@@ -13,11 +13,14 @@ public class Populator implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-
-		LogEntry entry1 = new LogEntry(1, 20);
-		LogEntry entry2 = new LogEntry(1001, 1220);
-		logEntryRepo.save(entry1);
-		logEntryRepo.save(entry2);
+		
+		// Add 2 entries if there are none yet
+		if (logEntryRepo.count() == 0) {
+			LogEntry entry1 = new LogEntry(1, 20);
+			LogEntry entry2 = new LogEntry(1001, 1220);
+			logEntryRepo.save(entry1);
+			logEntryRepo.save(entry2);
+		}
 
 	}
 }
