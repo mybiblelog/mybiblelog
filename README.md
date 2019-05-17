@@ -12,7 +12,7 @@ To configure these properties, right click the project. Under `Run As`, click `R
 
 In the left column, select `Java Application > Application`. In the Environment tab on the right, add a new variable:
 * Variable: `JDBC_DATABASE_URL`
-* Value: `jdbc:h2:file:~mybiblelog_db;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE`
+* Value: `jdbc:h2:file:~/mybiblelog_db;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE`
 
 In the left column, select `JUnit > mybiblelog`. (If there is no `mybiblelog` under `JUnit`, right-click `JUnit` and select `New Configuration`.) In the environment tab add this variable:
 * Variable: `JDBC_DATABASE_URL`
