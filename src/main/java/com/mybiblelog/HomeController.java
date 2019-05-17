@@ -40,4 +40,15 @@ public class HomeController {
 		
 		return "redirect:/log";
 	}
+
+	@GetMapping("/secure")
+	public String getSecure() {
+		return "secure";
+	}
+
+	@GetMapping("/login")
+	public String getLogin() {
+		return "login";
+	}
+
 }

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>My Bible Log</title>
+</head>
+<body>
+	<h1>My Bible Log</h1>
+
+	<div th:if="${param.error}">
+		Invalid username and password.
+	</div>
+	<div th:if="${param.logout}">
+		You have been logged out.
+	</div>
+	<form th:action="@{/login}" method="post">
+		<div><label> User Name : <input type="text" name="username"/> </label></div>
+		<div><label> Password: <input type="password" name="password"/> </label></div>
+		<div><input type="submit" value="Sign In"/></div>
+	</form>
+
+	<a th:href="@{/}">Home</a>
+</body>
+</html>
