@@ -34,6 +34,3 @@ atlassian-ide-plugin.xml
 /dist/
 /nbdist/
 /.nb-gradle/
-
-### VS Code ###
-.vscode/
