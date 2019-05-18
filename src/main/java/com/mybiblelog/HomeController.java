@@ -35,7 +35,6 @@ public class HomeController {
 		int endVerseId = startVerseId + rand.nextInt(150);
 		
 		LogEntry entry = new LogEntry(startVerseId, endVerseId);
-		System.out.println(entry.getStartVerseId());
 		logEntryRepo.save(entry);
 		
 		return "redirect:/log";
