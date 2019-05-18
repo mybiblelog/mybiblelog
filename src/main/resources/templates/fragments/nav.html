@@ -1,0 +1,8 @@
+<nav>
+  <a href="/demo">Demo Page</a>
+  <a href="/hello">Hello Page</a>
+  <hr>
+  <div th:if="${@identity.hasRole('ADMIN')}" th:remove="tag">
+    <a href="/h2-console" target="_blank">H2 Console</a>
+  </div>
+</nav>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+
+<head>
+	<title>Demo Page!</title>
+</head>
+
+<body>
+	<div layout:fragment="content">
+	
+		<h1 th:text="'Hello, ' + ${user.username} + '!'"></h1>
+		<form th:action="@{/logout}" method="post">
+			<input type="submit" value="Sign Out" />
+		</form>
+	
+	</div>
+</body>
+
+</html>

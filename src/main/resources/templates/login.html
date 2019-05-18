@@ -1,26 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>My Bible Log</title>
+	
+  <link rel="shortcut icon" href="favicon.png">
+	
+	<title>Log In</title>
+	
+	<link rel="stylesheet" href="css/style.css">
+	<style>
+		body {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+		}
+		
+		#loginContainer {
+			min-height: 50vh;
+			min-width: 20vw;
+			border: 2px solid #ccc;
+			border-radius: 1rem;
+		}
+	</style>
 </head>
 <body>
-	<h1>My Bible Log</h1>
 
-	<div th:if="${param.error}">
-		Invalid username and password.
+	<div id="loginContainer">
+		<h1>My Bible Log</h1>
+		<h2>Log In</h2>
+		<div th:if="${param.error}">
+			Invalid username and password.
+		</div>
+		<div th:if="${param.logout}">
+			You have been logged out.
+		</div>
+		<form th:action="@{/login}" method="post">
+			<div>
+				<label> User Name :
+					<input type="text" name="username" /> </label>
+			</div>
+			<div>
+				<label> Password:
+					<input type="password" name="password" /> </label>
+			</div>
+			<div>
+				<input type="submit" value="Sign In" />
+			</div>
+		</form>
 	</div>
-	<div th:if="${param.logout}">
-		You have been logged out.
-	</div>
-	<form th:action="@{/login}" method="post">
-		<div><label> User Name : <input type="text" name="username"/> </label></div>
-		<div><label> Password: <input type="password" name="password"/> </label></div>
-		<div><input type="submit" value="Sign In"/></div>
-	</form>
-
-	<a th:href="@{/}">Home</a>
 </body>
 </html>

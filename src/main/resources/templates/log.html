@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html layout:decorate="~{layout}">
 
 <head>
 	<meta charset="UTF-8">
@@ -9,19 +9,23 @@
 </head>
 
 <body>
-	<h1>Log Entries</h1>
+	<div layout:fragment="content">
+		
+		<h1>Log Entries</h1>
+		
+		<a th:href="@{/}">Home</a>
 	
-	<a th:href="@{/}">Home</a>
-
-	<ul>
-		<li th:each="entry : ${logEntries}">
-			<strong>Start Verse ID:</strong> <span th:text="${entry.startVerseId}"></span>
-			<br>
-			<strong>End Verse ID:</strong> <span th:text="${entry.endVerseId}"></span>
-		</li>
-	</ul>
-
-	<a th:href="@{/add}">Add</a>
+		<ul>
+			<li th:each="entry : ${logEntries}">
+				<strong>Start Verse ID:</strong> <span th:text="${entry.startVerseId}"></span>
+				<br>
+				<strong>End Verse ID:</strong> <span th:text="${entry.endVerseId}"></span>
+			</li>
+		</ul>
+	
+		<a th:href="@{/add}">Add</a>
+		
+	</div>
 </body>
 
 </html>
