@@ -1,4 +1,4 @@
-package com.mybiblelog;
+package com.mybiblelog.logentry;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,4 +1,4 @@
-package com.mybiblelog;
+package com.mybiblelog.logentry;
 
 import org.springframework.data.repository.CrudRepository;
 

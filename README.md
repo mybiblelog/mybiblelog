@@ -14,6 +14,8 @@ In the left column, select `Java Application > Application`. In the Environment 
 * Variable: `JDBC_DATABASE_URL`
 * Value: `jdbc:h2:file:~/mybiblelog_db;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE`
 
+You will also need to add values for `CLIENT_ID` and `CLIENT_SECRET` to enable OAuth2 with Google.
+
 In the left column, select `JUnit > mybiblelog`. (If there is no `mybiblelog` under `JUnit`, right-click `JUnit` and select `New Configuration`.) In the environment tab add this variable:
 * Variable: `JDBC_DATABASE_URL`
 * Value: `jdbc:h2:mem:testdb`
@@ -28,6 +30,8 @@ This will ensure correct database access for three different environments:
 These notes apply to developing and testing in the terminal on Windows.
 
 On Windows, a modified Procfile must be used to run the application locally: `heroku local web -f procfile.windows`
+
+## Building with Gradle
 
 Before running `gradle build` in the local terminal, you must run `export JDBC_DATABASE_URL=jdbc:h2:mem:testdb` to set the environment variable. Otherwise tests will fail.
 

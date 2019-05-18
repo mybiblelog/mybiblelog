@@ -1,4 +1,4 @@
-package com.mybiblelog;
+package com.mybiblelog.user;
 
 import java.util.Optional;
 

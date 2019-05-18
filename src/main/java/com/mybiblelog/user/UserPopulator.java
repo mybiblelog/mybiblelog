@@ -1,4 +1,4 @@
-package com.mybiblelog;
+package com.mybiblelog.user;
 
 import javax.annotation.Resource;
 
@@ -6,7 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuthPopulator implements CommandLineRunner {
+public class UserPopulator implements CommandLineRunner {
 
 	@Resource
 	private UserRepository userRepo;
