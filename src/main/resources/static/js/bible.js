@@ -1,6 +1,4 @@
-(() => {
-
-	const Bible = {};
+(Bible => {
 	
 	Bible.makeVerseId = (book, chapter, verse) => {
 		let verseId = 100000000 + book * 1000000 + chapter * 1000 + verse;
