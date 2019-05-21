@@ -37,6 +37,10 @@ public class ThymeleafHelperConfig {
 	}
 	
 	public class ThymeIdentity {
+		
+		public ThymeIdentity() {
+			System.out.println("Identity initialized for Thymeleaf consumption.");
+		}
 
 		public boolean loggedIn() {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -49,16 +53,20 @@ public class ThymeleafHelperConfig {
 		public boolean hasRole(String role) {
 			if (!this.loggedIn()) return false;
 			
-			Optional<User> userOpt = userRepo.findByUsername(this.username());
+			Optional<User> userOpt = userRepo.findByEmail(this.email());
 			if (!userOpt.isPresent()) return false;
 			
 			User user = userOpt.get();
 			return Arrays.asList(user.getRoles()).contains(role);
 		}
 		
-		public String username() {
+		public String email() {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			return authentication.getName();
+		}
+		
+		public String username() {
+			return this.email();
 		}
 	}
 }

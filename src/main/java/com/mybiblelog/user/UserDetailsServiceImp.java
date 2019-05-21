@@ -15,11 +15,11 @@ public class UserDetailsServiceImp implements UserDetailsService {
 	UserRepository userRepo;
 	
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
 		// Get existing user from database
 		User user;
-		Optional<User> existingUser = userRepo.findByUsername(username);
+		Optional<User> existingUser = userRepo.findByEmail(email);
 		if (!existingUser.isPresent()) {
 			throw new UsernameNotFoundException("User not found.");
 		}
@@ -27,7 +27,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
 		
 		// Build UserDetails object from user's username and password
 		UserBuilder builder = null;
-		builder = org.springframework.security.core.userdetails.User.withUsername(username);
+		builder = org.springframework.security.core.userdetails.User.withUsername(email);
 		builder.password(user.getPassword());
 		builder.roles(user.getRoles());
 		

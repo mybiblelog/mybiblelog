@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 		.authorizeRequests()
 			// To allow access to index, static resources, and H2 console
-			.antMatchers("/", "/privacy", "/terms", "/h2-console/**", "/css/**", "/js/**", "/favicon.png").permitAll()
+			.antMatchers("/", "/oauth2/authorization/google", "/privacy", "/terms", "/h2-console/**", "/css/**", "/js/**", "/favicon.png").permitAll()
 			// Ensure only the admin can access the user administration routes
 			// Alternatively, we could use controller annotations
 			// .antMatchers("/admin", "/saveUser").hasRole("ADMIN")
@@ -41,13 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			// .antMatchers("/protectedbyauthority").hasAuthority("READ_PRIVILEGE")
 			.anyRequest().authenticated()
 			.and()
-		.oauth2Login()
-			.and()
-		.formLogin().loginPage("/login").permitAll()
-			.and()
-		.logout().permitAll().logoutSuccessUrl("/login")
-			.and()
-		.csrf().disable();
+		.oauth2Login().loginPage("/oauth2/authorization/google");
 		
 		http.csrf().disable();
 		http.headers().frameOptions().disable();

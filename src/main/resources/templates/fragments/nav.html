@@ -1,8 +1,11 @@
 <nav>
+  <a href="/">Home Page</a>
   <a href="/demo">Demo Page</a>
   <a href="/hello">Hello Page</a>
+  <a href="/log">Log Page</a>
+  <a href="/oauth">OAuth2 Page</a>
   <hr>
-  <div th:if="${@identity.hasRole('ADMIN')}" th:remove="tag">
+  <div th:remove="tag">
     <a href="/h2-console" target="_blank">H2 Console</a>
   </div>
 </nav>
