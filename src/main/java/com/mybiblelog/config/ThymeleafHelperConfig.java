@@ -19,7 +19,7 @@ import nz.net.ultraq.thymeleaf.LayoutDialect;
 public class ThymeleafHelperConfig {
 
 	@Autowired
-	UserRepository userRepo;
+	LoginService loginService;
 	
 	// Enables Thymeleaf layouts (must be manually included since Spring Boot 2)
 	@Bean
@@ -38,8 +38,16 @@ public class ThymeleafHelperConfig {
 	
 	public class ThymeIdentity {
 		
-		public ThymeIdentity() {
-			System.out.println("Identity initialized for Thymeleaf consumption.");
+		private User user;
+		
+		private User getUser() {
+			if (this.user != null) {
+				return this.user;
+			}
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			User user = loginService.resolveAuthUser(authentication);
+			this.user = user;
+			return user;
 		}
 
 		public boolean loggedIn() {
@@ -50,23 +58,8 @@ public class ThymeleafHelperConfig {
 			return true;
 		}
 		
-		public boolean hasRole(String role) {
-			if (!this.loggedIn()) return false;
-			
-			Optional<User> userOpt = userRepo.findByEmail(this.email());
-			if (!userOpt.isPresent()) return false;
-			
-			User user = userOpt.get();
-			return Arrays.asList(user.getRoles()).contains(role);
-		}
-		
 		public String email() {
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			return authentication.getName();
-		}
-		
-		public String username() {
-			return this.email();
+			return this.getUser().getEmail();
 		}
 	}
 }

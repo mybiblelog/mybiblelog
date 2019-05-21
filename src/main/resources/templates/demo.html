@@ -8,7 +8,7 @@
 <body>
 	<div layout:fragment="content">
 	
-		<h1 th:text="'Hello, ' + ${user.username} + '!'"></h1>
+		<h1 th:text="'Hello, ' + ${user.email} + '!'"></h1>
 		<form th:action="@{/logout}" method="post">
 			<input type="submit" value="Sign Out" />
 		</form>

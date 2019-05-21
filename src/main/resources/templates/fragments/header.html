@@ -2,7 +2,7 @@
 	<h1>My Bible Log</h1>
 
 	<div th:if="${@identity.loggedIn()}">
-		<span th:text="'Welcome, ' + ${@identity.username()} + '!'" />
+		<span th:text="'Welcome, ' + ${@identity.email()} + '!'" />
 		<a href="/logout">Log Out</a>
 	</div>
 	<div  th:unless="${@identity.loggedIn()}">

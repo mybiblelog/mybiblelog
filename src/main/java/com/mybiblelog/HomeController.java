@@ -11,11 +11,6 @@ public class HomeController {
 		return "index";
 	}
 
-	@GetMapping("/hello")
-	public String getHello() {
-		return "hello";
-	}
-
 	@GetMapping("/privacy")
 	public String getPrivacyPolicy() {
 		return "policy/privacy";

@@ -6,10 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "appuser")
 public class User {
@@ -19,35 +15,32 @@ public class User {
 	@Column(name = "UID")
 	private Long id;
 	
-	private String username;
-	@JsonIgnore
-	private String password;
 	private String email;
-	private String[] roles;
+	private String name;
+	private String googleOAuth2ID;
 	
-	public User(String username, String password, String email, String... roles) {
-		this.username = username;
-		this.password = new BCryptPasswordEncoder().encode(password);
+	public User(String email, String name, String googleOAuth2ID) {
 		this.email = email;
-		this.roles = roles;
+		this.name = name;
+		this.googleOAuth2ID = googleOAuth2ID;
 	}
 
 	protected User() {} // JPA
 
-	public String getUsername() {
-		return username;
-	}
-
-	public String getPassword() {
-		return password;
+	public Long getId() {
+		return id;
 	}
 
 	public String getEmail() {
 		return email;
 	}
-	
-	public String[] getRoles() {
-		return roles;
+
+	public String getName() {
+		return name;
+	}
+
+	public String getGoogleOAuth2ID() {
+		return googleOAuth2ID;
 	}
 
 }
