@@ -1,0 +1,13283 @@
+{
+  "Genesis": {
+    "1": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "67": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "25": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "26": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "27": {
+      "46": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "28": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "29": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "30": {
+      "43": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "31": {
+      "55": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "32": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "33": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "34": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "35": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "36": {
+      "43": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "37": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "38": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "39": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "40": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "41": {
+      "57": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "42": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "43": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "44": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "45": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "46": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "47": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "48": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "49": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "50": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Exodus": {
+    "1": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "51": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "25": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "26": {
+      "37": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "27": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "28": {
+      "43": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "29": {
+      "46": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "30": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "31": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "32": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "33": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "34": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "35": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "36": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "37": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "38": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "39": {
+      "43": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "40": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Leviticus": {
+    "1": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "47": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "59": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "57": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "37": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "44": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "25": {
+      "55": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "26": {
+      "46": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "27": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Numbers": {
+    "1": {
+      "5": [
+        "NLT"
+      ],
+      "54": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "2": {
+      "2": [
+        "NLT"
+      ],
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "3": {
+      "51": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "49": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "89": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "4": [
+        "NLT"
+      ],
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "14": {
+      "45": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "41": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "50": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "41": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "25": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "26": {
+      "65": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "27": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "28": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "29": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "30": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "31": {
+      "54": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "32": {
+      "42": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "33": {
+      "56": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "34": {
+      "19": [
+        "NLT"
+      ],
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "35": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "36": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Deuteronomy": {
+    "1": {
+      "46": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "37": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "49": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "25": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "26": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "27": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "28": {
+      "68": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "29": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "30": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "31": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "32": {
+      "52": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "33": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "34": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Joshua": {
+    "1": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "43": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "8": [
+        "CEB",
+        "NIV"
+      ],
+      "24": [
+        "ASV",
+        "KJV",
+        "NASB",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "63": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "51": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "45": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Judges": {
+    "1": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "57": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "48": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Ruth": {
+    "1": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "1 Samuel": {
+    "1": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "52": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "58": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "42": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "25": {
+      "44": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "26": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "27": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "28": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "29": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "30": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "31": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "2 Samuel": {
+    "1": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "39": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "39": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "37": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "43": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "51": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "39": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "1 Kings": {
+    "1": {
+      "53": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "46": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "51": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "66": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "43": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "46": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "43": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "53": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "2 Kings": {
+    "1": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "44": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "37": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "41": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "37": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "37": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "37": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "25": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "1 Chronicles": {
+    "1": {
+      "54": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "55": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "43": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "81": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "44": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "47": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "43": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "25": {
+      "8": [
+        "NIV"
+      ],
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "26": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "27": {
+      "16": [
+        "NLT"
+      ],
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "28": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "29": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "2 Chronicles": {
+    "1": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "42": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "37": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "25": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "26": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "27": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "28": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "29": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "30": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "31": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "32": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "33": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "34": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "35": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "36": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Ezra": {
+    "1": {
+      "9": [
+        "NIV",
+        "NLT"
+      ],
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "WEB"
+      ]
+    },
+    "2": {
+      "2": [
+        "CEB",
+        "NIV",
+        "NLT"
+      ],
+      "70": [
+        "ASV",
+        "KJV",
+        "NASB",
+        "WEB"
+      ]
+    },
+    "3": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "44": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Nehemiah": {
+    "1": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "7": [
+        "CEB",
+        "NIV",
+        "NLT"
+      ],
+      "73": [
+        "ASV",
+        "KJV",
+        "NASB",
+        "WEB"
+      ]
+    },
+    "8": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "39": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "47": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Esther": {
+    "1": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "3": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Job": {
+    "1": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "25": {
+      "6": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "26": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "27": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "28": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "29": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "30": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "31": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "32": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "33": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "34": {
+      "37": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "35": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "36": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "37": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "38": {
+      "41": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "39": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "40": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "41": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "42": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Psalm": {
+    "1": {
+      "6": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "7": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "6": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "7": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "5": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "50": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "6": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "25": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "26": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "27": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "28": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "29": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "30": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "31": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "32": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "33": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "34": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "35": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "36": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "37": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "38": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "39": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "40": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "41": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "42": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "43": {
+      "5": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "44": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "45": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "46": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "47": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "48": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "49": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "50": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "51": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "52": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "53": {
+      "6": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "54": {
+      "7": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "55": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "56": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "57": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "58": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "59": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "60": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "61": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "62": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "63": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "64": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "65": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "66": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "67": {
+      "7": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "68": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "69": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "70": {
+      "5": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "71": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "72": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "73": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "74": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "75": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "76": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "77": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "78": {
+      "72": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "79": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "80": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "81": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "82": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "83": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "84": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "85": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "86": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "87": {
+      "7": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "88": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "89": {
+      "52": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "90": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "91": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "92": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "93": {
+      "5": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "94": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "95": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "96": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "97": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "98": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "99": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "100": {
+      "5": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "101": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "102": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "103": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "104": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "105": {
+      "45": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "106": {
+      "48": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "107": {
+      "43": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "108": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "109": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "110": {
+      "7": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "111": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "112": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "113": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "114": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "115": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "116": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "117": {
+      "2": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "118": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "119": {
+      "176": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "120": {
+      "7": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "121": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "122": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "123": {
+      "4": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "124": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "125": {
+      "5": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "126": {
+      "6": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "127": {
+      "5": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "128": {
+      "6": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "129": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "130": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "131": {
+      "3": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "132": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "133": {
+      "3": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "134": {
+      "3": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "135": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "136": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "137": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "138": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "139": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "140": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "141": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "142": {
+      "7": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "143": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "144": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "145": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "146": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "147": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "148": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "149": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "150": {
+      "6": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Proverbs": {
+    "1": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "25": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "26": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "27": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "28": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "29": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "30": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "31": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Ecclesiastes": {
+    "1": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Song of Songs": {
+    "1": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Isaiah": {
+    "1": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "6": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "6": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "7": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "6": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "25": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "26": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "27": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "28": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "29": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "30": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "31": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "32": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "33": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "34": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "35": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "36": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "37": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "38": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "39": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "40": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "41": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "42": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "43": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "44": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "45": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "46": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "47": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "48": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "49": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "50": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "51": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "52": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "53": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "54": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "55": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "56": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "57": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "58": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "59": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "60": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "61": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "62": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "63": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "64": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "65": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "66": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Jeremiah": {
+    "1": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "37": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "25": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "26": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "27": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "28": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "29": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "30": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "31": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "32": {
+      "44": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "33": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "34": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "35": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "36": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "37": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "38": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "39": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "40": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "41": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "42": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "43": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "44": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "45": {
+      "5": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "46": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "47": {
+      "7": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "48": {
+      "47": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "49": {
+      "39": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "50": {
+      "46": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "51": {
+      "64": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "52": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Lamentations": {
+    "1": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "66": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Ezekiel": {
+    "1": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "63": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "49": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "49": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "25": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "26": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "27": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "28": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "29": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "30": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "31": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "32": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "33": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "34": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "35": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "36": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "37": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "38": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "39": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "40": {
+      "49": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "41": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "42": {
+      "8": [
+        "CEB"
+      ],
+      "20": [
+        "ASV",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "43": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "44": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "45": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "46": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "47": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "48": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Daniel": {
+    "1": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "49": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "37": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "45": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Hosea": {
+    "1": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "5": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Joel": {
+    "1": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Amos": {
+    "1": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Obadiah": {
+    "1": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Jonah": {
+    "1": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Micah": {
+    "1": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Nahum": {
+    "1": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Habakkuk": {
+    "1": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Zephaniah": {
+    "1": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Haggai": {
+    "1": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Zechariah": {
+    "1": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "9": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Malachi": {
+    "1": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "6": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Matthew": {
+    "1": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "48": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "42": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "50": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "58": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "39": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "20": [
+        "ASV",
+        "CEB",
+        "NLT"
+      ],
+      "27": [
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "18": {
+      "10": [
+        "ASV",
+        "CEB",
+        "NLT"
+      ],
+      "35": [
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "19": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "46": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "46": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "13": [
+        "ASV",
+        "CEB",
+        "NLT"
+      ],
+      "39": [
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "24": {
+      "51": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "25": {
+      "46": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "26": {
+      "75": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "27": {
+      "66": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "28": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Mark": {
+    "1": {
+      "45": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "41": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "43": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "56": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "15": [
+        "ASV",
+        "CEB",
+        "NLT"
+      ],
+      "37": [
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "8": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "43": [
+        "ASV",
+        "CEB",
+        "NLT"
+      ],
+      "50": [
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "10": {
+      "52": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "25": [
+        "ASV",
+        "CEB",
+        "NLT"
+      ],
+      "33": [
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "12": {
+      "44": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "37": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "72": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "27": [
+        "ASV",
+        "CEB",
+        "NLT"
+      ],
+      "47": [
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "16": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Luke": {
+    "1": {
+      "80": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "52": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "44": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "39": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "49": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "50": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "56": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "62": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "42": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "54": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "59": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "35": [
+        "ASV",
+        "CEB",
+        "NLT"
+      ],
+      "37": [
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "18": {
+      "43": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "48": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "47": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "71": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "16": [
+        "ASV",
+        "CEB",
+        "NLT"
+      ],
+      "56": [
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "24": {
+      "53": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "John": {
+    "1": {
+      "51": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "54": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "3": [
+        "ASV",
+        "CEB",
+        "NLT"
+      ],
+      "47": [
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "6": {
+      "71": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "53": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "59": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "41": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "42": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "57": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "50": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "42": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Acts": {
+    "1": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "47": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "37": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "42": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "60": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "36": [
+        "ASV",
+        "CEB",
+        "NLT"
+      ],
+      "40": [
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "9": {
+      "43": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "48": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "52": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "33": [
+        "ASV",
+        "CEB",
+        "NLT"
+      ],
+      "41": [
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "16": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "41": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "38": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "23": {
+      "35": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "24": {
+      "6": [
+        "ASV",
+        "CEB",
+        "NLT"
+      ],
+      "27": [
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "25": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "26": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "27": {
+      "44": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "28": {
+      "28": [
+        "ASV",
+        "CEB",
+        "NLT"
+      ],
+      "31": [
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    }
+  },
+  "Romans": {
+    "1": {
+      "1": [
+        "CEB"
+      ],
+      "32": [
+        "ASV",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "39": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "36": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT"
+      ],
+      "26": [
+        "WEB"
+      ]
+    },
+    "15": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "23": [
+        "ASV",
+        "CEB",
+        "NLT"
+      ],
+      "25": [
+        "WEB"
+      ],
+      "27": [
+        "KJV",
+        "NASB",
+        "NIV"
+      ]
+    }
+  },
+  "1 Corinthians": {
+    "1": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "34": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "58": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "2 Corinthians": {
+    "1": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "2": [
+        "CEB"
+      ],
+      "21": [
+        "ASV",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "13": [
+        "CEB"
+      ],
+      "14": [
+        "ASV",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Galatians": {
+    "1": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "31": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Ephesians": {
+    "1": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "3": [
+        "CEB"
+      ],
+      "22": [
+        "ASV",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "32": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "33": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Philippians": {
+    "1": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "30": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Colossians": {
+    "1": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "23": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "1 Thessalonians": {
+    "1": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "2 Thessalonians": {
+    "1": {
+      "12": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "1 Timothy": {
+    "1": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "2 Timothy": {
+    "1": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Titus": {
+    "1": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Philemon": {
+    "1": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Hebrews": {
+    "1": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "16": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "8": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "28": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "39": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "40": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "13": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "James": {
+    "1": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "26": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "1 Peter": {
+    "1": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "2 Peter": {
+    "1": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "1 John": {
+    "1": {
+      "10": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "2 John": {
+    "1": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "3 John": {
+    "1": {
+      "14": [
+        "ASV",
+        "KJV",
+        "NIV",
+        "WEB"
+      ],
+      "15": [
+        "CEB",
+        "NASB",
+        "NLT"
+      ]
+    }
+  },
+  "Jude": {
+    "1": {
+      "25": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  },
+  "Revelation": {
+    "1": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "2": {
+      "29": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "3": {
+      "22": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "4": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "5": {
+      "14": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "6": {
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "7": {
+      "4": [
+        "NLT"
+      ],
+      "17": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ]
+    },
+    "8": {
+      "13": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "9": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "10": {
+      "11": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "11": {
+      "19": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "12": {
+      "17": [
+        "ASV",
+        "KJV",
+        "NASB",
+        "NIV",
+        "WEB"
+      ],
+      "18": [
+        "CEB",
+        "NLT"
+      ]
+    },
+    "13": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "14": {
+      "20": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "15": {
+      "8": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "16": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "17": {
+      "18": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "18": {
+      "24": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "19": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "20": {
+      "15": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "21": {
+      "27": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    },
+    "22": {
+      "21": [
+        "ASV",
+        "CEB",
+        "KJV",
+        "NASB",
+        "NIV",
+        "NLT",
+        "WEB"
+      ]
+    }
+  }
+}
