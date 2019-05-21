@@ -2,15 +2,14 @@ package com.mybiblelog.bible;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-
-import org.assertj.core.util.Arrays;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class BibleIndex {
 
-	private ArrayList<BibleBook> books = new ArrayList();
+	private ArrayList<BibleBook> books = new ArrayList<BibleBook>();
 	private HashMap<Integer, Integer> chapterVerses = new HashMap<Integer, Integer>();
 
 	// Singleton Pattern
@@ -29,7 +28,7 @@ public class BibleIndex {
 			String bibleBooksJsonFile = BibleIndex.class.getResource("bible-books.json").getFile();
 			File bibleBooksFile = new File(bibleBooksJsonFile);
 			BibleBook[] bookArray = mapper.readValue(bibleBooksFile, BibleBook[].class);
-			this.books = new ArrayList(Arrays.asList(bookArray));
+			this.books = new ArrayList<BibleBook>(Arrays.asList(bookArray));
 			
 			String chapterVersesJsonFile = BibleIndex.class.getResource("chapter-verses.json").getFile();
 			File chapterVersesFile = new File(chapterVersesJsonFile);
