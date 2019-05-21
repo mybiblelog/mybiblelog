@@ -6,7 +6,7 @@ public class BibleBook {
 	public String name;
 	public int testamentOrder;
 	public int bibleOrder;
-	public String testament;
-	public int chapters;
+	public boolean newTestament;
+	public int chapterCount;
 	public ArrayList<String> abbreviations;
 }
