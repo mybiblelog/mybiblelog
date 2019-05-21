@@ -1,10 +1,15 @@
 package com.mybiblelog.user;
 
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.mybiblelog.logentry.LogEntry;
 
 @Entity
 @Table(name = "appuser")
@@ -18,6 +23,9 @@ public class User {
 	private String email;
 	private String name;
 	private String googleOAuth2ID;
+	
+	@OneToMany(mappedBy="user")
+	private Collection<LogEntry> logEntries;
 	
 	public User(String email, String name, String googleOAuth2ID) {
 		this.email = email;

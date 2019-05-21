@@ -1,5 +1,6 @@
 package com.mybiblelog.logentry;
 
+import java.util.Date;
 import java.util.Random;
 
 import javax.annotation.Resource;
@@ -29,7 +30,7 @@ public class LogEntryController {
 		int startVerseId = rand.nextInt(300);
 		int endVerseId = startVerseId + rand.nextInt(150);
 		
-		LogEntry entry = new LogEntry(startVerseId, endVerseId);
+		LogEntry entry = new LogEntry(null, startVerseId, endVerseId, new Date());
 		logEntryRepo.save(entry);
 		
 		return "redirect:/log";

@@ -1,5 +1,7 @@
 package com.mybiblelog;
 
+import java.util.Date;
+
 import javax.annotation.Resource;
 
 import org.springframework.boot.CommandLineRunner;
@@ -19,8 +21,8 @@ public class Populator implements CommandLineRunner {
 		
 		// Add 2 entries if there are none yet
 		if (logEntryRepo.count() == 0) {
-			LogEntry entry1 = new LogEntry(1, 20);
-			LogEntry entry2 = new LogEntry(1001, 1220);
+			LogEntry entry1 = new LogEntry(null, 1, 20, new Date());
+			LogEntry entry2 = new LogEntry(null, 1001, 1220, new Date());
 			logEntryRepo.save(entry1);
 			logEntryRepo.save(entry2);
 		}
