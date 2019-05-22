@@ -51,4 +51,8 @@ public class User {
 		return googleOAuth2ID;
 	}
 
+	public Iterable<LogEntry> getLogEntries() {
+		return this.logEntries;
+	}
+
 }
