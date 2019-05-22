@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.mybiblelog.bible.BibleBook;
+import com.mybiblelog.bible.BibleIndex;
 import com.mybiblelog.config.LoginService;
 import com.mybiblelog.user.User;
 
@@ -28,6 +30,10 @@ public class LogEntryController {
 		
 		Iterable<LogEntry> logEntries = user.getLogEntries();
 		model.addAttribute("logEntries", logEntries);
+		
+		Iterable<BibleBook> books = BibleIndex.getInstance().getBooks();
+		model.addAttribute("books", books);
+		
 		return "log";
 	}
 	
