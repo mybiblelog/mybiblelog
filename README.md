@@ -52,3 +52,15 @@ SELECT schemaname, relname, n_live_tup
 -- Count total number of rows in database
 SELECT SUM(n_live_tup) FROM pg_stat_user_tables;
 ```
+
+## Connecting to Google OAuth2
+
+To allow users to log in with their existing user accounts you will need to follow several steps:
+* Set up an OAuth2 client with the Google credentials manager: https://console.developers.google.com/apis/credentials/oauthclient/
+* Ensure all relevant hosts are set as allowed Google redirect URLs:
+	* http://localhost:8080/login/oauth2/code/google
+	* http://www.mybiblelog.com/login/oauth2/code/google
+	* http://mybiblelog.herokuapp.com/login/oauth2/code/google
+* Get the `CLIENT_ID` and `CLIENT_SECRET` environment variables from Google
+* Set up those variables in Eclipse to run the project locally
+* Set up those variables in Heroku to deploy the project
