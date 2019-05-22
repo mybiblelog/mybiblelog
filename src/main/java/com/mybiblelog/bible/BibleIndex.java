@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -63,7 +65,11 @@ public class BibleIndex {
 	}
 
 	public int getBookChapterCount(int bookIndex) {
-		BibleBook book = this.books.get(bookIndex);
+		List<BibleBook> resultBook = this.books.stream()
+            .filter(b -> b.bibleOrder == bookIndex)
+            .collect(Collectors.toList());
+        if (resultBook.size() == 0) return 0;
+        BibleBook book = resultBook.get(0);
 		if (book == null) return 0;
 		return book.chapterCount;
 	}

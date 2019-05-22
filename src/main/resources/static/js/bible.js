@@ -15,4 +15,14 @@
 		return { book, chapter, verse };
 	};
 
+	Bible.countBookChapters = bookIndex => {
+		return fetch('/countBookChapters?bookIndex=' + bookIndex)
+			.then(response => response.json());
+	};
+
+	Bible.countChapterVerses = (bookIndex, chapterIndex) => {
+		return fetch('/countBookChapterVerses?bookIndex=' + bookIndex + '&chapterIndex=' + chapterIndex)
+			.then(response => response.json());
+	};
+
 })(window.Bible = window.Bible || {});
