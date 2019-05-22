@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mybiblelog.bible.BibleBook;
 import com.mybiblelog.bible.BibleIndex;
@@ -38,13 +39,8 @@ public class LogEntryController {
 	}
 	
 	@GetMapping("/add")
-	public String addLogEntry(Model model, Authentication authentication) {
+	public String addLogEntry(Authentication authentication, @RequestParam int startVerseId, @RequestParam int endVerseId) {
 		User user = loginService.resolveAuthUser(authentication);
-		
-		Random rand = new Random();
-		
-		int startVerseId = rand.nextInt(300);
-		int endVerseId = startVerseId + rand.nextInt(150);
 		
 		LogEntry entry = new LogEntry(user, startVerseId, endVerseId, new Date());
 		logEntryRepo.save(entry);

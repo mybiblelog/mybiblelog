@@ -22,7 +22,8 @@
 		</ul>
 		
 		
-		<form method="POST" action="/add">
+		<form method="POST" action="/add" class="js-log-entry-form">
+		
 			<select name="bookId">
 				<option disabled selected="true">Choose Book</option>
 				<option
@@ -31,10 +32,14 @@
 					th:value="${book.bibleOrder}">
 				</option>
 			</select>
+			
+			<button>Add</button>
+			
 		</form>
-	
-		<a th:href="@{/add}">Add</a>
 		
+		<script src="/js/log-page.js"></script>
+		<script>LogPage.init();</script>
+	
 	</div>
 </body>
 
