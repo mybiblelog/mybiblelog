@@ -1,12 +1,12 @@
 (LogPage => {
-	
+
 	const dom = {};
 	const model = {
-		book: 				0,
-		startChapter: 0,
-		startVerse: 	0,
-		endChapter: 	0,
-		endVerse: 		0,
+		book:			0,
+		startChapter:	0,
+		startVerse:		0,
+		endChapter:		0,
+		endVerse:		0,
 	};
 
 	const cacheDom = () => {
@@ -47,7 +47,7 @@
 		event.preventDefault();
 
 		// TODO: ensure the minimum number of fields is selected
-		
+
 		// TODO: generate startVerseId and endVerseId
 
 		// TODO: submit request
