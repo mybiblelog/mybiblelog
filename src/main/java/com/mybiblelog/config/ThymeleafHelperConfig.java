@@ -38,15 +38,9 @@ public class ThymeleafHelperConfig {
 	
 	public class ThymeIdentity {
 		
-		private User user;
-		
 		private User getUser() {
-			if (this.user != null) {
-				return this.user;
-			}
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			User user = loginService.resolveAuthUser(authentication);
-			this.user = user;
 			return user;
 		}
 
