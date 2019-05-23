@@ -10,8 +10,12 @@
 				endChapter:		0,
 				endVerse:		0,
 			},
-			books: [],
 			logEntries: [],
+			books: [],
+			startChapters: [],
+			startVerses: [],
+			endChapters: [],
+			endVerses: [],
 		},
 		computed: {
 			//
@@ -34,7 +38,17 @@
 				}
 			},
 			onSelectBook() {
-				// TODO: populate start chapter 
+				this.model.startChapter = 0;
+				this.model.startVerse = 0;
+				this.model.endChapter = 0;
+				this.model.endVerse = 0;
+
+				const bookIndex = this.model.book;
+				const book = this.books.find(b => b.bibleOrder === bookIndex);
+				const chapterCount = book.chapterCount;
+				const chapters = [];
+				for (let i = 1; i <= chapterCount; i++) chapters.push(i);
+				this.startChapters = chapters;
 			},
 			onSelectStartChapter() {
 				// TODO: populate start verse select
@@ -58,17 +72,24 @@
 			},
 		},
 		mounted() {
-			fetch('/logEntries')
-				.then(response => response.json())
-				.then(data => {
-					this.logEntries = data;
-				});
-			fetch('/bibleBooks')
-				.then(response => response.json())
-				.then(data => {
-					this.books = data;
-				});
-			console.log({ this: this });
+
+			const loadBibleBooks =
+				() => fetch('/bibleBooks')
+					.then(response => response.json())
+					.then(data => {
+						this.books = data;
+					});
+			
+			const loadLogEntries =
+				() => fetch('/logEntries')
+					.then(response => response.json())
+					.then(data => {
+						this.logEntries = data;
+					});
+
+			// Load bible metadata first since it is used to
+			// display log entries
+			loadBibleBooks().then(loadLogEntries);
 		},
 	});
 

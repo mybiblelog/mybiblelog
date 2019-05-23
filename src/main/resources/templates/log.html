@@ -32,10 +32,17 @@
 			
 			<form @submit.prevent="onSubmitLogEntryForm">
 
-				<select v-model="model.book">
+				<select v-model="model.book" @change="onSelectBook">
 					<option disabled value="0" selected>Choose Book</option>
 					<option v-for="book in books" v-bind:value="book.bibleOrder">
 						{{ book.name }}
+					</option>
+				</select>
+
+				<select v-model="model.startChapter">
+					<option disabled value="0" selected>Choose Start Chapter</option>
+					<option v-for="chapter in startChapters" v-bind:value="chapter">
+						{{ chapter }}
 					</option>
 				</select>
 			
