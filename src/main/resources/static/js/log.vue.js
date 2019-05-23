@@ -21,7 +21,16 @@
 			//
 		},
 		methods: {
-			displayRange(startVerseId, endVerseId) {
+			displayDate(date) {
+				const options = {
+					weekday: 	'long',
+					year: 		'numeric',
+					month: 		'long',
+					day: 		'numeric'
+				};
+				return new Date(date).toLocaleDateString('en-US', options);
+			},
+			displayVerseRange(startVerseId, endVerseId) {
 				const start = Bible.parseVerseId(startVerseId);
 				const end = Bible.parseVerseId(endVerseId);
 				const bookName = this.books.find(b => b.bibleOrder === start.book).name;
