@@ -11,26 +11,13 @@
 <body>
 	<div layout:fragment="content">
 		
-		<h1>Log Entries</h1>
-
 		<div id="js-vue-app" v-cloak>
 
-			<table>
-				<thead>
-					<tr>
-						<th>Date</th>
-						<th>Verses</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr v-for="entry of logEntries">
-						<td>{{ displayDate(entry.date) }}</td>
-						<td>{{ displayVerseRange(entry.startVerseId, entry.endVerseId) }}</td>
-					</tr>
-				</tbody>
-			</table>
-			
+			<h2>Add Entry</h2>
+
 			<form @submit.prevent="onSubmitLogEntryForm">
+
+				<input v-model="model.date" type="date">
 
 				<select v-model="model.book" @change="onSelectBook">
 					<option disabled value="0" selected>Choose Book</option>
@@ -71,6 +58,21 @@
 				
 			</form>
 
+			<table>
+				<thead>
+					<tr>
+						<th>Date</th>
+						<th>Verses</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="entry of logEntries">
+						<td>{{ displayDate(entry.date) }}</td>
+						<td>{{ displayVerseRange(entry.startVerseId, entry.endVerseId) }}</td>
+					</tr>
+				</tbody>
+			</table>
+			
 		</div>
 		
 		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>

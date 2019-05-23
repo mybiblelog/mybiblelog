@@ -44,7 +44,10 @@ public class LogEntryController {
 		// TODO: validate that chapters/verses actually exist
 		// TODO: validate that verses are in correct order
 		
-		LogEntry entry = new LogEntry(user, startVerseId, endVerseId, new Date());
+		Date date = new Date();
+		System.out.println(date);
+		
+		LogEntry entry = new LogEntry(user, startVerseId, endVerseId, date);
 		entry = logEntryRepo.save(entry);
 		
 		return entry;

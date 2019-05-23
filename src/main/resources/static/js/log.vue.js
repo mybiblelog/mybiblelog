@@ -4,6 +4,7 @@
 		el: '#js-vue-app',
 		data: {
 			model: {
+				date: 			Date.now(),
 				book:			0,
 				startChapter:	0,
 				startVerse:		0,
