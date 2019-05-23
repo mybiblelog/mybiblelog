@@ -46,16 +46,27 @@
 					return range
 				}
 			},
-			onSelectBook() {
+			resetStartChapter() {
 				this.model.startChapter = 0;
-				this.model.startVerse = 0;
-				this.model.endChapter = 0;
-				this.model.endVerse = 0;
-
 				this.startChapters = [];
+			},
+			resetStartVerse() {
+				this.model.startVerse = 0;
 				this.startVerses = [];
+			},
+			resetEndChapter() {
+				this.model.endChapter = 0;
 				this.endChapters = [];
+			},
+			resetEndVerse() {
+				this.model.endVerse = 0;
 				this.endVerses = [];
+			},
+			onSelectBook() {
+				resetStartChapter();
+				resetStartVerse();
+				resetEndChapter();
+				resetEndVerse();
 
 				const bookIndex = this.model.book;
 				const book = this.books.find(b => b.bibleOrder === bookIndex);
@@ -65,13 +76,9 @@
 				this.startChapters = chapters;
 			},
 			onSelectStartChapter() {
-				this.model.startVerse = 0;
-				this.model.endChapter = 0;
-				this.model.endVerse = 0;
-
-				this.startVerses = [];
-				this.endChapters = [];
-				this.endVerses = [];
+				resetStartVerse();
+				resetEndChapter();
+				resetEndVerse();
 
 				fetch(`/countBookChapterVerses?bookIndex=${this.model.book}&chapterIndex=${this.model.startChapter}`)
 					.then(response => response.json())
@@ -82,11 +89,8 @@
 					});
 			},
 			onSelectStartVerse() {
-				this.model.endChapter = 0;
-				this.model.endVerse = 0;
-
-				this.endChapters = [];
-				this.endVerses = [];
+				resetEndChapter();
+				resetEndVerse();
 
 				const bookIndex = this.model.book;
 				const book = this.books.find(b => b.bibleOrder === bookIndex);
@@ -96,9 +100,7 @@
 				this.endChapters = chapters;
 			},
 			onSelectEndChapter() {
-				this.model.endVerse = 0;
-
-				this.endVerses = [];
+				esetEndVerse();
 
 				fetch(`/countBookChapterVerses?bookIndex=${this.model.book}&chapterIndex=${this.model.endChapter}`)
 					.then(response => response.json())
