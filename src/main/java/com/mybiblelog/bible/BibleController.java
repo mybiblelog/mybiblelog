@@ -7,6 +7,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BibleController {
 
+	@GetMapping("/bibleBooks")
+	public Iterable<BibleBook> getBibleBooks() {
+		BibleIndex bible = BibleIndex.getInstance();
+		return bible.getBooks();
+	}
+	
 	@GetMapping("/countBookChapters")
 	public int countBookChapters(@RequestParam int bookIndex) {
 		BibleIndex bible = BibleIndex.getInstance();

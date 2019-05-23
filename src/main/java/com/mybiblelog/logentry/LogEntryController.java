@@ -1,18 +1,15 @@
 package com.mybiblelog.logentry;
 
 import java.util.Date;
-import java.util.Random;
 
 import javax.annotation.Resource;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mybiblelog.bible.BibleBook;
-import com.mybiblelog.bible.BibleIndex;
 import com.mybiblelog.config.LoginService;
 import com.mybiblelog.user.User;
 
@@ -26,16 +23,16 @@ public class LogEntryController {
 	LogEntryRepository logEntryRepo;
 
 	@GetMapping("/log")
-	public String getLog(Model model, Authentication authentication) {
-		User user = loginService.resolveAuthUser(authentication);
-		
-		Iterable<LogEntry> logEntries = user.getLogEntries();
-		model.addAttribute("logEntries", logEntries);
-		
-		Iterable<BibleBook> books = BibleIndex.getInstance().getBooks();
-		model.addAttribute("books", books);
-		
+	public String getLog() {
 		return "log";
+	}
+	
+	@GetMapping("/logEntries")
+	@ResponseBody
+	public Iterable<LogEntry> getLogEntries(Authentication authentication) {
+		User user = loginService.resolveAuthUser(authentication);
+		Iterable<LogEntry> logEntries = user.getLogEntries();
+		return logEntries;
 	}
 	
 	@GetMapping("/add")

@@ -12,33 +12,41 @@
 	<div layout:fragment="content">
 		
 		<h1>Log Entries</h1>
-		
-		<ul>
-			<li th:each="entry : ${logEntries}">
-				<strong>Start Verse ID:</strong> <span th:text="${entry.startVerseId}"></span>
-				<br>
-				<strong>End Verse ID:</strong> <span th:text="${entry.endVerseId}"></span>
-			</li>
-		</ul>
-		
-		
-		<form method="POST" action="/add" class="js-log-entry-form">
-		
-			<select name="bookId">
-				<option disabled selected="true">Choose Book</option>
-				<option
-					th:each="book : ${books}"
-					th:text="${book.name}"
-					th:value="${book.bibleOrder}">
-				</option>
-			</select>
+
+		<div id="js-vue-app" v-cloak>
+
+			<table>
+				<thead>
+					<tr>
+						<th>Date</th>
+						<th>Verses</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="entry of logEntries">
+						<td>{{ entry.date }}</td>
+						<td>{{ displayRange(entry.startVerseId, entry.endVerseId) }}</td>
+					</tr>
+				</tbody>
+			</table>
 			
-			<button>Add</button>
+			<form @submit.prevent="onSubmitLogEntryForm">
+
+				<select v-model="model.book">
+					<option disabled value="0" selected>Choose Book</option>
+					<option v-for="book in books" v-bind:value="book.bibleOrder">
+						{{ book.name }}
+					</option>
+				</select>
 			
-		</form>
+				<button type="submit">Add</button>
+				
+			</form>
+
+		</div>
 		
-		<script src="/js/log-page.js"></script>
-		<script>LogPage.init();</script>
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+		<script src="/js/log.vue.js"></script>
 	
 	</div>
 </body>
