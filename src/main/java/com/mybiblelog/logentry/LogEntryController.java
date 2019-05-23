@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,15 +38,17 @@ public class LogEntryController {
 	
 	@GetMapping("/add")
 	@ResponseBody
-	public LogEntry addLogEntry(Authentication authentication, @RequestParam int startVerseId, @RequestParam int endVerseId) {
+	public LogEntry addLogEntry(
+			Authentication authentication,
+			@RequestParam int startVerseId,
+			@RequestParam int endVerseId,
+			@RequestParam @DateTimeFormat(pattern="MMddyyyy") Date date
+	) {
 		User user = loginService.resolveAuthUser(authentication);
 		
 		// TODO: validate that verses are in same (existing) book
 		// TODO: validate that chapters/verses actually exist
 		// TODO: validate that verses are in correct order
-		
-		Date date = new Date();
-		System.out.println(date);
 		
 		LogEntry entry = new LogEntry(user, startVerseId, endVerseId, date);
 		entry = logEntryRepo.save(entry);
