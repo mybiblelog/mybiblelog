@@ -24,8 +24,8 @@
 				</thead>
 				<tbody>
 					<tr v-for="entry of logEntries">
-						<td>{{ entry.date }}</td>
-						<td>{{ displayRange(entry.startVerseId, entry.endVerseId) }}</td>
+						<td>{{ displayDate(entry.date) }}</td>
+						<td>{{ displayVerseRange(entry.startVerseId, entry.endVerseId) }}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -39,28 +39,28 @@
 					</option>
 				</select>
 
-				<select v-model="model.startChapter" @change="onSelectStartChapter">
+				<select v-model="model.startChapter" @change="onSelectStartChapter" :disabled="this.model.book === 0">
 					<option disabled value="0" selected>Choose Start Chapter</option>
 					<option v-for="chapter in startChapters" v-bind:value="chapter">
 						{{ chapter }}
 					</option>
 				</select>
 			
-				<select v-model="model.startVerse" @change="onSelectStartVerse">
+				<select v-model="model.startVerse" @change="onSelectStartVerse" :disabled="this.model.startChapter === 0">
 					<option disabled value="0" selected>Choose Start Verse</option>
 					<option v-for="verse in startVerses" v-bind:value="verse">
 						{{ verse }}
 					</option>
 				</select>
 
-				<select v-model="model.endChapter" @change="onSelectEndChapter">
+				<select v-model="model.endChapter" @change="onSelectEndChapter" :disabled="this.model.startVerse === 0">
 					<option disabled value="0" selected>Choose End Chapter</option>
 					<option v-for="chapter in endChapters" v-bind:value="chapter">
 						{{ chapter }}
 					</option>
 				</select>
 			
-				<select v-model="model.endVerse">
+				<select v-model="model.endVerse" :disabled="this.model.endChapter === 0">
 					<option disabled value="0" selected>Choose End Verse</option>
 					<option v-for="verse in endVerses" v-bind:value="verse">
 						{{ verse }}
