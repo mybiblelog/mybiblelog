@@ -34,6 +34,7 @@
 			displayVerseRange(startVerseId, endVerseId) {
 				const start = Bible.parseVerseId(startVerseId);
 				const end = Bible.parseVerseId(endVerseId);
+
 				const bookName = this.books.find(b => b.bibleOrder === start.book).name;
 				let range = bookName + ' ';
 				if (start.chapter === end.chapter) {
@@ -64,10 +65,10 @@
 				this.endVerses = [];
 			},
 			onSelectBook() {
-				resetStartChapter();
-				resetStartVerse();
-				resetEndChapter();
-				resetEndVerse();
+				this.resetStartChapter();
+				this.resetStartVerse();
+				this.resetEndChapter();
+				this.resetEndVerse();
 
 				const bookIndex = this.model.book;
 				const book = this.books.find(b => b.bibleOrder === bookIndex);
@@ -77,9 +78,9 @@
 				this.startChapters = chapters;
 			},
 			onSelectStartChapter() {
-				resetStartVerse();
-				resetEndChapter();
-				resetEndVerse();
+				this.resetStartVerse();
+				this.resetEndChapter();
+				this.resetEndVerse();
 
 				fetch(`/countBookChapterVerses?bookIndex=${this.model.book}&chapterIndex=${this.model.startChapter}`)
 					.then(response => response.json())
@@ -90,8 +91,8 @@
 					});
 			},
 			onSelectStartVerse() {
-				resetEndChapter();
-				resetEndVerse();
+				this.resetEndChapter();
+				this.resetEndVerse();
 
 				const bookIndex = this.model.book;
 				const book = this.books.find(b => b.bibleOrder === bookIndex);
@@ -101,7 +102,7 @@
 				this.endChapters = chapters;
 			},
 			onSelectEndChapter() {
-				esetEndVerse();
+				this.resetEndVerse();
 
 				fetch(`/countBookChapterVerses?bookIndex=${this.model.book}&chapterIndex=${this.model.endChapter}`)
 					.then(response => response.json())
@@ -116,8 +117,10 @@
 			onSubmitLogEntryForm() {
 				const startVerseId = Bible.makeVerseId(this.model.book, this.model.startChapter, this.model.startVerse);
 				const endVerseId = Bible.makeVerseId(this.model.book, this.model.endChapter, this.model.endVerse);
+				const modelDate = new Date(this.model.date + ' 00:00');
+				const date = modelDate.toLocaleDateString('en-US');
 
-				fetch(`/add?startVerseId=${startVerseId}&endVerseId=${endVerseId}`)
+				fetch(`/add?startVerseId=${startVerseId}&endVerseId=${endVerseId}&date=${date}`)
 					.then(response => response.json())
 					.then(data => {
 						if (!data) {
@@ -142,6 +145,9 @@
 				() => fetch('/logEntries')
 					.then(response => response.json())
 					.then(data => {
+						// Initialize all logEntry dates as actual Date objects
+						// Include time to make the dates timezone-agnostic
+						data.map(logEntry => logEntry.date = new Date(logEntry.date + ' 00:00'));
 						this.logEntries = data;
 					});
 
