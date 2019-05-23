@@ -36,12 +36,17 @@ public class LogEntryController {
 	}
 	
 	@GetMapping("/add")
-	public String addLogEntry(Authentication authentication, @RequestParam int startVerseId, @RequestParam int endVerseId) {
+	@ResponseBody
+	public LogEntry addLogEntry(Authentication authentication, @RequestParam int startVerseId, @RequestParam int endVerseId) {
 		User user = loginService.resolveAuthUser(authentication);
 		
-		LogEntry entry = new LogEntry(user, startVerseId, endVerseId, new Date());
-		logEntryRepo.save(entry);
+		// TODO: validate that verses are in same (existing) book
+		// TODO: validate that chapters/verses actually exist
+		// TODO: validate that verses are in correct order
 		
-		return "redirect:/log";
+		LogEntry entry = new LogEntry(user, startVerseId, endVerseId, new Date());
+		entry = logEntryRepo.save(entry);
+		
+		return entry;
 	}
 }

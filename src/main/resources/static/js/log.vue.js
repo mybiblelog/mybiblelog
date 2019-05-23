@@ -24,7 +24,7 @@
 			displayRange(startVerseId, endVerseId) {
 				const start = Bible.parseVerseId(startVerseId);
 				const end = Bible.parseVerseId(endVerseId);
-				const bookName = this.books.find(b => b.bibleOrder = start.book).name;
+				const bookName = this.books.find(b => b.bibleOrder === start.book).name;
 				let range = bookName + ' ';
 				if (start.chapter === end.chapter) {
 					range += start.chapter + ':';
@@ -105,11 +105,16 @@
 				const startVerseId = Bible.makeVerseId(this.model.book, this.model.startChapter, this.model.startVerse);
 				const endVerseId = Bible.makeVerseId(this.model.book, this.model.endChapter, this.model.endVerse);
 
-				console.log({ startVerseId, endVerseId });
-				alert('Check Console');
-				
-				// TODO: submit request
-				// TODO: update data with result
+				fetch(`/add?startVerseId=${startVerseId}&endVerseId=${endVerseId}`)
+					.then(response => response.json())
+					.then(data => {
+						if (!data) {
+							alert('Unable to save entry.');
+						}
+						else {
+							this.logEntries.push(data);
+						}
+					});
 			},
 		},
 		mounted() {
