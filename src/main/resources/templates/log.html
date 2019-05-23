@@ -39,14 +39,35 @@
 					</option>
 				</select>
 
-				<select v-model="model.startChapter">
+				<select v-model="model.startChapter" @change="onSelectStartChapter">
 					<option disabled value="0" selected>Choose Start Chapter</option>
 					<option v-for="chapter in startChapters" v-bind:value="chapter">
 						{{ chapter }}
 					</option>
 				</select>
 			
-				<button type="submit">Add</button>
+				<select v-model="model.startVerse" @change="onSelectStartVerse">
+					<option disabled value="0" selected>Choose Start Verse</option>
+					<option v-for="verse in startVerses" v-bind:value="verse">
+						{{ verse }}
+					</option>
+				</select>
+
+				<select v-model="model.endChapter" @change="onSelectEndChapter">
+					<option disabled value="0" selected>Choose End Chapter</option>
+					<option v-for="chapter in endChapters" v-bind:value="chapter">
+						{{ chapter }}
+					</option>
+				</select>
+			
+				<select v-model="model.endVerse">
+					<option disabled value="0" selected>Choose End Verse</option>
+					<option v-for="verse in endVerses" v-bind:value="verse">
+						{{ verse }}
+					</option>
+				</select>
+				
+				<button type="submit" :disabled="this.model.endVerse === 0">Add</button>
 				
 			</form>
 

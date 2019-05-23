@@ -43,6 +43,11 @@
 				this.model.endChapter = 0;
 				this.model.endVerse = 0;
 
+				this.startChapters = [];
+				this.startVerses = [];
+				this.endChapters = [];
+				this.endVerses = [];
+
 				const bookIndex = this.model.book;
 				const book = this.books.find(b => b.bibleOrder === bookIndex);
 				const chapterCount = book.chapterCount;
@@ -51,24 +56,60 @@
 				this.startChapters = chapters;
 			},
 			onSelectStartChapter() {
-				// TODO: populate start verse select
+				this.model.startVerse = 0;
+				this.model.endChapter = 0;
+				this.model.endVerse = 0;
+
+				this.startVerses = [];
+				this.endChapters = [];
+				this.endVerses = [];
+
+				fetch(`/countBookChapterVerses?bookIndex=${this.model.book}&chapterIndex=${this.model.startChapter}`)
+					.then(response => response.json())
+					.then(verseCount => {
+						const verses = [];
+						for (let i = 1; i <= verseCount; i++) verses.push(i);
+						this.startVerses = verses;
+					});
 			},
 			onSelectStartVerse() {
-				//
+				this.model.endChapter = 0;
+				this.model.endVerse = 0;
+
+				this.endChapters = [];
+				this.endVerses = [];
+
+				const bookIndex = this.model.book;
+				const book = this.books.find(b => b.bibleOrder === bookIndex);
+				const chapterCount = book.chapterCount;
+				const chapters = [];
+				for (let i = this.model.startChapter; i <= chapterCount; i++) chapters.push(i);
+				this.endChapters = chapters;
 			},
 			onSelectEndChapter() {
-				//
-			},
-			onSelectEndVerse() {
-				//
+				this.model.endVerse = 0;
+
+				this.endVerses = [];
+
+				fetch(`/countBookChapterVerses?bookIndex=${this.model.book}&chapterIndex=${this.model.endChapter}`)
+					.then(response => response.json())
+					.then(verseCount => {
+						const verses = [];
+						let i = 1;
+						if (this.model.startChapter === this.model.endChapter) i = this.model.startVerse;
+						for (; i <= verseCount; i++) verses.push(i);
+						this.endVerses = verses;
+					});
 			},
 			onSubmitLogEntryForm() {
-				alert('"Submitted"')
-				// TODO: ensure the minimum number of fields is selected
-				// TODO: generate startVerseId and endVerseId
+				const startVerseId = Bible.makeVerseId(this.model.book, this.model.startChapter, this.model.startVerse);
+				const endVerseId = Bible.makeVerseId(this.model.book, this.model.endChapter, this.model.endVerse);
+
+				console.log({ startVerseId, endVerseId });
+				alert('Check Console');
+				
 				// TODO: submit request
-				// TODO: update state with result
-				// TODO: render page
+				// TODO: update data with result
 			},
 		},
 		mounted() {
