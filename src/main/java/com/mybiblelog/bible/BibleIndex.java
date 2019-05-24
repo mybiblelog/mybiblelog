@@ -28,11 +28,11 @@ public class BibleIndex {
 	private BibleIndex() {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			InputStream bibleBooksFileStream = BibleIndex.class.getResource("bible-books.json").openStream();
+			InputStream bibleBooksFileStream = this.getClass().getResourceAsStream("bible-books.json");
 			BibleBook[] bookArray = mapper.readValue(bibleBooksFileStream, BibleBook[].class);
 			this.books = new ArrayList<BibleBook>(Arrays.asList(bookArray));
 			
-			InputStream chapterVersesFileStream = BibleIndex.class.getResource("chapter-verses.json").openStream();
+			InputStream chapterVersesFileStream = this.getClass().getResourceAsStream("chapter-verses.json");
 			ChapterVerseCount[] chapterVerseCounts = mapper.readValue(chapterVersesFileStream, ChapterVerseCount[].class);
 			HashMap<Integer, Integer> chapterVerses = new HashMap<Integer, Integer>();
 			for (ChapterVerseCount chapterVerseCount : chapterVerseCounts) {
