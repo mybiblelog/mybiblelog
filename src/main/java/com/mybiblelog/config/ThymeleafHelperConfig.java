@@ -1,8 +1,5 @@
 package com.mybiblelog.config;
 
-import java.util.Arrays;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +8,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.mybiblelog.user.User;
-import com.mybiblelog.user.UserRepository;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 
