@@ -54,7 +54,7 @@
 					</option>
 				</select>
 				
-				<button type="submit" :disabled="this.model.endVerse === 0">Add</button>
+				<button type="submit" :disabled="this.model.endVerse === 0 || this.model.date === ''">Add</button>
 				
 			</form>
 

@@ -42,7 +42,7 @@ public class LogEntryController {
 			Authentication authentication,
 			@RequestParam int startVerseId,
 			@RequestParam int endVerseId,
-			@RequestParam @DateTimeFormat(pattern="MM/dd/yyyy") Date date
+			@RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date date
 	) {
 		User user = loginService.resolveAuthUser(authentication);
 		

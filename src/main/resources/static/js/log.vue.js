@@ -1,10 +1,38 @@
 (() => {
 
+	const DateString = {
+		parse(dateString) {
+			const [yyyy, mm, dd] = dateString.split('-');
+			const year = +yyyy;
+			const month = +mm;
+			const date = +dd;
+			return { year, month, date };
+		},
+		stringify(year, month, date) {
+			return `${year}-${month}-${date}`;
+		},
+		now() {
+			const today = new Date();
+			const year = today.getFullYear().toString().padStart(4, '0');
+			const month = today.getMonth().toString().padStart(2, '0');
+			const date = today.getDate().toString().padStart(2, '0');
+			return this.stringify(year, month, date);
+		},
+		makeDate(dateString) {
+			const { year, month, date } = this.parse(dateString);
+			const result = new Date();
+			result.setFullYear(year);
+			result.setMonth(month);
+			result.setDate(date);
+			return result;
+		},
+	};
+
 	new Vue({
 		el: '#js-vue-app',
 		data: {
 			model: {
-				date: 			Date.now(),
+				date: 			DateString.now(),
 				book:			0,
 				startChapter:	0,
 				startVerse:		0,
@@ -64,6 +92,14 @@
 				this.model.endVerse = 0;
 				this.endVerses = [];
 			},
+			resetForm() {
+				this.model.date = DateString.now();
+				this.model.book = 0;
+				this.resetStartChapter();
+				this.resetStartVerse();
+				this.resetEndChapter();
+				this.resetEndVerse();
+			},
 			onSelectBook() {
 				this.resetStartChapter();
 				this.resetStartVerse();
@@ -117,10 +153,10 @@
 			onSubmitLogEntryForm() {
 				const startVerseId = Bible.makeVerseId(this.model.book, this.model.startChapter, this.model.startVerse);
 				const endVerseId = Bible.makeVerseId(this.model.book, this.model.endChapter, this.model.endVerse);
-				const modelDate = new Date(this.model.date + ' 00:00');
-				const date = modelDate.toLocaleDateString('en-US');
+				// const modelDate = new Date(this.model.date + ' 00:00');
+				// const date = modelDate.toLocaleDateString('en-US');
 
-				fetch(`/add?startVerseId=${startVerseId}&endVerseId=${endVerseId}&date=${date}`)
+				fetch(`/add?startVerseId=${startVerseId}&endVerseId=${endVerseId}&date=${this.model.date}`)
 					.then(response => response.json())
 					.then(data => {
 						if (!data) {
@@ -128,6 +164,7 @@
 						}
 						else {
 							this.logEntries.push(data);
+							this.resetForm();
 						}
 					});
 			},
