@@ -32,7 +32,7 @@ public class LogEntryController {
 	@ResponseBody
 	public Iterable<LogEntry> getLogEntries(Authentication authentication) {
 		User user = loginService.resolveAuthUser(authentication);
-		Iterable<LogEntry> logEntries = user.getLogEntries();
+		Iterable<LogEntry> logEntries = logEntryRepo.findAllByUserOrderByDateAsc(user);
 		return logEntries;
 	}
 	
