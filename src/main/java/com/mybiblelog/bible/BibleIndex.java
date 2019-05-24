@@ -1,12 +1,13 @@
 package com.mybiblelog.bible;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.util.ResourceUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -28,11 +29,11 @@ public class BibleIndex {
 	private BibleIndex() {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			InputStream bibleBooksFileStream = this.getClass().getResourceAsStream("bible-books.json");
+			InputStream bibleBooksFileStream = ResourceUtils.getURL("src/main/java/com/mybiblelog/bible/bible-books.json").openStream();
 			BibleBook[] bookArray = mapper.readValue(bibleBooksFileStream, BibleBook[].class);
 			this.books = new ArrayList<BibleBook>(Arrays.asList(bookArray));
 			
-			InputStream chapterVersesFileStream = this.getClass().getResourceAsStream("chapter-verses.json");
+			InputStream chapterVersesFileStream = ResourceUtils.getURL("src/main/java/com/mybiblelog/bible/chapter-verses.json").openStream();
 			ChapterVerseCount[] chapterVerseCounts = mapper.readValue(chapterVersesFileStream, ChapterVerseCount[].class);
 			HashMap<Integer, Integer> chapterVerses = new HashMap<Integer, Integer>();
 			for (ChapterVerseCount chapterVerseCount : chapterVerseCounts) {
