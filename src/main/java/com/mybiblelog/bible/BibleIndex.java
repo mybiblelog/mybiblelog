@@ -1,6 +1,7 @@
 package com.mybiblelog.bible;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,14 +28,12 @@ public class BibleIndex {
 	private BibleIndex() {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
-			String bibleBooksJsonFile = BibleIndex.class.getResource("bible-books.json").getFile();
-			File bibleBooksFile = new File(bibleBooksJsonFile);
-			BibleBook[] bookArray = mapper.readValue(bibleBooksFile, BibleBook[].class);
+			InputStream bibleBooksFileStream = BibleIndex.class.getResource("bible-books.json").openStream();
+			BibleBook[] bookArray = mapper.readValue(bibleBooksFileStream, BibleBook[].class);
 			this.books = new ArrayList<BibleBook>(Arrays.asList(bookArray));
 			
-			String chapterVersesJsonFile = BibleIndex.class.getResource("chapter-verses.json").getFile();
-			File chapterVersesFile = new File(chapterVersesJsonFile);
-			ChapterVerseCount[] chapterVerseCounts = mapper.readValue(chapterVersesFile, ChapterVerseCount[].class);
+			InputStream chapterVersesFileStream = BibleIndex.class.getResource("chapter-verses.json").openStream();
+			ChapterVerseCount[] chapterVerseCounts = mapper.readValue(chapterVersesFileStream, ChapterVerseCount[].class);
 			HashMap<Integer, Integer> chapterVerses = new HashMap<Integer, Integer>();
 			for (ChapterVerseCount chapterVerseCount : chapterVerseCounts) {
 				chapterVerses.put(chapterVerseCount.chapterId, chapterVerseCount.verseCount);
