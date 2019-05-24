@@ -19,42 +19,42 @@
 
 				<input v-model="model.date" type="date">
 
-				<select v-model="model.book" @change="onSelectBook">
+				<select v-model="model.book" ref="book" @change="onSelectBook">
 					<option disabled value="0" selected>Choose Book</option>
 					<option v-for="book in books" v-bind:value="book.bibleOrder">
 						{{ book.name }}
 					</option>
 				</select>
 
-				<select v-model="model.startChapter" @change="onSelectStartChapter" :disabled="this.model.book === 0">
+				<select v-model="model.startChapter" ref="startChapter" @change="onSelectStartChapter" :disabled="this.model.book === 0">
 					<option disabled value="0" selected>Choose Start Chapter</option>
 					<option v-for="chapter in startChapters" v-bind:value="chapter">
 						{{ chapter }}
 					</option>
 				</select>
 			
-				<select v-model="model.startVerse" @change="onSelectStartVerse" :disabled="this.model.startChapter === 0">
+				<select v-model="model.startVerse" ref="startVerse" @change="onSelectStartVerse" :disabled="this.model.startChapter === 0">
 					<option disabled value="0" selected>Choose Start Verse</option>
 					<option v-for="verse in startVerses" v-bind:value="verse">
 						{{ verse }}
 					</option>
 				</select>
 
-				<select v-model="model.endChapter" @change="onSelectEndChapter" :disabled="this.model.startVerse === 0">
+				<select v-model="model.endChapter" ref="endChapter" @change="onSelectEndChapter" :disabled="this.model.startVerse === 0">
 					<option disabled value="0" selected>Choose End Chapter</option>
 					<option v-for="chapter in endChapters" v-bind:value="chapter">
 						{{ chapter }}
 					</option>
 				</select>
 			
-				<select v-model="model.endVerse" :disabled="this.model.endChapter === 0">
+				<select v-model="model.endVerse" ref="endVerse" @change="onSelectEndVerse" :disabled="this.model.endChapter === 0">
 					<option disabled value="0" selected>Choose End Verse</option>
 					<option v-for="verse in endVerses" v-bind:value="verse">
 						{{ verse }}
 					</option>
 				</select>
 				
-				<button type="submit" :disabled="this.model.endVerse === 0 || this.model.date === ''">Add</button>
+				<button type="submit" ref="submit" :disabled="this.model.endVerse === 0 || this.model.date === ''">Add</button>
 				
 			</form>
 

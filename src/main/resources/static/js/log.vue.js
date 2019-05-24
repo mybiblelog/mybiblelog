@@ -130,6 +130,8 @@
 				const chapters = [];
 				for (let i = 1; i <= chapterCount; i++) chapters.push(i);
 				this.startChapters = chapters;
+
+				this.$nextTick(() => this.$refs.startChapter.focus());
 			},
 			onSelectStartChapter() {
 				this.resetStartVerse();
@@ -142,6 +144,8 @@
 						const verses = [];
 						for (let i = 1; i <= verseCount; i++) verses.push(i);
 						this.startVerses = verses;
+						
+						this.$nextTick(() => this.$refs.startVerse.focus());
 					});
 			},
 			onSelectStartVerse() {
@@ -154,6 +158,10 @@
 				const chapters = [];
 				for (let i = this.model.startChapter; i <= chapterCount; i++) chapters.push(i);
 				this.endChapters = chapters;
+
+				// Make it easier to log an entry of verses within a single chapter
+				this.model.endChapter = this.model.startChapter;
+				this.onSelectEndChapter();
 			},
 			onSelectEndChapter() {
 				this.resetEndVerse();
@@ -166,7 +174,12 @@
 						if (this.model.startChapter === this.model.endChapter) i = this.model.startVerse;
 						for (; i <= verseCount; i++) verses.push(i);
 						this.endVerses = verses;
+
+						this.$nextTick(() => this.$refs.endVerse.focus());
 					});
+			},
+			onSelectEndVerse() {
+				this.$nextTick(() => this.$refs.submit.focus());
 			},
 			onSubmitLogEntryForm() {
 				const startVerseId = Bible.makeVerseId(this.model.book, this.model.startChapter, this.model.startVerse);
