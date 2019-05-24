@@ -11,12 +11,15 @@
 		stringify(year, month, date) {
 			return `${year}-${month}-${date}`;
 		},
+		fromDate(dateObject) {
+			const year = dateObject.getFullYear().toString().padStart(4, '0');
+			const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
+			const date = dateObject.getDate().toString().padStart(2, '0');
+			return this.stringify(year, month, date);
+		},
 		now() {
 			const today = new Date();
-			const year = today.getFullYear().toString().padStart(4, '0');
-			const month = today.getMonth().toString().padStart(2, '0');
-			const date = today.getDate().toString().padStart(2, '0');
-			return this.stringify(year, month, date);
+			return this.fromDate(today);
 		},
 		makeDate(dateString) {
 			const { year, month, date } = this.parse(dateString);
@@ -47,17 +50,32 @@
 			endVerses: [],
 		},
 		computed: {
-			//
+			entryDates() {
+				const dateMap = {};
+				for (let logEntry of this.logEntries) {
+					if (!dateMap[logEntry.date]) {
+						dateMap[logEntry.date] = [];
+					}
+					dateMap[logEntry.date].push(logEntry);
+				}
+				const dates = Object.keys(dateMap).sort().map(date => ({
+					date,
+					entries: dateMap[date],
+				}));
+				return dates;
+			},
 		},
 		methods: {
-			displayDate(date) {
+			displayDate(dateString) {
+				// Include time to make the date timezone-agnostic, preventing date shift
+				date = new Date(dateString + ' 00:00');
 				const options = {
 					weekday: 	'long',
 					year: 		'numeric',
 					month: 		'long',
 					day: 		'numeric'
 				};
-				return new Date(date).toLocaleDateString('en-US', options);
+				return date.toLocaleDateString('en-US', options);
 			},
 			displayVerseRange(startVerseId, endVerseId) {
 				const start = Bible.parseVerseId(startVerseId);
@@ -153,8 +171,6 @@
 			onSubmitLogEntryForm() {
 				const startVerseId = Bible.makeVerseId(this.model.book, this.model.startChapter, this.model.startVerse);
 				const endVerseId = Bible.makeVerseId(this.model.book, this.model.endChapter, this.model.endVerse);
-				// const modelDate = new Date(this.model.date + ' 00:00');
-				// const date = modelDate.toLocaleDateString('en-US');
 
 				fetch(`/add?startVerseId=${startVerseId}&endVerseId=${endVerseId}&date=${this.model.date}`)
 					.then(response => response.json())
@@ -163,6 +179,7 @@
 							alert('Unable to save entry.');
 						}
 						else {
+							console.log({ data });
 							this.logEntries.push(data);
 							this.resetForm();
 						}
@@ -182,9 +199,6 @@
 				() => fetch('/logEntries')
 					.then(response => response.json())
 					.then(data => {
-						// Initialize all logEntry dates as actual Date objects
-						// Include time to make the dates timezone-agnostic
-						data.map(logEntry => logEntry.date = new Date(logEntry.date + ' 00:00'));
 						this.logEntries = data;
 					});
 

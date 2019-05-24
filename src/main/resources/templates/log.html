@@ -58,20 +58,14 @@
 				
 			</form>
 
-			<table>
-				<thead>
-					<tr>
-						<th>Date</th>
-						<th>Verses</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr v-for="entry of logEntries">
-						<td>{{ displayDate(entry.date) }}</td>
-						<td>{{ displayVerseRange(entry.startVerseId, entry.endVerseId) }}</td>
-					</tr>
-				</tbody>
-			</table>
+			<div v-for="entryDate of entryDates">
+				<h4>{{ displayDate(entryDate.date) }}</h4>
+				<ul>
+					<li v-for="entry of entryDate.entries">
+						{{ displayVerseRange(entry.startVerseId, entry.endVerseId) }}
+					</li>
+				</ul>
+			</div>
 			
 		</div>
 		
