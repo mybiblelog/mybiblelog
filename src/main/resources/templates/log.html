@@ -15,44 +15,62 @@
 
 			<h2>Add Entry</h2>
 
-			<form @submit.prevent="onSubmitLogEntryForm">
+			<form id="model" @submit.prevent="onSubmitLogEntryForm">
 
-				<input v-model="model.date" type="date">
+				<div>
+					<label for="model-date">Date</label>
+					<input id="model-date" v-model="model.date" type="date">
+				</div>
+				
+				<div>
+					<label for="model-book">Book</label>
+					<select id="model-book" v-model="model.book" ref="book" @change="onSelectBook">
+						<option disabled value="0" selected>Choose Book</option>
+						<option v-for="book in books" v-bind:value="book.bibleOrder">
+							{{ book.name }}
+						</option>
+					</select>
+				</div>
 
-				<select v-model="model.book" ref="book" @change="onSelectBook">
-					<option disabled value="0" selected>Choose Book</option>
-					<option v-for="book in books" v-bind:value="book.bibleOrder">
-						{{ book.name }}
-					</option>
-				</select>
+				<div>
+					<label for="model-startChapter">Start Chapter</label>
+					<select v-model="model.startChapter" ref="startChapter" @change="onSelectStartChapter" :disabled="this.model.book === 0">
+						<option disabled value="0" selected>Choose Start Chapter</option>
+						<option v-for="chapter in startChapters" v-bind:value="chapter">
+							{{ chapter }}
+						</option>
+					</select>
+				</div>
 
-				<select v-model="model.startChapter" ref="startChapter" @change="onSelectStartChapter" :disabled="this.model.book === 0">
-					<option disabled value="0" selected>Choose Start Chapter</option>
-					<option v-for="chapter in startChapters" v-bind:value="chapter">
-						{{ chapter }}
-					</option>
-				</select>
-			
-				<select v-model="model.startVerse" ref="startVerse" @change="onSelectStartVerse" :disabled="this.model.startChapter === 0">
-					<option disabled value="0" selected>Choose Start Verse</option>
-					<option v-for="verse in startVerses" v-bind:value="verse">
-						{{ verse }}
-					</option>
-				</select>
+				<div>
+					<label for="model-startVerse">Start Verse</label>
+					<select v-model="model.startVerse" ref="startVerse" @change="onSelectStartVerse" :disabled="this.model.startChapter === 0">
+						<option disabled value="0" selected>Choose Start Verse</option>
+						<option v-for="verse in startVerses" v-bind:value="verse">
+							{{ verse }}
+						</option>
+					</select>
+				</div>
 
-				<select v-model="model.endChapter" ref="endChapter" @change="onSelectEndChapter" :disabled="this.model.startVerse === 0">
-					<option disabled value="0" selected>Choose End Chapter</option>
-					<option v-for="chapter in endChapters" v-bind:value="chapter">
-						{{ chapter }}
-					</option>
-				</select>
-			
-				<select v-model="model.endVerse" ref="endVerse" @change="onSelectEndVerse" :disabled="this.model.endChapter === 0">
-					<option disabled value="0" selected>Choose End Verse</option>
-					<option v-for="verse in endVerses" v-bind:value="verse">
-						{{ verse }}
-					</option>
-				</select>
+				<div>
+					<label for="model-endChapter">End Chapter</label>
+					<select v-model="model.endChapter" ref="endChapter" @change="onSelectEndChapter" :disabled="this.model.startVerse === 0">
+						<option disabled value="0" selected>Choose End Chapter</option>
+						<option v-for="chapter in endChapters" v-bind:value="chapter">
+							{{ chapter }}
+						</option>
+					</select>
+				</div>
+
+				<div>
+					<label for="model-endVerse">End Verse</label>
+					<select v-model="model.endVerse" ref="endVerse" @change="onSelectEndVerse" :disabled="this.model.endChapter === 0">
+						<option disabled value="0" selected>Choose End Verse</option>
+						<option v-for="verse in endVerses" v-bind:value="verse">
+							{{ verse }}
+						</option>
+					</select>
+				</div>
 				
 				<button type="submit" ref="submit" :disabled="this.model.endVerse === 0 || this.model.date === ''">Add</button>
 				

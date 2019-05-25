@@ -49,3 +49,54 @@ footer {
 nav a {
   display: block;
 }
+
+
+/* Hide Vue.js apps until they are compiled */
+[v-cloak] {
+  display: none;
+}
+
+
+#model {
+	max-width: 30rem;
+	padding: 1rem;
+    border: 3px solid #000;
+	margin: 1rem 0;
+	
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-column-gap: 1rem;
+	grid-row-gap: 1rem;
+}
+
+#model > div {
+	display: flex;
+	flex-direction: column;
+}
+
+#model label {
+	font-size: 14px;
+}
+
+#model input,
+#model select,
+#model button {
+	font-size: 16px;
+	height: 2.5rem;
+	padding: 0.5rem;
+	border: 2px solid #000;
+}
+
+#model input:not(:disabled),
+#model select:not(:disabled) {
+	background-color: #fff;
+}
+
+#model button[type="submit"]:not(:disabled) {
+	color: #fff;
+	background-color: #000;
+}
+
+#model button[type="submit"] {
+	grid-column: span 2;
+}
