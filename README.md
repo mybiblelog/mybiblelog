@@ -1,6 +1,6 @@
 # MyBibleLog.com
 
-[![Build Status](https://travis-ci.com/AaronSmithX/mybiblelog.svg?branch=master)](https://travis-ci.com/AaronSmithX/mybiblelog)
+[![Build Status](https://travis-ci.com/mybiblelog/mybiblelog.svg?branch=master)](https://travis-ci.com/mybiblelog/mybiblelog)
 
 This repository contains the code that runs [mybiblelog.com](http://www.mybiblelog.com/).
 
