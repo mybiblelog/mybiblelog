@@ -36,6 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			"/",
 			"/login",
 			"/oauth2/authorization/google",
+			"/oauth2/authorization/facebook",
 			"/privacy", "/terms",
 			"/h2-console/**",
 			"/css/**", "/js/**", "/favicon.png"
@@ -46,10 +47,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.loginPage("/login")
 		.loginProcessingUrl("/login")
 		.defaultSuccessUrl("/log", true)
-		// .failureUrl("/login?error=true")
-		// .failureHandler(authenticationFailureHandler())
 		.and()
-		.oauth2Login().loginPage("/oauth2/authorization/google")
+		.oauth2Login()
+		.loginPage("/oauth2/authorization") // just redirects to regular login page
 		.and()
 		.logout().permitAll()
 		.logoutUrl("/logout")
@@ -62,8 +62,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
-//		auth.inMemoryAuthentication()
-//			.withUser("testuser").password(passwordEncoder().encode("testpass")).roles("USER");
 	}
 
 }

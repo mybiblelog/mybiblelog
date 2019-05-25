@@ -14,5 +14,12 @@ spring:
       client:
         registration:
           google:
-            client-id: ${CLIENT_ID}
-            client-secret: ${CLIENT_SECRET}
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+          facebook:
+            client-id: ${FACEBOOK_CLIENT_ID}
+            client-secret: ${FACEBOOK_CLIENT_SECRET}
+            scope:
+              - email

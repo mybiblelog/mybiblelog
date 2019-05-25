@@ -6,7 +6,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import com.mybiblelog.user.User;
@@ -32,12 +33,16 @@ public class LoginService {
 			return userRepo.findByEmail(email).get();
 		}
 		
-		// If user was not authenticated via username/password stragety, they used OAuth2
-		// Since Google is currently the only OAuth2 provider set up, we know we can use
-		// Google's user details
-		DefaultOidcUser userPrincipal = (DefaultOidcUser) authentication.getPrincipal();
-		String email = userPrincipal.getEmail();
+		OAuth2AuthenticationToken oauth2Auth = (OAuth2AuthenticationToken) authentication;
+		OAuth2User oauth2User = oauth2Auth.getPrincipal();
+		Object emailValue = oauth2User.getAttributes().get("email");
+
+		// If the OAuth2 attributes don't include email, there is no authenticated user
+		if (!(emailValue instanceof String)) {
+			return null; // TODO: this can't actually be fixed here - it has to be fixed earlier in security flow
+		}
 		
+		String email = (String) emailValue;
 		// Use an existing account (identified by email), or create one otherwise
 		return userRepo.findByEmail(email).orElseGet(() -> {
 			String[] roles = new String[] { "USER" };
