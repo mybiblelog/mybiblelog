@@ -34,7 +34,7 @@ public class ThymeleafHelperConfig {
 	
 	public class ThymeIdentity {
 		
-		private User getUser() {
+		public User user() {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			User user = loginService.resolveAuthUser(authentication);
 			return user;
@@ -49,7 +49,7 @@ public class ThymeleafHelperConfig {
 		}
 		
 		public String email() {
-			return this.getUser().getEmail();
+			return this.user().getEmail();
 		}
 	}
 }
