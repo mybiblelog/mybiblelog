@@ -56,6 +56,30 @@ nav a {
   display: none;
 }
 
+.page-column {
+	max-width: 30rem;
+	margin: 0 auto;
+}
+
+.page-column header {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 1rem;
+
+	padding: 0; /* unset from main header -- this should be more specific */
+}
+
+.page-column header button {
+	font-size: 16px;
+	height: 2.5rem;
+	padding: 0.5rem;
+	border: 2px solid #000;
+}
+.page-column header button:not(:disabled) {
+	color: #fff;
+	background-color: #000;
+}
+
 
 #model {
 	max-width: 30rem;
@@ -67,6 +91,10 @@ nav a {
 	grid-template-columns: 1fr 1fr;
 	grid-column-gap: 1rem;
 	grid-row-gap: 1rem;
+}
+
+#model > h2 {
+	grid-column: span 2;
 }
 
 #model > div {
@@ -99,4 +127,25 @@ nav a {
 
 #model button[type="submit"] {
 	grid-column: span 2;
+}
+
+
+.entry-container {
+	margin-top: 1rem;
+}
+
+.entry-date {
+
+}
+
+.entry-date h4 {
+
+}
+
+.entry-date ul {
+
+}
+
+.entry-date ul li {
+	
 }

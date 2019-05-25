@@ -11,11 +11,17 @@
 <body>
 	<div layout:fragment="content">
 		
-		<div id="js-vue-app" v-cloak>
+		<div id="js-vue-app" v-cloak class="page-column">
 
-			<h2>Add Entry</h2>
+			<header>
+				<h2>Reading Log</h2>
+				
+				<button @click="openAddEntryForm" :disabled="formOpen">Add Entry</button>
+			</header>
 
-			<form id="model" @submit.prevent="onSubmitLogEntryForm">
+			<form id="model" v-if="formOpen" @submit.prevent="onSubmitLogEntryForm">
+
+				<h2>Add Entry</h2>
 
 				<div>
 					<label for="model-date">Date</label>
@@ -76,13 +82,15 @@
 				
 			</form>
 
-			<div v-for="entryDate of entryDates">
-				<h4>{{ displayDate(entryDate.date) }}</h4>
-				<ul>
-					<li v-for="entry of entryDate.entries">
-						{{ displayVerseRange(entry.startVerseId, entry.endVerseId) }}
-					</li>
-				</ul>
+			<div class="entry-container">
+				<div v-for="entryDate of entryDates" class="entry-date">
+					<h4>{{ displayDate(entryDate.date) }}</h4>
+					<ul>
+						<li v-for="entry of entryDate.entries">
+							{{ displayVerseRange(entry.startVerseId, entry.endVerseId) }}
+						</li>
+					</ul>
+				</div>
 			</div>
 			
 		</div>

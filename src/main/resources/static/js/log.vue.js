@@ -34,6 +34,9 @@
 	new Vue({
 		el: '#js-vue-app',
 		data: {
+			logEntries: [],
+
+			formOpen: false,
 			model: {
 				date: 			DateString.now(),
 				book:			0,
@@ -42,7 +45,7 @@
 				endChapter:		0,
 				endVerse:		0,
 			},
-			logEntries: [],
+			
 			books: [],
 			startChapters: [],
 			startVerses: [],
@@ -93,6 +96,9 @@
 					range += end.chapter + ':' + end.verse;
 					return range
 				}
+			},
+			openAddEntryForm() {
+				this.formOpen = true;
 			},
 			resetStartChapter() {
 				this.model.startChapter = 0;
