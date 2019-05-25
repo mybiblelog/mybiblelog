@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.mybiblelog.config.LoginService;
 import com.mybiblelog.config.ThymeleafHelperConfig;
+import com.mybiblelog.user.UserRepository;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(HomeController.class)
@@ -29,6 +30,9 @@ public class HomeControllerMockMvcTest {
 
 	@MockBean
 	private ClientRegistrationRepository clientRegistrationRepository;
+
+	@MockBean
+	private UserRepository userRepo;
 
 	@MockBean
 	private LoginService loginService;

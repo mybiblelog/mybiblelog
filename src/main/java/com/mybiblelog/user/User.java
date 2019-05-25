@@ -9,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mybiblelog.logentry.LogEntry;
 
 @Entity
@@ -21,14 +24,23 @@ public class User {
 	private Long id;
 	
 	private String email;
+	
+	@JsonIgnore
+	private String password;
+	
 	private String name;
+	
+	private String[] roles;
+	
 	private String googleOAuth2ID;
 	
 	@OneToMany(mappedBy="user")
 	private Collection<LogEntry> logEntries;
 	
-	public User(String email, String name, String googleOAuth2ID) {
+	public User(String email, String password, String[] roles, String name, String googleOAuth2ID) {
 		this.email = email;
+		this.password = password != null ? new BCryptPasswordEncoder().encode(password) : null;
+		this.roles = roles;
 		this.name = name;
 		this.googleOAuth2ID = googleOAuth2ID;
 	}
@@ -42,7 +54,15 @@ public class User {
 	public String getEmail() {
 		return email;
 	}
+	
+	public String getPassword() {
+		return password;
+	}
 
+	public String[] getRoles() {
+		return roles;
+	}
+	
 	public String getName() {
 		return name;
 	}
