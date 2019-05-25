@@ -100,6 +100,9 @@
 			openAddEntryForm() {
 				this.formOpen = true;
 			},
+			closeAddEntryForm() {
+				this.formOpen = false;
+			},
 			resetStartChapter() {
 				this.model.startChapter = 0;
 				this.startChapters = [];

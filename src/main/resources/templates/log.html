@@ -21,7 +21,10 @@
 
 			<form id="model" v-if="formOpen" @submit.prevent="onSubmitLogEntryForm">
 
-				<h2>Add Entry</h2>
+				<div class="form-header">
+					<h2>Add Entry</h2>
+					<button class="form-close" @click.prevent="closeAddEntryForm">Close</button>
+				</div>
 
 				<div>
 					<label for="model-date">Date</label>

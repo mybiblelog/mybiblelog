@@ -93,8 +93,15 @@ nav a {
 	grid-row-gap: 1rem;
 }
 
-#model > h2 {
+#model .form-header {
 	grid-column: span 2;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+#model button.form-close {
+	color: #fff;
+	background: #000;
 }
 
 #model > div {
