@@ -35,6 +35,10 @@
 		<div th:if="${param.error}">
 			Invalid username and password.
 		</div>
+		<div th:if="${param.emailError}">
+			<p>You must grant access to your email address to use your Facebook login.</p>
+			<p>You can <a href="https://www.facebook.com/settings?tab=applications" target="_blank">delete <strong>My Bible Log</strong> from your Facebook apps</a> and try again.</p>
+		</div>
 		<div th:if="${param.logout}">
 			You have been logged out.
 		</div>

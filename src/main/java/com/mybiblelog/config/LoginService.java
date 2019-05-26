@@ -29,6 +29,7 @@ public class LoginService {
 		// confidently look them up since they could only use that strategy if
 		// they were already in the database
 		if (authentication instanceof UsernamePasswordAuthenticationToken) {
+			System.out.println("Username password auth");
 			String email = authentication.getName();
 			return userRepo.findByEmail(email).get();
 		}
@@ -36,12 +37,10 @@ public class LoginService {
 		OAuth2AuthenticationToken oauth2Auth = (OAuth2AuthenticationToken) authentication;
 		OAuth2User oauth2User = oauth2Auth.getPrincipal();
 		Object emailValue = oauth2User.getAttributes().get("email");
-
-		// If the OAuth2 attributes don't include email, there is no authenticated user
-		if (!(emailValue instanceof String)) {
-			return null; // TODO: this can't actually be fixed here - it has to be fixed earlier in security flow
-		}
 		
+		System.out.println(emailValue.getClass());
+		System.out.println(emailValue);
+
 		String email = (String) emailValue;
 		// Use an existing account (identified by email), or create one otherwise
 		return userRepo.findByEmail(email).orElseGet(() -> {
