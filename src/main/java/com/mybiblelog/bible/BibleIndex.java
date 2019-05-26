@@ -66,10 +66,10 @@ public class BibleIndex {
 
 	public int getBookChapterCount(int bookIndex) {
 		List<BibleBook> resultBook = this.books.stream()
-            .filter(b -> b.bibleOrder == bookIndex)
-            .collect(Collectors.toList());
-        if (resultBook.size() == 0) return 0;
-        BibleBook book = resultBook.get(0);
+			.filter(b -> b.bibleOrder == bookIndex)
+			.collect(Collectors.toList());
+		if (resultBook.size() == 0) return 0;
+		BibleBook book = resultBook.get(0);
 		if (book == null) return 0;
 		return book.chapterCount;
 	}

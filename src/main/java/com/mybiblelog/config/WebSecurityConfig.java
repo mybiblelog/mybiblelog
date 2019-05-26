@@ -55,7 +55,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.loginPage("/login")
 		.loginProcessingUrl("/login")
 		.defaultSuccessUrl("/log", true)
-		// .successHandler(successHandler())
 		.and()
 		.oauth2Login()
 		.loginPage("/oauth2/authorization") // just redirects to regular login page

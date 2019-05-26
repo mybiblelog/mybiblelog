@@ -25,8 +25,6 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 		HttpServletResponse response,
 		Authentication authentication
 	) throws IOException, ServletException {
-		System.out.println("The user SHOULD be authenticated by now...");
-		System.out.println("It is necessary to double-check that OAuth2 users have provided an email address.");
 		
 		handle(request, response, authentication);
 		clearAuthenticationAttributes(request);
@@ -38,6 +36,14 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 		Authentication authentication
 	) throws IOException, ServletException {
 		
+		// The primary problem this method solves is that it is possible for Facebook OAuth2 users
+		// to withhold their email addresses. Since all data in the app is tied to user email address,
+		// this creates an error state - there cannot be an authenticated user without an email.
+		
+		// When a user first authenticates with OAuth2, this handler executes.
+		// If they didn't provide an email address, they will be redirected to the login form,
+		// which will display an error and explanation of how to provide their Facebook email.
+		
 		String targetUrl = "/log";
 		
 		// Ensure any OAuth2 user data includes an email address
@@ -48,17 +54,14 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 		// If the OAuth2 attributes don't include email, there is no authenticated user
 		if (!(emailValue instanceof String)) {
 			targetUrl = "/login?emailError";
-			request.logout();
+			redirectStrategy.sendRedirect(request, response, targetUrl);
+			return;
 		}
 		
-		// TODO: at this point, a NEWLY registered user (first log in) needs to be entered into database...
-		System.out.println("Should probably create a user account at this point...");
+		// TODO: at this point, any newly registered user (first log in) should be entered into database
 
 		if (response.isCommitted()) {
-			System.out.println(
-				"Response has already been committed. " +
-				"Unable to redirect to " + targetUrl
-				);
+			// If the response is already committed, we can't redirect
 			return;
 		}
  

@@ -33,7 +33,7 @@ public class UserController {
 	public String getLogin() {
 		return "login";
 	}
-	
+
 	@GetMapping("/demo")
 	public String demoPage(HttpServletRequest request, Model model, Principal principal, Authentication authentication) {
 		User user = loginService.resolveAuthUser(authentication);

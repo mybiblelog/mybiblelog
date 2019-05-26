@@ -20,7 +20,7 @@ public class ThymeleafHelperConfig {
 	// Enables Thymeleaf layouts (must be manually included since Spring Boot 2)
 	@Bean
 	public LayoutDialect layoutDialect() {
-	    return new LayoutDialect();
+		return new LayoutDialect();
 	}
 	
 	// This class is for calling Java functionality from within a Thymeleaf template

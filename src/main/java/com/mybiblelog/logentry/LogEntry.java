@@ -28,7 +28,7 @@ public class LogEntry {
 	
 	@Temporal(TemporalType.DATE)
 	@JsonFormat(pattern="yyyy-MM-dd")
-    Date date;
+	Date date;
 	
 	private int startVerseId;
 	private int endVerseId;

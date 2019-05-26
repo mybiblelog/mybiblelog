@@ -29,7 +29,6 @@ public class LoginService {
 		// confidently look them up since they could only use that strategy if
 		// they were already in the database
 		if (authentication instanceof UsernamePasswordAuthenticationToken) {
-			System.out.println("Username password auth");
 			String email = authentication.getName();
 			return userRepo.findByEmail(email).get();
 		}
@@ -38,9 +37,6 @@ public class LoginService {
 		OAuth2User oauth2User = oauth2Auth.getPrincipal();
 		Object emailValue = oauth2User.getAttributes().get("email");
 		
-		System.out.println(emailValue.getClass());
-		System.out.println(emailValue);
-
 		String email = (String) emailValue;
 		// Use an existing account (identified by email), or create one otherwise
 		return userRepo.findByEmail(email).orElseGet(() -> {
