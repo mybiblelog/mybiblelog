@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -13,8 +14,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.mybiblelog.user.User;
 import com.mybiblelog.user.UserRepository;
@@ -25,10 +26,10 @@ public class LoginServiceTest {
 	private LoginService loginService;
 	
 	@Mock
-	private Authentication authentication;
+	private OAuth2AuthenticationToken authentication;
 	
 	@Mock
-	private DefaultOidcUser googleId;
+	private OAuth2User oauth2User;
 	
 	@Mock
 	private UserRepository userRepo;
@@ -37,16 +38,20 @@ public class LoginServiceTest {
 	private User user;
 	
 	@Mock
+	private HashMap<String, Object> attributes;
+	
+	@Mock
 	private EntityManager entityManager;
 	
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		String googleEmail = "test@gmail.com";
+		String testEmail = "test@example.com";
 		
-		when(googleId.getEmail()).thenReturn(googleEmail);
-		when(authentication.getPrincipal()).thenReturn(googleId);
-		when(userRepo.findByEmail(googleEmail)).thenReturn(Optional.of(user));
+		when(attributes.get("email")).thenReturn(testEmail);
+		when(oauth2User.getAttributes()).thenReturn(attributes);
+		when(authentication.getPrincipal()).thenReturn(oauth2User);
+		when(userRepo.findByEmail(testEmail)).thenReturn(Optional.of(user));
 	}
 	
 	@Test
