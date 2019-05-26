@@ -59,6 +59,10 @@ public class BibleIndex {
 	}
 
 	public String getBookName(int bookIndex) {
+		bookIndex--;
+		if (bookIndex < 0 || bookIndex >= this.books.size()) {
+			return "";
+		}
 		BibleBook book = this.books.get(bookIndex);
 		if (book == null) return "";
 		return book.name;

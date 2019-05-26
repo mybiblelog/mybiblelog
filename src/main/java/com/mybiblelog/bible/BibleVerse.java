@@ -8,6 +8,7 @@ public class BibleVerse {
 
 	public BibleVerse(int id) {
 		this.id = id;
+		id -= 100000000;
 		this.bookIndex = id / 1000000;
 		id -= this.bookIndex * 1000000;
 		this.chapterIndex = id / 1000;
