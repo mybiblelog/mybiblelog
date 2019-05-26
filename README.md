@@ -61,6 +61,22 @@ To allow users to log in with their existing user accounts you will need to foll
 	* http://localhost:8080/login/oauth2/code/google
 	* http://www.mybiblelog.com/login/oauth2/code/google
 	* http://mybiblelog.herokuapp.com/login/oauth2/code/google
-* Get the `CLIENT_ID` and `CLIENT_SECRET` environment variables from Google
+* Get the `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` environment variables from Google
 * Set up those variables in Eclipse to run the project locally
 * Set up those variables in Heroku to deploy the project
+
+## Connecting to Facebook OAuth2
+
+To allow users to log in with their existing accounts you will need to follow several steps:
+* Set up an OAuth2 app with the Facebook App Manager: https://developers.facebook.com/apps/
+* Get the `FACEBOOK_CLIENT_ID` and `FACEBOOK_CLIENT_SECRET` environment variables from Google
+	* Click the app name in the dashboard
+	* In the left sidebar, click "Settings"
+	* Under settings, click "Basic"
+	* The "App ID" and "App Secret" are at the top of the page
+
+It is possible for Facebook OAuth2 users to withhold their email addresses during the login flow. This is problematic as user accounts and user data are centered around the email address as a unique identifier.
+
+This situation is handled gracefully within the app. If you wish to test it by allowing/denying your Facebook email, you can delete this app from your personal Facebook permissions to start the login flow the beginning.
+ 
+Personal OAuth2 dashboard: https://www.facebook.com/settings?tab=applications
