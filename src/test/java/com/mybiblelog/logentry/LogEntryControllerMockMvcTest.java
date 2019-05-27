@@ -60,9 +60,6 @@ public class LogEntryControllerMockMvcTest {
 	ThymeIdentity thymeIdentity;
 	
 	@Mock
-	private Authentication authentication;
-	
-	@Mock
 	private DefaultOidcUser googleId;
 
 	@MockBean

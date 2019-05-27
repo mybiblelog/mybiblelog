@@ -85,6 +85,18 @@ public class BibleIndex {
 		return chapterVerseCount;
 	}
 	
+	public boolean verseExists(int bookIndex, int chapterIndex, int verseIndex) {
+		int chapterVerseCount = this.getChapterVerseCount(bookIndex, chapterIndex);
+		return verseIndex > 0 && verseIndex <= chapterVerseCount;
+	}
+	
+	public boolean verseExists(BibleVerse verse) {
+		int bookIndex = verse.getBookIndex();
+		int chapterIndex = verse.getChapterIndex();
+		int verseIndex = verse.getVerseIndex();
+		return this.verseExists(bookIndex, chapterIndex, verseIndex);
+	}
+	
 	static private class ChapterVerseCount {
 		public int chapterId;
 		public int verseCount;
