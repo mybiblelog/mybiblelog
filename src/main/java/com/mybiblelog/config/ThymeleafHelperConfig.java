@@ -35,9 +35,7 @@ public class ThymeleafHelperConfig {
 	public class ThymeIdentity {
 		
 		public User user() {
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			User user = loginService.resolveAuthUser(authentication);
-			return user;
+			return loginService.resolveAuthUser();
 		}
 
 		public boolean loggedIn() {

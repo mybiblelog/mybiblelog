@@ -6,7 +6,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -35,8 +34,8 @@ public class UserController {
 	}
 
 	@GetMapping("/demo")
-	public String demoPage(HttpServletRequest request, Model model, Principal principal, Authentication authentication) {
-		User user = loginService.resolveAuthUser(authentication);
+	public String demoPage(HttpServletRequest request, Model model, Principal principal) {
+		User user = loginService.resolveAuthUser();
 		model.addAttribute("user", user);
 		return "demo";
 	}

@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,9 @@ public class LoginService {
 	private EntityManager entityManager;
 
 	@Transactional
-	public User resolveAuthUser(Authentication authentication) {
+	public User resolveAuthUser() {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
 		// If user was authenticated via username/password strategy, we can
 		// confidently look them up since they could only use that strategy if

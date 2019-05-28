@@ -43,6 +43,9 @@ public class LogEntryControllerMockMvcTest {
 	@MockBean
 	private ClientRegistrationRepository clientRegistrationRepository;
 
+	@Mock
+	Authentication authentication;
+	
 	@MockBean
 	LoginService loginService;
 
@@ -67,9 +70,9 @@ public class LogEntryControllerMockMvcTest {
 
 	@Before
 	public void setup() {
-		when(thymeIdentity.user()).thenReturn(user);
 		when(user.getEmail()).thenReturn(testUserEmail);
 		when(userRepo.findByEmail(testUserEmail)).thenReturn(Optional.of(user));
+		when(loginService.resolveAuthUser()).thenReturn(user);
 	}
 
 	@Test

@@ -3,11 +3,9 @@ package com.mybiblelog.logentry;
 import java.util.Date;
 import java.util.Optional;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,23 +25,23 @@ import com.mybiblelog.user.User;
 @RequestMapping("/api/log-entries")
 public class LogEntryRestController {
 
-	@Resource
+	@Autowired
 	LoginService loginService;
 
-	@Resource
+	@Autowired
 	private LogEntryRepository logEntryRepo;
 	
 	BibleIndex bibleIndex = BibleIndex.getInstance();
 	
 	@GetMapping("")
-	public Iterable<LogEntry> getAllLogEntries(Authentication authentication) {
-		User user = loginService.resolveAuthUser(authentication);
+	public Iterable<LogEntry> getAllLogEntries() {
+		User user = loginService.resolveAuthUser();
 		return logEntryRepo.findAllByUserOrderByDateAsc(user);
 	}
 	
 	@GetMapping("/{id}")
-	public LogEntry getLogEntryById(Authentication authentication, @PathVariable long id) throws Exception {
-		User user = loginService.resolveAuthUser(authentication);
+	public LogEntry getLogEntryById(@PathVariable long id) throws Exception {
+		User user = loginService.resolveAuthUser();
 		Optional<LogEntry> logEntry = logEntryRepo.findByUserAndId(user, id);
 		if (logEntry.isPresent()) {
 			return logEntry.get();
@@ -52,8 +50,8 @@ public class LogEntryRestController {
 	}
 	
 	@PostMapping("")
-	public LogEntry createLogEntry(Authentication authentication, @RequestBody LogEntryCreateRequest logEntryBody) throws Exception {
-		User user = loginService.resolveAuthUser(authentication);
+	public LogEntry createLogEntry(@RequestBody LogEntryCreateRequest logEntryBody) throws Exception {
+		User user = loginService.resolveAuthUser();
 		
 		int startVerseId = logEntryBody.startVerseId;
 		int endVerseId = logEntryBody.endVerseId;
@@ -67,8 +65,8 @@ public class LogEntryRestController {
 	}
 	
 	@PutMapping("/{id}")
-	public LogEntry updateLogEntry(Authentication authentication, @PathVariable long id, @RequestBody LogEntryUpdateRequest logEntryBody) throws Exception {
-		User user = loginService.resolveAuthUser(authentication);
+	public LogEntry updateLogEntry(@PathVariable long id, @RequestBody LogEntryUpdateRequest logEntryBody) throws Exception {
+		User user = loginService.resolveAuthUser();
 		
 		Long bodyId = logEntryBody.id;
 		if (id != bodyId) {
@@ -95,8 +93,8 @@ public class LogEntryRestController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public boolean deleteLogEntry(Authentication authentication, @PathVariable long id) {
-		User user = loginService.resolveAuthUser(authentication);
+	public boolean deleteLogEntry(@PathVariable long id) {
+		User user = loginService.resolveAuthUser();
 		return logEntryRepo.deleteByUserAndId(user, id);
 	}
 	

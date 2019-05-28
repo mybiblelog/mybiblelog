@@ -14,6 +14,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -38,6 +40,9 @@ public class LoginServiceTest {
 	private User user;
 	
 	@Mock
+	SecurityContext securityContext;
+	
+	@Mock
 	private HashMap<String, Object> attributes;
 	
 	@Mock
@@ -46,8 +51,12 @@ public class LoginServiceTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		String testEmail = "test@example.com";
 		
+		when(securityContext.getAuthentication()).thenReturn(authentication);
+		SecurityContextHolder.setContext(securityContext);
+		
+		String testEmail = "test@example.com";
+
 		when(attributes.get("email")).thenReturn(testEmail);
 		when(oauth2User.getAttributes()).thenReturn(attributes);
 		when(authentication.getPrincipal()).thenReturn(oauth2User);
@@ -56,7 +65,7 @@ public class LoginServiceTest {
 	
 	@Test
 	public void shouldRetrieveUser() {
-		User result = loginService.resolveAuthUser(authentication);
+		User result = loginService.resolveAuthUser();
 		assertThat(result, is(user));
 	}
 }

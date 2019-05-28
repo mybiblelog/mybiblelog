@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.annotation.Resource;
 
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,8 +29,8 @@ public class LogEntryController {
 	
 	@GetMapping("/logEntries")
 	@ResponseBody
-	public Iterable<LogEntry> getLogEntries(Authentication authentication) {
-		User user = loginService.resolveAuthUser(authentication);
+	public Iterable<LogEntry> getLogEntries() {
+		User user = loginService.resolveAuthUser();
 		Iterable<LogEntry> logEntries = logEntryRepo.findAllByUserOrderByDateAsc(user);
 		return logEntries;
 	}
@@ -39,12 +38,11 @@ public class LogEntryController {
 	@GetMapping("/add")
 	@ResponseBody
 	public LogEntry addLogEntry(
-			Authentication authentication,
 			@RequestParam int startVerseId,
 			@RequestParam int endVerseId,
 			@RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date date
 	) {
-		User user = loginService.resolveAuthUser(authentication);
+		User user = loginService.resolveAuthUser();
 		
 		// TODO: validate that verses are in same (existing) book
 		// TODO: validate that chapters/verses actually exist
