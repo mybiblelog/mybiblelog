@@ -10,11 +10,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mybiblelog.user.User;
 
 @Entity
+@JsonAutoDetect(
+	getterVisibility = JsonAutoDetect.Visibility.NONE,
+	isGetterVisibility = JsonAutoDetect.Visibility.NONE
+)
 public class LogEntry {
 
 	@Id
@@ -29,7 +35,7 @@ public class LogEntry {
 	@Temporal(TemporalType.DATE)
 	@JsonFormat(pattern="yyyy-MM-dd")
 	Date date;
-	
+
 	private int startVerseId;
 	private int endVerseId;
 	
@@ -40,6 +46,12 @@ public class LogEntry {
 		this.date = date;
 	}
 	
+	@JsonProperty
+	public Long getId() {
+		return id;
+	}
+	
+	@JsonProperty
 	public Date getDate() {
 		return date;
 	}
@@ -48,6 +60,7 @@ public class LogEntry {
 		this.date = date;
 	}
 
+	@JsonProperty
 	public int getStartVerseId() {
 		return startVerseId;
 	}
@@ -56,6 +69,7 @@ public class LogEntry {
 		this.startVerseId = startVerseId;
 	}
 
+	@JsonProperty
 	public int getEndVerseId() {
 		return endVerseId;
 	}

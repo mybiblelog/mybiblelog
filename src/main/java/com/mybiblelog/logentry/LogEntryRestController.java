@@ -140,17 +140,27 @@ public class LogEntryRestController {
 	// Custom Errors
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public class PathBodyIdMismatchException extends Exception {}
+	public class PathBodyIdMismatchException extends Exception {
+		private static final long serialVersionUID = 1L;
+	}
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public class LogEntryNotFoundException extends Exception {}
+	public class LogEntryNotFoundException extends Exception {
+		private static final long serialVersionUID = 1L;
+	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public class InvalidStartVerseException extends Exception {}
+	public class InvalidStartVerseException extends Exception {
+		private static final long serialVersionUID = 1L;
+	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public class InvalidEndVerseException extends Exception {}
+	public class InvalidEndVerseException extends Exception {
+		private static final long serialVersionUID = 1L;
+	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public class InvalidVerseRangeException extends Exception {}
+	public class InvalidVerseRangeException extends Exception {
+		private static final long serialVersionUID = 1L;
+	}
 }
