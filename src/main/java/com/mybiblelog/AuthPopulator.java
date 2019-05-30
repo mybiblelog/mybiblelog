@@ -2,8 +2,7 @@ package com.mybiblelog;
 
 import java.util.Optional;
 
-import javax.annotation.Resource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +12,7 @@ import com.mybiblelog.user.UserRepository;
 @Component
 public class AuthPopulator implements CommandLineRunner {
 
-	@Resource
+	@Autowired
 	private UserRepository userRepo;
 
 	@Override
