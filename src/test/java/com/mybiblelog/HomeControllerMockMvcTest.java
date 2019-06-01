@@ -5,16 +5,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import javax.annotation.Resource;
-
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.mybiblelog.config.LoginService;
 import com.mybiblelog.config.ThymeleafHelperConfig;
@@ -25,7 +27,9 @@ import com.mybiblelog.user.UserRepository;
 @Import(ThymeleafHelperConfig.class)
 public class HomeControllerMockMvcTest {
 
-	@Resource
+	@Autowired
+	private WebApplicationContext context;
+	
 	private MockMvc mvc;
 
 	@MockBean
@@ -36,6 +40,11 @@ public class HomeControllerMockMvcTest {
 
 	@MockBean
 	private LoginService loginService;
+	
+	@Before
+	public void setup() {
+		mvc = MockMvcBuilders.webAppContextSetup(context).build();
+	}
 
 	@Test
 	public void shouldRouteToIndex() throws Exception {
