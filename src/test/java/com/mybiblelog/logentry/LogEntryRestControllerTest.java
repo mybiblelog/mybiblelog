@@ -91,4 +91,12 @@ public class LogEntryRestControllerTest {
         	.andExpect(status().isOk())
         	.andExpect(jsonPath("$.id", is(1)));
     }
+	
+	@WithMockUser("test@example.com")
+	@Test
+	public void shouldReturn404IfOneLogEntryNotFoundById() throws Exception {
+		mvc
+			.perform(get("/api/log-entries/1"))
+        	.andExpect(status().is(404));
+	}
 }
