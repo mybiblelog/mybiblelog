@@ -32,30 +32,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-		.authorizeRequests()
-		.antMatchers(
-			"/",
-			"/login",
-			"/oauth2/authorization/google",
-			"/oauth2/authorization/facebook",
-			"/privacy", "/terms",
-			"/h2-console/**",
-			"/css/**", "/js/**", "/favicon.png"
-		).permitAll()
-		.anyRequest().authenticated()
-		.and()
-		.formLogin()
-		.loginPage("/login")
-		.loginProcessingUrl("/login")
-		.defaultSuccessUrl("/log", true)
-		.and()
-		.oauth2Login()
-		.loginPage("/oauth2/authorization") // just redirects to regular login page
-		.successHandler(successHandler())
-		.and()
-		.logout().permitAll()
-		.logoutUrl("/logout")
-		.logoutSuccessUrl("/");
+			.headers().frameOptions().disable()
+			.and()
+				.authorizeRequests()
+				.antMatchers(
+					"/",
+					"/login",
+					"/oauth2/authorization/google",
+					"/oauth2/authorization/facebook",
+					"/privacy", "/terms",
+					"/h2-console/**",
+					"/css/**", "/js/**", "/favicon.png"
+				)
+				.permitAll()
+				.anyRequest().authenticated()
+			.and()
+				.formLogin()
+				.loginPage("/login")
+				.loginProcessingUrl("/login")
+				.defaultSuccessUrl("/log", true)
+			.and()
+				.oauth2Login()
+				.loginPage("/oauth2/authorization") // just redirects to regular login page
+				.successHandler(successHandler())
+			.and()
+				.logout().permitAll()
+				.logoutUrl("/logout")
+				.logoutSuccessUrl("/");
 		
 		http.csrf().disable();
 		http.headers().frameOptions().disable();

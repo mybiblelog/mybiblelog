@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Optional;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -62,6 +63,8 @@ public class LogEntryRestControllerTest {
 		when(mockLogEntry.getId()).thenReturn(1L);
 	}
 	
+	// READ ALL
+	
 	@WithMockUser("test@example.com")
     @Test
     public void shouldGetAllLogEntriesWithStatus200() throws Exception {
@@ -70,6 +73,14 @@ public class LogEntryRestControllerTest {
         	.contentType(MediaType.APPLICATION_JSON))
         	.andExpect(status().isOk());
     }
+	
+	@Test
+	@Ignore("NOT IMPLEMENTED")
+	public void shouldReturn401IfNotAuthorizedToGetAll() {
+		//
+	}
+	
+	// READ ONE
 	
 	@WithMockUser("test@example.com")
     @Test
@@ -98,5 +109,101 @@ public class LogEntryRestControllerTest {
 		mvc
 			.perform(get("/api/log-entries/1"))
         	.andExpect(status().is(404));
+	}
+	
+	@Test
+	public void shouldReturn302IfNotAuthenticated() throws Exception {
+		when(logEntryRepo.findByUserAndId(mockUser, 1L)).thenReturn(Optional.of(mockLogEntry));
+		mvc
+			.perform(get("/api/log-entries/1"))
+	    	.andExpect(status().is(302));
+
+	}
+	
+	// CREATE
+	
+	@WithMockUser("test@example.com")
+	@Test
+	@Ignore("NOT IMPLEMENTED")
+	public void shouldCreateLogEntryWithStatus200() {
+		//
+	}
+	
+	@WithMockUser("test@example.com")
+	@Test
+	@Ignore("NOT IMPLEMENTED")
+	public void shouldReturnCreatedLogEntry() {
+		//
+	}
+	
+	@WithMockUser("test@example.com")
+	@Test
+	@Ignore("NOT IMPLEMENTED")
+	public void shouldReturn400ForInvalidCreatePayload() {
+		//
+	}
+	
+	@Test
+	@Ignore("NOT IMPLEMENTED")
+	public void shouldReturn401IfNotAuthorizedToCreate() {
+		//
+	}
+	
+	// UPDATE
+	
+	@WithMockUser("test@example.com")
+	@Test
+	@Ignore("NOT IMPLEMENTED")
+	public void shouldUpdateExistingLogEntryWithStatus200() {
+		//
+	}
+	
+	@WithMockUser("test@example.com")
+	@Test
+	@Ignore("NOT IMPLEMENTED")
+	public void shouldReturnUpdatedLogEntry() {
+		//
+	}
+	
+	@WithMockUser("test@example.com")
+	@Test
+	@Ignore("NOT IMPLEMENTED")
+	public void shouldReturn400ForInvalidUpdatePayload() {
+		//
+	}
+	
+	@WithMockUser("test@example.com")
+	@Test
+	@Ignore("NOT IMPLEMENTED")
+	public void shouldReturn404IfLogEntryToUpdateNotFound() {
+		//
+	}
+
+	@Test
+	@Ignore("NOT IMPLEMENTED")
+	public void shouldReturn401IfNotAuthorizedToUpdate() {
+		//
+	}
+	
+	// DELETE
+	
+	@WithMockUser("test@example.com")
+	@Test
+	@Ignore("NOT IMPLEMENTED")
+	public void shouldDeleteExistingLogEntryWithStatus200() {
+		//
+	}
+	
+	@WithMockUser("test@example.com")
+	@Test
+	@Ignore("NOT IMPLEMENTED")
+	public void shouldReturn404IfLogEntryToDeleteNotFound() {
+		//
+	}
+	
+	@Test
+	@Ignore("NOT IMPLEMENTED")
+	public void shouldReturn401IfNotAuthorizedToDelete() {
+		//
 	}
 }
