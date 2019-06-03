@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,12 +29,12 @@ import com.mybiblelog.user.User;
 public class LogEntryRestController {
 
 	@Autowired
-	LoginService loginService;
+	private LoginService loginService;
 
 	@Autowired
 	private LogEntryRepository logEntryRepo;
 	
-	BibleIndex bibleIndex = BibleIndex.getInstance();
+	private BibleIndex bibleIndex = BibleIndex.getInstance();
 	
 	@GetMapping("")
 	public Iterable<LogEntry> getAllLogEntries() {
@@ -51,7 +52,8 @@ public class LogEntryRestController {
 		throw new LogEntryNotFoundException();
 	}
 	
-	@PostMapping("")
+	@PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseStatus(HttpStatus.CREATED)
 	public LogEntry createLogEntry(@RequestBody LogEntryCreateRequest logEntryBody) throws Exception {
 		User user = loginService.resolveAuthUser();
 		
@@ -66,7 +68,7 @@ public class LogEntryRestController {
 		return newLogEntry;
 	}
 	
-	@PutMapping("/{id}")
+	@PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public LogEntry updateLogEntry(@PathVariable long id, @RequestBody LogEntryUpdateRequest logEntryBody) throws Exception {
 		User user = loginService.resolveAuthUser();
 		
