@@ -3,6 +3,8 @@ package com.mybiblelog.logentry;
 import java.util.Date;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -93,24 +95,31 @@ public class LogEntryRestController {
 	}
 	
 	@DeleteMapping("/{id}")
+	@Transactional
 	public boolean deleteLogEntry(@PathVariable long id) {
 		User user = loginService.resolveAuthUser();
-		return logEntryRepo.deleteByUserAndId(user, id);
+		int result = logEntryRepo.deleteByUserAndId(user, id);
+		System.out.println(result);
+		return (result > 0);
 	}
 	
 	// @RequestBody Mapping Objects
 	
 	public static class LogEntryCreateRequest {
-		@DateTimeFormat(pattern="yyyy-MM-dd") Date date;
-		int startVerseId;
-		int endVerseId;
+		@DateTimeFormat(pattern="yyyy-MM-dd") public Date date;
+		public int startVerseId;
+		public int endVerseId;
+		
+		public LogEntryCreateRequest() {} // Jackson
 	}
 	
 	public static class LogEntryUpdateRequest {
-		Long id;
-		@DateTimeFormat(pattern="yyyy-MM-dd") Date date;
-		int startVerseId;
-		int endVerseId;
+		public Long id;
+		@DateTimeFormat(pattern="yyyy-MM-dd") public Date date;
+		public int startVerseId;
+		public int endVerseId;
+		
+		public LogEntryUpdateRequest() {} // Jackson
 	}
 	
 	// Request Validation

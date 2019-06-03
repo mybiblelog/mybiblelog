@@ -12,5 +12,5 @@ public interface LogEntryRepository extends CrudRepository<LogEntry, Long> {
 	
 	Optional<LogEntry> findByUserAndId(User user, Long id);
 	
-	Boolean deleteByUserAndId(User user, Long id);
+	Integer deleteByUserAndId(User user, Long id);
 }
