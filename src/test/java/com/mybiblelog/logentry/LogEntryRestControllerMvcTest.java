@@ -1,9 +1,11 @@
 package com.mybiblelog.logentry;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -33,6 +35,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mybiblelog.config.LoginService;
+import com.mybiblelog.logentry.LogEntryRestController.LogEntryCreateRequest;
 import com.mybiblelog.user.User;
 import com.mybiblelog.user.UserRepository;
 
@@ -168,9 +171,20 @@ public class LogEntryRestControllerMvcTest {
 	
 	@WithMockUser("test@example.com")
 	@Test
-	@Ignore("NOT IMPLEMENTED")
-	public void shouldCreateLogEntryWithStatus200() {
-		//
+	public void shouldCreateLogEntryWithStatus201() throws Exception {
+		LogEntryCreateRequest body = new LogEntryCreateRequest();
+		body.startVerseId = 101001001;
+		body.endVerseId = 101001001;
+		body.date = null;
+		String bodyJson = this.mapToJson(body);
+		
+		MvcResult result = mvc
+			.perform(post("/api/log-entries")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(bodyJson)).andReturn();
+		
+		int status = result.getResponse().getStatus();
+		assertEquals(201, status);
 	}
 	
 	@WithMockUser("test@example.com")
