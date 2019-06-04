@@ -98,10 +98,11 @@ public class LogEntryRestController {
 	
 	@DeleteMapping("/{id}")
 	@Transactional
-	public boolean deleteLogEntry(@PathVariable long id) {
+	public boolean deleteLogEntry(@PathVariable long id) throws LogEntryNotFoundException {
 		User user = loginService.resolveAuthUser();
+		Optional<LogEntry> optional = logEntryRepo.findByUserAndId(user, id);
+		if (!optional.isPresent()) throw new LogEntryNotFoundException();
 		int result = logEntryRepo.deleteByUserAndId(user, id);
-		System.out.println(result);
 		return (result > 0);
 	}
 	

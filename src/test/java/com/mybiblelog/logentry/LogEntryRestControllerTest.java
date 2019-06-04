@@ -19,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.mybiblelog.config.LoginService;
 import com.mybiblelog.logentry.LogEntryRestController.LogEntryCreateRequest;
+import com.mybiblelog.logentry.LogEntryRestController.LogEntryNotFoundException;
 import com.mybiblelog.logentry.LogEntryRestController.LogEntryUpdateRequest;
 import com.mybiblelog.user.User;
 
@@ -116,9 +117,10 @@ public class LogEntryRestControllerTest {
 	}
 	
 	@Test
-	public void shouldDeleteLogEntry() {
+	public void shouldDeleteLogEntry() throws Exception {
 		// Arrange
 		Long testId = 13L;
+		when(logEntryRepo.findByUserAndId(testUser, testId)).thenReturn(Optional.of(entry1));
 		when(logEntryRepo.deleteByUserAndId(testUser, testId)).thenReturn(1);
 		
 		// Act

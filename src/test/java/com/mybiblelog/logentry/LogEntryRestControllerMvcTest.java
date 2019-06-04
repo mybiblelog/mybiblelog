@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -261,59 +262,129 @@ public class LogEntryRestControllerMvcTest {
 	
 	@WithMockUser("test@example.com")
 	@Test
-	@Ignore("NOT IMPLEMENTED") // TODO
 	public void shouldUpdateExistingLogEntryWithStatus200() throws Exception {
 		LogEntryUpdateRequest body = new LogEntryUpdateRequest();
+		body.id = 1L;
+		body.startVerseId = 101001001;
+		body.endVerseId = 101001001;
+		body.date = null;
 		String bodyJson = this.mapToJson(body);
+
+		when(logEntryRepo.findByUserAndId(mockUser, 1L)).thenReturn(Optional.of(mockLogEntry));
 		
 		MvcResult result = mvc
-			.perform(put("/api/log-entries")
+			.perform(put("/api/log-entries/1")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(bodyJson)).andReturn();
 		
 		int status = result.getResponse().getStatus();
-		assertEquals(302, status);	
+		assertEquals(200, status);
 	}
 	
 	@WithMockUser("test@example.com")
 	@Test
-	@Ignore("NOT IMPLEMENTED")
-	public void shouldReturn400ForInvalidUpdatePayload() {
-		//
+	public void shouldReturn400ForInvalidUpdatePayload() throws Exception {
+		LogEntryUpdateRequest body = new LogEntryUpdateRequest();
+		body.id = 1L;
+		body.startVerseId = 101001002; // start before end
+		body.endVerseId = 101001001;
+		body.date = null;
+		String bodyJson = this.mapToJson(body);
+
+		when(logEntryRepo.findByUserAndId(mockUser, 1L)).thenReturn(Optional.of(mockLogEntry));
+		
+		MvcResult result = mvc
+			.perform(put("/api/log-entries/1")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(bodyJson)).andReturn();
+		
+		int status = result.getResponse().getStatus();
+		assertEquals(400, status);
 	}
 	
 	@WithMockUser("test@example.com")
 	@Test
-	@Ignore("NOT IMPLEMENTED")
-	public void shouldReturn404IfLogEntryToUpdateNotFound() {
-		//
+	public void shouldReturn404IfLogEntryToUpdateNotFound() throws Exception {
+		LogEntryUpdateRequest body = new LogEntryUpdateRequest();
+		body.id = 7L;
+		body.startVerseId = 101001001;
+		body.endVerseId = 101001001;
+		body.date = null;
+		String bodyJson = this.mapToJson(body);
+
+		MvcResult result = mvc
+			.perform(put("/api/log-entries/7")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(bodyJson)).andReturn();
+		
+		int status = result.getResponse().getStatus();
+		assertEquals(404, status);
 	}
 
 	@Test
-	@Ignore("NOT IMPLEMENTED")
-	public void shouldReturn302IfNotAuthorizedToUpdate() {
-		//
+	public void shouldReturn302IfNotAuthorizedToUpdate() throws Exception {
+		LogEntryUpdateRequest body = new LogEntryUpdateRequest();
+		body.id = 1L;
+		body.startVerseId = 101001001;
+		body.endVerseId = 101001001;
+		body.date = null;
+		String bodyJson = this.mapToJson(body);
+
+		when(logEntryRepo.findByUserAndId(mockUser, 1L)).thenReturn(Optional.of(mockLogEntry));
+		
+		MvcResult result = mvc
+			.perform(put("/api/log-entries/7")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(bodyJson)).andReturn();
+		
+		int status = result.getResponse().getStatus();
+		assertEquals(302, status);
 	}
 	
 	// DELETE
 	
 	@WithMockUser("test@example.com")
 	@Test
-	@Ignore("NOT IMPLEMENTED")
-	public void shouldDeleteExistingLogEntryWithStatus200() {
-		//
+	public void shouldDeleteExistingLogEntryWithStatus200() throws Exception {
+		when(logEntryRepo.findByUserAndId(mockUser, 1L)).thenReturn(Optional.of(mockLogEntry));
+		when(logEntryRepo.deleteByUserAndId(mockUser, 1L)).thenReturn(1);
+		
+		MvcResult result = mvc
+			.perform(delete("/api/log-entries/1")
+			.contentType(MediaType.APPLICATION_JSON))
+			.andReturn();
+		
+		String content = result.getResponse().getContentAsString();
+		assertThat(content, is("true"));
+		
+		int status = result.getResponse().getStatus();
+		assertEquals(200, status);
 	}
 	
 	@WithMockUser("test@example.com")
 	@Test
-	@Ignore("NOT IMPLEMENTED")
-	public void shouldReturn404IfLogEntryToDeleteNotFound() {
-		//
+	public void shouldReturn404IfLogEntryToDeleteNotFound() throws Exception {
+		
+		MvcResult result = mvc
+			.perform(delete("/api/log-entries/1")
+			.contentType(MediaType.APPLICATION_JSON))
+			.andReturn();
+
+		int status = result.getResponse().getStatus();
+		assertEquals(404, status);
 	}
 	
 	@Test
-	@Ignore("NOT IMPLEMENTED")
-	public void shouldReturn302IfNotAuthorizedToDelete() {
-		//
+	public void shouldReturn302IfNotAuthorizedToDelete() throws Exception {
+		when(logEntryRepo.findByUserAndId(mockUser, 1L)).thenReturn(Optional.of(mockLogEntry));
+		when(logEntryRepo.deleteByUserAndId(mockUser, 1L)).thenReturn(1);
+		
+		MvcResult result = mvc
+			.perform(delete("/api/log-entries/1")
+			.contentType(MediaType.APPLICATION_JSON))
+			.andReturn();
+		
+		int status = result.getResponse().getStatus();
+		assertEquals(302, status);
 	}
 }
