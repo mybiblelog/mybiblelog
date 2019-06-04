@@ -2,16 +2,21 @@ package com.mybiblelog.logentry;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -36,6 +41,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mybiblelog.config.LoginService;
 import com.mybiblelog.logentry.LogEntryRestController.LogEntryCreateRequest;
+import com.mybiblelog.logentry.LogEntryRestController.LogEntryUpdateRequest;
 import com.mybiblelog.user.User;
 import com.mybiblelog.user.UserRepository;
 
@@ -168,7 +174,7 @@ public class LogEntryRestControllerMvcTest {
 	}
 	
 	// CREATE
-	
+
 	@WithMockUser("test@example.com")
 	@Test
 	public void shouldCreateLogEntryWithStatus201() throws Exception {
@@ -185,6 +191,36 @@ public class LogEntryRestControllerMvcTest {
 		
 		int status = result.getResponse().getStatus();
 		assertEquals(201, status);
+	}
+
+	@WithMockUser("test@example.com")
+	@Test
+	public void shouldCreateLogEntryAndReturnIt() throws Exception {
+		String testDateString = "2020-01-01";
+		Date testDate = new SimpleDateFormat("yyyy-MM-dd").parse(testDateString);
+				
+		LogEntryCreateRequest body = new LogEntryCreateRequest();
+		body.startVerseId = 101001001;
+		body.endVerseId = 101001002;
+		body.date = testDate;
+		String bodyJson = this.mapToJson(body);
+		
+		LogEntry createdEntry = new LogEntry(null, 101001001, 101001002, testDate);
+		
+		when(logEntryRepo.save(any(LogEntry.class)))
+			.thenReturn(createdEntry);
+		
+		MvcResult result = mvc
+			.perform(post("/api/log-entries")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(bodyJson))
+			.andExpect(jsonPath("$.date", testDateString).exists())
+			.andReturn();
+		
+		String content = result.getResponse().getContentAsString();
+		LogEntry resultEntry = this.mapFromJson(content, LogEntry.class);
+		assertThat(resultEntry.getStartVerseId(), is(101001001));
+		assertThat(resultEntry.getEndVerseId(), is(101001002));
 	}
 	
 	@WithMockUser("test@example.com")
@@ -225,9 +261,18 @@ public class LogEntryRestControllerMvcTest {
 	
 	@WithMockUser("test@example.com")
 	@Test
-	@Ignore("NOT IMPLEMENTED")
-	public void shouldUpdateExistingLogEntryWithStatus200() {
-		//
+	@Ignore("NOT IMPLEMENTED") // TODO
+	public void shouldUpdateExistingLogEntryWithStatus200() throws Exception {
+		LogEntryUpdateRequest body = new LogEntryUpdateRequest();
+		String bodyJson = this.mapToJson(body);
+		
+		MvcResult result = mvc
+			.perform(put("/api/log-entries")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(bodyJson)).andReturn();
+		
+		int status = result.getResponse().getStatus();
+		assertEquals(302, status);	
 	}
 	
 	@WithMockUser("test@example.com")
