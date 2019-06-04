@@ -208,9 +208,17 @@ public class LogEntryRestControllerMvcTest {
 	}
 	
 	@Test
-	@Ignore("NOT IMPLEMENTED")
-	public void shouldReturn302IfNotAuthorizedToCreate() {
-		//
+	public void shouldReturn302IfNotAuthorizedToCreate() throws Exception {
+		LogEntryCreateRequest body = new LogEntryCreateRequest();
+		String bodyJson = this.mapToJson(body);
+		
+		MvcResult result = mvc
+			.perform(post("/api/log-entries")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(bodyJson)).andReturn();
+		
+		int status = result.getResponse().getStatus();
+		assertEquals(302, status);
 	}
 	
 	// UPDATE
