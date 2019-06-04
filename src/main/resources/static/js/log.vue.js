@@ -38,6 +38,7 @@
 
 			formOpen: false,
 			model: {
+				id:				null,
 				date: 			DateString.now(),
 				book:			0,
 				startChapter:	0,
@@ -97,11 +98,30 @@
 					return range
 				}
 			},
+			deleteEntry(id) {
+				fetch('/api/log-entries/' + id, { method: 'DELETE' })
+					.then(response => response.json())
+					.then(data => {
+						if (data) {
+							this.logEntries = this.logEntries.filter(e => e.id !== id);
+						}
+						else {
+							alert('The log entry could not be deleted.');
+						}
+					});
+			},
 			openAddEntryForm() {
+				this.resetForm();
+				this.formOpen = true;
+			},
+			openEditEntryForm(id) {
+				const targetEntry = this.logEntries.find(e => e.id === id);
+				Object.assign(this.model, targetEntry);
 				this.formOpen = true;
 			},
 			closeAddEntryForm() {
 				this.formOpen = false;
+				this.resetForm();
 			},
 			resetStartChapter() {
 				this.model.startChapter = 0;
@@ -120,6 +140,7 @@
 				this.endVerses = [];
 			},
 			resetForm() {
+				this.model.id = null;
 				this.model.date = DateString.now();
 				this.model.book = 0;
 				this.resetStartChapter();
@@ -191,21 +212,68 @@
 				this.$nextTick(() => this.$refs.submit.focus());
 			},
 			onSubmitLogEntryForm() {
+				if (this.model.id) {
+					this.processEditEntryForm();
+				}
+				else {
+					this.processAddEntryForm();
+				}
+			},
+			processAddEntryForm() {
 				const startVerseId = Bible.makeVerseId(this.model.book, this.model.startChapter, this.model.startVerse);
 				const endVerseId = Bible.makeVerseId(this.model.book, this.model.endChapter, this.model.endVerse);
 
-				fetch(`/add?startVerseId=${startVerseId}&endVerseId=${endVerseId}&date=${this.model.date}`)
-					.then(response => response.json())
-					.then(data => {
-						if (!data) {
-							alert('Unable to save entry.');
-						}
-						else {
-							console.log({ data });
-							this.logEntries.push(data);
-							this.resetForm();
-						}
-					});
+				const requestBody = JSON.stringify({
+					date: this.model.date,
+					startVerseId,
+					endVerseId,
+				});
+
+				fetch('/api/log-entries', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: requestBody,
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (!data) {
+						alert('Unable to add entry.');
+					}
+					else {
+						console.log({ data });
+						this.logEntries.push(data);
+						this.resetForm();
+					}
+				});
+			},
+			processEditEntryForm() {
+				const startVerseId = Bible.makeVerseId(this.model.book, this.model.startChapter, this.model.startVerse);
+				const endVerseId = Bible.makeVerseId(this.model.book, this.model.endChapter, this.model.endVerse);
+
+				const requestBody = JSON.stringify({
+					id: this.model.id,
+					date: this.model.date,
+					startVerseId,
+					endVerseId,
+				});
+
+				fetch(`/api/log-entries/${this.model.id}`, {
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: requestBody,
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (!data) {
+						alert('Unable to update entry.');
+					}
+					else {
+						console.log({ data });
+						const updatedLogEntry = this.logEntries.find(e => e.id === data.id);
+						Object.assign(updatedLogEntry, data);
+						this.resetForm();
+					}
+				});
 			},
 		},
 		mounted() {

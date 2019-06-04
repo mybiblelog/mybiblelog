@@ -137,22 +137,25 @@ nav a {
 }
 
 
-.entry-container {
+table.entry-container {
 	margin-top: 1rem;
+	width: 100%;
+	border-collapse: collapse;
 }
 
-.entry-date {
-
+table.entry-container td {
+	padding: 0.5rem;
 }
 
-.entry-date h4 {
-
+tr.entry-date-row {
+	color: #fff;
+	background: #000;
 }
 
-.entry-date ul {
-
+tr.entry-row td:last-child {
+	text-align: right;
 }
 
-.entry-date ul li {
-	
+tr.entry-row.active {
+	background: yellow;
 }
