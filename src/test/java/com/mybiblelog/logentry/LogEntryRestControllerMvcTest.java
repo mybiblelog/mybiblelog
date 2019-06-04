@@ -189,9 +189,22 @@ public class LogEntryRestControllerMvcTest {
 	
 	@WithMockUser("test@example.com")
 	@Test
-	@Ignore("NOT IMPLEMENTED")
-	public void shouldReturn400ForInvalidCreatePayload() {
-		//
+	public void shouldReturn400ForInvalidCreatePayload() throws Exception {
+		LogEntryCreateRequest body = new LogEntryCreateRequest();
+		
+		// end verse before start verse
+		body.startVerseId = 101001002;
+		body.endVerseId = 101001001;
+		body.date = null;
+		String bodyJson = this.mapToJson(body);
+		
+		MvcResult result = mvc
+			.perform(post("/api/log-entries")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(bodyJson)).andReturn();
+		
+		int status = result.getResponse().getStatus();
+		assertEquals(400, status);
 	}
 	
 	@Test
