@@ -286,7 +286,7 @@
 					});
 			
 			const loadLogEntries =
-				() => fetch('/logEntries')
+				() => fetch('/api/log-entries')
 					.then(response => response.json())
 					.then(data => {
 						this.logEntries = data;

@@ -16,6 +16,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+/**
+ * This class configures the Jackson ObjectMapper for the entire application.
+ * Specifically, it ensures LocalDate values are serialized/deserialized correctly.
+ */
+
 @Configuration
 public class JacksonConfiguration {
 

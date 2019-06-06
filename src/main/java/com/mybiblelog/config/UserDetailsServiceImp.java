@@ -34,10 +34,6 @@ public class UserDetailsServiceImp implements UserDetailsService {
 		builder.password(user.getPassword());
 		builder.roles(user.getRoles());
 		
-		// TESTING
-		// String[] roles = user.getRoles();
-		// for (String role : roles) System.out.println(role);
-
 		return builder.build();
 	}
 }
