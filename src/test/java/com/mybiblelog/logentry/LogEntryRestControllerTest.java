@@ -19,7 +19,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.mybiblelog.config.LoginService;
 import com.mybiblelog.logentry.LogEntryRestController.LogEntryCreateRequest;
-import com.mybiblelog.logentry.LogEntryRestController.LogEntryNotFoundException;
 import com.mybiblelog.logentry.LogEntryRestController.LogEntryUpdateRequest;
 import com.mybiblelog.user.User;
 

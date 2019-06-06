@@ -1,12 +1,11 @@
 package com.mybiblelog.logentry;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -59,7 +58,7 @@ public class LogEntryRestController {
 		
 		int startVerseId = logEntryBody.startVerseId;
 		int endVerseId = logEntryBody.endVerseId;
-		Date date = logEntryBody.date;
+		LocalDate date = logEntryBody.date;
 		
 		this.validateVerseRange(startVerseId, endVerseId);
 
@@ -78,7 +77,7 @@ public class LogEntryRestController {
 		}
 		int startVerseId = logEntryBody.startVerseId;
 		int endVerseId = logEntryBody.endVerseId;
-		Date date = logEntryBody.date;
+		LocalDate date = logEntryBody.date;
 		
 		this.validateVerseRange(startVerseId, endVerseId);
 		
@@ -109,7 +108,7 @@ public class LogEntryRestController {
 	// @RequestBody Mapping Objects
 	
 	public static class LogEntryCreateRequest {
-		@DateTimeFormat(pattern="yyyy-MM-dd") public Date date;
+		public LocalDate date;
 		public int startVerseId;
 		public int endVerseId;
 		
@@ -118,7 +117,7 @@ public class LogEntryRestController {
 	
 	public static class LogEntryUpdateRequest {
 		public Long id;
-		@DateTimeFormat(pattern="yyyy-MM-dd") public Date date;
+		public LocalDate date;
 		public int startVerseId;
 		public int endVerseId;
 		

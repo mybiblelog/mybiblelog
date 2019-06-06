@@ -14,14 +14,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Optional;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -68,6 +66,9 @@ public class LogEntryRestControllerMvcTest {
 	@MockBean
 	LogEntryRepository logEntryRepo;
 	
+	@Autowired
+	ObjectMapper mapper;
+	
 	@Mock
 	LogEntry mockLogEntry;
 	
@@ -86,15 +87,12 @@ public class LogEntryRestControllerMvcTest {
 	}
 	
 	private String mapToJson(Object object) throws JsonProcessingException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		return objectMapper.writeValueAsString(object);
+		return mapper.writeValueAsString(object);
 	}
 	
 	private <T> T mapFromJson(String json, Class<T> type)
 		throws JsonParseException, JsonMappingException, IOException {
-		
-		ObjectMapper objectMapper = new ObjectMapper();
-		return objectMapper.readValue(json, type);
+		return mapper.readValue(json, type);
 	}
 	
 	// READ ALL
@@ -197,9 +195,8 @@ public class LogEntryRestControllerMvcTest {
 	@WithMockUser("test@example.com")
 	@Test
 	public void shouldCreateLogEntryAndReturnIt() throws Exception {
-		String testDateString = "2020-01-01";
-		Date testDate = new SimpleDateFormat("yyyy-MM-dd").parse(testDateString);
-				
+		LocalDate testDate = LocalDate.of(2020, 1, 1);
+		
 		LogEntryCreateRequest body = new LogEntryCreateRequest();
 		body.startVerseId = 101001001;
 		body.endVerseId = 101001002;
@@ -210,14 +207,14 @@ public class LogEntryRestControllerMvcTest {
 		
 		when(logEntryRepo.save(any(LogEntry.class)))
 			.thenReturn(createdEntry);
-		
+
 		MvcResult result = mvc
 			.perform(post("/api/log-entries")
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(bodyJson))
-			.andExpect(jsonPath("$.date", testDateString).exists())
+			.andExpect(jsonPath("$.date", "2020-01-01").exists())
 			.andReturn();
-		
+
 		String content = result.getResponse().getContentAsString();
 		LogEntry resultEntry = this.mapFromJson(content, LogEntry.class);
 		assertThat(resultEntry.getStartVerseId(), is(101001001));

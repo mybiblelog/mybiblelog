@@ -1,6 +1,6 @@
 package com.mybiblelog.logentry;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.annotation.Resource;
 
@@ -40,7 +40,7 @@ public class LogEntryController {
 	public LogEntry addLogEntry(
 			@RequestParam int startVerseId,
 			@RequestParam int endVerseId,
-			@RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date date
+			@RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate date
 	) {
 		User user = loginService.resolveAuthUser();
 		
