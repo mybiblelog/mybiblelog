@@ -17,30 +17,31 @@
   </div>
 </head>
 <body>
-  <div class="container">
+	<!--/*
+		Template content is included in each section within .container so
+		errors can be detected if any intended content is not present.
+	*/-->
 
-    <!--/*
-      Template content is included in each section within .container so
-      errors can be detected if any intended content is not present.
-    */-->
+	<div th:replace="fragments/header">
+		<!-- HEADER -->
+	</div>
 
-    <div th:replace="fragments/header">(( HEADER ))</div>
+	<div th:replace="fragments/nav">
+		<!-- NAV -->
+	</div>
 
-    <main>
-      <div layout:fragment="content">(( CONTENT ))</div>
-    </main>
-    
-    <div th:replace="fragments/nav">(( NAV ))</div>
+	<main>
+		<div layout:fragment="content">
+			<!-- CONTENT -->
+		</div>
+	</main>
 
-    <div th:replace="fragments/footer">(( FOOTER ))</div>
-  </div>
+	<!--/* This is a site-wide JavaScript file. */-->
+	<script src="js/script.js"></script>
+	<script src="js/bible.js"></script>
 
-  <!--/* This is a site-wide JavaScript file. */-->
-  <script src="js/script.js"></script>
-  <script src="js/bible.js"></script>
-  
-  <div layout:fragment="bodyscripts">
-    <!--/* If any individual page doesn't have bodyscripts, this <div> will not render. */-->
-  </div>
+	<div layout:fragment="bodyscripts">
+		<!--/* If any individual page doesn't have bodyscripts, this <div> will not render. */-->
+	</div>
 </body>
 </html>

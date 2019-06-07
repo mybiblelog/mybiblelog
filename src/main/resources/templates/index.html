@@ -11,10 +11,24 @@
 <body>
 	<div layout:fragment="content">
 		
-		<h1>My Bible Log</h1>
+		<p>MyBibleLog.com is a project to help you track and gain insights on your bible reading.</p>
 	
-		<p>Home Page -- use navigation in sidebar.</p>
-	
+		<p>It's a fitness app for studying scripture!</p>
+
+		<p>
+			Unlike regular prescriptive reading plans, which tell you what to read and when to read it,
+			MyBibleLog.com is entirely descriptive. It tells you what you've read and when you read it.
+		</p>
+
+		<p>
+			The site is free for all to use and works on any device!
+			<span th:unless="${@identity.loggedIn()}" th:remove="tag">Sign in below:</span>
+		</p>
+
+		<nav th:unless="${@identity.loggedIn()}">
+			<a href="/oauth2/authorization/google">Google</a>
+			<a href="/oauth2/authorization/facebook">Facebook</a>
+		</nav>
 	</div>
 </body>
 </html>

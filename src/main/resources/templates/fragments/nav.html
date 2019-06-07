@@ -1,10 +1,5 @@
 <nav>
-  <a href="/">Home Page</a>
-  <a href="/demo">Demo Page</a>
-  <a href="/log">Log Page</a>
-  <a href="/oauth">OAuth2 Page</a>
-  <hr>
-  <div th:if="${@identity.loggedIn()}" th:remove="tag">
-    <a href="/h2-console" target="_blank">H2 Console</a>
-  </div>
+	<div th:if="${@identity.loggedIn()}" th:remove="tag">
+		<a href="/logout">Sign Out</a>
+	</div>
 </nav>
