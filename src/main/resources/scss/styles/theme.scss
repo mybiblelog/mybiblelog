@@ -1,0 +1,137 @@
+:root {
+	font-size: 16px;
+  }
+  
+  * {
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+	font-family: sans-serif;
+  }
+  
+  $breakpoint: 800px;
+  
+  @mixin mq($breakpoint) {
+	@media (min-width: $breakpoint) { @content; }
+  }
+  
+  $header-height: calc(1rem + 1.618rem + 3px);
+  
+  .site-container {
+	height: 100vh;
+  
+	display: flex;
+	flex-direction: column;
+	padding-top: $header-height;
+  
+	@include mq($breakpoint) {
+	  display: grid;
+	  grid-template-columns: auto 1fr;
+	  grid-template-rows: auto 1fr;
+	  padding-top: 0;
+	}
+  }
+  
+  .site-header {
+	background-color: rgb(43, 111, 189);
+	color: #fff;
+	padding: 0.5rem;
+	border-bottom: 1px solid #fff;
+	box-shadow: 0 0 5px #000;
+  
+	display: flex;
+	justify-content: space-between;
+	
+	position: fixed;
+	top: 0;
+	width: 100%;
+  
+	@include mq($breakpoint) {
+	  position: static;
+	  width: auto;
+	  grid-area: 1 / 1 / 2 / 3;
+	}
+  }
+  
+  .site-title {
+	font-size: 1.5rem;
+	font-weight: 300;
+  }
+  
+  .site-nav-trigger {
+	padding: 0.25rem 0.5rem;
+	background: #000;
+	color: #fff;
+	border-radius: 3px;
+	line-height: 1;
+	display: flex;
+	align-items: center;
+	border: 0;
+	font-size: 1rem;
+	letter-spacing: 1px;
+  
+	&:active {
+	  background: #fff;
+	  color: #333;
+	}
+  
+	@include mq($breakpoint) {
+	  display: none;
+	}
+  }
+  
+  .site-nav {
+	background: #333;
+	position: absolute;
+	top: $header-height;
+	width: 100vw;
+	display: none;
+  
+	min-height: calc(100vh - #{$header-height});
+  
+	&.active {
+	  display: block;
+	}
+  
+	@include mq($breakpoint) {
+	  display: block;
+	  position: static;
+	  width: auto;
+	  grid-area: 2 / 1 / 2 / 2;
+	  min-width: 12rem;
+	}
+	
+	ul {
+	  list-style-type: none;
+	  li {
+	    .site-nav__welcome {
+		  color: #fff;
+		  padding: 0.5rem;
+		  display: block;
+		  border-bottom: 1px solid #444;		
+		}
+		a {
+		  display: block;
+		  padding: 0.5rem;
+		  color: #ccc;
+		  text-decoration: none;
+		  border-bottom: 1px solid #444;
+		  &:hover {
+			background: #111;
+			color: #fff;
+			transition: 0.2s;
+		  }
+		}
+	  }
+	}
+  }
+  
+  .site-main {
+	padding: 1rem 0.5rem;
+	@include mq($breakpoint) {
+	  padding: 1rem;
+	  overflow-y: auto;
+	}
+  }
+
+  @import 'log.scss';

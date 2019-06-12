@@ -1,11 +1,4 @@
-<header>
-	<h1>My Bible Log</h1>
-
-	<div th:if="${@identity.loggedIn()}">
-		<span th:text="'Welcome, ' + ${@identity.email()} + '!'" />
-	</div>
-	<div  th:unless="${@identity.loggedIn()}">
-		<span>Welcome, Guest!</span>
-	</div>
-	
+<header class="site-header">
+	<h1 class="site-title">My Bible Log</h1>
+	<button class="site-nav-trigger">menu</button>
 </header>

@@ -1,5 +1,19 @@
-<nav>
-	<div th:if="${@identity.loggedIn()}" th:remove="tag">
-		<a href="/logout">Sign Out</a>
-	</div>
+<nav class="site-nav">
+	<ul>
+		<li th:if="${@identity.loggedIn()}">
+			<span class="site-nav__welcome" th:text="'Welcome, ' + ${@identity.email()} + '!'" />
+		</li>
+		<li th:unless="${@identity.loggedIn()}">
+			<span class="site-nav__welcome">Welcome, Guest!</span>
+		</li>
+		<li>
+			<a href="/">Home</a>
+		</li>
+		<li>
+			<a href="/log">Reading Log</a>
+		</li>
+		<li th:if="${@identity.loggedIn()}">
+			<a href="/logout">Sign Out</a>
+		</li>
+	</ul>
 </nav>

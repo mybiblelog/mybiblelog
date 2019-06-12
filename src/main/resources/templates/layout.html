@@ -10,7 +10,7 @@
 
   <link rel="shortcut icon" href="favicon.png">
 
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/theme.css">
   
   <div layout:fragment="headscripts">
     <!--/* If any individual page doesn't have headscripts, this <div> will not render. */-->
@@ -22,22 +22,18 @@
 		errors can be detected if any intended content is not present.
 	*/-->
 
-	<div th:replace="fragments/header">
-		<!-- HEADER -->
-	</div>
+	<div class="site-container">
+		<div th:replace="fragments/header"><!-- HEADER --></div>
 
-	<div th:replace="fragments/nav">
-		<!-- NAV -->
-	</div>
+		<main class="site-main">
+			<div layout:fragment="content"><!-- CONTENT --></div>
+		</main>
 
-	<main>
-		<div layout:fragment="content">
-			<!-- CONTENT -->
-		</div>
-	</main>
+		<div th:replace="fragments/nav"><!-- NAV --></div>
+	</div>
 
 	<!--/* This is a site-wide JavaScript file. */-->
-	<script src="js/script.js"></script>
+	<script src="js/site.js"></script>
 	<script src="js/bible.js"></script>
 
 	<div layout:fragment="bodyscripts">
