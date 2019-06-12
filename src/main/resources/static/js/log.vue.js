@@ -243,7 +243,7 @@
 					else {
 						console.log({ data });
 						this.logEntries.push(data);
-						this.resetForm();
+						this.closeAddEntryForm()
 					}
 				});
 			},
@@ -272,7 +272,7 @@
 						console.log({ data });
 						const updatedLogEntry = this.logEntries.find(e => e.id === data.id);
 						Object.assign(updatedLogEntry, data);
-						this.resetForm();
+						this.closeAddEntryForm()
 					}
 				});
 			},
