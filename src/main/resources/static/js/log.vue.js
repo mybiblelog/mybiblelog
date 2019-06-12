@@ -99,6 +99,7 @@
 				}
 			},
 			deleteEntry(id) {
+				if (!confirm('Are you sure you want to delete this entry?')) return;
 				fetch('/api/log-entries/' + id, { method: 'DELETE' })
 					.then(response => response.json())
 					.then(data => {
