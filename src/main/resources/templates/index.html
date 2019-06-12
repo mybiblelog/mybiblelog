@@ -26,8 +26,8 @@
 		</p>
 
 		<nav th:unless="${@identity.loggedIn()}">
-			<a href="/oauth2/authorization/google">Google</a>
-			<a href="/oauth2/authorization/facebook">Facebook</a>
+			<a class="button-link" href="/oauth2/authorization/google">Sign in with Google</a>
+			<a class="button-link" href="/oauth2/authorization/facebook">Sign in with Facebook</a>
 		</nav>
 	</div>
 </body>
