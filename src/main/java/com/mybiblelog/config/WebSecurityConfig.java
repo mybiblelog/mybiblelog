@@ -30,6 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
+			.csrf().disable()
 			.headers().frameOptions().disable()
 			.and()
 				.authorizeRequests()
@@ -56,10 +57,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 				.logout().permitAll()
 				.logoutUrl("/logout")
-				.logoutSuccessUrl("/");
-		
-		http.csrf().disable();
-		http.headers().frameOptions().disable();
+				.logoutSuccessUrl("/")
+			.and()
+				.requiresChannel() // Forces Heroku traffic to HTTPS
+				.requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
+				.requiresSecure();
 	}
 
 	@Override
