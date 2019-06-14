@@ -60,6 +60,26 @@ SELECT schemaname, relname, n_live_tup
 SELECT SUM(n_live_tup) FROM pg_stat_user_tables;
 ```
 
+### Database Backup and Restore
+
+Heroku's paid Postgres plans include the ability to make databse backups on the server.
+
+For free plans, it is still possible to use `heroku pg:pull` and `heroku pg:push` to copy a database between the server and a local machine: https://devcenter.heroku.com/articles/heroku-postgresql#pg-pull
+
+The pattern for using `pg:pull` is:
+```
+PGUSER=postgres PGPASSWORD=password heroku pg:pull HEROKU_DATABASE_URL NEW_LOCAL_DB_NAME --app mybiblelog
+```
+* `PGUSER` and `PGPASSWORD` are the credentials for the local database.
+* `HEROKU_DATABASE_URL` is the name of the database addon.
+* `NEW_LOCAL_DB_NAME` is the name of a NONEXISTANT local database that will be created as an exact copy of the remote database.
+
+Usage of `pg:push` is similar:
+```
+PGUSER=postgres PGPASSWORD=password heroku pg:push existing_local_db HEROKU_DATABASE_URL --app mybiblelog
+```
+The remote database needs to exist to run the command, but it must also be empty. If it is not empty, you will be prompted to `pg:reset` it first.
+
 ## Connecting to Google OAuth2
 
 To allow users to log in with their existing user accounts you will need to follow several steps:
