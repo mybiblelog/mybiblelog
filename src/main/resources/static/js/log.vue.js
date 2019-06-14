@@ -46,6 +46,8 @@
 				endChapter:		0,
 				endVerse:		0,
 			},
+
+			chapterVerses: {},
 			
 			books: [],
 			startChapters: [],
@@ -116,9 +118,25 @@
 				this.formOpen = true;
 			},
 			openEditEntryForm(id) {
-				const targetEntry = this.logEntries.find(e => e.id === id);
-				Object.assign(this.model, targetEntry);
 				this.formOpen = true;
+				const targetEntry = this.logEntries.find(e => e.id === id);
+				const { date, startVerseId, endVerseId } = targetEntry;
+				const start = Bible.parseVerseId(startVerseId);
+				const end = Bible.parseVerseId(endVerseId);
+				Object.assign(this.model, {
+					id,
+					date,
+					book: start.book,
+				});
+				this.onSelectBook();
+				this.model.startChapter = start.chapter;
+				this.onSelectStartChapter();
+				this.model.startVerse = start.verse;
+				this.onSelectStartVerse();
+				this.model.endChapter = end.chapter;
+				this.onSelectEndChapter();
+				this.model.endVerse = end.verse;
+				this.onSelectEndVerse();
 			},
 			closeAddEntryForm() {
 				this.formOpen = false;
@@ -168,16 +186,13 @@
 				this.resetStartVerse();
 				this.resetEndChapter();
 				this.resetEndVerse();
-
-				fetch(`/countBookChapterVerses?bookIndex=${this.model.book}&chapterIndex=${this.model.startChapter}`)
-					.then(response => response.json())
-					.then(verseCount => {
-						const verses = [];
-						for (let i = 1; i <= verseCount; i++) verses.push(i);
-						this.startVerses = verses;
-						
-						this.$nextTick(() => this.$refs.startVerse.focus());
-					});
+				
+				const chapterId = Bible.makeVerseId(this.model.book, this.model.startChapter, 0);
+				const chapterVerseCount = this.chapterVerses[chapterId];
+				const verses = [];
+				for (let i = 1; i <= chapterVerseCount; i++) verses.push(i);
+				this.startVerses = verses;
+				this.$nextTick(() => this.$refs.endVerse.focus());
 			},
 			onSelectStartVerse() {
 				this.resetEndChapter();
@@ -197,17 +212,14 @@
 			onSelectEndChapter() {
 				this.resetEndVerse();
 
-				fetch(`/countBookChapterVerses?bookIndex=${this.model.book}&chapterIndex=${this.model.endChapter}`)
-					.then(response => response.json())
-					.then(verseCount => {
-						const verses = [];
-						let i = 1;
-						if (this.model.startChapter === this.model.endChapter) i = this.model.startVerse;
-						for (; i <= verseCount; i++) verses.push(i);
-						this.endVerses = verses;
-
-						this.$nextTick(() => this.$refs.endVerse.focus());
-					});
+				const chapterId = Bible.makeVerseId(this.model.book, this.model.endChapter, 0);
+				const chapterVerseCount = this.chapterVerses[chapterId];
+				const verses = [];
+				let i = 1;
+				if (this.model.startChapter === this.model.endChapter) i = this.model.startVerse;
+				for (; i <= chapterVerseCount; i++) verses.push(i);
+				this.endVerses = verses;
+				this.$nextTick(() => this.$refs.endVerse.focus());
 			},
 			onSelectEndVerse() {
 				this.$nextTick(() => this.$refs.submit.focus());
@@ -285,6 +297,14 @@
 					.then(data => {
 						this.books = data;
 					});
+
+			const loadChapterVerses =
+				() => fetch('/chapter-verses.json').then(r => r.json())
+					.then(d => {
+						for (let i of d) {
+							this.chapterVerses[i.chapterId] = i.verseCount;
+						}
+					});
 			
 			const loadLogEntries =
 				() => fetch('/api/log-entries')
@@ -295,7 +315,9 @@
 
 			// Load bible metadata first since it is used to
 			// display log entries
-			loadBibleBooks().then(loadLogEntries);
+			loadBibleBooks()
+				.then(loadChapterVerses)
+				.then(loadLogEntries);
 		},
 	});
 
