@@ -33,7 +33,14 @@ On Windows, a modified Procfile must be used to run the application locally: `he
 
 ## Building with Gradle
 
-Before running `gradle build` in the local terminal, you must run `export JDBC_DATABASE_URL=jdbc:h2:mem:testdb` to set the environment variable. Otherwise tests will fail.
+Previously, it was necessary to set the `JDBC_DATABASE_URL` environment variable before running Gradle scripts like `gradle build` and `gradle check`.
+
+This section of the `build.gradle` now handles that automatically:
+```groovy
+test {
+	environment "JDBC_DATABASE_URL", "jdbc:h2:mem:testdb"
+}
+```
 
 ## Working with Postgres
 
@@ -69,11 +76,13 @@ To allow users to log in with their existing user accounts you will need to foll
 
 To allow users to log in with their existing accounts you will need to follow several steps:
 * Set up an OAuth2 app with the Facebook App Manager: https://developers.facebook.com/apps/
-* Get the `FACEBOOK_CLIENT_ID` and `FACEBOOK_CLIENT_SECRET` environment variables from Google
+* Get the `FACEBOOK_CLIENT_ID` and `FACEBOOK_CLIENT_SECRET` environment variables from Facebook
 	* Click the app name in the dashboard
 	* In the left sidebar, click "Settings"
 	* Under settings, click "Basic"
 	* The "App ID" and "App Secret" are at the top of the page
+* Note that you will also need to configure the **Valid OAuth Redirect URIs** for your app. These settings can be found under **Products > Settings** in the left sidebar.
+	* The default redirect URI is: `https://www.mybiblelog.com/login/oauth2/code/facebook`
 
 It is possible for Facebook OAuth2 users to withhold their email addresses during the login flow. This is problematic as user accounts and user data are centered around the email address as a unique identifier.
 
