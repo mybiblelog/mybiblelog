@@ -86,8 +86,8 @@ To allow users to log in with their existing user accounts you will need to foll
 * Set up an OAuth2 client with the Google credentials manager: https://console.developers.google.com/apis/credentials/oauthclient/
 * Ensure all relevant hosts are set as allowed Google redirect URLs:
 	* http://localhost:8080/login/oauth2/code/google
-	* http://www.mybiblelog.com/login/oauth2/code/google
-	* http://mybiblelog.herokuapp.com/login/oauth2/code/google
+	* https://mybiblelog.herokuapp.com/login/oauth2/code/google
+	* https://www.mybiblelog.com/login/oauth2/code/google
 * Get the `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` environment variables from Google
 * Set up those variables in Eclipse to run the project locally
 * Set up those variables in Heroku to deploy the project
@@ -101,8 +101,9 @@ To allow users to log in with their existing accounts you will need to follow se
 	* In the left sidebar, click "Settings"
 	* Under settings, click "Basic"
 	* The "App ID" and "App Secret" are at the top of the page
-* Note that you will also need to configure the **Valid OAuth Redirect URIs** for your app. These settings can be found under **Products > Settings** in the left sidebar.
-	* The default redirect URI is: `https://www.mybiblelog.com/login/oauth2/code/facebook`
+* Note that you will also need to configure the **Valid OAuth Redirect URIs** for your app. These settings can be found under **Products > Facebook Login > Settings** in the left sidebar. Facebook allows `localhost` redirects by default, but be sure to add the Heroku subdomain and any custom domain:
+	* `https://mybiblelog.herokuapp.com/login/oauth2/code/facebook`
+	* `https://www.mybiblelog.com/login/oauth2/code/facebook`
 
 It is possible for Facebook OAuth2 users to withhold their email addresses during the login flow. This is problematic as user accounts and user data are centered around the email address as a unique identifier.
 
