@@ -100,7 +100,7 @@
       overflow-y: auto; } }
   .site-main .button-link {
     padding: 1rem;
-    background: #ccc;
+    background: #ddd;
     color: #000;
     border-radius: 3px;
     line-height: 1;
@@ -110,17 +110,12 @@
     font-size: 1rem;
     letter-spacing: 1px;
     text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     margin: 0.5rem 0;
-    font-size: 1.2rem;
-    box-shadow: 0 0 0 0.1rem rgba(0, 0, 0, 0.3);
-    transition: box-shadow 0.2s ease-out, background 0.2s ease-out, padding 0.2s ease-out; }
+    border: 1px solid #666;
+    max-width: 20rem; }
     .site-main .button-link:active {
-      background: #eee;
-      box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.5) inset;
-      padding: 1.1rem 1rem 0.9rem; }
+      color: #333;
+      background: #eee; }
 
 main p {
   margin-bottom: 1rem; }
