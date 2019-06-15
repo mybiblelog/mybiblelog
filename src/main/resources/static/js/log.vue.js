@@ -292,19 +292,14 @@
 		mounted() {
 
 			const loadBibleBooks =
-				() => fetch('/bibleBooks')
+				() => fetch('/bible-books.json')
 					.then(response => response.json())
-					.then(data => {
-						this.books = data;
-					});
+					.then(data => this.books = data);
 
 			const loadChapterVerses =
-				() => fetch('/chapter-verses.json').then(r => r.json())
-					.then(d => {
-						for (let i of d) {
-							this.chapterVerses[i.chapterId] = i.verseCount;
-						}
-					});
+				() => fetch('/chapter-verses.json')
+					.then(response => response.json())
+					.then(data => this.chapterVerses = data);
 			
 			const loadLogEntries =
 				() => fetch('/api/log-entries')

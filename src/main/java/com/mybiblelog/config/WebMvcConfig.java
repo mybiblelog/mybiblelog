@@ -25,10 +25,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new FacebookEmailInterceptor());
 	}
-	
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		 registry.addResourceHandler("/*.json").addResourceLocations("classpath:/com/mybiblelog/bible/");
-	}
-
 }

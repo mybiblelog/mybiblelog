@@ -1,28 +1,22 @@
 package com.mybiblelog.bible;
 
+import java.util.HashMap;
+
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class BibleController {
 
-	@GetMapping("/bibleBooks")
+	@GetMapping("/bible-books.json")
 	public Iterable<BibleBook> getBibleBooks() {
 		BibleIndex bible = BibleIndex.getInstance();
 		return bible.getBooks();
 	}
 	
-	@GetMapping("/countBookChapters")
-	public int countBookChapters(@RequestParam int bookIndex) {
+	@GetMapping("/chapter-verses.json")
+	public HashMap<Integer, Integer> getChapterVerses() {
 		BibleIndex bible = BibleIndex.getInstance();
-		return bible.getBookChapterCount(bookIndex);
+		return bible.getChapterVerses();
 	}
-	
-	@GetMapping("/countBookChapterVerses")
-	public int countChapterVerses(@RequestParam int bookIndex, @RequestParam int chapterIndex) {
-		BibleIndex bible = BibleIndex.getInstance();
-		return bible.getChapterVerseCount(bookIndex, chapterIndex);
-	}
-	
 }
