@@ -20,4 +20,9 @@ public class LogEntryController {
 	public String getLog() {
 		return "log";
 	}
+	
+	@GetMapping("/coverage")
+	public String getCoverage() {
+		return "coverage";
+	}
 }

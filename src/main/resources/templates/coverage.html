@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>My Bible Log</title>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		
+		<div id="js-vue-app" v-cloak class="page-column">
+
+			<header>
+				<h2>Coverage Report</h2>
+			</header>
+			
+			<div>Display whole bible coverage here</div>
+			
+			<div>Display OT / NT coverage here</div>
+
+            <div>COMPONENT TEMPLATE SCRIPT TAG - BookCoverage</div>
+			<div>COMPONENT TEMPLATE SCRIPT TAG - ChapterCoverage</div>
+			
+		</div>
+		
+		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+		<script src="/js/coverage.vue.js"></script>
+	
+	</div>
+</body>
+
+</html>

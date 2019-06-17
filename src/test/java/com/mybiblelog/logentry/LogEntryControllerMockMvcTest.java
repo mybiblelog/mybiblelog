@@ -91,4 +91,21 @@ public class LogEntryControllerMockMvcTest {
 	public void shouldBeOkForLogIfAuthenticated() throws Exception {
 		mvc.perform(get("/log")).andExpect(status().isOk());
 	}
+
+	@Test
+	public void shouldRedirectFromCoverageReportIfNotAuthenticated() throws Exception {
+		mvc.perform(get("/coverage")).andExpect(status().is3xxRedirection());
+	}
+	
+	@Test
+	@WithMockUser("test@example.com")
+	public void shouldRouteToCoverageReportIfAuthenticated() throws Exception {
+		mvc.perform(get("/coverage")).andExpect(view().name(is("coverage")));
+	}
+	
+	@Test
+	@WithMockUser("test@example.com")
+	public void shouldBeOkForCoverageReportIfAuthenticated() throws Exception {
+		mvc.perform(get("/coverage")).andExpect(status().isOk());
+	}
 }
