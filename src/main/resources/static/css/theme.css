@@ -60,11 +60,12 @@
 
 .site-nav {
   background: #333;
-  position: absolute;
+  position: fixed;
   top: calc(1rem + 1.618rem + 3px);
   width: 100vw;
-  display: none;
-  min-height: calc(100vh - calc(1rem + 1.618rem + 3px)); }
+  height: calc(100vh - calc(1rem + 1.618rem + 3px));
+  overflow-y: scroll;
+  display: none; }
   .site-nav.active {
     display: block; }
   @media (min-width: 800px) {
