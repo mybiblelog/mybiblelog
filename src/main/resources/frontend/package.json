@@ -1,0 +1,23 @@
+{
+  "name": "scss",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "sass": "node-sass styles/theme.scss ../static/css/theme.css",
+    "sass:watch": "node-sass -w styles/theme.scss ../static/css/theme.css",
+    "rollup": "rollup scripts/bible.js -o ../static/js/bible.js -f iife --config rollup.config.js",
+    "rollup:watch": "rollup scripts/bible.js -o ../static/js/bible.js -f iife --config rollup.config.js --watch",
+    "jest": "jest",
+    "jest:watch": "jest --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^24.8.0",
+    "node-sass": "^4.12.0",
+    "rollup": "^1.15.6",
+    "rollup-plugin-commonjs": "^10.0.0"
+  }
+}
