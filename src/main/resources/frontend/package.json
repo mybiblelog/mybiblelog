@@ -6,16 +6,22 @@
   "scripts": {
     "sass": "node-sass styles/theme.scss ../static/css/theme.css",
     "sass:watch": "node-sass -w styles/theme.scss ../static/css/theme.css",
+    "eslint": "esw --fix scripts",
+    "eslint:watch": "npm run eslint -- --watch",
     "rollup": "rollup scripts/bible.js -o ../static/js/bible.js -f iife --config rollup.config.js",
     "rollup:watch": "rollup scripts/bible.js -o ../static/js/bible.js -f iife --config rollup.config.js --watch",
     "jest": "jest",
-	"jest:watch": "jest --watch",
-	"build": "npm run sass && npm run rollup"
+    "jest:watch": "jest --watch",
+    "javascript": "concurrently \"npm run rollup:watch\" \"npm run jest:watch\" \"npm run eslint:watch\"",
+    "build": "npm run sass && npm run rollup"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "concurrently": "^4.1.0",
+    "eslint": "^5.16.0",
+    "eslint-watch": "^5.1.2",
     "jest": "^24.8.0",
     "node-sass": "^4.12.0",
     "rollup": "^1.15.6",
