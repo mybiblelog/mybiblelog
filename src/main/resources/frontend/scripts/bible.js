@@ -1,7 +1,10 @@
 const bibleBooks = require('./static/bible-books.js');
 const chapterVerses = require('./static/chapter-verses.js');
+const BibleVerse = require('./bible-verse.js');
 
 const Bible = {};
+
+Bible.Verse = BibleVerse;
 
 Bible.makeVerseId = (book = 0, chapter = 0, verse = 0) => {
 	let verseId = 100000000 + book * 1000000 + chapter * 1000 + verse;
@@ -22,16 +25,22 @@ Bible.getBooks = () => bibleBooks;
 
 Bible.getChapterVerses = () => chapterVerses;
 
-Bible.countBookChapters = bookIndex => {
+Bible.getBookChapterCount = bookIndex => {
 	const targetBook = bibleBooks.find(b => b.bibleOrder === bookIndex);
 	if (!targetBook) return 0;
 	return targetBook.chapterCount;
 };
 
-Bible.countChapterVerses = (bookIndex, chapterIndex) => {
+Bible.getChapterVerseCount = (bookIndex, chapterIndex) => {
 	const chapterId = Bible.makeVerseId(bookIndex, chapterIndex);
 	const result = chapterVerses.find(c => c.chapterId === chapterId);
 	return result ? result.verseCount : 0;
+};
+
+Bible.getBookName = bookIndex => {
+	const targetBook = bibleBooks.find(b => b.bibleOrder === bookIndex);
+	if (!targetBook) return '';
+	return targetBook.name;
 };
 
 module.exports = Bible;
