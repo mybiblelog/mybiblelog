@@ -1,12 +1,7 @@
 const bibleBooks = require('./static/bible-books.js');
 const chapterVerses = require('./static/chapter-verses.js');
-const BibleVerse = require('./bible-verse.js');
-const LogEntry = require('./log-entry.js');
 
 const Bible = {};
-
-Bible.Verse = BibleVerse;
-Bible.LogEntry = LogEntry;
 
 Bible.makeVerseId = (book = 0, chapter = 0, verse = 0) => {
   let verseId = 100000000 + book * 1000000 + chapter * 1000 + verse;

@@ -1,10 +1,14 @@
 import commonjs from 'rollup-plugin-commonjs';
 
-export default {
-	output: {
-	  file: 'bible.js',
-	  format: 'iife',
-	  name: 'Bible'
-	},
-	plugins: [commonjs()] // recognizes 'require(...)'
-};
+export default [
+  {
+    input:  'scripts/modules.js',
+    output: {
+      file:    '../static/js/modules.js',
+      format:  'iife',
+      exports: 'named',
+      name:    'Modules',
+    },
+    plugins: [commonjs()], // recognizes 'require(...)'
+  },
+];
