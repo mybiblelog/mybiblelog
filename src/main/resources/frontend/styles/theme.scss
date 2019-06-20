@@ -86,7 +86,7 @@
 	top: $header-height;
 	width: 100vw;
 	height: calc(100vh - #{$header-height});
-	overflow-y: scroll;
+	overflow-y: auto;
 	display: none;  
   
 	&.active {

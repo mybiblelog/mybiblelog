@@ -64,7 +64,7 @@
   top: calc(1rem + 1.618rem + 3px);
   width: 100vw;
   height: calc(100vh - calc(1rem + 1.618rem + 3px));
-  overflow-y: scroll;
+  overflow-y: auto;
   display: none; }
   .site-nav.active {
     display: block; }

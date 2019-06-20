@@ -9,7 +9,8 @@
     "rollup": "rollup scripts/bible.js -o ../static/js/bible.js -f iife --config rollup.config.js",
     "rollup:watch": "rollup scripts/bible.js -o ../static/js/bible.js -f iife --config rollup.config.js --watch",
     "jest": "jest",
-    "jest:watch": "jest --watch"
+	"jest:watch": "jest --watch",
+	"build": "npm run sass && npm run rollup"
   },
   "keywords": [],
   "author": "",
