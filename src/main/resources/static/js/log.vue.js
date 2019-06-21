@@ -99,7 +99,10 @@
 					range += end.chapter + ':' + end.verse;
 					return range
 				}
-			},
+      },
+      displayVerseRangeCount(startVerseId, endVerseId) {
+        return Bible.countRangeVerses(startVerseId, endVerseId);
+      },
 			deleteEntry(id) {
 				if (!confirm('Are you sure you want to delete this entry?')) return;
 				fetch('/api/log-entries/' + id, { method: 'DELETE' })

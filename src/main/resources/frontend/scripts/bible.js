@@ -40,4 +40,28 @@ Bible.getBookName = bookIndex => {
   return targetBook.name;
 };
 
+Bible.countRangeVerses = (startVerseId, endVerseId) => {
+  const startVerse = Bible.parseVerseId(startVerseId);
+  const endVerse = Bible.parseVerseId(endVerseId);
+  if (startVerse.chapter === endVerse.chapter) {
+    return endVerse.verse - startVerse.verse + 1;
+  }
+  const { book } = startVerse;
+  let verseCount = 0;
+  for (let i = startVerse.chapter; i <= endVerse.chapter; i++) {
+    const chapterVerses = Bible.getChapterVerseCount(book, i);
+    if (i === startVerse.chapter) {
+      const unreadVerses = (startVerse.verse - 1);
+      verseCount += (chapterVerses - unreadVerses);
+    }
+    else if (i === endVerse.chapter) {
+      verseCount += endVerse.verse;
+    }
+    else {
+      verseCount += chapterVerses;
+    }
+  }
+  return verseCount;
+};
+
 module.exports = Bible;

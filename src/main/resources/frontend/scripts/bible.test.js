@@ -76,3 +76,23 @@ test('should get zero for nonexistant chapter verse counts', () => {
   expect(nonChapterVerses3).toBe(0);
   expect(nonChapterVerses4).toBe(0);
 });
+
+test('can count verse range of single verse', () => {
+  const verseId = Bible.makeVerseId(1, 1, 1);
+  const verseCount = Bible.countRangeVerses(verseId, verseId);
+  expect(verseCount).toBe(1);
+});
+
+test('can count verse range with multiple verses', () => {
+  const startVerseId = Bible.makeVerseId(1, 1, 1);
+  const endVerseId = Bible.makeVerseId(1, 1, 4);
+  const verseCount = Bible.countRangeVerses(startVerseId, endVerseId);
+  expect(verseCount).toBe(4);
+});
+
+test('can count verse range across chapters', () => {
+  const startVerseId = Bible.makeVerseId(1, 1, 15); //31 verses
+  const endVerseId = Bible.makeVerseId(1, 2, 10); //25 verses
+  const verseCount = Bible.countRangeVerses(startVerseId, endVerseId);
+  expect(verseCount).toBe(27);
+});
