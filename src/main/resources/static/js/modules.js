@@ -5609,6 +5609,18 @@ var Modules = (function (exports) {
     return totalVerses;
   };
 
+  Bible.compareRanges = (range1, range2) => {
+    const startVerse1 = Bible.parseVerseId(range1.startVerseId);
+    const startVerse2 = Bible.parseVerseId(range2.startVerseId);
+    if (startVerse1.book < startVerse2.book) return -1;
+    if (startVerse1.book > startVerse2.book) return 1;
+    if (startVerse1.chapter < startVerse2.chapter) return -1;
+    if (startVerse1.chapter > startVerse2.chapter) return 1;
+    if (startVerse1.verse < startVerse2.verse) return -1;
+    if (startVerse1.verse > startVerse2.verse) return 1;
+    return 0;
+  };
+
   var bible = Bible;
 
   class BibleVerse {

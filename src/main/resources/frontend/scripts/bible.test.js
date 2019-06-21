@@ -110,3 +110,48 @@ test('can count number of verses in whole bible', () => {
   const bibleVerseCount = Bible.getTotalVerseCount();
   expect(bibleVerseCount).toBe(31103);
 });
+
+test('can compare ranges of verses in different books', () => {
+  const genesisRange = {
+    startVerseId: Bible.makeVerseId(1, 1, 2),
+    endVerseId:   Bible.makeVerseId(1, 2, 5),
+  };
+  const exodusRange = {
+    startVerseId: Bible.makeVerseId(2, 2, 1),
+    endVerseId:   Bible.makeVerseId(2, 3, 15),
+  };
+  const smallerFirst = Bible.compareRanges(genesisRange, exodusRange);
+  const largerFirst = Bible.compareRanges(exodusRange, genesisRange);
+  expect(smallerFirst).toBe(-1);
+  expect(largerFirst).toBe(1);
+});
+
+test('can compare ranges of verses in same book', () => {
+  const genesis1Range = {
+    startVerseId: Bible.makeVerseId(1, 1, 2),
+    endVerseId:   Bible.makeVerseId(1, 2, 5),
+  };
+  const genesis2Range = {
+    startVerseId: Bible.makeVerseId(1, 2, 1),
+    endVerseId:   Bible.makeVerseId(1, 3, 15),
+  };
+  const smallerFirst = Bible.compareRanges(genesis1Range, genesis2Range);
+  const largerFirst = Bible.compareRanges(genesis2Range, genesis1Range);
+  expect(smallerFirst).toBe(-1);
+  expect(largerFirst).toBe(1);
+});
+
+test('can compare ranges of verses in same chapter', () => {
+  const genesis1Range = {
+    startVerseId: Bible.makeVerseId(1, 1, 1),
+    endVerseId:   Bible.makeVerseId(1, 1, 15),
+  };
+  const genesis2Range = {
+    startVerseId: Bible.makeVerseId(1, 1, 10),
+    endVerseId:   Bible.makeVerseId(1, 1, 25),
+  };
+  const smallerFirst = Bible.compareRanges(genesis1Range, genesis2Range);
+  const largerFirst = Bible.compareRanges(genesis2Range, genesis1Range);
+  expect(smallerFirst).toBe(-1);
+  expect(largerFirst).toBe(1);
+});
