@@ -5,36 +5,37 @@
 		data: {
 			books: [],
 			chapterVerses: {},
-			logEntries: [],
+      logEntries: [],
 		},
 		computed: {
-			//
-		},
+      totalBibleVerses() {
+        return Bible.getTotalVerseCount();
+      },
+      totalVersesRead() {
+        return Bible.countUniqueRangeVerses(this.logEntries);
+      },
+      percentageRead() {
+        return this.percentage(this.totalVersesRead, this.totalBibleVerses);
+      }
+    },
 		methods: {
-			//
+      percentage(numerator, denominator) {
+        return (numerator / denominator * 100).toFixed(2);
+      },
+			bookReport(bookIndex) {
+        const bookName = Bible.getBookName(bookIndex);
+        const totalVerses = Bible.getBookVerseCount(bookIndex);
+        const versesRead = Bible.countUniqueBookRangeVerses(bookIndex, this.logEntries);
+        const percentage = this.percentage(versesRead, totalVerses);
+        return { bookName, totalVerses, versesRead, percentage };
+      },
 		},
 		mounted() {
-
-			const loadBibleBooks =
-				() => fetch('/bible-books.json')
-					.then(response => response.json())
-					.then(data => this.books = data);
-
-			const loadChapterVerses =
-				() => fetch('/chapter-verses.json')
-					.then(response => response.json())
-					.then(data => this.chapterVerses = data);
-			
-			const loadLogEntries =
-				() => fetch('/api/log-entries')
-					.then(response => response.json())
-					.then(data => {
-						this.logEntries = data;
-					});
-
-			loadBibleBooks()
-				.then(loadChapterVerses)
-				.then(loadLogEntries);
+			fetch('/api/log-entries')
+        .then(response => response.json())
+        .then(data => {
+          this.logEntries = data;
+        });
 		},
 	});
 

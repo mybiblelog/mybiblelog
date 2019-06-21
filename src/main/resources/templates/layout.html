@@ -26,7 +26,7 @@
 		<div th:replace="fragments/header"><!-- HEADER --></div>
 
 		<main class="site-main">
-			<div layout:fragment="content"><!-- CONTENT --></div>
+			<div layout:fragment="content" th:remove="tag"><!-- CONTENT --></div>
 		</main>
 
 		<div th:replace="fragments/nav"><!-- NAV --></div>
@@ -36,7 +36,7 @@
 	<script src="js/site.js"></script>
 	<script src="js/modules.js"></script>
 
-	<div layout:fragment="bodyscripts">
+	<div layout:fragment="bodyscripts" th:remove="tag">
 		<!--/* If any individual page doesn't have bodyscripts, this <div> will not render. */-->
 	</div>
 </body>

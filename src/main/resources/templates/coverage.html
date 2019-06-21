@@ -15,21 +15,24 @@
 
 			<header>
 				<h2>Coverage Report</h2>
-			</header>
-			
-			<div>Display whole bible coverage here</div>
-			
-			<div>Display OT / NT coverage here</div>
+      </header>
 
-            <div>COMPONENT TEMPLATE SCRIPT TAG - BookCoverage</div>
-			<div>COMPONENT TEMPLATE SCRIPT TAG - ChapterCoverage</div>
-			
-		</div>
-		
-		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
-		<script src="/js/coverage.vue.js"></script>
-	
-	</div>
+      <div>
+        <p>Total verses in bible: {{ totalBibleVerses }}</p>
+        <p>Total unique verses read: {{ totalVersesRead }}</p>
+        <p>Percent complete: {{ percentageRead }}%</p>
+      </div>
+
+      <div style="height: 0.5rem; background: #000; margin: 1rem 0;">
+        <div style="height: 100%; background: #09f" :style="{ width: percentageRead + '%' }"></div>
+      </div>
+    </div>
+    
+  </div>
+  <div layout:fragment="bodyscripts">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
+    <script src="/js/coverage.vue.js"></script>
+  </div>
 </body>
 
 </html>

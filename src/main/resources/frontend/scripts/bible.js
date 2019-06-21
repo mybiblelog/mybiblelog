@@ -118,7 +118,9 @@ Bible.countUniqueRangeVerses = ranges => {
       lastRange = range;
     }
   }
-  totalVerses += Bible.countRangeVerses(lastRange.startVerseId, lastRange.endVerseId);
+  if (lastRange) {
+    totalVerses += Bible.countRangeVerses(lastRange.startVerseId, lastRange.endVerseId);
+  }
   return totalVerses;
 };
 
