@@ -64,4 +64,22 @@ Bible.countRangeVerses = (startVerseId, endVerseId) => {
   return verseCount;
 };
 
+Bible.getBookVerseCount = bookIndex => {
+  const bookChapterCount = Bible.getBookChapterCount(bookIndex);
+  let totalVerses = 0;
+  for (let c = 1, l = bookChapterCount; c <= l; c++) {
+    totalVerses += Bible.getChapterVerseCount(bookIndex, c);
+  }
+  return totalVerses;
+};
+
+Bible.getTotalVerseCount = () => {
+  const books = Bible.getBooks();
+  let totalVerses = 0;
+  for (let b = 1, l = books.length; b <= l; b++) {
+    totalVerses += Bible.getBookVerseCount(b);
+  }
+  return totalVerses;
+};
+
 module.exports = Bible;

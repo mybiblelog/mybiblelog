@@ -96,3 +96,17 @@ test('can count verse range across chapters', () => {
   const verseCount = Bible.countRangeVerses(startVerseId, endVerseId);
   expect(verseCount).toBe(27);
 });
+
+test('can count number of verses in book', () => {
+  const genesisVerseCount = Bible.getBookVerseCount(1);
+  const judeVerseCount = Bible.getBookVerseCount(65);
+  const revelationVerseCount = Bible.getBookVerseCount(66);
+  expect(genesisVerseCount).toBe(1533);
+  expect(judeVerseCount).toBe(25);
+  expect(revelationVerseCount).toBe(404);
+});
+
+test('can count number of verses in whole bible', () => {
+  const bibleVerseCount = Bible.getTotalVerseCount();
+  expect(bibleVerseCount).toBe(31103);
+});
