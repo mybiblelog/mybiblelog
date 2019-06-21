@@ -142,16 +142,43 @@ test('can compare ranges of verses in same book', () => {
 });
 
 test('can compare ranges of verses in same chapter', () => {
-  const genesis1Range = {
+  const genesisRange1 = {
     startVerseId: Bible.makeVerseId(1, 1, 1),
     endVerseId:   Bible.makeVerseId(1, 1, 15),
   };
-  const genesis2Range = {
+  const genesisRange2 = {
     startVerseId: Bible.makeVerseId(1, 1, 10),
     endVerseId:   Bible.makeVerseId(1, 1, 25),
   };
-  const smallerFirst = Bible.compareRanges(genesis1Range, genesis2Range);
-  const largerFirst = Bible.compareRanges(genesis2Range, genesis1Range);
+  const smallerFirst = Bible.compareRanges(genesisRange1, genesisRange2);
+  const largerFirst = Bible.compareRanges(genesisRange2, genesisRange1);
   expect(smallerFirst).toBe(-1);
   expect(largerFirst).toBe(1);
+});
+
+test('can determine that ranges from different books do not overlap', () => {
+  const genesisRange = {
+    startVerseId: Bible.makeVerseId(1, 1, 1),
+    endVerseId:   Bible.makeVerseId(1, 1, 15),
+  };
+  const exodusRange = {
+    startVerseId: Bible.makeVerseId(2, 1, 10),
+    endVerseId:   Bible.makeVerseId(2, 3, 25),
+  };
+  const result = Bible.checkRangeOverlap(genesisRange, exodusRange);
+  expect(result).toBe(false);
+});
+
+
+test('can determine when ranges do overlap', () => {
+  const genesisRange1 = {
+    startVerseId: Bible.makeVerseId(1, 1, 1),
+    endVerseId:   Bible.makeVerseId(1, 2, 15),
+  };
+  const genesisRange2 = {
+    startVerseId: Bible.makeVerseId(1, 1, 10),
+    endVerseId:   Bible.makeVerseId(1, 2, 25),
+  };
+  const result = Bible.checkRangeOverlap(genesisRange1, genesisRange2);
+  expect(result).toBe(true);
 });

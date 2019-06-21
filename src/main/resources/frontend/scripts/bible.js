@@ -94,4 +94,10 @@ Bible.compareRanges = (range1, range2) => {
   return 0;
 };
 
+Bible.checkRangeOverlap = (range1, range2) => {
+  // Sort ranges according to bible order
+  const [firstRange, secondRange] = [range1, range2].sort(Bible.compareRanges);
+  return firstRange.endVerseId >= secondRange.startVerseId;
+};
+
 module.exports = Bible;
