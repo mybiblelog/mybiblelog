@@ -16,6 +16,13 @@
       },
       percentageRead() {
         return this.percentage(this.totalVersesRead, this.totalBibleVerses);
+      },
+      allBookReports() {
+        const reports = [];
+        for (let i = 1, l = Bible.getBookCount(); i <= l; i++) {
+          reports.push(this.bookReport(i));
+        }
+        return reports;
       }
     },
 		methods: {

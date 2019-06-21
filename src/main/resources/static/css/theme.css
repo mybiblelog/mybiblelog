@@ -216,3 +216,14 @@ tr.entry-row td:last-child {
 
 tr.entry-row.active {
   background: yellow; }
+
+.coverage-table {
+  border-collapse: collapse;
+  border: 1px solid #eee; }
+  .coverage-table th, .coverage-table td {
+    padding: 5px;
+    text-align: right; }
+    .coverage-table th:first-child, .coverage-table td:first-child {
+      text-align: left; }
+  .coverage-table tbody tr:nth-child(odd) {
+    background: #eee; }

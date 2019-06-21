@@ -1,0 +1,16 @@
+.coverage-table {
+  border-collapse: collapse;
+  border: 1px solid #eee;
+
+  th, td {
+    padding: 5px;
+    text-align: right;
+    &:first-child {
+      text-align: left;
+    }
+  }
+
+  tbody tr:nth-child(odd) {
+    background: #eee;
+  }
+}

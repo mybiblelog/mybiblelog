@@ -22,6 +22,8 @@ Bible.getBooks = () => bibleBooks;
 
 Bible.getChapterVerses = () => chapterVerses;
 
+Bible.getBookCount = () => Bible.getBooks().length;
+
 Bible.getBookChapterCount = bookIndex => {
   const targetBook = bibleBooks.find(b => b.bibleOrder === bookIndex);
   if (!targetBook) return 0;

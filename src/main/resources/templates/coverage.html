@@ -26,6 +26,23 @@
       <div style="height: 0.5rem; background: #000; margin: 1rem 0;">
         <div style="height: 100%; background: #09f" :style="{ width: percentageRead + '%' }"></div>
       </div>
+
+      <table class="coverage-table">
+        <thead>
+          <tr>
+            <th>Book</th>
+            <th>Verses Read</th>
+            <th>Total Verses</th>
+            <th>Percent Complete</th>
+          </tr>
+        </thead>
+        <tr v-for="report in allBookReports">
+          <td>{{ report.bookName }}</td>
+          <td>{{ report.versesRead }}</td>
+          <td>{{ report.totalVerses }}</td>
+          <td>{{ report.percentage }}%</td>
+        </tr>
+      </table>
     </div>
     
   </div>
