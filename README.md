@@ -25,6 +25,18 @@ This will ensure correct database access for three different environments:
 2. Development of the application will use a persisted H2 database
 3. Heroku can configure the connection when the app is deployed to production
 
+### Eclipse and `node_modules`
+
+Be sure to exclude `node_modules` from Eclipse's file system refresh operation, as it will significantly slow the operation with no benefit.
+
+Follow this path through the UI and select the options below:
+
+`Project > Properties > Resource > Resource Filters > Add Filter`
+* Exclude all
+* Folders
+* All children (recursive)
+* [Name][matches][node_modules]
+
 ## Developing on Windows
 
 These notes apply to developing and testing in the terminal on Windows.
