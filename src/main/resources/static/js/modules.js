@@ -5627,6 +5627,33 @@ var Modules = (function (exports) {
     return firstRange.endVerseId >= secondRange.startVerseId;
   };
 
+  Bible.countUniqueRangeVerses = ranges => {
+    ranges = ranges.sort(Bible.compareRanges);
+    let totalVerses = 0;
+    let lastRange = null;
+    for (let range of ranges) {
+      if (!lastRange) {
+        lastRange = range;
+      }
+      else if (range.startVerseId <= lastRange.endVerseId) {
+        if (range.endVerseId > lastRange.endVerseId) {
+          lastRange.endVerseId = range.endVerseId;
+        }
+      }
+      else {
+        totalVerses += Bible.countRangeVerses(lastRange.startVerseId, lastRange.endVerseId);
+        lastRange = range;
+      }
+    }
+    totalVerses += Bible.countRangeVerses(lastRange.startVerseId, lastRange.endVerseId);
+    return totalVerses;
+  };
+
+  Bible.countUniqueBookRangeVerses = (bookIndex, ranges) => {
+    ranges = ranges.filter(r => Bible.parseVerseId(r.startVerseId).book === bookIndex);
+    return Bible.countUniqueRangeVerses(ranges);
+  };
+
   var bible = Bible;
 
   class BibleVerse {

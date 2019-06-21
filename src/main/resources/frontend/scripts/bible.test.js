@@ -182,3 +182,49 @@ test('can determine when ranges do overlap', () => {
   const result = Bible.checkRangeOverlap(genesisRange1, genesisRange2);
   expect(result).toBe(true);
 });
+
+test('can count total number of verses in non-overlapping ranges', () => {
+  const genesisRange1 = {
+    startVerseId: Bible.makeVerseId(1, 1, 1),
+    endVerseId:   Bible.makeVerseId(1, 1, 15),
+  };
+  const genesisRange2 = {
+    startVerseId: Bible.makeVerseId(1, 2, 10),
+    endVerseId:   Bible.makeVerseId(1, 2, 25),
+  };
+  const result = Bible.countUniqueRangeVerses([genesisRange1, genesisRange2]);
+  expect(result).toBe(31);
+});
+
+test('can count total number of verses in overlapping ranges', () => {
+  const genesisRange1 = {
+    startVerseId: Bible.makeVerseId(1, 1, 1),
+    endVerseId:   Bible.makeVerseId(1, 2, 15),
+  };
+  const genesisRange2 = {
+    startVerseId: Bible.makeVerseId(1, 2, 1),
+    endVerseId:   Bible.makeVerseId(1, 2, 25),
+  };
+  const result = Bible.countUniqueRangeVerses([genesisRange1, genesisRange2]);
+  expect(result).toBe(56);
+});
+
+test('can count only verses from ranges in given book', () => {
+  const genesisRange1 = {
+    startVerseId: Bible.makeVerseId(1, 1, 1),
+    endVerseId:   Bible.makeVerseId(1, 2, 15),
+  };
+  const genesisRange2 = {
+    startVerseId: Bible.makeVerseId(1, 2, 1),
+    endVerseId:   Bible.makeVerseId(1, 2, 25),
+  };
+  const exodusRange = {
+    startVerseId: Bible.makeVerseId(2, 1, 1),
+    endVerseId:   Bible.makeVerseId(2, 1, 17),
+  };
+  const ranges = [genesisRange1, exodusRange, genesisRange2];
+  const genesisResult = Bible.countUniqueBookRangeVerses(1, ranges);
+  const exodusResult = Bible.countUniqueBookRangeVerses(2, ranges);
+  expect(genesisResult).toBe(56);
+  expect(exodusResult).toBe(17);
+});
