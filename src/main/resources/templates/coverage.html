@@ -10,6 +10,12 @@
 
 <body>
 	<div layout:fragment="content">
+
+    <script type="text/x-template" id="completion-bar">
+      <div :style="backgroundStyle">
+        <div :style="foregroundStyle"></div>
+      </div>
+    </script>
 		
 		<div id="js-vue-app" v-cloak class="page-column">
 
@@ -23,9 +29,7 @@
         <p>Percent complete: {{ percentageRead }}%</p>
       </div>
 
-      <div style="height: 0.5rem; background: #000; margin: 1rem 0;">
-        <div style="height: 100%; background: #09f" :style="{ width: percentageRead + '%' }"></div>
-      </div>
+      <completion-bar :percentage="percentageRead"></completion-bar>
 
       <table class="coverage-table">
         <thead>

@@ -1,7 +1,41 @@
 (() => {
 
+  const CompletionBar = {
+    template: '#completion-bar',
+    props: {
+      percentage: String,
+      backgroundColor: {
+        type: String,
+        default: '#000',
+      },
+      foregroundColor: {
+        type: String,
+        default: '#09f',
+      },
+    },
+    computed: {
+      backgroundStyle() {
+        return {
+          height: '0.5rem',
+          background: this.backgroundColor,
+          margin: '1rem 0',
+        };
+      },
+      foregroundStyle() {
+        return {
+          height: '100%',
+          background: this.foregroundColor,
+          width: this.percentage + '%',
+        };
+      },
+    },
+  };
+
 	new Vue({
-		el: '#js-vue-app',
+    el: '#js-vue-app',
+    components: {
+      CompletionBar,
+    },
 		data: {
 			books: [],
 			chapterVerses: {},
