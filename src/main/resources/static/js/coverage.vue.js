@@ -1,5 +1,9 @@
 (() => {
 
+  const calcPercent = (numerator, denominator, decimalDigits = 2) => {
+    return (numerator / denominator * 100).toFixed(decimalDigits);
+  };
+
   const CompletionBar = {
     template: '#completion-bar',
     props: {
@@ -31,17 +35,15 @@
     },
   };
 
-	new Vue({
-    el: '#js-vue-app',
+  const BibleReport = {
+    template: '#bible-report',
     components: {
       CompletionBar,
     },
-		data: {
-			books: [],
-			chapterVerses: {},
-      logEntries: [],
-		},
-		computed: {
+    props: {
+      logEntries: Array,
+    },
+    computed: {
       totalBibleVerses() {
         return Bible.getTotalVerseCount();
       },
@@ -49,7 +51,7 @@
         return Bible.countUniqueRangeVerses(this.logEntries);
       },
       percentageRead() {
-        return this.percentage(this.totalVersesRead, this.totalBibleVerses);
+        return calcPercent(this.totalVersesRead, this.totalBibleVerses);
       },
       allBookReports() {
         const reports = [];
@@ -57,18 +59,59 @@
           reports.push(this.bookReport(i));
         }
         return reports;
-      }
-    },
-		methods: {
-      percentage(numerator, denominator) {
-        return (numerator / denominator * 100).toFixed(2);
       },
-			bookReport(bookIndex) {
+    },
+    methods: {
+      bookReport(bookIndex) {
         const bookName = Bible.getBookName(bookIndex);
         const totalVerses = Bible.getBookVerseCount(bookIndex);
         const versesRead = Bible.countUniqueBookRangeVerses(bookIndex, this.logEntries);
-        const percentage = this.percentage(versesRead, totalVerses);
-        return { bookName, totalVerses, versesRead, percentage };
+        const percentage = calcPercent(versesRead, totalVerses);
+        return { bookIndex, bookName, totalVerses, versesRead, percentage };
+      },
+    },
+  };
+
+  const BookReport = {
+    template: '#book-report',
+    components: {
+      CompletionBar,
+    },
+    props: {
+      logEntries: Array,
+      bookIndex: Number,
+    },
+    computed: {
+      book() {
+        return Bible.getBooks().find(b => b.bibleOrder === this.bookIndex);
+      }
+    },
+    methods: {
+      //
+    },
+  };
+
+	new Vue({
+    el: '#js-vue-app',
+    components: {
+      BibleReport,
+      BookReport,
+    },
+		data: {
+      view: 'bible',
+      bookIndex: 1,
+      logEntries: [],
+		},
+		computed: {
+      //
+    },
+		methods: {
+      viewBibleReport() {
+        this.view = 'bible';
+      },
+      viewBookReport(bookIndex) {
+        this.view = 'book';
+        this.bookIndex = bookIndex;
       },
 		},
 		mounted() {

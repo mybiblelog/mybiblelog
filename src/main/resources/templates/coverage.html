@@ -16,44 +16,68 @@
         <div :style="foregroundStyle"></div>
       </div>
     </script>
+
+    <script type="text/x-template" id="bible-report">
+      <div>
+        <header>
+          <h2>Coverage Report</h2>
+        </header>
+
+        <div>
+          <p>Total Bible Verses: {{ totalBibleVerses }}</p>
+          <p>Unique Verses Read: {{ totalVersesRead }}</p>
+          <p>Percent Complete: {{ percentageRead }}%</p>
+        </div>
+
+        <completion-bar :percentage="percentageRead"></completion-bar>
+
+        <table class="coverage-table">
+          <thead>
+            <tr>
+              <th>Book</th>
+              <th>Verses Read</th>
+              <th>Total Verses</th>
+              <th>Percent Complete</th>
+            </tr>
+          </thead>
+          <template v-for="report in allBookReports"> 
+            <tr @click="$emit('view-book-report', report.bookIndex)">
+              <td>{{ report.bookName }}</td>
+              <td>{{ report.versesRead }}</td>
+              <td>{{ report.totalVerses }}</td>
+              <td>{{ report.percentage }}%</td>
+            </tr>
+            <tr @click="$emit('view-book-report', report.bookIndex)">
+              <td colspan=4>
+                <completion-bar :percentage="report.percentage"></completion-bar>
+              </td>
+            </tr>
+          </template>
+        </table>
+      </div>
+    </script>
+		
+    <script type="text/x-template" id="book-report">
+      <div>
+        <header>
+          <h2>Book Report: {{ book.name }}</h2>
+        </header>
+        <button @click="$emit('exit-book-report')">Go Back</button>
+      </div>
+    </script>
 		
 		<div id="js-vue-app" v-cloak class="page-column">
-
-			<header>
-				<h2>Coverage Report</h2>
-      </header>
-
-      <div>
-        <p>Total Bible Verses: {{ totalBibleVerses }}</p>
-        <p>Unique Verses Read: {{ totalVersesRead }}</p>
-        <p>Percent Complete: {{ percentageRead }}%</p>
-      </div>
-
-      <completion-bar :percentage="percentageRead"></completion-bar>
-
-      <table class="coverage-table">
-        <thead>
-          <tr>
-            <th>Book</th>
-            <th>Verses Read</th>
-            <th>Total Verses</th>
-            <th>Percent Complete</th>
-          </tr>
-        </thead>
-        <template v-for="report in allBookReports"> 
-          <tr>
-            <td>{{ report.bookName }}</td>
-            <td>{{ report.versesRead }}</td>
-            <td>{{ report.totalVerses }}</td>
-            <td>{{ report.percentage }}%</td>
-          </tr>
-          <tr>
-            <td colspan=4>
-              <completion-bar :percentage="report.percentage"></completion-bar>
-            </td>
-          </tr>
-        </template>
-      </table>
+      <bible-report
+        v-if="view == 'bible'"
+        :log-entries="logEntries"
+        @view-book-report="viewBookReport($event)"
+        ></bible-report>
+      <book-report
+        v-if="view == 'book'"
+        :log-entries="logEntries"
+        :book-index="bookIndex"
+        @exit-book-report="viewBibleReport"
+        ></book-report>
     </div>
     
   </div>
