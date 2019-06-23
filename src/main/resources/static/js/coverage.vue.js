@@ -18,7 +18,7 @@
         return {
           height: '0.5rem',
           background: this.backgroundColor,
-          margin: '1rem 0',
+          margin: '0 0 1rem',
         };
       },
       foregroundStyle() {

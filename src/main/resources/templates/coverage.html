@@ -24,9 +24,9 @@
       </header>
 
       <div>
-        <p>Total verses in bible: {{ totalBibleVerses }}</p>
-        <p>Total unique verses read: {{ totalVersesRead }}</p>
-        <p>Percent complete: {{ percentageRead }}%</p>
+        <p>Total Bible Verses: {{ totalBibleVerses }}</p>
+        <p>Unique Verses Read: {{ totalVersesRead }}</p>
+        <p>Percent Complete: {{ percentageRead }}%</p>
       </div>
 
       <completion-bar :percentage="percentageRead"></completion-bar>
@@ -40,12 +40,19 @@
             <th>Percent Complete</th>
           </tr>
         </thead>
-        <tr v-for="report in allBookReports">
-          <td>{{ report.bookName }}</td>
-          <td>{{ report.versesRead }}</td>
-          <td>{{ report.totalVerses }}</td>
-          <td>{{ report.percentage }}%</td>
-        </tr>
+        <template v-for="report in allBookReports"> 
+          <tr>
+            <td>{{ report.bookName }}</td>
+            <td>{{ report.versesRead }}</td>
+            <td>{{ report.totalVerses }}</td>
+            <td>{{ report.percentage }}%</td>
+          </tr>
+          <tr>
+            <td colspan=4>
+              <completion-bar :percentage="report.percentage"></completion-bar>
+            </td>
+          </tr>
+        </template>
       </table>
     </div>
     
