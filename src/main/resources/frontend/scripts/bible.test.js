@@ -228,3 +228,45 @@ test('can count only verses from ranges in given book', () => {
   expect(genesisResult).toBe(56);
   expect(exodusResult).toBe(17);
 });
+
+test('can count only range verses from given chapter', () => {
+  // Genesis chapter verse counts: 1=31, 2=25, 3=24
+  const overlapPreviousChapter = {
+    startVerseId: Bible.makeVerseId(1, 1, 16), // 15 verses in ch 1
+    endVerseId:   Bible.makeVerseId(1, 2, 20), // 20 verses in ch 2
+  };
+  const overlapNextChapter = {
+    startVerseId: Bible.makeVerseId(1, 2, 21), // 5 verses in ch 2
+    endVerseId:   Bible.makeVerseId(1, 3, 10), // 10 verses in ch 3
+  };
+  const overlapSurroundingChapters = {
+    startVerseId: Bible.makeVerseId(1, 1, 16), // 15 verses in ch 1
+    endVerseId:   Bible.makeVerseId(1, 3, 10), // 10 verses in ch 3
+  };
+  const entirelyPreviousChapter = {
+    startVerseId: Bible.makeVerseId(1, 1, 10),
+    endVerseId:   Bible.makeVerseId(1, 1, 20), // 11 verses in ch 1
+  };
+  const entirelyNextChapter = {
+    startVerseId: Bible.makeVerseId(1, 3, 5),
+    endVerseId:   Bible.makeVerseId(1, 3, 20), // 16 verses in ch 3
+  };
+  const entirelyThisChapter = {
+    startVerseId: Bible.makeVerseId(1, 2, 1),
+    endVerseId:   Bible.makeVerseId(1, 2, 17), // 17 verses in ch 2
+  };
+
+  const overlapPreviousResult     = Bible.countUniqueBookChapterRangeVerses(1, 2, [overlapPreviousChapter]);
+  const overlapNextResult         = Bible.countUniqueBookChapterRangeVerses(1, 2, [overlapNextChapter]);
+  const overlapSurroundingResult  = Bible.countUniqueBookChapterRangeVerses(1, 2, [overlapSurroundingChapters]);
+  const entirelyPreviousResult    = Bible.countUniqueBookChapterRangeVerses(1, 2, [entirelyPreviousChapter]);
+  const entirelyNextResult        = Bible.countUniqueBookChapterRangeVerses(1, 2, [entirelyNextChapter]);
+  const entirelyThisResult        = Bible.countUniqueBookChapterRangeVerses(1, 2, [entirelyThisChapter]);
+
+  expect(overlapPreviousResult).toBe(20);
+  expect(overlapNextResult).toBe(5);
+  expect(overlapSurroundingResult).toBe(25);
+  expect(entirelyPreviousResult).toBe(0);
+  expect(entirelyNextResult).toBe(0);
+  expect(entirelyThisResult).toBe(17);
+});

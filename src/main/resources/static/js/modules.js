@@ -5658,6 +5658,37 @@ var Modules = (function (exports) {
     return Bible.countUniqueRangeVerses(ranges);
   };
 
+  Bible.countUniqueBookChapterRangeVerses = (bookIndex, chapterIndex, ranges) => {
+    ranges = ranges
+      // Include only ranges that overlap into the given chapter of the given book
+      .filter(r => {
+        const startVerse = Bible.parseVerseId(r.startVerseId);
+        const endVerse = Bible.parseVerseId(r.endVerseId);
+        return (
+          startVerse.book === bookIndex &&
+          startVerse.chapter <= chapterIndex &&
+          endVerse.chapter >= chapterIndex
+        );
+      })
+      // Crop out all verses that are beyond the given chapter
+      .map(r => {
+        const startVerse = Bible.parseVerseId(r.startVerseId);
+        const endVerse = Bible.parseVerseId(r.endVerseId);
+        if (startVerse.chapter < chapterIndex) {
+          startVerse.chapter = chapterIndex;
+          startVerse.verse = 1;
+        }
+        if (endVerse.chapter > chapterIndex) {
+          endVerse.chapter = chapterIndex;
+          endVerse.verse = Bible.getChapterVerseCount(bookIndex, chapterIndex);
+        }
+        const startVerseId = Bible.makeVerseId(startVerse.book, startVerse.chapter, startVerse.verse);
+        const endVerseId = Bible.makeVerseId(endVerse.book, endVerse.chapter, endVerse.verse);
+        return Object.assign(r, { startVerseId, endVerseId });
+      });
+    return Bible.countUniqueRangeVerses(ranges);
+  };
+
   var bible = Bible;
 
   class BibleVerse {
