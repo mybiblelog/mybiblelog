@@ -84,10 +84,31 @@
     computed: {
       book() {
         return Bible.getBooks().find(b => b.bibleOrder === this.bookIndex);
-      }
+      },
+      totalBookVerses() {
+        return Bible.getBookVerseCount(this.bookIndex);
+      },
+      totalVersesRead() {
+        return Bible.countUniqueBookRangeVerses(this.bookIndex, this.logEntries);
+      },
+      percentageRead() {
+        return calcPercent(this.totalVersesRead, this.totalBookVerses);
+      },
+      allChapterReports() {
+        const reports = [];
+        for (let i = 1, l = Bible.getBookChapterCount(this.bookIndex); i <= l; i++) {
+          reports.push(this.chapterReport(i));
+        }
+        return reports;
+      },
     },
     methods: {
-      //
+      chapterReport(chapterIndex) {
+        const totalVerses = Bible.getChapterVerseCount(this.bookIndex, chapterIndex);
+        const versesRead = Bible.countUniqueBookChapterRangeVerses(this.bookIndex, chapterIndex, this.logEntries);
+        const percentage = calcPercent(versesRead, totalVerses);
+        return { chapterIndex, totalVerses, versesRead, percentage };
+      },
     },
   };
 

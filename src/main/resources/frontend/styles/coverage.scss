@@ -1,4 +1,10 @@
+header {
+  display: flex;
+  justify-content: space-between;
+}
+
 .coverage-table {
+  width: 100%;
   border-collapse: collapse;
   border: 1px solid #eee;
 

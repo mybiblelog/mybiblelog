@@ -61,8 +61,40 @@
       <div>
         <header>
           <h2>Book Report: {{ book.name }}</h2>
+          <button @click="$emit('exit-book-report')">Go Back</button>
         </header>
-        <button @click="$emit('exit-book-report')">Go Back</button>
+
+        <div>
+          <p>Total Book Verses: {{ totalBookVerses }}</p>
+          <p>Unique Verses Read: {{ totalVersesRead }}</p>
+          <p>Percent Complete: {{ percentageRead }}%</p>
+        </div>
+
+        <completion-bar :percentage="percentageRead"></completion-bar>
+
+        <table class="coverage-table">
+          <thead>
+            <tr>
+              <th>Chapter</th>
+              <th>Verses Read</th>
+              <th>Total Verses</th>
+              <th>Percent Complete</th>
+            </tr>
+          </thead>
+          <template v-for="report in allChapterReports"> 
+            <tr>
+              <td>{{ report.chapterIndex }}</td>
+              <td>{{ report.versesRead }}</td>
+              <td>{{ report.totalVerses }}</td>
+              <td>{{ report.percentage }}%</td>
+            </tr>
+            <tr>
+              <td colspan=4>
+                <completion-bar :percentage="report.percentage"></completion-bar>
+              </td>
+            </tr>
+          </template>
+        </table>
       </div>
     </script>
 		

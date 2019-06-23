@@ -217,7 +217,12 @@ tr.entry-row td:last-child {
 tr.entry-row.active {
   background: yellow; }
 
+header {
+  display: flex;
+  justify-content: space-between; }
+
 .coverage-table {
+  width: 100%;
   border-collapse: collapse;
   border: 1px solid #eee; }
   .coverage-table th, .coverage-table td {
