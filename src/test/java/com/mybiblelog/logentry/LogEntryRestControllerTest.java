@@ -87,7 +87,6 @@ public class LogEntryRestControllerTest {
 		
 		// Act
 		LogEntry result = underTest.createLogEntry(requestBody);
-		System.out.println("RESULT: " + result);
 		
 		// Assert
 		verify(logEntryRepo, times(1)).save(any(LogEntry.class));

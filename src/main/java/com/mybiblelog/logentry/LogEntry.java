@@ -40,6 +40,11 @@ public class LogEntry {
 		this.date = date;
 	}
 	
+	@JsonIgnore
+	public User getUser() {
+		return user;
+	}
+	
 	@JsonProperty
 	public Long getId() {
 		return id;
