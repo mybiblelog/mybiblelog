@@ -34,7 +34,8 @@
 	new Vue({
 		el: '#js-vue-app',
 		data: {
-			logEntries: [],
+      logEntries: [],
+      loading: false,
 
 			formOpen: false,
 			model: {
@@ -312,10 +313,12 @@
 					});
 
 			// Load bible metadata first since it is used to
-			// display log entries
+      // display log entries
+      this.loading = true;
 			loadBibleBooks()
 				.then(loadChapterVerses)
-				.then(loadLogEntries);
+        .then(loadLogEntries)
+        .then(() => this.loading = false);
 		},
 	});
 

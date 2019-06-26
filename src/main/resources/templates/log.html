@@ -82,31 +82,34 @@
 				</div>
 				
 				<button type="submit" ref="submit" :disabled="this.model.endVerse === 0 || this.model.date === ''">
-                    {{ model.id ? 'Save' : 'Add' }}
-                </button>
+          {{ model.id ? 'Save' : 'Add' }}
+         </button>
 				
 			</form>
 
-            <table class="entry-container">
-                <tbody>
-                    <template v-for="entryDate of entryDates">
-                        <tr class="entry-date-row">
-                            <td colspan=3>{{ displayDate(entryDate.date) }}</td>
-                        </tr>
-                        <tr v-for="entry of entryDate.entries" :class="'entry-row ' + (entry.id === model.id ? 'active' : '' )">
-                            <td>{{ displayVerseRange(entry.startVerseId, entry.endVerseId) }}</td>
-							<td>{{ displayVerseRangeCount(entry.startVerseId, entry.endVerseId) }} verses</td>
-                            <td>
-                                <button @click="openEditEntryForm(entry.id)" :disabled="formOpen">Edit</button>
-                                <button @click="deleteEntry(entry.id)">Delete</button>
-                            </td>
-                        </tr>
-                    </template>
-                    <tr v-if="!entryDates.length">
-                        <td colspan=2>No Log Entries</td>
-                    </tr>
-                </tbody>
-            </table>
+      <table class="entry-container">
+        <tbody>
+          <template v-for="entryDate of entryDates">
+            <tr class="entry-date-row">
+              <td colspan=3>{{ displayDate(entryDate.date) }}</td>
+            </tr>
+            <tr v-for="entry of entryDate.entries" :class="'entry-row ' + (entry.id === model.id ? 'active' : '' )">
+              <td>{{ displayVerseRange(entry.startVerseId, entry.endVerseId) }}</td>
+              <td>{{ displayVerseRangeCount(entry.startVerseId, entry.endVerseId) }} verses</td>
+              <td>
+                <button @click="openEditEntryForm(entry.id)" :disabled="formOpen">Edit</button>
+                <button @click="deleteEntry(entry.id)">Delete</button>
+              </td>
+            </tr>
+          </template>
+          <tr v-if="loading">
+            <td colspan=2>Loading...</td>
+          </tr> 
+          <tr v-if="!loading && !entryDates.length">
+            <td colspan=2>No Log Entries</td>
+          </tr>
+        </tbody>
+      </table>
 			
     </div>
   </div>
