@@ -72,7 +72,6 @@
           entries: dateMap[date],
           verses: dateMap[date].verses,
         }));
-        console.log({ dates });
 				return dates;
 			},
 		},
@@ -84,7 +83,7 @@
 					weekday: 	'long',
 					year: 		'numeric',
 					month: 		'long',
-					day: 		'numeric'
+					day: 		  'numeric'
 				};
 				return date.toLocaleDateString('en-US', options);
 			},
