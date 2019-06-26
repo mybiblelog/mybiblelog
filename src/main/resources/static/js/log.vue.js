@@ -61,14 +61,18 @@
 				const dateMap = {};
 				for (let logEntry of this.logEntries) {
 					if (!dateMap[logEntry.date]) {
-						dateMap[logEntry.date] = [];
+            dateMap[logEntry.date] = [];
+            dateMap[logEntry.date].verses = 0;
 					}
-					dateMap[logEntry.date].push(logEntry);
+          dateMap[logEntry.date].push(logEntry);
+          dateMap[logEntry.date].verses += Bible.countRangeVerses(logEntry.startVerseId, logEntry.endVerseId);
 				}
 				const dates = Object.keys(dateMap).sort().map(date => ({
 					date,
-					entries: dateMap[date],
-				}));
+          entries: dateMap[date],
+          verses: dateMap[date].verses,
+        }));
+        console.log({ dates });
 				return dates;
 			},
 		},

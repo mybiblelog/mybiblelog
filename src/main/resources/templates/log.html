@@ -91,7 +91,10 @@
         <tbody>
           <template v-for="entryDate of entryDates">
             <tr class="entry-date-row">
-              <td colspan=3>{{ displayDate(entryDate.date) }}</td>
+              <td colspan=3>
+                <span>{{ displayDate(entryDate.date) }}</span>
+                <span style="float: right;">{{ entryDate.verses }} verses</span>
+              </td>
             </tr>
             <tr v-for="entry of entryDate.entries" :class="'entry-row ' + (entry.id === model.id ? 'active' : '' )">
               <td>{{ displayVerseRange(entry.startVerseId, entry.endVerseId) }}</td>
