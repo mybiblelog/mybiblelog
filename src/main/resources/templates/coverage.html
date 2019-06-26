@@ -31,29 +31,15 @@
 
         <completion-bar :percentage="percentageRead"></completion-bar>
 
-        <table class="coverage-table">
-          <thead>
-            <tr>
-              <th>Book</th>
-              <th>Verses Read</th>
-              <th>Total Verses</th>
-              <th>Percent Complete</th>
-            </tr>
-          </thead>
-          <template v-for="report in allBookReports"> 
-            <tr @click="$emit('view-book-report', report.bookIndex)">
-              <td>{{ report.bookName }}</td>
-              <td>{{ report.versesRead }}</td>
-              <td>{{ report.totalVerses }}</td>
-              <td>{{ report.percentage }}%</td>
-            </tr>
-            <tr @click="$emit('view-book-report', report.bookIndex)">
-              <td colspan=4>
-                <completion-bar :percentage="report.percentage"></completion-bar>
-              </td>
-            </tr>
-          </template>
-        </table>
+        <div class="coverage-list">
+          <div class="coverage-card" v-for="report in allBookReports" @click="$emit('view-book-report', report.bookIndex)">
+            <span class="coverage-card-book">{{ report.bookName }}</span>
+            <span class="coverage-card-percentage">{{ report.percentage }}%</span>
+            <div class="coverage-card-progress">
+              <completion-bar :percentage="report.percentage"></completion-bar>
+            </div>
+          </div>
+        </div>
       </div>
     </script>
 		

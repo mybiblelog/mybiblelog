@@ -20,3 +20,44 @@ header {
     background: #eee;
   }
 }
+
+.coverage-list {
+  
+  .coverage-card {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 7px #999;
+
+    cursor: pointer;
+    transition: 0.1s;
+    &:hover {
+      transition: 0.2s;
+      box-shadow: 0 1px 9px #333;
+    }
+
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "title .   percentage"
+      "bar   bar bar";
+  
+    &-book,
+    &-percentage {
+      font-size: 0.8rem;
+      font-weight: bold;
+      padding-bottom: 0.5rem;
+    }
+
+    &-book {
+      grid-area: title;
+    }
+    &-percentage {
+      grid-area: percentage;
+    }
+    &-progress {
+      grid-area: bar;
+    }
+  }
+}

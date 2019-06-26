@@ -22,7 +22,8 @@
         return {
           height: '0.5rem',
           background: this.backgroundColor,
-          margin: '0 0 1rem',
+          borderRadius: '0.5rem',
+          overflow: 'hidden',
         };
       },
       foregroundStyle() {

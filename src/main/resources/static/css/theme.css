@@ -232,3 +232,28 @@ header {
       text-align: left; }
   .coverage-table tbody tr:nth-child(odd) {
     background: #eee; }
+
+.coverage-list .coverage-card {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 7px #999;
+  cursor: pointer;
+  transition: 0.1s;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto auto;
+  grid-template-areas: "title .   percentage" "bar   bar bar"; }
+  .coverage-list .coverage-card:hover {
+    transition: 0.2s;
+    box-shadow: 0 1px 9px #333; }
+  .coverage-list .coverage-card-book, .coverage-list .coverage-card-percentage {
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding-bottom: 0.5rem; }
+  .coverage-list .coverage-card-book {
+    grid-area: title; }
+  .coverage-list .coverage-card-percentage {
+    grid-area: percentage; }
+  .coverage-list .coverage-card-progress {
+    grid-area: bar; }
