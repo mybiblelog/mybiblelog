@@ -196,7 +196,11 @@
 				const verses = [];
 				for (let i = 1; i <= chapterVerseCount; i++) verses.push(i);
 				this.startVerses = verses;
-				this.$nextTick(() => this.$refs.endVerse.focus());
+        this.$nextTick(() => this.$refs.endVerse.focus());
+
+        // Make it easier to log an entry that begins at the beginning of a chapter
+        this.model.startVerse = 1;
+        this.onSelectStartVerse();
 			},
 			onSelectStartVerse() {
 				this.resetEndChapter();
@@ -208,10 +212,6 @@
 				const chapters = [];
 				for (let i = this.model.startChapter; i <= chapterCount; i++) chapters.push(i);
 				this.endChapters = chapters;
-
-				// Make it easier to log an entry of verses within a single chapter
-				this.model.endChapter = this.model.startChapter;
-				this.onSelectEndChapter();
 			},
 			onSelectEndChapter() {
 				this.resetEndVerse();
@@ -223,7 +223,11 @@
 				if (this.model.startChapter === this.model.endChapter) i = this.model.startVerse;
 				for (; i <= chapterVerseCount; i++) verses.push(i);
 				this.endVerses = verses;
-				this.$nextTick(() => this.$refs.endVerse.focus());
+        this.$nextTick(() => this.$refs.endVerse.focus());
+
+        // Make it easier to log an entry that ends at the end of a chapter
+        this.model.endVerse = this.endVerses[this.endVerses.length-1];
+        this.onSelectEndVerse();
 			},
 			onSelectEndVerse() {
 				this.$nextTick(() => this.$refs.submit.focus());
