@@ -85,6 +85,45 @@ Bible.getTotalVerseCount = () => {
 };
 
 /**
+ * Returns the next verseId. Especially used to jump from
+ * the end of a chapter to the beginning of the next chapter
+ * without landing on a nonexistent verse.
+ *
+ * There is no expected behavior for a verse before the first book or after the last.
+ */
+Bible.getNextVerseId = verseId => {
+  let { book, chapter, verse } = Bible.parseVerseId(verseId);
+  const chapterVerseCount = Bible.getChapterVerseCount(book, chapter);
+  if (verse < chapterVerseCount) {
+    verse++;
+  }
+  else {
+    chapter++;
+    verse = 1;
+  }
+  return Bible.makeVerseId(book, chapter, verse);
+};
+
+/**
+ * Returns the previous verseId. Especially used to jump from
+ * the beginning of a chapter back to the end of the previous chapter
+ * without landing on a nonexistent verse.
+ *
+ * There is no expected behavior for a verse before the first book or after the last.
+ */
+Bible.getPreviousVerseId = verseId => {
+  let { book, chapter, verse } = Bible.parseVerseId(verseId);
+  if (verse > 1) {
+    verse--;
+  }
+  else {
+    chapter--;
+    verse = Bible.getChapterVerseCount(book, chapter);
+  }
+  return Bible.makeVerseId(book, chapter, verse);
+};
+
+/**
  * A function for use with `Array.prototype.sort` that
  * orders ranges based on book and chapter indices.
  */
@@ -219,6 +258,99 @@ Bible.consolidateRanges = ranges => {
     result.push(lastRange);
   }
   return result;
+};
+
+/**
+ * Generates an array of segments, each indicating a read/unread range of verses.
+ */
+Bible.generateSegments = (firstVerseId, finalVerseId, ranges) => {
+  const segments = [];
+
+  // If there are no ranges, return one giant UNREAD segment
+  if (!ranges.length) {
+    return [{
+      startVerseId: firstVerseId,
+      endVerseId:   finalVerseId,
+      read:         false,
+      verseCount:   Bible.countRangeVerses(firstVerseId, finalVerseId),
+    }];
+  }
+
+  // Sort and consolidate ranges
+  ranges = Bible.consolidateRanges(ranges);
+
+  let lastReadVerseId;
+  for (let i = 0, l = ranges.length; i < l; i++) {
+    const range = ranges[i];
+
+    // Create initial UNREAD segment before first range if needed
+    if (i === 0) {
+      const { startVerseId, endVerseId } = range;
+      if (firstVerseId !== startVerseId) {
+        const unreadEndVerseId = Bible.getPreviousVerseId(startVerseId);
+        segments.push({
+          startVerseId: firstVerseId,
+          endVerseId:   unreadEndVerseId,
+          read:         false,
+          verseCount:   Bible.countRangeVerses(firstVerseId, unreadEndVerseId),
+        });
+      }
+    }
+    // if this is NOT the first range, create an UNREAD segment before it
+    else {
+      const unreadStartVerseId = Bible.getNextVerseId(lastReadVerseId);
+      const unreadEndVerseId = Bible.getPreviousVerseId(range.startVerseId);
+      segments.push({
+        startVerseId: unreadStartVerseId,
+        endVerseId:   unreadEndVerseId,
+        read:         false,
+        verseCount:   Bible.countRangeVerses(unreadStartVerseId, unreadEndVerseId),
+      });
+    }
+    // add the range as a READ segment
+    const { startVerseId, endVerseId } = range;
+    segments.push({
+      startVerseId,
+      endVerseId,
+      read:       true,
+      verseCount: Bible.countRangeVerses(startVerseId, endVerseId),
+    });
+    lastReadVerseId = endVerseId;
+
+    // Create trailing UNREAD segment if needed
+    if (i === l - 1) {
+      if (range.endVerseId !== finalVerseId) {
+        const startVerseId = Bible.getNextVerseId(lastReadVerseId);
+        segments.push({
+          startVerseId,
+          endVerseId: finalVerseId,
+          read:       false,
+          verseCount: Bible.countRangeVerses(startVerseId, finalVerseId),
+        });
+      }
+    }
+  }
+
+  return segments;
+};
+
+Bible.generateBookSegments = (bookIndex, ranges) => {
+  const lastChapterIndex = Bible.getBookChapterCount(bookIndex);
+  const lastChapterVerseCount = Bible.getChapterVerseCount(bookIndex, lastChapterIndex);
+
+  const firstVerseId = Bible.makeVerseId(bookIndex, 1, 1);
+  const finalVerseId = Bible.makeVerseId(bookIndex, lastChapterIndex, lastChapterVerseCount);
+
+  return Bible.generateSegments(firstVerseId, finalVerseId, ranges);
+};
+
+Bible.generateBookChapterSegments = (bookIndex, chapterIndex, ranges) => {
+  const chapterVerseCount = Bible.getChapterVerseCount(bookIndex, chapterIndex);
+
+  const firstVerseId = Bible.makeVerseId(bookIndex, chapterIndex, 1);
+  const finalVerseId = Bible.makeVerseId(bookIndex, chapterIndex, chapterVerseCount);
+
+  return Bible.generateSegments(firstVerseId, finalVerseId, ranges);
 };
 
 module.exports = Bible;

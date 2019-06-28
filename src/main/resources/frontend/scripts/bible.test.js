@@ -377,3 +377,79 @@ test('can consolidate overlapping ranges', () => {
   expect(result[0].startVerseId).toBe(overlap1.startVerseId);
   expect(result[0].endVerseId).toBe(overlap2.endVerseId);
 });
+
+test('can get next verseId', () => {
+  const verseId = Bible.makeVerseId(1, 1, 1);
+  const nextVerseId = Bible.getNextVerseId(verseId);
+  const { book, chapter, verse } = Bible.parseVerseId(nextVerseId);
+  expect(book).toBe(1);
+  expect(chapter).toBe(1);
+  expect(verse).toBe(2);
+});
+
+test('can go to next chapter to get next verseId', () => {
+  const verseId = Bible.makeVerseId(1, 1, 31);
+  const nextVerseId = Bible.getNextVerseId(verseId);
+  const { book, chapter, verse } = Bible.parseVerseId(nextVerseId);
+  expect(book).toBe(1);
+  expect(chapter).toBe(2);
+  expect(verse).toBe(1);
+});
+
+test('can get previous versId', () => {
+  const verseId = Bible.makeVerseId(1, 1, 2);
+  const previousVerseId = Bible.getPreviousVerseId(verseId);
+  const { book, chapter, verse } = Bible.parseVerseId(previousVerseId);
+  expect(book).toBe(1);
+  expect(chapter).toBe(1);
+  expect(verse).toBe(1);
+});
+
+test('can go to previous chapter to get previous verseId', () => {
+  const verseId = Bible.makeVerseId(1, 2, 1);
+  const previousVerseId = Bible.getPreviousVerseId(verseId);
+  const { book, chapter, verse } = Bible.parseVerseId(previousVerseId);
+  expect(book).toBe(1);
+  expect(chapter).toBe(1);
+  expect(verse).toBe(31);
+});
+
+test('can generate read/unread segments from ranges in a given book', () => {
+  const bookIndex = 1;
+  const ranges = [{
+    startVerseId: Bible.makeVerseId(1, 2, 20),
+    endVerseId:   Bible.makeVerseId(1, 3, 10),
+  }, {
+    startVerseId: Bible.makeVerseId(1, 5, 1),
+    endVerseId:   Bible.makeVerseId(1, 10, 5),
+  }];
+  const result = Bible.generateBookSegments(bookIndex, ranges);
+  expect(result.length).toBe(5); // before, [range 0], between, [range 1], after
+  expect(result[0].verseCount).toBe(50);
+  expect(result[0].read).toBe(false);
+  expect(result[1].verseCount).toBe(16);
+  expect(result[1].read).toBe(true);
+  expect(result[2].verseCount).toBe(40);
+  expect(result[2].read).toBe(false);
+  expect(result[3].verseCount).toBe(134);
+  expect(result[3].read).toBe(true);
+  expect(result[4].verseCount).toBe(1293);
+  expect(result[4].read).toBe(false);
+});
+
+test('can generate read/unread segments from ranges in a given chapter', () => {
+  const bookIndex = 1;
+  const chapterIndex = 2;
+  const ranges = [{
+    startVerseId: Bible.makeVerseId(1, 2, 10),
+    endVerseId:   Bible.makeVerseId(1, 2, 15),
+  }];
+  const result = Bible.generateBookChapterSegments(bookIndex, chapterIndex, ranges);
+  expect(result.length).toBe(3); // before, [range 0], after
+  expect(result[0].verseCount).toBe(9);
+  expect(result[0].read).toBe(false);
+  expect(result[1].verseCount).toBe(6);
+  expect(result[1].read).toBe(true);
+  expect(result[2].verseCount).toBe(10);
+  expect(result[2].read).toBe(false);
+});
