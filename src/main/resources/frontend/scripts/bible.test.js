@@ -169,7 +169,6 @@ test('can determine that ranges from different books do not overlap', () => {
   expect(result).toBe(false);
 });
 
-
 test('can determine when ranges do overlap', () => {
   const genesisRange1 = {
     startVerseId: Bible.makeVerseId(1, 1, 1),
@@ -269,4 +268,112 @@ test('can count only range verses from given chapter', () => {
   expect(entirelyPreviousResult).toBe(0);
   expect(entirelyNextResult).toBe(0);
   expect(entirelyThisResult).toBe(17);
+});
+
+test('can filter ranges by book', () => {
+  const bookIndex = 3;
+  const inBook1 = {
+    startVerseId: Bible.makeVerseId(3, 1, 16),
+    endVerseId:   Bible.makeVerseId(3, 2, 20),
+  };
+  const outOfBook1 = {
+    startVerseId: Bible.makeVerseId(2, 1, 5),
+    endVerseId:   Bible.makeVerseId(2, 3, 10),
+  };
+  const inBook2 = {
+    startVerseId: Bible.makeVerseId(3, 2, 5),
+    endVerseId:   Bible.makeVerseId(3, 3, 1),
+  };
+  const outOfBook2 = {
+    startVerseId: Bible.makeVerseId(4, 1, 16),
+    endVerseId:   Bible.makeVerseId(4, 3, 10),
+  };
+  const ranges = [inBook1, outOfBook1, inBook2, outOfBook2];
+  const result = Bible.filterRangesByBook(bookIndex, ranges);
+  expect(result.length).toBe(2);
+});
+
+test('can filter ranges by book and chapter', () => {
+  const bookIndex = 5;
+  const chapterIndex = 4;
+  const leadsOutOfChapter = {
+    startVerseId: Bible.makeVerseId(5, 4, 16),
+    endVerseId:   Bible.makeVerseId(5, 5, 20),
+  };
+  const isOutOfChapter = {
+    startVerseId: Bible.makeVerseId(2, 1, 5),
+    endVerseId:   Bible.makeVerseId(2, 3, 10),
+  };
+  const leadsIntoChapter = {
+    startVerseId: Bible.makeVerseId(5, 3, 5),
+    endVerseId:   Bible.makeVerseId(5, 4, 1),
+  };
+  const isInChapter = {
+    startVerseId: Bible.makeVerseId(5, 4, 10),
+    endVerseId:   Bible.makeVerseId(5, 4, 12),
+  };
+  const ranges = [leadsOutOfChapter, isOutOfChapter, leadsIntoChapter, isInChapter];
+  const result = Bible.filterRangesByBookChapter(bookIndex, chapterIndex, ranges);
+  expect(result.length).toBe(3);
+});
+
+test('can crop ranges to include only verses in given chapter', () => {
+  const bookIndex = 5;
+  const chapterIndex = 4;
+
+  const leadsOutOfChapter = {
+    startVerseId: Bible.makeVerseId(5, 4, 16),
+    endVerseId:   Bible.makeVerseId(5, 5, 20),
+  };
+  const leadsIntoChapter = {
+    startVerseId: Bible.makeVerseId(5, 3, 5),
+    endVerseId:   Bible.makeVerseId(5, 4, 1),
+  };
+  const isInChapter = {
+    startVerseId: Bible.makeVerseId(5, 4, 10),
+    endVerseId:   Bible.makeVerseId(5, 4, 12),
+  };
+  const leadsInAndOutOfChapter = {
+    startVerseId: Bible.makeVerseId(5, 3, 10),
+    endVerseId:   Bible.makeVerseId(5, 5, 12),
+  };
+
+  const leadsOutOfChapterResult =
+    Bible.cropRangeToBookChapter(bookIndex, chapterIndex, leadsOutOfChapter);
+  const leadsIntoChapterResult =
+    Bible.cropRangeToBookChapter(bookIndex, chapterIndex, leadsIntoChapter);
+  const isInChapterResult =
+    Bible.cropRangeToBookChapter(bookIndex, chapterIndex, isInChapter);
+  const leadsInAndOutOfChapterResult =
+    Bible.cropRangeToBookChapter(bookIndex, chapterIndex, leadsInAndOutOfChapter);
+
+  const chapterVerseCount = Bible.getChapterVerseCount(bookIndex, chapterIndex);
+  const chapterFirstVerseId = Bible.makeVerseId(bookIndex, chapterIndex, 1);
+  const chapterFinalVerseId = Bible.makeVerseId(bookIndex, chapterIndex, chapterVerseCount);
+
+  expect(leadsOutOfChapterResult.endVerseId).toBe(chapterFinalVerseId);
+  expect(leadsIntoChapterResult.startVerseId).toBe(chapterFirstVerseId);
+  expect(isInChapterResult.startVerseId).toBe(isInChapter.startVerseId);
+  expect(isInChapterResult.endVerseId).toBe(isInChapter.endVerseId);
+  expect(leadsInAndOutOfChapterResult.endVerseId).toBe(chapterFinalVerseId);
+  expect(leadsInAndOutOfChapterResult.startVerseId).toBe(chapterFirstVerseId);
+
+  // should return NEW object cloned from original
+  expect(leadsOutOfChapterResult.endVerseId).not.toBe(leadsOutOfChapter.endVerseId);
+  expect(leadsIntoChapterResult.startVerseId).not.toBe(leadsIntoChapter.startVerseId);
+});
+
+test('can consolidate overlapping ranges', () => {
+  const overlap1 = {
+    startVerseId: Bible.makeVerseId(1, 1, 16),
+    endVerseId:   Bible.makeVerseId(1, 2, 25),
+  };
+  const overlap2 = {
+    startVerseId: Bible.makeVerseId(1, 2, 20),
+    endVerseId:   Bible.makeVerseId(1, 3, 10),
+  };
+  const result = Bible.consolidateRanges([overlap1, overlap2]);
+  expect(result.length).toBe(1);
+  expect(result[0].startVerseId).toBe(overlap1.startVerseId);
+  expect(result[0].endVerseId).toBe(overlap2.endVerseId);
 });

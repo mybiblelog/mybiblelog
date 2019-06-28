@@ -84,6 +84,10 @@ Bible.getTotalVerseCount = () => {
   return totalVerses;
 };
 
+/**
+ * A function for use with `Array.prototype.sort` that
+ * orders ranges based on book and chapter indices.
+ */
 Bible.compareRanges = (range1, range2) => {
   const startVerse1 = Bible.parseVerseId(range1.startVerseId);
   const startVerse2 = Bible.parseVerseId(range2.startVerseId);
@@ -102,6 +106,10 @@ Bible.checkRangeOverlap = (range1, range2) => {
   return firstRange.endVerseId >= secondRange.startVerseId;
 };
 
+/**
+ * Counts the total number of verses in an array of ranges,
+ * never counting the same verse more than once.
+ */
 Bible.countUniqueRangeVerses = ranges => {
   ranges = ranges.sort(Bible.compareRanges);
   let totalVerses = 0;
@@ -127,13 +135,26 @@ Bible.countUniqueRangeVerses = ranges => {
 };
 
 Bible.countUniqueBookRangeVerses = (bookIndex, ranges) => {
-  ranges = ranges.filter(r => Bible.parseVerseId(r.startVerseId).book === bookIndex);
+  ranges = Bible.filterRangesByBook(bookIndex, ranges);
   return Bible.countUniqueRangeVerses(ranges);
 };
 
-Bible.countUniqueBookChapterRangeVerses = (bookIndex, chapterIndex, ranges) => {
-  // Include only ranges that overlap into the given chapter of the given book
-  const filteredRanges = ranges.filter(r => {
+/**
+ * Returns a new array comprised only of ranges in the given book.
+ */
+Bible.filterRangesByBook = (bookIndex, ranges) => {
+  return ranges.filter(r => {
+    const startVerse = Bible.parseVerseId(r.startVerseId);
+    return startVerse.book === bookIndex;
+  });
+};
+
+/**
+ * Filters out all ranges that do not overlap the given book chapter,
+ * returning the new resulting array.
+ */
+Bible.filterRangesByBookChapter = (bookIndex, chapterIndex, ranges) => {
+  return  ranges.filter(r => {
     const startVerse = Bible.parseVerseId(r.startVerseId);
     const endVerse = Bible.parseVerseId(r.endVerseId);
     return (
@@ -142,25 +163,62 @@ Bible.countUniqueBookChapterRangeVerses = (bookIndex, chapterIndex, ranges) => {
       endVerse.chapter >= chapterIndex
     );
   });
+};
+
+/**
+ * Crops a range's start and end verse IDs to the first and last verse IDs
+ * for a given book chapter.
+ */
+Bible.cropRangeToBookChapter = (bookIndex, chapterIndex, range) => {
+  const startVerse = Bible.parseVerseId(range.startVerseId);
+  const endVerse = Bible.parseVerseId(range.endVerseId);
+  if (startVerse.chapter < chapterIndex) {
+    startVerse.chapter = chapterIndex;
+    startVerse.verse = 1;
+  }
+  if (endVerse.chapter > chapterIndex) {
+    endVerse.chapter = chapterIndex;
+    endVerse.verse = Bible.getChapterVerseCount(bookIndex, chapterIndex);
+  }
+  const startVerseId = Bible.makeVerseId(startVerse.book, startVerse.chapter, startVerse.verse);
+  const endVerseId = Bible.makeVerseId(endVerse.book, endVerse.chapter, endVerse.verse);
+  return Object.assign({}, range, { startVerseId, endVerseId });
+};
+
+Bible.countUniqueBookChapterRangeVerses = (bookIndex, chapterIndex, ranges) => {
+  // Include only ranges that overlap into the given chapter of the given book
+  const filteredRanges = Bible.filterRangesByBookChapter(bookIndex, chapterIndex, ranges);
 
   // Crop out all verses that are beyond the given chapter
-  const croppedRanges = filteredRanges.map(r => {
-    const startVerse = Bible.parseVerseId(r.startVerseId);
-    const endVerse = Bible.parseVerseId(r.endVerseId);
-    if (startVerse.chapter < chapterIndex) {
-      startVerse.chapter = chapterIndex;
-      startVerse.verse = 1;
-    }
-    if (endVerse.chapter > chapterIndex) {
-      endVerse.chapter = chapterIndex;
-      endVerse.verse = Bible.getChapterVerseCount(bookIndex, chapterIndex);
-    }
-    const startVerseId = Bible.makeVerseId(startVerse.book, startVerse.chapter, startVerse.verse);
-    const endVerseId = Bible.makeVerseId(endVerse.book, endVerse.chapter, endVerse.verse);
-    return Object.assign({}, r, { startVerseId, endVerseId });
+  const croppedRanges = filteredRanges.map(range => {
+    return Bible.cropRangeToBookChapter(bookIndex, chapterIndex, range);
   });
 
   return Bible.countUniqueRangeVerses(croppedRanges);
+};
+
+Bible.consolidateRanges = ranges => {
+  ranges = ranges.sort(Bible.compareRanges);
+  const result = [];
+  let lastRange = null;
+  for (let range of ranges) {
+    if (!lastRange) {
+      lastRange = range;
+    }
+    else if (range.startVerseId <= lastRange.endVerseId) {
+      if (range.endVerseId > lastRange.endVerseId) {
+        lastRange.endVerseId = range.endVerseId;
+      }
+    }
+    else {
+      result.push(lastRange);
+      lastRange = range;
+    }
+  }
+  if (lastRange) {
+    result.push(lastRange);
+  }
+  return result;
 };
 
 module.exports = Bible;
