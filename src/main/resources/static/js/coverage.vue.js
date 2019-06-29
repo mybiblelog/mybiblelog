@@ -36,10 +36,57 @@
     },
   };
 
+  
+  const SegmentBar = {
+    template: '#segment-bar',
+    props: {
+      segments: Array, // { weight, foregroundColor }
+      backgroundColor: {
+        type: String,
+        default: '#000',
+      },
+      foregroundColor: {
+        type: String,
+        default: '#09F',
+      },
+    },
+    computed: {
+      backgroundStyle() {
+        return {
+          height: '0.5rem',
+          background: this.backgroundColor,
+          borderRadius: '0.5rem',
+          overflow: 'hidden',
+          lineHeight: '0',
+        };
+      },
+    },
+    methods: {
+      displayVerseRange(startVerseId, endVerseId) {
+				const start = Bible.parseVerseId(startVerseId);
+				const end = Bible.parseVerseId(endVerseId);
+
+				const bookName = Bible.getBookName(start.book);
+				let range = bookName + ' ';
+				if (start.chapter === end.chapter) {
+					range += start.chapter + ':';
+					range += start.verse + '-' + end.verse;
+					return range;
+				}
+				else {
+					range += start.chapter + ':' + start.verse + '-';
+					range += end.chapter + ':' + end.verse;
+					return range
+				}
+      },
+    },
+  };
+
   const BibleReport = {
     template: '#bible-report',
     components: {
       CompletionBar,
+      SegmentBar,
     },
     props: {
       logEntries: Array,
@@ -60,6 +107,25 @@
           reports.push(this.bookReport(i));
         }
         return reports;
+      },
+      bibleReadingSegments() {
+        const totalBibleVerses = Bible.getTotalVerseCount();
+        const ranges = this.logEntries.map(entry => Object.assign({}, entry));
+        const segments = Bible.generateBibleSegments(ranges);
+
+        console.log({ segments });
+
+        let sum = 0;
+        segments.forEach(segment => {
+          segment.percentage = segment.verseCount * 100 / totalBibleVerses;
+          sum += segment.verseCount;
+          return segment;
+        });
+        
+        // FIXME: there are 31102 verses in bible but this results in 31103
+        console.log({ sum });
+        
+        return segments;
       },
     },
     methods: {

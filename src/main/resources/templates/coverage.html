@@ -17,6 +17,19 @@
       </div>
     </script>
 
+    <script type="text/x-template" id="segment-bar">
+      <div :style="backgroundStyle">
+        <div v-for="segment in segments"
+        :title="displayVerseRange(segment.startVerseId, segment.endVerseId)"
+        :style="{
+          width: segment.percentage + '%',
+          height: '100%',
+          background: segment.read ? foregroundColor : 'transparent',
+          display: 'inline-block',
+        }"></div>
+      </div>
+    </script>
+
     <script type="text/x-template" id="bible-report">
       <div>
         <header>
@@ -28,8 +41,12 @@
           <p>Unique Verses Read: {{ totalVersesRead }}</p>
           <p>Percent Complete: {{ percentageRead }}%</p>
         </div>
+        
+        <!--
+          <completion-bar :percentage="percentageRead"></completion-bar>
+        -->
 
-        <completion-bar :percentage="percentageRead"></completion-bar>
+        <segment-bar :segments="bibleReadingSegments"></segment-bar>
 
         <div class="coverage-list">
           <div class="coverage-card" v-for="report in allBookReports" @click="$emit('view-book-report', report.bookIndex)">

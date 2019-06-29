@@ -97,6 +97,21 @@ test('can count verse range across chapters', () => {
   expect(verseCount).toBe(27);
 });
 
+test('can count verse range across books', () => {
+  const startVerseId = Bible.makeVerseId(1, 50, 1); //26 verses
+  const endVerseId = Bible.makeVerseId(2, 1, 10); //10 verses
+  const verseCount = Bible.countRangeVerses(startVerseId, endVerseId);
+  expect(verseCount).toBe(36);
+});
+
+test('can count verse range across multiple', () => {
+  const startVerseId = Bible.makeVerseId(1, 50, 1); //26 verses
+  // 1213 verses in chapter 2
+  const endVerseId = Bible.makeVerseId(3, 1, 10); //10 verses
+  const verseCount = Bible.countRangeVerses(startVerseId, endVerseId);
+  expect(verseCount).toBe(1249);
+});
+
 test('can count number of verses in book', () => {
   const genesisVerseCount = Bible.getBookVerseCount(1);
   const judeVerseCount = Bible.getBookVerseCount(65);
@@ -452,4 +467,11 @@ test('can generate read/unread segments from ranges in a given chapter', () => {
   expect(result[1].read).toBe(true);
   expect(result[2].verseCount).toBe(10);
   expect(result[2].read).toBe(false);
+});
+
+test('can output human readable verse range', () => {
+  const startVerseId = Bible.makeVerseId(5, 1, 13);
+  const endVerseId = Bible.makeVerseId(5, 4, 18);
+  const result = Bible.displayVerseRange(startVerseId, endVerseId);
+  expect(result).toBe('Deuteronomy 1:13-4:18');
 });

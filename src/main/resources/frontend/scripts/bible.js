@@ -45,6 +45,32 @@ Bible.getBookName = bookIndex => {
 Bible.countRangeVerses = (startVerseId, endVerseId) => {
   const startVerse = Bible.parseVerseId(startVerseId);
   const endVerse = Bible.parseVerseId(endVerseId);
+
+  // If we are counting the unread verses between segments that have been read,
+  // those unread spans could jump between books
+  if (startVerse.book !== endVerse.book) {
+    let sum = 0;
+
+    const tailStartVerseId = startVerseId;
+    const lastChapter = Bible.getBookChapterCount(startVerse.book);
+    const lastVerse = Bible.getChapterVerseCount(startVerse.book, lastChapter);
+    const tailEndVerseId = Bible.makeVerseId(startVerse.book, lastChapter, lastVerse);
+    const tailVerseCount = Bible.countRangeVerses(tailStartVerseId, tailEndVerseId);
+    sum += tailVerseCount;
+
+    for (let i = startVerse.book + 1, l = endVerse.book; i < l; i++) {
+      const bookVerseCount = Bible.getBookVerseCount(i);
+      sum += bookVerseCount;
+    }
+
+    const headStartVerseId = Bible.makeVerseId(endVerse.book, 1, 1);
+    const headEndVerseId = endVerseId;
+    const headVerseCount = Bible.countRangeVerses(headStartVerseId, headEndVerseId);
+    sum += headVerseCount;
+
+    return sum;
+  }
+
   if (startVerse.chapter === endVerse.chapter) {
     return endVerse.verse - startVerse.verse + 1;
   }
@@ -236,6 +262,9 @@ Bible.countUniqueBookChapterRangeVerses = (bookIndex, chapterIndex, ranges) => {
   return Bible.countUniqueRangeVerses(croppedRanges);
 };
 
+/**
+ * THIS FUNCTION MUTATES THE RANGE ARRAY.
+ */
 Bible.consolidateRanges = ranges => {
   ranges = ranges.sort(Bible.compareRanges);
   const result = [];
@@ -334,6 +363,16 @@ Bible.generateSegments = (firstVerseId, finalVerseId, ranges) => {
   return segments;
 };
 
+Bible.generateBibleSegments = ranges => {
+  const lastChapterIndex = Bible.getBookChapterCount(66);
+  const lastChapterVerseCount = Bible.getChapterVerseCount(66, lastChapterIndex);
+
+  const firstVerseId = Bible.makeVerseId(1, 1, 1);
+  const finalVerseId = Bible.makeVerseId(66, lastChapterIndex, lastChapterVerseCount);
+
+  return Bible.generateSegments(firstVerseId, finalVerseId, ranges);
+};
+
 Bible.generateBookSegments = (bookIndex, ranges) => {
   const lastChapterIndex = Bible.getBookChapterCount(bookIndex);
   const lastChapterVerseCount = Bible.getChapterVerseCount(bookIndex, lastChapterIndex);
@@ -351,6 +390,24 @@ Bible.generateBookChapterSegments = (bookIndex, chapterIndex, ranges) => {
   const finalVerseId = Bible.makeVerseId(bookIndex, chapterIndex, chapterVerseCount);
 
   return Bible.generateSegments(firstVerseId, finalVerseId, ranges);
+};
+
+Bible.displayVerseRange = (startVerseId, endVerseId) => {
+  const start = Bible.parseVerseId(startVerseId);
+  const end = Bible.parseVerseId(endVerseId);
+
+  const bookName = Bible.getBookName(start.book);
+  let range = bookName + ' ';
+  if (start.chapter === end.chapter) {
+    range += start.chapter + ':';
+    range += start.verse + '-' + end.verse;
+    return range;
+  }
+  else {
+    range += start.chapter + ':' + start.verse + '-';
+    range += end.chapter + ':' + end.verse;
+    return range;
+  }
 };
 
 module.exports = Bible;

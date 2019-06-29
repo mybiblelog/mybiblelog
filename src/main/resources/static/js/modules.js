@@ -5572,6 +5572,32 @@ var Modules = (function (exports) {
   Bible.countRangeVerses = (startVerseId, endVerseId) => {
     const startVerse = Bible.parseVerseId(startVerseId);
     const endVerse = Bible.parseVerseId(endVerseId);
+
+    // If we are counting the unread verses between segments that have been read,
+    // those unread spans could jump between books
+    if (startVerse.book !== endVerse.book) {
+      let sum = 0;
+
+      const tailStartVerseId = startVerseId;
+      const lastChapter = Bible.getBookChapterCount(startVerse.book);
+      const lastVerse = Bible.getChapterVerseCount(startVerse.book, lastChapter);
+      const tailEndVerseId = Bible.makeVerseId(startVerse.book, lastChapter, lastVerse);
+      const tailVerseCount = Bible.countRangeVerses(tailStartVerseId, tailEndVerseId);
+      sum += tailVerseCount;
+
+      for (let i = startVerse.book + 1, l = endVerse.book; i < l; i++) {
+        const bookVerseCount = Bible.getBookVerseCount(i);
+        sum += bookVerseCount;
+      }
+
+      const headStartVerseId = Bible.makeVerseId(endVerse.book, 1, 1);
+      const headEndVerseId = endVerseId;
+      const headVerseCount = Bible.countRangeVerses(headStartVerseId, headEndVerseId);
+      sum += headVerseCount;
+
+      return sum;
+    }
+
     if (startVerse.chapter === endVerse.chapter) {
       return endVerse.verse - startVerse.verse + 1;
     }
@@ -5609,6 +5635,45 @@ var Modules = (function (exports) {
       totalVerses += Bible.getBookVerseCount(b);
     }
     return totalVerses;
+  };
+
+  /**
+   * Returns the next verseId. Especially used to jump from
+   * the end of a chapter to the beginning of the next chapter
+   * without landing on a nonexistent verse.
+   *
+   * There is no expected behavior for a verse before the first book or after the last.
+   */
+  Bible.getNextVerseId = verseId => {
+    let { book, chapter, verse } = Bible.parseVerseId(verseId);
+    const chapterVerseCount = Bible.getChapterVerseCount(book, chapter);
+    if (verse < chapterVerseCount) {
+      verse++;
+    }
+    else {
+      chapter++;
+      verse = 1;
+    }
+    return Bible.makeVerseId(book, chapter, verse);
+  };
+
+  /**
+   * Returns the previous verseId. Especially used to jump from
+   * the beginning of a chapter back to the end of the previous chapter
+   * without landing on a nonexistent verse.
+   *
+   * There is no expected behavior for a verse before the first book or after the last.
+   */
+  Bible.getPreviousVerseId = verseId => {
+    let { book, chapter, verse } = Bible.parseVerseId(verseId);
+    if (verse > 1) {
+      verse--;
+    }
+    else {
+      chapter--;
+      verse = Bible.getChapterVerseCount(book, chapter);
+    }
+    return Bible.makeVerseId(book, chapter, verse);
   };
 
   /**
@@ -5724,6 +5789,9 @@ var Modules = (function (exports) {
     return Bible.countUniqueRangeVerses(croppedRanges);
   };
 
+  /**
+   * THIS FUNCTION MUTATES THE RANGE ARRAY.
+   */
   Bible.consolidateRanges = ranges => {
     ranges = ranges.sort(Bible.compareRanges);
     const result = [];
@@ -5748,10 +5816,185 @@ var Modules = (function (exports) {
     return result;
   };
 
+  /**
+   * Generates an array of segments, each indicating a read/unread range of verses.
+   */
+  Bible.generateSegments = (firstVerseId, finalVerseId, ranges) => {
+    const segments = [];
+
+    // If there are no ranges, return one giant UNREAD segment
+    if (!ranges.length) {
+      return [{
+        startVerseId: firstVerseId,
+        endVerseId:   finalVerseId,
+        read:         false,
+        verseCount:   Bible.countRangeVerses(firstVerseId, finalVerseId),
+      }];
+    }
+
+    // Sort and consolidate ranges
+    ranges = Bible.consolidateRanges(ranges);
+
+    let lastReadVerseId;
+    for (let i = 0, l = ranges.length; i < l; i++) {
+      const range = ranges[i];
+
+      // Create initial UNREAD segment before first range if needed
+      if (i === 0) {
+        const { startVerseId, endVerseId } = range;
+        if (firstVerseId !== startVerseId) {
+          const unreadEndVerseId = Bible.getPreviousVerseId(startVerseId);
+          segments.push({
+            startVerseId: firstVerseId,
+            endVerseId:   unreadEndVerseId,
+            read:         false,
+            verseCount:   Bible.countRangeVerses(firstVerseId, unreadEndVerseId),
+          });
+        }
+      }
+      // if this is NOT the first range, create an UNREAD segment before it
+      else {
+        const unreadStartVerseId = Bible.getNextVerseId(lastReadVerseId);
+        const unreadEndVerseId = Bible.getPreviousVerseId(range.startVerseId);
+        segments.push({
+          startVerseId: unreadStartVerseId,
+          endVerseId:   unreadEndVerseId,
+          read:         false,
+          verseCount:   Bible.countRangeVerses(unreadStartVerseId, unreadEndVerseId),
+        });
+      }
+      // add the range as a READ segment
+      const { startVerseId, endVerseId } = range;
+      segments.push({
+        startVerseId,
+        endVerseId,
+        read:       true,
+        verseCount: Bible.countRangeVerses(startVerseId, endVerseId),
+      });
+      lastReadVerseId = endVerseId;
+
+      // Create trailing UNREAD segment if needed
+      if (i === l - 1) {
+        if (range.endVerseId !== finalVerseId) {
+          const startVerseId = Bible.getNextVerseId(lastReadVerseId);
+          segments.push({
+            startVerseId,
+            endVerseId: finalVerseId,
+            read:       false,
+            verseCount: Bible.countRangeVerses(startVerseId, finalVerseId),
+          });
+        }
+      }
+    }
+
+    return segments;
+  };
+
+  Bible.generateBibleSegments = ranges => {
+    const lastChapterIndex = Bible.getBookChapterCount(66);
+    const lastChapterVerseCount = Bible.getChapterVerseCount(66, lastChapterIndex);
+
+    const firstVerseId = Bible.makeVerseId(1, 1, 1);
+    const finalVerseId = Bible.makeVerseId(66, lastChapterIndex, lastChapterVerseCount);
+
+    return Bible.generateSegments(firstVerseId, finalVerseId, ranges);
+  };
+
+  Bible.generateBookSegments = (bookIndex, ranges) => {
+    const lastChapterIndex = Bible.getBookChapterCount(bookIndex);
+    const lastChapterVerseCount = Bible.getChapterVerseCount(bookIndex, lastChapterIndex);
+
+    const firstVerseId = Bible.makeVerseId(bookIndex, 1, 1);
+    const finalVerseId = Bible.makeVerseId(bookIndex, lastChapterIndex, lastChapterVerseCount);
+
+    return Bible.generateSegments(firstVerseId, finalVerseId, ranges);
+  };
+
+  Bible.generateBookChapterSegments = (bookIndex, chapterIndex, ranges) => {
+    const chapterVerseCount = Bible.getChapterVerseCount(bookIndex, chapterIndex);
+
+    const firstVerseId = Bible.makeVerseId(bookIndex, chapterIndex, 1);
+    const finalVerseId = Bible.makeVerseId(bookIndex, chapterIndex, chapterVerseCount);
+
+    return Bible.generateSegments(firstVerseId, finalVerseId, ranges);
+  };
+
+  Bible.displayVerseRange = (startVerseId, endVerseId) => {
+    const start = Bible.parseVerseId(startVerseId);
+    const end = Bible.parseVerseId(endVerseId);
+
+    const bookName = Bible.getBookName(start.book);
+    let range = bookName + ' ';
+    if (start.chapter === end.chapter) {
+      range += start.chapter + ':';
+      range += start.verse + '-' + end.verse;
+      return range;
+    }
+    else {
+      range += start.chapter + ':' + start.verse + '-';
+      range += end.chapter + ':' + end.verse;
+      return range;
+    }
+  };
+
   var bible = Bible;
+
+  const Helpers = {};
+
+  // standardize weights to whole-number percentages of a given full amount
+  Helpers.standardizeWeights = (fullMeasure, weights) => {
+
+    // Determine sum of weights
+    let totalWeight = 0;
+    for (let i = 0; i < weights.length; i++) {
+      totalWeight += weights[i];
+    }
+
+    // Determine floor values
+    const floorVals = [];
+    for (let i = 0; i < weights.length; i++) {
+      floorVals[i] = Math.floor(weights[i] / totalWeight * fullMeasure);
+    }
+
+    // Sum floor values
+    let floorSum = 0;
+    for (let i = 0; i < floorVals.length; i++) {
+      floorSum += floorVals[i];
+    }
+
+    // Determine difference between floorVals and fullMeasure
+    let difference = fullMeasure - floorSum;
+
+    const addedWeightIndices = []; // weights already used
+
+    while (difference > 0) {
+
+      // Find original weight with highest decimal
+      let plusCandidateIndex = -1; // the best candidate to add to
+      let currentWeightChampion = -1; // the value of the best candidate
+      for (let i = 0; i < weights.length; i++) {
+
+        // check if remainder from %1 is next champion AND hasn't been used yet
+        if (weights[i] % 1 > currentWeightChampion && addedWeightIndices.indexOf(i) === -1) {
+          plusCandidateIndex = i;
+          currentWeightChampion = weights[i] % 1;
+        }
+      }
+
+      // Add 1 to highest unused decimal number
+      floorVals[plusCandidateIndex] += 1;
+      addedWeightIndices.push(plusCandidateIndex);
+      difference--;
+    }
+
+    return floorVals;
+  };
+
+  var helpers = Helpers;
 
   const exports$1 = {
     Bible: bible,
+    Helpers: helpers,
   };
 
   Object.assign(window, exports$1);
