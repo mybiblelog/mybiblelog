@@ -3,6 +3,13 @@ const chapterVerses = require('./static/chapter-verses.js');
 
 const Bible = {};
 
+/**
+ * Create a new `Object` with the same nested properties as the input.
+ * Used to manipulate data without mutating the original input.
+ * @param {Object} data
+ */
+const cloneData = data => JSON.parse(JSON.stringify(data));
+
 Bible.makeVerseId = (book = 0, chapter = 0, verse = 0) => {
   let verseId = 100000000 + book * 1000000 + chapter * 1000 + verse;
   return verseId;
@@ -176,6 +183,7 @@ Bible.checkRangeOverlap = (range1, range2) => {
  * never counting the same verse more than once.
  */
 Bible.countUniqueRangeVerses = ranges => {
+  ranges = cloneData(ranges);
   ranges = ranges.sort(Bible.compareRanges);
   let totalVerses = 0;
   let lastRange = null;
@@ -208,6 +216,7 @@ Bible.countUniqueBookRangeVerses = (bookIndex, ranges) => {
  * Returns a new array comprised only of ranges in the given book.
  */
 Bible.filterRangesByBook = (bookIndex, ranges) => {
+  ranges = cloneData(ranges);
   return ranges.filter(r => {
     const startVerse = Bible.parseVerseId(r.startVerseId);
     return startVerse.book === bookIndex;
@@ -219,6 +228,7 @@ Bible.filterRangesByBook = (bookIndex, ranges) => {
  * returning the new resulting array.
  */
 Bible.filterRangesByBookChapter = (bookIndex, chapterIndex, ranges) => {
+  ranges = cloneData(ranges);
   return  ranges.filter(r => {
     const startVerse = Bible.parseVerseId(r.startVerseId);
     const endVerse = Bible.parseVerseId(r.endVerseId);
@@ -262,10 +272,8 @@ Bible.countUniqueBookChapterRangeVerses = (bookIndex, chapterIndex, ranges) => {
   return Bible.countUniqueRangeVerses(croppedRanges);
 };
 
-/**
- * THIS FUNCTION MUTATES THE RANGE ARRAY.
- */
 Bible.consolidateRanges = ranges => {
+  ranges = cloneData(ranges);
   ranges = ranges.sort(Bible.compareRanges);
   const result = [];
   let lastRange = null;
@@ -379,6 +387,8 @@ Bible.generateBookSegments = (bookIndex, ranges) => {
 
   const firstVerseId = Bible.makeVerseId(bookIndex, 1, 1);
   const finalVerseId = Bible.makeVerseId(bookIndex, lastChapterIndex, lastChapterVerseCount);
+
+  ranges = Bible.filterRangesByBook(bookIndex, ranges);
 
   return Bible.generateSegments(firstVerseId, finalVerseId, ranges);
 };

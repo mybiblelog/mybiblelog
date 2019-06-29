@@ -110,20 +110,16 @@
       },
       bibleReadingSegments() {
         const totalBibleVerses = Bible.getTotalVerseCount();
-        const ranges = this.logEntries.map(entry => Object.assign({}, entry));
-        const segments = Bible.generateBibleSegments(ranges);
+        
+        const segments = Bible.generateBibleSegments(this.logEntries);
 
-        console.log({ segments });
-
-        let sum = 0;
+        // let sum = 0;
         segments.forEach(segment => {
           segment.percentage = segment.verseCount * 100 / totalBibleVerses;
-          sum += segment.verseCount;
+          // sum += segment.verseCount;
           return segment;
         });
-        
-        // FIXME: there are 31102 verses in bible but this results in 31103
-        console.log({ sum });
+        // console.log(`Whole bible verse count: ${sum}`);
         
         return segments;
       },
@@ -135,6 +131,21 @@
         const versesRead = Bible.countUniqueBookRangeVerses(bookIndex, this.logEntries);
         const percentage = calcPercent(versesRead, totalVerses);
         return { bookIndex, bookName, totalVerses, versesRead, percentage };
+      },
+      bookReadingSegments(bookIndex) {
+        const totalBookVerses = Bible.getBookVerseCount(bookIndex);
+
+        const segments = Bible.generateBookSegments(bookIndex, this.logEntries);
+
+        // let sum = 0;
+        segments.forEach(segment => {
+          segment.percentage = segment.verseCount * 100 / totalBookVerses;
+          // sum += segment.verseCount;
+          return segment;
+        });
+        // console.log(`Book ${bookIndex} verse count: ${sum}`);
+        
+        return segments;
       },
     },
   };
