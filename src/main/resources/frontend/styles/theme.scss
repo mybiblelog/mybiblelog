@@ -16,6 +16,10 @@ $breakpoint: 800px;
     @content;
   }
 }
+
+$zIndexSiteHeader: 3;
+$zIndexSiteNav: 2;
+$zIndexSiteNavScreen: 1;
   
 $header-height: calc(1rem + 1.618rem + 3px);
 
@@ -44,7 +48,8 @@ $header-height: calc(1rem + 1.618rem + 3px);
 	display: flex;
 	justify-content: space-between;
 	
-	position: fixed;
+  position: fixed;
+  z-index: $zIndexSiteHeader;
 	top: 0;
 	width: 100%;
   
@@ -84,15 +89,19 @@ $header-height: calc(1rem + 1.618rem + 3px);
   
 .site-nav {
 	background: #333;
-	position: fixed;
+  position: fixed;
+  z-index: $zIndexSiteNav;
 	top: $header-height;
-	width: 100vw;
+  width: calc(100% - 2rem);
+  max-width: 350px;
 	height: calc(100vh - #{$header-height});
-	overflow-y: auto;
-	display: none;  
+  overflow-y: auto;
   
+  transition: all 0.2s ease-in;
+  left: -100vw;
 	&.active {
-	  display: block;
+    left: 0;
+    transition: all 0.2s ease-out;
 	}
   
 	@include mq($breakpoint) {
@@ -125,6 +134,27 @@ $header-height: calc(1rem + 1.618rem + 3px);
         }
       }
 	  }
+	}
+}
+
+.site-nav-screen {
+  position: fixed;
+  z-index: $zIndexSiteNavScreen;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  transition: background-color 0.2s ease-in;
+
+  &.active {
+    background-color: rgba(0,0,0,0.5);
+    transition: background-color 0.2s ease-out;
+    pointer-events: all;
+  }
+
+  @include mq($breakpoint) {
+	  display: none;
 	}
 }
   
