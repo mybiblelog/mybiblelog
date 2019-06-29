@@ -1,23 +1,25 @@
 :root {
 	font-size: 16px;
-  }
+}
   
-  * {
+* {
 	box-sizing: border-box;
 	padding: 0;
 	margin: 0;
 	font-family: sans-serif;
+}
+  
+$breakpoint: 800px;
+
+@mixin mq($breakpoint) {
+	@media (min-width: $breakpoint) {
+    @content;
   }
+}
   
-  $breakpoint: 800px;
-  
-  @mixin mq($breakpoint) {
-	@media (min-width: $breakpoint) { @content; }
-  }
-  
-  $header-height: calc(1rem + 1.618rem + 3px);
-  
-  .site-container {
+$header-height: calc(1rem + 1.618rem + 3px);
+
+.site-container {
 	height: 100vh;
   
 	display: flex;
@@ -30,9 +32,9 @@
 	  grid-template-rows: auto 1fr;
 	  padding-top: 0;
 	}
-  }
+}
   
-  .site-header {
+.site-header {
 	background-color: rgb(43, 111, 189);
 	color: #fff;
 	padding: 0.5rem;
@@ -51,14 +53,14 @@
 	  width: auto;
 	  grid-area: 1 / 1 / 2 / 3;
 	}
-  }
+}
   
-  .site-title {
+.site-title {
 	font-size: 1.5rem;
 	font-weight: 300;
-  }
+}
   
-  .site-nav-trigger {
+.site-nav-trigger {
 	padding: 0.25rem 0.5rem;
 	background: #000;
 	color: #fff;
@@ -78,9 +80,9 @@
 	@include mq($breakpoint) {
 	  display: none;
 	}
-  }
+}
   
-  .site-nav {
+.site-nav {
 	background: #333;
 	position: fixed;
 	top: $header-height;
@@ -105,28 +107,28 @@
 	  list-style-type: none;
 	  li {
 	    .site-nav__welcome {
-		  color: #fff;
-		  padding: 0.5rem;
-		  display: block;
-		  border-bottom: 1px solid #444;		
-		}
-		a {
-		  display: block;
-		  padding: 0.5rem;
-		  color: #ccc;
-		  text-decoration: none;
-		  border-bottom: 1px solid #444;
-		  &:hover {
-			background: #111;
-			color: #fff;
-			transition: 0.2s;
-		  }
-		}
+        color: #fff;
+        padding: 0.5rem;
+        display: block;
+        border-bottom: 1px solid #444;		
+      }
+      a {
+        display: block;
+        padding: 0.5rem;
+        color: #ccc;
+        text-decoration: none;
+        border-bottom: 1px solid #444;
+        &:hover {
+          background: #111;
+          color: #fff;
+          transition: 0.2s;
+        }
+      }
 	  }
 	}
-  }
+}
   
-  .site-main {
+.site-main {
 	padding: 1rem 0.5rem;
 	@include mq($breakpoint) {
 	  padding: 1rem;
@@ -154,7 +156,7 @@
 			background: #eee;
 		}
 	}
-  }
+}
 
-  @import 'log.scss';
-  @import 'coverage.scss';
+@import 'log.scss';
+@import 'coverage.scss';
