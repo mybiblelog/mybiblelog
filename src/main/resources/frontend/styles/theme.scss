@@ -155,11 +155,11 @@ body {
 	height: calc(100vh - #{$header-height});
   overflow-y: auto;
   
-  transition: all 0.2s ease-in;
+  transition: left 0.2s ease-in;
   left: -100vw;
 	&.active {
     left: 0;
-    transition: all 0.2s ease-out;
+    transition: left 0.2s ease-out;
 	}
   
 	@include mq($breakpoint) {

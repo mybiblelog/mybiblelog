@@ -107,11 +107,11 @@ body.modal-open {
   max-width: 350px;
   height: calc(100vh - calc(1rem + 1.618rem + 3px));
   overflow-y: auto;
-  transition: all 0.2s ease-in;
+  transition: left 0.2s ease-in;
   left: -100vw; }
   .site-nav.active {
     left: 0;
-    transition: all 0.2s ease-out; }
+    transition: left 0.2s ease-out; }
   @media (min-width: 800px) {
     .site-nav {
       display: block;
