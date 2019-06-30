@@ -23,6 +23,12 @@ $zIndexSiteNavScreen: 1;
   
 $header-height: calc(1rem + 1.618rem + 3px);
 
+body {
+  &.modal-open {
+    overflow-y: hidden;
+  }
+}
+
 .site-container {
 	height: 100vh;
   
