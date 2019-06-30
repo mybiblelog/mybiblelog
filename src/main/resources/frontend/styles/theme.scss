@@ -81,11 +81,6 @@ $header-height: calc(1rem + 1.618rem + 3px);
 	font-size: 1rem;
 	letter-spacing: 1px;
   
-	&:active {
-	  background: #fff;
-	  color: #333;
-	}
-  
 	@include mq($breakpoint) {
 	  display: none;
   }

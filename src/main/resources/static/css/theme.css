@@ -54,9 +54,6 @@
   border: 0;
   font-size: 1rem;
   letter-spacing: 1px; }
-  .site-nav-trigger:active {
-    background: #fff;
-    color: #333; }
   @media (min-width: 800px) {
     .site-nav-trigger {
       display: none; } }
