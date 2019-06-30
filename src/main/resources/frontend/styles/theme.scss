@@ -66,8 +66,12 @@ $header-height: calc(1rem + 1.618rem + 3px);
 }
   
 .site-nav-trigger {
+  // HACK size to seem smaller for now
+  transform: scale(0.7);
+  margin: -15px;
+
 	padding: 0.25rem 0.5rem;
-	background: #000;
+	background: transparent;
 	color: #fff;
 	border-radius: 3px;
 	line-height: 1;
@@ -84,7 +88,60 @@ $header-height: calc(1rem + 1.618rem + 3px);
   
 	@include mq($breakpoint) {
 	  display: none;
-	}
+  }
+  
+  &-icon {
+    width: 40px;
+    height: 30px;
+    position: relative;
+    margin: 10px;
+    transform: rotate(0deg);
+    transition: .5s ease-in-out;
+    cursor: pointer;
+  
+    span {
+      display: block;
+      position: absolute;
+      height: 6px;
+      width: 100%;
+      background: #fff;
+      border-radius: 6px;
+      opacity: 1;
+      left: 0;
+      transform: rotate(0deg);
+      transition: .25s ease-in-out;
+      
+      &:nth-child(1) {
+        top: 0px;
+      }
+      &:nth-child(2),
+      &:nth-child(3) {
+        top: 12px;
+      }
+      &:nth-child(4) {
+        top: 24px;
+      }
+    }
+  
+    &.active span {
+      &:nth-child(1) {
+        top: 12px;
+        width: 0%;
+        left: 50%;
+      }
+      &:nth-child(2) {
+        transform: rotate(45deg);
+      }
+      &:nth-child(3) {
+        transform: rotate(-45deg);
+      }
+      &:nth-child(4) {
+        top: 12px;
+        width: 0%;
+        left: 50%;
+      }
+    }
+  }
 }
   
 .site-nav {
@@ -117,16 +174,20 @@ $header-height: calc(1rem + 1.618rem + 3px);
 	  li {
 	    .site-nav__welcome {
         color: #fff;
-        padding: 0.5rem;
+        padding: 0.5rem 1rem;
         display: block;
         border-bottom: 1px solid #444;		
       }
       a {
         display: block;
-        padding: 0.5rem;
+        padding: 1rem;
         color: #ccc;
         text-decoration: none;
         border-bottom: 1px solid #444;
+        @include mq($breakpoint) {
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+        }
         &:hover {
           background: #111;
           color: #fff;
