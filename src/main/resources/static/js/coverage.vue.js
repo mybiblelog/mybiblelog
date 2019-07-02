@@ -82,6 +82,16 @@
     },
   };
 
+  const ChapterReport = {
+    template: '#chapter-report',
+    components: {
+      CompletionBar,
+    },
+    props: {
+      report: Object,
+    },
+  };
+
   const BibleReport = {
     template: '#bible-report',
     components: {
@@ -154,6 +164,7 @@
     template: '#book-report',
     components: {
       CompletionBar,
+      ChapterReport,
     },
     props: {
       logEntries: Array,

@@ -30,6 +30,19 @@
       </div>
     </script>
 
+    <script type="text/x-template" id="chapter-report">
+      <div class="chapter-report">
+        <div class="chapter-report--indicator">
+          <div class="chapter-report--index">{{ report.chapterIndex }}</div>
+          <div class="chapter-report--fraction">
+            {{ report.versesRead }} / {{ report.totalVerses }}
+          </div>
+        </div>
+        <completion-bar class="chapter-report--completion"
+          :percentage="report.percentage"></completion-bar>
+      </div>
+    </script>
+
     <script type="text/x-template" id="bible-report">
       <div>
         <header>
@@ -76,29 +89,11 @@
 
         <completion-bar :percentage="percentageRead"></completion-bar>
 
-        <table class="coverage-table">
-          <thead>
-            <tr>
-              <th>Chapter</th>
-              <th>Verses Read</th>
-              <th>Total Verses</th>
-              <th>Percent Complete</th>
-            </tr>
-          </thead>
-          <template v-for="report in allChapterReports"> 
-            <tr>
-              <td>{{ report.chapterIndex }}</td>
-              <td>{{ report.versesRead }}</td>
-              <td>{{ report.totalVerses }}</td>
-              <td>{{ report.percentage }}%</td>
-            </tr>
-            <tr>
-              <td colspan=4>
-                <completion-bar :percentage="report.percentage"></completion-bar>
-              </td>
-            </tr>
+        <div class="chapter-report-grid">
+          <template v-for="report in allChapterReports">
+            <chapter-report :report="report"></chapter-report>
           </template>
-        </table>
+        </div>
       </div>
     </script>
 		

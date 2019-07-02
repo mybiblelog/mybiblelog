@@ -3,24 +3,6 @@ header {
   justify-content: space-between;
 }
 
-.coverage-table {
-  width: 100%;
-  border-collapse: collapse;
-  border: 1px solid #eee;
-
-  th, td {
-    padding: 5px;
-    text-align: right;
-    &:first-child {
-      text-align: left;
-    }
-  }
-
-  tbody tr:nth-child(odd) {
-    background: #eee;
-  }
-}
-
 .coverage-list {
   
   .coverage-card {
@@ -59,5 +41,69 @@ header {
     &-progress {
       grid-area: bar;
     }
+  }
+}
+
+
+.chapter-report-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.chapter-report {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 7px #999;
+  
+  flex-basis: calc(25% - 1rem);
+  position: relative;
+
+  cursor: pointer;
+  transition: 0.1s;
+  &:hover {
+    transition: 0.2s;
+    box-shadow: 0 1px 9px #333;
+  }
+
+  &--indicator {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 10%;
+      top: 10%;
+      bottom: 10%;
+      right: 10%;
+      border-radius: 50%;
+      border: 1rem double #eee;
+    }
+  }
+
+  &--index {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    font-weight: bold;
+    font-size: 1.2rem;
+    font-family: monospace;
+  }
+
+  &--fraction {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    
+    font-size: 0.8rem;
+    font-weight: bold;
+  }
+
+  &--completion {
+    //
   }
 }
