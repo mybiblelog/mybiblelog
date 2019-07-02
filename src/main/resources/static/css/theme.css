@@ -285,6 +285,13 @@ tr.entry-row td:last-child {
 tr.entry-row.active {
   background: yellow; }
 
+tr.entry-row td button {
+  background: #ddd;
+  border: 0;
+  padding: 4px 8px;
+  border-radius: 3px;
+  margin-left: 3px; }
+
 header {
   display: flex;
   justify-content: space-between; }
