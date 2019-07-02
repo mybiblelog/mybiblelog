@@ -9,7 +9,12 @@ main p {
 
 .page-column {
 	max-width: 30rem;
-	margin: 0 auto;
+  margin: 0 auto;
+  
+  ul {
+    padding-left: 2rem;
+    margin-bottom: 1rem;
+  }
 }
 
 .page-column header {
@@ -31,11 +36,10 @@ main p {
 	background-color: #000;
 }
 
-
 #model {
 	max-width: 30rem;
 	padding: 1rem;
-    border: 3px solid #000;
+  border: 3px solid #000;
 	margin: 1rem 0;
 	
 	display: grid;

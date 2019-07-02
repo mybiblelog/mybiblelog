@@ -10,25 +10,44 @@
 
 <body>
 	<div layout:fragment="content">
-		
-		<p>MyBibleLog.com is a project to help you track and gain insights on your bible reading.</p>
-	
-		<p>It's a fitness app for studying scripture!</p>
 
-		<p>
-			Unlike regular prescriptive reading plans, which tell you what to read and when to read it,
-			MyBibleLog.com is entirely descriptive. It tells you what you've read and when you read it.
-		</p>
+      <div class="page-column">
 
-		<p>
-			The site is free for all to use and works on any device!
-			<span th:unless="${@identity.loggedIn()}" th:remove="tag">Sign in below:</span>
-		</p>
+        <header>
+            <h2>My Bible Log</h2>
+        </header>
+        
+        <p>MyBibleLog.com is a project to help you track and gain insights on your bible reading.</p>
+      
+        <p>The bible is an anthology of 66 books written over a period of hundreds of years, with estimates closer to 2000 years.</p>
 
-		<nav th:unless="${@identity.loggedIn()}">
-			<a class="button-link" href="/oauth2/authorization/google">Sign in with Google</a>
-			<a class="button-link" href="/oauth2/authorization/facebook">Sign in with Facebook</a>
-		</nav>
+        <p>It is rarely read from cover to cover, and a few of its books are read more often than others.
+          In fact, few people have read the entire text.
+          A <a href="https://religionnews.com/2017/04/25/the-bible-helpful-but-unread/">2017 survey</a> showed that only 11% of Americans had read the whole bible.</p>
+
+        <p>Regardless, it remains the predominant religious text in the United States,
+          as <a href="https://www.pewforum.org/religious-landscape-study/">over 70% of Americans identify as Christians</a>.</p>
+
+        <p>MyBibleLog.com is designed to help you read the entire bible, one piece at a time:</p>
+        <ul>
+          <li>You don't have to read anything in order &mdash; all passages can be read independently of one another.</li>
+          <li>You don't have to follow a reading plan &mdash; you just need to keep reading the portions of the bible you haven't read yet.</li>
+        </ul>
+
+        <p>All you really have to do is
+          <a href="/log" th:if="${@identity.loggedIn()}">log your reading each day.</a>
+          <span th:unless="${@identity.loggedIn()}" th:remove="tag">
+            log your reading each day.
+            You don't even have to create an account or password to do it - just log in with Google or Facebook to get started:
+          </span>
+        </p>
+
+        <nav th:unless="${@identity.loggedIn()}">
+          <a class="button-link" href="/oauth2/authorization/google">Sign in with Google</a>
+          <a class="button-link" href="/oauth2/authorization/facebook">Sign in with Facebook</a>
+        </nav>
+    
+      </div>
 	</div>
 </body>
 </html>

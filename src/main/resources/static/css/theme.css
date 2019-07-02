@@ -193,6 +193,9 @@ main p {
 .page-column {
   max-width: 30rem;
   margin: 0 auto; }
+  .page-column ul {
+    padding-left: 2rem;
+    margin-bottom: 1rem; }
 
 .page-column header {
   display: flex;
