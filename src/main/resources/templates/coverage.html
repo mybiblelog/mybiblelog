@@ -31,7 +31,7 @@
     </script>
 
     <script type="text/x-template" id="chapter-report">
-      <div class="chapter-report">
+      <div class="chapter-report" @click="openChapterInBible">
         <div class="chapter-report--indicator">
           <div class="chapter-report--index">{{ report.chapterIndex }}</div>
           <div class="chapter-report--fraction">
@@ -91,7 +91,8 @@
 
         <div class="chapter-report-grid">
           <template v-for="report in allChapterReports">
-            <chapter-report :report="report"></chapter-report>
+            <chapter-report :report="report">
+            </chapter-report>
           </template>
         </div>
       </div>

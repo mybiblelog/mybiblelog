@@ -63,21 +63,21 @@
     },
     methods: {
       displayVerseRange(startVerseId, endVerseId) {
-				const start = Bible.parseVerseId(startVerseId);
-				const end = Bible.parseVerseId(endVerseId);
+        const start = Bible.parseVerseId(startVerseId);
+        const end = Bible.parseVerseId(endVerseId);
 
-				const bookName = Bible.getBookName(start.book);
-				let range = bookName + ' ';
-				if (start.chapter === end.chapter) {
-					range += start.chapter + ':';
-					range += start.verse + '-' + end.verse;
-					return range;
-				}
-				else {
-					range += start.chapter + ':' + start.verse + '-';
-					range += end.chapter + ':' + end.verse;
-					return range
-				}
+        const bookName = Bible.getBookName(start.book);
+        let range = bookName + ' ';
+        if (start.chapter === end.chapter) {
+          range += start.chapter + ':';
+          range += start.verse + '-' + end.verse;
+          return range;
+        }
+        else {
+          range += start.chapter + ':' + start.verse + '-';
+          range += end.chapter + ':' + end.verse;
+          return range
+        }
       },
     },
   };
@@ -89,6 +89,15 @@
     },
     props: {
       report: Object,
+    },
+    methods: {
+      openChapterInBible() {
+        const { bookIndex, chapterIndex } = this.report;
+        const bookName = Bible.getBookName(bookIndex);
+        const chapterReference = `${bookName} ${chapterIndex}`;
+        const url = encodeURI(`https://www.biblegateway.com/passage/?version=NASB&search=${chapterReference}`);
+        window.open(url, '_blank');
+      },
     },
   };
 
@@ -196,26 +205,26 @@
         const totalVerses = Bible.getChapterVerseCount(this.bookIndex, chapterIndex);
         const versesRead = Bible.countUniqueBookChapterRangeVerses(this.bookIndex, chapterIndex, this.logEntries);
         const percentage = calcPercent(versesRead, totalVerses);
-        return { chapterIndex, totalVerses, versesRead, percentage };
+        return { chapterIndex, totalVerses, versesRead, percentage, bookIndex: this.bookIndex, chapterIndex };
       },
     },
   };
 
-	new Vue({
+  new Vue({
     el: '#js-vue-app',
     components: {
       BibleReport,
       BookReport,
     },
-		data: {
+    data: {
       view: 'bible',
       bookIndex: 1,
       logEntries: [],
-		},
-		computed: {
+    },
+    computed: {
       //
     },
-		methods: {
+    methods: {
       viewBibleReport() {
         this.view = 'bible';
       },
@@ -223,14 +232,14 @@
         this.view = 'book';
         this.bookIndex = bookIndex;
       },
-		},
-		mounted() {
-			fetch('/api/log-entries')
+    },
+    mounted() {
+      fetch('/api/log-entries')
         .then(response => response.json())
         .then(data => {
           this.logEntries = data;
         });
-		},
-	});
+    },
+  });
 
 })();
