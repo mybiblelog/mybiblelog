@@ -3,6 +3,19 @@ header {
   justify-content: space-between;
 }
 
+.plaque {
+  padding: 1rem;
+  background: #eee;
+  box-shadow: 0 0 7px #999 inset;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+
+  p {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
 .coverage-list {
   
   .coverage-card {

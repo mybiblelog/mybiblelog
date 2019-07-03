@@ -49,18 +49,14 @@
           <h2>Coverage Report</h2>
         </header>
 
-        <div>
-          <p>Total Bible Verses: {{ totalBibleVerses }}</p>
-          <p>Unique Verses Read: {{ totalVersesRead }}</p>
-          <p>Percent Complete: {{ percentageRead }}%</p>
+        <div class="plaque">
+          <p>Total Bible Verses: <span>{{ totalBibleVerses }}</span></p>
+          <p>Unique Verses Read: <span>{{ totalVersesRead }}</span></p>
+          <p>Percent Complete: <span>{{ percentageRead }}%</span></p>
+
+          <segment-bar :segments="bibleReadingSegments"></segment-bar>
         </div>
         
-        <!--
-          <completion-bar :percentage="percentageRead"></completion-bar>
-        -->
-
-        <segment-bar :segments="bibleReadingSegments"></segment-bar>
-
         <div class="coverage-list">
           <div class="coverage-card" v-for="report in allBookReports" @click="$emit('view-book-report', report.bookIndex)">
             <span class="coverage-card-book">{{ report.bookName }}</span>
@@ -81,13 +77,13 @@
           <button @click="$emit('exit-book-report')">Go Back</button>
         </header>
 
-        <div>
-          <p>Total Book Verses: {{ totalBookVerses }}</p>
-          <p>Unique Verses Read: {{ totalVersesRead }}</p>
-          <p>Percent Complete: {{ percentageRead }}%</p>
+        <div class="plaque">
+          <p>Total Book Verses: <span>{{ totalBookVerses }}</span></p>
+          <p>Unique Verses Read: <span>{{ totalVersesRead }}</span></p>
+          <p>Percent Complete: <span>{{ percentageRead }}%</span></p>
+          
+          <completion-bar :percentage="percentageRead"></completion-bar>
         </div>
-
-        <completion-bar :percentage="percentageRead"></completion-bar>
 
         <div class="chapter-report-grid">
           <template v-for="report in allChapterReports">
