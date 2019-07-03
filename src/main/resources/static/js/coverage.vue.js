@@ -93,9 +93,7 @@
     methods: {
       openChapterInBible() {
         const { bookIndex, chapterIndex } = this.report;
-        const bookName = Bible.getBookName(bookIndex);
-        const chapterReference = `${bookName} ${chapterIndex}`;
-        const url = encodeURI(`https://www.biblegateway.com/passage/?version=NASB&search=${chapterReference}`);
+        const url = Util.getReadingUrl(bookIndex, chapterIndex);
         window.open(url, '_blank');
       },
     },

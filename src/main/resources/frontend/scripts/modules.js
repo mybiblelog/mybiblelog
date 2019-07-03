@@ -1,9 +1,9 @@
 const Bible = require('./bible');
-const Helpers = require('./helpers');
+const Util = require('./util');
 
 const exports = {
   Bible,
-  Helpers,
+  Util,
 };
 
 Object.assign(window, exports);
