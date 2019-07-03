@@ -300,7 +300,7 @@ tr.entry-row td:last-child {
   text-align: right; }
 
 tr.entry-row.active {
-  background: yellow; }
+  background: #ccc; }
 
 tr.entry-row td button {
   background: #ddd;
