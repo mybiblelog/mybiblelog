@@ -290,7 +290,12 @@ tr.entry-row td button {
   border: 0;
   padding: 4px 8px;
   border-radius: 3px;
-  margin-left: 3px; }
+  margin-left: 3px;
+  cursor: pointer; }
+  tr.entry-row td button:hover {
+    background: #333;
+    color: #fff;
+    transition: 0.2s; }
 
 header {
   display: flex;
