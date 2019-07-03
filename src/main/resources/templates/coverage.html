@@ -62,7 +62,6 @@
             <span class="coverage-card-book">{{ report.bookName }}</span>
             <span class="coverage-card-percentage">{{ report.percentage }}%</span>
             <div class="coverage-card-progress">
-              <!-- <completion-bar :percentage="report.percentage"></completion-bar> -->
               <segment-bar :segments="bookReadingSegments(report.bookIndex)"></segment-bar>
             </div>
           </div>

@@ -225,10 +225,18 @@
     methods: {
       viewBibleReport() {
         this.view = 'bible';
+        window.scrollTo({
+          top: 0,
+          behavior: 'auto',
+        });
       },
       viewBookReport(bookIndex) {
         this.view = 'book';
         this.bookIndex = bookIndex;
+        window.scrollTo({
+          top: 0,
+          behavior: 'auto',
+        });
       },
     },
     mounted() {
