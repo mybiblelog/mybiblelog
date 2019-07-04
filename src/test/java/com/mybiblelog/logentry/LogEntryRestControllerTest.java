@@ -55,7 +55,7 @@ public class LogEntryRestControllerTest {
 			.thenReturn(logEntries);
 		
 		// Act
-		Iterable<LogEntry> result = underTest.getAllLogEntries();
+		Iterable<LogEntry> result = underTest.getAllLogEntries(null, null);
 		
 		// Assert
 		long size = result.spliterator().getExactSizeIfKnown();

@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,11 +36,22 @@ public class LogEntryRestController {
 	private LogEntryRepository logEntryRepo;
 	
 	private BibleIndex bibleIndex = BibleIndex.getInstance();
-	
+
 	@GetMapping("")
-	public Iterable<LogEntry> getAllLogEntries() {
+	public Iterable<LogEntry> getAllLogEntries(
+		@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+		@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+	) {
 		User user = loginService.resolveAuthUser();
-		return logEntryRepo.findAllByUserOrderByDateAsc(user);
+		if (startDate == null) {
+			return logEntryRepo.findAllByUserOrderByDateAsc(user);
+		}
+		else if (endDate == null) {
+			return logEntryRepo.findAllByUserAndDateGreaterThanEqualOrderByDateAsc(user, startDate);
+		}
+		else {
+			return logEntryRepo.findAllByUserAndDateBetweenOrderByDateAsc(user, startDate, endDate);
+		}
 	}
 	
 	@GetMapping("/{id}")

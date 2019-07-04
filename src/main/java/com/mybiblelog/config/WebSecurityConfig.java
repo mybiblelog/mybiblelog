@@ -59,6 +59,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutUrl("/logout")
 				.logoutSuccessUrl("/")
 			.and()
+				.sessionManagement()
+				.invalidSessionUrl("/login?invalidSession")
+				.maximumSessions(1)
+					.expiredUrl("/login?expired")
+					.and()
+			.and()
 				.requiresChannel() // Forces Heroku traffic to HTTPS
 				.requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
 				.requiresSecure();

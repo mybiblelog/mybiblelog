@@ -169,7 +169,6 @@ public class LogEntryRestControllerMvcTest {
 		mvc
 			.perform(get("/api/log-entries/1"))
 	    	.andExpect(status().is(302));
-
 	}
 	
 	// CREATE
