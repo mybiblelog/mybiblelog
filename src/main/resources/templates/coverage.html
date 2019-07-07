@@ -38,8 +38,7 @@
             {{ report.versesRead }} / {{ report.totalVerses }}
           </div>
         </div>
-        <completion-bar class="chapter-report--completion"
-          :percentage="report.percentage"></completion-bar>
+        <segment-bar class="chapter-report--completion" :segments="report.segments"></segment-bar>
       </div>
     </script>
 
@@ -81,7 +80,7 @@
           <p>Unique Verses Read: <span>{{ totalVersesRead }}</span></p>
           <p>Percent Complete: <span>{{ percentageRead }}%</span></p>
           
-          <completion-bar :percentage="percentageRead"></completion-bar>
+          <segment-bar :segments="bookReadingSegments(book.bibleOrder)"></segment-bar>
         </div>
 
         <div class="chapter-report-grid">

@@ -86,6 +86,7 @@
     template: '#chapter-report',
     components: {
       CompletionBar,
+      SegmentBar,
     },
     props: {
       report: Object,
@@ -171,6 +172,7 @@
     template: '#book-report',
     components: {
       CompletionBar,
+      SegmentBar,
       ChapterReport,
     },
     props: {
@@ -203,7 +205,32 @@
         const totalVerses = Bible.getChapterVerseCount(this.bookIndex, chapterIndex);
         const versesRead = Bible.countUniqueBookChapterRangeVerses(this.bookIndex, chapterIndex, this.logEntries);
         const percentage = calcPercent(versesRead, totalVerses);
-        return { chapterIndex, totalVerses, versesRead, percentage, bookIndex: this.bookIndex, chapterIndex };
+        const segments = this.chapterReadingSegments(this.bookIndex, chapterIndex);
+        return { chapterIndex, totalVerses, versesRead, percentage, bookIndex: this.bookIndex, chapterIndex, segments };
+      },
+      bookReadingSegments(bookIndex) {
+        const totalBookVerses = Bible.getBookVerseCount(bookIndex);
+
+        const segments = Bible.generateBookSegments(bookIndex, this.logEntries);
+
+        segments.forEach(segment => {
+          segment.percentage = segment.verseCount * 100 / totalBookVerses;
+          return segment;
+        });
+        
+        return segments;
+      },
+      chapterReadingSegments(bookIndex, chapterIndex) {
+        const totalChapterVerses = Bible.getChapterVerseCount(bookIndex, chapterIndex);
+
+        const segments = Bible.generateBookChapterSegments(bookIndex, chapterIndex, this.logEntries);
+
+        segments.forEach(segment => {
+          segment.percentage = segment.verseCount * 100 / totalChapterVerses;
+          return segment;
+        });
+        
+        return segments;
       },
     },
   };

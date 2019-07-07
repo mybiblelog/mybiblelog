@@ -399,6 +399,11 @@ Bible.generateBookChapterSegments = (bookIndex, chapterIndex, ranges) => {
   const firstVerseId = Bible.makeVerseId(bookIndex, chapterIndex, 1);
   const finalVerseId = Bible.makeVerseId(bookIndex, chapterIndex, chapterVerseCount);
 
+  ranges = Bible.filterRangesByBookChapter(bookIndex, chapterIndex, ranges);
+  ranges = ranges.map(range => {
+    return Bible.cropRangeToBookChapter(bookIndex, chapterIndex, range);
+  });
+
   return Bible.generateSegments(firstVerseId, finalVerseId, ranges);
 };
 
