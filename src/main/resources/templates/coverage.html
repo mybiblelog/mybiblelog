@@ -33,6 +33,10 @@
     <script type="text/x-template" id="chapter-report">
       <div class="chapter-report" @click="openChapterInBible">
         <div class="chapter-report--indicator">
+          <div class="chapter-report--indicator--icon">
+            <img src="/icons/star.svg" v-if="report.percentage == 100">
+            <img src="/icons/target.svg" v-if="report.percentage != 100">
+          </div>
           <div class="chapter-report--index">{{ report.chapterIndex }}</div>
           <div class="chapter-report--fraction">
             {{ report.versesRead }} / {{ report.totalVerses }}

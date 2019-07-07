@@ -83,17 +83,17 @@ header {
     position: relative;
     width: 100%;
     padding-bottom: 100%;
-    
-    &::before {
-      content: '';
-      display: block;
+
+    &--icon {
       position: absolute;
-      left: 10%;
-      top: 10%;
-      bottom: 10%;
-      right: 10%;
-      border-radius: 50%;
-      border: 1rem double #eee;
+      left: 20%;
+      top: 20%;
+      bottom: 20%;
+      right: 20%;
+
+      img {
+        width: 100%;
+      }
     }
   }
 

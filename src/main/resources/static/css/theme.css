@@ -374,16 +374,14 @@ header {
     position: relative;
     width: 100%;
     padding-bottom: 100%; }
-    .chapter-report--indicator::before {
-      content: '';
-      display: block;
+    .chapter-report--indicator--icon {
       position: absolute;
-      left: 10%;
-      top: 10%;
-      bottom: 10%;
-      right: 10%;
-      border-radius: 50%;
-      border: 1rem double #eee; }
+      left: 20%;
+      top: 20%;
+      bottom: 20%;
+      right: 20%; }
+      .chapter-report--indicator--icon img {
+        width: 100%; }
   .chapter-report--index {
     position: absolute;
     top: 0;
