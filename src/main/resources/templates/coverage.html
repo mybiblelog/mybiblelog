@@ -62,6 +62,10 @@
         
         <div class="coverage-list">
           <div class="coverage-card" v-for="report in allBookReports" @click="$emit('view-book-report', report.bookIndex)">
+            <span class="coverage-card-icon">
+              <img src="/icons/star.svg" v-if="report.percentage == 100">
+              <img src="/icons/target.svg" v-if="report.percentage != 100">
+            </span>
             <span class="coverage-card-book">{{ report.bookName }}</span>
             <span class="coverage-card-percentage">{{ report.percentage }}%</span>
             <div class="coverage-card-progress">
