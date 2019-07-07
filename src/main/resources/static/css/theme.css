@@ -167,7 +167,7 @@ body.modal-open {
   .site-main .button-link {
     padding: 1rem;
     background: #ddd;
-    color: #000;
+    color: #fff;
     border-radius: 3px;
     line-height: 1;
     display: flex;
@@ -177,11 +177,18 @@ body.modal-open {
     letter-spacing: 1px;
     text-decoration: none;
     margin: 0.5rem 0;
-    border: 1px solid #666;
+    border: 1px solid rgba(0, 0, 0, 0.5);
     max-width: 20rem; }
+    .site-main .button-link.facebook {
+      background: #4172B8; }
+    .site-main .button-link.google {
+      background: #4285F4; }
     .site-main .button-link:active {
-      color: #333;
-      background: #eee; }
+      background: #000; }
+    .site-main .button-link img {
+      width: 1.2rem;
+      margin: -0.1rem;
+      margin-right: .7rem; }
 
 main p {
   margin-bottom: 1rem; }

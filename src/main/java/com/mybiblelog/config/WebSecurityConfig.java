@@ -41,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					"/oauth2/authorization/facebook",
 					"/privacy", "/terms",
 					"/h2-console/**",
-					"/css/**", "/js/**", "/favicon.png"
+					"/css/**", "/js/**", "/icons/**", "/favicon.png"
 				)
 				.permitAll()
 				.anyRequest().authenticated()
