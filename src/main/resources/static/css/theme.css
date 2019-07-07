@@ -190,6 +190,26 @@ body.modal-open {
       margin: -0.1rem;
       margin-right: .7rem; }
 
+.factoid {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0; }
+  .factoid.reverse {
+    flex-direction: row-reverse; }
+  .factoid .datum {
+    border: 2px dashed #09f;
+    border-radius: 0.5rem;
+    padding: 0.8rem;
+    font-size: 1.5rem;
+    color: #333;
+    margin-right: 1rem; }
+  .factoid.reverse .datum {
+    margin-right: 0;
+    margin-left: 1rem; }
+  .factoid p {
+    margin: 1rem;
+    flex-basis: 65%; }
+
 main p {
   margin-bottom: 1rem; }
 
