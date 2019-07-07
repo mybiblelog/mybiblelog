@@ -95,7 +95,10 @@
 				let range = bookName + ' ';
 				if (start.chapter === end.chapter) {
 					range += start.chapter + ':';
-					range += start.verse + '-' + end.verse;
+          range += start.verse;
+          if (start.verse !== end.verse) {
+            range += '-' + end.verse;
+          }
 					return range;
 				}
 				else {
