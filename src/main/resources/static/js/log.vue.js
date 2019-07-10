@@ -1,5 +1,64 @@
 (() => {
 
+  /**
+   * Returns the number of days in a given month.
+   * @param {number} month January = 0, February = 1, etc.
+   * @param {number} year Full year: 1984, 2000, etc.
+   */
+  const daysInMonth = (month, year) => {
+    // We look at the date of the last day of the month
+    // We access it as the zeroeth day of the next month
+    return new Date(year, month+1, 0).getDate();
+  };
+
+  /**
+   * Returns the numerical weekday, with Sunday = 1, Monday = 2, etc.
+   * @param {number} year Full year: 1984, 2000, etc.
+   * @param {number} month January = 0, February = 1, etc.
+   * @param {number} date 1, 2, 3, etc.
+   */
+  const indexOfWeekday = (year, month, date) => {
+    return new Date(year, month, date).getDay();
+  };
+
+  /**
+   * Generates an array of 7 date-like objects representing the week
+   * in which the specified date occurs.
+   * @param {number} year Full year: 1984, 2000, etc.
+   * @param {number} month January = 0, February = 1, etc.
+   * @param {number} date 1, 2, 3, etc.
+   */
+  const weekFromDate = (year, month, date) => {
+    console.log({ year, month, date });
+    const weekdayIndex = indexOfWeekday(year, month, date);
+    console.log({ weekdayIndex });
+    const daysSinceSunday = weekdayIndex - 1;
+    let sundayDate = date - daysSinceSunday;
+    if (sundayDate < 1) {
+      const previousMonthDays = daysInMonth(month - 1);
+      sundayDate = previousMonthDays + sundayDate;
+    }
+    const currentMonthDays = daysInMonth(month);
+    const result = [];
+    for (let i = 0; i < 7; i++) {
+      const date = sundayDate + i;
+      if (date > currentMonthDays) date -= currentMonthDays;
+      const dayDate = { year, month, date };
+      result.push(dayDate);
+    }
+    return result;
+  };
+
+  const getWeekStartAndEnd = (year, month, date) => {
+    const week = weekFromDate(year, month, date);
+    const startDate = week[0];
+    const endDate = week[6];
+    return {
+      startDate,
+      endDate,
+    };
+  };
+
 	const DateString = {
 		parse(dateString) {
 			const [yyyy, mm, dd] = dateString.split('-');
@@ -28,7 +87,7 @@
 			result.setMonth(month);
 			result.setDate(date);
 			return result;
-		},
+    },
 	};
 
 	new Vue({
@@ -36,6 +95,8 @@
 		data: {
       logEntries: [],
       loading: false,
+
+      weekMarkerDate: new Date(),
 
 			formOpen: false,
 			model: {
@@ -57,6 +118,12 @@
 			endVerses: [],
 		},
 		computed: {
+      weekdays() {
+        const year = this.weekMarkerDate.getFullYear();
+        const month = this.weekMarkerDate.getMonth();
+        const date = this.weekMarkerDate.getDate();
+        return weekFromDate(year, month, date);
+      },
 			entryDates() {
 				const dateMap = {};
 				for (let logEntry of this.logEntries) {
@@ -76,6 +143,16 @@
 			},
 		},
 		methods: {
+      prevWeek() {
+        const currentDate = this.weekMarkerDate.getDate();
+        this.weekMarkerDate.setDate(currentDate - 7);
+        this.weekMarkerDate = new Date(this.weekMarkerDate);
+      },
+      nextWeek() {
+        const currentDate = this.weekMarkerDate.getDate();
+        this.weekMarkerDate.setDate(currentDate + 7);
+        this.weekMarkerDate = new Date(this.weekMarkerDate);
+      },
 			displayDate(dateString) {
 				// Include time to make the date timezone-agnostic, preventing date shift
 				date = new Date(dateString + ' 00:00');
@@ -91,7 +168,7 @@
 				const start = Bible.parseVerseId(startVerseId);
 				const end = Bible.parseVerseId(endVerseId);
 
-				const bookName = this.books.find(b => b.bibleOrder === start.book).name;
+				const bookName = Bible.getBookName(start.book);
 				let range = bookName + ' ';
 				if (start.chapter === end.chapter) {
 					range += start.chapter + ':';
@@ -184,8 +261,7 @@
 				this.resetEndVerse();
 
 				const bookIndex = this.model.book;
-				const book = this.books.find(b => b.bibleOrder === bookIndex);
-				const chapterCount = book.chapterCount;
+				const chapterCount = Bible.getbookChapterCount(bookIndex);
 				const chapters = [];
 				for (let i = 1; i <= chapterCount; i++) chapters.push(i);
 				this.startChapters = chapters;
@@ -197,8 +273,7 @@
 				this.resetEndChapter();
 				this.resetEndVerse();
 				
-				const chapterId = Bible.makeVerseId(this.model.book, this.model.startChapter, 0);
-				const chapterVerseCount = this.chapterVerses[chapterId];
+				const chapterVerseCount = Bible.getChapterVerseCount(this.model.book, this.model.startChapter);
 				const verses = [];
 				for (let i = 1; i <= chapterVerseCount; i++) verses.push(i);
 				this.startVerses = verses;
@@ -213,8 +288,7 @@
 				this.resetEndVerse();
 
 				const bookIndex = this.model.book;
-				const book = this.books.find(b => b.bibleOrder === bookIndex);
-				const chapterCount = book.chapterCount;
+				const chapterCount = Bible.getbookChapterCount(bookIndex);
 				const chapters = [];
 				for (let i = this.model.startChapter; i <= chapterCount; i++) chapters.push(i);
 				this.endChapters = chapters;
@@ -222,8 +296,7 @@
 			onSelectEndChapter() {
 				this.resetEndVerse();
 
-				const chapterId = Bible.makeVerseId(this.model.book, this.model.endChapter, 0);
-				const chapterVerseCount = this.chapterVerses[chapterId];
+				const chapterVerseCount = Bible.getChapterVerseCount(this.model.book, this.model.startChapter);
 				const verses = [];
 				let i = 1;
 				if (this.model.startChapter === this.model.endChapter) i = this.model.startVerse;
@@ -304,17 +377,6 @@
 			},
 		},
 		mounted() {
-
-			const loadBibleBooks =
-				() => fetch('/bible-books.json')
-					.then(response => response.json())
-					.then(data => this.books = data);
-
-			const loadChapterVerses =
-				() => fetch('/chapter-verses.json')
-					.then(response => response.json())
-					.then(data => this.chapterVerses = data);
-			
 			const loadLogEntries =
 				() => fetch('/api/log-entries')
 					.then(response => response.json())
@@ -322,13 +384,8 @@
 						this.logEntries = data;
 					});
 
-			// Load bible metadata first since it is used to
-      // display log entries
       this.loading = true;
-			loadBibleBooks()
-				.then(loadChapterVerses)
-        .then(loadLogEntries)
-        .then(() => this.loading = false);
+			loadLogEntries().then(() => this.loading = false);
 		},
 	});
 

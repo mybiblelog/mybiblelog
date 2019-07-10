@@ -13,6 +13,12 @@
 		
 		<div id="js-vue-app" v-cloak class="page-column">
 
+      <button @click="prevWeek">Previous Week</button>
+      <button @click="nextWeek">Next Week</button>
+      <ul>
+        <li v-for="weekday in weekdays">{{ weekday }}</li>
+      </ul>
+
 			<header>
 				<h2>Reading Log</h2>
 				
