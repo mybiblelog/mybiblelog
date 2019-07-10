@@ -1,11 +1,45 @@
 (() => {
 
+	const DateString = {
+		parse(dateString) {
+			const [yyyy, mm, dd] = dateString.split('-');
+			const year = +yyyy;
+			const month = +mm;
+			const date = +dd;
+			return { year, month, date };
+		},
+		stringify(year, month, date) {
+      year = year.toString().padStart(4, '0');
+      month = month.toString().padStart(2, '0');
+      date = date.toString().padStart(2, '0');
+			return `${year}-${month}-${date}`;
+		},
+		fromDate(dateObject) {
+			const year = dateObject.getFullYear().toString().padStart(4, '0');
+			const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
+			const date = dateObject.getDate().toString().padStart(2, '0');
+			return this.stringify(year, month, date);
+		},
+		now() {
+			const today = new Date();
+			return this.fromDate(today);
+		},
+		makeDate(dateString) {
+			const { year, month, date } = this.parse(dateString);
+			const result = new Date();
+			result.setFullYear(year);
+			result.setMonth(month);
+			result.setDate(date);
+			return result;
+    },
+	};
+
   /**
    * Returns the number of days in a given month.
-   * @param {number} month January = 0, February = 1, etc.
    * @param {number} year Full year: 1984, 2000, etc.
+   * @param {number} month January = 0, February = 1, etc.
    */
-  const daysInMonth = (month, year) => {
+  const daysInMonth = (year, month) => {
     // We look at the date of the last day of the month
     // We access it as the zeroeth day of the next month
     return new Date(year, month+1, 0).getDate();
@@ -29,21 +63,25 @@
    * @param {number} date 1, 2, 3, etc.
    */
   const weekFromDate = (year, month, date) => {
-    console.log({ year, month, date });
+    console.clear();
     const weekdayIndex = indexOfWeekday(year, month, date);
-    console.log({ weekdayIndex });
     const daysSinceSunday = weekdayIndex - 1;
     let sundayDate = date - daysSinceSunday;
     if (sundayDate < 1) {
       const previousMonthDays = daysInMonth(month - 1);
       sundayDate = previousMonthDays + sundayDate;
     }
-    const currentMonthDays = daysInMonth(month);
+    // TODO: needs to wrap gracefully to previous year
+    const currentMonthDays = daysInMonth(year, month);
     const result = [];
     for (let i = 0; i < 7; i++) {
-      const date = sundayDate + i;
+      let date = sundayDate + i;
       if (date > currentMonthDays) date -= currentMonthDays;
-      const dayDate = { year, month, date };
+      // TODO: somewhere in here, needs to wrap gracefully to next month 
+      const dayDate = DateString.stringify(year, month + 1, date);
+      console.log({
+        year, month, date, dayDate,
+      })
       result.push(dayDate);
     }
     return result;
@@ -58,37 +96,6 @@
       endDate,
     };
   };
-
-	const DateString = {
-		parse(dateString) {
-			const [yyyy, mm, dd] = dateString.split('-');
-			const year = +yyyy;
-			const month = +mm;
-			const date = +dd;
-			return { year, month, date };
-		},
-		stringify(year, month, date) {
-			return `${year}-${month}-${date}`;
-		},
-		fromDate(dateObject) {
-			const year = dateObject.getFullYear().toString().padStart(4, '0');
-			const month = (dateObject.getMonth() + 1).toString().padStart(2, '0');
-			const date = dateObject.getDate().toString().padStart(2, '0');
-			return this.stringify(year, month, date);
-		},
-		now() {
-			const today = new Date();
-			return this.fromDate(today);
-		},
-		makeDate(dateString) {
-			const { year, month, date } = this.parse(dateString);
-			const result = new Date();
-			result.setFullYear(year);
-			result.setMonth(month);
-			result.setDate(date);
-			return result;
-    },
-	};
 
 	new Vue({
 		el: '#js-vue-app',
@@ -125,15 +132,18 @@
         return weekFromDate(year, month, date);
       },
 			entryDates() {
-				const dateMap = {};
-				for (let logEntry of this.logEntries) {
-					if (!dateMap[logEntry.date]) {
-            dateMap[logEntry.date] = [];
-            dateMap[logEntry.date].verses = 0;
-					}
-          dateMap[logEntry.date].push(logEntry);
-          dateMap[logEntry.date].verses += Bible.countRangeVerses(logEntry.startVerseId, logEntry.endVerseId);
-				}
+        const dateMap = {};
+        for (let weekday of this.weekdays) {
+          dateMap[weekday] = [];
+          dateMap[weekday].verses = 0;
+        }
+        for (let logEntry of this.logEntries) {
+          console.log({ logEntry });
+					if (dateMap[logEntry.date]) {
+            dateMap[logEntry.date].push(logEntry);
+            dateMap[logEntry.date].verses += Bible.countRangeVerses(logEntry.startVerseId, logEntry.endVerseId);
+          }
+        }
 				const dates = Object.keys(dateMap).sort().map(date => ({
 					date,
           entries: dateMap[date],
@@ -143,19 +153,49 @@
 			},
 		},
 		methods: {
+      loadWeekLogEntries() {
+        const year = this.weekMarkerDate.getFullYear();
+        const month = this.weekMarkerDate.getMonth();
+        const date = this.weekMarkerDate.getDate();
+        const { startDate, endDate } = getWeekStartAndEnd(year, month, date);
+
+        console.log('loadWeekLogEntries', { startDate, endDate });
+
+        this.loading = true;
+				fetch(`/api/log-entries?startDate=${startDate}&endDate=${endDate}`)
+					.then(response => response.json())
+					.then(data => {
+            console.log({ data });
+            if (Array.isArray(data)) {
+              this.logEntries = data;
+            }
+            else throw Error();
+          })
+          .catch(error => {
+            alert('An error occurred.');
+            console.error(error);
+          })
+          .then(() => this.loading = false);
+      },
       prevWeek() {
         const currentDate = this.weekMarkerDate.getDate();
         this.weekMarkerDate.setDate(currentDate - 7);
         this.weekMarkerDate = new Date(this.weekMarkerDate);
+        this.loadWeekLogEntries();
+      },
+      thisWeek() {
+        this.weekMarkerDate = new Date();
+        this.loadWeekLogEntries();
       },
       nextWeek() {
         const currentDate = this.weekMarkerDate.getDate();
         this.weekMarkerDate.setDate(currentDate + 7);
         this.weekMarkerDate = new Date(this.weekMarkerDate);
+        this.loadWeekLogEntries();
       },
 			displayDate(dateString) {
 				// Include time to make the date timezone-agnostic, preventing date shift
-				date = new Date(dateString + ' 00:00');
+        date = new Date(dateString + ' 00:00');
 				const options = {
 					weekday: 	'long',
 					year: 		'numeric',
@@ -261,7 +301,7 @@
 				this.resetEndVerse();
 
 				const bookIndex = this.model.book;
-				const chapterCount = Bible.getbookChapterCount(bookIndex);
+				const chapterCount = Bible.getBookChapterCount(bookIndex);
 				const chapters = [];
 				for (let i = 1; i <= chapterCount; i++) chapters.push(i);
 				this.startChapters = chapters;
@@ -288,7 +328,7 @@
 				this.resetEndVerse();
 
 				const bookIndex = this.model.book;
-				const chapterCount = Bible.getbookChapterCount(bookIndex);
+				const chapterCount = Bible.getBookChapterCount(bookIndex);
 				const chapters = [];
 				for (let i = this.model.startChapter; i <= chapterCount; i++) chapters.push(i);
 				this.endChapters = chapters;
@@ -377,15 +417,8 @@
 			},
 		},
 		mounted() {
-			const loadLogEntries =
-				() => fetch('/api/log-entries')
-					.then(response => response.json())
-					.then(data => {
-						this.logEntries = data;
-					});
-
-      this.loading = true;
-			loadLogEntries().then(() => this.loading = false);
+      this.books = Bible.getBooks();
+      this.loadWeekLogEntries();
 		},
 	});
 
