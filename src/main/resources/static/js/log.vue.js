@@ -55,6 +55,12 @@
     return new Date(year, month, date).getDay();
   };
 
+  const dateYearMonthDay = date => ({
+    year: date.getFullYear(),
+    month: date.getMonth(),
+    date: date.getDate(),
+  });
+
   /**
    * Generates an array of 7 date-like objects representing the week
    * in which the specified date occurs.
@@ -63,20 +69,20 @@
    * @param {number} date 1, 2, 3, etc.
    */
   const weekFromDate = (year, month, date) => {
-    const weekdayIndex = indexOfWeekday(year, month, date);
-    const daysSinceSunday = weekdayIndex - 1;
-    let sundayDate = date - daysSinceSunday;
-    if (sundayDate < 1) {
-      const previousMonthDays = daysInMonth(year, month - 1);
-      sundayDate = previousMonthDays + sundayDate;
-    }
-    const currentMonthDays = daysInMonth(year, month);
+    // Start at noon on the given day
+    const referenceDate = new Date(year, month, date, 12);
+    
+    // Move the day back to Sunday
+    const daysSinceSunday = referenceDate.getDay();
+    referenceDate.setDate(referenceDate.getDate() - daysSinceSunday);
+    
+    // For each day of the week, capture the date and increment
     const result = [];
     for (let i = 0; i < 7; i++) {
-      let date = sundayDate + i;
-      if (date > currentMonthDays) date -= currentMonthDays;
+      let { year, month, date } = dateYearMonthDay(referenceDate);
       const dayDate = DateString.stringify(year, month + 1, date);
       result.push(dayDate);
+      referenceDate.setDate(referenceDate.getDate() + 1);
     }
     return result;
   };
