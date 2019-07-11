@@ -123,6 +123,38 @@ main p {
 	}
 }
 
+.pagination {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  button {
+    font-size: 16px;
+    padding: 0.5rem;
+    border-width: 2px 1px;
+    border-style: solid;
+    border-color: #000;
+    background: #fff;
+    color: #000;
+
+    &:first-child {
+      border-left-width: 2px;
+      border-top-left-radius: 0.25rem;
+      border-bottom-left-radius: 0.25rem;
+    }
+    &:last-child {
+      border-right-width: 2px;
+      border-top-right-radius: 0.25rem;
+      border-bottom-right-radius: 0.25rem;
+    }
+
+    &:active {
+      background: #000;
+      color: #fff;
+      transition: 0.2s;
+    }
+  }
+}
+
 
 table.entry-container {
 	margin-top: 1rem;

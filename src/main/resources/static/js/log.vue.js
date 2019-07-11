@@ -63,25 +63,19 @@
    * @param {number} date 1, 2, 3, etc.
    */
   const weekFromDate = (year, month, date) => {
-    console.clear();
     const weekdayIndex = indexOfWeekday(year, month, date);
     const daysSinceSunday = weekdayIndex - 1;
     let sundayDate = date - daysSinceSunday;
     if (sundayDate < 1) {
-      const previousMonthDays = daysInMonth(month - 1);
+      const previousMonthDays = daysInMonth(year, month - 1);
       sundayDate = previousMonthDays + sundayDate;
     }
-    // TODO: needs to wrap gracefully to previous year
     const currentMonthDays = daysInMonth(year, month);
     const result = [];
     for (let i = 0; i < 7; i++) {
       let date = sundayDate + i;
       if (date > currentMonthDays) date -= currentMonthDays;
-      // TODO: somewhere in here, needs to wrap gracefully to next month 
       const dayDate = DateString.stringify(year, month + 1, date);
-      console.log({
-        year, month, date, dayDate,
-      })
       result.push(dayDate);
     }
     return result;
@@ -132,13 +126,14 @@
         return weekFromDate(year, month, date);
       },
 			entryDates() {
+        if (this.loading) return [];
+        
         const dateMap = {};
         for (let weekday of this.weekdays) {
           dateMap[weekday] = [];
           dateMap[weekday].verses = 0;
         }
         for (let logEntry of this.logEntries) {
-          console.log({ logEntry });
 					if (dateMap[logEntry.date]) {
             dateMap[logEntry.date].push(logEntry);
             dateMap[logEntry.date].verses += Bible.countRangeVerses(logEntry.startVerseId, logEntry.endVerseId);
@@ -158,21 +153,18 @@
         const month = this.weekMarkerDate.getMonth();
         const date = this.weekMarkerDate.getDate();
         const { startDate, endDate } = getWeekStartAndEnd(year, month, date);
-
-        console.log('loadWeekLogEntries', { startDate, endDate });
-
+        
         this.loading = true;
-				fetch(`/api/log-entries?startDate=${startDate}&endDate=${endDate}`)
+        
+        fetch(`/api/log-entries?startDate=${startDate}&endDate=${endDate}`)
 					.then(response => response.json())
 					.then(data => {
-            console.log({ data });
             if (Array.isArray(data)) {
               this.logEntries = data;
             }
             else throw Error();
           })
           .catch(error => {
-            alert('An error occurred.');
             console.error(error);
           })
           .then(() => this.loading = false);
@@ -336,7 +328,7 @@
 			onSelectEndChapter() {
 				this.resetEndVerse();
 
-				const chapterVerseCount = Bible.getChapterVerseCount(this.model.book, this.model.startChapter);
+				const chapterVerseCount = Bible.getChapterVerseCount(this.model.book, this.model.endChapter);
 				const verses = [];
 				let i = 1;
 				if (this.model.startChapter === this.model.endChapter) i = this.model.startVerse;
