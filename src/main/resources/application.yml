@@ -23,3 +23,7 @@ spring:
             client-secret: ${FACEBOOK_CLIENT_SECRET}
             scope:
               - email
+server:
+  servlet:
+    session:
+      timeout: 60m
