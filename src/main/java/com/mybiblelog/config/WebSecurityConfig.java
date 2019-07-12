@@ -7,10 +7,17 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.mybiblelog.jwt.JwtAuthenticationFilter;
+import com.mybiblelog.jwt.JwtAuthorizationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -34,18 +41,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.headers().frameOptions().disable()
 			.and()
 				.authorizeRequests()
-				.antMatchers(
-					"/",
-					"/login",
-					"/oauth2/authorization/google",
-					"/oauth2/authorization/facebook",
-					"/privacy", "/terms",
-					"/h2-console/**",
-					"/css/**", "/js/**", "/icons/**", "/favicon.png"
-				)
-				.permitAll()
-				.anyRequest().authenticated()
+					.antMatchers(
+						"/",
+						"/login",
+						"/oauth2/authorization/google",
+						"/oauth2/authorization/facebook",
+						"/privacy", "/terms",
+						"/h2-console/**",
+						"/css/**", "/js/**", "/icons/**", "/favicon.png"
+					).permitAll()
+					.anyRequest().authenticated()
 			.and()
+	            .addFilter(new JwtAuthenticationFilter(authenticationManager()))
+	            .addFilter(new JwtAuthorizationFilter(authenticationManager()))
+	            // We COULD disable sessions and make the app entirely stateless, but we need
+	            // the session to allow users to generate a JWT in the browser via social sign in
+//	            .sessionManagement()
+//	            	.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//			.and()
 				.formLogin()
 				.loginPage("/login")
 				.loginProcessingUrl("/login")
@@ -79,4 +92,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationSuccessHandler successHandler() {
 		return new OAuthSuccessHandler();
 	}
+	
+	@Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+
+        return source;
+    }
 }
