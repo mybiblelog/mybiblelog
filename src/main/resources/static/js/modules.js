@@ -5432,7 +5432,7 @@ var Modules = (function (exports) {
     },
     {
       'chapterId':  164001000,
-      'verseCount': 15,
+      'verseCount': 14,
     },
     {
       'chapterId':  165001000,
