@@ -56,4 +56,24 @@ public class HomeControllerMockMvcTest {
 		mvc.perform(get("/")).andExpect(status().isOk());
 	}
 
+	@Test
+	public void shouldRouteToTerms() throws Exception {
+		mvc.perform(get("/terms")).andExpect(view().name(is("policy/terms")));
+	}
+
+	@Test
+	public void shouldBeOkForTerms() throws Exception {
+		mvc.perform(get("/terms")).andExpect(status().isOk());
+	}
+
+	@Test
+	public void shouldRouteToPrivacy() throws Exception {
+		mvc.perform(get("/privacy")).andExpect(view().name(is("policy/privacy")));
+	}
+
+	@Test
+	public void shouldBeOkForPrivacy() throws Exception {
+		mvc.perform(get("/privacy")).andExpect(status().isOk());
+	}
+
 }

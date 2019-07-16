@@ -155,6 +155,10 @@ body {
   max-width: 350px;
 	height: calc(100vh - #{$header-height});
   overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   
   transition: left 0.2s ease-in;
   left: -100vw;
@@ -164,7 +168,7 @@ body {
 	}
   
 	@include mq($breakpoint) {
-	  display: block;
+	  display: flex;
 	  position: static;
 	  width: auto;
 	  grid-area: 2 / 1 / 2 / 2;
@@ -197,7 +201,13 @@ body {
         }
       }
 	  }
-	}
+  }
+
+  // The first <li> in the second <ul> needs a top border
+  ul + ul li a:first-child {
+    border-top: 1px solid #444;
+    margin-top: -1px;
+  }
 }
 
 .site-nav-screen {
@@ -226,7 +236,23 @@ body {
 	@include mq($breakpoint) {
 	  padding: 1rem;
 	  overflow-y: auto;
-	}
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+  }
+
+  ul, ol {
+    padding-left: 2rem;
+    li {
+      //
+    }
+  }
+
+  p, ul, ol {
+    margin: 1rem 0;
+  }
 
 	.button-link {
 		padding: 1rem;
@@ -251,7 +277,7 @@ body {
     &.google {
       background: #4285F4;
     }
-    
+
 		&:active {
 			background: #000;
     }

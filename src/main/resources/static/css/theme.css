@@ -107,6 +107,9 @@ body.modal-open {
   max-width: 350px;
   height: calc(100vh - calc(1rem + 1.618rem + 3px));
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   transition: left 0.2s ease-in;
   left: -100vw; }
   .site-nav.active {
@@ -114,7 +117,7 @@ body.modal-open {
     transition: left 0.2s ease-out; }
   @media (min-width: 800px) {
     .site-nav {
-      display: block;
+      display: flex;
       position: static;
       width: auto;
       grid-area: 2 / 1 / 2 / 2;
@@ -140,6 +143,9 @@ body.modal-open {
         background: #111;
         color: #fff;
         transition: 0.2s; }
+  .site-nav ul + ul li a:first-child {
+    border-top: 1px solid #444;
+    margin-top: -1px; }
 
 .site-nav-screen {
   position: fixed;
@@ -164,6 +170,13 @@ body.modal-open {
     .site-main {
       padding: 1rem;
       overflow-y: auto; } }
+  .site-main h1, .site-main h2, .site-main h3, .site-main h4, .site-main h5, .site-main h6 {
+    margin-top: 1em;
+    margin-bottom: 0.5em; }
+  .site-main ul, .site-main ol {
+    padding-left: 2rem; }
+  .site-main p, .site-main ul, .site-main ol {
+    margin: 1rem 0; }
   .site-main .button-link {
     padding: 1rem;
     background: #ddd;
@@ -227,6 +240,7 @@ main p {
 .page-column header {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
   margin-bottom: 1rem;
   padding: 0;
   /* unset from main header -- this should be more specific */ }
@@ -237,7 +251,12 @@ main p {
   border: 2px solid #000;
   background: #fff;
   color: #000;
-  border-radius: 0.25rem; }
+  border-radius: 0.25rem;
+  transition: 0.2s;
+  cursor: pointer; }
+  .page-column header button:hover {
+    color: #fff;
+    background: #000; }
   .page-column header button:disabled {
     color: #666;
     background-color: #ccc; }
@@ -321,7 +340,12 @@ main p {
     border-style: solid;
     border-color: #000;
     background: #fff;
-    color: #000; }
+    color: #000;
+    transition: 0.2s;
+    cursor: pointer; }
+    .pagination button:hover {
+      color: #fff;
+      background: #000; }
     .pagination button:first-child {
       border-left-width: 2px;
       border-top-left-radius: 0.25rem;

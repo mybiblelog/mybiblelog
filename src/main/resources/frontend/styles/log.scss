@@ -19,7 +19,8 @@ main p {
 
 .page-column header {
 	display: flex;
-	justify-content: space-between;
+  justify-content: space-between;
+  align-items: baseline;
 	margin-bottom: 1rem;
 
 	padding: 0; /* unset from main header -- this should be more specific */
@@ -32,6 +33,13 @@ main p {
   background: #fff;
   color: #000;
   border-radius: 0.25rem;
+  transition: 0.2s;
+  cursor: pointer;
+
+  &:hover {
+    color: #fff;
+    background: #000;
+  }
   
   &:disabled {
     color: #666;
@@ -135,6 +143,14 @@ main p {
     border-color: #000;
     background: #fff;
     color: #000;
+
+    transition: 0.2s;
+    cursor: pointer;
+
+    &:hover {
+      color: #fff;
+      background: #000;
+    }
 
     &:first-child {
       border-left-width: 2px;

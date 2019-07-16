@@ -1,23 +1,31 @@
 <nav class="site-nav">
-	<ul>
-		<li th:if="${@identity.loggedIn()}">
-			<span class="site-nav__welcome" th:text="'Welcome, ' + ${@identity.email()} + '!'" />
-		</li>
-		<li th:unless="${@identity.loggedIn()}">
-			<span class="site-nav__welcome">Welcome, Guest!</span>
-		</li>
-		<li>
-			<a href="/">Home</a>
-		</li>
-		<li>
-			<a href="/log">Reading Log</a>
-		</li>
-		<li>
-			<a href="/coverage">Coverage Report</a>
-		</li>
-		<li th:if="${@identity.loggedIn()}">
-			<a href="/logout">Sign Out</a>
-		</li>
+  <ul>
+    <li th:if="${@identity.loggedIn()}">
+      <span class="site-nav__welcome" th:text="'Welcome, ' + ${@identity.email()} + '!'" />
+    </li>
+    <li th:unless="${@identity.loggedIn()}">
+      <span class="site-nav__welcome">Welcome, Guest!</span>
+    </li>
+    <li>
+      <a href="/">Home</a>
+    </li>
+    <li>
+      <a href="/log">Reading Log</a>
+    </li>
+    <li>
+      <a href="/coverage">Coverage Report</a>
+    </li>
+    <li th:if="${@identity.loggedIn()}">
+      <a href="/logout">Sign Out</a>
+    </li>
+  </ul>
+  <ul>
+    <li>
+      <a href="/terms">Terms and Conditions</a>
+    </li>
+    <li>
+      <a href="/privacy">Privacy Policy</a>
+    </li>
   </ul>
 </nav>
 <div class="site-nav-screen"></div>
