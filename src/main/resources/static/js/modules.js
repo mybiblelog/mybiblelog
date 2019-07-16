@@ -222,7 +222,7 @@ var Modules = (function (exports) {
       ],
     },
     {
-      'name':           'Psalm',
+      'name':           'Psalms',
       'testamentOrder': 19,
       'bibleOrder':     19,
       'newTestament':   false,
