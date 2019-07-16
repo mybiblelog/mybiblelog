@@ -49,6 +49,17 @@ Bible.getBookName = bookIndex => {
   return targetBook.name;
 };
 
+Bible.getBookIndex = bookName => {
+  const caseInsensitive = bookName.toLocaleLowerCase();
+  const targetBook = bibleBooks.find(b => {
+    if (b.name.toLocaleLowerCase() === caseInsensitive) return true;
+    const insensitiveAbbreviations = b.abbreviations.map(a => a.toLocaleLowerCase());
+    if (insensitiveAbbreviations.includes(caseInsensitive)) return true;
+  });
+  if (!targetBook) return -1;
+  return targetBook.bibleOrder;
+};
+
 Bible.countRangeVerses = (startVerseId, endVerseId) => {
   const startVerse = Bible.parseVerseId(startVerseId);
   const endVerse = Bible.parseVerseId(endVerseId);
@@ -423,6 +434,66 @@ Bible.displayVerseRange = (startVerseId, endVerseId) => {
     range += end.chapter + ':' + end.verse;
     return range;
   }
+};
+
+const RegEx = {
+  BookChapterVerseToChapterVerse: /((?:\d\s)?\w+)\s+(\d+)\s*:\s*(\d+)\s*[-–—]+\s*(\d+)\s*:\s*(\d+)/i,
+  BookChapterVerseToVerse:        /((?:\d\s)?\w+)\s+(\d+)\s*:\s*(\d+)\s*[-–—]+\s*(\d+)/i,
+  BookChapterToChapter:           /((?:\d\s)?\w+)\s+(\d+)\s*[-–—]+\s*(\d+)/i,
+  BookChapterVerse:               /((?:\d\s)?\w+)\s+(\d+)\s*:\s*(\d+)/i,
+  BookChapter:                    /((?:\d\s)?\w+)\s+(\d+)/i,
+  Book:                           /((?:\d\s)?\w+)/i,
+};
+Bible.parseVerseRange = verseRangeString => {
+  const start = {
+    book:    null,
+    chapter: null,
+    verse:   null,
+  };
+  const end = {
+    chapter: null,
+    verse:   null,
+  };
+
+  let match;
+  if (match = RegEx.BookChapterVerseToChapterVerse.exec(verseRangeString), match) {
+    [, start.book, start.chapter, start.verse, end.chapter, end.verse] = match;
+  }
+  else if (match = RegEx.BookChapterVerseToVerse.exec(verseRangeString), match) {
+    [, start.book, start.chapter, start.verse, end.verse] = match;
+    end.chapter = start.chapter;
+  }
+  else if (match = RegEx.BookChapterToChapter.exec(verseRangeString), match) {
+    [, start.book, start.chapter, end.chapter] = match;
+    start.verse = 1;
+    end.verse = Bible.getChapterVerseCount(Bible.getBookIndex(start.book), end.chapter);
+  }
+  else if (match = RegEx.BookChapterVerse.exec(verseRangeString), match) {
+    [, start.book, start.chapter, start.verse] = match;
+    end.chapter = start.chapter;
+    end.verse = start.verse;
+  }
+  else if (match = RegEx.BookChapter.exec(verseRangeString), match) {
+    [, start.book, start.chapter] = match;
+    start.verse = 1;
+    end.chapter = start.chapter;
+    end.verse = Bible.getChapterVerseCount(Bible.getBookIndex(start.book), start.chapter);
+  }
+  else if (match = RegEx.Book.exec(verseRangeString), match) {
+    [, start.book] = match;
+    start.chapter = 1;
+    start.verse = 1;
+    end.chapter = Bible.getBookChapterCount(Bible.getBookIndex(start.book));
+    end.verse = Bible.getChapterVerseCount(Bible.getBookIndex(start.book), end.chapter);
+  }
+
+  start.book = Bible.getBookIndex(start.book);
+  end.book = start.book;
+
+  const startVerseId = Bible.makeVerseId(start.book, +start.chapter, +start.verse);
+  const endVerseId = Bible.makeVerseId(end.book, +end.chapter, +end.verse);
+
+  return { startVerseId, endVerseId };
 };
 
 module.exports = Bible;

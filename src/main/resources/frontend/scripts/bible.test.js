@@ -35,6 +35,30 @@ test('should get empty string for nonexistant book names', () => {
   expect(bookName67).toBe('');
 });
 
+test('can get book index from book name', () => {
+  const genesisIndex = Bible.getBookIndex('Genesis');
+  const revelationIndex = Bible.getBookIndex('Revelation');
+
+  expect(genesisIndex).toBe(1);
+  expect(revelationIndex).toBe(66);
+});
+
+test('can get book index from book abbreviation', () => {
+  const genesisIndex = Bible.getBookIndex('Gn');
+  const revelationIndex = Bible.getBookIndex('Rev');
+
+  expect(genesisIndex).toBe(1);
+  expect(revelationIndex).toBe(66);
+});
+
+test('can get book index without case sensitivity', () => {
+  const genesisIndex = Bible.getBookIndex('gEnESiS');
+  const revelationIndex = Bible.getBookIndex('reV');
+
+  expect(genesisIndex).toBe(1);
+  expect(revelationIndex).toBe(66);
+});
+
 test('should get book chapter counts', () => {
   const genesisChapterCount = Bible.getBookChapterCount(1);
   const judeChapterCount = Bible.getBookChapterCount(65);
@@ -123,7 +147,7 @@ test('can count number of verses in book', () => {
 
 test('can count number of verses in whole bible', () => {
   const bibleVerseCount = Bible.getTotalVerseCount();
-  expect(bibleVerseCount).toBe(31103);
+  expect(bibleVerseCount).toBe(31102);
 });
 
 test('can compare ranges of verses in different books', () => {
@@ -479,4 +503,59 @@ test('can output human readable verse range', () => {
   const endVerseId = Bible.makeVerseId(5, 4, 18);
   const result = Bible.displayVerseRange(startVerseId, endVerseId);
   expect(result).toBe('Deuteronomy 1:13-4:18');
+});
+
+test('can parse human readable verse range (passage)', () => {
+  const passage1 = 'Deuteronomy 1:13-4:18';
+  const passage2 = 'Genesis 1:1-1:10';
+
+  const range1 = Bible.parseVerseRange(passage1);
+  const range2 = Bible.parseVerseRange(passage2);
+
+  expect(range1.startVerseId).toBe(Bible.makeVerseId(5, 1, 13));
+  expect(range1.endVerseId).toBe(Bible.makeVerseId(5, 4, 18));
+  expect(range2.startVerseId).toBe(Bible.makeVerseId(1, 1, 1));
+  expect(range2.endVerseId).toBe(Bible.makeVerseId(1, 1, 10));
+});
+
+test('can parse verse range consisting only of single chapter', () => {
+  const passage = '2 Peter 3';
+  const range = Bible.parseVerseRange(passage);
+  expect(range.startVerseId).toBe(Bible.makeVerseId(61, 3, 1));
+  expect(range.endVerseId).toBe(Bible.makeVerseId(61, 3, 18));
+});
+
+test('can parse verse range consisting of entire book', () => {
+  const passage = 'Jude';
+  const range = Bible.parseVerseRange(passage);
+  expect(range.startVerseId).toBe(Bible.makeVerseId(65, 1, 1));
+  expect(range.endVerseId).toBe(Bible.makeVerseId(65, 1, 25));
+});
+
+test('can parse verse range consisting of single verse', () => {
+  const passage = 'John 3:16';
+  const range = Bible.parseVerseRange(passage);
+  expect(range.startVerseId).toBe(Bible.makeVerseId(43, 3, 16));
+  expect(range.endVerseId).toBe(range.startVerseId);
+});
+
+test('can parse verse range consisting of whole chapters', () => {
+  const passage = 'Acts 2 - 4';
+  const range = Bible.parseVerseRange(passage);
+  expect(range.startVerseId).toBe(Bible.makeVerseId(44, 2, 1));
+  expect(range.endVerseId).toBe(Bible.makeVerseId(44, 4, 37));
+});
+
+test('can parse verse range within a single chapters', () => {
+  const passage = 'Acts 2:14 - 36';
+  const range = Bible.parseVerseRange(passage);
+  expect(range.startVerseId).toBe(Bible.makeVerseId(44, 2, 14));
+  expect(range.endVerseId).toBe(Bible.makeVerseId(44, 2, 36));
+});
+
+test('can parse verse range with book abbreviation', () => {
+  const passage = '2 Jn';
+  const range = Bible.parseVerseRange(passage);
+  expect(range.startVerseId).toBe(Bible.makeVerseId(63, 1, 1));
+  expect(range.endVerseId).toBe(Bible.makeVerseId(63, 1, 13));
 });
