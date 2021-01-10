@@ -28,7 +28,7 @@
 			const { year, month, date } = this.parse(dateString);
 			const result = new Date();
 			result.setFullYear(year);
-			result.setMonth(month);
+			result.setMonth(month - 1);
 			result.setDate(date);
 			return result;
     },
@@ -192,8 +192,7 @@
         this.loadWeekLogEntries();
       },
 			displayDate(dateString) {
-				// Include time to make the date timezone-agnostic, preventing date shift
-        date = new Date(dateString + ' 00:00');
+        date = DateString.makeDate(dateString);
 				const options = {
 					weekday: 	'long',
 					year: 		'numeric',
