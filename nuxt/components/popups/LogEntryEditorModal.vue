@@ -51,8 +51,8 @@ export default {
         confirmMessage: this.$t('messaging.are_you_sure_close_editor'),
       });
     },
-    handleSave() {
-      this.logEntryEditorStore.saveLogEntry();
+    async handleSave() {
+      await this.logEntryEditorStore.saveLogEntry().catch(() => {});
     },
   },
 };
