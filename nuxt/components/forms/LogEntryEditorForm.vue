@@ -5,7 +5,7 @@
     </div>
     <div>
       <label for="model-date">{{ $t('date') }}</label>
-      <input id="model-date" :value="logEntry.date || defaultDate" type="date" @input="updateDate">
+      <input id="model-date" :value="logEntry.date" type="date" @change="updateDate">
     </div>
     <div>
       <label for="model-book">{{ $t('book') }}</label>
@@ -96,6 +96,9 @@
         </option>
       </select>
     </div>
+    <div v-if="errors._form" class="form-error">
+      {{ $terr(errors._form) }}
+    </div>
     <!-- ensures property will be computed because it is accessed-->
     <p hidden="hidden">
       {{ isValid }}
@@ -104,7 +107,6 @@
 </template>
 
 <script>
-import * as dayjs from 'dayjs';
 import { Bible } from '@mybiblelog/shared';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 
@@ -127,8 +129,8 @@ export default {
     isValid() {
       return this.logEntryEditorStore.isValid;
     },
-    defaultDate() {
-      return dayjs().format('YYYY-MM-DD');
+    errors() {
+      return this.logEntryEditorStore.errors;
     },
     formBook() {
       // First check if we have a book stored directly
@@ -241,9 +243,6 @@ export default {
     onSelectStartChapter(event) {
       const chapterIndex = parseInt(event.target.value, 10);
       this.logEntryEditorStore.selectStartChapter(chapterIndex);
-      this.$nextTick(() => {
-        this.$refs.endVerse?.focus();
-      });
     },
     onSelectStartVerse(event) {
       const verseIndex = parseInt(event.target.value, 10);
@@ -279,6 +278,13 @@ form {
     max-width: 400px;
     grid-row-gap: 1rem;
   }
+}
+
+.form-error {
+  grid-column: span 2;
+  color: var(--mbl-danger);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
 }
 
 .passage-preview {
@@ -318,7 +324,7 @@ form input {
   min-height: 3rem;
   padding: 0.5rem;
   padding-top: 1.125rem;
-  border: 1px solid var(--mbl-border);
+  border: 2px solid var(--mbl-border-strong);
   width: unset;
   border-radius: var(--mbl-radius);
   box-sizing: border-box;
@@ -339,7 +345,7 @@ form select {
   height: 3rem;
   padding: 0.5rem;
   padding-top: 1.125rem;
-  border: 1px solid var(--mbl-border);
+  border: 2px solid var(--mbl-border-strong);
   width: unset;
   border-radius: var(--mbl-radius);
   box-sizing: border-box;

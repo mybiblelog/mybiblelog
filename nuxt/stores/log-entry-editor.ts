@@ -193,6 +193,7 @@ export const useLogEntryEditorStore = defineStore('log-entry-editor', {
     },
 
     updateDate(date: string): void {
+      if (!date) { return; }
       const updated = clone(this.logEntry);
       updated.date = date;
       this.updateLogEntry(updated);
