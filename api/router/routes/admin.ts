@@ -38,7 +38,7 @@ const getPastWeekEngagement = async () => {
     return count;
   };
 
-  const countUsersWithLogEntryForDate = async (date) => {
+  const countUsersWithLogEntryForDate = async (date: string) => {
     // Use aggregation to count distinct owners for the given date
     const result = await LogEntry.aggregate([
       {
@@ -90,7 +90,7 @@ const getPastWeekEngagement = async () => {
     return result.length > 0 ? result[0].uniqueOwners : 0;
   };
 
-  const getEngagementForDate = async (date) => {
+  const getEngagementForDate = async (date: string) => {
     const newUserAccountsPromise = countNewUserAccountsForDate({ date });
     const usersWithLogEntryPromise = countUsersWithLogEntryForDate(date);
     const usersWithNotePromise = countUsersWithNoteForDate({ date });
@@ -219,11 +219,13 @@ router.get('/admin/feedback', async (req, res, next) => {
   try {
     const { Feedback } = await useMongooseModels();
     await authCurrentUser(req, { adminOnly: true });
-    const feedback = await Feedback
-      .find()
-      .sort({ createdAt: -1 })
-      .exec();
-    res.json({ data: feedback } satisfies ApiResponse);
+    const offset = Math.max(0, parseInt(req.query.offset as string) || 0);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string) || 10));
+    const [size, feedback] = await Promise.all([
+      Feedback.countDocuments(),
+      Feedback.find().sort({ createdAt: -1 }).skip(offset).limit(limit).exec(),
+    ]);
+    res.json({ data: feedback, meta: { pagination: { offset, limit, size } } } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -326,9 +328,9 @@ const validateQuery = (query: {
   const sortDirectionValues = {
     ascending: 1,
     descending: -1,
-  };
+  } as const;
   if (query.sortDirection && Object.keys(sortDirectionValues).includes(query.sortDirection)) {
-    validated.sortDirection = sortDirectionValues[query.sortDirection];
+    validated.sortDirection = sortDirectionValues[query.sortDirection as keyof typeof sortDirectionValues];
   }
 
   // determine max number of results to return
@@ -670,6 +672,40 @@ router.get('/admin/users/:email/login', async (req, res, next) => {
     const token = user.generateJWT();
     setAuthTokenCookie(res, token);
     res.json({ data: { token } } satisfies ApiResponse);
+  }
+  catch (error) {
+    next(error);
+  }
+});
+
+// GET user stats
+router.get('/admin/users/:email/stats', async (req, res, next) => {
+  try {
+    const { User, LogEntry, PassageNote, Feedback } = await useMongooseModels();
+    await authCurrentUser(req, { adminOnly: true });
+    const { email } = req.params;
+    const user = await User.findOne({ email }).select({ createdAt: 1 }).exec();
+    if (!user) {
+      throw new NotFoundError();
+    }
+    const userId = user._id;
+    const [logEntryCount, noteCount, feedbackCount, lastLogEntry, lastNote] = await Promise.all([
+      LogEntry.countDocuments({ owner: userId }),
+      PassageNote.countDocuments({ owner: userId }),
+      Feedback.countDocuments({ owner: userId }),
+      LogEntry.findOne({ owner: userId }).sort({ date: -1 }).select({ date: 1 }).exec(),
+      PassageNote.findOne({ owner: userId }).sort({ createdAt: -1 }).select({ createdAt: 1 }).exec(),
+    ]);
+    res.json({
+      data: {
+        joinDate: user.createdAt,
+        logEntryCount,
+        noteCount,
+        feedbackCount,
+        lastLogEntryDate: lastLogEntry?.date ?? null,
+        lastNoteDate: lastNote?.createdAt ?? null,
+      },
+    } satisfies ApiResponse);
   }
   catch (error) {
     next(error);

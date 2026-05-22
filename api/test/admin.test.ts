@@ -723,6 +723,69 @@ describe('admin.test.js', () => {
     });
   });
 
+  describe('GET /api/admin/users/:email/stats', () => {
+    it('unauthenticated users get 401', async () => {
+      const response = await requestApi
+        .get('/api/admin/users/test@example.com/stats');
+      expect(response.status).toBe(401);
+    });
+
+    it('authenticated non-admin users get 403', async () => {
+      const testUser = await createTestUser();
+      try {
+        const response = await requestApi
+          .get('/api/admin/users/test@example.com/stats')
+          .set('Authorization', `Bearer ${testUser.token}`);
+        expect(response.status).toBe(403);
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
+    it('returns 404 for a non-existent user', async () => {
+      const admin = await createTestAdmin();
+      try {
+        const response = await requestApi
+          .get('/api/admin/users/nonexistent@example.com/stats')
+          .set('Authorization', `Bearer ${admin.token}`);
+        expect(response.status).toBe(404);
+      }
+      finally {
+        await deleteTestUser(admin);
+      }
+    });
+
+    it('admin can view stats for a user', async () => {
+      const admin = await createTestAdmin();
+      const testUser = await createTestUser();
+      try {
+        const response = await requestApi
+          .get(`/api/admin/users/${testUser.email}/stats`)
+          .set('Authorization', `Bearer ${admin.token}`);
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('data');
+        expect(response.body).not.toHaveProperty('error');
+        const { data } = response.body;
+        expect(data).toHaveProperty('joinDate');
+        expect(data).toHaveProperty('logEntryCount');
+        expect(data).toHaveProperty('noteCount');
+        expect(data).toHaveProperty('feedbackCount');
+        expect(data).toHaveProperty('lastLogEntryDate');
+        expect(data).toHaveProperty('lastNoteDate');
+        expect(typeof data.logEntryCount).toBe('number');
+        expect(typeof data.noteCount).toBe('number');
+        expect(typeof data.feedbackCount).toBe('number');
+        expect(data.lastLogEntryDate).toBeNull();
+        expect(data.lastNoteDate).toBeNull();
+      }
+      finally {
+        await deleteTestUser(testUser);
+        await deleteTestUser(admin);
+      }
+    });
+  });
+
   describe('GET /api/admin/users/:email/login', () => {
     it('unauthenticated users get 401', async () => {
       const response = await requestApi

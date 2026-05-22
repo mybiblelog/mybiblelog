@@ -1,128 +1,149 @@
 <template>
   <main>
-    <section class="mbl-section">
-      <div class="mbl-container">
-        <div class="mbl-level">
-          <div class="mbl-level-left">
-            <h1 class="mbl-title">
-              Users Admin
-            </h1>
-          </div>
-          <div class="mbl-level-right">
-            <input v-model="searchText" class="mbl-input" type="text" placeholder="Search by email">
-          </div>
+    <div class="content-column">
+      <div class="mbl-level">
+        <div class="mbl-level-left">
+          <h1 class="mbl-title">
+            Users Admin
+          </h1>
         </div>
-        <div>
-          <div>
-            Page
-            <div class="mbl-select">
-              <select v-model="page">
-                <option v-for="p in Array.from({ length: totalPages }).map((_, i) => i + 1)" :key="p" :value="p">
-                  {{ p }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <div>
-            Results per page
-            <div class="mbl-select">
-              <select v-model="limit">
-                <option v-for="size in [10, 25, 50, 100]" :key="size" :value="size">
-                  {{ size }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <div v-if="totalUsers !== 0">
-            Showing {{ offset + 1 }} to {{ Math.min(offset + limit, totalUsers) }} of {{ totalUsers }} users.
-          </div>
-        </div>
-        <div v-if="users" class="mbl-table-wrap">
-          <table class="mbl-table mbl-table--narrow mbl-table--striped">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th class="sortable" @click="toggleSort(SortColumns.email)">
-                  <div class="flex">
-                    User
-                    <template v-if="sortOn === SortColumns.email">
-                      <caret-down-icon v-if="sortDirection === 1" width="1.5rem" height="1.5rem" fill="var(--mbl-text-subtle)" />
-                      <caret-down-icon v-if="sortDirection === -1" class="flipped" width="1.5rem" height="1.5rem" fill="var(--mbl-text-subtle)" />
-                    </template>
-                  </div>
-                </th>
-                <th class="sortable" @click="toggleSort(SortColumns.createdAt)">
-                  <div class="flex">
-                    Join Date
-                    <template v-if="sortOn === SortColumns.createdAt">
-                      <caret-down-icon v-if="sortDirection === 1" width="1.5rem" height="1.5rem" fill="var(--mbl-text-subtle)" />
-                      <caret-down-icon v-if="sortDirection === -1" class="flipped" width="1.5rem" height="1.5rem" fill="var(--mbl-text-subtle)" />
-                    </template>
-                  </div>
-                </th>
-                <th>Controls</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-if="loadError">
-                <td colspan="7">
-                  There was an error loading users.
-                </td>
-              </tr>
-              <tr v-else-if="!users.length">
-                <td colspan="7">
-                  There are no users.
-                </td>
-              </tr>
-              <tr v-for="(user, index) in users" :key="user._id">
-                <td>{{ offset + index + 1 }}</td>
-                <td>{{ user.email }}</td>
-                <td class="nowrap">
-                  {{ user.createdAt.split('T')[0] }}
-                </td>
-                <td>
-                  <div class="mbl-button-group">
-                    <button class="mbl-button mbl-button--light mbl-button--primary mbl-button--sm" @click="openUserDetails(user)">
-                      Details
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="mbl-level-right">
+          <input v-model="searchText" class="mbl-input" type="text" placeholder="Search by email">
         </div>
       </div>
-    </section>
 
-    <app-modal
-      :open="!!selectedUser"
-      :title="selectedUser ? selectedUser.email : ''"
-      @close="closeUserDetails"
-    >
-      <template slot="content">
-        <div v-if="selectedUser" class="mbl-button-group">
-          <button class="mbl-button mbl-button--primary" type="button" @click="signInAsUser">
-            Sign In As User
+      <div class="users-page__toolbar">
+        <div class="users-page__sort">
+          <span class="mbl-text-small mbl-text-muted">Sort:</span>
+          <button
+            class="mbl-button mbl-button--sm mbl-button--light"
+            :class="{ 'mbl-button--primary': sortOn === SortColumns.email }"
+            type="button"
+            @click="toggleSort(SortColumns.email)"
+          >
+            User
+            <template v-if="sortOn === SortColumns.email">
+              <caret-down-icon v-if="sortDirection === 1" width="1rem" height="1rem" fill="currentColor" />
+              <caret-down-icon v-if="sortDirection === -1" class="flipped" width="1rem" height="1rem" fill="currentColor" />
+            </template>
           </button>
-          <button class="mbl-button mbl-button--danger" type="button" @click="deleteUser(selectedUser.email)">
-            Delete User
+          <button
+            class="mbl-button mbl-button--sm mbl-button--light"
+            :class="{ 'mbl-button--primary': sortOn === SortColumns.createdAt }"
+            type="button"
+            @click="toggleSort(SortColumns.createdAt)"
+          >
+            Join Date
+            <template v-if="sortOn === SortColumns.createdAt">
+              <caret-down-icon v-if="sortDirection === 1" width="1rem" height="1rem" fill="currentColor" />
+              <caret-down-icon v-if="sortDirection === -1" class="flipped" width="1rem" height="1rem" fill="currentColor" />
+            </template>
           </button>
         </div>
-      </template>
-      <template slot="footer">
-        <button class="mbl-button" type="button" @click="closeUserDetails">
-          Close
-        </button>
-      </template>
-    </app-modal>
+        <div class="users-page__limit">
+          <span class="mbl-text-small mbl-text-muted">Per page:</span>
+          <div class="mbl-select mbl-select--sm">
+            <select v-model="limit">
+              <option v-for="size in [10, 25, 50, 100]" :key="size" :value="size">
+                {{ size }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="users !== null">
+        <div v-if="loadError">
+          <p>There was an error loading users.</p>
+        </div>
+
+        <div v-else-if="!users.length">
+          <p>There are no users.</p>
+        </div>
+
+        <template v-else>
+          <div class="users-page__results-bar">
+            <div class="mbl-text-small mbl-text-muted">
+              {{ resultsSummary }}
+            </div>
+
+            <div v-if="pagerTotalPages > 1" class="users-page__pager">
+              <div class="mbl-field mbl-field--addons mbl-field--flush" role="group" aria-label="Pagination">
+                <p class="mbl-control">
+                  <button
+                    class="mbl-button mbl-button--sm mbl-button--light"
+                    type="button"
+                    :disabled="pagerPage <= 1"
+                    aria-label="Previous page"
+                    @click="onPageChanged(pagerPage - 1)"
+                  >
+                    <caret-left-icon width="10px" height="18px" fill="currentColor" />
+                  </button>
+                </p>
+
+                <div class="mbl-control">
+                  <div class="mbl-select mbl-select--sm">
+                    <select
+                      :value="pagerPage"
+                      aria-label="Page"
+                      @change="onPageChanged(Number($event.target.value))"
+                    >
+                      <option v-for="p in pagerTotalPages" :key="p" :value="p">
+                        Page {{ p }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <p class="mbl-control">
+                  <button
+                    class="mbl-button mbl-button--sm mbl-button--light"
+                    type="button"
+                    :disabled="pagerPage >= pagerTotalPages"
+                    aria-label="Next page"
+                    @click="onPageChanged(pagerPage + 1)"
+                  >
+                    <caret-right-icon width="10px" height="18px" fill="currentColor" />
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="user-cards">
+            <div v-for="(user, index) in users" :key="user._id" class="user-card">
+              <div class="user-card__email">
+                <span class="user-card__number mbl-text-small mbl-text-muted">#{{ offset + index + 1 }}</span>
+                {{ user.email }}
+              </div>
+              <div class="user-card__date mbl-text-small mbl-text-muted">
+                {{ user.createdAt.split('T')[0] }}
+              </div>
+              <div class="user-card__actions">
+                <button class="mbl-button mbl-button--light mbl-button--primary mbl-button--sm" @click="openUserDetails(user)">
+                  Details
+                </button>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <admin-user-detail-modal
+      :user="selectedUser"
+      :open="!!selectedUser"
+      @close="closeUserDetails"
+      @user-deleted="onUserDeleted"
+    />
   </main>
 </template>
 
 <script>
-import AppModal from '@/components/popups/AppModal';
+import AdminUserDetailModal from '@/components/admin/AdminUserDetailModal';
 import CaretDownIcon from '@/components/svg/CaretDownIcon';
-import { useDialogStore } from '~/stores/dialog';
-import { useAuthStore } from '~/stores/auth';
+import CaretLeftIcon from '@/components/svg/CaretLeftIcon';
+import CaretRightIcon from '@/components/svg/CaretRightIcon';
 
 const SortColumns = {
   email: 'email',
@@ -132,8 +153,10 @@ const SortColumns = {
 export default {
   name: 'AdminUserListPage',
   components: {
-    AppModal,
+    AdminUserDetailModal,
     CaretDownIcon,
+    CaretLeftIcon,
+    CaretRightIcon,
   },
   middleware: ['auth'],
   meta: {
@@ -168,6 +191,19 @@ export default {
     totalPages() {
       return Math.ceil(this.totalUsers / this.limit) || 1;
     },
+    pagerPage() {
+      return this.page;
+    },
+    pagerTotalPages() {
+      return this.totalPages;
+    },
+    resultsSummary() {
+      if (!this.totalUsers) { return 'No users'; }
+      if (this.totalUsers <= this.limit) { return `Showing all ${this.totalUsers}`; }
+      const first = this.offset + 1;
+      const last = Math.min(this.offset + (this.users?.length ?? 0), this.totalUsers);
+      return `Showing ${first}–${last} of ${this.totalUsers}`;
+    },
   },
   watch: {
     limit() {
@@ -189,9 +225,6 @@ export default {
   },
   mounted() {
     this.loadUsers();
-  },
-  destroyed() {
-    clearInterval(this.pollInterval);
   },
   methods: {
     buildUsersRequestUrl() {
@@ -218,14 +251,14 @@ export default {
     },
     async loadUsers() {
       const path = this.buildUsersRequestUrl();
+      this.loadError = false;
       try {
         const { data: users, meta } = await this.$http.get(path);
         const { size } = meta.pagination;
         this.users = users;
         this.totalUsers = size;
       }
-      catch (error) {
-        console.error('Error loading users:', error);
+      catch {
         this.users = [];
         this.loadError = true;
       }
@@ -240,35 +273,11 @@ export default {
       }
       this.loadUsers();
     },
-    async deleteUser(email) {
-      const dialogStore = useDialogStore();
-      if (email === useAuthStore().user?.email) {
-        await dialogStore.alert({ message: 'You cannot delete your own account.' });
-        return;
-      }
-      let confirmed = false;
-      confirmed = await dialogStore.confirm({
-        message: `Are you sure you want to delete account "${email}"? This action cannot be undone.`,
-        confirmButtonType: 'danger',
-      });
-      if (!confirmed) {
-        return;
-      }
-      confirmed = await dialogStore.confirm({
-        message: `Are you absolutely certain? The account "${email}" will be completely removed from the system.`,
-        confirmButtonType: 'danger',
-      });
-      if (!confirmed) {
-        return;
-      }
-      try {
-        await this.$http.delete(`/api/admin/users/${email}`);
-        this.selectedUser = null;
-        this.loadUsers();
-      }
-      catch (err) {
-        await dialogStore.alert({ message: 'Unable to delete user.' });
-      }
+    onPageChanged(newPage) {
+      const clamped = Math.min(Math.max(Number(newPage || 1), 1), this.pagerTotalPages);
+      if (clamped === this.page) { return; }
+      this.page = clamped;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     },
     openUserDetails(user) {
       this.selectedUser = user;
@@ -276,49 +285,91 @@ export default {
     closeUserDetails() {
       this.selectedUser = null;
     },
-    async signInAsUser() {
-      if (!this.selectedUser) { return; }
-
-      const dialogStore = useDialogStore();
-      const confirmed = await dialogStore.confirm({ message: 'Are you sure you want to sign in as this user? You will be logged out of your own account.' });
-      if (!confirmed) {
-        return;
-      }
-      try {
-        // Clear any cached data from admin account session
-        sessionStorage.clear();
-
-        await this.$http.get(`/api/admin/users/${this.selectedUser.email}/login`);
-        // Instead of relying on the store to reload user and data,
-        // fully reload the page to ensure the new user is logged in and data is refreshed.
-        window.location.href = '/start';
-      }
-      catch (error) {
-        await dialogStore.alert({ message: 'Unable to sign in as user.' });
-      }
+    onUserDeleted() {
+      this.selectedUser = null;
+      this.loadUsers();
     },
   },
 };
 </script>
 
 <style scoped>
-table.table {
-  width: 100%;
-}
-.flex {
+.users-page__toolbar {
   display: flex;
-}
-.sortable {
-  cursor: pointer;
-  transition: 0.2s;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
 }
 
-.sortable:hover {
-  background-color: var(--mbl-bg-hover-light);
+.users-page__sort {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
-.nowrap {
+
+.users-page__limit {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.users-page__results-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.users-page__pager {
+  flex-shrink: 0;
+}
+
+.user-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.user-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 0.4rem 1rem;
+  border: 1px solid var(--mbl-border);
+  border-radius: 0.5rem;
+  padding: 0.875rem 1rem;
+}
+
+.user-card__email {
+  align-self: center;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.user-card__number {
+  flex-shrink: 0;
+}
+
+.user-card__date {
+  align-self: center;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.user-card__actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+}
+
 .flipped {
   transform: rotate(180deg);
 }
