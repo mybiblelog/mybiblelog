@@ -4,51 +4,100 @@
       <h1 class="mbl-title">
         Admin Feedback Review
       </h1>
-      <div v-if="!feedbacks.length">
+
+      <div v-if="!feedbacks.length && !loading">
         <p>There are no feedbacks.</p>
       </div>
-      <div v-else>
-        <div class="mbl-table-wrap">
-          <table class="mbl-table mbl-table--striped mbl-table--full">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>User</th>
-                <th>Feedback</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(feedback, index) in feedbacks" :key="feedback._id">
-                <td>{{ index + 1 }}</td>
-                <td>
-                  <div class="mbl-text-small" style="text-wrap: nowrap;">
-                    {{ dayjs(feedback.createdAt).format('YYYY-MM-DD hh:mm a') }}
-                  </div>
-                  <div>{{ feedback.email }}</div>
-                  <div class="mbl-text-small">
-                    {{ feedback.ip }}
-                  </div>
-                </td>
-                <td>
-                  <div class="mbl-text-small" :class="feedbackKindClass(feedback.kind)">
-                    {{ feedback.kind }}
-                  </div>
-                  <div>{{ feedback.message }}</div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+
+      <template v-else>
+        <div class="feedback-page__results-bar">
+          <div class="mbl-text-small mbl-text-muted">
+            {{ resultsSummary }}
+          </div>
+
+          <div v-if="pagerTotalPages > 1" class="feedback-page__pager">
+            <div class="mbl-field mbl-field--addons mbl-field--flush" role="group" aria-label="Pagination">
+              <p class="mbl-control">
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  :disabled="pagerPage <= 1"
+                  aria-label="Previous page"
+                  @click="onPageChanged(pagerPage - 1)"
+                >
+                  <caret-left-icon width="10px" height="18px" fill="currentColor" />
+                </button>
+              </p>
+
+              <div class="mbl-control">
+                <div class="mbl-select mbl-select--sm">
+                  <select
+                    :value="pagerPage"
+                    aria-label="Page"
+                    @change="onPageChanged(Number($event.target.value))"
+                  >
+                    <option v-for="p in pagerTotalPages" :key="p" :value="p">
+                      Page {{ p }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <p class="mbl-control">
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  :disabled="pagerPage >= pagerTotalPages"
+                  aria-label="Next page"
+                  @click="onPageChanged(pagerPage + 1)"
+                >
+                  <caret-right-icon width="10px" height="18px" fill="currentColor" />
+                </button>
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
+
+        <div class="feedback-cards">
+          <div v-for="feedback in feedbacks" :key="feedback._id" class="feedback-card">
+            <div class="feedback-card__date mbl-text-small mbl-text-muted">
+              {{ dayjs(feedback.createdAt).format('YYYY-MM-DD hh:mm a') }}
+            </div>
+            <div class="feedback-card__kind mbl-text-small" :class="feedbackKindClass(feedback.kind)">
+              {{ feedback.kind }}
+            </div>
+            <div class="feedback-card__message">
+              {{ feedback.message }}
+            </div>
+            <div class="feedback-card__email mbl-text-small">
+              <span class="feedback-card__email-text">{{ feedback.email }}</span>
+              <span class="feedback-badge" :class="feedback.owner ? 'feedback-badge--user' : 'feedback-badge--guest'">
+                {{ feedback.owner ? 'user' : 'guest' }}
+              </span>
+            </div>
+            <div class="feedback-card__ip mbl-text-small mbl-text-muted">
+              {{ feedback.ip }}
+            </div>
+          </div>
+        </div>
+      </template>
     </div>
   </main>
 </template>
 
 <script>
 import dayjs from 'dayjs';
+import CaretLeftIcon from '@/components/svg/CaretLeftIcon';
+import CaretRightIcon from '@/components/svg/CaretRightIcon';
+
+const PAGE_LIMIT = 10;
 
 export default {
   name: 'AdminFeedbackReviewPage',
+  components: {
+    CaretLeftIcon,
+    CaretRightIcon,
+  },
   middleware: ['auth'],
   meta: {
     auth: 'admin',
@@ -56,14 +105,25 @@ export default {
   data() {
     return {
       feedbacks: [],
+      loading: false,
+      pagination: { page: 1, limit: PAGE_LIMIT, size: 0, totalPages: 1 },
     };
   },
-  head() {
-    return {
-      meta: [
-        { hid: 'robots', name: 'robots', content: 'noindex' },
-      ],
-    };
+  computed: {
+    pagerPage() {
+      return Number((this.pagination && this.pagination.page) || 1);
+    },
+    pagerTotalPages() {
+      return Math.max(1, Number((this.pagination && this.pagination.totalPages) || 1));
+    },
+    resultsSummary() {
+      const { size, page, limit } = this.pagination;
+      if (!size) { return 'No feedback'; }
+      if (size <= limit) { return `Showing all ${size}`; }
+      const first = (page - 1) * limit + 1;
+      const last = Math.min(first + this.feedbacks.length - 1, size);
+      return `Showing ${first}–${last} of ${size}`;
+    },
   },
   mounted() {
     this.loadFeedbacks();
@@ -71,13 +131,27 @@ export default {
   methods: {
     dayjs,
     async loadFeedbacks() {
+      this.loading = true;
       try {
-        const { data: feedbacks } = await this.$http.get('/api/admin/feedback');
+        const offset = (this.pagerPage - 1) * PAGE_LIMIT;
+        const { data: feedbacks, meta } = await this.$http.get(`/api/admin/feedback?offset=${offset}&limit=${PAGE_LIMIT}`);
         this.feedbacks = feedbacks;
+        const p = (meta && meta.pagination) || {};
+        const limit = Number(p.limit || PAGE_LIMIT);
+        const size = Number(p.size || 0);
+        const resolvedOffset = Number(p.offset || 0);
+        this.pagination = {
+          limit,
+          size,
+          page: Math.floor(resolvedOffset / limit) + 1,
+          totalPages: Math.max(1, Math.ceil(size / limit)),
+        };
       }
-      catch (err) {
-        console.error('Failed to load feedbacks:', err);
+      catch {
         this.feedbacks = [];
+      }
+      finally {
+        this.loading = false;
       }
     },
     feedbackKindClass(kind) {
@@ -87,18 +161,97 @@ export default {
         'mbl-text-danger': kind === 'bug',
       };
     },
+    onPageChanged(newPage) {
+      const clamped = Math.min(Math.max(Number(newPage || 1), 1), this.pagerTotalPages);
+      if (clamped === this.pagerPage) { return; }
+      this.pagination = { ...this.pagination, page: clamped };
+      this.loadFeedbacks();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
   },
 };
 </script>
 
 <style scoped>
-.mbl-table-wrap {
-  overflow-x: auto;
-  margin: 0 -0.75rem;
-  padding: 0 0.75rem;
+.feedback-page__results-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
 
-  table {
-    min-width: 600px;
-  }
+.feedback-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.feedback-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 1rem;
+  border: 1px solid var(--mbl-border);
+  border-radius: 0.5rem;
+  padding: 0.875rem 1rem;
+}
+
+.feedback-card__date {
+  align-self: center;
+}
+
+.feedback-card__kind {
+  text-align: right;
+  align-self: center;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.feedback-card__message {
+  grid-column: 1 / -1;
+  padding: 0.5rem 0;
+  word-break: break-word;
+}
+
+.feedback-card__email {
+  align-self: center;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.feedback-card__email-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.feedback-card__ip {
+  text-align: right;
+  align-self: center;
+}
+
+.feedback-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.2em 0.45em;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.feedback-badge--user {
+  background-color: var(--mbl-success);
+  color: var(--neutral-0);
+}
+
+.feedback-badge--guest {
+  background-color: var(--mbl-text-muted);
+  color: var(--neutral-0);
 }
 </style>
