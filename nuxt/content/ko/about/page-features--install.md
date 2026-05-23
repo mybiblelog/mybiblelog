@@ -14,7 +14,7 @@ og:
 My Bible Log은 홈페이지인 동시에 \"프로그레시브 웹 앱\"(PWA)이기도 합니다. 모든 기기에서 독립된 앱으로 설치할 수 있습니다 .
 
 <div style="margin: 1rem">
-  <img alt="My Bible Log 데스크톱 앱 스크린샷" src="/screenshots/sc8-install-anywhere.webp" />
+  <img alt="My Bible Log 데스크톱 앱 스크린샷" src="/screenshots/ko/sc8-install-anywhere.webp" />
 </div>
 
 예를 들어, Google Chrome을 사용하면 다음과 같은 기기에 PWA를 설치할 수 있습니다.

@@ -12,7 +12,7 @@ og:
 # Page de la liste de chapitres
 
 <div class="phone-frame">
-  <img alt="Capture d'écran de la page de liste de chapitres de My Bible Log" src="/screenshots/sc12-checklist.webp" />
+  <img alt="Capture d'écran de la page de liste de chapitres de My Bible Log" src="/screenshots/fr/sc12-checklist.webp" />
 </div>
 
 La page de la liste de chapitres est le moyen le plus simple et le plus rapide de suivre votre lecture, car elle vous permet de marquer un chapitre comme "lu" en un seul clic ou tapotement.

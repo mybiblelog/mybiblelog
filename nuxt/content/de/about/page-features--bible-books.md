@@ -12,7 +12,7 @@ og:
 # Bibelbücher-Seite
 
 <div class="phone-frame">
-  <img alt="Screenshot von My Bible Log Bibelbücher-Seite" src="/screenshots/sc7-bible-progress.webp" />
+  <img alt="Screenshot von My Bible Log Bibelbücher-Seite" src="/screenshots/de/sc7-bible-progress.webp" />
 </div>
 
 Die Bibelbücher-Seite hilft Ihnen, Ihren Lesefortschritt durch die gesamte Bibel zu verfolgen. Oben finden Sie eine visuelle Fortschrittsleiste, die anzeigt, welche Teile der Bibel Sie gelesen haben. Im Gegensatz zu einer einfachen von links nach rechts verlaufenden Fortschrittsleiste füllt diese genau dort aus, wo Sie gelesen haben - sei es am Anfang, in der Mitte oder am Ende der Bibel.
@@ -27,7 +27,7 @@ Unterhalb der Fortschrittsleiste finden Sie eine Liste aller Bibelbücher. Jedes
 ## Individuelle Buchseiten
 
 <div class="phone-frame">
-  <img alt="Screenshot von My Bible Log individueller Buchseite" src="/screenshots/sc6-book-chapter-progress.webp" />
+  <img alt="Screenshot von My Bible Log individueller Buchseite" src="/screenshots/de/sc6-book-chapter-progress.webp" />
 </div>
 
 Klicken Sie auf ein beliebiges Buch, um seine detaillierte Fortschrittsseite zu sehen. Hier finden Sie:

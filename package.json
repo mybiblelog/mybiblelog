@@ -38,7 +38,8 @@
     "script:backup": "npm run -w api script:backup",
     "script:delete-test-users": "npm run -w api script:delete-test-users",
     "script:delete-stranded-data": "npm run -w api script:delete-stranded-data",
-    "script:migrate": "npm run -w api script:migrate"
+    "script:migrate": "npm run -w api script:migrate",
+    "screenshots": "tsx scripts/take-screenshots.ts"
   },
   "jest": {
     "testEnvironment": "node",
@@ -85,7 +86,9 @@
     "eslint": "^8.57.1",
     "jest": "^29.7.0",
     "openai": "^4.54.0",
-    "ts-jest": "^29.2.0"
+    "sharp": "^0.34.5",
+    "ts-jest": "^29.2.0",
+    "tsx": "^4.22.3"
   },
   "overrides": {
     "mongoose-unique-validator": {

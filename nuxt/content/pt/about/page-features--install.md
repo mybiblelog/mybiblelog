@@ -14,7 +14,7 @@ og:
 Meu Registro Bíblico é um site. Também é um "Progressive Web App" (PWA), o que significa que pode ser instalado como um aplicativo independente em qualquer dispositivo.
 
 <div style="margin: 1rem">
-  <img alt="Captura de Tela do Aplicativo de Desktop Meu Registro Bíblico" src="/screenshots/sc8-instalar-em-qualquer-lugar.webp" />
+  <img alt="Captura de Tela do Aplicativo de Desktop Meu Registro Bíblico" src="/screenshots/pt/sc8-install-anywhere.webp" />
 </div>
 
 Como exemplo, o Google Chrome pode ser usado para instalar um PWA nesses tipos de dispositivos:

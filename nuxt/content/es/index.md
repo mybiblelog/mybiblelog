@@ -18,7 +18,7 @@ ld_json:
   cta-note="Regístrate con correo electrónico o Google"></content-page-hero>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc4-daily-goal.webp"
+  image-src="/screenshots/es/sc4-daily-goal.webp"
   image-alt="La aplicación My Bible Log mostrando una barra de progreso completada para alcanzar el objetivo de lectura diaria"
   image-width="750"
   image-height="1334"
@@ -31,7 +31,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc2-achievements.webp"
+  image-src="/screenshots/es/sc2-achievements.webp"
   image-alt="La aplicación My Bible Log otorgando una estrella dorada por leer un libro de la Biblia"
   image-width="750"
   image-height="1334"
@@ -45,7 +45,7 @@ ld_json:
   :reverse="true"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc1-reading-suggestions.webp"
+  image-src="/screenshots/es/sc1-reading-suggestions.webp"
   image-alt="La página Hoy de la aplicación My Bible Log mostrando varias sugerencias de lectura"
   image-width="750"
   image-height="1334"
@@ -56,7 +56,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc7-bible-progress.webp"
+  image-src="/screenshots/es/sc7-bible-progress.webp"
   image-alt="La aplicación My Bible Log mostrando una barra de progreso segmentada para leer toda la Biblia"
   image-width="750"
   image-height="1334"
@@ -67,7 +67,7 @@ ld_json:
   :reverse="true"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc9-calendar.webp"
+  image-src="/screenshots/es/sc9-calendar.webp"
   image-alt="El calendario My Bible Log mostrando un mes donde muchas fechas han ganado una estrella por alcanzar el objetivo de lectura diaria"
   image-width="750"
   image-height="1334"
@@ -81,7 +81,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc10-notes.webp"
+  image-src="/screenshots/es/sc10-notes.webp"
   image-alt="La pantalla de notas de My Bible Log mostrando varios versículos para memorizar"
   image-width="750"
   image-height="1334"
@@ -92,7 +92,7 @@ ld_json:
   :reverse="true"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc12-checklist.webp"
+  image-src="/screenshots/es/sc12-checklist.webp"
   image-alt="La lista de verificación de capítulos de My Bible Log con los primeros cuatro capítulos de Apocalipsis marcados como completos"
   image-width="750"
   image-height="1334"
@@ -103,7 +103,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc8-install-anywhere.webp"
+  image-src="/screenshots/es/sc8-install-anywhere.webp"
   image-alt="La aplicación My Bible Log ejecutándose en modo escritorio"
   image-width="1069"
   image-height="690"

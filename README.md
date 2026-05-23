@@ -137,6 +137,11 @@ OPENAI_API_KEY=xxxxxxxxxx
 # Test Data
 TEST_SITE_URL=http://localhost:3000 # for e2e tests
 TEST_BYPASS_SECRET=xxxxxxxxxx # for api tests (do NOT set in prod)
+
+# Screenshot Script (optional config)
+SCREENSHOT_HEADLESS=false
+SCREENSHOT_EMAIL=demo@example.com
+SCREENSHOT_PASSWORD=password
 ```
 
 For deployment to Heroku, ensure these env vars are set before pushing:

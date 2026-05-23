@@ -14,7 +14,7 @@ og:
 My Bible Log - це веб-сайт. Це також "Прогресивний веб-додаток" (PWA), що означає, що його можна встановити як самостійний додаток на будь-якому пристрої.
 
 <div style="margin: 1rem">
-  <img alt="Скріншот додатка My Bible Log для робочого столу" src="/screenshots/sc8-install-anywhere.webp" />
+  <img alt="Скріншот додатка My Bible Log для робочого столу" src="/screenshots/uk/sc8-install-anywhere.webp" />
 </div>
 
 На приклад, Google Chrome можна використовувати для встановлення PWA на таких типах пристроїв:

@@ -12,7 +12,7 @@ og:
 # Notes Page
 
 <div class="phone-frame">
-  <img alt="My Bible Log Notes Page Screenshot" src="/screenshots/sc10-notes.webp" />
+  <img alt="My Bible Log Notes Page Screenshot" src="/screenshots/en/sc10-notes.webp" />
 </div>
 
 My Bible Log allows you to take freeform notes to collect, organize, and process as you read.
@@ -55,7 +55,7 @@ Both sort orders are based on the date and time the note was originally created.
 ## Creating Tags to Organize Your Notes
 
 <div class="phone-frame">
-  <img alt="My Bible Log Note Tags Page Screenshot" src="/screenshots/sc11-note-tags.webp" />
+  <img alt="My Bible Log Note Tags Page Screenshot" src="/screenshots/en/sc11-note-tags.webp" />
 </div>
 
 To reach the Tags page and work with your own custom tags, click the "Tags" button on the Notes page.

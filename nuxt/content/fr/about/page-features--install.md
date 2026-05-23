@@ -14,7 +14,7 @@ og:
 My Bible Log est un site web. C'est aussi une "Application Web Progressive" (PWA), ce qui signifie qu'elle peut être installée en tant qu'application autonome sur n'importe quel appareil.
 
 <div style="margin: 1rem">
-  <img alt="Capture d'écran de l'application My Bible Log pour ordinateur de bureau" src="/screenshots/sc8-install-anywhere.webp" />
+  <img alt="Capture d'écran de l'application My Bible Log pour ordinateur de bureau" src="/screenshots/fr/sc8-install-anywhere.webp" />
 </div>
 
 Par exemple, Google Chrome peut être utilisé pour installer une PWA sur ces types d'appareils :

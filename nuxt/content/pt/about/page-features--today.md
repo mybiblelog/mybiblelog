@@ -12,7 +12,7 @@ og:
 # Página de Hoje
 
 <div class="phone-frame">
-  <img alt="Captura de tela da Página de Hoje do My Bible Log" src="/screenshots/sc4-daily-goal.webp" />
+  <img alt="Captura de tela da Página de Hoje do My Bible Log" src="/screenshots/pt/sc4-daily-goal.webp" />
 </div>
 
 A página de Hoje ajuda você a acompanhar o progresso da sua leitura diária da Bíblia. No topo, você verá uma barra de progresso mostrando o quão perto está de atingir sua meta diária. Por exemplo, se sua meta for 86 versículos, a barra estará completa quando você ler 86 versículos hoje.

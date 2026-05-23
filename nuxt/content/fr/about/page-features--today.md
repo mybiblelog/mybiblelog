@@ -12,7 +12,7 @@ og:
 # Page d'aujourd'hui
 
 <div class="phone-frame">
-  <img alt="Capture d'écran de la page d'aujourd'hui de My Bible Log" src="/screenshots/sc4-daily-goal.webp" />
+  <img alt="Capture d'écran de la page d'aujourd'hui de My Bible Log" src="/screenshots/fr/sc4-daily-goal.webp" />
 </div>
 
 La page d'aujourd'hui vous aide à suivre votre progression de lecture biblique quotidienne. En haut, vous verrez une barre de progression montrant à quel point vous êtes proche d'atteindre votre objectif quotidien. Par exemple, si votre objectif est de 86 versets, la barre sera pleine une fois que vous aurez lu 86 versets aujourd'hui.

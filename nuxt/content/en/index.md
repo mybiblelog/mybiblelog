@@ -18,7 +18,7 @@ ld_json:
   cta-note="Sign up with email or Google"></content-page-hero>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc4-daily-goal.webp"
+  image-src="/screenshots/en/sc4-daily-goal.webp"
   image-alt="The My Bible Log app showing a completed progress bar for meeting the daily reading goal"
   image-width="750"
   image-height="1334"
@@ -31,7 +31,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc2-achievements.webp"
+  image-src="/screenshots/en/sc2-achievements.webp"
   image-alt="The My Bible Log app awarding a gold star for reading through a book of the Bible"
   image-width="750"
   image-height="1334"
@@ -45,7 +45,7 @@ ld_json:
   :reverse="true"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc1-reading-suggestions.webp"
+  image-src="/screenshots/en/sc1-reading-suggestions.webp"
   image-alt="The My Bible Log app Today page showing several reading suggestions"
   image-width="750"
   image-height="1334"
@@ -56,7 +56,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc7-bible-progress.webp"
+  image-src="/screenshots/en/sc7-bible-progress.webp"
   image-alt="The My Bible Log app showing a segmented progress bar for reading the whole Bible"
   image-width="750"
   image-height="1334"
@@ -67,7 +67,7 @@ ld_json:
   :reverse="true"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc9-calendar.webp"
+  image-src="/screenshots/en/sc9-calendar.webp"
   image-alt="The My Bible Log calendar showing a month where many dates have earned a star for meeting the daily reading goal"
   image-width="750"
   image-height="1334"
@@ -81,7 +81,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc10-notes.webp"
+  image-src="/screenshots/en/sc10-notes.webp"
   image-alt="The My Bible Log notes screen showing several memory verses"
   image-width="750"
   image-height="1334"
@@ -92,7 +92,7 @@ ld_json:
   :reverse="true"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc12-checklist.webp"
+  image-src="/screenshots/en/sc12-checklist.webp"
   image-alt="The My Bible Log chapter checklist with the first four chapters of Revelation marked complete"
   image-width="750"
   image-height="1334"
@@ -103,7 +103,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc8-install-anywhere.webp"
+  image-src="/screenshots/en/sc8-install-anywhere.webp"
   image-alt="The My Bible Log app running in desktop mode"
   image-width="1069"
   image-height="690"

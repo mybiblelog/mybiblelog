@@ -12,7 +12,7 @@ og:
 # 성경 일람 페이지
 
 <div class="phone-frame">
-  <img alt="My Bible Log 성경 책 페이지 스크린샷" src="/screenshots/sc7-bible-progress.webp" />
+  <img alt="My Bible Log 성경 책 페이지 스크린샷" src="/screenshots/ko/sc7-bible-progress.webp" />
 </div>
 
 성경 일람 페이지에서는 성경 전체의 읽기 진행 상황을 확인할 수 있습니다. 상단에는 성경에서 읽은 부분을 시각적으로 나타내는 진행 표시줄이 있습니다. 단순히 왼쪽에서 오른쪽으로 채워지는 진행 표시줄과는 달리 성경 순서에 따라 실제로 읽은 위치(앞·중간·뒤)가 그대로 반영됩니다.
@@ -27,7 +27,7 @@ og:
 ## 개별 책 페이지
 
 <div class="phone-frame">
-  <img alt="My Bible Log 개별 책 페이지 스크린샷" src="/screenshots/sc6-book-chapter-progress.webp" />
+  <img alt="My Bible Log 개별 책 페이지 스크린샷" src="/screenshots/ko/sc6-book-chapter-progress.webp" />
 </div>
 
 원하는 책을 탭하면 상세 진행 페이지로 이동합니다. 아 기능이 준비되어 있습니다.

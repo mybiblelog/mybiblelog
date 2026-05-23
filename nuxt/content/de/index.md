@@ -18,7 +18,7 @@ ld_json:
   cta-note="Mit E-Mail oder Google anmelden"></content-page-hero>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc4-daily-goal.webp"
+  image-src="/screenshots/de/sc4-daily-goal.webp"
   image-alt="Die My Bible Log App zeigt eine abgeschlossene Fortschrittsleiste für das Erreichen des täglichen Leseziels"
   image-width="750"
   image-height="1334"
@@ -31,7 +31,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc2-achievements.webp"
+  image-src="/screenshots/de/sc2-achievements.webp"
   image-alt="Die My Bible Log App vergibt einen goldenen Stern für das Lesen eines Buches der Bibel"
   image-width="750"
   image-height="1334"
@@ -45,7 +45,7 @@ ld_json:
   :reverse="true"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc1-reading-suggestions.webp"
+  image-src="/screenshots/de/sc1-reading-suggestions.webp"
   image-alt="Die My Bible Log App Heute-Seite zeigt mehrere Lesevorschläge"
   image-width="750"
   image-height="1334"
@@ -56,7 +56,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc7-bible-progress.webp"
+  image-src="/screenshots/de/sc7-bible-progress.webp"
   image-alt="Die My Bible Log App zeigt eine segmentierte Fortschrittsleiste für das Lesen der ganzen Bibel"
   image-width="750"
   image-height="1334"
@@ -67,7 +67,7 @@ ld_json:
   :reverse="true"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc9-calendar.webp"
+  image-src="/screenshots/de/sc9-calendar.webp"
   image-alt="Der My Bible Log Kalender zeigt einen Monat, in dem viele Daten einen Stern für das Erreichen des täglichen Leseziels erhalten haben"
   image-width="750"
   image-height="1334"
@@ -81,7 +81,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc10-notes.webp"
+  image-src="/screenshots/de/sc10-notes.webp"
   image-alt="Der My Bible Log Notizen-Bildschirm zeigt mehrere Merkverse"
   image-width="750"
   image-height="1334"
@@ -92,7 +92,7 @@ ld_json:
   :reverse="true"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc12-checklist.webp"
+  image-src="/screenshots/de/sc12-checklist.webp"
   image-alt="Die My Bible Log Kapitel-Checkliste mit den ersten vier Kapiteln der Offenbarung als abgeschlossen markiert"
   image-width="750"
   image-height="1334"
@@ -103,7 +103,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc8-install-anywhere.webp"
+  image-src="/screenshots/de/sc8-install-anywhere.webp"
   image-alt="Die My Bible Log App läuft im Desktop-Modus"
   image-width="1069"
   image-height="690"

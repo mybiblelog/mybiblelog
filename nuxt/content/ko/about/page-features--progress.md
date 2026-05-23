@@ -12,7 +12,7 @@ og:
 # 진도 페이지
 
 <div class="phone-frame">
-  <img alt="My Bible Log 진행 페이지 스크린샷" src="/screenshots/sc13-progress.webp" />
+  <img alt="My Bible Log 진행 페이지 스크린샷" src="/screenshots/ko/sc13-progress.webp" />
 </div>
 
 진도 페이지는 성경 일람 페이지 상단에 위치한 \"진도\" 버튼을 눌러 이동할 수 있습니다.

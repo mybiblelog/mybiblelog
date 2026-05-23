@@ -12,7 +12,7 @@ og:
 # 달력 페이지
 
 <div class="phone-frame">
-  <img alt="My Bible Log 달력 페이지 스크린샷" src="/screenshots/sc9-calendar.webp" />
+  <img alt="My Bible Log 달력 페이지 스크린샷" src="/screenshots/ko/sc9-calendar.webp" />
 </div>
 
 달력 페이지에서는 과거 성경 읽기 기록을 캘린더 형식으로 확인할 수 있습니다.

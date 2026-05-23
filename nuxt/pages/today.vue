@@ -11,7 +11,7 @@
       </button>
     </header>
     <br>
-    <div class="today-page__progress-bar-container">
+    <div class="today-page__progress-bar-container" data-screenshot="daily-goal">
       <double-progress-bar :primary-percentage="dailyGoalPercentCompleteNew" :secondary-percentage="dailyGoalPercentComplete" />
       <div class="mbl-level mbl-level--mobile">
         <div class="mbl-level-left">
@@ -47,37 +47,39 @@
       </client-only>
     </div>
     <br>
-    <h3 class="mbl-title mbl-title--5">
-      {{ $t('reading_suggestions') }}
-    </h3>
-    <div class="entry-container" role="list" data-testid="reading-suggestions">
-      <client-only>
-        <log-entry
-          v-for="(passage, index) of readingSuggestionsWithNewVerseCounts"
-          :key="index + '-' + passage.startVerseId + '-' + passage.endVerseId"
-          role="listitem"
-          :message="passage.suggestionContext"
-          :passage="passage"
-          :actions="actionsForReadingSuggestionPassage(passage)"
-        />
-        <log-entry
-          v-if="loadingReadingSuggestions && !readingSuggestionsWithNewVerseCounts.length"
-          key="loading"
-          role="listitem"
-          :message="$t('loading')"
-        />
-        <log-entry
-          v-if="!loadingReadingSuggestions && !readingSuggestionsWithNewVerseCounts.length"
-          key="no-suggestions"
-          role="listitem"
-          :message="$t('no_suggestions')"
-        />
-      </client-only>
-    </div>
-    <div class="mbl-text-center" style="margin-top: 1rem;">
-      <nuxt-link class="mbl-button mbl-button--light" :to="localePath('/log')">
-        {{ $t('view_all_reading') }}
-      </nuxt-link>
+    <div data-testid="reading-suggestions-section">
+      <h3 class="mbl-title mbl-title--5">
+        {{ $t('reading_suggestions') }}
+      </h3>
+      <div class="entry-container" role="list" data-testid="reading-suggestions">
+        <client-only>
+          <log-entry
+            v-for="(passage, index) of readingSuggestionsWithNewVerseCounts"
+            :key="index + '-' + passage.startVerseId + '-' + passage.endVerseId"
+            role="listitem"
+            :message="passage.suggestionContext"
+            :passage="passage"
+            :actions="actionsForReadingSuggestionPassage(passage)"
+          />
+          <log-entry
+            v-if="loadingReadingSuggestions && !readingSuggestionsWithNewVerseCounts.length"
+            key="loading"
+            role="listitem"
+            :message="$t('loading')"
+          />
+          <log-entry
+            v-if="!loadingReadingSuggestions && !readingSuggestionsWithNewVerseCounts.length"
+            key="no-suggestions"
+            role="listitem"
+            :message="$t('no_suggestions')"
+          />
+        </client-only>
+      </div>
+      <div class="mbl-text-center" style="margin-top: 1rem;">
+        <nuxt-link class="mbl-button mbl-button--light" :to="localePath('/log')">
+          {{ $t('view_all_reading') }}
+        </nuxt-link>
+      </div>
     </div>
     <br>
     <div class="mbl-level mbl-level--mobile">
