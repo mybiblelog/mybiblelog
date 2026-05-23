@@ -23,7 +23,7 @@
           <dt class="mbl-text-small mbl-text-muted">
             Join Date
           </dt>
-          <dd>{{ stats.joinDate ? stats.joinDate.split('T')[0] : '—' }}</dd>
+          <dd>{{ stats.joinDate ? stats.joinDate.split('T')[0] : '—' }}<span v-if="stats.joinDate" class="admin-user-detail__days-ago"> ({{ daysAgo(stats.joinDate) }})</span></dd>
         </div>
         <div class="admin-user-detail__stat">
           <dt class="mbl-text-small mbl-text-muted">
@@ -35,7 +35,7 @@
           <dt class="mbl-text-small mbl-text-muted">
             Last Log Entry
           </dt>
-          <dd>{{ stats.lastLogEntryDate || '—' }}</dd>
+          <dd>{{ stats.lastLogEntryDate || '—' }}<span v-if="stats.lastLogEntryDate" class="admin-user-detail__days-ago"> ({{ daysAgo(stats.lastLogEntryDate) }})</span></dd>
         </div>
         <div class="admin-user-detail__stat">
           <dt class="mbl-text-small mbl-text-muted">
@@ -47,7 +47,7 @@
           <dt class="mbl-text-small mbl-text-muted">
             Last Note
           </dt>
-          <dd>{{ stats.lastNoteDate ? stats.lastNoteDate.split('T')[0] : '—' }}</dd>
+          <dd>{{ stats.lastNoteDate ? stats.lastNoteDate.split('T')[0] : '—' }}<span v-if="stats.lastNoteDate" class="admin-user-detail__days-ago"> ({{ daysAgo(stats.lastNoteDate) }})</span></dd>
         </div>
         <div class="admin-user-detail__stat">
           <dt class="mbl-text-small mbl-text-muted">
@@ -76,6 +76,7 @@
 
 <script>
 import AppModal from '@/components/popups/AppModal';
+import { displayTimeSince } from '@mybiblelog/shared';
 import { useDialogStore } from '~/stores/dialog';
 import { useAuthStore } from '~/stores/auth';
 
@@ -113,6 +114,9 @@ export default {
     },
   },
   methods: {
+    daysAgo(dateStr) {
+      return displayTimeSince(dateStr, this.$i18n.locale);
+    },
     async loadStats() {
       this.stats = null;
       this.statsError = false;
@@ -135,6 +139,7 @@ export default {
       try {
         sessionStorage.clear();
         await this.$http.get(`/api/admin/users/${this.user.email}/login`);
+        this.$emit('close');
         this.$router.push('/start');
       }
       catch {
@@ -189,5 +194,11 @@ export default {
 .admin-user-detail__stat dd {
   margin: 0;
   font-weight: 500;
+}
+
+.admin-user-detail__days-ago {
+  font-weight: 400;
+  opacity: 0.6;
+  font-size: 0.875em;
 }
 </style>
