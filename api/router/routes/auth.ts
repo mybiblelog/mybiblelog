@@ -4,11 +4,11 @@ import rateLimit from '../helpers/rateLimit';
 import authCurrentUser, { AUTH_COOKIE_NAME, setAuthTokenCookie } from '../helpers/authCurrentUser';
 import googleOauth2 from '../helpers/google-oauth2';
 import { ApiErrorDetailCode } from '../errors/error-codes';
-import useMongooseModels from '../../mongoose/useMongooseModels';
+import useRepositories from '../../repositories/useRepositories';
+import { generateUserJWT, isCodeValid, isEmailVerified, toAuthJSON } from '../../repositories/user-auth';
+import { type UserCreateInput } from '../../repositories/types';
 import useEmailService from '../../services/email/email-service';
 import checkTestBypass from '../helpers/checkTestBypass';
-import UserSettings from '../../mongoose/schemas/UserSettings';
-import { isEmailVerified } from '../../mongoose/schemas/User';
 import { LocaleCode } from '@mybiblelog/shared';
 import { type ApiResponse } from '../response';
 import { ValidationError } from '../errors/validation-errors';
@@ -127,7 +127,7 @@ router.get('/auth/user', async (req, res, next) => {
   try {
     const currentUser = await authCurrentUser(req, { optional: true });
     if (!currentUser) { return res.json({ data: { user: null } } satisfies ApiResponse); }
-    return res.json({ data: { user: currentUser.toAuthJSON() } } satisfies ApiResponse);
+    return res.json({ data: { user: toAuthJSON(currentUser) } } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -215,14 +215,14 @@ router.post('/auth/login', async (req, res, next) => {
     throw new ValidationError([{ code: ApiErrorDetailCode.Required, field: 'password' }]);
   }
 
-  const { User } = await useMongooseModels();
-  const user = await User.findOne({ email });
+  const { users } = await useRepositories();
+  const user = await users.findByEmail(email);
   if (!user) {
     // definitely invalid email, but not giving that away
     throw new UnauthorizedError([{ code: ApiErrorDetailCode.InvalidLogin, field: null }]);
   }
 
-  const passwordValid = await user.authenticate(password);
+  const passwordValid = await users.verifyPassword(user.id, password);
   if (!passwordValid) {
     // definitely invalid password, but not giving that away
     throw new UnauthorizedError([{ code: ApiErrorDetailCode.InvalidLogin, field: null }]);
@@ -231,8 +231,8 @@ router.post('/auth/login', async (req, res, next) => {
   if (requireEmailVerification && !isEmailVerified(user) && !bypass) {
     throw new UnauthorizedError([{ code: ApiErrorDetailCode.VerifyEmail, field: null, properties: { email: user.email } }]);
   }
-  const userData = user.toAuthJSON();
-  const token = user.generateJWT();
+  const userData = toAuthJSON(user);
+  const token = generateUserJWT(user);
   setAuthTokenCookie(res, token);
   return res.json({
     data: {
@@ -357,23 +357,19 @@ router.post('/auth/register', async (req, res, next) => {
     emailVerificationCode,
   } = req.body;
 
-  const { User } = await useMongooseModels();
-  const user = new User();
+  const { users } = await useRepositories();
   try {
-    user.email = email;
-    user.password = password;
-    // remaining settings will be set by Mongoose default
-    user.settings = new UserSettings({ locale });
+    const input: UserCreateInput = { email, password, locale };
 
     if (authBypass) {
-      // setting emailVerificationCode to null will mark the user as email verified
-      user.emailVerificationCode = emailVerificationCode || '';
+      // setting emailVerificationCode to '' will mark the user as email verified
+      input.emailVerificationCode = emailVerificationCode || '';
       if (isAdmin) {
-        user.isAdmin = true;
+        input.isAdmin = true;
       }
     }
 
-    await user.save();
+    const user = await users.create(input);
 
     res.json({ data: { success: true } } satisfies ApiResponse);
 
@@ -382,10 +378,6 @@ router.post('/auth/register', async (req, res, next) => {
     emailService.sendUserEmailVerification(email, user.emailVerificationCode, locale);
   }
   catch (err) {
-    // Specifically handle the case where the email is already in use
-    if (err.name === 'ValidationError' && err.errors.email && err.errors.email.kind === 'unique') {
-      throw new ValidationError([{ code: ApiErrorDetailCode.EmailInUse, field: 'email' }]);
-    }
     next(err);
   }
 });
@@ -511,7 +503,7 @@ router.post('/auth/oauth2/google/verify', async (req, res, next) => {
       throw new InvalidRequestError();
     }
 
-    const { User } = await useMongooseModels();
+    const { users } = await useRepositories();
     const accessToken = await googleOauth2.getAccessTokenFromCode(code);
     const profile = await googleOauth2.getUserProfileFromToken(accessToken);
 
@@ -527,31 +519,28 @@ router.post('/auth/oauth2/google/verify', async (req, res, next) => {
       throw new ValidationError([{ code: ApiErrorDetailCode.EmailNotVerified, field: null }]);
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await users.findByEmail(email);
     if (existingUser) {
       // Link Google account to existing account if not already linked
       if (!existingUser.googleId) {
-        existingUser.googleId = id;
-        await existingUser.save();
+        await users.linkGoogleAccount(existingUser.id, id);
       }
 
-      const token = existingUser.generateJWT();
+      const token = generateUserJWT(existingUser);
       setAuthTokenCookie(res, token);
       return res.json({ data: { token } } satisfies ApiResponse);
     }
 
     // Create new user account
-    const user = new User();
-    user.email = email;
-    user.emailVerificationCode = ''; // Google verified emails don't need verification
-    user.password = null;
-    user.googleId = id;
+    const user = await users.create({
+      email,
+      emailVerificationCode: '', // Google verified emails don't need verification
+      password: null,
+      googleId: id,
+      locale,
+    });
 
-    // remaining settings will be set by Mongoose default
-    user.settings = new UserSettings({ locale });
-
-    await user.save();
-    const token = user.generateJWT();
+    const token = generateUserJWT(user);
     setAuthTokenCookie(res, token);
     res.json({ data: { token } } satisfies ApiResponse);
   }
@@ -627,24 +616,26 @@ router.post('/auth/verify-email', async (req, res) => {
     throw new NotFoundError();
   }
   // Find the user (if not found, error)
-  const { User } = await useMongooseModels();
-  const user = await User.findOne({ emailVerificationCode });
+  const { users } = await useRepositories();
+  const user = await users.findByEmailVerificationCode(emailVerificationCode);
   if (!user) {
     throw new NotFoundError();
   }
 
   // Verify the code and check expiration
-  if (!user.verifyEmailVerificationCode(emailVerificationCode)) {
+  if (!isCodeValid({
+    code: emailVerificationCode,
+    expectedCode: user.emailVerificationCode,
+    expiresAt: user.emailVerificationExpires,
+  })) {
     throw new ValidationError([{ code: ApiErrorDetailCode.VerificationCodeExpired, field: null }]);
   }
 
-  // Mark the user's email as verified by setting the verification code to null
-  user.emailVerificationCode = '';
-  user.emailVerificationExpires = new Date(0);
-  await user.save();
+  // Mark the user's email as verified by clearing the verification code
+  const verifiedUser = await users.markEmailVerified(user.id);
 
   // Send a JWT back for auto-login
-  const token = user.generateJWT();
+  const token = generateUserJWT(verifiedUser);
   setAuthTokenCookie(res, token);
   res.json({ data: { token } } satisfies ApiResponse);
 });
@@ -699,24 +690,24 @@ router.put('/auth/change-password', async (req, res, next) => {
   }
 
   try {
+    const { users } = await useRepositories();
     const currentUser = await authCurrentUser(req);
     const { currentPassword, newPassword } = req.body;
 
     // If the user's password is invalid, throw error
-    const passwordValid = await currentUser.authenticate(currentPassword);
+    const passwordValid = await users.verifyPassword(currentUser.id, currentPassword);
     if (!passwordValid) {
       throw new ValidationError([{ code: ApiErrorDetailCode.PasswordIncorrect, field: 'currentPassword' }]);
     }
 
     // Set new password
-    currentUser.password = newPassword;
     try {
-      await currentUser.save();
+      await users.setPassword(currentUser.id, newPassword);
       res.json({ data: { success: true } } satisfies ApiResponse);
     }
     catch (err) {
       // Any 'password' validation errors should be seen on the 'newPassword' field
-      // The 'password' errors come from Mongoose validation of a new password,
+      // The 'password' errors come from validation of a new password,
       // but the input field is 'newPassword'
       if (err instanceof ValidationError) {
         throw new ValidationError(err.details?.map((detail) => ({ ...detail, field: detail.field === 'password' ? 'newPassword' : detail.field })));
@@ -782,6 +773,7 @@ router.post('/auth/change-email', async (req, res, next) => {
   }
 
   try {
+    const { users } = await useRepositories();
     const currentUser = await authCurrentUser(req);
     const { newEmail, password } = req.body;
 
@@ -805,25 +797,24 @@ router.post('/auth/change-email', async (req, res, next) => {
     // requires the verification code sent to the new email address.
 
     // confirm password
-    const passwordValid = await currentUser.authenticate(password);
+    const passwordValid = await users.verifyPassword(currentUser.id, password);
     if (!passwordValid) {
       throw new ValidationError([{ code: ApiErrorDetailCode.PasswordIncorrect, field: 'password' }]);
     }
 
     // have the new email confirmation expire in 1 hour
-    currentUser.enableEmailUpdate(newEmail);
-    await currentUser.save();
+    const updatedUser = await users.beginEmailUpdate(currentUser.id, newEmail);
 
     // send success response
     const responseData: { success: boolean; newEmailVerificationCode?: string } = { success: true };
-    if (authBypass && currentUser.newEmailVerificationCode) {
-      responseData.newEmailVerificationCode = currentUser.newEmailVerificationCode;
+    if (authBypass && updatedUser.newEmailVerificationCode) {
+      responseData.newEmailVerificationCode = updatedUser.newEmailVerificationCode;
     }
     res.json({ data: responseData } satisfies ApiResponse);
 
     // send an email update confirmation code
     const emailService = await useEmailService();
-    emailService.sendEmailUpdateLink(currentUser.email, newEmail, currentUser.newEmailVerificationCode, currentUser.settings.locale as LocaleCode);
+    emailService.sendEmailUpdateLink(currentUser.email, newEmail, updatedUser.newEmailVerificationCode, currentUser.settings.locale as LocaleCode);
   }
   catch (error) {
     next(error);
@@ -928,8 +919,8 @@ router.get('/auth/change-email/:newEmailVerificationCode', async (req, res, next
   }
 
   const { newEmailVerificationCode } = req.params;
-  const { User } = await useMongooseModels();
-  const user = await User.findOne({ newEmailVerificationCode });
+  const { users } = await useRepositories();
+  const user = await users.findByNewEmailVerificationCode(newEmailVerificationCode);
 
   if (user) {
     return res.json({
@@ -970,8 +961,8 @@ router.delete('/auth/change-email', async (req, res, next) => {
     const currentUser = await authCurrentUser(req);
 
     if (currentUser.newEmail) {
-      currentUser.disableEmailUpdate();
-      await currentUser.save();
+      const { users } = await useRepositories();
+      await users.cancelEmailUpdate(currentUser.id);
       return res.json({ data: true } satisfies ApiResponse);
     }
 
@@ -1045,14 +1036,18 @@ router.post('/auth/change-email/:newEmailVerificationCode', async (req, res, nex
 
   const { newEmailVerificationCode } = req.params;
   // Find the user (if not found, error)
-  const { User } = await useMongooseModels();
-  const user = await User.findOne({ newEmailVerificationCode });
+  const { users } = await useRepositories();
+  const user = await users.findByNewEmailVerificationCode(newEmailVerificationCode);
   if (!user) {
     throw new NotFoundError();
   }
 
   // Verify the code and check expiration
-  if (!user.verifyNewEmailVerificationCode(newEmailVerificationCode)) {
+  if (!isCodeValid({
+    code: newEmailVerificationCode,
+    expectedCode: user.newEmailVerificationCode,
+    expiresAt: user.newEmailVerificationExpires,
+  })) {
     throw new ValidationError([{ code: ApiErrorDetailCode.VerificationCodeExpired, field: null }]);
   }
 
@@ -1063,22 +1058,17 @@ router.post('/auth/change-email/:newEmailVerificationCode', async (req, res, nex
   // We validate at this point to ensure the owner of a given email address
   // will not lose control of that email address because another user
   // happened to request to change their email to that address first.
-  const existingUserWithEmail = await User.findOne({ email: newEmail });
+  const existingUserWithEmail = await users.findByEmail(newEmail as string);
   if (existingUserWithEmail) {
     throw new ValidationError([{ code: ApiErrorDetailCode.EmailInUse, field: null }]);
   }
 
   // Keep track of the user's current (now old) email address.
-  // Mark the user's email as verified by setting the verification code to null.
-  user.oldEmails.push(user.email);
-  user.email = newEmail as string;
-  user.newEmail = null;
-  user.newEmailVerificationCode = '';
-  user.newEmailVerificationExpires = new Date(0);
-  await user.save();
+  // Mark the user's email as verified by clearing the verification code.
+  const updatedUser = await users.completeEmailUpdate(user.id);
 
   // Send a JWT back for auto-login
-  const token = user.generateJWT();
+  const token = generateUserJWT(updatedUser);
   setAuthTokenCookie(res, token);
   res.json({ data: { token } } satisfies ApiResponse);
 });
@@ -1128,9 +1118,9 @@ router.post('/auth/reset-password', async (req, res) => {
   }
 
   const { email } = req.body;
-  const { User } = await useMongooseModels();
+  const { users } = await useRepositories();
   // Require a string to prevent NoSQL operator injection
-  const user = typeof email === 'string' && email ? await User.findOne({ email }) : null;
+  const user = typeof email === 'string' && email ? await users.findByEmail(email) : null;
 
   // Always respond with success, whether or not an account exists for the
   // given email address, to prevent account enumeration.
@@ -1140,18 +1130,17 @@ router.post('/auth/reset-password', async (req, res) => {
   }
 
   // have the password reset expire in 1 hour
-  user.enablePasswordReset();
-  await user.save();
+  const updatedUser = await users.beginPasswordReset(user.id);
 
   // send success response, but don't `return` here so the email can be sent
-  if (authBypass && user.passwordResetCode) {
-    responseData.passwordResetCode = user.passwordResetCode;
+  if (authBypass && updatedUser.passwordResetCode) {
+    responseData.passwordResetCode = updatedUser.passwordResetCode;
   }
   res.json({ data: responseData } satisfies ApiResponse);
 
   // send password reset code via email
   const emailService = await useEmailService();
-  emailService.sendUserPasswordResetLink(user.email, user.passwordResetCode, user.settings.locale as LocaleCode);
+  emailService.sendUserPasswordResetLink(updatedUser.email, updatedUser.passwordResetCode, updatedUser.settings.locale as LocaleCode);
 });
 
 /**
@@ -1194,8 +1183,8 @@ router.get('/auth/reset-password/:passwordResetCode/valid', async (req, res, nex
   const { passwordResetCode } = req.params;
 
   // Look for the user to determine if reset code is valid
-  const { User } = await useMongooseModels();
-  const user = await User.findOne({ passwordResetCode });
+  const { users } = await useRepositories();
+  const user = await users.findByPasswordResetCode(passwordResetCode);
   if (user) {
     return res.json({ data: { valid: true } } satisfies ApiResponse);
   }
@@ -1273,22 +1262,25 @@ router.post('/auth/reset-password/:passwordResetCode', async (req, res, next) =>
   const { newPassword } = req.body;
 
   // Find the user (if not found, error)
-  const { User } = await useMongooseModels();
-  const user = await User.findOne({ passwordResetCode });
+  const { users } = await useRepositories();
+  const user = await users.findByPasswordResetCode(passwordResetCode);
   if (!user) {
     throw new NotFoundError();
   }
 
   // Ensure the password reset is not expired
-  if (!user.verifyPasswordResetCode(passwordResetCode)) {
+  if (!isCodeValid({
+    code: passwordResetCode,
+    expectedCode: user.passwordResetCode,
+    expiresAt: user.passwordResetExpires,
+  })) {
     throw new ValidationError([{ code: ApiErrorDetailCode.PasswordResetLinkExpired, field: null }]);
   }
 
   // Set new password and disable the password reset link
+  let updatedUser;
   try {
-    user.password = newPassword;
-    user.disablePasswordReset();
-    await user.save();
+    updatedUser = await users.completePasswordReset(user.id, newPassword);
   }
   catch (err) {
     if (err instanceof ValidationError) {
@@ -1297,7 +1289,7 @@ router.post('/auth/reset-password/:passwordResetCode', async (req, res, next) =>
     throw err;
   }
   // Send a JWT back for auto-login
-  const token = user.generateJWT();
+  const token = generateUserJWT(updatedUser);
   setAuthTokenCookie(res, token);
   res.json({ data: { token } } satisfies ApiResponse);
 });

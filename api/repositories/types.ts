@@ -1,0 +1,201 @@
+/**
+ * Plain domain object types returned by the repository layer.
+ *
+ * These records are intentionally free of Mongoose document behavior:
+ * ids are strings, nested documents are plain objects, and no instance
+ * methods exist. Route handlers should only ever see these types.
+ */
+
+export interface UserSettingsRecord {
+  dailyVerseCountGoal: number;
+  lookBackDate: string;
+  preferredBibleVersion: string;
+  startPage: string;
+  passageNoteTagSortOrder: string;
+  locale: string;
+}
+
+export interface UserRecord {
+  id: string;
+  email: string;
+  isAdmin: boolean;
+  /** True when the user has a password (the hash itself never leaves the repository). */
+  hasLocalAccount: boolean;
+  googleId: string | null;
+  /** An empty string means the email address has been verified. */
+  emailVerificationCode: string;
+  emailVerificationExpires: Date;
+  newEmail: string | null;
+  newEmailVerificationCode: string;
+  newEmailVerificationExpires: Date;
+  oldEmails: string[];
+  passwordResetCode: string;
+  passwordResetExpires: Date;
+  settings: UserSettingsRecord;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface UserCreateInput {
+  email: string;
+  /** `null` creates an OAuth-only account with no local password. */
+  password?: string | null;
+  locale?: string;
+  googleId?: string;
+  emailVerificationCode?: string;
+  isAdmin?: boolean;
+}
+
+export interface AdminUserListQuery {
+  limit: number;
+  offset: number;
+  sortOn: string;
+  sortDirection: 1 | -1;
+  searchText: string;
+}
+
+export interface AdminUserListItem {
+  id: string;
+  email: string;
+  isAdmin: boolean;
+  googleId: string | null;
+  emailVerificationExpires: Date;
+  newEmail?: string | null;
+  oldEmails: string[];
+  settings: UserSettingsRecord;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface LogEntryRecord {
+  id: string;
+  ownerId: string;
+  date: string;
+  startVerseId: number;
+  endVerseId: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface LogEntryInput {
+  date: string;
+  startVerseId: number;
+  endVerseId: number;
+}
+
+/**
+ * Passage subdocuments serialize with their `_id` today
+ * (the schema does not set `_id: false`), so the record keeps it
+ * to preserve the wire shape.
+ */
+export interface PassageRecord {
+  _id: string;
+  startVerseId: number;
+  endVerseId: number;
+}
+
+export interface PassageInput {
+  startVerseId: number;
+  endVerseId: number;
+}
+
+export interface PassageNoteRecord {
+  id: string;
+  ownerId: string;
+  content: string;
+  passages: PassageRecord[];
+  tags: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface PassageNoteInput {
+  content?: string;
+  passages?: PassageInput[];
+  tags?: string[];
+}
+
+export interface PassageNoteSearchQuery {
+  limit: number;
+  offset: number;
+  sortOn: string;
+  sortDirection: 1 | -1;
+  filterTags: string[];
+  filterTagMatching: 'any' | 'all' | 'exact';
+  searchText: string;
+  filterPassageStartVerseId: number;
+  filterPassageEndVerseId: number;
+  filterPassageMatching: 'inclusive' | 'exclusive';
+}
+
+/** Shape produced by the passage note search aggregation (includes timestamps, excludes owner). */
+export interface PassageNoteSearchResultItem {
+  id: string;
+  content: string;
+  passages: PassageRecord[];
+  tags: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface PassageNoteTagRecord {
+  id: string;
+  ownerId: string;
+  label: string;
+  color: string;
+  description: string;
+  /** Not stored in the database; computed and attached per request. */
+  noteCount?: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface PassageNoteTagInput {
+  label?: string;
+  color?: string;
+  description?: string;
+}
+
+export interface DailyReminderRecord {
+  id: string;
+  ownerId: string;
+  hour: number;
+  minute: number;
+  timezoneOffset: number;
+  active: boolean;
+  publicToken: string;
+  lastEmailEngagementAt: Date | null;
+  nextOccurrence: number;
+}
+
+export interface DailyReminderPatch {
+  hour?: number;
+  minute?: number;
+  timezoneOffset?: number;
+  active?: boolean;
+}
+
+/**
+ * Matches the default Mongoose toJSON shape (`_id`, `owner`, `__v`, timestamps)
+ * because the feedback endpoints have always returned documents serialized
+ * that way and tests pin the shape.
+ */
+export interface FeedbackRecord {
+  _id: string;
+  ip: string;
+  owner: string | null;
+  email: string;
+  kind: string;
+  message: string;
+  createdAt: Date;
+  updatedAt: Date;
+  __v?: number;
+}
+
+export interface FeedbackCreateInput {
+  ip: string;
+  ownerId: string | null;
+  email: string;
+  kind: string;
+  message: string;
+}

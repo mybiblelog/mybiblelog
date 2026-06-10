@@ -1,8 +1,8 @@
 import express from 'express';
-import { ObjectId } from 'mongodb';
 import authCurrentUser from '../helpers/authCurrentUser';
-import useMongooseModels from '../../mongoose/useMongooseModels';
-import { Types } from 'mongoose';
+import useRepositories from '../../repositories/useRepositories';
+import { isValidObjectId } from '../../repositories/ids';
+import { toPassageNoteTagJSON } from '../../repositories/serializers';
 import { ApiErrorDetailCode } from '../errors/error-codes';
 import { type ApiResponse } from '../response';
 import { ValidationError } from '../errors/validation-errors';
@@ -46,9 +46,9 @@ const router = express.Router();
  *           description: The date and time when the tag was last updated
  */
 
-const countTagNotes = async (tag) => {
-  const { PassageNote } = await useMongooseModels();
-  return PassageNote.countDocuments({ tags: tag._id });
+const countTagNotes = async (tagId: string) => {
+  const { passageNotes } = await useRepositories();
+  return passageNotes.countByTag(tagId);
 };
 
 /**
@@ -76,15 +76,15 @@ const countTagNotes = async (tag) => {
  */
 router.get('/passage-note-tags', async (req, res, next) => {
   try {
-    const { PassageNoteTag } = await useMongooseModels();
+    const { passageNoteTags: tagRepository } = await useRepositories();
     const currentUser = await authCurrentUser(req);
-    const passageNoteTags = await PassageNoteTag.find({ owner: currentUser._id });
+    const passageNoteTags = await tagRepository.listByOwner(currentUser.id);
 
     for (const passageNoteTag of passageNoteTags) {
-      passageNoteTag.noteCount = await countTagNotes(passageNoteTag);
+      passageNoteTag.noteCount = await countTagNotes(passageNoteTag.id);
     }
 
-    return res.json({ data: passageNoteTags } satisfies ApiResponse);
+    return res.json({ data: passageNoteTags.map(toPassageNoteTagJSON) } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -134,19 +134,19 @@ router.get('/passage-note-tags', async (req, res, next) => {
 router.get('/passage-note-tags/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (!ObjectId.isValid(id)) {
+    if (!isValidObjectId(id)) {
       throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
     }
 
-    const { PassageNoteTag } = await useMongooseModels();
+    const { passageNoteTags: tagRepository } = await useRepositories();
     const currentUser = await authCurrentUser(req);
 
-    const passageNoteTag = await PassageNoteTag.findOne({ owner: currentUser._id, _id: id });
+    const passageNoteTag = await tagRepository.findByIdForOwner(currentUser.id, id);
     if (!passageNoteTag) {
       throw new NotFoundError();
     }
-    passageNoteTag.noteCount = await countTagNotes(passageNoteTag);
-    res.json({ data: passageNoteTag.toJSON() } satisfies ApiResponse);
+    passageNoteTag.noteCount = await countTagNotes(passageNoteTag.id);
+    res.json({ data: toPassageNoteTagJSON(passageNoteTag) } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -201,29 +201,14 @@ router.get('/passage-note-tags/:id', async (req, res, next) => {
  */
 router.post('/passage-note-tags', async (req, res, next) => {
   try {
-    const { PassageNoteTag } = await useMongooseModels();
+    const { passageNoteTags: tagRepository } = await useRepositories();
     const currentUser = await authCurrentUser(req);
-    const passageNoteTag = new PassageNoteTag(req.body);
-    passageNoteTag.owner = new Types.ObjectId(currentUser._id);
-    try {
-      await passageNoteTag.validate();
-    }
-    catch (error) {
-      throw new ValidationError();
-    }
-    try {
-      await passageNoteTag.save();
-    }
-    catch (error) {
-      // Check if this is a duplicate key error (index violation)
-      if (error.code === 11000) {
-        throw new ValidationError([{ code: ApiErrorDetailCode.Unique, field: 'label' }]);
-      }
-      throw error;
-    }
+    const { label, color, description } = req.body;
+
+    const passageNoteTag = await tagRepository.create(currentUser.id, { label, color, description });
 
     passageNoteTag.noteCount = 0;
-    res.json({ data: passageNoteTag.toJSON() } satisfies ApiResponse);
+    res.json({ data: toPassageNoteTagJSON(passageNoteTag) } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -289,32 +274,20 @@ router.post('/passage-note-tags', async (req, res, next) => {
 router.put('/passage-note-tags/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (!ObjectId.isValid(id)) {
+    if (!isValidObjectId(id)) {
       throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
     }
 
-    const { PassageNoteTag } = await useMongooseModels();
+    const { passageNoteTags: tagRepository } = await useRepositories();
     const currentUser = await authCurrentUser(req);
     const { label, color, description } = req.body;
 
-    const passageNoteTag = await PassageNoteTag.findOne({ owner: currentUser._id, _id: id });
+    const passageNoteTag = await tagRepository.update(currentUser.id, id, { label, color, description });
     if (!passageNoteTag) {
       throw new NotFoundError();
     }
 
-    if (label) { passageNoteTag.label = label; }
-    if (color) { passageNoteTag.color = color; }
-    if (description) { passageNoteTag.description = description; }
-    try {
-      await passageNoteTag.validate();
-    }
-    catch (error) {
-      throw new ValidationError();
-    }
-
-    await passageNoteTag.save();
-
-    res.json({ data: passageNoteTag.toJSON() } satisfies ApiResponse);
+    res.json({ data: toPassageNoteTagJSON(passageNoteTag) } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -365,19 +338,19 @@ router.put('/passage-note-tags/:id', async (req, res, next) => {
 router.delete('/passage-note-tags/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (!ObjectId.isValid(id)) {
+    if (!isValidObjectId(id)) {
       throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
     }
 
-    const { PassageNoteTag } = await useMongooseModels();
+    const { passageNoteTags: tagRepository } = await useRepositories();
     const currentUser = await authCurrentUser(req);
 
-    const result = await PassageNoteTag.deleteOne({ owner: currentUser._id, _id: id });
-    if (result.deletedCount === 0) {
+    const deletedCount = await tagRepository.deleteByIdForOwner(currentUser.id, id);
+    if (deletedCount === 0) {
       throw new NotFoundError();
     }
 
-    res.json({ data: result.deletedCount } satisfies ApiResponse);
+    res.json({ data: deletedCount } satisfies ApiResponse);
   }
   catch (error) {
     next(error);

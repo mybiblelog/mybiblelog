@@ -1,11 +1,10 @@
 import express from 'express';
-import { type QueryFilter } from 'mongoose';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import authCurrentUser, { setAuthTokenCookie } from '../helpers/authCurrentUser';
-import useMongooseModels from '../../mongoose/useMongooseModels';
+import useRepositories from '../../repositories/useRepositories';
+import { generateUserJWT } from '../../repositories/user-auth';
 import deleteAccount from '../helpers/deleteAccount';
-import { IUser } from '../../mongoose/schemas/User';
 import { type ApiResponse } from '../response';
 import { InvalidRequestError, NotFoundError } from '../errors/http-errors';
 import { ApiErrorDetailCode } from '../errors/error-codes';
@@ -20,45 +19,19 @@ type PastWeekEngagementData = {
 };
 
 const getPastWeekEngagement = async () => {
-  const { User, LogEntry, PassageNote } = await useMongooseModels();
+  const { users, logEntries, passageNotes } = await useRepositories();
 
   const countNewUserAccountsForDate = async ({ date, hoursOffset = 0 }) => {
     // Convert the input date to a UTC start and end date, applying the hoursOffset
     const startDate = dayjs.utc(date).startOf('day').add(hoursOffset, 'hour').toDate();
     const endDate = dayjs.utc(date).endOf('day').add(hoursOffset, 'hour').toDate();
 
-    // Query the database directly
-    const count = await User.countDocuments({
-      createdAt: {
-        $gte: startDate,
-        $lte: endDate,
-      },
-    }).exec();
-
-    return count;
+    return users.countCreatedBetween(startDate, endDate);
   };
 
   const countUsersWithLogEntryForDate = async (date: string) => {
-    // Use aggregation to count distinct owners for the given date
-    const result = await LogEntry.aggregate([
-      {
-        // Match log entries by the exact date string
-        $match: { date },
-      },
-      {
-        // Group by owner to find unique owners
-        $group: {
-          _id: '$owner', // Group by owner
-        },
-      },
-      {
-        // Count the number of distinct owners
-        $count: 'uniqueOwners',
-      },
-    ]).exec();
-
-    // Return the count or 0 if no results
-    return result.length > 0 ? result[0].uniqueOwners : 0;
+    // Count distinct owners with a log entry on the exact date string
+    return logEntries.countDistinctOwnersOnDate(date);
   };
 
   const countUsersWithNoteForDate = async ({ date, hoursOffset = 0 }) => {
@@ -66,28 +39,7 @@ const getPastWeekEngagement = async () => {
     const startDate = dayjs.utc(date).startOf('day').add(hoursOffset, 'hour').toDate();
     const endDate = dayjs.utc(date).endOf('day').add(hoursOffset, 'hour').toDate();
 
-    // Use aggregation to count distinct owners
-    const result = await PassageNote.aggregate([
-      {
-        // Filter notes by the createdAt date range
-        $match: {
-          createdAt: { $gte: startDate, $lte: endDate },
-        },
-      },
-      {
-        // Group by the 'owner' field to count unique owners
-        $group: {
-          _id: '$owner', // Group by owner
-        },
-      },
-      {
-        // Count the number of distinct owners
-        $count: 'uniqueOwners',
-      },
-    ]).exec();
-
-    // Return the count or 0 if no results
-    return result.length > 0 ? result[0].uniqueOwners : 0;
+    return passageNotes.countDistinctOwnersCreatedBetween(startDate, endDate);
   };
 
   const getEngagementForDate = async (date: string) => {
@@ -217,15 +169,12 @@ const router = express.Router();
 // GET all feedback
 router.get('/admin/feedback', async (req, res, next) => {
   try {
-    const { Feedback } = await useMongooseModels();
+    const { feedback: feedbackRepository } = await useRepositories();
     await authCurrentUser(req, { adminOnly: true });
     const offset = Math.max(0, parseInt(req.query.offset as string) || 0);
     const limit = Math.min(100, Math.max(1, parseInt(req.query.limit as string) || 10));
-    const [size, feedback] = await Promise.all([
-      Feedback.countDocuments(),
-      Feedback.find().sort({ createdAt: -1 }).skip(offset).limit(limit).exec(),
-    ]);
-    res.json({ data: feedback, meta: { pagination: { offset, limit, size } } } satisfies ApiResponse);
+    const { results, total } = await feedbackRepository.listPaginated({ offset, limit });
+    res.json({ data: results, meta: { pagination: { offset, limit, size: total } } } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -460,7 +409,7 @@ const validateQuery = (query: {
 // GET list users
 router.get('/admin/users', async (req, res, next) => {
   try {
-    const { User } = await useMongooseModels();
+    const { users: userRepository } = await useRepositories();
     await authCurrentUser(req, { adminOnly: true });
     const query = validateQuery(req.query);
 
@@ -468,51 +417,13 @@ router.get('/admin/users', async (req, res, next) => {
       throw new InvalidRequestError();
     }
 
-    const filterQuery: QueryFilter<IUser> = {}; // all users
-
-    if (query.searchText) {
-      // Escape special regex characters to prevent injection
-      const escapedSearchText = query.searchText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      filterQuery.email = { $regex: escapedSearchText, $options: 'i' };
-    }
-
-    const sortQuery: Record<string, 1 | -1> = {
-      [query.sortOn]: query.sortDirection,
-    };
-
-    const users = await User
-      .aggregate([
-        { $match: filterQuery },
-        { $sort: sortQuery },
-        { $skip: query.offset },
-        { $limit: query.limit },
-        {
-          $addFields: {
-            id: '$_id',
-          },
-        },
-        {
-          $project: {
-            _id: 0,
-            __v: 0,
-            emailVerificationCode: 0,
-            newEmailVerificationCode: 0,
-            newEmailVerificationExpires: 0,
-            password: 0,
-            passwordResetCode: 0,
-            passwordResetExpires: 0,
-          },
-        },
-      ]);
-
-    // Count the total number of results for all applied filters
-    const totalResultCount = await User.countDocuments(filterQuery);
+    const { users, total } = await userRepository.listAdminUsers(query);
 
     const meta = {
       pagination: {
         offset: query.offset,
         limit: query.limit,
-        size: totalResultCount,
+        size: total,
       },
     };
 
@@ -579,13 +490,10 @@ router.get('/admin/users', async (req, res, next) => {
 // GET a user
 router.get('/admin/users/:email', async (req, res, next) => {
   try {
-    const { User } = await useMongooseModels();
+    const { users } = await useRepositories();
     await authCurrentUser(req, { adminOnly: true });
     const { email } = req.params;
-    const user = await User
-      .findOne({ email })
-      .select({ email: 1 })
-      .exec();
+    const user = await users.getAdminUserSummary(email);
     if (!user) {
       throw new NotFoundError();
     }
@@ -660,16 +568,16 @@ router.get('/admin/users/:email', async (req, res, next) => {
 // GET a JWT to login as a user
 router.get('/admin/users/:email/login', async (req, res, next) => {
   try {
-    const { User } = await useMongooseModels();
+    const { users } = await useRepositories();
     await authCurrentUser(req, { adminOnly: true });
     const { email } = req.params;
-    const user = await User.findOne({ email });
+    const user = await users.findByEmail(email);
 
     if (!user) {
       throw new NotFoundError();
     }
 
-    const token = user.generateJWT();
+    const token = generateUserJWT(user);
     setAuthTokenCookie(res, token);
     res.json({ data: { token } } satisfies ApiResponse);
   }
@@ -681,20 +589,20 @@ router.get('/admin/users/:email/login', async (req, res, next) => {
 // GET user stats
 router.get('/admin/users/:email/stats', async (req, res, next) => {
   try {
-    const { User, LogEntry, PassageNote, Feedback } = await useMongooseModels();
+    const { users, logEntries, passageNotes, feedback } = await useRepositories();
     await authCurrentUser(req, { adminOnly: true });
     const { email } = req.params;
-    const user = await User.findOne({ email }).select({ createdAt: 1 }).exec();
+    const user = await users.findByEmail(email);
     if (!user) {
       throw new NotFoundError();
     }
-    const userId = user._id;
-    const [logEntryCount, noteCount, feedbackCount, lastLogEntry, lastNote] = await Promise.all([
-      LogEntry.countDocuments({ owner: userId }),
-      PassageNote.countDocuments({ owner: userId }),
-      Feedback.countDocuments({ owner: userId }),
-      LogEntry.findOne({ owner: userId }).sort({ date: -1 }).select({ date: 1 }).exec(),
-      PassageNote.findOne({ owner: userId }).sort({ createdAt: -1 }).select({ createdAt: 1 }).exec(),
+    const userId = user.id;
+    const [logEntryCount, noteCount, feedbackCount, lastLogEntryDate, lastNoteDate] = await Promise.all([
+      logEntries.countByOwner(userId),
+      passageNotes.countByOwner(userId),
+      feedback.countByOwner(userId),
+      logEntries.findLatestEntryDate(userId),
+      passageNotes.findLatestCreatedAt(userId),
     ]);
     res.json({
       data: {
@@ -702,8 +610,8 @@ router.get('/admin/users/:email/stats', async (req, res, next) => {
         logEntryCount,
         noteCount,
         feedbackCount,
-        lastLogEntryDate: lastLogEntry?.date ?? null,
-        lastNoteDate: lastNote?.createdAt ?? null,
+        lastLogEntryDate,
+        lastNoteDate,
       },
     } satisfies ApiResponse);
   }

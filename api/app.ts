@@ -8,7 +8,6 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger';
 import config from './config';
 import apiRouter from './router/router';
-import mongooseErrorHandler from './router/middleware/mongoose-error-handler';
 import { ApiResponse } from './router/response';
 import { AppError } from './router/errors/app-error';
 import { InternalError } from './router/errors/internal-error';
@@ -141,9 +140,6 @@ const buildApp = (): express.Application => {
   app.use((req, res, next) => {
     next(new NotFoundError());
   });
-
-  // Handle recognized Mongoose validation errors
-  app.use(mongooseErrorHandler);
 
   // Handle any other errors
   const apiRouterErrorHandler = (err, req, res, next) => {
