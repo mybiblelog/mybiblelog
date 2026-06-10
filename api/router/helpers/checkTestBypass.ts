@@ -10,6 +10,12 @@ import { type Request} from 'express';
  * @returns {boolean}
  */
 const checkTestBypass = (req: Request): boolean => {
+  // Never honor the test bypass in production, even if a secret is configured.
+  // The bypass can skip rate limiting and grant admin on registration, so it
+  // must be impossible to trigger against a production deployment.
+  if (config.nodeEnv === 'production') {
+    return false;
+  }
   const testBypassSecret = config.testBypassSecret;
   if (!testBypassSecret) {
     return false;

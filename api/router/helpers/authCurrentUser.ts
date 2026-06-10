@@ -4,11 +4,12 @@ import useMongooseModels from '../../mongoose/useMongooseModels';
 import { type Request, type Response } from 'express';
 import { parseCookieHeader } from './parseCookieHeader';
 
-import type { UserDoc } from '../../mongoose/schemas/User';
+import { AUTH_TOKEN_TTL_DAYS, type UserDoc } from '../../mongoose/schemas/User';
 import { UnauthenticatedError, UnauthorizedError } from '../errors/http-errors';
 
 export const AUTH_COOKIE_NAME = 'auth_token';
-export const AUTH_COOKIE_MAX_AGE = 1000 * 60 * 60 * 24 * 30; // 30 days
+// Keep the cookie lifetime in sync with the JWT it carries
+export const AUTH_COOKIE_MAX_AGE = 1000 * 60 * 60 * 24 * AUTH_TOKEN_TTL_DAYS;
 
 const { jwtSecret, siteUrl } = config;
 const jwtIssuer = new URL(siteUrl).origin;

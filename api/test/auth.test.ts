@@ -370,20 +370,17 @@ describe('Auth routes', () => {
       await deleteTestUser(testUser);
     });
 
-    it('returns 404 for invalid email (no account found)', async () => {
+    it('returns generic success for an unknown email to prevent account enumeration', async () => {
       const response = await requestApi
         .post('/api/auth/reset-password')
         .set('x-test-bypass-secret', TEST_BYPASS_SECRET!)
         .send({
-          email: 'invalid-email',
+          email: 'unknown-account@example.com',
         });
-      expect(response.statusCode).toBe(404);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).not.toHaveProperty('data');
-      expect(response.body.error).toEqual({
-        code: 'not_found',
-        errors: [{ field: 'email', code: 'account_not_found' }],
-      });
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toHaveProperty('data');
+      expect(response.body).not.toHaveProperty('error');
+      expect(response.body.data).toEqual({ success: true });
     });
   });
 
