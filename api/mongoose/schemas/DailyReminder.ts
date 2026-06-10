@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import crypto from 'node:crypto';
+import { getNextOccurrence } from '../../repositories/reminder-schedule';
 
 export const DailyReminderSchema = new mongoose.Schema({
   owner: {
@@ -50,22 +51,11 @@ export const DailyReminderSchema = new mongoose.Schema({
      * When testing this code in a local timezone, the offset is not needed.
      */
     getNextOccurrence() {
-      // Use the UTC date minus 2 days to find a guaranteed past occurrence
-      // Then add 24 hours as needed until the time is in the future
-      const now = new Date();
-      const nextOccurrence = new Date(Date.UTC(
-        now.getUTCFullYear(),
-        now.getUTCMonth(),
-        now.getUTCDate() - 2,
-        this.hour,
-        this.minute + this.timezoneOffset,
-        0,
-        0,
-      ));
-      while (nextOccurrence.getTime() < new Date().getTime()) {
-        nextOccurrence.setHours(nextOccurrence.getHours() + 24);
-      }
-      return nextOccurrence;
+      return getNextOccurrence({
+        hour: this.hour,
+        minute: this.minute,
+        timezoneOffset: this.timezoneOffset,
+      });
     },
     toJSON() {
       const { _id, hour, minute, timezoneOffset, active } = this;

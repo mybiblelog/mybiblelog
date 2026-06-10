@@ -1,6 +1,6 @@
 import express from 'express';
 import authCurrentUser from '../helpers/authCurrentUser';
-import useMongooseModels from '../../mongoose/useMongooseModels';
+import useRepositories from '../../repositories/useRepositories';
 import { type ApiResponse } from '../response';
 import rateLimit from '../helpers/rateLimit';
 
@@ -93,24 +93,23 @@ router.post('/feedback', async (req, res, next) => {
     const ip = req.ip;
 
     // Get current user (optional)
-    const { Feedback } = await useMongooseModels();
+    const { feedback: feedbackRepository } = await useRepositories();
     const currentUser = await authCurrentUser(req, { optional: true });
 
     // If the user is logged in, we can associate the feedback with their account
-    const owner = currentUser?._id || null;
+    const ownerId = currentUser?.id || null;
 
     const { email, kind, message } = req.body;
 
-    const feedback = new Feedback({
+    const feedback = await feedbackRepository.create({
       ip,
-      owner,
+      ownerId,
       email,
       kind,
       message,
     });
 
-    await feedback.save();
-    res.status(201).send({ data: feedback.toJSON() } satisfies ApiResponse);
+    res.status(201).send({ data: feedback } satisfies ApiResponse);
   }
   catch (error) {
     next(error);

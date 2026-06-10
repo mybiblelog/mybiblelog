@@ -5,16 +5,13 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import config from '../../config';
 import { UserSettingsSchema } from './UserSettings';
+import { AUTH_TOKEN_TTL_DAYS } from '../../repositories/user-auth';
 
 const SALT_WORK_FACTOR = 10;
 
 // bcrypt only uses the first 72 bytes of a password; longer values would be
 // silently truncated, so we reject them at validation time instead.
 const BCRYPT_MAX_PASSWORD_BYTES = 72;
-
-// JWT lifetime; the auth cookie max age (authCurrentUser.ts) is derived from
-// this so the cookie and the token it carries expire together.
-export const AUTH_TOKEN_TTL_DAYS = 30;
 
 export const UserSchema = new mongoose.Schema({
   email: { type: String, lowercase: true, unique: true, required: [true, 'required'], match: [/^\S+@\S+\.\S+$/, 'is invalid'], index: true },

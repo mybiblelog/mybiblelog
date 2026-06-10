@@ -1,6 +1,8 @@
 import express from 'express';
 import authCurrentUser, { AUTH_COOKIE_NAME } from '../helpers/authCurrentUser';
 import deleteAccount from '../helpers/deleteAccount';
+import useRepositories from '../../repositories/useRepositories';
+import { type UserSettingsRecord } from '../../repositories/types';
 import { type ApiResponse } from '../response';
 import { InternalError } from '../errors/internal-error';
 
@@ -97,22 +99,24 @@ router.get('/settings', async (req, res, next) => {
  */
 router.put('/settings', async (req, res, next) => {
   try {
+    const { users } = await useRepositories();
     const currentUser = await authCurrentUser(req);
     const { settings } = req.body;
-    [
+    const patch: Partial<UserSettingsRecord> = {};
+    ([
       'dailyVerseCountGoal',
       'lookBackDate',
       'preferredBibleVersion',
       'startPage',
       'passageNoteTagSortOrder',
       'locale',
-    ].forEach((property) => {
+    ] as const).forEach((property) => {
       if (typeof settings[property] !== 'undefined') {
-        currentUser.settings![property] = settings[property];
+        patch[property] = settings[property];
       }
     });
-    await currentUser.save();
-    return res.json({ data: currentUser.settings } satisfies ApiResponse);
+    const updatedSettings = await users.updateSettings(currentUser.id, patch);
+    return res.json({ data: updatedSettings } satisfies ApiResponse);
   }
   catch (error) {
     next(error);

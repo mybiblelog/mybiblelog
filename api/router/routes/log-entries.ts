@@ -1,9 +1,9 @@
 import express from 'express';
-import { ObjectId } from 'mongodb';
 import { SimpleDate } from '@mybiblelog/shared';
 import authCurrentUser from '../helpers/authCurrentUser';
-import useMongooseModels from '../../mongoose/useMongooseModels';
-import { Types } from 'mongoose';
+import useRepositories from '../../repositories/useRepositories';
+import { isValidObjectId } from '../../repositories/ids';
+import { toLogEntryJSON } from '../../repositories/serializers';
 import { ApiErrorDetailCode } from '../errors/error-codes';
 import { type ApiResponse } from '../response';
 import { ValidationError } from '../errors/validation-errors';
@@ -85,7 +85,7 @@ const router = express.Router();
  */
 router.get('/log-entries', async (req, res, next) => {
   try {
-    const { LogEntry } = await useMongooseModels();
+    const { logEntries: logEntryRepository } = await useRepositories();
     const currentUser = await authCurrentUser(req);
     const { startDate, endDate } = req.query as { startDate: string; endDate: string };
 
@@ -97,23 +97,8 @@ router.get('/log-entries', async (req, res, next) => {
       throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'endDate' }]);
     }
 
-    if (!startDate && !endDate) {
-      const logEntries = await LogEntry.find({ owner: currentUser._id });
-      return res.json({ data: logEntries } satisfies ApiResponse);
-    }
-
-    if (startDate && !endDate) {
-      const logEntries = await LogEntry.find({ owner: currentUser._id, date: { $gte: startDate } });
-      return res.json({ data: logEntries } satisfies ApiResponse);
-    }
-
-    if (!startDate && endDate) {
-      const logEntries = await LogEntry.find({ owner: currentUser._id, date: { $lte: endDate } });
-      return res.json({ data: logEntries } satisfies ApiResponse);
-    }
-
-    const logEntries = await LogEntry.find({ owner: currentUser._id, date: { $gte: startDate, $lte: endDate } });
-    return res.json({ data: logEntries } satisfies ApiResponse);
+    const logEntries = await logEntryRepository.listByOwner(currentUser.id, { startDate, endDate });
+    return res.json({ data: logEntries.map(toLogEntryJSON) } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -163,18 +148,18 @@ router.get('/log-entries', async (req, res, next) => {
 router.get('/log-entries/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (!ObjectId.isValid(id)) {
+    if (!isValidObjectId(id)) {
       throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
     }
 
-    const { LogEntry } = await useMongooseModels();
+    const { logEntries } = await useRepositories();
     const currentUser = await authCurrentUser(req);
 
-    const logEntry = await LogEntry.findOne({ owner: currentUser._id, _id: id });
+    const logEntry = await logEntries.findByIdForOwner(currentUser.id, id);
     if (!logEntry) {
       throw new NotFoundError();
     }
-    res.json({ data: logEntry.toJSON() } satisfies ApiResponse);
+    res.json({ data: toLogEntryJSON(logEntry) } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -228,20 +213,13 @@ router.get('/log-entries/:id', async (req, res, next) => {
  */
 router.post('/log-entries', async (req, res, next) => {
   try {
-    const { LogEntry } = await useMongooseModels();
+    const { logEntries } = await useRepositories();
     const currentUser = await authCurrentUser(req);
-    const logEntry = new LogEntry(req.body);
-    logEntry.owner = new Types.ObjectId(currentUser._id);
+    const { date, startVerseId, endVerseId } = req.body;
 
-    try {
-      await logEntry.validate();
-    }
-    catch (error) {
-      throw new ValidationError();
-    }
-    await logEntry.save();
+    const logEntry = await logEntries.create(currentUser.id, { date, startVerseId, endVerseId });
 
-    res.json({ data: logEntry.toJSON() } satisfies ApiResponse);
+    res.json({ data: toLogEntryJSON(logEntry) } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -305,32 +283,20 @@ router.post('/log-entries', async (req, res, next) => {
 router.put('/log-entries/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (!ObjectId.isValid(id)) {
+    if (!isValidObjectId(id)) {
       throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
     }
 
-    const { LogEntry } = await useMongooseModels();
+    const { logEntries } = await useRepositories();
     const currentUser = await authCurrentUser(req);
     const { date, startVerseId, endVerseId } = req.body;
 
-    const logEntry = await LogEntry.findOne({ owner: currentUser._id, _id: id });
+    const logEntry = await logEntries.update(currentUser.id, id, { date, startVerseId, endVerseId });
     if (!logEntry) {
       throw new NotFoundError();
     }
 
-    if (date) { logEntry.date = date; }
-    if (startVerseId) { logEntry.startVerseId = startVerseId; }
-    if (endVerseId) { logEntry.endVerseId = endVerseId; }
-
-    try {
-      await logEntry.validate();
-    }
-    catch (error) {
-      throw new ValidationError();
-    }
-    await logEntry.save();
-
-    res.json({ data: logEntry.toJSON() } satisfies ApiResponse);
+    res.json({ data: toLogEntryJSON(logEntry) } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -381,19 +347,19 @@ router.put('/log-entries/:id', async (req, res, next) => {
 router.delete('/log-entries/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (!ObjectId.isValid(id)) {
+    if (!isValidObjectId(id)) {
       throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
     }
 
-    const { LogEntry } = await useMongooseModels();
+    const { logEntries } = await useRepositories();
     const currentUser = await authCurrentUser(req);
 
-    const result = await LogEntry.deleteOne({ owner: currentUser._id, _id: id });
-    if (result.deletedCount === 0) {
+    const deletedCount = await logEntries.deleteByIdForOwner(currentUser.id, id);
+    if (deletedCount === 0) {
       throw new NotFoundError();
     }
 
-    res.json({ data: result.deletedCount } satisfies ApiResponse);
+    res.json({ data: deletedCount } satisfies ApiResponse);
   }
   catch (error) {
     next(error);

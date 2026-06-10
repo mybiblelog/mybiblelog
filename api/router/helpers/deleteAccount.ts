@@ -1,17 +1,17 @@
-import useMongooseModels from '../../mongoose/useMongooseModels';
+import useRepositories from '../../repositories/useRepositories';
 
 const deleteAccount = async (email: string): Promise<boolean> => {
   try {
-    const { User, LogEntry, PassageNote, PassageNoteTag, DailyReminder } = await useMongooseModels();
-    const user = await User.findOne({ email });
+    const { users, logEntries, passageNotes, passageNoteTags, dailyReminders } = await useRepositories();
+    const user = await users.findByEmail(email);
     if (!user) {
       return false;
     }
-    await LogEntry.deleteMany({ owner: user._id });
-    await PassageNote.deleteMany({ owner: user._id });
-    await PassageNoteTag.deleteMany({ owner: user._id });
-    await DailyReminder.deleteMany({ owner: user._id });
-    await User.deleteOne({ _id: user._id });
+    await logEntries.deleteAllByOwner(user.id);
+    await passageNotes.deleteAllByOwner(user.id);
+    await passageNoteTags.deleteAllByOwner(user.id);
+    await dailyReminders.deleteAllByOwner(user.id);
+    await users.deleteById(user.id);
     return true;
   }
   catch (error) {

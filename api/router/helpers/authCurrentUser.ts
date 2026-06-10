@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken';
 import config from '../../config';
-import useMongooseModels from '../../mongoose/useMongooseModels';
+import useRepositories from '../../repositories/useRepositories';
 import { type Request, type Response } from 'express';
 import { parseCookieHeader } from './parseCookieHeader';
 
-import { AUTH_TOKEN_TTL_DAYS, type UserDoc } from '../../mongoose/schemas/User';
+import { AUTH_TOKEN_TTL_DAYS } from '../../repositories/user-auth';
+import { type UserRecord } from '../../repositories/types';
 import { UnauthenticatedError, UnauthorizedError } from '../errors/http-errors';
 
 export const AUTH_COOKIE_NAME = 'auth_token';
@@ -45,20 +46,20 @@ const getTokenFromHeader = (req: Request): string | null => {
 
 async function authCurrentUser(
   req: Request,
-): Promise<UserDoc>;
+): Promise<UserRecord>;
 
 async function authCurrentUser(
   req: Request,
   opts: { optional?: false; adminOnly?: boolean }
-): Promise<UserDoc>;
+): Promise<UserRecord>;
 
 async function authCurrentUser(
   req: Request,
   opts: { optional: true; adminOnly?: boolean }
-): Promise<UserDoc | null>;
+): Promise<UserRecord | null>;
 
-async function authCurrentUser(req: Request, { optional = false, adminOnly = false } = {}): Promise<UserDoc | null> {
-  const { User } = await useMongooseModels();
+async function authCurrentUser(req: Request, { optional = false, adminOnly = false } = {}): Promise<UserRecord | null> {
+  const { users } = await useRepositories();
 
   const token = getTokenFromHeader(req);
   if (!token) {
@@ -105,7 +106,7 @@ async function authCurrentUser(req: Request, { optional = false, adminOnly = fal
     return null;
   }
 
-  const user: UserDoc | null = await User.findById(userId);
+  const user: UserRecord | null = await users.findById(String(userId));
   if (!user) {
     // We throw an error even when optional because the token is expired
     // and the client will need to re-authenticate. (Or the account was deleted.)

@@ -1,10 +1,10 @@
 import express from 'express';
-import { ObjectId } from 'mongodb';
 import authCurrentUser from '../helpers/authCurrentUser';
 import { Bible } from '@mybiblelog/shared';
-import useMongooseModels from '../../mongoose/useMongooseModels';
-import { QueryFilter, Types } from 'mongoose';
-import { IPassageNote } from '../../mongoose/schemas/PassageNote';
+import useRepositories from '../../repositories/useRepositories';
+import { isValidObjectId } from '../../repositories/ids';
+import { toPassageNoteJSON } from '../../repositories/serializers';
+import { type PassageNoteSearchQuery } from '../../repositories/types';
 import { ApiErrorDetailCode } from '../errors/error-codes';
 import { type ApiResponse } from '../response';
 import { ValidationError } from '../errors/validation-errors';
@@ -77,34 +77,19 @@ const router = express.Router();
  *           description: The list of passage notes
  */
 
-const validateTags = async (tagIds, owner) => {
-  const { PassageNoteTag } = await useMongooseModels();
-  for (const tagId of tagIds) {
-    // Reject anything that isn't a valid ObjectId to avoid query injection
-    if (!ObjectId.isValid(tagId)) {
-      return false;
-    }
-    // Scope the lookup to the requesting user so notes cannot reference
-    // tags owned by other users.
-    const count = await PassageNoteTag.countDocuments({ _id: tagId, owner });
-    if (!count) {
-      return false;
-    }
-  }
-  return true;
+const validateTags = async (tagIds: string[], ownerId: string) => {
+  const { passageNoteTags } = await useRepositories();
+  // Scope the lookup to the requesting user so notes cannot reference
+  // tags owned by other users.
+  return passageNoteTags.ownsAll(ownerId, tagIds);
 };
 
-type ValidatedQuery = {
-  limit: number;
-  offset: number;
-  sortOn: string;
-  sortDirection: 1 | -1;
-  filterTags: ObjectId[];
-  filterTagMatching: 'any' | 'all' | 'exact';
-  searchText: string;
-  filterPassageStartVerseId: number;
-  filterPassageEndVerseId: number;
-  filterPassageMatching: 'inclusive' | 'exclusive';
+// Normalizes the `tags` request body value into an array of id strings
+const normalizeTagIds = (tags: unknown): string[] => {
+  if (Array.isArray(tags)) {
+    return tags.map(String);
+  }
+  return tags ? [String(tags)] : [];
 };
 
 /**
@@ -117,7 +102,7 @@ const validateQuery = (query) => {
   const MAX_PAGE_SIZE = 50;
 
   // default query values
-  const validated: ValidatedQuery = {
+  const validated: PassageNoteSearchQuery = {
     limit: 10, // default page size
     offset: 0,
     sortOn: 'createdAt',
@@ -212,8 +197,8 @@ const validateQuery = (query) => {
   if (query.filterTags.length) {
     for (const filterTag of query.filterTags) {
       // ensure each value is a valid ObjectId
-      if (ObjectId.isValid(filterTag)) {
-        validated.filterTags.push(new ObjectId(filterTag));
+      if (isValidObjectId(filterTag)) {
+        validated.filterTags.push(String(filterTag));
       }
     }
   }
@@ -345,7 +330,7 @@ const validateQuery = (query) => {
  */
 router.get('/passage-notes', async (req, res, next) => {
   try {
-    const { PassageNote } = await useMongooseModels();
+    const { passageNotes } = await useRepositories();
     const currentUser = await authCurrentUser(req);
     const query = validateQuery(req.query);
 
@@ -353,84 +338,15 @@ router.get('/passage-notes', async (req, res, next) => {
       throw new InvalidRequestError();
     }
 
-    const filterQuery: QueryFilter<IPassageNote> = {
-      owner: currentUser._id,
-    };
-
-    if (query.filterTags.length || query.filterTagMatching === 'exact') {
-      if (query.filterTagMatching === 'any') {
-        filterQuery.tags = {
-          $in: query.filterTags,
-        };
-      }
-      else if (query.filterTagMatching === 'all') {
-        filterQuery.tags = {
-          $all: query.filterTags,
-        };
-      }
-      else if (query.filterTagMatching === 'exact') {
-        filterQuery.tags = query.filterTags;
-      }
-    }
-
-    if (query.filterPassageStartVerseId && query.filterPassageEndVerseId) {
-      if (query.filterPassageMatching === 'inclusive') {
-        filterQuery.passages = {
-          $elemMatch: {
-            startVerseId: { $lte: query.filterPassageEndVerseId },
-            endVerseId: { $gte: query.filterPassageStartVerseId },
-          },
-        };
-      }
-      else if (query.filterPassageMatching === 'exclusive') {
-        filterQuery.passages = {
-          $elemMatch: {
-            startVerseId: { $gte: query.filterPassageStartVerseId },
-            endVerseId: { $lte: query.filterPassageEndVerseId },
-          },
-        };
-      }
-    }
-
-    if (query.searchText) {
-      filterQuery.$text = {
-        $search: query.searchText,
-      };
-    }
-
-    const sortQuery: Record<string, 1 | -1> = {
-      [query.sortOn]: query.sortDirection,
-    };
-
-    const passageNotes = await PassageNote
-      .aggregate([
-        { $match: filterQuery },
-        { $sort: sortQuery },
-        { $skip: query.offset },
-        { $limit: query.limit },
-        {
-          $addFields: {
-            id: '$_id',
-          },
-        },
-        {
-          $project: {
-            _id: 0,
-            __v: 0,
-            owner: 0,
-          },
-        },
-      ]);
-
-    const totalResultCount = await PassageNote.countDocuments(filterQuery);
+    const { results, total } = await passageNotes.search(currentUser.id, query);
 
     const response = {
-      data: passageNotes,
+      data: results,
       meta: {
         pagination: {
           offset: query.offset,
           limit: query.limit,
-          size: totalResultCount,
+          size: total,
         },
       },
     };
@@ -485,18 +401,18 @@ router.get('/passage-notes', async (req, res, next) => {
 router.get('/passage-notes/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (!ObjectId.isValid(id)) {
+    if (!isValidObjectId(id)) {
       throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
     }
 
-    const { PassageNote } = await useMongooseModels();
+    const { passageNotes } = await useRepositories();
     const currentUser = await authCurrentUser(req);
 
-    const passageNote = await PassageNote.findOne({ owner: currentUser._id, _id: id });
+    const passageNote = await passageNotes.findByIdForOwner(currentUser.id, id);
     if (!passageNote) {
       throw new NotFoundError();
     }
-    res.json({ data: passageNote.toJSON() } satisfies ApiResponse);
+    res.json({ data: toPassageNoteJSON(passageNote) } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -561,26 +477,20 @@ router.get('/passage-notes/:id', async (req, res, next) => {
  */
 router.post('/passage-notes', async (req, res, next) => {
   try {
-    const { PassageNote } = await useMongooseModels();
+    const { passageNotes } = await useRepositories();
     const currentUser = await authCurrentUser(req);
-    const passageNote = new PassageNote(req.body);
+    const { content, passages } = req.body;
+    const tags = normalizeTagIds(req.body.tags);
 
     // validate that all tags exist and belong to the current user
-    const tagsValid = await validateTags(passageNote.tags, currentUser._id);
+    const tagsValid = await validateTags(tags, currentUser.id);
     if (!tagsValid) {
       throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'tags' }]);
     }
 
-    passageNote.owner = new Types.ObjectId(currentUser._id);
-    try {
-      await passageNote.validate();
-    }
-    catch (error) {
-      throw new ValidationError();
-    }
-    await passageNote.save();
+    const passageNote = await passageNotes.create(currentUser.id, { content, passages, tags });
 
-    res.json({ data: passageNote.toJSON() } satisfies ApiResponse);
+    res.json({ data: toPassageNoteJSON(passageNote) } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -656,38 +566,35 @@ router.post('/passage-notes', async (req, res, next) => {
 router.put('/passage-notes/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (!ObjectId.isValid(id)) {
+    if (!isValidObjectId(id)) {
       throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
     }
 
-    const { PassageNote } = await useMongooseModels();
+    const { passageNotes } = await useRepositories();
     const currentUser = await authCurrentUser(req);
     const { content, passages, tags } = req.body;
 
-    const passageNote = await PassageNote.findOne({ owner: currentUser._id, _id: id });
+    const existingNote = await passageNotes.findByIdForOwner(currentUser.id, id);
+    if (!existingNote) {
+      throw new NotFoundError();
+    }
+
+    let tagIds: string[] | undefined;
+    if (tags) {
+      tagIds = normalizeTagIds(tags);
+      // validate that all tags exist and belong to the current user
+      const tagsValid = await validateTags(tagIds, currentUser.id);
+      if (!tagsValid) {
+        throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'tags' }]);
+      }
+    }
+
+    const passageNote = await passageNotes.update(currentUser.id, id, { content, passages, tags: tagIds });
     if (!passageNote) {
       throw new NotFoundError();
     }
 
-    if (typeof content === 'string') { passageNote.content = content; }
-    if (passages) { passageNote.passages = passages; }
-    if (tags) {
-      // validate that all tags exist and belong to the current user
-      const tagsValid = await validateTags(tags, currentUser._id);
-      if (!tagsValid) {
-        throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'tags' }]);
-      }
-      passageNote.tags = tags;
-    }
-    try {
-      await passageNote.validate();
-    }
-    catch (error) {
-      throw new ValidationError();
-    }
-    await passageNote.save();
-
-    res.json({ data: passageNote.toJSON() } satisfies ApiResponse);
+    res.json({ data: toPassageNoteJSON(passageNote) } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -738,19 +645,19 @@ router.put('/passage-notes/:id', async (req, res, next) => {
 router.delete('/passage-notes/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (!ObjectId.isValid(id)) {
+    if (!isValidObjectId(id)) {
       throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
     }
 
-    const { PassageNote } = await useMongooseModels();
+    const { passageNotes } = await useRepositories();
     const currentUser = await authCurrentUser(req);
 
-    const result = await PassageNote.deleteOne({ owner: currentUser._id, _id: id });
-    if (result.deletedCount === 0) {
+    const deletedCount = await passageNotes.deleteByIdForOwner(currentUser.id, id);
+    if (deletedCount === 0) {
       throw new NotFoundError();
     }
 
-    res.json({ data: result.deletedCount } satisfies ApiResponse);
+    res.json({ data: deletedCount } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -784,62 +691,12 @@ router.delete('/passage-notes/:id', async (req, res, next) => {
 // GET passage note book counts
 router.get('/passage-notes/count/books', async (req, res, next) => {
   try {
-    const { PassageNote } = await useMongooseModels();
+    const { passageNotes } = await useRepositories();
     const currentUser = await authCurrentUser(req);
 
-    const facetQuery = {};
-    const projectQuery = {};
+    const bookCounts = await passageNotes.countByBook(currentUser.id);
 
-    for (const book of Bible.getBooks()) {
-      const { bibleOrder } = book;
-
-      const firstVerseId = Bible.getFirstBookVerseId(bibleOrder);
-      const lastVerseId = Bible.getLastBookVerseId(bibleOrder);
-      facetQuery[bibleOrder] = [
-        {
-          $match: {
-            passages: {
-              $elemMatch: {
-                startVerseId: { $gte: firstVerseId },
-                endVerseId: { $lte: lastVerseId },
-              },
-            },
-          },
-        },
-        {
-          $count: 'count',
-        },
-      ];
-
-      projectQuery[bibleOrder] = {
-        $cond: [
-          {
-            $eq: [
-              { $size: `$${bibleOrder}` },
-              0,
-            ],
-          },
-          0,
-          { $arrayElemAt: [`$${bibleOrder}.count`, 0] },
-        ],
-      };
-    }
-
-    const result = await PassageNote.aggregate([
-      {
-        $match: {
-          owner: currentUser._id,
-        },
-      },
-      {
-        $facet: facetQuery,
-      },
-      {
-        $project: projectQuery,
-      },
-    ]);
-
-    res.json({ data: result[0] } satisfies ApiResponse);
+    res.json({ data: bookCounts } satisfies ApiResponse);
   }
   catch (error) {
     next(error);

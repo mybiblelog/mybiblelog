@@ -1,6 +1,7 @@
 import express from 'express';
 import authCurrentUser from '../helpers/authCurrentUser';
-import useMongooseModels from '../../mongoose/useMongooseModels';
+import useRepositories from '../../repositories/useRepositories';
+import { toDailyReminderJSON } from '../../repositories/serializers';
 import { type ApiResponse } from '../response';
 import { NotFoundError } from '../errors/http-errors';
 import config from '../../config';
@@ -80,12 +81,8 @@ router.get('/reminders/daily-reminder/track/:token', async (req, res, next) => {
     const { to } = req.query;
     const redirectTo = getSafeDailyReminderRedirectUrl(to);
 
-    const { DailyReminder } = await useMongooseModels();
-    const reminder = await DailyReminder.findOne({ publicToken: token });
-    if (reminder) {
-      reminder.lastEmailEngagementAt = new Date();
-      await reminder.save();
-    }
+    const { dailyReminders } = await useRepositories();
+    await dailyReminders.recordEngagement(token);
 
     return res.redirect(redirectTo);
   }
@@ -93,31 +90,6 @@ router.get('/reminders/daily-reminder/track/:token', async (req, res, next) => {
     next(error);
   }
 });
-
-/**
- * Returns the single daily reminder for the given user,
- * first creating it if necessary.
- * The reminder time defaults to 12:00 noon, and will be in UTC
- * until the user updates it.
- * This is OK since it won't be active until the user updates it.
- * @param {*} currentUser the __id of the current user
- */
-const getUserReminder = async (currentUser) => {
-  const { DailyReminder } = await useMongooseModels();
-  let reminder = await DailyReminder.findOne({ owner: currentUser });
-  if (!reminder) {
-    reminder = new DailyReminder({
-      owner: currentUser,
-      hour: 12,
-      minute: 0,
-      timezoneOffset: 0,
-      nextOccurrence: Date.now(),
-      active: false,
-    });
-    await reminder.save();
-  }
-  return reminder;
-};
 
 /**
  * @swagger
@@ -142,9 +114,10 @@ const getUserReminder = async (currentUser) => {
  */
 router.get('/reminders/daily-reminder', async (req, res, next) => {
   try {
+    const { dailyReminders } = await useRepositories();
     const currentUser = await authCurrentUser(req);
-    const reminder = await getUserReminder(currentUser);
-    return res.json({ data: reminder.toJSON() } satisfies ApiResponse);
+    const reminder = await dailyReminders.getOrCreateForOwner(currentUser.id);
+    return res.json({ data: toDailyReminderJSON(reminder) } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -193,21 +166,11 @@ router.get('/reminders/daily-reminder', async (req, res, next) => {
  */
 router.put('/reminders/daily-reminder', async (req, res, next) => {
   try {
+    const { dailyReminders } = await useRepositories();
     const currentUser = await authCurrentUser(req);
-    const update = req.body;
-    const reminder = await getUserReminder(currentUser);
-    [
-      'hour',
-      'minute',
-      'timezoneOffset',
-      'active',
-    ].forEach((property) => {
-      if (typeof update[property] !== 'undefined') {
-        reminder[property] = update[property];
-      }
-    });
-    await reminder.save();
-    res.json({ data: reminder.toJSON() } satisfies ApiResponse);
+    const { hour, minute, timezoneOffset, active } = req.body;
+    const reminder = await dailyReminders.updateForOwner(currentUser.id, { hour, minute, timezoneOffset, active });
+    res.json({ data: toDailyReminderJSON(reminder) } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -252,20 +215,17 @@ router.put('/reminders/daily-reminder', async (req, res, next) => {
  */
 router.put('/reminders/daily-reminder/unsubscribe/:token', async (req, res) => {
   const { token } = req.params;
-  const { DailyReminder, User } = await useMongooseModels();
+  const { dailyReminders, users } = await useRepositories();
 
-  const reminder = await DailyReminder.findOne({ publicToken: token });
+  const reminder = await dailyReminders.deactivateByPublicToken(token);
   if (!reminder) {
     throw new NotFoundError();
   }
 
-  const user = await User.findOne({ _id: reminder.owner });
+  const user = await users.findById(reminder.ownerId);
   if (!user) {
     throw new NotFoundError();
   }
-
-  reminder.active = false;
-  await reminder.save();
 
   return res.json({ data: { email: user.email } } satisfies ApiResponse);
 });
