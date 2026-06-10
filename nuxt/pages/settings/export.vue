@@ -10,7 +10,7 @@
     </h2>
     <p>{{ $t('reading_log.info.1') }}</p>
     <p>{{ $t('reading_log.info.2') }}</p>
-    <button class="mbl-button mbl-button--primary" @click="downloadLogEntriesCSV">
+    <button class="mbl-button mbl-button--primary" data-testid="export-log-csv-button" @click="downloadLogEntriesCSV">
       {{ $t('reading_log.cta') }}
     </button>
     <hr>
@@ -27,7 +27,7 @@
     </h2>
     <p>{{ $t('notes_text_file.info') }}</p>
     <p>
-      <button class="mbl-button mbl-button--primary" @click="downloadNotesTextFile">
+      <button class="mbl-button mbl-button--primary" data-testid="export-notes-text-button" @click="downloadNotesTextFile">
         {{ $t('notes_text_file.cta') }}
       </button>
     </p>
@@ -36,7 +36,7 @@
     </h2>
     <p>{{ $t('notes_json_file.info') }}</p>
     <p>
-      <button class="mbl-button mbl-button--primary" @click="downloadNotesJsonFile">
+      <button class="mbl-button mbl-button--primary" data-testid="export-notes-json-button" @click="downloadNotesJsonFile">
         {{ $t('notes_json_file.cta') }}
       </button>
     </p>
@@ -44,7 +44,9 @@
 </template>
 
 <script>
-import * as csv from 'csv';
+// Import csv-stringify directly: the `csv` meta-package also loads csv-generate,
+// which crashes in strict-mode browser bundles ("Generator is not defined").
+import stringify from 'csv-stringify';
 import * as dayjs from 'dayjs';
 import { Bible } from '@mybiblelog/shared';
 import { UnknownApiError } from '~/helpers/api-error';
@@ -106,7 +108,7 @@ export default {
     },
     generateCSVFromLogEntries(logEntries) {
       return new Promise((resolve, reject) => {
-        const stringifier = csv.stringify({ delimiter });
+        const stringifier = stringify({ delimiter });
         const data = [];
         stringifier.on('readable', () => {
           let row;

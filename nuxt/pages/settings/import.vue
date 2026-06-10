@@ -6,7 +6,7 @@
     <p>{{ $t('you_can_import_a_csv') }}</p>
     <div class="mbl-file-block">
       <label class="mbl-file">
-        <input class="mbl-file__input" type="file" multiple="multiple" @change="uploadCSVFilesChange">
+        <input class="mbl-file__input" type="file" multiple="multiple" data-testid="import-file-input" @change="uploadCSVFilesChange">
         <span class="mbl-file__cta">
           <span class="mbl-file__text">{{ $t('choose_a_file') }}</span>
         </span>
@@ -44,7 +44,7 @@
             {{ $t('no_log_entries_to_show') }}
           </td>
         </tr>
-        <tr v-for="entry in importLogEntries" :key="entry.id">
+        <tr v-for="entry in importLogEntries" :key="entry.id" data-testid="import-row">
           <td>{{ entry.date }}</td>
           <td>
             <span v-if="entry.startVerseId !== null">
@@ -52,7 +52,9 @@
             </span>
             <span v-else>{{ entry.verseRange }}</span>
           </td>
-          <td>{{ entry.status }}</td>
+          <td data-testid="import-row-status">
+            {{ entry.status }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -60,7 +62,9 @@
 </template>
 
 <script>
-import * as csv from 'csv';
+// Import csv-parse directly: the `csv` meta-package also loads csv-generate,
+// which crashes in strict-mode browser bundles ("Generator is not defined").
+import parse from 'csv-parse';
 import { Bible, SimpleDate, displayDate } from '@mybiblelog/shared';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntriesStore } from '~/stores/log-entries';
@@ -122,7 +126,7 @@ export default {
     },
     parseCsv(csvText) {
       return new Promise((resolve, reject) => {
-        const parser = csv.parse({ delimiter });
+        const parser = parse({ delimiter });
         const output = [];
         parser.on('readable', () => {
           let record;

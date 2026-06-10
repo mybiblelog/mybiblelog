@@ -2,6 +2,7 @@
   <div v-if="authStore.loggedIn" class="no-print">
     <button
       class="floating-action-button"
+      data-testid="floating-feedback-button"
       :aria-label="$t('floating_action_button.give_feedback')"
       @click="openModal"
     >

@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="handleSubmit">
+  <form data-testid="note-editor" @submit.prevent="handleSubmit">
     <div v-if="errors._form" class="mbl-help mbl-help--danger">
       <div class="mbl-help mbl-help--danger">
         {{ $terr(errors._form) }}
@@ -7,7 +7,7 @@
     </div>
     <div class="mbl-field passages-title">
       <label class="mbl-label">{{ $t('passages') }}</label>
-      <button class="mbl-button mbl-button--primary mbl-button--sm" :disabled="editingPassage > -1" @click.prevent="addPassage">
+      <button class="mbl-button mbl-button--primary mbl-button--sm" data-testid="note-editor-add-passage" :disabled="editingPassage > -1" @click.prevent="addPassage">
         {{ $t('add_passage') }}
       </button>
     </div>
@@ -46,7 +46,14 @@
     <div class="mbl-field">
       <label class="mbl-label">{{ $t('content') }}</label>
       <div class="mbl-control">
-        <textarea :value="passageNote.content" class="mbl-textarea" :disabled="editingPassage > -1" maxlength="3000" @input="updateContent" />
+        <textarea
+          :value="passageNote.content"
+          class="mbl-textarea"
+          data-testid="note-editor-content"
+          :disabled="editingPassage > -1"
+          maxlength="3000"
+          @input="updateContent"
+        />
         <p v-if="errors.content" class="mbl-help mbl-help--danger">
           {{ errors.content }}
         </p>
@@ -69,7 +76,7 @@
           </em>
         </div>
         <div class="passage-note-editor-tags__actions">
-          <button class="mbl-button mbl-button--sm" type="button" @click.prevent="openManageTags">
+          <button class="mbl-button mbl-button--sm" type="button" data-testid="note-editor-manage-tags" @click.prevent="openManageTags">
             {{ $t('manage_tags') }}
           </button>
         </div>

@@ -1,5 +1,12 @@
 <template>
-  <button class="chapter-report" @click="openActionSheet">
+  <button
+    class="chapter-report"
+    data-testid="book-report-chapter"
+    :data-chapter="report.chapterIndex"
+    :data-verses-read="report.versesRead"
+    :data-total-verses="report.totalVerses"
+    @click="openActionSheet"
+  >
     <div class="chapter-report--indicator">
       <div class="chapter-report--indicator--icon">
         <star-icon width="100%" height="100%" :fill="report.percentage == 100 ? 'var(--mbl-star-earned)' : 'var(--mbl-star-unearned)'" />

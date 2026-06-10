@@ -13,7 +13,14 @@
         {{ $terr(errors.label, { field: $t('label') }) }}
       </div>
       <div class="mbl-control">
-        <input :value="passageNoteTag.label" class="mbl-input" type="text" maxlength="32" @input="updateLabel">
+        <input
+          :value="passageNoteTag.label"
+          class="mbl-input"
+          type="text"
+          maxlength="32"
+          data-testid="tag-editor-label"
+          @input="updateLabel"
+        >
       </div>
     </div>
     <div class="mbl-field">
@@ -21,7 +28,7 @@
         {{ $t('color') }}
       </div>
       <div class="mbl-control">
-        <input :value="passageNoteTag.color" class="mbl-input" type="color" @input="updateColor">
+        <input :value="passageNoteTag.color" class="mbl-input" type="color" data-testid="tag-editor-color" @input="updateColor">
       </div>
     </div>
     <div class="mbl-field">
@@ -29,7 +36,7 @@
         {{ $t('description') }}
       </div>
       <div class="mbl-control">
-        <textarea :value="passageNoteTag.description" class="mbl-textarea" maxlength="1500" @input="updateDescription" />
+        <textarea :value="passageNoteTag.description" class="mbl-textarea" maxlength="1500" data-testid="tag-editor-description" @input="updateDescription" />
       </div>
     </div>
     <!-- ensures property will be computed because it is accessed-->

@@ -4,17 +4,17 @@
       <busy-bar :busy="dateVerseCountsBusy" />
       <div id="calendar-page">
         <calendar-month :get-date-verse-counts="getDateVerseCounts" :daily-verse-count-goal="userSettings.dailyVerseCountGoal" @daySelected="selectDate" />
-        <div v-if="currentDate" class="entry-container">
+        <div v-if="currentDate" class="entry-container" data-testid="calendar-day-entries" :data-date="entryDate.date">
           <div class="entry-date">
             <div>
-              <div class="date">
+              <div class="date" data-testid="calendar-selected-date">
                 {{ displayDate(entryDate.date) }}
               </div>
-              <div class="verse-count">
+              <div class="verse-count" data-testid="calendar-selected-verse-count" :data-verse-count="entryDate.verses">
                 {{ entryDate.verses }} {{ $tc('verse', entryDate.verses) }}
               </div>
             </div>
-            <button class="mbl-button mbl-button--sm calendar-page__add-entry-button" @click="openAddEntryFormForDate(entryDate.date)">
+            <button class="mbl-button mbl-button--sm calendar-page__add-entry-button" data-testid="calendar-add-entry" @click="openAddEntryFormForDate(entryDate.date)">
               +
             </button>
           </div>

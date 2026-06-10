@@ -1,6 +1,6 @@
 <template>
-  <div class="passage-note" :class="{ 'empty': empty }">
-    <div class="passage-note--passages">
+  <div class="passage-note" data-testid="passage-note" :class="{ 'empty': empty }">
+    <div class="passage-note--passages" data-testid="passage-note-passages">
       <ul>
         <li v-for="passage in note.passages" :key="passage.id">
           <a :href="readingUrl(passage)" target="_blank">
@@ -12,10 +12,10 @@
     <div class="passage-note--created-date">
       <span class="mbl-text-muted mbl-text-small" :title="displayDateTime(note.createdAt)">{{ displayTimeSince(note.createdAt) }}</span>
     </div>
-    <div class="passage-note--content">
+    <div class="passage-note--content" data-testid="passage-note-content">
       <hyperlinked-text :text="note.content" />
     </div>
-    <div class="passage-note--tags">
+    <div class="passage-note--tags" data-testid="passage-note-tags">
       <passage-note-tag-pill v-for="tag in populatedTags(note.tags)" :key="tag.id" :tag="tag" />
     </div>
     <div class="passage-note--controls">
