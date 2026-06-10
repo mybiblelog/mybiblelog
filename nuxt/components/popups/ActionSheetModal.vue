@@ -23,6 +23,7 @@
           v-for="action in actions"
           :key="action.label"
           class="action-sheet-item"
+          data-testid="action-sheet-item"
           @click="handleAction(action)"
         >
           {{ action.label }}

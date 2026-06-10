@@ -8,10 +8,17 @@
     </h3>
     <div class="mbl-field mbl-field--addons">
       <div class="mbl-control">
-        <input v-model="userSettingsForm.dailyVerseCountGoal" class="mbl-input" type="number" min="1" max="1111">
+        <input
+          v-model="userSettingsForm.dailyVerseCountGoal"
+          class="mbl-input"
+          type="number"
+          min="1"
+          max="1111"
+          data-testid="settings-daily-goal-input"
+        >
       </div>
       <div class="mbl-control">
-        <a class="mbl-button mbl-button--primary" @click="handleDailyVerseCountGoalSubmit">{{ $t('save') }}</a>
+        <a class="mbl-button mbl-button--primary" data-testid="settings-daily-goal-save" @click="handleDailyVerseCountGoalSubmit">{{ $t('save') }}</a>
       </div>
     </div>
     <div v-if="userSettingsErrors.dailyVerseCountGoal" class="mbl-help mbl-help--danger">
@@ -25,10 +32,10 @@
     </h3>
     <div class="mbl-field mbl-field--addons">
       <div class="mbl-control">
-        <input v-model="userSettingsForm.lookBackDate" class="mbl-input" type="date">
+        <input v-model="userSettingsForm.lookBackDate" class="mbl-input" type="date" data-testid="settings-look-back-date-input">
       </div>
       <div class="mbl-control">
-        <a class="mbl-button mbl-button--primary" @click="handleLookBackDateSubmit">{{ $t('save') }}</a>
+        <a class="mbl-button mbl-button--primary" data-testid="settings-look-back-date-save" @click="handleLookBackDateSubmit">{{ $t('save') }}</a>
       </div>
     </div>
     <div v-if="userSettingsErrors.lookBackDate" class="mbl-help mbl-help--danger">
@@ -47,7 +54,7 @@
     <div class="mbl-field mbl-field--addons">
       <div class="mbl-control">
         <div class="mbl-select">
-          <select v-model="userSettingsForm.preferredBibleVersion">
+          <select v-model="userSettingsForm.preferredBibleVersion" data-testid="settings-bible-version-select">
             <option value="" selected="selected" disabled="disabled">
               {{ $t('select_an_option') }}
             </option>
@@ -58,7 +65,7 @@
         </div>
       </div>
       <div class="mbl-control">
-        <a class="mbl-button mbl-button--primary" @click="handlePreferredBibleVersionSubmit">{{ $t('save') }}</a>
+        <a class="mbl-button mbl-button--primary" data-testid="settings-bible-version-save" @click="handlePreferredBibleVersionSubmit">{{ $t('save') }}</a>
       </div>
     </div>
     <div v-if="userSettingsErrors.preferredBibleVersion" class="mbl-help mbl-help--danger">
@@ -72,7 +79,7 @@
     <div class="mbl-field mbl-field--addons">
       <div class="mbl-control">
         <div class="mbl-select">
-          <select v-model="userSettingsForm.preferredBibleApp">
+          <select v-model="userSettingsForm.preferredBibleApp" data-testid="settings-bible-app-select">
             <option value="" selected="selected" disabled="disabled">
               {{ $t('select_an_option') }}
             </option>
@@ -83,7 +90,7 @@
         </div>
       </div>
       <div class="mbl-control">
-        <a class="mbl-button mbl-button--primary" @click="handlePreferredBibleAppSubmit">{{ $t('save') }}</a>
+        <a class="mbl-button mbl-button--primary" data-testid="settings-bible-app-save" @click="handlePreferredBibleAppSubmit">{{ $t('save') }}</a>
       </div>
     </div>
     <div v-if="userSettingsErrors.preferredBibleApp" class="mbl-help mbl-help--danger">

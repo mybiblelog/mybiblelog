@@ -1,5 +1,11 @@
 <template>
-  <div class="bar-container" data-testid="double-progress-bar" :style="backgroundStyle">
+  <div
+    class="bar-container"
+    data-testid="double-progress-bar"
+    :data-primary-percentage="primaryPercentage"
+    :data-secondary-percentage="secondaryPercentage"
+    :style="backgroundStyle"
+  >
     <div class="bar-progress" data-testid="secondary-bar" :style="secondaryBarStyle" />
     <div class="bar-progress" data-testid="primary-bar" :style="primaryBarStyle" />
     <div class="bar-progress bar-progress--complete" data-testid="primary-bar-complete" :class="{'is-complete': primaryPercentage >= 100 }" />

@@ -10,7 +10,7 @@
       <div class="mbl-field">
         <label class="mbl-label" for="currentPassword">{{ $t('current_password') }}</label>
         <div class="mbl-control">
-          <input v-model="changePasswordModel.currentPassword" class="mbl-input" type="password" name="currentPassword">
+          <input v-model="changePasswordModel.currentPassword" class="mbl-input" type="password" name="currentPassword" data-testid="password-current">
         </div>
         <div v-if="changePasswordErrors.currentPassword" class="mbl-help mbl-help--danger">
           {{ $terr(changePasswordErrors.currentPassword) }}
@@ -19,7 +19,7 @@
       <div class="mbl-field">
         <label class="mbl-label" for="newPassword">{{ $t('new_password') }}</label>
         <div class="mbl-control">
-          <input v-model="changePasswordModel.newPassword" class="mbl-input" type="password" name="newPassword">
+          <input v-model="changePasswordModel.newPassword" class="mbl-input" type="password" name="newPassword" data-testid="password-new">
         </div>
         <div v-if="changePasswordErrors.newPassword" class="mbl-help mbl-help--danger">
           {{ $terr(changePasswordErrors.newPassword) }}
@@ -28,7 +28,7 @@
       <div class="mbl-field">
         <label class="mbl-label" for="confirmNewPassword">{{ $t('confirm_new_password') }}</label>
         <div class="mbl-control">
-          <input v-model="changePasswordModel.confirmNewPassword" class="mbl-input" type="password" name="confirmNewPassword">
+          <input v-model="changePasswordModel.confirmNewPassword" class="mbl-input" type="password" name="confirmNewPassword" data-testid="password-confirm">
         </div>
         <div v-if="changePasswordErrors.confirmNewPassword" class="mbl-help mbl-help--danger">
           {{ $terr(changePasswordErrors.confirmNewPassword) }}
@@ -36,7 +36,7 @@
       </div>
       <div class="mbl-field">
         <div class="mbl-control">
-          <button class="mbl-button mbl-button--primary" type="submit">
+          <button class="mbl-button mbl-button--primary" type="submit" data-testid="password-submit">
             {{ $t('change_password_button') }}
           </button>
         </div>

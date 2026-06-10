@@ -5,6 +5,7 @@
         v-if="open"
         class="mbl-modal mbl-modal--active"
         role="dialog"
+        data-testid="modal"
       >
         <div class="mbl-modal__backdrop" @click="close" />
         <div class="mbl-modal__card">
@@ -12,7 +13,7 @@
             <p class="mbl-modal__title">
               {{ title }}
             </p>
-            <button class="mbl-delete" type="button" aria-label="close" @click.prevent="close" />
+            <button class="mbl-delete" type="button" aria-label="close" data-testid="modal-close" @click.prevent="close" />
           </header>
           <section
             class="mbl-modal__body"

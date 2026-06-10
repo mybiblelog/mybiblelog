@@ -1,5 +1,15 @@
 <template>
-  <li class="calendar-day" :class="calendarDayClass" @click="onClick">
+  <li
+    class="calendar-day"
+    data-testid="calendar-day"
+    :data-date="day.date"
+    :data-current-month="day.isCurrentMonth"
+    :data-primary-percentage="primaryPercentage"
+    :data-secondary-percentage="secondaryPercentage"
+    :data-goal-met="primaryPercentage >= 100"
+    :class="calendarDayClass"
+    @click="onClick"
+  >
     <div class="date">
       {{ label }}
     </div>

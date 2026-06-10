@@ -16,7 +16,7 @@
       <div class="mbl-level mbl-level--mobile">
         <div class="mbl-level-left">
           <div v-if="userSettings.dailyVerseCountGoal" class="mbl-level-item">
-            <span>{{ $t('new_verses_read', [newVersesReadToday, userSettings.dailyVerseCountGoal]) }}</span>
+            <span data-testid="daily-goal-summary" :data-verses-read="newVersesReadToday" :data-goal="userSettings.dailyVerseCountGoal">{{ $t('new_verses_read', [newVersesReadToday, userSettings.dailyVerseCountGoal]) }}</span>
           </div>
           <div v-else class="mbl-level-item">
             <span>{{ $t('loading') }}</span>

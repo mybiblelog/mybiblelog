@@ -11,7 +11,7 @@
             {{ $t('notes') }}
             <caret-right-icon style="margin-left: 0.2rem;" />
           </nuxt-link>
-          <button class="mbl-button mbl-button--primary" @click="openPassageNoteTagEditor()">
+          <button class="mbl-button mbl-button--primary" data-testid="tag-new" @click="openPassageNoteTagEditor()">
             {{ $t('new') }}
           </button>
         </div>
@@ -23,7 +23,7 @@
           </div>
           <div class="mbl-control">
             <div class="mbl-select">
-              <select v-model="sortOrder">
+              <select v-model="sortOrder" data-testid="tag-sort-order">
                 <option value="label:ascending">
                   {{ $t('sort_az') }}
                 </option>
@@ -48,9 +48,9 @@
         </div>
       </div>
       <div>
-        <div v-for="tag in passageNoteTags" :key="tag.id" class="tag-line">
+        <div v-for="tag in passageNoteTags" :key="tag.id" class="tag-line" data-testid="tag-line">
           <div>
-            <div class="passage-note-tag" :style="passageNoteTagStyle(tag)">
+            <div class="passage-note-tag" data-testid="tag-label" :style="passageNoteTagStyle(tag)">
               {{ tag.label }}
             </div>
             <div class="tag-description">
@@ -62,13 +62,13 @@
               <span class="mbl-text-muted mbl-text-small" :title="displayTagDateTime(tag)">{{ $t('created') }} {{ displayTagTimeSince(tag) }}</span>
             </div>
             <div class="mbl-button-group mbl-button-group--end tag-footer--buttons">
-              <button class="mbl-button mbl-button--sm" @click="viewTagNotes(tag)">
+              <button class="mbl-button mbl-button--sm" data-testid="tag-notes-count" :data-note-count="tag.noteCount" @click="viewTagNotes(tag)">
                 {{ $t('notes_count', { count: tag.noteCount }) }}
               </button>
-              <button class="mbl-button mbl-button--sm" @click="openPassageNoteTagEditor(tag)">
+              <button class="mbl-button mbl-button--sm" data-testid="tag-edit" @click="openPassageNoteTagEditor(tag)">
                 {{ $t('edit') }}
               </button>
-              <button class="mbl-button mbl-button--sm" @click="deletePassageNoteTag(tag.id)">
+              <button class="mbl-button mbl-button--sm" data-testid="tag-delete" @click="deletePassageNoteTag(tag.id)">
                 {{ $t('delete') }}
               </button>
             </div>

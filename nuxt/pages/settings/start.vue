@@ -6,7 +6,7 @@
     <div class="mbl-field mbl-field--addons">
       <div class="mbl-control">
         <div class="mbl-select">
-          <select v-model="userSettingsForm.startPage">
+          <select v-model="userSettingsForm.startPage" data-testid="settings-start-page-select">
             <option value="" selected="selected" disabled="disabled">
               {{ $t('select_an_option') }}
             </option>
@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="mbl-control">
-        <a class="mbl-button mbl-button--primary" @click="handleStartPageSubmit">{{ $t('save') }}</a>
+        <a class="mbl-button mbl-button--primary" data-testid="settings-start-page-save" @click="handleStartPageSubmit">{{ $t('save') }}</a>
       </div>
     </div>
     <div v-if="userSettingsErrors.startPage" class="mbl-help mbl-help--danger">

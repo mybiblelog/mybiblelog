@@ -42,6 +42,12 @@ const parseCookieHeader = (cookieHeader: unknown): Record<string, string> => {
 export const useAppInitStore = defineStore('app-init', {
   actions: {
     async serverInit({ req, app }: { req?: { headers?: { cookie?: string } }; app: unknown }): Promise<void> {
+      // Resolve stores before any `await`: `setActivePinia` is a module-level
+      // global on the server, so a concurrent request can replace the active
+      // pinia mid-action and a late `useXStore()` would return that other
+      // request's store, leaking state across requests.
+      const authStore = useAuthStore();
+
       const cookieHeader = req?.headers?.cookie;
       useThemeStore().initFromCookie(cookieHeader);
 
@@ -53,17 +59,17 @@ export const useAppInitStore = defineStore('app-init', {
           // so it's safe to store the token here for SSR access
           (app as { ssrToken?: string }).ssrToken = token;
           try {
-            await useAuthStore().refreshUser();
+            await authStore.refreshUser();
           }
           catch {
             // Token is invalid or user no longer exists — treat as unauthenticated
             // so the auth middleware can redirect to /login instead of crashing SSR.
-            useAuthStore().setUser(null);
+            authStore.setUser(null);
           }
         }
       }
 
-      if (useAuthStore().loggedIn) {
+      if (authStore.loggedIn) {
         await this.loadUserData();
       }
     },
@@ -81,8 +87,15 @@ export const useAppInitStore = defineStore('app-init', {
     },
 
     async loadUserData(): Promise<void> {
-      await useLogEntriesStore().loadLogEntries();
-      await useUserSettingsStore().loadSettings();
+      // Resolve both stores before the first `await` (see serverInit) —
+      // resolving the settings store after the log entries load completed
+      // could return a concurrent request's store and load this user's
+      // settings into the wrong request (observed as default settings on
+      // the client under concurrent SSR traffic).
+      const logEntriesStore = useLogEntriesStore();
+      const userSettingsStore = useUserSettingsStore();
+      await logEntriesStore.loadLogEntries();
+      await userSettingsStore.loadSettings();
     },
   },
 });

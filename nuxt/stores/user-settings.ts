@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia';
+import { defineStore, getActivePinia } from 'pinia';
 import {
   BibleApps,
   BibleVersions,
@@ -145,6 +145,11 @@ export const useUserSettingsStore = defineStore('user-settings', {
     },
 
     async loadServerSettings(): Promise<void> {
+      // Snapshot the active pinia before any `await`: on the server it is a
+      // module-level global, so a concurrent request can replace it mid-action
+      // and a late bare `useXStore()` would resolve another request's store.
+      const pinia = getActivePinia();
+
       const { data } = await this.$http.get<Record<string, unknown>>('/api/settings');
       const {
         lookBackDate,
@@ -172,7 +177,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
       if (typeof passageNoteTagSortOrder === 'string' && passageNoteTagSortOrder) {
         // Avoid a static import here (passage-note-tags store reads user-settings store).
         const { usePassageNoteTagsStore } = await import('~/stores/passage-note-tags');
-        await usePassageNoteTagsStore().setPassageNoteTagSortOrder({ sortOrder: passageNoteTagSortOrder, persist: false });
+        await usePassageNoteTagsStore(pinia).setPassageNoteTagSortOrder({ sortOrder: passageNoteTagSortOrder, persist: false });
       }
     },
 

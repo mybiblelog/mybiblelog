@@ -1,5 +1,5 @@
 <template>
-  <div class="completion-bar--container" :style="backgroundStyle">
+  <div class="completion-bar--container" data-testid="completion-bar" :data-percentage="percentage" :style="backgroundStyle">
     <div class="completion-bar--progress" :style="foregroundStyle" />
   </div>
 </template>

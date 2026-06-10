@@ -1,5 +1,5 @@
 <template>
-  <div class="log-entry">
+  <div class="log-entry" data-testid="log-entry">
     <div v-if="message && passage" class="log-entry-header">
       <div class="log-entry-header-message">
         {{ message }}
@@ -8,10 +8,10 @@
     <div class="log-entry-body">
       <div>
         <template v-if="passage">
-          <div class="passage">
+          <div class="passage" data-testid="log-entry-passage">
             {{ displayVerseRange(passage.startVerseId, passage.endVerseId) }}
           </div>
-          <div class="verse-count">
+          <div class="verse-count" data-testid="log-entry-verse-count">
             {{ displayVerseCountMessage(passage) }}
           </div>
         </template>

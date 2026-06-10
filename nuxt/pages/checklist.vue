@@ -12,7 +12,14 @@
       <div v-if="!bookReports.length" class="loading-card">
         <strong>{{ $t('loading') }}</strong>
       </div>
-      <div v-for="bookReport in bookReports" :key="bookReport.bookIndex" class="book-card">
+      <div
+        v-for="bookReport in bookReports"
+        :key="bookReport.bookIndex"
+        class="book-card"
+        data-testid="book-card"
+        :data-book-index="bookReport.bookIndex"
+        :data-complete="bookReport.complete"
+      >
         <div class="book-card--header">
           <div class="book-card--completion-indicator">
             <check-mark-icon width="100%" height="100%" :fill="bookReport.complete ? 'var(--mbl-success-bright)' : 'transparent'" />
@@ -20,10 +27,10 @@
           <div class="book-card--book-name">
             {{ bookReport.bookName }}
           </div>
-          <div class="book-card--completion-fraction">
+          <div class="book-card--completion-fraction" data-testid="book-card-fraction">
             {{ bookReport.chaptersRead }} / {{ bookReport.totalChapters }}
           </div>
-          <div class="book-card--chapter-toggle" :class="{ flipped: expandedBooks[bookReport.bookIndex] }" @click="toggleBook(bookReport.bookIndex)">
+          <div class="book-card--chapter-toggle" data-testid="book-card-toggle" :class="{ flipped: expandedBooks[bookReport.bookIndex] }" @click="toggleBook(bookReport.bookIndex)">
             <caret-down-icon width="2rem" height="2rem" fill="var(--mbl-border-strong)" />
           </div>
           <div class="book-card--completion-bar">
@@ -31,7 +38,15 @@
           </div>
         </div>
         <div v-if="expandedBooks[bookReport.bookIndex]" class="book-card--chapters">
-          <div v-for="chapterReport in bookReport.chapterReports" :key="chapterReport.chapterIndex" class="chapter-card" @click="toggleChapter(chapterReport.bookIndex, chapterReport.chapterIndex)">
+          <div
+            v-for="chapterReport in bookReport.chapterReports"
+            :key="chapterReport.chapterIndex"
+            class="chapter-card"
+            data-testid="chapter-card"
+            :data-chapter="chapterReport.chapterIndex"
+            :data-complete="Boolean(chapterReport.complete)"
+            @click="toggleChapter(chapterReport.bookIndex, chapterReport.chapterIndex)"
+          >
             <div class="chapter-card--chapter-number">
               {{ chapterReport.chapterIndex }}
             </div>

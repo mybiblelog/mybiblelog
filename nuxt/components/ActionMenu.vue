@@ -8,6 +8,7 @@
       v-if="actions.length > 0"
       :aria-label="$t('open_menu')"
       class="action-menu-button"
+      data-testid="action-menu-toggle"
       @click.stop="toggle"
     >
       <span class="action-menu-button-icon" />
@@ -19,6 +20,7 @@
         v-for="action in actions"
         :key="action.label"
         class="action-menu-item"
+        data-testid="action-menu-item"
         @click="handleAction(action)"
       >
         {{ action.label }}

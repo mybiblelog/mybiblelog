@@ -7,15 +7,15 @@
       <p>{{ dialog.message }}</p>
     </div>
     <div v-if="dialog.type === 'alert'" class="mbl-button-group">
-      <button class="mbl-button" :class="buttonClass" @click="_clear">
+      <button class="mbl-button" :class="buttonClass" data-testid="dialog-ok" @click="_clear">
         {{ dialog.buttonText || $t('ok') }}
       </button>
     </div>
     <div v-if="dialog.type === 'confirm'" class="mbl-button-group popup-modal__actions">
-      <button class="mbl-button" :class="confirmButtonClass" @click="_confirm">
+      <button class="mbl-button" :class="confirmButtonClass" data-testid="dialog-confirm" @click="_confirm">
         {{ dialog.confirmButtonText || $t('confirm') }}
       </button>
-      <button class="mbl-button mbl-button--light" @click="_cancel">
+      <button class="mbl-button mbl-button--light" data-testid="dialog-cancel" @click="_cancel">
         {{ dialog.cancelButtonText || $t('cancel') }}
       </button>
     </div>

@@ -10,14 +10,22 @@
         <caret-right-icon style="margin-left: 0.2rem;" />
       </nuxt-link>
     </header>
-    <div class="plaque">
+    <div class="plaque" data-testid="bible-report-progress" :data-percentage="percentageRead">
       <p>
         <span>{{ $n(percentageRead / 100, 'percent') }}</span>
       </p>
       <segment-bar thick="thick" :segments="bibleReadingSegments" />
     </div>
     <div class="progress-list">
-      <div v-for="report in allBookReports" :key="report.bookIndex" class="progress-card" @click="$emit('view-book-report', report.bookIndex)">
+      <div
+        v-for="report in allBookReports"
+        :key="report.bookIndex"
+        class="progress-card"
+        data-testid="bible-report-book"
+        :data-book-index="report.bookIndex"
+        :data-percentage="report.percentage"
+        @click="$emit('view-book-report', report.bookIndex)"
+      >
         <span class="progress-card-icon">
           <star-icon :fill="report.percentage == 100 ? 'var(--mbl-star-earned)' : 'var(--mbl-star-unearned)'" />
         </span>

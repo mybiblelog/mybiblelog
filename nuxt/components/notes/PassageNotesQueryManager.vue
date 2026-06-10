@@ -8,6 +8,7 @@
             v-model.trim="draft.searchText"
             class="mbl-input"
             type="text"
+            data-testid="notes-query-search"
             :placeholder="$t('search_placeholder')"
           >
         </div>
@@ -28,7 +29,7 @@
           </span>
         </div>
         <div class="passage-notes-query-manager__tag-actions">
-          <button class="mbl-button mbl-button--light" type="button" @click="openTagFilterModal">
+          <button class="mbl-button mbl-button--light" type="button" data-testid="notes-query-choose-tags" @click="openTagFilterModal">
             {{ $t('tag_select.choose') }}
           </button>
           <button
@@ -138,10 +139,10 @@
       </div>
 
       <div class="passage-notes-query-manager__actions">
-        <button class="mbl-button mbl-button--primary" type="button" :disabled="!isDirty" @click="applyDraft">
+        <button class="mbl-button mbl-button--primary" type="button" data-testid="notes-query-apply" :disabled="!isDirty" @click="applyDraft">
           {{ $t('apply') }}
         </button>
-        <button class="mbl-button mbl-button--light" type="button" :disabled="!isDirty" @click="cancelDraft">
+        <button class="mbl-button mbl-button--light" type="button" data-testid="notes-query-cancel" :disabled="!isDirty" @click="cancelDraft">
           {{ $t('cancel') }}
         </button>
       </div>

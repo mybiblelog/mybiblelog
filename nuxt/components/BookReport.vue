@@ -32,7 +32,7 @@
         <caret-right-icon style="margin-left: 0.2rem;" />
       </button>
     </header>
-    <div class="plaque">
+    <div class="plaque" data-testid="book-report-progress" :data-percentage="percentageRead">
       <p>
         <span>{{ $n(percentageRead / 100, 'percent') }}</span>
       </p>

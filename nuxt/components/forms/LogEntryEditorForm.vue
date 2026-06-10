@@ -1,11 +1,11 @@
 <template>
-  <form>
-    <div class="passage-preview">
+  <form data-testid="log-entry-editor">
+    <div class="passage-preview" data-testid="log-entry-editor-preview">
       {{ displayEditorVerseRange || $t('preview_passage') }}
     </div>
     <div>
       <label for="model-date">{{ $t('date') }}</label>
-      <input id="model-date" :value="logEntry.date" type="date" @change="updateDate">
+      <input id="model-date" data-testid="log-entry-editor-date" :value="logEntry.date" type="date" @change="updateDate">
     </div>
     <div>
       <label for="model-book">{{ $t('book') }}</label>
