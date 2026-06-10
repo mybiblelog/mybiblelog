@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { defaultLocale } from '@mybiblelog/shared';
 
 export type AuthUser = {
   email?: string;
@@ -56,7 +57,9 @@ export const useAuthStore = defineStore('auth', {
         // Clear session storage and fully reload the page
         // to ensure the user is logged out and all store data is cleared.
         sessionStorage.clear();
-        window.location.href = '/login';
+        const locale = this.$i18n.locale;
+        const loginPath = locale === defaultLocale ? '/login' : `/${locale}/login`;
+        window.location.href = loginPath;
       }
     },
   },
