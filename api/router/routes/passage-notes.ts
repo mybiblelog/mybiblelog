@@ -77,10 +77,16 @@ const router = express.Router();
  *           description: The list of passage notes
  */
 
-const validateTags = async (tagIds) => {
+const validateTags = async (tagIds, owner) => {
   const { PassageNoteTag } = await useMongooseModels();
   for (const tagId of tagIds) {
-    const count = await PassageNoteTag.countDocuments({ _id: tagId });
+    // Reject anything that isn't a valid ObjectId to avoid query injection
+    if (!ObjectId.isValid(tagId)) {
+      return false;
+    }
+    // Scope the lookup to the requesting user so notes cannot reference
+    // tags owned by other users.
+    const count = await PassageNoteTag.countDocuments({ _id: tagId, owner });
     if (!count) {
       return false;
     }
@@ -559,8 +565,8 @@ router.post('/passage-notes', async (req, res, next) => {
     const currentUser = await authCurrentUser(req);
     const passageNote = new PassageNote(req.body);
 
-    // validate that all tags exist
-    const tagsValid = await validateTags(passageNote.tags);
+    // validate that all tags exist and belong to the current user
+    const tagsValid = await validateTags(passageNote.tags, currentUser._id);
     if (!tagsValid) {
       throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'tags' }]);
     }
@@ -666,8 +672,8 @@ router.put('/passage-notes/:id', async (req, res, next) => {
     if (typeof content === 'string') { passageNote.content = content; }
     if (passages) { passageNote.passages = passages; }
     if (tags) {
-      // validate that all tags exist
-      const tagsValid = await validateTags(tags);
+      // validate that all tags exist and belong to the current user
+      const tagsValid = await validateTags(tags, currentUser._id);
       if (!tagsValid) {
         throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'tags' }]);
       }

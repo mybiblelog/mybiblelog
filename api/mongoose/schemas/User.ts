@@ -8,10 +8,29 @@ import { UserSettingsSchema } from './UserSettings';
 
 const SALT_WORK_FACTOR = 10;
 
+// bcrypt only uses the first 72 bytes of a password; longer values would be
+// silently truncated, so we reject them at validation time instead.
+const BCRYPT_MAX_PASSWORD_BYTES = 72;
+
+// JWT lifetime; the auth cookie max age (authCurrentUser.ts) is derived from
+// this so the cookie and the token it carries expire together.
+export const AUTH_TOKEN_TTL_DAYS = 30;
+
 export const UserSchema = new mongoose.Schema({
   email: { type: String, lowercase: true, unique: true, required: [true, 'required'], match: [/^\S+@\S+\.\S+$/, 'is invalid'], index: true },
   isAdmin: { type: Boolean, default: false },
-  password: { type: String, minlength: 8, maxlength: 100 },
+  password: {
+    type: String,
+    minlength: 8,
+    maxlength: BCRYPT_MAX_PASSWORD_BYTES,
+    validate: {
+      // maxlength counts characters; multibyte characters can exceed the
+      // bcrypt byte limit with fewer characters, so also check byte length
+      validator: (value: string) => Buffer.byteLength(value, 'utf8') <= BCRYPT_MAX_PASSWORD_BYTES,
+      message: 'maxlength',
+      type: 'maxlength',
+    },
+  },
   googleId: { type: String, default: null },
   emailVerificationCode: { type: String, default: () => crypto.randomBytes(64).toString('hex') },
   emailVerificationExpires: { type: Date, default: () => new Date(Date.now() + 24 * 60 * 60 * 1000) }, // 24 hours
@@ -101,7 +120,7 @@ export const UserSchema = new mongoose.Schema({
     generateJWT() {
       const today = new Date();
       const exp = new Date(today);
-      exp.setDate(today.getDate() + 60);
+      exp.setDate(today.getDate() + AUTH_TOKEN_TTL_DAYS);
 
       return jwt.sign({
         id: this._id,

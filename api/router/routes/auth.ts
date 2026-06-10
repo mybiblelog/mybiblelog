@@ -39,7 +39,7 @@ const router = express.Router();
  *         Most endpoints in this API require authentication. Protected endpoints are marked with the lock icon 🔒 in the Swagger UI.
  *
  *         ## Token Expiration
- *         Tokens expire after 60 days. You'll need to log in again to obtain a new token.
+ *         Tokens expire after 30 days. You'll need to log in again to obtain a new token.
  */
 
 /**
@@ -205,11 +205,13 @@ router.post('/auth/login', async (req, res, next) => {
 
   const { email, password } = req.body;
 
-  if (!email) {
+  // Require string values to prevent NoSQL operator injection
+  // (e.g. { email: { $gt: '' } } matching an arbitrary user).
+  if (typeof email !== 'string' || !email) {
     throw new ValidationError([{ code: ApiErrorDetailCode.Required, field: 'email' }]);
   }
 
-  if (!password) {
+  if (typeof password !== 'string' || !password) {
     throw new ValidationError([{ code: ApiErrorDetailCode.Required, field: 'password' }]);
   }
 
@@ -620,6 +622,10 @@ router.post('/auth/verify-email', async (req, res) => {
   }
 
   const { code: emailVerificationCode } = req.body;
+  // Require a string to prevent NoSQL operator injection
+  if (typeof emailVerificationCode !== 'string') {
+    throw new NotFoundError();
+  }
   // Find the user (if not found, error)
   const { User } = await useMongooseModels();
   const user = await User.findOne({ emailVerificationCode });
@@ -776,20 +782,27 @@ router.post('/auth/change-email', async (req, res, next) => {
   }
 
   try {
-    const { User } = await useMongooseModels();
     const currentUser = await authCurrentUser(req);
     const { newEmail, password } = req.body;
+
+    // Require string values to prevent NoSQL operator injection
+    if (typeof newEmail !== 'string' || !newEmail) {
+      throw new ValidationError([{ code: ApiErrorDetailCode.NewEmailRequired, field: 'newEmail' }]);
+    }
+    if (typeof password !== 'string' || !password) {
+      throw new ValidationError([{ code: ApiErrorDetailCode.PasswordIncorrect, field: 'password' }]);
+    }
 
     // disallow newEmail to be current email
     if (newEmail === currentUser.email) {
       throw new ValidationError([{ code: ApiErrorDetailCode.NewEmailRequired, field: 'newEmail' }]);
     }
 
-    // disallow newEmail to be an email currently in use by another user
-    const existingUserWithEmail = await User.findOne({ email: newEmail });
-    if (existingUserWithEmail) {
-      throw new ValidationError([{ code: ApiErrorDetailCode.EmailInUse, field: 'newEmail' }]);
-    }
+    // NOTE: We intentionally do NOT check here whether newEmail is already
+    // in use by another user, because doing so would let any logged-in user
+    // probe which email addresses have accounts (account enumeration).
+    // The check is instead enforced when the change is completed, which
+    // requires the verification code sent to the new email address.
 
     // confirm password
     const passwordValid = await currentUser.authenticate(password);
@@ -1089,7 +1102,10 @@ router.post('/auth/change-email/:newEmailVerificationCode', async (req, res, nex
  *                 type: string
  *     responses:
  *       200:
- *         description: Password reset process initiated successfully
+ *         description: |
+ *           Password reset process initiated successfully.
+ *           Always returns success, whether or not an account exists for the
+ *           given email address, to prevent account enumeration.
  *         content:
  *           application/json:
  *             schema:
@@ -1103,12 +1119,6 @@ router.post('/auth/change-email/:newEmailVerificationCode', async (req, res, nex
  *                     success:
  *                       type: boolean
  *                       description: Success indicator (true)
- *       400:
- *         description: Account not found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiErrorResponse'
  */
 router.post('/auth/reset-password', async (req, res) => {
   // Rate limiting for password reset requests
@@ -1119,16 +1129,21 @@ router.post('/auth/reset-password', async (req, res) => {
 
   const { email } = req.body;
   const { User } = await useMongooseModels();
-  const user = await User.findOne({ email });
+  // Require a string to prevent NoSQL operator injection
+  const user = typeof email === 'string' && email ? await User.findOne({ email }) : null;
+
+  // Always respond with success, whether or not an account exists for the
+  // given email address, to prevent account enumeration.
+  const responseData: { success: boolean; passwordResetCode?: string } = { success: true };
   if (!user) {
-    throw new NotFoundError([{ code: ApiErrorDetailCode.AccountNotFound, field: 'email' }]);
+    return res.json({ data: responseData } satisfies ApiResponse);
   }
+
   // have the password reset expire in 1 hour
   user.enablePasswordReset();
   await user.save();
 
   // send success response, but don't `return` here so the email can be sent
-  const responseData: { success: boolean; passwordResetCode?: string } = { success: true };
   if (authBypass && user.passwordResetCode) {
     responseData.passwordResetCode = user.passwordResetCode;
   }
