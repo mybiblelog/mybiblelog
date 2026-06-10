@@ -12,7 +12,7 @@ og:
 # 장별 체크 페이지
 
 <div class="phone-frame">
-  <img alt="My Bible Log 장 체크리스트 스크린샷" src="/screenshots/sc12-checklist.webp" />
+  <img alt="My Bible Log 장 체크리스트 스크린샷" src="/screenshots/ko/sc12-checklist.webp" />
 </div>
 
 장별 체크 페이지는 성경읽기 진행 상황을 기록하는 가장 간편하고 빠른 방법입니다. 한 번의 클릭 또는 탭만으로 해당 장을 \"읽음\"으로 표시할 수 있습니다.

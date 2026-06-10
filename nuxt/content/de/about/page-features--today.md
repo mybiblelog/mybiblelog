@@ -12,7 +12,7 @@ og:
 # Today-Seite
 
 <div class="phone-frame">
-  <img alt="Screenshot der Today-Seite von My Bible Log" src="/screenshots/sc4-daily-goal.webp" />
+  <img alt="Screenshot der Today-Seite von My Bible Log" src="/screenshots/de/sc4-daily-goal.webp" />
 </div>
 
 Die Today-Seite hilft Ihnen, Ihren täglichen Bibellesefortschritt zu verfolgen. Oben sehen Sie eine Fortschrittsleiste, die zeigt, wie nahe Sie Ihrem täglichen Ziel sind. Wenn Ihr Ziel beispielsweise 86 Verse beträgt, ist die Leiste voll, sobald Sie heute 86 Verse gelesen haben.

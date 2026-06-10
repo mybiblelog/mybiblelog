@@ -12,7 +12,7 @@ og:
 # Página de Hoy
 
 <div class="phone-frame">
-  <img alt="Captura de pantalla de la Página de Hoy de My Bible Log" src="/screenshots/sc4-daily-goal.webp" />
+  <img alt="Captura de pantalla de la Página de Hoy de My Bible Log" src="/screenshots/es/sc4-daily-goal.webp" />
 </div>
 
 La página de Hoy muestra una barra de progreso de tu objetivo de lectura diaria. Si tu cuenta de versículos de lectura diaria es de 86, la barra de progreso estará completa una vez que hayas leído al menos 86 versículos.

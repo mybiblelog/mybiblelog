@@ -12,7 +12,7 @@ og:
 # Bible Books Page
 
 <div class="phone-frame">
-  <img alt="My Bible Log Bible Books Page Screenshot" src="/screenshots/sc7-bible-progress.webp" />
+  <img alt="My Bible Log Bible Books Page Screenshot" src="/screenshots/en/sc7-bible-progress.webp" />
 </div>
 
 The Bible Books page helps you track your reading progress through the entire Bible. At the top, you'll see a visual progress bar that shows which parts of the Bible you've read. Unlike a simple left-to-right progress bar, this one fills in exactly where you've read - whether that's at the beginning, middle, or end of the Bible.
@@ -27,7 +27,7 @@ Below the progress bar, you'll find a list of all Bible books. Each book has:
 ## Individual Book Pages
 
 <div class="phone-frame">
-  <img alt="My Bible Log Individual Book Page Screenshot" src="/screenshots/sc6-book-chapter-progress.webp" />
+  <img alt="My Bible Log Individual Book Page Screenshot" src="/screenshots/en/sc6-book-chapter-progress.webp" />
 </div>
 
 Click any book to see its detailed progress page. Here you'll find:

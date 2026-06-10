@@ -12,7 +12,7 @@ og:
 # Сторінка календаря
 
 <div class="phone-frame">
-  <img alt="Скріншот сторінки календаря My Bible Log" src="/screenshots/sc9-calendar.webp" />
+  <img alt="Скріншот сторінки календаря My Bible Log" src="/screenshots/uk/sc9-calendar.webp" />
 </div>
 
 На сторінці календаря представлений календар читання Біблії протягом часу.

@@ -12,7 +12,7 @@ og:
 # Progress Page
 
 <div class="phone-frame">
-  <img alt="My Bible Log Progress Page Screenshot" src="/screenshots/sc13-progress.webp" />
+  <img alt="My Bible Log Progress Page Screenshot" src="/screenshots/en/sc13-progress.webp" />
 </div>
 
 The Progress page can be reached by going to the Bible Books page and clicking the "Progress" button at the top.

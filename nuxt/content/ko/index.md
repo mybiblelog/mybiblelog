@@ -18,7 +18,7 @@ ld_json:
   cta-note="이메일 또는 Google로 가입"></content-page-hero>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc4-daily-goal.webp"
+  image-src="/screenshots/ko/sc4-daily-goal.webp"
   image-alt="일일 읽기 목표 달성 시 완료된 진행 표시줄이 나타나는 My Bible Log 앱"
   image-width="750"
   image-height="1334"
@@ -31,7 +31,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc2-achievements.webp"
+  image-src="/screenshots/ko/sc2-achievements.webp"
   image-alt="성경의 한 책을 다 읽으면 금색 별이 제공되는 My Bible Log 앱"
   image-width="750"
   image-height="1334"
@@ -45,7 +45,7 @@ ld_json:
   :reverse="true"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc1-reading-suggestions.webp"
+  image-src="/screenshots/ko/sc1-reading-suggestions.webp"
   image-alt="여러 읽기 제안이 표시된 My Bible Log 앱 오늘의 성경 페이지"
   image-width="750"
   image-height="1334"
@@ -56,7 +56,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc7-bible-progress.webp"
+  image-src="/screenshots/ko/sc7-bible-progress.webp"
   image-alt="성경 전체 읽기 진도를 구간별로 보여주는 My Bible Log 앱"
   image-width="750"
   image-height="1334"
@@ -67,7 +67,7 @@ ld_json:
   :reverse="true"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc9-calendar.webp"
+  image-src="/screenshots/ko/sc9-calendar.webp"
   image-alt="일일 읽기 목표를 달성한 일자에 별을 달아주는 My Bible Log 달력"
   image-width="750"
   image-height="1334"
@@ -81,7 +81,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc10-notes.webp"
+  image-src="/screenshots/ko/sc10-notes.webp"
   image-alt="여러 암송 구절이 표시된 My Bible Log 노트 화면"
   image-width="750"
   image-height="1334"
@@ -92,7 +92,7 @@ ld_json:
   :reverse="true"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc12-checklist.webp"
+  image-src="/screenshots/ko/sc12-checklist.webp"
   image-alt="요한계시록 처음 네 장이 읽기 완료로 표시된 My Bible Log 장별 체크"
   image-width="750"
   image-height="1334"
@@ -103,7 +103,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc8-install-anywhere.webp"
+  image-src="/screenshots/ko/sc8-install-anywhere.webp"
   image-alt="데스크톱 모드로 실행 중인 My Bible Log 앱"
   image-width="1069"
   image-height="690"

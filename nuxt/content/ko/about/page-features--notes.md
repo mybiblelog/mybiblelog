@@ -12,7 +12,7 @@ og:
 # 노트 페이지
 
 <div class="phone-frame">
-  <img alt="My Bible Log 노트 페이지 스크린샷" src="/screenshots/sc10-notes.webp" />
+  <img alt="My Bible Log 노트 페이지 스크린샷" src="/screenshots/ko/sc10-notes.webp" />
 </div>
 
 My Bible Log에서는 성경을 읽으며 자유형식으로 노트를 작성해 수집, 정리, 기록할 수 있습니다.
@@ -55,7 +55,7 @@ My Bible Log에서는 성경을 읽으며 자유형식으로 노트를 작성해
 ## 태그를 통해 노트 정리하기
 
 <div class="phone-frame">
-  <img alt="My Bible Log 태그 페이지 스크린샷" src="/screenshots/sc11-note-tags.webp" />
+  <img alt="My Bible Log 태그 페이지 스크린샷" src="/screenshots/ko/sc11-note-tags.webp" />
 </div>
 
 사용자 정의 태그를 관리하기 위해서는 노트 페이지의 "태그" 버튼을 눌러 태그 페이지로 이동합니다.

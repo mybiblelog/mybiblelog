@@ -12,7 +12,7 @@ og:
 # Página de Libros de la Biblia
 
 <div class="phone-frame">
-  <img alt="Captura de pantalla de la Página de Libros de la Biblia de My Bible Log" src="/screenshots/sc7-bible-progress.webp" />
+  <img alt="Captura de pantalla de la Página de Libros de la Biblia de My Bible Log" src="/screenshots/es/sc7-bible-progress.webp" />
 </div>
 
 La página de Libros de la Biblia te permite navegar por los libros de la Biblia y hacer un seguimiento de tu progreso de lectura en toda la Biblia.
@@ -28,7 +28,7 @@ Como era de esperar, la página de Libros de la Biblia lista todos los libros de
 ## Páginas Individuales de Libros
 
 <div class="phone-frame">
-  <img alt="Captura de pantalla de la Página Individual de Libro de My Bible Log" src="/screenshots/sc6-book-chapter-progress.webp" />
+  <img alt="Captura de pantalla de la Página Individual de Libro de My Bible Log" src="/screenshots/es/sc6-book-chapter-progress.webp" />
 </div>
 
 Desde la página de Libros de la Biblia, puedes hacer clic en cualquier libro para ver una página de progreso específica para ese libro. En la parte superior de esta página está la misma barra de progreso de la página de Libros de la Biblia, mostrando qué partes del libro están completas.

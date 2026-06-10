@@ -12,7 +12,7 @@ og:
 # 오늘의 성경 페이지
 
 <div class="phone-frame">
-  <img alt="My Bible Log 오늘 페이지 스크린샷" src="/screenshots/sc4-daily-goal.webp" />
+  <img alt="My Bible Log 오늘 페이지 스크린샷" src="/screenshots/ko/sc4-daily-goal.webp" />
 </div>
 
 오늘의 성경 페이지에서는 일일 성경 읽기 진행 상황을 확인할 수 있습니다. 상단에는 일일 목표 달성률을 보여주는 진행 표시줄이 있습니다. 예를 들어, 일일 목표가 86절이라면 오늘 86절을 읽었을 때 막대가 가득 채워집니다.

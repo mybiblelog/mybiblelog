@@ -12,7 +12,7 @@ og:
 # Page des Notes
 
 <div class="phone-frame">
-  <img alt="Capture d'écran de la Page des Notes de My Bible Log" src="/screenshots/sc10-notes.webp" />
+  <img alt="Capture d'écran de la Page des Notes de My Bible Log" src="/screenshots/fr/sc10-notes.webp" />
 </div>
 
 My Bible Log vous permet de prendre des notes libres pour collecter, organiser et traiter pendant votre lecture.
@@ -55,7 +55,7 @@ Les deux ordres de tri sont basés sur la date et l'heure à laquelle la note a 
 ## Créer des Tags pour Organiser Vos Notes
 
 <div class="phone-frame">
-  <img alt="Capture d'écran de la Page des Tags de My Bible Log" src="/screenshots/sc11-note-tags.webp" />
+  <img alt="Capture d'écran de la Page des Tags de My Bible Log" src="/screenshots/fr/sc11-note-tags.webp" />
 </div>
 
 Pour accéder à la page des Tags et travailler avec vos propres tags personnalisés, cliquez sur le bouton "Tags" sur la page des Notes.

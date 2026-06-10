@@ -52,7 +52,14 @@ export const useAppInitStore = defineStore('app-init', {
           // `app` is not serialized into the HTML response,
           // so it's safe to store the token here for SSR access
           (app as { ssrToken?: string }).ssrToken = token;
-          await useAuthStore().refreshUser();
+          try {
+            await useAuthStore().refreshUser();
+          }
+          catch {
+            // Token is invalid or user no longer exists — treat as unauthenticated
+            // so the auth middleware can redirect to /login instead of crashing SSR.
+            useAuthStore().setUser(null);
+          }
         }
       }
 

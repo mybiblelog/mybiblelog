@@ -12,7 +12,7 @@ og:
 # Kalenderseite
 
 <div class="phone-frame">
-  <img alt="Screenshot der Kalenderseite von My Bible Log" src="/screenshots/sc9-calendar.webp" />
+  <img alt="Screenshot der Kalenderseite von My Bible Log" src="/screenshots/de/sc9-calendar.webp" />
 </div>
 
 Die Kalenderseite zeigt einen Kalender mit Ihrer Bibellektüre im Laufe der Zeit.

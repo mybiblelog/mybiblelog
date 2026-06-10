@@ -12,7 +12,7 @@ og:
 ## Сторінка прогресу
 
 <div class="phone-frame">
-  <img alt="Скріншот сторінки прогресу My Bible Log" src="/screenshots/sc13-progress.webp" />
+  <img alt="Скріншот сторінки прогресу My Bible Log" src="/screenshots/uk/sc13-progress.webp" />
 </div>
 
 До сторінки прогресу можна перейти, перейшовши на сторінку книг Біблії та натиснувши кнопку "Прогрес" у верхній частині.

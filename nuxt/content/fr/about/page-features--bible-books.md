@@ -12,7 +12,7 @@ og:
 # Page des Livres de la Bible
 
 <div class="phone-frame">
-  <img alt="Capture d'écran de la page des Livres de la Bible de My Bible Log" src="/screenshots/sc7-bible-progress.webp" />
+  <img alt="Capture d'écran de la page des Livres de la Bible de My Bible Log" src="/screenshots/fr/sc7-bible-progress.webp" />
 </div>
 
 La page des Livres de la Bible vous aide à suivre votre progression de lecture à travers toute la Bible. En haut, vous verrez une barre de progression visuelle qui montre quelles parties de la Bible vous avez lues. Contrairement à une simple barre de progression de gauche à droite, celle-ci se remplit exactement là où vous avez lu - que ce soit au début, au milieu ou à la fin de la Bible.
@@ -27,7 +27,7 @@ Sous la barre de progression, vous trouverez une liste de tous les livres de la 
 ## Pages Individuelles des Livres
 
 <div class="phone-frame">
-  <img alt="Capture d'écran de la page de livre individuelle de My Bible Log" src="/screenshots/sc6-book-chapter-progress.webp" />
+  <img alt="Capture d'écran de la page de livre individuelle de My Bible Log" src="/screenshots/fr/sc6-book-chapter-progress.webp" />
 </div>
 
 Cliquez sur n'importe quel livre pour voir sa page de progression détaillée. Ici vous trouverez :

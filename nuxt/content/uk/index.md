@@ -18,7 +18,7 @@ ld_json:
   cta-note="Зареєструйтеся за допомогою електронної пошти або Google"></content-page-hero>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc4-daily-goal.webp"
+  image-src="/screenshots/uk/sc4-daily-goal.webp"
   image-alt="Додаток My Bible Log показує завершену смугу прогресу для досягнення щоденної мети читання"
   image-width="750"
   image-height="1334"
@@ -31,7 +31,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc2-achievements.webp"
+  image-src="/screenshots/uk/sc2-achievements.webp"
   image-alt="Додаток My Bible Log нагороджує золотою зіркою за читання книги Біблії"
   image-width="750"
   image-height="1334"
@@ -45,7 +45,7 @@ ld_json:
   :reverse="true"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc1-reading-suggestions.webp"
+  image-src="/screenshots/uk/sc1-reading-suggestions.webp"
   image-alt="Сторінка Сьогодні додатку My Bible Log показує кілька пропозицій для читання"
   image-width="750"
   image-height="1334"
@@ -56,7 +56,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc7-bible-progress.webp"
+  image-src="/screenshots/uk/sc7-bible-progress.webp"
   image-alt="Додаток My Bible Log показує сегментовану смугу прогресу для читання всієї Біблії"
   image-width="750"
   image-height="1334"
@@ -67,7 +67,7 @@ ld_json:
   :reverse="true"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc9-calendar.webp"
+  image-src="/screenshots/uk/sc9-calendar.webp"
   image-alt="Календар My Bible Log показує місяць, де багато дат отримали зірку за досягнення щоденної мети читання"
   image-width="750"
   image-height="1334"
@@ -81,7 +81,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc10-notes.webp"
+  image-src="/screenshots/uk/sc10-notes.webp"
   image-alt="Екран нотаток My Bible Log показує кілька віршів для запам'ятовування"
   image-width="750"
   image-height="1334"
@@ -92,7 +92,7 @@ ld_json:
   :reverse="true"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc12-checklist.webp"
+  image-src="/screenshots/uk/sc12-checklist.webp"
   image-alt="Список перевірки розділів My Bible Log з першими чотирма розділами Об'явлення, позначеними як завершені"
   image-width="750"
   image-height="1334"
@@ -103,7 +103,7 @@ ld_json:
   :reverse="false"></content-fifty-fifty>
 
 <content-fifty-fifty
-  image-src="/screenshots/sc8-install-anywhere.webp"
+  image-src="/screenshots/uk/sc8-install-anywhere.webp"
   image-alt="Додаток My Bible Log працює в режимі робочого столу"
   image-width="1069"
   image-height="690"
