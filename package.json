@@ -23,7 +23,7 @@
     "start:api": "npm run -w api start",
     "start:nuxt": "npm run -w nuxt start",
     "build": "npm run build -w api && npm run build -w nuxt",
-    "heroku-prebuild": "npm install && npm install --include=dev -w shared && npm install -w nuxt && npm install -w api",
+    "heroku-prebuild": "npm install --include=dev && npm install --include=dev -w shared && npm install -w nuxt && npm install -w api",
     "heroku-postbuild": "npm run build",
     "clean": "rm -rf node_modules && npm run clean -w api && npm run clean -w nuxt && npm run clean -w shared",
     "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore .",
