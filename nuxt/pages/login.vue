@@ -23,6 +23,10 @@
             {{ $terr(errors._form) }}
           </div>
         </div>
+        <resend-verification-email
+          v-if="showResendVerification"
+          :email="email || ''"
+        />
         <form @submit.prevent="onSubmit">
           <div class="mbl-field">
             <label class="mbl-label">{{ $t('email') }}</label>
@@ -62,6 +66,7 @@
 <script>
 import GoogleLoginButton from '@/components/forms/GoogleLoginButton.vue';
 import InfoLink from '@/components/InfoLink';
+import ResendVerificationEmail from '@/components/ResendVerificationEmail.vue';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useAuthStore } from '~/stores/auth';
@@ -71,6 +76,7 @@ export default {
   components: {
     GoogleLoginButton,
     InfoLink,
+    ResendVerificationEmail,
   },
   middleware: ['auth'],
   async asyncData({ app }) {
@@ -108,6 +114,12 @@ export default {
         { hid: 'robots', name: 'robots', content: 'noindex' },
       ],
     };
+  },
+  computed: {
+    showResendVerification() {
+      const code = this.errors?._form?.code;
+      return code === 'verify_email';
+    },
   },
   // The localStorage usage here is a workaround for the i18n built-in locale persistence,
   // as i18n will try to infer the user's locale from the Google redirect URL,

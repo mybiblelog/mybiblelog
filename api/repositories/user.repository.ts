@@ -47,6 +47,7 @@ const toUserRecord = (user: UserDoc): UserRecord => {
     googleId: user.googleId ?? null,
     emailVerificationCode: user.emailVerificationCode,
     emailVerificationExpires: user.emailVerificationExpires,
+    emailVerificationCodeLastSentAt: user.emailVerificationCodeLastSentAt,
     newEmail: user.newEmail ?? null,
     newEmailVerificationCode: user.newEmailVerificationCode,
     newEmailVerificationExpires: user.newEmailVerificationExpires,
@@ -110,6 +111,10 @@ export const createUserRepository = ({ User }: Models) => {
       if (input.emailVerificationCode !== undefined) {
         // setting emailVerificationCode to '' will mark the user as email verified
         user.emailVerificationCode = input.emailVerificationCode;
+      }
+      // Track when the initial verification email is sent so resend can enforce a cooldown
+      if (user.emailVerificationCode !== '') {
+        user.emailVerificationCodeLastSentAt = new Date();
       }
       if (input.isAdmin) {
         user.isAdmin = true;
@@ -234,6 +239,15 @@ export const createUserRepository = ({ User }: Models) => {
       catch (error) {
         translateMongooseError(error);
       }
+      return toUserRecord(user);
+    },
+
+    async resendEmailVerification(userId: string): Promise<UserRecord> {
+      const user = await requireDocById(userId);
+      user.emailVerificationCode = generateVerificationCode();
+      user.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      user.emailVerificationCodeLastSentAt = new Date();
+      await user.save();
       return toUserRecord(user);
     },
 
