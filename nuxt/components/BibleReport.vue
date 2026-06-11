@@ -10,6 +10,32 @@
         <caret-right-icon style="margin-left: 0.2rem;" />
       </nuxt-link>
     </header>
+    <div class="testament-toggle">
+      <button
+        type="button"
+        class="testament-toggle--button"
+        :class="{ active: testamentFilter === 'all' }"
+        @click="testamentFilter = 'all'"
+      >
+        {{ $t('whole_bible') }}
+      </button>
+      <button
+        type="button"
+        class="testament-toggle--button"
+        :class="{ active: testamentFilter === 'old' }"
+        @click="testamentFilter = 'old'"
+      >
+        {{ $t('old_testament_short') }}
+      </button>
+      <button
+        type="button"
+        class="testament-toggle--button"
+        :class="{ active: testamentFilter === 'new' }"
+        @click="testamentFilter = 'new'"
+      >
+        {{ $t('new_testament_short') }}
+      </button>
+    </div>
     <div class="plaque" data-testid="bible-report-progress" :data-percentage="percentageRead">
       <p>
         <span>{{ $n(percentageRead / 100, 'percent') }}</span>
@@ -69,40 +95,43 @@ export default {
   },
   data() {
     return {
+      testamentFilter: 'all',
       bookNotesCounts: {},
       anyBooksHaveNotes: false,
     };
   },
   computed: {
-    totalBibleVerses() {
-      return Bible.getTotalVerseCount();
+    visibleBookIndices() {
+      return Bible.getBooks()
+        .filter((book) => {
+          if (this.testamentFilter === 'old') { return !book.newTestament; }
+          if (this.testamentFilter === 'new') { return book.newTestament; }
+          return true;
+        })
+        .map(book => book.bibleOrder);
+    },
+    totalVisibleVerses() {
+      return this.visibleBookIndices.reduce((sum, bookIndex) => sum + Bible.getBookVerseCount(bookIndex), 0);
     },
     totalVersesRead() {
-      return Bible.countUniqueRangeVerses(this.logEntries);
+      return this.visibleBookIndices.reduce((sum, bookIndex) => sum + Bible.countUniqueBookRangeVerses(bookIndex, this.logEntries), 0);
     },
     percentageRead() {
-      return calcPercent(this.totalVersesRead, this.totalBibleVerses);
+      return calcPercent(this.totalVersesRead, this.totalVisibleVerses);
     },
     allBookReports() {
-      const reports = [];
-      for (let i = 1, l = Bible.getBookCount(); i <= l; i++) {
-        reports.push(this.bookReport(i));
-      }
-      return reports;
+      return this.visibleBookIndices.map(bookIndex => this.bookReport(bookIndex));
     },
     bibleReadingSegments() {
-      const totalBibleVerses = Bible.getTotalVerseCount();
+      const segments = [];
+      for (const bookIndex of this.visibleBookIndices) {
+        segments.push(...Bible.generateBookSegments(bookIndex, this.logEntries));
+      }
 
-      const segments = Bible.generateBibleSegments(this.logEntries);
-
-      // let sum = 0;
       segments.forEach((segment) => {
-        // sum += segment.verseCount;
-        // segment.startPercentage = sum * 100 / totalBibleVerses;
-        segment.percentage = segment.verseCount * 100 / totalBibleVerses;
+        segment.percentage = segment.verseCount * 100 / this.totalVisibleVerses;
         return segment;
       });
-      // console.log(`Whole Bible verse count: ${sum}`);
 
       return segments;
     },
@@ -165,6 +194,44 @@ export default {
 <style>
 .bible-report {
   user-select: none;
+}
+
+.bible-report .testament-toggle {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.bible-report .testament-toggle--button {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--mbl-border-strong);
+  background: var(--mbl-bg);
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.bible-report .testament-toggle--button:hover {
+  border-color: var(--mbl-link-bright);
+  background: var(--mbl-message-info-bg);
+}
+
+.bible-report .testament-toggle--button.active {
+  background: var(--mbl-link-bright);
+  color: var(--mbl-on-accent);
+  border-color: var(--mbl-link-bright);
+}
+
+.bible-report .testament-toggle--button:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-right: none;
+}
+
+.bible-report .testament-toggle--button:last-child {
+  border-left: none;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 .plaque {
@@ -269,37 +336,58 @@ export default {
   "en": {
     "bible_books": "Bible Books",
     "progress": "Progress",
-    "note": "Note | Notes"
+    "note": "Note | Notes",
+    "whole_bible": "Bible",
+    "old_testament_short": "OT",
+    "new_testament_short": "NT"
   },
   "de": {
     "bible_books": "Bücher der Bibel",
     "progress": "Fortschritt",
-    "note": "Notiz | Notizen"
+    "note": "Notiz | Notizen",
+    "whole_bible": "Bibel",
+    "old_testament_short": "AT",
+    "new_testament_short": "NT"
   },
   "es": {
     "bible_books": "Libros de la Biblia",
     "progress": "Progreso",
-    "note": "Nota | Notas"
+    "note": "Nota | Notas",
+    "whole_bible": "Biblia",
+    "old_testament_short": "AT",
+    "new_testament_short": "NT"
   },
   "fr": {
     "bible_books": "Livres de la Bible",
     "progress": "Progrès",
-    "note": "Note | Notes"
+    "note": "Note | Notes",
+    "whole_bible": "Bible",
+    "old_testament_short": "AT",
+    "new_testament_short": "NT"
   },
   "ko": {
     "bible_books": "성경 일람",
     "progress": "진도",
-    "note": "노트 | 노트"
+    "note": "노트 | 노트",
+    "whole_bible": "성경",
+    "old_testament_short": "구약",
+    "new_testament_short": "신약"
   },
   "pt": {
     "bible_books": "Livros da Bíblia",
     "progress": "Progresso",
-    "note": "Nota | Notas"
+    "note": "Nota | Notas",
+    "whole_bible": "Bíblia",
+    "old_testament_short": "AT",
+    "new_testament_short": "NT"
   },
   "uk": {
     "bible_books": "Книги Біблії",
     "progress": "Прогрес",
-    "note": "Примітка | Примітки"
+    "note": "Примітка | Примітки",
+    "whole_bible": "Біблія",
+    "old_testament_short": "СТ",
+    "new_testament_short": "НЗ"
   }
 }
 </i18n>
