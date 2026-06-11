@@ -68,7 +68,7 @@ const getPastWeekEngagement = async () => {
   const getLastSevenDays = () => {
     const dates: string[] = [];
     for (let i = 0; i < 7; i++) {
-      dates.push(dayjs().subtract(i, 'day').format('YYYY-MM-DD'));
+      dates.push(dayjs.utc().subtract(i, 'day').format('YYYY-MM-DD'));
     }
     return dates;
   };

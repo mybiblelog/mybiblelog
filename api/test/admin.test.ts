@@ -1,6 +1,9 @@
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { requestApi, createTestUser, createTestAdmin, deleteTestUser } from './helpers';
+
+dayjs.extend(utc);
 
 describe('admin.test.js', () => {
   describe('GET /api/admin/feedback is protected', () => {
@@ -186,7 +189,7 @@ describe('admin.test.js', () => {
         const initialResponse = await requestApi
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
-        const today = dayjs().format('YYYY-MM-DD');
+        const today = dayjs.utc().format('YYYY-MM-DD');
         const initialCount = initialResponse.body.data.find((d) => d.date === today).usersWithLogEntry;
 
         // Add a log entry
@@ -221,7 +224,7 @@ describe('admin.test.js', () => {
         const initialResponse = await requestApi
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
-        const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
+        const yesterday = dayjs.utc().subtract(1, 'day').format('YYYY-MM-DD');
         const initialCount = initialResponse.body.data.find((d) => d.date === yesterday).usersWithLogEntry;
 
         // Add a log entry
@@ -256,7 +259,7 @@ describe('admin.test.js', () => {
         const initialResponse = await requestApi
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
-        const today = dayjs().format('YYYY-MM-DD');
+        const today = dayjs.utc().format('YYYY-MM-DD');
         const initialCount = initialResponse.body.data.find((d) => d.date === today).usersWithLogEntry;
 
         // Add two log entries
@@ -300,7 +303,7 @@ describe('admin.test.js', () => {
         const initialResponse = await requestApi
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
-        const oldDate = dayjs().subtract(8, 'day').format('YYYY-MM-DD');
+        const oldDate = dayjs.utc().subtract(8, 'day').format('YYYY-MM-DD');
 
         // Add a log entry
         await requestApi
@@ -333,7 +336,7 @@ describe('admin.test.js', () => {
         const initialResponse = await requestApi
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
-        const today = dayjs().format('YYYY-MM-DD');
+        const today = dayjs.utc().format('YYYY-MM-DD');
         const initialCount = initialResponse.body.data.find((d) => d.date === today).usersWithNote;
 
         // Add a note
@@ -367,7 +370,7 @@ describe('admin.test.js', () => {
         const initialResponse = await requestApi
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
-        const today = dayjs().format('YYYY-MM-DD');
+        const today = dayjs.utc().format('YYYY-MM-DD');
         const initialCount = initialResponse.body.data.find((d) => d.date === today).usersWithNote;
 
         // Add two notes
@@ -409,7 +412,7 @@ describe('admin.test.js', () => {
         const initialResponse = await requestApi
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
-        const today = dayjs().format('YYYY-MM-DD');
+        const today = dayjs.utc().format('YYYY-MM-DD');
         const initialCount = initialResponse.body.data.find((d) => d.date === today).newUserAccounts;
 
         // Create a new user
@@ -437,7 +440,7 @@ describe('admin.test.js', () => {
         const initialResponse = await requestApi
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
-        const today = dayjs().format('YYYY-MM-DD');
+        const today = dayjs.utc().format('YYYY-MM-DD');
         const initialCount = initialResponse.body.data.find((d) => d.date === today).newUserAccounts;
 
         // Delete the user
