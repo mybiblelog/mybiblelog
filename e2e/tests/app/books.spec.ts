@@ -42,6 +42,51 @@ test.describe('Bible Books pages', () => {
     await expect(chapter2).toHaveAttribute('data-verses-read', '10');
   });
 
+  test('testament toggle filters books and recalculates progress', async ({ page, api }) => {
+    // John 1-3 registers ~1% of the New Testament but 0% of the whole Bible,
+    // so the headline percentage proves the total tracks the selected testament.
+    await seedLogEntries(api, [
+      { date: today(), ...chapterRange(BOOK.JOHN, 1) },
+      { date: today(), ...chapterRange(BOOK.JOHN, 2) },
+      { date: today(), ...chapterRange(BOOK.JOHN, 3) },
+    ]);
+    const versesRead = [1, 2, 3].reduce((sum, chapter) => sum + chapterVerseCount(BOOK.JOHN, chapter), 0);
+    const totalVerses = (firstBook: number, lastBook: number) => {
+      let total = 0;
+      for (let book = firstBook; book <= lastBook; book++) { total += bookVerseCount(book); }
+      return total;
+    };
+
+    await page.goto('/books');
+    const books = page.getByTestId('bible-report-book');
+    const progress = page.getByTestId('bible-report-progress');
+
+    // Default view covers the whole Bible
+    await expect(books).toHaveCount(66);
+    const biblePercentage = Math.floor((versesRead * 100) / totalVerses(1, 66));
+    await expect(progress).toHaveAttribute('data-percentage', String(biblePercentage));
+
+    // New Testament: 27 books starting with Matthew; total only counts NT verses
+    await page.getByTestId('testament-toggle-new').click();
+    await expect(books).toHaveCount(27);
+    await expect(books.first()).toHaveAttribute('data-book-index', String(BOOK.MATTHEW));
+    const ntPercentage = Math.floor((versesRead * 100) / totalVerses(BOOK.MATTHEW, BOOK.REVELATION));
+    expect(ntPercentage).toBeGreaterThan(biblePercentage);
+    await expect(progress).toHaveAttribute('data-percentage', String(ntPercentage));
+
+    // Old Testament: 39 books starting with Genesis; the John reading doesn't count
+    await page.getByTestId('testament-toggle-old').click();
+    await expect(books).toHaveCount(39);
+    await expect(books.first()).toHaveAttribute('data-book-index', String(BOOK.GENESIS));
+    await expect(books.last()).toHaveAttribute('data-book-index', '39');
+    await expect(progress).toHaveAttribute('data-percentage', '0');
+
+    // Back to the whole Bible
+    await page.getByTestId('testament-toggle-all').click();
+    await expect(books).toHaveCount(66);
+    await expect(progress).toHaveAttribute('data-percentage', String(biblePercentage));
+  });
+
   test('clicking a book on the overview navigates to its report', async ({ page }) => {
     await page.goto('/books');
     await page.getByTestId('bible-report-book').first().click();

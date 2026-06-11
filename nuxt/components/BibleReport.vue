@@ -15,6 +15,7 @@
         type="button"
         class="testament-toggle--button"
         :class="{ active: testamentFilter === 'all' }"
+        data-testid="testament-toggle-all"
         @click="testamentFilter = 'all'"
       >
         {{ $t('whole_bible') }}
@@ -23,6 +24,7 @@
         type="button"
         class="testament-toggle--button"
         :class="{ active: testamentFilter === 'old' }"
+        data-testid="testament-toggle-old"
         @click="testamentFilter = 'old'"
       >
         {{ $t('old_testament_short') }}
@@ -31,6 +33,7 @@
         type="button"
         class="testament-toggle--button"
         :class="{ active: testamentFilter === 'new' }"
+        data-testid="testament-toggle-new"
         @click="testamentFilter = 'new'"
       >
         {{ $t('new_testament_short') }}
