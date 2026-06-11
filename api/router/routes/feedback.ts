@@ -90,7 +90,7 @@ router.post('/feedback', async (req, res, next) => {
 
   try {
     // Use IP address to mitigate spam
-    const ip = req.ip;
+    const ip = req.ip ?? '';
 
     // Get current user (optional)
     const { feedback: feedbackRepository } = await useRepositories();
