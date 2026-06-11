@@ -1,85 +1,6 @@
 import Bible from './bible';
 import { LocaleCode } from './i18n';
-
-/** Determines if the operating system is a mobile device (for opening links in apps). */
-const isMobileOperatingSystem = () => {
-  if (typeof window === 'undefined') {
-    return false;
-  }
-  return /Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(navigator.userAgent);
-};
-
-// These lines allow us to check for unknown properties on the window object.
-interface UnknownBrowserWindow extends Window {
-  [key: string]: unknown;
-}
-declare let window: UnknownBrowserWindow;
-
-/**
- * Determine the mobile operating system.
- * This function returns one of 'iOS', 'Android', 'Windows Phone', or 'unknown'.
- *
- * @returns {String}
- */
-const getMobileOperatingSystem = () => {
-  const userAgent = String(navigator.userAgent || navigator.vendor || window.opera);
-
-  // Windows Phone must come first because its UA also contains "Android"
-  if (/windows phone/i.test(userAgent)) {
-    return 'Windows Phone';
-  }
-
-  if (/android/i.test(userAgent)) {
-    return 'Android';
-  }
-
-  // iOS detection from: http://stackoverflow.com/a/9039885/177710
-  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-    return 'iOS';
-  }
-
-  return 'unknown';
-};
-
-const OSIS: { [bookName: string]: string } = {
-  Judges: 'JDG',
-  '1 Samuel': '1SA',
-  '2 Samuel': '2SA',
-  '1 Kings': '1KI',
-  '2 Kings': '2KI',
-  '1 Chronicles': '1CH',
-  '2 Chronicles': '2CH',
-  'Song of Solomon': 'SNG',
-  Ezekiel: 'EZK',
-  Joel: 'JOL',
-  Nahum: 'NAM',
-  Mark: 'MRK',
-  John: 'JHN',
-  '1 Corinthians': '1CO',
-  '2 Corinthians': '2CO',
-  '1 Thessalonians': '1TH',
-  '2 Thessalonians': '2TH',
-  '1 Timothy': '1TI',
-  '2 Timothy': '2TI',
-  Philippians: 'PHP',
-  Philemon: 'PHM',
-  James: 'JAS',
-  '1 Peter': '1PE',
-  '2 Peter': '2PE',
-  '1 John': '1JN',
-  '2 John': '2JN',
-  '3 John': '3JN',
-};
-
-/**
- * Use the OSIS abbreviation map for books whose OSIS codes do not follow the
- * pattern of using their three initial letters.
- * @param {string} bookName
- */
-const getOsisCode = (bookName: string) => {
-  if (OSIS[bookName]) { return OSIS[bookName]; }
-  return bookName.substring(0, 3).toLocaleUpperCase();
-};
+import { getMobileOperatingSystem, isMobileOperatingSystem } from './device';
 
 /**
  * This is an enum of translations *internal* to My Bible Log.
@@ -201,9 +122,8 @@ const defaultBibleVersion: keyof typeof BibleVersions = BibleVersions.NASB2020;
 const getYouVersionReadingURL = (version: keyof typeof BibleVersions, bookIndex: number, chapterIndex: number) => {
   // Map version to YouVersion accepted values
   version = BibleVersions[version] || defaultBibleVersion;
-  const bookName = Bible.getBookName(bookIndex, 'en');
-  const bookOsisCode = getOsisCode(bookName);
-  const url = `youversion://bible?reference=${bookOsisCode}.${chapterIndex}.${version}`;
+  const bookUsfmCode = Bible.getBookUsfmCode(bookIndex);
+  const url = `youversion://bible?reference=${bookUsfmCode}.${chapterIndex}.${version}`;
   return url;
 };
 
@@ -212,88 +132,17 @@ const getBibleComReadingURL = (version: keyof typeof BibleVersions, bookIndex: n
   // Map version to Bible.com accepted values
   version = BibleVersions[version] || defaultBibleVersion;
   const languageCode = BibleComTranslationLanguages[version] || 1;
-  const bookName = Bible.getBookName(bookIndex, 'en');
-  const bookOsisCode = getOsisCode(bookName);
-  const url = `https://www.bible.com/bible/${languageCode}/${bookOsisCode}.${chapterIndex}.${version}`;
+  const bookUsfmCode = Bible.getBookUsfmCode(bookIndex);
+  const url = `https://www.bible.com/bible/${languageCode}/${bookUsfmCode}.${chapterIndex}.${version}`;
   return url;
 };
-
-const BlueLetterBibleBookCodes = [
-  undefined,
-  'Gen',
-  'Exo',
-  'Lev',
-  'Num',
-  'Deu',
-  'Jos',
-  'Jdg',
-  'Rth',
-  '1Sa',
-  '2Sa',
-  '1Ki',
-  '2Ki',
-  '1Ch',
-  '2Ch',
-  'Ezr',
-  'Neh',
-  'Est',
-  'Job',
-  'Psa',
-  'Pro',
-  'Ecc',
-  'Sng',
-  'Isa',
-  'Jer',
-  'Lam',
-  'Eze',
-  'Dan',
-  'Hos',
-  'Joe',
-  'Amo',
-  'Oba',
-  'Jon',
-  'Mic',
-  'Nah',
-  'Hab',
-  'Zep',
-  'Hag',
-  'Zec',
-  'Mal',
-  'Mat',
-  'Mar',
-  'Luk',
-  'Jhn',
-  'Act',
-  'Rom',
-  '1Co',
-  '2Co',
-  'Gal',
-  'Eph',
-  'Phl',
-  'Col',
-  '1Th',
-  '2Th',
-  '1Ti',
-  '2Ti',
-  'Tit',
-  'Phm',
-  'Heb',
-  'Jas',
-  '1Pe',
-  '2Pe',
-  '1Jo',
-  '2Jo',
-  '3Jo',
-  'Jde',
-  'Rev',
-];
 
 const getBlueLetterBibleReadingURL = (version: keyof typeof BibleVersions, bookIndex: number, chapterIndex: number) => {
   // Example: https://www.blueletterbible.org/nasb20/1jo/3/1/s_1162001
   // Map version to Blue Letter Bible accepted values
   version = (BlueLetterBibleVersions[version] || BlueLetterBibleVersions[defaultBibleVersion]) as keyof typeof BibleVersions;
   // Get app-specific book code
-  const bookCode = BlueLetterBibleBookCodes[bookIndex];
+  const bookCode = Bible.getBookBlbCode(bookIndex);
   const url = `https://www.blueletterbible.org/${version}/${bookCode}/${chapterIndex}/1`;
   return url;
 };

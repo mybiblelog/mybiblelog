@@ -3,6 +3,10 @@ export type BibleBook = {
   bibleOrder: number;
   newTestament: boolean;
   chapterCount: number;
+  /** Paratext/USFM-style book code used by YouVersion and Bible.com (e.g. "GEN", "1SA"). */
+  usfmCode: string;
+  /** Blue Letter Bible URL book code (e.g. "Gen", "1Sa"). */
+  blbCode: string;
   locales: {
     [locale: string]: {
       name: string;
@@ -17,6 +21,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 1,
     newTestament: false,
     chapterCount: 50,
+    usfmCode: 'GEN',
+    blbCode: 'Gen',
     locales: {
       de: {
         name: 'Genesis',
@@ -73,6 +79,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 2,
     newTestament: false,
     chapterCount: 40,
+    usfmCode: 'EXO',
+    blbCode: 'Exo',
     locales: {
       de: {
         name: 'Exodus',
@@ -128,6 +136,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 3,
     newTestament: false,
     chapterCount: 27,
+    usfmCode: 'LEV',
+    blbCode: 'Lev',
     locales: {
       de: {
         name: 'Levitikus',
@@ -183,6 +193,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 4,
     newTestament: false,
     chapterCount: 36,
+    usfmCode: 'NUM',
+    blbCode: 'Num',
     locales: {
       de: {
         name: 'Numeri',
@@ -240,6 +252,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 5,
     newTestament: false,
     chapterCount: 34,
+    usfmCode: 'DEU',
+    blbCode: 'Deu',
     locales: {
       de: {
         name: 'Deuteronomium',
@@ -296,6 +310,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 6,
     newTestament: false,
     chapterCount: 24,
+    usfmCode: 'JOS',
+    blbCode: 'Jos',
     locales: {
       de: {
         name: 'Josua',
@@ -352,6 +368,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 7,
     newTestament: false,
     chapterCount: 21,
+    usfmCode: 'JDG',
+    blbCode: 'Jdg',
     locales: {
       de: {
         name: 'Richter',
@@ -409,6 +427,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 8,
     newTestament: false,
     chapterCount: 4,
+    usfmCode: 'RUT',
+    blbCode: 'Rth',
     locales: {
       de: {
         name: 'Ruth',
@@ -463,6 +483,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 9,
     newTestament: false,
     chapterCount: 31,
+    usfmCode: '1SA',
+    blbCode: '1Sa',
     locales: {
       de: {
         name: '1. Samuel',
@@ -521,6 +543,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 10,
     newTestament: false,
     chapterCount: 24,
+    usfmCode: '2SA',
+    blbCode: '2Sa',
     locales: {
       de: {
         name: '2. Samuel',
@@ -579,6 +603,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 11,
     newTestament: false,
     chapterCount: 22,
+    usfmCode: '1KI',
+    blbCode: '1Ki',
     locales: {
       de: {
         name: '1. Könige',
@@ -636,6 +662,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 12,
     newTestament: false,
     chapterCount: 25,
+    usfmCode: '2KI',
+    blbCode: '2Ki',
     locales: {
       de: {
         name: '2. Könige',
@@ -693,6 +721,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 13,
     newTestament: false,
     chapterCount: 29,
+    usfmCode: '1CH',
+    blbCode: '1Ch',
     locales: {
       de: {
         name: '1. Chronik',
@@ -749,6 +779,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 14,
     newTestament: false,
     chapterCount: 36,
+    usfmCode: '2CH',
+    blbCode: '2Ch',
     locales: {
       de: {
         name: '2. Chronik',
@@ -805,6 +837,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 15,
     newTestament: false,
     chapterCount: 10,
+    usfmCode: 'EZR',
+    blbCode: 'Ezr',
     locales: {
       de: {
         name: 'Esra',
@@ -858,6 +892,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 16,
     newTestament: false,
     chapterCount: 13,
+    usfmCode: 'NEH',
+    blbCode: 'Neh',
     locales: {
       de: {
         name: 'Nehemia',
@@ -913,6 +949,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 17,
     newTestament: false,
     chapterCount: 10,
+    usfmCode: 'EST',
+    blbCode: 'Est',
     locales: {
       de: {
         name: 'Esther',
@@ -968,6 +1006,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 18,
     newTestament: false,
     chapterCount: 42,
+    usfmCode: 'JOB',
+    blbCode: 'Job',
     locales: {
       de: {
         name: 'Hiob',
@@ -1021,6 +1061,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 19,
     newTestament: false,
     chapterCount: 150,
+    usfmCode: 'PSA',
+    blbCode: 'Psa',
     locales: {
       de: {
         name: 'Psalm',
@@ -1079,6 +1121,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 20,
     newTestament: false,
     chapterCount: 31,
+    usfmCode: 'PRO',
+    blbCode: 'Pro',
     locales: {
       de: {
         name: 'Sprüche',
@@ -1136,6 +1180,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 21,
     newTestament: false,
     chapterCount: 12,
+    usfmCode: 'ECC',
+    blbCode: 'Ecc',
     locales: {
       de: {
         name: 'Prediger',
@@ -1195,6 +1241,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 22,
     newTestament: false,
     chapterCount: 8,
+    usfmCode: 'SNG',
+    blbCode: 'Sng',
     locales: {
       de: {
         name: 'Hohelied',
@@ -1249,6 +1297,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 23,
     newTestament: false,
     chapterCount: 66,
+    usfmCode: 'ISA',
+    blbCode: 'Isa',
     locales: {
       de: {
         name: 'Jesaja',
@@ -1303,6 +1353,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 24,
     newTestament: false,
     chapterCount: 52,
+    usfmCode: 'JER',
+    blbCode: 'Jer',
     locales: {
       de: {
         name: 'Jeremia',
@@ -1359,6 +1411,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 25,
     newTestament: false,
     chapterCount: 5,
+    usfmCode: 'LAM',
+    blbCode: 'Lam',
     locales: {
       de: {
         name: 'Klagelieder',
@@ -1414,6 +1468,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 26,
     newTestament: false,
     chapterCount: 48,
+    usfmCode: 'EZK',
+    blbCode: 'Eze',
     locales: {
       de: {
         name: 'Hesekiel',
@@ -1470,6 +1526,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 27,
     newTestament: false,
     chapterCount: 12,
+    usfmCode: 'DAN',
+    blbCode: 'Dan',
     locales: {
       de: {
         name: 'Daniel',
@@ -1526,6 +1584,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 28,
     newTestament: false,
     chapterCount: 14,
+    usfmCode: 'HOS',
+    blbCode: 'Hos',
     locales: {
       de: {
         name: 'Hosea',
@@ -1581,6 +1641,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 29,
     newTestament: false,
     chapterCount: 3,
+    usfmCode: 'JOL',
+    blbCode: 'Joe',
     locales: {
       de: {
         name: 'Joel',
@@ -1634,6 +1696,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 30,
     newTestament: false,
     chapterCount: 9,
+    usfmCode: 'AMO',
+    blbCode: 'Amo',
     locales: {
       de: {
         name: 'Amos',
@@ -1686,6 +1750,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 31,
     newTestament: false,
     chapterCount: 1,
+    usfmCode: 'OBA',
+    blbCode: 'Oba',
     locales: {
       de: {
         name: 'Obadja',
@@ -1739,6 +1805,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 32,
     newTestament: false,
     chapterCount: 4,
+    usfmCode: 'JON',
+    blbCode: 'Jon',
     locales: {
       de: {
         name: 'Jona',
@@ -1792,6 +1860,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 33,
     newTestament: false,
     chapterCount: 7,
+    usfmCode: 'MIC',
+    blbCode: 'Mic',
     locales: {
       de: {
         name: 'Micha',
@@ -1847,6 +1917,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 34,
     newTestament: false,
     chapterCount: 3,
+    usfmCode: 'NAM',
+    blbCode: 'Nah',
     locales: {
       de: {
         name: 'Nahum',
@@ -1902,6 +1974,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 35,
     newTestament: false,
     chapterCount: 3,
+    usfmCode: 'HAB',
+    blbCode: 'Hab',
     locales: {
       de: {
         name: 'Habakuk',
@@ -1957,6 +2031,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 36,
     newTestament: false,
     chapterCount: 3,
+    usfmCode: 'ZEP',
+    blbCode: 'Zep',
     locales: {
       de: {
         name: 'Zephanja',
@@ -2013,6 +2089,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 37,
     newTestament: false,
     chapterCount: 2,
+    usfmCode: 'HAG',
+    blbCode: 'Hag',
     locales: {
       de: {
         name: 'Haggai',
@@ -2067,6 +2145,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 38,
     newTestament: false,
     chapterCount: 14,
+    usfmCode: 'ZEC',
+    blbCode: 'Zec',
     locales: {
       de: {
         name: 'Sacharja',
@@ -2123,6 +2203,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 39,
     newTestament: false,
     chapterCount: 4,
+    usfmCode: 'MAL',
+    blbCode: 'Mal',
     locales: {
       de: {
         name: 'Maleachi',
@@ -2178,6 +2260,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 40,
     newTestament: true,
     chapterCount: 28,
+    usfmCode: 'MAT',
+    blbCode: 'Mat',
     locales: {
       de: {
         name: 'Matthäus',
@@ -2232,6 +2316,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 41,
     newTestament: true,
     chapterCount: 16,
+    usfmCode: 'MRK',
+    blbCode: 'Mar',
     locales: {
       de: {
         name: 'Markus',
@@ -2286,6 +2372,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 42,
     newTestament: true,
     chapterCount: 24,
+    usfmCode: 'LUK',
+    blbCode: 'Luk',
     locales: {
       de: {
         name: 'Lukas',
@@ -2340,6 +2428,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 43,
     newTestament: true,
     chapterCount: 21,
+    usfmCode: 'JHN',
+    blbCode: 'Jhn',
     locales: {
       de: {
         name: 'Johannes',
@@ -2394,6 +2484,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 44,
     newTestament: true,
     chapterCount: 28,
+    usfmCode: 'ACT',
+    blbCode: 'Act',
     locales: {
       de: {
         name: 'Apostelgeschichte',
@@ -2445,6 +2537,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 45,
     newTestament: true,
     chapterCount: 16,
+    usfmCode: 'ROM',
+    blbCode: 'Rom',
     locales: {
       de: {
         name: 'Römer',
@@ -2501,6 +2595,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 46,
     newTestament: true,
     chapterCount: 16,
+    usfmCode: '1CO',
+    blbCode: '1Co',
     locales: {
       de: {
         name: '1. Korinther',
@@ -2556,6 +2652,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 47,
     newTestament: true,
     chapterCount: 13,
+    usfmCode: '2CO',
+    blbCode: '2Co',
     locales: {
       de: {
         name: '2. Korinther',
@@ -2611,6 +2709,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 48,
     newTestament: true,
     chapterCount: 6,
+    usfmCode: 'GAL',
+    blbCode: 'Gal',
     locales: {
       de: {
         name: 'Galater',
@@ -2666,6 +2766,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 49,
     newTestament: true,
     chapterCount: 6,
+    usfmCode: 'EPH',
+    blbCode: 'Eph',
     locales: {
       de: {
         name: 'Epheser',
@@ -2720,6 +2822,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 50,
     newTestament: true,
     chapterCount: 4,
+    usfmCode: 'PHP',
+    blbCode: 'Phl',
     locales: {
       de: {
         name: 'Philipper',
@@ -2776,6 +2880,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 51,
     newTestament: true,
     chapterCount: 4,
+    usfmCode: 'COL',
+    blbCode: 'Col',
     locales: {
       de: {
         name: 'Kolosser',
@@ -2830,6 +2936,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 52,
     newTestament: true,
     chapterCount: 5,
+    usfmCode: '1TH',
+    blbCode: '1Th',
     locales: {
       de: {
         name: '1. Thessalonicher',
@@ -2886,6 +2994,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 53,
     newTestament: true,
     chapterCount: 3,
+    usfmCode: '2TH',
+    blbCode: '2Th',
     locales: {
       de: {
         name: '2. Thessalonicher',
@@ -2942,6 +3052,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 54,
     newTestament: true,
     chapterCount: 6,
+    usfmCode: '1TI',
+    blbCode: '1Ti',
     locales: {
       de: {
         name: '1. Timotheus',
@@ -2997,6 +3109,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 55,
     newTestament: true,
     chapterCount: 4,
+    usfmCode: '2TI',
+    blbCode: '2Ti',
     locales: {
       de: {
         name: '2. Timotheus',
@@ -3052,6 +3166,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 56,
     newTestament: true,
     chapterCount: 3,
+    usfmCode: 'TIT',
+    blbCode: 'Tit',
     locales: {
       de: {
         name: 'Titus',
@@ -3106,6 +3222,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 57,
     newTestament: true,
     chapterCount: 1,
+    usfmCode: 'PHM',
+    blbCode: 'Phm',
     locales: {
       de: {
         name: 'Philemon',
@@ -3162,6 +3280,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 58,
     newTestament: true,
     chapterCount: 13,
+    usfmCode: 'HEB',
+    blbCode: 'Heb',
     locales: {
       de: {
         name: 'Hebräer',
@@ -3215,6 +3335,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 59,
     newTestament: true,
     chapterCount: 5,
+    usfmCode: 'JAS',
+    blbCode: 'Jas',
     locales: {
       de: {
         name: 'Jakobus',
@@ -3270,6 +3392,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 60,
     newTestament: true,
     chapterCount: 5,
+    usfmCode: '1PE',
+    blbCode: '1Pe',
     locales: {
       de: {
         name: '1. Petrus',
@@ -3327,6 +3451,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 61,
     newTestament: true,
     chapterCount: 3,
+    usfmCode: '2PE',
+    blbCode: '2Pe',
     locales: {
       de: {
         name: '2. Petrus',
@@ -3384,6 +3510,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 62,
     newTestament: true,
     chapterCount: 5,
+    usfmCode: '1JN',
+    blbCode: '1Jo',
     locales: {
       de: {
         name: '1. Johannes',
@@ -3440,6 +3568,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 63,
     newTestament: true,
     chapterCount: 1,
+    usfmCode: '2JN',
+    blbCode: '2Jo',
     locales: {
       de: {
         name: '2. Johannes',
@@ -3496,6 +3626,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 64,
     newTestament: true,
     chapterCount: 1,
+    usfmCode: '3JN',
+    blbCode: '3Jo',
     locales: {
       de: {
         name: '3. Johannes',
@@ -3552,6 +3684,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 65,
     newTestament: true,
     chapterCount: 1,
+    usfmCode: 'JUD',
+    blbCode: 'Jde',
     locales: {
       de: {
         name: 'Judas',
@@ -3606,6 +3740,8 @@ const bibleBooks: BibleBook[] = [
     bibleOrder: 66,
     newTestament: true,
     chapterCount: 22,
+    usfmCode: 'REV',
+    blbCode: 'Rev',
     locales: {
       de: {
         name: 'Offenbarung',

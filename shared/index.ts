@@ -4,7 +4,8 @@ export { default as SimpleDate } from './simple-date';
 export { default as BrowserCache } from './browser-cache';
 
 // Utility exports
-export * from './util';
+export * from './bible-apps';
+export * from './device';
 export * from './date-helpers';
 
 // i18n exports
@@ -16,3 +17,4 @@ export { default as chapterVerses } from './static/chapter-verses/nasb';
 
 // Type exports
 export type { BibleBook } from './static/bible-books';
+export type { ParsedVerseId, Segment, VerseId, VerseRange } from './bible';
