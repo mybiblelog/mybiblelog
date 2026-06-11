@@ -1,4 +1,4 @@
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect } from 'vitest';
 import { requestApi, createTestUser, deleteTestUser } from './helpers';
 import { AUTH_COOKIE_NAME } from '../router/helpers/authCurrentUser';
 
