@@ -107,63 +107,15 @@
 </template>
 
 <script>
-import { BibleApps, BibleVersions } from '@mybiblelog/shared';
+import { bibleVersionOptions as allBibleVersionOptions, bibleAppOptions, localeVersionGroups } from '@mybiblelog/shared';
 import { useToastStore } from '~/stores/toast';
 import { useUserSettingsStore } from '~/stores/user-settings';
-
-const bibleVersionNames = {
-  [BibleVersions.NASB2020]: 'New American Standard Bible (NASB)',
-  [BibleVersions.NASB1995]: 'New American Standard Bible 1995 (NASB 1995)',
-  [BibleVersions.AMP]: 'Amplified Bible (AMP)',
-  [BibleVersions.KJV]: 'King James Version (KJV)',
-  [BibleVersions.NKJV]: 'New King James Version (NKJV)',
-  [BibleVersions.NIV]: 'New International Version (NIV)',
-  [BibleVersions.ESV]: 'English Standard Version (ESV)',
-  [BibleVersions.NABRE]: 'New American Bible Revised Edition (NABRE)',
-  [BibleVersions.NLT]: 'New Living Translation (NLT)',
-  [BibleVersions.TPT]: 'The Passion Translation (TPT)',
-  [BibleVersions.MSG]: 'The Message (MSG)',
-  [BibleVersions.RVR1960]: 'Reina-Valera 1960 (RVR1960)',
-  [BibleVersions.RVR2020]: 'Reina-Valera 2020 (RVR2020)',
-  [BibleVersions.UKR]: 'українська (UKRK)',
-  [BibleVersions.BDS]: 'Bible du Semeur (BDS)',
-  [BibleVersions.LSG]: 'Louis Segond (LSG)',
-  [BibleVersions.ARC]: 'Almeida Revista e Corrigida (ARC)',
-  [BibleVersions.LUT]: 'Luther 1545 (LUT)',
-  [BibleVersions.KLB]: '한글성경 (KLB)',
-  [BibleVersions.KRV]: '개역한글 (KRV)',
-};
-
-const bibleAppNames = {
-  [BibleApps.BIBLEGATEWAY]: 'Bible Gateway',
-  [BibleApps.YOUVERSIONAPP]: 'YouVersion App',
-  [BibleApps.BIBLECOM]: 'Bible.com (YouVersion)',
-  [BibleApps.BLUELETTERBIBLE]: 'Blue Letter Bible',
-  [BibleApps.OLIVETREE]: 'Olive Tree App',
-};
-
-const bibleVersionOptions = Object.keys(bibleVersionNames).map((key) => {
-  const value = bibleVersionNames[key];
-  return {
-    text: value,
-    value: key,
-  };
-});
-
-const bibleAppOptions = Object.keys(bibleAppNames).map((key) => {
-  const value = bibleAppNames[key];
-  return {
-    text: value,
-    value: key,
-  };
-});
 
 export default {
   name: 'ReadingSettingsPage',
   middleware: ['auth'],
   data() {
     return {
-      bibleVersionOptions,
       bibleAppOptions,
       userSettingsForm: {
         lookBackDate: '',
@@ -189,6 +141,16 @@ export default {
   computed: {
     userSettings() {
       return useUserSettingsStore().settings;
+    },
+    bibleVersionOptions() {
+      const locale = this.$i18n?.locale || 'en';
+      const group = localeVersionGroups[locale] || [];
+      return [...allBibleVersionOptions].sort((a, b) => {
+        const aLocal = group.includes(a.value);
+        const bLocal = group.includes(b.value);
+        if (aLocal === bLocal) { return 0; }
+        return aLocal ? -1 : 1;
+      });
     },
     bibleReadingDays() {
       if (!this.userSettings.dailyVerseCountGoal) {

@@ -1,5 +1,6 @@
 import { test, expect } from '../../fixtures';
-import { login } from '../../helpers/api-client';
+import { login, createTestUser, deleteTestUser } from '../../helpers/api-client';
+import { env } from '../../helpers/env';
 
 test.describe('Settings', () => {
   test('settings pages are marked noindex', async ({ page }) => {
@@ -73,5 +74,27 @@ test.describe('Settings', () => {
 
     // The form surfaces an error and the password is unchanged
     await expect(page.locator('.mbl-help--danger').first()).toBeVisible();
+  });
+
+  test('non-English locale sees locale translations at the top of the Bible version list', async ({ browser }) => {
+    const germanUser = await createTestUser({ locale: 'de' });
+    const ctx = await browser.newContext({ baseURL: env.siteUrl });
+    try {
+      await ctx.addCookies([
+        { name: 'auth_token', value: germanUser.token, url: env.siteUrl, httpOnly: true, sameSite: 'Lax' },
+        { name: 'i18n_redirected', value: 'de', url: env.siteUrl },
+      ]);
+      const page = await ctx.newPage();
+      await page.goto('/de/settings/reading');
+
+      const select = page.getByTestId('settings-bible-version-select');
+      // nth(0) is the disabled placeholder; nth(1) is the first real option
+      const firstOption = select.locator('option').nth(1);
+      await expect(firstOption).toHaveAttribute('value', 'LUT');
+    }
+    finally {
+      await ctx.close();
+      await deleteTestUser(germanUser);
+    }
   });
 });

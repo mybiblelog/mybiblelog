@@ -202,3 +202,48 @@ export const getDefaultBibleApp = () => {
 export const getDefaultBibleVersion = () => {
   return BibleVersions.NASB2020;
 };
+
+export const bibleVersionNames: Record<typeof BibleVersions[keyof typeof BibleVersions], string> = {
+  [BibleVersions.NASB2020]: 'New American Standard Bible (NASB)',
+  [BibleVersions.NASB1995]: 'New American Standard Bible 1995 (NASB 1995)',
+  [BibleVersions.AMP]: 'Amplified Bible (AMP)',
+  [BibleVersions.KJV]: 'King James Version (KJV)',
+  [BibleVersions.NKJV]: 'New King James Version (NKJV)',
+  [BibleVersions.NIV]: 'New International Version (NIV)',
+  [BibleVersions.ESV]: 'English Standard Version (ESV)',
+  [BibleVersions.NABRE]: 'New American Bible Revised Edition (NABRE)',
+  [BibleVersions.NLT]: 'New Living Translation (NLT)',
+  [BibleVersions.TPT]: 'The Passion Translation (TPT)',
+  [BibleVersions.MSG]: 'The Message (MSG)',
+  [BibleVersions.RVR1960]: 'Reina-Valera 1960 (RVR1960)',
+  [BibleVersions.RVR2020]: 'Reina-Valera 2020 (RVR2020)',
+  [BibleVersions.UKR]: 'українська (UKRK)',
+  [BibleVersions.BDS]: 'Bible du Semeur (BDS)',
+  [BibleVersions.LSG]: 'Louis Segond (LSG)',
+  [BibleVersions.ARC]: 'Almeida Revista e Corrigida (ARC)',
+  [BibleVersions.LUT]: 'Luther 1545 (LUT)',
+  [BibleVersions.KLB]: '한글성경 (KLB)',
+  [BibleVersions.KRV]: '개역한글 (KRV)',
+};
+
+export const bibleVersionOptions = Object.entries(bibleVersionNames).map(([value, text]) => ({ text, value }));
+
+export const bibleAppNames: Record<typeof BibleApps[keyof typeof BibleApps], string> = {
+  [BibleApps.BIBLEGATEWAY]: 'Bible Gateway',
+  [BibleApps.YOUVERSIONAPP]: 'YouVersion App',
+  [BibleApps.BIBLECOM]: 'Bible.com (YouVersion)',
+  [BibleApps.BLUELETTERBIBLE]: 'Blue Letter Bible',
+  [BibleApps.OLIVETREE]: 'Olive Tree App',
+};
+
+export const bibleAppOptions = Object.entries(bibleAppNames).map(([value, text]) => ({ text, value }));
+
+export const localeVersionGroups: Record<LocaleCode, readonly string[]> = {
+  en: ['AMP', 'KJV', 'NKJV', 'NIV', 'ESV', 'NASB1995', 'NASB2020', 'NABRE', 'NLT', 'TPT', 'MSG'],
+  de: ['LUT'],
+  es: ['RVR1960', 'RVR2020'],
+  fr: ['BDS', 'LSG'],
+  ko: ['KLB', 'KRV'],
+  pt: ['ARC'],
+  uk: ['UKR'],
+};
