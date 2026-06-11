@@ -57,6 +57,24 @@
   color: var(--mbl-message-info-fg);
 }
 
+.mbl-message--success .mbl-message__header {
+  background-color: var(--mbl-success);
+  color: var(--mbl-on-accent);
+}
+
+.mbl-message--success .mbl-message__body {
+  background-color: var(--mbl-message-success-bg);
+  color: var(--mbl-message-success-fg);
+}
+
+.mbl-message--success > .mbl-message__body:only-child {
+  background-color: var(--mbl-message-success-bg);
+  border: none;
+  border-left: 5px solid var(--mbl-message-success-accent);
+  border-radius: var(--mbl-radius);
+  color: var(--mbl-message-success-fg);
+}
+
 .mbl-notification {
   background-color: var(--mbl-bg-muted);
   border-radius: var(--mbl-radius);

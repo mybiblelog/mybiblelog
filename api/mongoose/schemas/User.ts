@@ -29,8 +29,11 @@ export const UserSchema = new mongoose.Schema({
     },
   },
   googleId: { type: String, default: null },
+
+  // email verification flow
   emailVerificationCode: { type: String, default: () => crypto.randomBytes(64).toString('hex') },
   emailVerificationExpires: { type: Date, default: () => new Date(Date.now() + 24 * 60 * 60 * 1000) }, // 24 hours
+  emailVerificationCodeLastSentAt: { type: Date, default: () => new Date(0) },
 
   // change email flow
   newEmail: { type: String, lowercase: true, trim: true, required: false, match: [/^\S+@\S+\.\S+$/, 'is invalid'] },

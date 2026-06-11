@@ -177,6 +177,11 @@
   --mbl-message-info-fg: #1a5080;
   --mbl-message-info-accent: #7ab8e8;
 
+  --mbl-message-success-border: #a3d9b1;
+  --mbl-message-success-bg: #f0fff4;
+  --mbl-message-success-fg: #1a6634;
+  --mbl-message-success-accent: #48c774;
+
   --mbl-notification-info-bg: var(--mbl-info);
   --mbl-notification-info-fg: var(--mbl-on-accent);
 
@@ -250,6 +255,11 @@
   --mbl-message-info-bg: #11202f;
   --mbl-message-info-fg: #c5e3ff;
   --mbl-message-info-accent: #5b8db8;
+
+  --mbl-message-success-border: #1e4d30;
+  --mbl-message-success-bg: #0d2118;
+  --mbl-message-success-fg: #b8f5cc;
+  --mbl-message-success-accent: #3a9e5c;
   --mbl-star-earned: #d08a2f;
   /* Visible on #191919 surfaces; was #2c2c2c (too low contrast) */
   --mbl-star-unearned: #6e6e6e;

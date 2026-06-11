@@ -25,6 +25,7 @@ export interface UserRecord {
   /** An empty string means the email address has been verified. */
   emailVerificationCode: string;
   emailVerificationExpires: Date;
+  emailVerificationCodeLastSentAt: Date;
   newEmail: string | null;
   newEmailVerificationCode: string;
   newEmailVerificationExpires: Date;

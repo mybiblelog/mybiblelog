@@ -642,6 +642,102 @@ router.post('/auth/verify-email', async (req, res) => {
 
 /**
  * @swagger
+ * /auth/resend-email-verification:
+ *   post:
+ *     summary: Resend verification email (cooldown)
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *               locale:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Returns whether resend was queued and cooldown seconds
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               required:
+ *                 - data
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   required:
+ *                     - success
+ *                     - secondsUntilCanRetry
+ *                   properties:
+ *                     success:
+ *                       type: boolean
+ *                     secondsUntilCanRetry:
+ *                       type: number
+ *       400:
+ *         description: Validation error (e.g., missing email)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiErrorResponse'
+ */
+router.post('/auth/resend-email-verification', async (req, res) => {
+  // Rate limiting for resend requests
+  const authBypass = checkTestBypass(req);
+  if (!authBypass) {
+    await rateLimit(req, { maxRequests: 10, windowMs: 60 * 60 * 1000 }); // 10 attempts per hour
+  }
+
+  const cooldownMs = 5 * 60 * 1000;
+  const defaultSecondsUntilCanRetry = Math.ceil(cooldownMs / 1000);
+
+  const rawEmail = req.body?.email;
+  if (!rawEmail) {
+    throw new ValidationError([{ code: ApiErrorDetailCode.Required, field: 'email' }]);
+  }
+  const email = String(rawEmail).trim().toLowerCase();
+
+  const { users } = await useRepositories();
+  const user = await users.findByEmail(email);
+
+  // Avoid email enumeration: unknown / already verified both return a generic success.
+  if (!user || user.emailVerificationCode === '' || !requireEmailVerification) {
+    return res.json({ data: { success: true, secondsUntilCanRetry: defaultSecondsUntilCanRetry } } satisfies ApiResponse);
+  }
+
+  const nowMs = Date.now();
+  const lastSentAtMs = user.emailVerificationCodeLastSentAt.getTime();
+  const remainingSeconds = Math.max(0, Math.ceil((lastSentAtMs + cooldownMs - nowMs) / 1000));
+
+  if (remainingSeconds > 0) {
+    return res.json({ data: { success: true, secondsUntilCanRetry: remainingSeconds } } satisfies ApiResponse);
+  }
+
+  const updatedUser = await users.resendEmailVerification(user.id);
+
+  const responseData: { success: boolean; secondsUntilCanRetry: number; emailVerificationCode?: string } = {
+    success: true,
+    secondsUntilCanRetry: defaultSecondsUntilCanRetry,
+  };
+  if (authBypass) {
+    responseData.emailVerificationCode = updatedUser.emailVerificationCode;
+  }
+  res.json({ data: responseData } satisfies ApiResponse);
+
+  const localeFromBody = req.body?.locale;
+  const locale = (user.settings?.locale as LocaleCode) || (localeFromBody as LocaleCode) || 'en';
+
+  const emailService = await useEmailService();
+  emailService.sendUserEmailVerification(updatedUser.email, updatedUser.emailVerificationCode, locale);
+});
+
+/**
+ * @swagger
  * /auth/change-password:
  *   put:
  *     summary: Change user password
@@ -1136,6 +1232,8 @@ router.post('/auth/reset-password', async (req, res) => {
   if (authBypass && updatedUser.passwordResetCode) {
     responseData.passwordResetCode = updatedUser.passwordResetCode;
   }
+
+  // send success response, but don't `return` here so the email can be sent
   res.json({ data: responseData } satisfies ApiResponse);
 
   // send password reset code via email
