@@ -35,6 +35,21 @@ test.describe('Registration', () => {
     await page.goto('/register');
     await expect(page.getByRole('heading', { name: 'Sign Up' })).toBeVisible();
 
+    // Fail fast with a clear message if the app is running with email
+    // verification enabled (e.g. a reused dev server started without
+    // REQUIRE_EMAIL_VERIFICATION=false) — otherwise registration cannot
+    // auto-login and the test would time out waiting for onboarding.
+    await page.waitForFunction(() => Boolean((window as any).$nuxt?.$config));
+    const requireEmailVerification = await page.evaluate(
+      () => (window as any).$nuxt.$config.requireEmailVerification,
+    );
+    if (requireEmailVerification) {
+      throw new Error(
+        'The app is requiring email verification, so registration cannot auto-login. '
+        + 'Restart the dev servers with REQUIRE_EMAIL_VERIFICATION=false (or let Playwright start them).',
+      );
+    }
+
     await page.getByRole('textbox', { name: 'Email' }).fill(email);
     await page.getByRole('textbox', { name: 'Password' }).fill(password);
     await page.getByRole('button', { name: 'Sign Up' }).click();
