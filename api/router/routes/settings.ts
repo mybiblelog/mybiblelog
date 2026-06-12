@@ -21,7 +21,7 @@ const router = express.Router();
  *         lookBackDate:
  *           type: string
  *           format: date
- *           description: The date to look back to for statistics
+ *           description: The date to look back to for statistics (known as "Tracker Start Date" in the frontend UI; should be renamed in a future DB/API migration)
  *         preferredBibleVersion:
  *           type: string
  *           description: The user's preferred Bible version

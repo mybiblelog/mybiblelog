@@ -2,10 +2,7 @@ import crypto from 'node:crypto';
 import mongoose, { HydratedDocument, InferSchemaType } from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import config from '../../config';
 import { UserSettingsSchema } from './UserSettings';
-import { AUTH_TOKEN_TTL_DAYS } from '../../repositories/user-auth';
 
 const SALT_WORK_FACTOR = 10;
 
@@ -52,95 +49,6 @@ export const UserSchema = new mongoose.Schema({
   },
 }, {
   timestamps: true,
-  methods: {
-    authenticate(password: string) {
-      const userPassword = this.password ?? '';
-      if (!userPassword) {
-        return false;
-      }
-      return new Promise((resolve) => {
-        bcrypt.compare(password, userPassword, function(err, isMatch) {
-          if (err) {
-            resolve(false);
-          }
-          else {
-            resolve(isMatch);
-          }
-        });
-      });
-    },
-    enablePasswordReset() {
-      this.passwordResetCode = crypto.randomBytes(64).toString('hex');
-      this.passwordResetExpires = new Date(Date.now() + (60 * 60 * 1000)); // in 1 hour
-    },
-    verifyPasswordResetCode(passwordResetCode: string) {
-      if (passwordResetCode !== this.passwordResetCode) {
-        return false;
-      }
-      if (new Date().getTime() > this.passwordResetExpires.getTime()) {
-        return false;
-      }
-      return true;
-    },
-    disablePasswordReset() {
-      this.passwordResetCode = '';
-      this.passwordResetExpires = new Date(0);
-    },
-    enableEmailUpdate(newEmail: string) {
-      // Allow any user to request to change their email address to any
-      // other email address -- if they don't own that other email address,
-      // they simply won't be able to take control of it.
-      this.newEmail = newEmail;
-      this.newEmailVerificationCode = crypto.randomBytes(64).toString('hex');
-      this.newEmailVerificationExpires = new Date(Date.now() + (60 * 60 * 1000)); // in 1 hour
-    },
-    verifyEmailVerificationCode(emailVerificationCode: string) {
-      if (emailVerificationCode !== this.emailVerificationCode) {
-        return false;
-      }
-      if (new Date().getTime() > this.emailVerificationExpires.getTime()) {
-        return false;
-      }
-      return true;
-    },
-    verifyNewEmailVerificationCode(newEmailVerificationCode: string) {
-      if (newEmailVerificationCode !== this.newEmailVerificationCode) {
-        return false;
-      }
-      if (new Date().getTime() > this.newEmailVerificationExpires.getTime()) {
-        return false;
-      }
-      return true;
-    },
-    disableEmailUpdate() {
-      this.newEmail = null;
-      this.newEmailVerificationCode = '';
-      this.newEmailVerificationExpires = new Date(0);
-    },
-    generateJWT() {
-      const today = new Date();
-      const exp = new Date(today);
-      exp.setDate(today.getDate() + AUTH_TOKEN_TTL_DAYS);
-
-      return jwt.sign({
-        id: this._id,
-        hasLocalAccount: Boolean(this.password),
-        isAdmin: this.isAdmin,
-        exp: Math.round(exp.getTime() / 1000),
-      }, config.jwtSecret, {
-        algorithm: 'HS256',
-        issuer: new URL(config.siteUrl).origin,
-        audience: new URL(config.siteUrl).origin,
-      });
-    },
-    toAuthJSON() {
-      return {
-        hasLocalAccount: Boolean(this.password),
-        email: this.email,
-        isAdmin: this.isAdmin,
-      };
-    },
-  },
 });
 
 UserSchema.plugin(uniqueValidator);

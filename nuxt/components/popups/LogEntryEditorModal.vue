@@ -18,6 +18,8 @@
 import AppModal from '@/components/popups/AppModal';
 import LogEntryEditorForm from '@/components/forms/LogEntryEditorForm';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
+import { useUserSettingsStore } from '~/stores/user-settings';
+import { useDialogStore } from '~/stores/dialog';
 
 export default {
   name: 'LogEntryEditorModal',
@@ -28,6 +30,12 @@ export default {
   computed: {
     logEntryEditorStore() {
       return useLogEntryEditorStore();
+    },
+    userSettingsStore() {
+      return useUserSettingsStore();
+    },
+    dialogStore() {
+      return useDialogStore();
     },
     open() {
       return this.logEntryEditorStore.open;
@@ -52,7 +60,14 @@ export default {
       });
     },
     async handleSave() {
-      await this.logEntryEditorStore.saveLogEntry().catch(() => {});
+      const entryDate = this.logEntry?.date;
+      const result = await this.logEntryEditorStore.saveLogEntry().catch(() => null);
+      if (result && entryDate) {
+        const lookBackDate = this.userSettingsStore.settings.lookBackDate;
+        if (lookBackDate && entryDate < lookBackDate) {
+          this.dialogStore.alert({ message: this.$t('messaging.entry_before_tracker_start_date') });
+        }
+      }
     },
   },
 };
@@ -67,7 +82,8 @@ export default {
     "add": "Add",
     "close": "Close",
     "messaging": {
-      "are_you_sure_close_editor": "Are you sure you want to close the editor? All unsaved changes will be lost."
+      "are_you_sure_close_editor": "Are you sure you want to close the editor? All unsaved changes will be lost.",
+      "entry_before_tracker_start_date": "This entry is before your Tracker Start Date and will not be counted in your reading progress."
     }
   },
   "de": {
@@ -77,7 +93,8 @@ export default {
     "add": "Hinzufügen",
     "close": "Schließen",
     "messaging": {
-      "are_you_sure_close_editor": "Möchten Sie den Editor wirklich schließen? Alle ungespeicherten Änderungen gehen verloren."
+      "are_you_sure_close_editor": "Möchten Sie den Editor wirklich schließen? Alle ungespeicherten Änderungen gehen verloren.",
+      "entry_before_tracker_start_date": "Dieser Eintrag liegt vor Ihrem Tracker-Startdatum und wird nicht in Ihrem Lesefortschritt gezählt."
     }
   },
   "es": {
@@ -87,7 +104,8 @@ export default {
     "add": "Añadir",
     "close": "Cerrar",
     "messaging": {
-      "are_you_sure_close_editor": "¿Estás seguro de que quieres cerrar el editor? Todas las modificaciones no guardadas se perderán."
+      "are_you_sure_close_editor": "¿Estás seguro de que quieres cerrar el editor? Todas las modificaciones no guardadas se perderán.",
+      "entry_before_tracker_start_date": "Esta entrada es anterior a tu Fecha de Inicio del Rastreador y no se contará en tu progreso de lectura."
     }
   },
   "fr": {
@@ -97,7 +115,8 @@ export default {
     "add": "Ajouter",
     "close": "Fermer",
     "messaging": {
-      "are_you_sure_close_editor": "Êtes-vous sûr de vouloir fermer l'éditeur? Toutes les modifications non enregistrées seront perdues."
+      "are_you_sure_close_editor": "Êtes-vous sûr de vouloir fermer l'éditeur? Toutes les modifications non enregistrées seront perdues.",
+      "entry_before_tracker_start_date": "Cette entrée est antérieure à votre Date de Début du Suivi et ne sera pas comptée dans votre progression de lecture."
     }
   },
   "ko": {
@@ -107,7 +126,8 @@ export default {
     "add": "추가",
     "close": "닫기",
     "messaging": {
-      "are_you_sure_close_editor": "편집창을 닫을까요? 저장하지 않은 변경 내용이 사라집니다."
+      "are_you_sure_close_editor": "편집창을 닫을까요? 저장하지 않은 변경 내용이 사라집니다.",
+      "entry_before_tracker_start_date": "이 기록은 추적기 시작일 이전의 날짜로, 읽기 진도에 포함되지 않습니다."
     }
   },
   "pt": {
@@ -117,7 +137,8 @@ export default {
     "add": "Adicionar",
     "close": "Fechar",
     "messaging": {
-      "are_you_sure_close_editor": "Tem certeza de que deseja fechar o editor? Todas as modificações não salvas serão perdidas."
+      "are_you_sure_close_editor": "Tem certeza de que deseja fechar o editor? Todas as modificações não salvas serão perdidas.",
+      "entry_before_tracker_start_date": "Esta entrada é anterior à sua Data de Início do Rastreador e não será contada no seu progresso de leitura."
     }
   },
   "uk": {
@@ -127,7 +148,8 @@ export default {
     "add": "Додати",
     "close": "Закрити",
     "messaging": {
-      "are_you_sure_close_editor": "Ви впевнені, що хочете закрити редактор? Всі незбережені зміни будуть втрачені."
+      "are_you_sure_close_editor": "Ви впевнені, що хочете закрити редактор? Всі незбережені зміни будуть втрачені.",
+      "entry_before_tracker_start_date": "Цей запис датований до вашої дати початку відстеження і не буде враховуватись у вашому прогресі читання."
     }
   }
 }

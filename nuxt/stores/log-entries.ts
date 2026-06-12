@@ -3,9 +3,9 @@ import { Bible } from '@mybiblelog/shared';
 import { useAchievementsStore } from '~/stores/achievements';
 import { useUserSettingsStore } from '~/stores/user-settings';
 
-const refreshDateVerseCounts = async (date?: string): Promise<void> => {
+const refreshDateVerseCounts = async (): Promise<void> => {
   const { useDateVerseCountsStore } = await import('~/stores/date-verse-counts');
-  useDateVerseCountsStore().cacheDateVerseCounts(date);
+  useDateVerseCountsStore().cacheDateVerseCounts();
 };
 
 const refreshReadingSuggestions = async (): Promise<void> => {
@@ -64,6 +64,14 @@ export const useLogEntriesStore = defineStore('log-entries', {
       }
       return state.logEntries.filter(logEntry => logEntry.date >= lookBackDate);
     },
+    isBibleComplete(): boolean {
+      return isBibleComplete(this.currentLogEntries);
+    },
+    hasLogEntriesForToday(state): boolean {
+      const now = new Date();
+      const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      return state.logEntries.some(entry => entry.date === today);
+    },
   },
   actions: {
     async loadLogEntries(): Promise<LogEntry[]> {
@@ -101,7 +109,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
       }
 
       await refreshReadingSuggestions();
-      refreshDateVerseCounts(date);
+      refreshDateVerseCounts();
 
       return data;
     },
@@ -142,7 +150,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
       }
 
       await refreshReadingSuggestions();
-      refreshDateVerseCounts(date);
+      refreshDateVerseCounts();
 
       return updated;
     },
@@ -160,7 +168,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
 
       await refreshReadingSuggestions();
       if (date) {
-        refreshDateVerseCounts(date);
+        refreshDateVerseCounts();
       }
 
       return true;

@@ -6,6 +6,7 @@ import {
   getDefaultBibleApp,
   getDefaultBibleVersion,
 } from '@mybiblelog/shared';
+import { useDateVerseCountsStore } from '~/stores/date-verse-counts';
 
 const LocalStorageKeys = {
   PREFERRED_BIBLE_APP: 'store:user-settings:preferredBibleApp',
@@ -18,6 +19,7 @@ export type PreferredBibleApp = keyof typeof BibleApps;
 export type PreferredBibleVersion = keyof typeof BibleVersions;
 
 export type UserSettings = {
+  // NOTE: Known as "Tracker Start Date" in the frontend UI; field needs to be renamed in DB/API.
   lookBackDate: string;
   dailyVerseCountGoal: number;
   preferredBibleApp: PreferredBibleApp;
@@ -50,6 +52,8 @@ const defaultSettings: UserSettings = {
 export const useUserSettingsStore = defineStore('user-settings', {
   state: () => ({
     settings: { ...defaultSettings } as UserSettings,
+    // Frontend-only: tracks whether the user dismissed the ReadingTrackerResetCard for this session.
+    readingTrackerResetDelayed: false as boolean,
   }),
   getters: {
     getReadingUrl: state => (bookIndex: number, chapterIndex: number): string => {
@@ -72,6 +76,9 @@ export const useUserSettingsStore = defineStore('user-settings', {
 
       if (lookBackDate) {
         this.settings.lookBackDate = lookBackDate;
+
+        // If the tracker start date changed, recalculate cached date verse counts.
+        useDateVerseCountsStore().cacheDateVerseCounts();
       }
       if (dailyVerseCountGoal) {
         this.settings.dailyVerseCountGoal = dailyVerseCountGoal;
@@ -188,8 +195,16 @@ export const useUserSettingsStore = defineStore('user-settings', {
         if (localStorageSetting && (BibleApps as Record<string, unknown>)[localStorageSetting]) {
           preferredBibleApp = localStorageSetting as PreferredBibleApp;
         }
+        this.readingTrackerResetDelayed = sessionStorage.getItem('readingTrackerResetDelayed') === 'true';
       }
       this.applySettingsUpdate({ preferredBibleApp });
+    },
+
+    dismissReadingTrackerReset(): void {
+      this.readingTrackerResetDelayed = true;
+      if (process.client) {
+        sessionStorage.setItem('readingTrackerResetDelayed', 'true');
+      }
     },
   },
 });

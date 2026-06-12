@@ -1,6 +1,9 @@
 <template>
   <div class="content-column">
     <busy-bar :busy="busy" />
+    <client-only>
+      <reading-tracker-reset-card />
+    </client-only>
     <header class="page-header">
       <h2 class="mbl-title">
         {{ $t('chapter_checklist') }}
@@ -72,6 +75,7 @@ import SpinnerIcon from '@/components/svg/SpinnerIcon';
 import InfoLink from '@/components/InfoLink';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntriesStore } from '~/stores/log-entries';
+import ReadingTrackerResetCard from '@/components/ReadingTrackerResetCard';
 const CHAPTER_CHECKLIST_CACHE_KEY = 'chapterChecklist';
 const CHAPTER_CHECKLIST_CACHE_MINUTES = 60;
 
@@ -87,6 +91,7 @@ export default {
     CaretDownIcon,
     SpinnerIcon,
     InfoLink,
+    ReadingTrackerResetCard,
   },
   middleware: ['auth'],
   data() {

@@ -258,19 +258,29 @@ export const createUserRepository = ({ User }: Models) => {
     },
 
     async updateSettings(userId: string, patch: Partial<UserSettingsRecord>): Promise<UserSettingsRecord> {
-      const user = await requireDocById(userId);
+      const set: Record<string, string | number> = {};
       for (const key of USER_SETTINGS_KEYS) {
         if (typeof patch[key] !== 'undefined') {
-          user.set(`settings.${key}`, patch[key]);
+          set[`settings.${key}`] = patch[key];
         }
       }
+
+      // If nothing to change, return current settings
+      if (Object.keys(set).length === 0) {
+        const user = await requireDocById(userId);
+        return toUserSettingsRecord(user.settings);
+      }
+
       try {
-        await user.save();
+        // Perform an atomic update so we don't trigger full-document
+        // validation or `pre('save')` hooks that touch unrelated fields
+        await User.updateOne({ _id: userId }, { $set: set }, { runValidators: true }).exec();
+        const updated = await requireDocById(userId);
+        return toUserSettingsRecord(updated.settings);
       }
       catch (error) {
-        translateMongooseError(error);
+        return translateMongooseError(error);
       }
-      return toUserSettingsRecord(user.settings);
     },
 
     async deleteById(id: string): Promise<boolean> {

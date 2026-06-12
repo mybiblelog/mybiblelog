@@ -1,6 +1,9 @@
 <template>
   <div class="content-column">
     <busy-bar :busy="loadingReadingSuggestions && !readingSuggestionsWithNewVerseCounts.length" />
+    <client-only>
+      <reading-tracker-reset-card />
+    </client-only>
     <header class="page-header">
       <h1 class="mbl-title">
         {{ $t('today') }}
@@ -143,6 +146,7 @@ import DoubleProgressBar from '@/components/DoubleProgressBar';
 import LogEntry from '@/components/LogEntry';
 import InfoLink from '@/components/InfoLink';
 import PassageNote from '@/components/PassageNote';
+import ReadingTrackerResetCard from '@/components/ReadingTrackerResetCard';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
@@ -162,6 +166,7 @@ export default {
     LogEntry,
     InfoLink,
     PassageNote,
+    ReadingTrackerResetCard,
   },
   middleware: ['auth'],
   data() {
