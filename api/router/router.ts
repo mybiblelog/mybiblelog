@@ -8,6 +8,7 @@ import passageNotesRouter from './routes/passage-notes';
 import passageNoteTagsRouter from './routes/passage-note-tags';
 import remindersRouter from './routes/reminders';
 import feedbackRouter from './routes/feedback';
+import scriptureRouter from './routes/scripture';
 import sitemapRouter from './routes/sitemap';
 
 const apiRouter = express.Router();
@@ -20,6 +21,7 @@ apiRouter.use(passageNotesRouter);
 apiRouter.use(passageNoteTagsRouter);
 apiRouter.use(remindersRouter);
 apiRouter.use(feedbackRouter);
+apiRouter.use(scriptureRouter);
 apiRouter.use(sitemapRouter);
 
 export default apiRouter;

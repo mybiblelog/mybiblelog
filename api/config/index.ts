@@ -31,6 +31,7 @@ const envSchema = z.object({
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
   GOOGLE_REDIRECT: z.string(),
+  HELLOAO_API_BASE_URL: z.string().url().default('https://bible.helloao.org/api'),
 });
 
 const result = envSchema.safeParse(process.env);
@@ -57,6 +58,9 @@ const config = {
     clientId: result.data.GOOGLE_CLIENT_ID,
     clientSecret: result.data.GOOGLE_CLIENT_SECRET,
     redirectUri: result.data.GOOGLE_REDIRECT,
+  },
+  helloao: {
+    apiBaseUrl: result.data.HELLOAO_API_BASE_URL,
   },
 };
 
