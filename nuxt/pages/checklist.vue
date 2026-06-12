@@ -8,6 +8,9 @@
       </h2>
     </header>
     <br>
+    <client-only>
+      <reading-tracker-reset-card />
+    </client-only>
     <div>
       <div v-if="!bookReports.length" class="loading-card">
         <strong>{{ $t('loading') }}</strong>
@@ -72,6 +75,7 @@ import SpinnerIcon from '@/components/svg/SpinnerIcon';
 import InfoLink from '@/components/InfoLink';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntriesStore } from '~/stores/log-entries';
+import ReadingTrackerResetCard from '@/components/ReadingTrackerResetCard';
 const CHAPTER_CHECKLIST_CACHE_KEY = 'chapterChecklist';
 const CHAPTER_CHECKLIST_CACHE_MINUTES = 60;
 
@@ -87,6 +91,7 @@ export default {
     CaretDownIcon,
     SpinnerIcon,
     InfoLink,
+    ReadingTrackerResetCard,
   },
   middleware: ['auth'],
   data() {

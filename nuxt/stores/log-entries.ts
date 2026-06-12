@@ -64,6 +64,14 @@ export const useLogEntriesStore = defineStore('log-entries', {
       }
       return state.logEntries.filter(logEntry => logEntry.date >= lookBackDate);
     },
+    isBibleComplete(): boolean {
+      return isBibleComplete(this.currentLogEntries);
+    },
+    hasLogEntriesForToday(state): boolean {
+      const now = new Date();
+      const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      return state.logEntries.some(entry => entry.date === today);
+    },
   },
   actions: {
     async loadLogEntries(): Promise<LogEntry[]> {

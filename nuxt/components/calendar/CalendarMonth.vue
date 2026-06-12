@@ -23,6 +23,8 @@
         :is-selected="day.date === selectedDay"
         :primary-percentage="day.uniqueVerseCountPercentage"
         :secondary-percentage="day.totalVerseCountPercentage"
+        :is-before-tracker-start-date="day.isBeforeTrackerStartDate || false"
+        :is-tracker-start-date="day.isTrackerStartDate || false"
         @daySelected="selectDay"
       />
     </ol>
@@ -58,6 +60,10 @@ export default {
       type: Number,
       required: true,
     },
+    trackerStartDate: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
@@ -87,6 +93,7 @@ export default {
     },
     currentMonthDays() {
       const dailyVerseCountGoal = this.dailyVerseCountGoal;
+      const trackerStartDate = this.trackerStartDate;
       return [...Array(this.numberOfDaysInMonth)].map((day, index) => {
         const date = dayjs(`${this.year}-${this.month}-${index + 1}`).format('YYYY-MM-DD');
         const { unique, total } = this.getDateVerseCounts(date);
@@ -97,6 +104,8 @@ export default {
           isCurrentMonth: true,
           uniqueVerseCountPercentage,
           totalVerseCountPercentage,
+          isBeforeTrackerStartDate: trackerStartDate ? date < trackerStartDate : false,
+          isTrackerStartDate: trackerStartDate ? date === trackerStartDate : false,
         };
       });
     },

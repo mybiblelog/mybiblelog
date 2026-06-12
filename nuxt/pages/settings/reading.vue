@@ -30,6 +30,11 @@
     <h3 class="mbl-title mbl-title--5">
       {{ $t('look_back_date.title') }}
     </h3>
+    <div v-if="showEarlyEntriesAlert" class="mbl-message mbl-message--info">
+      <div class="mbl-message__body">
+        {{ $t('look_back_date.early_entries_alert', { date: displayDate(earliestLogEntryDate, $i18n.locale) }) }}
+      </div>
+    </div>
     <div class="mbl-field mbl-field--addons">
       <div class="mbl-control">
         <input v-model="userSettingsForm.lookBackDate" class="mbl-input" type="date" data-testid="settings-look-back-date-input">
@@ -107,9 +112,10 @@
 </template>
 
 <script>
-import { bibleVersionOptions as allBibleVersionOptions, bibleAppOptions, localeVersionGroups } from '@mybiblelog/shared';
+import { bibleVersionOptions as allBibleVersionOptions, bibleAppOptions, localeVersionGroups, displayDate } from '@mybiblelog/shared';
 import { useToastStore } from '~/stores/toast';
 import { useUserSettingsStore } from '~/stores/user-settings';
+import { useLogEntriesStore } from '~/stores/log-entries';
 
 export default {
   name: 'ReadingSettingsPage',
@@ -142,6 +148,17 @@ export default {
     userSettings() {
       return useUserSettingsStore().settings;
     },
+    logEntries() {
+      return useLogEntriesStore().logEntries;
+    },
+    earliestLogEntryDate() {
+      if (!this.logEntries.length) { return null; }
+      return this.logEntries.reduce((min, e) => e.date < min ? e.date : min, this.logEntries[0].date);
+    },
+    showEarlyEntriesAlert() {
+      const { lookBackDate } = this.userSettings;
+      return this.earliestLogEntryDate && lookBackDate && this.earliestLogEntryDate < lookBackDate;
+    },
     bibleVersionOptions() {
       const locale = this.$i18n?.locale || 'en';
       const group = localeVersionGroups[locale] || [];
@@ -164,6 +181,7 @@ export default {
     Object.assign(this.userSettingsForm, this.userSettings);
   },
   methods: {
+    displayDate,
     async handleDailyVerseCountGoalSubmit() {
       const { dailyVerseCountGoal } = this.userSettingsForm;
       const success = await useUserSettingsStore().updateSettings({ dailyVerseCountGoal });
@@ -249,12 +267,13 @@ select {
       }
     },
     "look_back_date": {
-      "title": "Look Back Date",
+      "title": "Tracker Start Date",
+      "early_entries_alert": "Your earliest log entry is on {date}. Log entries before your Tracker Start Date are not counted in your progress.",
       "info": {
         "1": "My Bible Log will ignore your log entries before this date when counting your progress.",
         "2": "Log entries before this date still exist, and can be viewed and updated at any time.",
         "3": "This allows you to restart your Bible reading progress at any time.",
-        "4": "For example, if you just read the entire Bible once, you can set your look back date to today to start reading it again."
+        "4": "For example, if you just read the entire Bible once, you can set your Tracker Start Date to today to start reading it again."
       }
     },
     "preferred_bible_version": {
@@ -276,7 +295,7 @@ select {
     "messaging": {
       "daily_verse_count_goal_saved_successfully": "Daily verse count goal saved successfully.",
       "unable_to_save_daily_verse_count_goal": "Unable to save. Please enter a number between 1 and 1111.",
-      "look_back_date_saved_successfully": "Look back date saved successfully.",
+      "look_back_date_saved_successfully": "Tracker start date saved successfully.",
       "unable_to_save_look_back_date": "Unable to save. Please enter a date no later than tomorrow.",
       "preferred_bible_version_saved_successfully": "Preferred Bible version saved successfully.",
       "unable_to_save_preferred_bible_version": "Unable to save.",
@@ -296,12 +315,13 @@ select {
       }
     },
     "look_back_date": {
-      "title": "Rückblickdatum",
+      "title": "Tracker-Startdatum",
+      "early_entries_alert": "Ihr frühester Journaleintrag ist vom {date}. Einträge vor Ihrem Tracker-Startdatum werden nicht in Ihrem Fortschritt gezählt.",
       "info": {
         "1": "My Bible Log wird Ihre Einträge im Journal vor diesem Datum nicht beim Berechnen Ihres Fortschritts berücksichtigen.",
         "2": "Einträge im Journal vor diesem Datum existieren weiterhin und können jederzeit angesehen und aktualisiert werden.",
         "3": "Dies ermöglicht es Ihnen, Ihren Bibel-Lesefortschritt jederzeit neu zu starten.",
-        "4": "Wenn Sie beispielsweise gerade die ganze Bibel einmal gelesen haben, können Sie Ihr Rückblickdatum auf heute setzen, um sie erneut zu lesen."
+        "4": "Wenn Sie beispielsweise gerade die ganze Bibel einmal gelesen haben, können Sie Ihr Tracker-Startdatum auf heute setzen, um sie erneut zu lesen."
       }
     },
     "preferred_bible_version": {
@@ -323,7 +343,7 @@ select {
     "messaging": {
       "daily_verse_count_goal_saved_successfully": "Tägliche Verszahl Ziel erfolgreich gespeichert.",
       "unable_to_save_daily_verse_count_goal": "Nicht gespeichert. Bitte geben Sie eine Zahl zwischen 1 und 1111 ein.",
-      "look_back_date_saved_successfully": "Rückblickdatum erfolgreich gespeichert.",
+      "look_back_date_saved_successfully": "Tracker-Startdatum erfolgreich gespeichert.",
       "unable_to_save_look_back_date": "Nicht gespeichert. Bitte geben Sie ein Datum nicht später als morgen ein.",
       "preferred_bible_version_saved_successfully": "Bibelversion bevorzugt erfolgreich gespeichert.",
       "unable_to_save_preferred_bible_version": "Nicht gespeichert.",
@@ -343,12 +363,13 @@ select {
       }
     },
     "look_back_date": {
-      "title": "Fecha de Revisión",
+      "title": "Fecha de Inicio del Rastreador",
+      "early_entries_alert": "Tu entrada de registro más antigua es del {date}. Las entradas anteriores a tu Fecha de Inicio del Rastreador no se cuentan en tu progreso.",
       "info": {
         "1": "My Bible Log ignorará sus entradas de registro antes de esta fecha al contar su progreso.",
         "2": "Las entradas de registro antes de esta fecha aún existen y se pueden ver y actualizar en cualquier momento.",
         "3": "Esto le permite reiniciar su progreso de lectura de la Biblia en cualquier momento.",
-        "4": "Por ejemplo, si acaba de leer toda la Biblia una vez, puede establecer su fecha de revisión para hoy para comenzar a leerla nuevamente."
+        "4": "Por ejemplo, si acaba de leer toda la Biblia una vez, puede establecer su Fecha de Inicio del Rastreador para hoy para comenzar a leerla nuevamente."
       }
     },
     "preferred_bible_version": {
@@ -370,7 +391,7 @@ select {
     "messaging": {
       "daily_verse_count_goal_saved_successfully": "Meta de versículos diarios guardada con éxito.",
       "unable_to_save_daily_verse_count_goal": "No se puede guardar. Por favor ingrese un número entre 1 y 1111.",
-      "look_back_date_saved_successfully": "Fecha de revisión guardada con éxito.",
+      "look_back_date_saved_successfully": "Fecha de inicio del rastreador guardada con éxito.",
       "unable_to_save_look_back_date": "No se puede guardar. Por favor ingrese una fecha no posterior a mañana.",
       "preferred_bible_version_saved_successfully": "Versión de la Biblia preferida guardada con éxito.",
       "unable_to_save_preferred_bible_version": "No se puede guardar.",
@@ -390,12 +411,13 @@ select {
       }
     },
     "look_back_date": {
-      "title": "Date de retour en arrière",
+      "title": "Date de Début du Suivi",
+      "early_entries_alert": "Votre entrée de journal la plus ancienne date du {date}. Les entrées antérieures à votre Date de Début du Suivi ne sont pas comptées dans votre progression.",
       "info": {
         "1": "My Bible Log ignorera vos entrées de journal avant cette date lors du calcul de votre progression.",
         "2": "Les entrées de journal antérieures à cette date existent toujours et peuvent être consultées et mises à jour à tout moment.",
         "3": "Cela vous permet de recommencer votre progression de lecture de la Bible à tout moment.",
-        "4": "Par exemple, si vous avez lu toute la Bible une fois, vous pouvez définir votre date de retour à aujourd'hui pour la relire."
+        "4": "Par exemple, si vous avez lu toute la Bible une fois, vous pouvez définir votre Date de Début du Suivi à aujourd'hui pour la relire."
       }
     },
     "preferred_bible_version": {
@@ -417,7 +439,7 @@ select {
     "messaging": {
       "daily_verse_count_goal_saved_successfully": "Objectif de nombre de versets quotidiens enregistré avec succès.",
       "unable_to_save_daily_verse_count_goal": "Impossible d'enregistrer. Veuillez entrer un nombre entre 1 et 1111.",
-      "look_back_date_saved_successfully": "Date de recherche en arrière enregistrée avec succès.",
+      "look_back_date_saved_successfully": "Date de début du suivi enregistrée avec succès.",
       "unable_to_save_look_back_date": "Impossible d'enregistrer. Veuillez saisir une date au plus tard demain.",
       "preferred_bible_version_saved_successfully": "Version préférée de la Bible enregistrée avec succès.",
       "unable_to_save_preferred_bible_version": "Impossible d'enregistrer.",
@@ -437,12 +459,13 @@ select {
       }
     },
     "look_back_date": {
-      "title": "기준 시작일",
+      "title": "추적기 시작일",
+      "early_entries_alert": "가장 오래된 기록은 {date}입니다. 추적기 시작일 이전의 기록은 진도에 포함되지 않습니다.",
       "info": {
         "1": "My Bible Log가 진도를 계산할 때 위 날짜 이전 기록을 무시합니다.",
         "2": "해당 날짜 이전 기록도 삭제되지 않으며, 언제든 조회하거나 수정할 수 있습니다.",
         "3": "이를 통해 언제든지 성경읽기 진도를 새로 시작할 수 있습니다.",
-        "4": "예를 들어 성경 전체를 완독한 이후, 기준 시작일을 오늘로 설정해 읽기를 다시 시작할 수 있습니다."
+        "4": "예를 들어 성경 전체를 완독한 이후, 추적기 시작일을 오늘로 설정해 읽기를 다시 시작할 수 있습니다."
       }
     },
     "preferred_bible_version": {
@@ -464,7 +487,7 @@ select {
     "messaging": {
       "daily_verse_count_goal_saved_successfully": "일일 구절 수 목표가 저장되었습니다.",
       "unable_to_save_daily_verse_count_goal": "저장할 수 없습니다. 1~1111 사이의 숫자를 입력해 주세요.",
-      "look_back_date_saved_successfully": "기준 시작일이 저장되었습니다.",
+      "look_back_date_saved_successfully": "추적기 시작일이 저장되었습니다.",
       "unable_to_save_look_back_date": "저장할 수 없습니다. 내일 안쪽의 날짜를 입력해 주세요.",
       "preferred_bible_version_saved_successfully": "선호 성경 번역본이 저장되었습니다.",
       "unable_to_save_preferred_bible_version": "저장할 수 없습니다.",
@@ -484,12 +507,13 @@ select {
       }
     },
     "look_back_date": {
-      "title": "Data de Retrocesso",
+      "title": "Data de Início do Rastreador",
+      "early_entries_alert": "Sua entrada de registro mais antiga é em {date}. Entradas anteriores à sua Data de Início do Rastreador não são contadas no seu progresso.",
       "info": {
         "1": "Meu registro da Bíblia ignorará suas entradas de log antes desta data ao contar seu progresso.",
         "2": "As entradas de log antes desta data ainda existem e podem ser visualizadas e atualizadas a qualquer momento.",
         "3": "Isso permite que você reinicie seu progresso na leitura da Bíblia a qualquer momento.",
-        "4": "Por exemplo, se você acabou de ler a Bíblia inteira uma vez, pode definir a data de retorno como hoje para começar a lê-la novamente."
+        "4": "Por exemplo, se você acabou de ler a Bíblia inteira uma vez, pode definir sua Data de Início do Rastreador como hoje para começar a lê-la novamente."
       }
     },
     "preferred_bible_version": {
@@ -511,7 +535,7 @@ select {
     "messaging": {
       "daily_verse_count_goal_saved_successfully": "Meta de versículos diários salva com sucesso.",
       "unable_to_save_daily_verse_count_goal": "Não foi possível salvar. Por favor, insira um número entre 1 e 1111.",
-      "look_back_date_saved_successfully": "Data de retorno salva com sucesso.",
+      "look_back_date_saved_successfully": "Data de início do rastreador salva com sucesso.",
       "unable_to_save_look_back_date": "Não é possível salvar. Por favor, insira uma data até amanhã no máximo.",
       "preferred_bible_version_saved_successfully": "Versão preferida da Bíblia salva com sucesso.",
       "unable_to_save_preferred_bible_version": "Não é possível salvar.",
@@ -531,12 +555,13 @@ select {
       }
     },
     "look_back_date": {
-      "title": "Дата перегляду",
+      "title": "Дата початку відстеження",
+      "early_entries_alert": "Ваш найстаріший запис датований {date}. Записи до дати початку відстеження не враховуються у вашому прогресі.",
       "info": {
         "1": "My Bible Log ігноруватиме ваші записи до цієї дати під час обчислення вашого прогресу.",
         "2": "Записи до цієї дати все ще існують і можуть бути переглянуті та оновлені у будь-який час.",
         "3": "Це дозволяє вам перезапустити свій прогрес у читанні Біблії у будь-який момент.",
-        "4": "Наприклад, якщо ви вже прочитали всю Біблію один раз, ви можете встановити свою дату перегляду на сьогодні, щоб почати читати її знову."
+        "4": "Наприклад, якщо ви вже прочитали всю Біблію один раз, ви можете встановити свою дату початку відстеження на сьогодні, щоб почати читати її знову."
       }
     },
     "preferred_bible_version": {
@@ -558,7 +583,7 @@ select {
     "messaging": {
       "daily_verse_count_goal_saved_successfully": "Мету щоденної кількості віршів успішно збережено.",
       "unable_to_save_daily_verse_count_goal": "Не вдалося зберегти. Будь ласка, введіть число від 1 до 1111.",
-      "look_back_date_saved_successfully": "Дата перегляду успішно збережена.",
+      "look_back_date_saved_successfully": "Дата початку відстеження успішно збережена.",
       "unable_to_save_look_back_date": "Не вдалося зберегти. Будь ласка, введіть дату, яка не пізніше завтра.",
       "preferred_bible_version_saved_successfully": "Обрану версію Біблії успішно збережено.",
       "unable_to_save_preferred_bible_version": "Не вдалося зберегти.",

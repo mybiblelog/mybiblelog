@@ -2,8 +2,14 @@
   <div class="content-column">
     <client-only>
       <busy-bar :busy="dateVerseCountsBusy" />
+      <reading-tracker-reset-card />
       <div id="calendar-page">
-        <calendar-month :get-date-verse-counts="getDateVerseCounts" :daily-verse-count-goal="userSettings.dailyVerseCountGoal" @daySelected="selectDate" />
+        <calendar-month :get-date-verse-counts="getDateVerseCounts" :daily-verse-count-goal="userSettings.dailyVerseCountGoal" :tracker-start-date="userSettings.lookBackDate" @daySelected="selectDate" />
+        <div v-if="currentDate && currentDate === userSettings.lookBackDate" class="mbl-message mbl-message--info calendar-page__tracker-start-alert">
+          <div class="mbl-message__body">
+            {{ $t('tracker_start_date_message') }}
+          </div>
+        </div>
         <div v-if="currentDate" class="entry-container" data-testid="calendar-day-entries" :data-date="entryDate.date">
           <div class="entry-date">
             <div>
@@ -34,6 +40,7 @@ import { Bible, displayDate } from '@mybiblelog/shared';
 import BusyBar from '@/components/BusyBar';
 import CalendarMonth from '@/components/calendar/CalendarMonth';
 import LogEntry from '@/components/LogEntry';
+import ReadingTrackerResetCard from '@/components/ReadingTrackerResetCard';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
@@ -49,6 +56,7 @@ export default {
     BusyBar,
     CalendarMonth,
     LogEntry,
+    ReadingTrackerResetCard,
   },
   middleware: ['auth'],
   data() {
@@ -201,6 +209,10 @@ export default {
 .calendar-page__no-entries {
   padding: 0.5rem;
 }
+
+.calendar-page__tracker-start-alert {
+  margin-top: 0.75rem;
+}
 </style>
 
 <i18n lang="json">
@@ -214,7 +226,8 @@ export default {
     "delete": "Delete",
     "no_entries": "No Entries",
     "are_you_sure": "Are you sure you want to delete this entry?",
-    "could_not_delete": "The log entry could not be deleted."
+    "could_not_delete": "The log entry could not be deleted.",
+    "tracker_start_date_message": "This is your Tracker Start Date. Log entries before this date are not counted in your progress."
   },
   "de": {
     "page_title": "Kalender",
@@ -225,7 +238,8 @@ export default {
     "delete": "Löschen",
     "no_entries": "Keine Einträge",
     "are_you_sure": "Sind Sie sicher, dass Sie diesen Eintrag löschen möchten?",
-    "could_not_delete": "Der Log-Eintrag konnte nicht gelöscht werden."
+    "could_not_delete": "Der Log-Eintrag konnte nicht gelöscht werden.",
+    "tracker_start_date_message": "Dies ist Ihr Tracker-Startdatum. Einträge vor diesem Datum werden nicht in Ihrem Fortschritt gezählt."
   },
   "es": {
     "page_title": "Calendario",
@@ -236,7 +250,8 @@ export default {
     "delete": "Borrar",
     "no_entries": "No hay entradas",
     "are_you_sure": "¿Estás seguro de que quieres borrar esta entrada?",
-    "could_not_delete": "No se pudo borrar la entrada del registro."
+    "could_not_delete": "No se pudo borrar la entrada del registro.",
+    "tracker_start_date_message": "Esta es tu Fecha de Inicio del Rastreador. Las entradas anteriores a esta fecha no se cuentan en tu progreso."
   },
   "fr": {
     "page_title": "Calendrier",
@@ -247,7 +262,8 @@ export default {
     "delete": "Supprimer",
     "no_entries": "Aucune entrée",
     "are_you_sure": "Êtes-vous sûr de vouloir supprimer cette entrée?",
-    "could_not_delete": "L'entrée du journal n'a pas pu être supprimée."
+    "could_not_delete": "L'entrée du journal n'a pas pu être supprimée.",
+    "tracker_start_date_message": "Ceci est votre Date de Début du Suivi. Les entrées antérieures à cette date ne sont pas comptées dans votre progression."
   },
   "ko": {
     "page_title": "달력",
@@ -258,7 +274,8 @@ export default {
     "delete": "삭제",
     "no_entries": "항목 없음",
     "are_you_sure": "해당 기록을 삭제할까요?",
-    "could_not_delete": "해당 기록을 삭제할 수 없습니다."
+    "could_not_delete": "해당 기록을 삭제할 수 없습니다.",
+    "tracker_start_date_message": "이 날짜는 추적기 시작일입니다. 이 날짜 이전의 기록은 진도에 포함되지 않습니다."
   },
   "pt": {
     "page_title": "Calendário",
@@ -269,7 +286,8 @@ export default {
     "delete": "Apagar",
     "no_entries": "Nenhum registro",
     "are_you_sure": "Tem certeza de que deseja apagar este registro?",
-    "could_not_delete": "O registro não pôde ser apagado."
+    "could_not_delete": "O registro não pôde ser apagado.",
+    "tracker_start_date_message": "Esta é sua Data de Início do Rastreador. Entradas anteriores a esta data não são contadas no seu progresso."
   },
   "uk": {
     "page_title": "Календар",
@@ -280,7 +298,8 @@ export default {
     "delete": "Видалити",
     "no_entries": "Немає записів",
     "are_you_sure": "Ви впевнені, що хочете видалити цей запис?",
-    "could_not_delete": "Не вдалося видалити запис."
+    "could_not_delete": "Не вдалося видалити запис.",
+    "tracker_start_date_message": "Це ваша дата початку відстеження. Записи до цієї дати не враховуються у вашому прогресі."
   }
 }
 </i18n>

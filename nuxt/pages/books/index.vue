@@ -1,17 +1,22 @@
 <template>
   <div class="content-column">
+    <client-only>
+      <reading-tracker-reset-card />
+    </client-only>
     <bible-report :log-entries="logEntries" @view-book-report="viewBookReport($event)" />
   </div>
 </template>
 
 <script>
 import BibleReport from '@/components/BibleReport';
+import ReadingTrackerResetCard from '@/components/ReadingTrackerResetCard';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useAppInitStore } from '~/stores/app-init';
 
 export default {
   components: {
     BibleReport,
+    ReadingTrackerResetCard,
   },
   middleware: ['auth'],
   async fetch() {

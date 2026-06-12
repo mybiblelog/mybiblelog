@@ -11,6 +11,9 @@
       </button>
     </header>
     <br>
+    <client-only>
+      <reading-tracker-reset-card />
+    </client-only>
     <div class="today-page__progress-bar-container" data-screenshot="daily-goal">
       <double-progress-bar :primary-percentage="dailyGoalPercentCompleteNew" :secondary-percentage="dailyGoalPercentComplete" />
       <div class="mbl-level mbl-level--mobile">
@@ -143,6 +146,7 @@ import DoubleProgressBar from '@/components/DoubleProgressBar';
 import LogEntry from '@/components/LogEntry';
 import InfoLink from '@/components/InfoLink';
 import PassageNote from '@/components/PassageNote';
+import ReadingTrackerResetCard from '@/components/ReadingTrackerResetCard';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
@@ -162,6 +166,7 @@ export default {
     LogEntry,
     InfoLink,
     PassageNote,
+    ReadingTrackerResetCard,
   },
   middleware: ['auth'],
   data() {

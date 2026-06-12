@@ -56,6 +56,14 @@ export default {
       type: Number,
       default: 0,
     },
+    isBeforeTrackerStartDate: {
+      type: Boolean,
+      default: false,
+    },
+    isTrackerStartDate: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     label() {
@@ -66,6 +74,8 @@ export default {
         'calendar-day--not-current': !this.day.isCurrentMonth,
         'calendar-day--today': this.isToday,
         'calendar-day--selected': this.isSelected,
+        'calendar-day--before-tracker-start': this.isBeforeTrackerStartDate,
+        'calendar-day--tracker-start': this.isTrackerStartDate,
       };
     },
     primaryProgressBarFillStyle() {
@@ -188,5 +198,25 @@ export default {
 
 .calendar-day .progress-bar .progress-bar-fill.secondary {
   background: var(--mbl-link-alt);
+}
+
+.calendar-day--before-tracker-start .progress-bar .progress-bar-fill {
+    background: var(--mbl-progress-fill-inactive);
+  }
+
+.calendar-day--before-tracker-start .progress-bar .progress-bar-fill.secondary {
+  background: var(--mbl-progress-fill-inactive);
+  opacity: 0.6;
+}
+
+.calendar-day--tracker-start::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-top: 1em solid var(--mbl-info);      /* triangle color */
+  border-left: 1em solid transparent; /* creates the angled edge */
 }
 </style>
