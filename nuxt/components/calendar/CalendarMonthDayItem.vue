@@ -201,12 +201,11 @@ export default {
 }
 
 .calendar-day--before-tracker-start .progress-bar .progress-bar-fill {
-    background: var(--mbl-progress-fill-inactive);
-  }
+  background: var(--mbl-progress-fill-inactive);
+}
 
 .calendar-day--before-tracker-start .progress-bar .progress-bar-fill.secondary {
   background: var(--mbl-progress-fill-inactive);
-  opacity: 0.6;
 }
 
 .calendar-day--tracker-start::before {

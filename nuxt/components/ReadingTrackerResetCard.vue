@@ -1,5 +1,5 @@
 <template>
-  <div v-if="showCard" class="mbl-message mbl-message--info reading-tracker-reset-card">
+  <div v-if="showCard" class="mbl-message mbl-message--info reading-tracker-reset-card" data-testid="reading-tracker-reset-card">
     <div class="mbl-message__header">
       {{ $t('header') }}
     </div>

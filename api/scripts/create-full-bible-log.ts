@@ -20,7 +20,7 @@ const main = async (): Promise<void> => {
   }
 
   const bookCount = Bible.getBookCount();
-  console.log(`Creating ${bookCount} log entries for ${user.email} on ${date}...`);
+  console.log(`Creating ${bookCount} log entries for ${user.email} on ${DATE}...`);
 
   for (let book = 1; book <= bookCount; book++) {
     const startVerseId = Bible.getFirstBookVerseId(book);

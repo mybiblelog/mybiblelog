@@ -1,5 +1,5 @@
 import { test, expect } from '../../fixtures';
-import { seedLogEntries } from '../../helpers/seed';
+import { seedLogEntries, setSettings } from '../../helpers/seed';
 import { verseId, BOOK } from '../../helpers/passages';
 import { today, daysAgo } from '../../helpers/dates';
 
@@ -40,6 +40,9 @@ test.describe('Log page', () => {
   });
 
   test('user can edit and delete entries from the log page', async ({ page, api }) => {
+    // Set lookBackDate before the entry date so editing never triggers the
+    // "entry before tracker start date" alert (tested separately below).
+    await setSettings(api, { lookBackDate: daysAgo(7) });
     await seedLogEntries(api, [
       { date: daysAgo(1), startVerseId: verseId(BOOK.GENESIS, 1, 1), endVerseId: verseId(BOOK.GENESIS, 1, 10) },
     ]);
@@ -60,5 +63,30 @@ test.describe('Log page', () => {
     await page.getByTestId('action-menu-item').filter({ hasText: 'Delete' }).click();
     await page.getByTestId('dialog-confirm').click();
     await expect(page.getByTestId('log-entry-passage')).toHaveCount(0);
+  });
+
+  test('editing an entry before the tracker start date shows a warning alert', async ({ page, api }) => {
+    // Leave lookBackDate at the default (today) so the entry date (yesterday)
+    // is before it — the editor should warn the user after saving.
+    await seedLogEntries(api, [
+      { date: daysAgo(1), startVerseId: verseId(BOOK.GENESIS, 1, 1), endVerseId: verseId(BOOK.GENESIS, 1, 10) },
+    ]);
+
+    await page.goto('/log');
+    const entry = page.getByTestId('log-entry').first();
+
+    await entry.getByTestId('action-menu-toggle').click();
+    await page.getByTestId('action-menu-item').filter({ hasText: 'Edit' }).click();
+    const dialog = page.getByRole('dialog');
+    await dialog.getByLabel('End Verse').selectOption('20');
+    await page.getByTestId('log-entry-editor-submit').click();
+
+    // Alert should appear because the entry date is before lookBackDate
+    await expect(page.getByTestId('dialog-ok')).toBeVisible();
+    await page.getByTestId('dialog-ok').click();
+
+    // Alert is dismissed; the updated passage should be visible
+    await expect(page.getByTestId('dialog-ok')).not.toBeVisible();
+    await expect(page.getByTestId('log-entry-passage').filter({ hasText: 'Genesis 1:1-20' })).toBeVisible();
   });
 });

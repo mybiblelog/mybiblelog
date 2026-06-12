@@ -7,6 +7,7 @@ export { default as BrowserCache } from './browser-cache';
 export * from './bible-apps';
 export * from './device';
 export * from './date-helpers';
+export { computeDateVerseCounts, type DateVerseCounts, type DateVerseCountsMap, type DateVerseCountLogEntry } from './date-verse-counts';
 
 // i18n exports
 export * from './i18n';

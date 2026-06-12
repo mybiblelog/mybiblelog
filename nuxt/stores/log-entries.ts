@@ -3,9 +3,9 @@ import { Bible } from '@mybiblelog/shared';
 import { useAchievementsStore } from '~/stores/achievements';
 import { useUserSettingsStore } from '~/stores/user-settings';
 
-const refreshDateVerseCounts = async (date?: string): Promise<void> => {
+const refreshDateVerseCounts = async (): Promise<void> => {
   const { useDateVerseCountsStore } = await import('~/stores/date-verse-counts');
-  useDateVerseCountsStore().cacheDateVerseCounts(date);
+  useDateVerseCountsStore().cacheDateVerseCounts();
 };
 
 const refreshReadingSuggestions = async (): Promise<void> => {
@@ -109,7 +109,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
       }
 
       await refreshReadingSuggestions();
-      refreshDateVerseCounts(date);
+      refreshDateVerseCounts();
 
       return data;
     },
@@ -150,7 +150,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
       }
 
       await refreshReadingSuggestions();
-      refreshDateVerseCounts(date);
+      refreshDateVerseCounts();
 
       return updated;
     },
@@ -168,7 +168,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
 
       await refreshReadingSuggestions();
       if (date) {
-        refreshDateVerseCounts(date);
+        refreshDateVerseCounts();
       }
 
       return true;

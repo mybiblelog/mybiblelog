@@ -258,7 +258,7 @@ export const createUserRepository = ({ User }: Models) => {
     },
 
     async updateSettings(userId: string, patch: Partial<UserSettingsRecord>): Promise<UserSettingsRecord> {
-      const set: Record<string, any> = {};
+      const set: Record<string, string | number> = {};
       for (const key of USER_SETTINGS_KEYS) {
         if (typeof patch[key] !== 'undefined') {
           set[`settings.${key}`] = patch[key];

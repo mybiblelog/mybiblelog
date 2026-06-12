@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { set as vueSet } from 'vue';
 import dayjs from 'dayjs';
-import { Bible, BrowserCache } from '@mybiblelog/shared';
+import { BrowserCache, computeDateVerseCounts } from '@mybiblelog/shared';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useUserSettingsStore } from '~/stores/user-settings';
 
@@ -15,12 +15,7 @@ export type DateVerseCountsMap = Record<string, DateVerseCounts>;
 const DATE_VERSE_COUNTS_CACHE_KEY = 'dateVerseCounts';
 const DATE_VERSE_COUNTS_CACHE_MINUTES = 60 * 24;
 
-const blockingIterations = 10;
-
 const emptyCounts: DateVerseCounts = { total: 0, unique: 0 };
-const yieldToEventLoop = async (): Promise<void> => {
-  await new Promise<void>(resolve => setTimeout(resolve, 0));
-};
 
 const parseCachedDateVerseCounts = (value: unknown): DateVerseCountsMap | null => {
   if (!value) {
@@ -60,7 +55,7 @@ export const useDateVerseCountsStore = defineStore('date-verse-counts', {
     getAllDateVerseCounts: state => state.dateVerseCounts,
   },
   actions: {
-    async cacheDateVerseCounts(startDate?: string): Promise<void> {
+    cacheDateVerseCounts(): void {
       this.jobs += 1;
       try {
         // Check for cached data to give an immediate visual response
@@ -75,52 +70,29 @@ export const useDateVerseCountsStore = defineStore('date-verse-counts', {
           // BrowserCache can fail in non-browser contexts; ignore.
         }
 
-        const logEntries = useLogEntriesStore().currentLogEntries;
-
-        const cumulativeLogEntries = [];
-        let totalVersesToDate = 0;
-
-        const explicitStartDate = startDate;
-        let effectiveStartDate = explicitStartDate;
-
-        if (explicitStartDate) {
-          // If there is a startDate, count up all log entries BEFORE that date
-          cumulativeLogEntries.push(...logEntries.filter(logEntry => logEntry.date < explicitStartDate));
-          totalVersesToDate = Bible.countUniqueRangeVerses(cumulativeLogEntries);
-        }
-        else {
-          // If no start date was provided, start at lookBackDate
-          effectiveStartDate = useUserSettingsStore().settings.lookBackDate;
+        const logEntries = useLogEntriesStore().logEntries;
+        let startDate: string | undefined;
+        for (const entry of logEntries) {
+          if (startDate === undefined || entry.date < startDate) {
+            startDate = entry.date;
+          }
         }
 
-        if (!effectiveStartDate) {
+        if (!startDate) {
           return;
         }
 
-        let currentDate = dayjs(effectiveStartDate).format('YYYY-MM-DD');
-        const today = dayjs().format('YYYY-MM-DD');
+        const trackerStartDate = useUserSettingsStore().settings.lookBackDate;
+        const dateVerseCounts = computeDateVerseCounts(
+          logEntries,
+          startDate,
+          dayjs().format('YYYY-MM-DD'),
+          trackerStartDate,
+        );
 
-        let iterations = 0;
-        while (currentDate <= today) {
-          const dateLogEntries = logEntries.filter(logEntry => logEntry.date === currentDate);
-          const dateTotalVerses = Bible.countUniqueRangeVerses(dateLogEntries);
-
-          cumulativeLogEntries.push(...dateLogEntries);
-          const totalVersesThroughDate = Bible.countUniqueRangeVerses(cumulativeLogEntries);
-          const dateUniqueVerses = totalVersesThroughDate - totalVersesToDate;
-          totalVersesToDate = totalVersesThroughDate;
-
-          // Vue 2 needs Vue.set for new object keys to be reactive
-          vueSet(this.dateVerseCounts, currentDate, { total: dateTotalVerses, unique: dateUniqueVerses });
-
-          currentDate = dayjs(currentDate).add(1, 'day').format('YYYY-MM-DD');
-
-          iterations++;
-          if (iterations === blockingIterations) {
-            await yieldToEventLoop();
-            iterations = 0;
-          }
-        }
+        Object.keys(dateVerseCounts).forEach((date) => {
+          vueSet(this.dateVerseCounts, date, dateVerseCounts[date]);
+        });
 
         // Cache the data for future use for 1 day
         try {

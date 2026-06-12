@@ -231,7 +231,7 @@
   --mbl-bg-hover-strong: #353535;
   --mbl-bg-disabled: #666;
   --mbl-progress-track-bg: #666;
-  --mbl-progress-fill-inactive: #999;
+  --mbl-progress-fill-inactive: #ccc;
   --mbl-tag-option-bg: #1b1b1b;
   --mbl-tag-option-border: #585858;
   --mbl-tag-option-selected-bg: #2a2a2a;
@@ -309,7 +309,7 @@
     --mbl-bg-hover-strong: #353535;
     --mbl-bg-disabled: #666;
     --mbl-progress-track-bg: #666;
-    --mbl-progress-fill-inactive: #999;
+    --mbl-progress-fill-inactive: #ccc;
     --mbl-tag-option-bg: #1b1b1b;
     --mbl-tag-option-border: #585858;
     --mbl-tag-option-selected-bg: #2a2a2a;
