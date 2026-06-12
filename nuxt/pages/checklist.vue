@@ -1,6 +1,9 @@
 <template>
   <div class="content-column">
     <busy-bar :busy="busy" />
+    <client-only>
+      <reading-tracker-reset-card />
+    </client-only>
     <header class="page-header">
       <h2 class="mbl-title">
         {{ $t('chapter_checklist') }}
@@ -8,9 +11,6 @@
       </h2>
     </header>
     <br>
-    <client-only>
-      <reading-tracker-reset-card />
-    </client-only>
     <div>
       <div v-if="!bookReports.length" class="loading-card">
         <strong>{{ $t('loading') }}</strong>

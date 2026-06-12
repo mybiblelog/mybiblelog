@@ -1,6 +1,9 @@
 <template>
   <div class="content-column">
     <busy-bar :busy="loadingReadingSuggestions && !readingSuggestionsWithNewVerseCounts.length" />
+    <client-only>
+      <reading-tracker-reset-card />
+    </client-only>
     <header class="page-header">
       <h1 class="mbl-title">
         {{ $t('today') }}
@@ -11,9 +14,6 @@
       </button>
     </header>
     <br>
-    <client-only>
-      <reading-tracker-reset-card />
-    </client-only>
     <div class="today-page__progress-bar-container" data-screenshot="daily-goal">
       <double-progress-bar :primary-percentage="dailyGoalPercentCompleteNew" :secondary-percentage="dailyGoalPercentComplete" />
       <div class="mbl-level mbl-level--mobile">

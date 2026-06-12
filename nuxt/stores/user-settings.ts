@@ -6,6 +6,7 @@ import {
   getDefaultBibleApp,
   getDefaultBibleVersion,
 } from '@mybiblelog/shared';
+import { useDateVerseCountsStore } from '~/stores/date-verse-counts';
 
 const LocalStorageKeys = {
   PREFERRED_BIBLE_APP: 'store:user-settings:preferredBibleApp',
@@ -75,6 +76,9 @@ export const useUserSettingsStore = defineStore('user-settings', {
 
       if (lookBackDate) {
         this.settings.lookBackDate = lookBackDate;
+
+        // If the tracker start date changed, recalculate cached date verse counts.
+        useDateVerseCountsStore().cacheDateVerseCounts();
       }
       if (dailyVerseCountGoal) {
         this.settings.dailyVerseCountGoal = dailyVerseCountGoal;
