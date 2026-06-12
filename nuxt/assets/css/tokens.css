@@ -167,6 +167,9 @@
   --mbl-secondary-soft-20: rgba(9, 101, 247, 0.2);
   --mbl-tertiary-soft: rgba(0, 209, 178, 0.05);
 
+  /* Inline scripture passage text: words of Jesus */
+  --mbl-scripture-words-of-jesus: #8a2c1d;
+
   --mbl-success-bright: #0c0;
   --mbl-award: #ffd700;
   --mbl-star-earned: var(--mbl-award);
@@ -262,6 +265,7 @@
   --mbl-message-success-bg: #0d2118;
   --mbl-message-success-fg: #b8f5cc;
   --mbl-message-success-accent: #3a9e5c;
+  --mbl-scripture-words-of-jesus: #e08a73;
   --mbl-star-earned: #d08a2f;
   /* Visible on #191919 surfaces; was #2c2c2c (too low contrast) */
   --mbl-star-unearned: #6e6e6e;
@@ -334,6 +338,7 @@
     --mbl-message-info-bg: #11202f;
     --mbl-message-info-fg: #c5e3ff;
     --mbl-message-info-accent: #5b8db8;
+    --mbl-scripture-words-of-jesus: #e08a73;
     --mbl-star-earned: #d08a2f;
     --mbl-star-unearned: #6e6e6e;
     --mbl-tab-active: var(--mbl-link-bright);

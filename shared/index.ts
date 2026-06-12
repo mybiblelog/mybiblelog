@@ -12,6 +12,15 @@ export { computeDateVerseCounts, type DateVerseCounts, type DateVerseCountsMap, 
 // i18n exports
 export * from './i18n';
 
+// Scripture passage types (provider-neutral)
+export type {
+  PassageBlock,
+  PassageCursor,
+  PassageTranslation,
+  PassageVerseSegment,
+  ScripturePassageChunk,
+} from './scripture';
+
 // Static data exports
 export { default as bibleBooks } from './static/bible-books';
 export { default as chapterVerses } from './static/chapter-verses/nasb';

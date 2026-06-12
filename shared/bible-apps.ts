@@ -33,6 +33,9 @@ export const BibleVersions = {
   KRV: 'KRV', // Korean Revised Version (개역한글)
 } as const;
 
+export const isBibleVersionKey = (s: string): s is keyof typeof BibleVersions =>
+  Object.prototype.hasOwnProperty.call(BibleVersions, s);
+
 export const defaultLocaleBibleVersions = {
   en: BibleVersions.NASB2020,
   de: BibleVersions.LUT,
