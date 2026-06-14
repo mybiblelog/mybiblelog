@@ -37,10 +37,10 @@
 <script>
 import * as dayjs from 'dayjs';
 import { Bible, displayDate } from '@mybiblelog/shared';
-import BusyBar from '@/components/BusyBar';
+import BusyBar from '@/components/ui/BusyBar';
 import CalendarMonth from '@/components/calendar/CalendarMonth';
-import LogEntry from '@/components/LogEntry';
-import ReadingTrackerResetCard from '@/components/ReadingTrackerResetCard';
+import LogEntry from '@/components/log/LogEntry';
+import ReadingTrackerResetCard from '@/components/ui/ReadingTrackerResetCard';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';

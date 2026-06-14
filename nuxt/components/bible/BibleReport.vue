@@ -74,9 +74,9 @@
 <script>
 import { Bible } from '@mybiblelog/shared';
 import { encodePassageNotesQueryToRoute } from '@/helpers/passage-notes-route-query';
-import SegmentBar from '@/components/SegmentBar';
+import SegmentBar from '@/components/bible/SegmentBar';
 import StarIcon from '@/components/svg/StarIcon';
-import InfoLink from '@/components/InfoLink';
+import InfoLink from '@/components/ui/InfoLink';
 import CaretRightIcon from '@/components/svg/CaretRightIcon';
 const calcPercent = (numerator, denominator) => {
   return Math.floor(numerator / denominator * 100);

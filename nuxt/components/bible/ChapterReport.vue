@@ -24,7 +24,7 @@
 
 <script>
 import { Bible } from '@mybiblelog/shared';
-import SegmentBar from '@/components/SegmentBar';
+import SegmentBar from '@/components/bible/SegmentBar';
 import StarIcon from '@/components/svg/StarIcon';
 import { useActionSheetStore } from '~/stores/action-sheet';
 import { useUserSettingsStore } from '~/stores/user-settings';

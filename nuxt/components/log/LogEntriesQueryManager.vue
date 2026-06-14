@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { SimpleDate } from '@mybiblelog/shared';
+import dayjs from 'dayjs';
 import VerseInput from '@/components/forms/VerseInput';
 import { useDialogStore } from '~/stores/dialog';
 
@@ -100,7 +100,7 @@ const DEFAULT_DRAFT = {
 function normalizeDateString(value) {
   const v = `${value ?? ''}`.trim();
   if (!v) { return ''; }
-  return SimpleDate.validateString(v) ? v : '';
+  return dayjs(v, 'YYYY-MM-DD', true).isValid() ? v : '';
 }
 
 function pickManagedQuery(query) {

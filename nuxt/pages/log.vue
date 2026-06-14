@@ -150,7 +150,7 @@
 import { Bible, displayDate } from '@mybiblelog/shared';
 import { decodeLogEntriesRouteQuery, encodeLogEntriesQueryToRoute, defaultLogEntriesQuery } from '@/helpers/log-entries-route-query';
 import { encodePassageNotesQueryToRoute } from '@/helpers/passage-notes-route-query';
-import LogEntry from '@/components/LogEntry';
+import LogEntry from '@/components/log/LogEntry';
 import LogEntriesQueryManager from '@/components/log/LogEntriesQueryManager';
 import AppModal from '@/components/popups/AppModal';
 import CaretLeftIcon from '@/components/svg/CaretLeftIcon';

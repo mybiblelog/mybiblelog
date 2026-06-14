@@ -32,7 +32,7 @@
 
 <script>
 import { Bible } from '@mybiblelog/shared';
-import ActionMenu from '@/components/ActionMenu';
+import ActionMenu from '@/components/ui/ActionMenu';
 
 export default {
   name: 'LogEntry',

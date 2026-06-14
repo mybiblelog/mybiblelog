@@ -65,8 +65,8 @@
 
 <script>
 import GoogleLoginButton from '@/components/forms/GoogleLoginButton.vue';
-import InfoLink from '@/components/InfoLink';
-import ResendVerificationEmail from '@/components/ResendVerificationEmail.vue';
+import InfoLink from '@/components/ui/InfoLink';
+import ResendVerificationEmail from '@/components/ui/ResendVerificationEmail.vue';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useAuthStore } from '~/stores/auth';

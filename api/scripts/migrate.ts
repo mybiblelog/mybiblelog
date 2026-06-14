@@ -2,7 +2,7 @@
 
 // This is an evergreen migration script, meant to update MongoDB data to the latest schema.
 
-import { SimpleDate } from '@shared/dist';
+import dayjs from 'dayjs';
 import useMongooseModels, { closeConnection } from '../mongoose/useMongooseModels';
 
 // Main
@@ -38,11 +38,11 @@ const main = async (): Promise<void> => {
   for (const user of usersWithInvalidLookBackDate) {
     console.log(`Migrating user ${user.email} to valid lookBackDate format...`);
     const justDate = user.settings.lookBackDate.split('T')[0];
-    if (justDate && SimpleDate.validateString(justDate)) {
+    if (justDate && dayjs(justDate, 'YYYY-MM-DD', true).isValid()) {
       user.settings.lookBackDate = justDate;
     }
     else {
-      user.settings.lookBackDate = SimpleDate.now().toString();
+      user.settings.lookBackDate = dayjs().format('YYYY-MM-DD');
     }
     await user.save();
   }

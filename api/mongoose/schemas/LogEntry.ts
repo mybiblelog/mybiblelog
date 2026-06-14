@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
-import { Bible, SimpleDate } from '@mybiblelog/shared';
+import dayjs from 'dayjs';
+import { Bible } from '@mybiblelog/shared';
 
 export const LogEntrySchema = new mongoose.Schema({
   owner: {
@@ -12,7 +13,7 @@ export const LogEntrySchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: SimpleDate.validateString,
+      validator: (v: string) => dayjs(v, 'YYYY-MM-DD', true).isValid(),
       message: (props) => `${props.value} is not a valid date string`,
     },
   },

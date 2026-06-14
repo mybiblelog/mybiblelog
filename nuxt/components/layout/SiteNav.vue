@@ -267,8 +267,8 @@
 </template>
 
 <script>
-import LanguageSwitcher from '@/components/LanguageSwitcher';
-import ThemeSwitcher from '@/components/ThemeSwitcher';
+import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
+import ThemeSwitcher from '@/components/layout/ThemeSwitcher';
 import { useAuthStore } from '~/stores/auth';
 
 /**

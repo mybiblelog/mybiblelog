@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import SimpleDate from './simple-date';
 
 // additional locales ('en' is already included)
 import 'dayjs/locale/es';
@@ -53,8 +52,7 @@ export const weekFromDate = (year: number, month: number, date: number) => {
   // For each day of the week, capture the date and increment
   const result = [];
   for (let i = 0; i < 7; i++) {
-    const { year, month, date } = SimpleDate.fromDate(referenceDate);
-    const dayDate = new SimpleDate(year, month, date).toString();
+    const dayDate = dayjs(referenceDate).format('YYYY-MM-DD');
     result.push(dayDate);
     referenceDate.setDate(referenceDate.getDate() + 1);
   }
@@ -72,10 +70,11 @@ export const getWeekStartAndEnd = (year: number, month: number, date: number) =>
 };
 
 export const displayDate = (dateString: string, locale = 'en') => {
-  const date = SimpleDate.fromString(dateString)?.toDate();
-  if (!date) {
+  const parsed = dayjs(dateString);
+  if (!parsed.isValid()) {
     return '';
   }
+  const date = parsed.toDate();
   const options: Intl.DateTimeFormatOptions = {
     weekday: 'long',
     year: 'numeric',

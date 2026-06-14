@@ -14,7 +14,7 @@
 import { Bible } from '@mybiblelog/shared';
 import { encodePassageNotesQueryToRoute } from '@/helpers/passage-notes-route-query';
 import { encodeLogEntriesQueryToRoute } from '@/helpers/log-entries-route-query';
-import BookReport from '@/components/BookReport';
+import BookReport from '@/components/bible/BookReport';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useAppInitStore } from '~/stores/app-init';
 

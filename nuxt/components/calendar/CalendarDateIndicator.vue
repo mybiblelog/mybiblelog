@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import InfoLink from '@/components/InfoLink';
+import InfoLink from '@/components/ui/InfoLink';
 
 export default {
   components: {

@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import FloatingFeedbackButton from '@/components/FloatingFeedbackButton.vue';
+import FloatingFeedbackButton from '@/components/ui/FloatingFeedbackButton.vue';
 
 export default {
   components: {

@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
-import { SimpleDate, BibleVersions, getLocaleCodes, defaultLocaleBibleVersions } from '@mybiblelog/shared';
+import dayjs from 'dayjs';
+import { BibleVersions, getLocaleCodes, defaultLocaleBibleVersions } from '@mybiblelog/shared';
 
 const siteLocales = getLocaleCodes();
 
@@ -53,9 +54,9 @@ export const UserSettingsSchema = new Schema({
   lookBackDate: {
     type: String,
     required: true,
-    default: SimpleDate.now().toString(),
+    default: () => dayjs().format('YYYY-MM-DD'),
     validate: {
-      validator: (date: string) => SimpleDate.validateString(date),
+      validator: (date: string) => dayjs(date, 'YYYY-MM-DD', true).isValid(),
       message: (props: { value: string }) => `${props.value} is not a valid date string`,
     },
   },

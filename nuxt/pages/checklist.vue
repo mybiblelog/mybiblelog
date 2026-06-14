@@ -67,15 +67,15 @@
 <script>
 import * as dayjs from 'dayjs';
 import { Bible, BrowserCache } from '@mybiblelog/shared';
-import BusyBar from '@/components/BusyBar';
-import CompletionBar from '@/components/CompletionBar';
+import BusyBar from '@/components/ui/BusyBar';
+import CompletionBar from '@/components/ui/CompletionBar';
 import CheckMarkIcon from '@/components/svg/CheckMarkIcon';
 import CaretDownIcon from '@/components/svg/CaretDownIcon';
 import SpinnerIcon from '@/components/svg/SpinnerIcon';
-import InfoLink from '@/components/InfoLink';
+import InfoLink from '@/components/ui/InfoLink';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntriesStore } from '~/stores/log-entries';
-import ReadingTrackerResetCard from '@/components/ReadingTrackerResetCard';
+import ReadingTrackerResetCard from '@/components/ui/ReadingTrackerResetCard';
 const CHAPTER_CHECKLIST_CACHE_KEY = 'chapterChecklist';
 const CHAPTER_CHECKLIST_CACHE_MINUTES = 60;
 

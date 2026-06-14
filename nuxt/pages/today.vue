@@ -141,12 +141,12 @@
 import * as dayjs from 'dayjs';
 import { Bible } from '@mybiblelog/shared';
 import { encodePassageNotesQueryToRoute } from '@/helpers/passage-notes-route-query';
-import BusyBar from '@/components/BusyBar';
-import DoubleProgressBar from '@/components/DoubleProgressBar';
-import LogEntry from '@/components/LogEntry';
-import InfoLink from '@/components/InfoLink';
-import PassageNote from '@/components/PassageNote';
-import ReadingTrackerResetCard from '@/components/ReadingTrackerResetCard';
+import BusyBar from '@/components/ui/BusyBar';
+import DoubleProgressBar from '@/components/ui/DoubleProgressBar';
+import LogEntry from '@/components/log/LogEntry';
+import InfoLink from '@/components/ui/InfoLink';
+import PassageNote from '@/components/notes/PassageNote';
+import ReadingTrackerResetCard from '@/components/ui/ReadingTrackerResetCard';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
