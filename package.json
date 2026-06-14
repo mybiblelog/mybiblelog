@@ -30,8 +30,7 @@
     "lint:fix": "eslint --ext .js,.ts,.vue --ignore-path .gitignore . --fix",
     "test": "npm run test:shared",
     "test:shared": "npm run -w shared test",
-    "test:serial": "jest --runInBand",
-    "test:watch": "jest --watch",
+    "test:nuxt": "npm run -w nuxt test",
     "test:api": "npm run -w api test",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
@@ -41,39 +40,6 @@
     "script:delete-stranded-data": "npm run -w api script:delete-stranded-data",
     "script:migrate": "npm run -w api script:migrate",
     "screenshots": "npx tsx scripts/take-screenshots.ts"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "testTimeout": 10000,
-    "projects": [
-      {
-        "displayName": "api-tests",
-        "testMatch": [
-          "<rootDir>/api/test/**/*.test.js"
-        ],
-        "testEnvironment": "node"
-      },
-      {
-        "displayName": "shared-tests",
-        "preset": "ts-jest",
-        "testMatch": [
-          "<rootDir>/shared/**/*.test.ts"
-        ],
-        "testEnvironment": "node",
-        "roots": [
-          "<rootDir>/shared"
-        ],
-        "transform": {
-          "^.+\\.ts$": "ts-jest"
-        },
-        "moduleFileExtensions": [
-          "ts",
-          "js",
-          "json",
-          "node"
-        ]
-      }
-    ]
   },
   "dependencies": {
     "cross-env": "^7.0.3",
@@ -85,10 +51,8 @@
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.1",
-    "jest": "^29.7.0",
     "openai": "^4.54.0",
-    "sharp": "^0.34.5",
-    "ts-jest": "^29.2.0"
+    "sharp": "^0.34.5"
   },
   "overrides": {
     "mongoose-unique-validator": {

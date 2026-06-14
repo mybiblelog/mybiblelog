@@ -65,7 +65,8 @@
 // Import csv-parse directly: the `csv` meta-package also loads csv-generate,
 // which crashes in strict-mode browser bundles ("Generator is not defined").
 import parse from 'csv-parse';
-import { Bible, SimpleDate, displayDate } from '@mybiblelog/shared';
+import dayjs from 'dayjs';
+import { Bible, displayDate } from '@mybiblelog/shared';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useUserSettingsStore } from '~/stores/user-settings';
@@ -155,7 +156,7 @@ export default {
         let date = inputDate;
 
         // If date is invalid, set to null (indicates error)
-        if (!SimpleDate.validateString(date)) {
+        if (!dayjs(date, 'YYYY-MM-DD', true).isValid()) {
           date = null;
         }
 

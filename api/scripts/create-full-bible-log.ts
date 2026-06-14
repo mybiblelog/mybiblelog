@@ -1,13 +1,14 @@
 /* eslint-disable no-console */
 
 import useMongooseModels, { closeConnection } from '../mongoose/useMongooseModels';
-import { Bible, SimpleDate } from '@mybiblelog/shared';
+import dayjs from 'dayjs';
+import { Bible } from '@mybiblelog/shared';
 
 // Update this email to the user you want to create entries for
 const EMAIL = 'user@example.com';
 
 // You can also update this date if you want to create entries for a different date
-const DATE = SimpleDate.now().toString(); // e.g. '2026-01-01'
+const DATE = dayjs().format('YYYY-MM-DD'); // e.g. '2026-01-01'
 
 const main = async (): Promise<void> => {
   const { User, LogEntry } = await useMongooseModels();

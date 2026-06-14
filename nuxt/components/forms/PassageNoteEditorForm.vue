@@ -100,7 +100,7 @@
 <script>
 import { Bible } from '@mybiblelog/shared';
 import PassageSelector from '@/components/forms/PassageSelector';
-import PassageNoteTagPill from '@/components/PassageNoteTagPill';
+import PassageNoteTagPill from '@/components/notes/PassageNoteTagPill';
 import PassageNoteManageTagsModal from '@/components/popups/PassageNoteManageTagsModal';
 import { useDialogStore } from '~/stores/dialog';
 import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';

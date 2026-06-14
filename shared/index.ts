@@ -1,6 +1,5 @@
 // Main exports
 export { default as Bible } from './bible';
-export { default as SimpleDate } from './simple-date';
 export { default as BrowserCache } from './browser-cache';
 
 // Utility exports

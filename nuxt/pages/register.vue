@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import InfoLink from '@/components/InfoLink';
+import InfoLink from '@/components/ui/InfoLink';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useAuthStore } from '~/stores/auth';

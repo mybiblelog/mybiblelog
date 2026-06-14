@@ -30,6 +30,7 @@
     "node_modules",
     "dist",
     "**/*.test.ts",
-    "**/*.test.js"
+    "**/*.test.js",
+    "vitest.config.ts"
   ]
 }

@@ -53,7 +53,7 @@ import WelcomeStep from '@/components/forms/settings/WelcomeStep.vue';
 import DailyVerseCountGoalForm from '@/components/forms/settings/DailyVerseCountGoalForm.vue';
 import PreferredBibleVersionForm from '@/components/forms/settings/PreferredBibleVersionForm.vue';
 import GetStartedModal from '@/components/popups/GetStartedModal.vue';
-import PillProgressBar from '@/components/PillProgressBar.vue';
+import PillProgressBar from '@/components/ui/PillProgressBar.vue';
 import { useUserSettingsStore } from '~/stores/user-settings';
 
 export default {

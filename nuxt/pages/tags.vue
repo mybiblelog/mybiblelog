@@ -87,8 +87,8 @@
 <script>
 import { displayDateTime, displayTimeSince } from '@mybiblelog/shared';
 import { encodePassageNotesQueryToRoute } from '@/helpers/passage-notes-route-query';
-import HyperlinkedText from '@/components/HyperlinkedText';
-import InfoLink from '@/components/InfoLink';
+import HyperlinkedText from '@/components/ui/HyperlinkedText';
+import InfoLink from '@/components/ui/InfoLink';
 import CaretRightIcon from '@/components/svg/CaretRightIcon';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';

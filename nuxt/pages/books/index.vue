@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import BibleReport from '@/components/BibleReport';
-import ReadingTrackerResetCard from '@/components/ReadingTrackerResetCard';
+import BibleReport from '@/components/bible/BibleReport';
+import ReadingTrackerResetCard from '@/components/ui/ReadingTrackerResetCard';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useAppInitStore } from '~/stores/app-init';
 

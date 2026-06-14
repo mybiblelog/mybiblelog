@@ -1,5 +1,5 @@
 import express from 'express';
-import { SimpleDate } from '@mybiblelog/shared';
+import dayjs from 'dayjs';
 import authCurrentUser from '../helpers/authCurrentUser';
 import useRepositories from '../../repositories/useRepositories';
 import { isValidObjectId } from '../../repositories/ids';
@@ -89,11 +89,11 @@ router.get('/log-entries', async (req, res, next) => {
     const currentUser = await authCurrentUser(req);
     const { startDate, endDate } = req.query as { startDate: string; endDate: string };
 
-    if (startDate && !SimpleDate.validateString(startDate)) {
+    if (startDate && !dayjs(startDate, 'YYYY-MM-DD', true).isValid()) {
       throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'startDate' }]);
     }
 
-    if (endDate && !SimpleDate.validateString(endDate)) {
+    if (endDate && !dayjs(endDate, 'YYYY-MM-DD', true).isValid()) {
       throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'endDate' }]);
     }
 

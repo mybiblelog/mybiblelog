@@ -13,8 +13,10 @@
     "dev": "tsc --watch",
     "clean": "rm -rf node_modules dist",
     "type-check": "tsc --noEmit",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint --ext .ts .",
+    "lint:fix": "eslint --ext .ts . --fix",
     "prepare": "npm run build"
   },
   "keywords": [
@@ -25,7 +27,8 @@
   "author": "Aaron Smith",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^24.9.1"
+    "@types/node": "^24.9.1",
+    "vitest": "^3.2.6"
   },
   "peerDependencies": {
     "dayjs": "^1.10.4"

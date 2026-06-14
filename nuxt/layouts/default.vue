@@ -16,9 +16,9 @@
 </template>
 
 <script>
-import SiteNav from '@/components/SiteNav.vue';
-import FloatingFeedbackButton from '@/components/FloatingFeedbackButton.vue';
-import AppToaster from '@/components/AppToaster.vue';
+import SiteNav from '@/components/layout/SiteNav.vue';
+import FloatingFeedbackButton from '@/components/ui/FloatingFeedbackButton.vue';
+import AppToaster from '@/components/ui/AppToaster.vue';
 import PopUps from '@/components/popups/PopUps.vue';
 import AppAchievements from '~/components/popups/AppAchievements.vue';
 import PassageNoteEditorModal from '@/components/popups/PassageNoteEditorModal.vue';

@@ -140,10 +140,10 @@
 <script>
 import { Bible } from '@mybiblelog/shared';
 import { decodePassageNotesRouteQuery, encodePassageNotesQueryToRoute } from '@/helpers/passage-notes-route-query';
-import PassageNote from '@/components/PassageNote';
+import PassageNote from '@/components/notes/PassageNote';
 import PassageNotesQueryManager from '@/components/notes/PassageNotesQueryManager';
 import AppModal from '@/components/popups/AppModal';
-import InfoLink from '@/components/InfoLink';
+import InfoLink from '@/components/ui/InfoLink';
 import CaretLeftIcon from '@/components/svg/CaretLeftIcon';
 import CaretRightIcon from '@/components/svg/CaretRightIcon';
 import { useDialogStore } from '~/stores/dialog';

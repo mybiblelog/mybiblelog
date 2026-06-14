@@ -1,4 +1,4 @@
-import { SimpleDate } from '@mybiblelog/shared';
+import dayjs from 'dayjs';
 
 export type LogEntriesSortDirection = 'ascending' | 'descending';
 
@@ -44,7 +44,7 @@ function pickEnum<T extends string>(value: unknown, allowed: readonly T[], fallb
 function normalizeDateString(value: unknown): string {
   const v = `${value ?? ''}`.trim();
   if (!v) { return ''; }
-  return SimpleDate.validateString(v) ? v : '';
+  return dayjs(v, 'YYYY-MM-DD', true).isValid() ? v : '';
 }
 
 export function decodeLogEntriesRouteQuery(routeQuery: RouteQueryLike = {}): LogEntriesQuery {
