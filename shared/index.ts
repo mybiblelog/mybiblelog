@@ -7,6 +7,21 @@ export * from './bible-apps';
 export * from './device';
 export * from './date-helpers';
 export { computeDateVerseCounts, type DateVerseCounts, type DateVerseCountsMap, type DateVerseCountLogEntry } from './date-verse-counts';
+export {
+  filterEntriesByDateRange,
+  getIntensityLevel,
+  buildContributionCalendar,
+  computeBookLastRead,
+  computeBookFrequencies,
+  computeDailyVerseSeries,
+  type InsightsLogEntry,
+  type HeatmapCell,
+  type HeatmapWeek,
+  type ContributionCalendar,
+  type BookLastRead,
+  type BookFrequency,
+  type DailyVersePoint,
+} from './insights';
 
 // i18n exports
 export * from './i18n';
