@@ -197,6 +197,14 @@
 
   --mbl-notification-danger-bg: var(--mbl-danger);
   --mbl-notification-danger-fg: var(--mbl-on-accent);
+
+  /* Insights activity heatmap: 0 (empty) → 4 (busiest) green intensity ramp */
+  --mbl-heat-0: var(--mbl-bg-muted);
+  --mbl-heat-1: #9be9a8;
+  --mbl-heat-2: #40c463;
+  --mbl-heat-3: #30a14e;
+  --mbl-heat-4: #216e39;
+  --mbl-heat-empty-border: var(--mbl-border-soft);
 }
 
 [data-theme="light"] {
@@ -281,6 +289,12 @@
     var(--secondary-color)
   );
   --mbl-busy-bar-stripe: rgba(255, 255, 255, 0.1);
+
+  /* Insights activity heatmap (heat-0 follows --mbl-bg-muted automatically) */
+  --mbl-heat-1: #0e4429;
+  --mbl-heat-2: #006d32;
+  --mbl-heat-3: #26a641;
+  --mbl-heat-4: #39d353;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -353,5 +367,11 @@
       var(--secondary-color)
     );
     --mbl-busy-bar-stripe: rgba(255, 255, 255, 0.1);
+
+    /* Insights activity heatmap (heat-0 follows --mbl-bg-muted automatically) */
+    --mbl-heat-1: #0e4429;
+    --mbl-heat-2: #006d32;
+    --mbl-heat-3: #26a641;
+    --mbl-heat-4: #39d353;
   }
 }
