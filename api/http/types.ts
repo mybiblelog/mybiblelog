@@ -1,6 +1,6 @@
 import { type ApiResponse } from '../router/response';
 import { type Repositories } from '../repositories/useRepositories';
-import { type UserRecord } from '../repositories/types';
+import { type UserRecord } from '../repositories/helpers/types';
 
 /**
  * A framework-agnostic, normalized representation of an inbound HTTP request.
@@ -14,7 +14,7 @@ export interface HttpRequest {
   method: string;
   params: Record<string, string | undefined>;
   query: Record<string, string | undefined>;
-  body: any;
+  body: unknown;
   headers: Record<string, string | string[] | undefined>;
 }
 
@@ -28,16 +28,25 @@ export interface HttpResult<T = any> {
 }
 
 /**
+ * Authenticates a request. Overloaded so the common (non-optional) call is
+ * typed as returning a guaranteed `UserRecord` — it throws rather than
+ * returning `null` — while the `optional: true` call returns `UserRecord | null`.
+ * This mirrors the real `authCurrentUser` and lets handlers use the result
+ * without a non-null assertion.
+ */
+export interface Authenticate {
+  (req: HttpRequest, opts?: { optional?: false; adminOnly?: boolean }): Promise<UserRecord>;
+  (req: HttpRequest, opts: { optional: true; adminOnly?: boolean }): Promise<UserRecord | null>;
+}
+
+/**
  * The dependencies a handler needs to do its job. Injecting these (rather than
  * importing them directly) is what makes the handlers unit-testable: tests pass
  * in fakes, production wiring passes in the real repositories and auth.
  */
 export interface RouteDependencies {
   repositories: Repositories;
-  authenticate: (
-    req: HttpRequest,
-    opts?: { optional?: boolean; adminOnly?: boolean },
-  ) => Promise<UserRecord | null>;
+  authenticate: Authenticate;
 }
 
 /**

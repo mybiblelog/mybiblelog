@@ -1,9 +1,12 @@
-import dayjs from 'dayjs';
-import { isValidObjectId } from '../../repositories/helpers/ids';
 import { toLogEntryJSON } from '../../repositories/helpers/serializers';
-import { ApiErrorDetailCode } from '../../router/errors/error-codes';
-import { ValidationError } from '../../router/errors/validation-errors';
 import { NotFoundError } from '../../router/errors/http-errors';
+import { validate } from '../../validation/validate';
+import { objectIdParam } from '../../validation/primitives';
+import {
+  logEntryCreateSchema,
+  logEntryUpdateSchema,
+  logEntryListQuerySchema,
+} from '../../validation/schemas/log-entry';
 import { type RouteHandler } from '../types';
 
 /**
@@ -20,30 +23,18 @@ import { type RouteHandler } from '../types';
 // GET /log-entries - List all log entries for current user with optional date filtering
 export const listLogEntries: RouteHandler = async (req, deps) => {
   const currentUser = await deps.authenticate(req);
-  const { startDate, endDate } = req.query;
+  const { query } = validate(req, { query: logEntryListQuerySchema });
 
-  if (startDate && !dayjs(startDate, 'YYYY-MM-DD', true).isValid()) {
-    throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'startDate' }]);
-  }
-
-  if (endDate && !dayjs(endDate, 'YYYY-MM-DD', true).isValid()) {
-    throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'endDate' }]);
-  }
-
-  const logEntries = await deps.repositories.logEntries.listByOwner(currentUser!.id, { startDate, endDate });
+  const logEntries = await deps.repositories.logEntries.listByOwner(currentUser.id, query);
   return { status: 200, body: { data: logEntries.map(toLogEntryJSON) } };
 };
 
 // GET /log-entries/:id - Get a specific log entry by ID
 export const getLogEntry: RouteHandler = async (req, deps) => {
-  const { id } = req.params;
-  if (!id || !isValidObjectId(id)) {
-    throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
-  }
-
+  const { params } = validate(req, { params: objectIdParam });
   const currentUser = await deps.authenticate(req);
 
-  const logEntry = await deps.repositories.logEntries.findByIdForOwner(currentUser!.id, id);
+  const logEntry = await deps.repositories.logEntries.findByIdForOwner(currentUser.id, params.id);
   if (!logEntry) {
     throw new NotFoundError();
   }
@@ -53,24 +44,19 @@ export const getLogEntry: RouteHandler = async (req, deps) => {
 // POST /log-entries - Create a new log entry
 export const createLogEntry: RouteHandler = async (req, deps) => {
   const currentUser = await deps.authenticate(req);
-  const { date, startVerseId, endVerseId } = req.body;
+  const { body } = validate(req, { body: logEntryCreateSchema });
 
-  const logEntry = await deps.repositories.logEntries.create(currentUser!.id, { date, startVerseId, endVerseId });
+  const logEntry = await deps.repositories.logEntries.create(currentUser.id, body);
 
   return { status: 200, body: { data: toLogEntryJSON(logEntry) } };
 };
 
 // PUT /log-entries/:id - Update a log entry
 export const updateLogEntry: RouteHandler = async (req, deps) => {
-  const { id } = req.params;
-  if (!id || !isValidObjectId(id)) {
-    throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
-  }
-
+  const { params, body } = validate(req, { params: objectIdParam, body: logEntryUpdateSchema });
   const currentUser = await deps.authenticate(req);
-  const { date, startVerseId, endVerseId } = req.body;
 
-  const logEntry = await deps.repositories.logEntries.update(currentUser!.id, id, { date, startVerseId, endVerseId });
+  const logEntry = await deps.repositories.logEntries.update(currentUser.id, params.id, body);
   if (!logEntry) {
     throw new NotFoundError();
   }
@@ -80,14 +66,10 @@ export const updateLogEntry: RouteHandler = async (req, deps) => {
 
 // DELETE /log-entries/:id - Delete a log entry
 export const deleteLogEntry: RouteHandler = async (req, deps) => {
-  const { id } = req.params;
-  if (!id || !isValidObjectId(id)) {
-    throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
-  }
-
+  const { params } = validate(req, { params: objectIdParam });
   const currentUser = await deps.authenticate(req);
 
-  const deletedCount = await deps.repositories.logEntries.deleteByIdForOwner(currentUser!.id, id);
+  const deletedCount = await deps.repositories.logEntries.deleteByIdForOwner(currentUser.id, params.id);
   if (deletedCount === 0) {
     throw new NotFoundError();
   }

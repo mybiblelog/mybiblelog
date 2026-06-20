@@ -1,6 +1,6 @@
 import { type Router } from 'express';
 import { createRouteDependencies } from '../dependencies';
-import { type HttpRequest, type RouteDefinition } from '../types';
+import { type HttpRequest, type RouteDefinition, type RouteDependencies } from '../types';
 
 /**
  * Express adapter. Registers a list of framework-neutral `RouteDefinition`s on
@@ -13,11 +13,17 @@ import { type HttpRequest, type RouteDefinition } from '../types';
  * produces the response — keeping HTTP error shapes/status codes unchanged.
  */
 export const registerRoutes = (router: Router, routes: RouteDefinition[]): void => {
+  // Resolve dependencies once, lazily on the first request. Deferring (rather
+  // than building them at registration time) avoids triggering a DB connection
+  // at import time; memoizing avoids rebuilding them on every request.
+  let depsPromise: Promise<RouteDependencies> | undefined;
+  const getDeps = (): Promise<RouteDependencies> => (depsPromise ??= createRouteDependencies());
+
   for (const route of routes) {
     const method = route.method.toLowerCase() as 'get' | 'post' | 'put' | 'patch' | 'delete';
     router[method](route.path, async (req, res, next) => {
       try {
-        const deps = await createRouteDependencies();
+        const deps = await getDeps();
         const httpReq: HttpRequest = {
           method: req.method,
           params: req.params as HttpRequest['params'],
