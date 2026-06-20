@@ -85,7 +85,6 @@ const options = {
   swaggerDefinition,
   // Paths to files containing OpenAPI definitions
   apis: [
-    './router/routes/*.ts',
     './mongoose/schemas/*.ts',
   ],
 };

@@ -1,12 +1,12 @@
 import { type RouteDefinition, type DocumentedRoute } from '../types';
-import { logEntryRoutes } from './log-entries';
 import { authRoutes } from './auth';
-import { adminRoutes } from './admin';
-import { feedbackRoutes } from './feedback';
-import { settingsRoutes } from './settings';
+import { logEntryRoutes } from './log-entries';
 import { passageNoteRoutes } from './passage-notes';
 import { passageNoteTagRoutes } from './passage-note-tags';
+import { settingsRoutes } from './settings';
 import { reminderRoutes } from './reminders';
+import { feedbackRoutes } from './feedback';
+import { adminRoutes } from './admin';
 import { scriptureRoutes } from './scripture';
 import { sitemapRoutes } from './sitemap';
 
@@ -21,14 +21,14 @@ import { sitemapRoutes } from './sitemap';
  * corresponding doc-only descriptors / JSDoc).
  */
 export const documentedRoutes: Array<RouteDefinition | DocumentedRoute> = [
-  ...logEntryRoutes,
   ...authRoutes,
-  ...adminRoutes,
-  ...feedbackRoutes,
-  ...settingsRoutes,
+  ...logEntryRoutes,
   ...passageNoteRoutes,
   ...passageNoteTagRoutes,
+  ...settingsRoutes,
   ...reminderRoutes,
+  ...feedbackRoutes,
+  ...adminRoutes,
   ...scriptureRoutes,
   ...sitemapRoutes,
 ];

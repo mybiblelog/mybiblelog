@@ -1,27 +1,37 @@
 import express from 'express';
 
-import authRouter from './routes/auth';
-import settingsRouter from './routes/settings';
-import adminRouter from './routes/admin';
-import logEntriesRouter from './routes/log-entries';
-import passageNotesRouter from './routes/passage-notes';
-import passageNoteTagsRouter from './routes/passage-note-tags';
-import remindersRouter from './routes/reminders';
-import feedbackRouter from './routes/feedback';
-import scriptureRouter from './routes/scripture';
-import sitemapRouter from './routes/sitemap';
+import { registerRoutes } from '../http/adapters/express';
+import { authRoutes } from '../http/routes/auth';
+import { logEntryRoutes } from '../http/routes/log-entries';
+import { passageNoteRoutes } from '../http/routes/passage-notes';
+import { passageNoteTagRoutes } from '../http/routes/passage-note-tags';
+import { settingsRoutes } from '../http/routes/settings';
+import { reminderRoutes } from '../http/routes/reminders';
+import { feedbackRoutes } from '../http/routes/feedback';
+import { adminRoutes } from '../http/routes/admin';
+import { scriptureRoutes } from '../http/routes/scripture';
+import { sitemapRoutes } from '../http/routes/sitemap';
 
+/**
+ * Express wiring for the API. The handlers are framework-agnostic
+ * (`api/http/handlers/`) and each route table carries its own OpenAPI docs
+ * (`api/http/routes/`). This file only registers those tables onto Express;
+ * auth, validation, rate limiting, cookies and redirects are expressed by the
+ * handlers/dependencies, not here. Registration order is route-matching order.
+ */
 const apiRouter = express.Router();
 
-apiRouter.use(authRouter);
-apiRouter.use(settingsRouter);
-apiRouter.use(adminRouter);
-apiRouter.use(logEntriesRouter);
-apiRouter.use(passageNotesRouter);
-apiRouter.use(passageNoteTagsRouter);
-apiRouter.use(remindersRouter);
-apiRouter.use(feedbackRouter);
-apiRouter.use(scriptureRouter);
-apiRouter.use(sitemapRouter);
+registerRoutes(apiRouter, [
+  ...authRoutes,
+  ...logEntryRoutes,
+  ...passageNoteRoutes,
+  ...passageNoteTagRoutes,
+  ...settingsRoutes,
+  ...reminderRoutes,
+  ...feedbackRoutes,
+  ...adminRoutes,
+  ...scriptureRoutes,
+  ...sitemapRoutes,
+]);
 
 export default apiRouter;
