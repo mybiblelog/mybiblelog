@@ -23,113 +23,13 @@ import { emailString } from '../../validation/primitives';
 
 const { requireEmailVerification } = config;
 
+/**
+ * OpenAPI docs for these endpoints are generated from schema-driven descriptors
+ * in `api/http/routes/auth.docs.ts` (not from JSDoc here). When changing a
+ * request/response shape, update the schema it references so the docs follow.
+ */
 const router = express.Router();
 
-/**
- * @swagger
- * components:
- *   securitySchemes:
- *     bearerAuth:
- *       type: http
- *       scheme: bearer
- *       bearerFormat: JWT
- *       description: |
- *         JWT token-based authentication.
- *
- *         ## Authentication Flow
- *         1. Obtain a JWT token by logging in via `/auth/login` or `/auth/google` endpoints
- *         2. Include the token in the Authorization header of subsequent requests:
- *            `Authorization: Bearer YOUR_TOKEN_HERE`
- *         3. The token contains user identity and permissions
- *
- *         ## Protected Endpoints
- *         Most endpoints in this API require authentication. Protected endpoints are marked with the lock icon 🔒 in the Swagger UI.
- *
- *         ## Token Expiration
- *         Tokens expire after 30 days. You'll need to log in again to obtain a new token.
- */
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     User:
- *       type: object
- *       required:
- *         - email
- *       properties:
- *         hasLocalAccount:
- *           type: boolean
- *           description: Whether the user has a local password account (as opposed to only OAuth)
- *         email:
- *           type: string
- *           description: The user's email address
- *         isAdmin:
- *           type: boolean
- *           description: Whether the user has admin privileges
- *     ApiErrorDetail:
- *       type: object
- *       properties:
- *         field:
- *           type: string
- *           nullable: true
- *           description: Field name for field-level errors, or null for top-level errors
- *         code:
- *           type: string
- *           description: Machine-readable i18n-friendly error code
- *         properties:
- *           type: object
- *           additionalProperties: true
- *           description: Optional metadata for the error
- *     ApiError:
- *       type: object
- *       required:
- *         - code
- *       properties:
- *         code:
- *           type: string
- *           description: Top-level error code
- *           enum: [validation_error, invalid_request, unauthenticated, unauthorized, not_found, too_many_requests, internal_server_error]
- *         errors:
- *           type: array
- *           items:
- *             $ref: '#/components/schemas/ApiErrorDetail'
- *           description: Optional array of field errors
- *     ApiErrorResponse:
- *       type: object
- *       required:
- *         - error
- *       properties:
- *         error:
- *           $ref: '#/components/schemas/ApiError'
- */
-
-/**
- * @swagger
- * /auth/user:
- *   get:
- *     summary: Get the currently logged-in user
- *     tags: [Authentication]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: The current user information
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     user:
- *                       $ref: '#/components/schemas/User'
- *                       nullable: true
- *                       description: User object if authenticated, null otherwise
- */
 router.get('/auth/user', async (req, res, next) => {
   try {
     const currentUser = await authCurrentUser(req, { optional: true });
@@ -141,68 +41,6 @@ router.get('/auth/user', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /auth/login:
- *   post:
- *     summary: Login with email and password
- *     description: |
- *       Authenticates a user with email and password, returning a JWT token.
- *       This token should be included in the Authorization header of subsequent requests.
- *     tags: [Authentication]
- *     security: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - password
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *               password:
- *                 type: string
- *                 format: password
- *     responses:
- *       200:
- *         description: Login successful
- *         headers:
- *           Set-Cookie:
- *             description: |
- *               Authentication cookie containing the JWT token.
- *               - Cookie name: `auth_token`
- *               - HttpOnly: true
- *               - Secure: true (in production)
- *               - Max-Age: 2592000 seconds (30 days)
- *             schema:
- *               type: string
- *               example: auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...; HttpOnly; Secure; Max-Age=2592000
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     token:
- *                       type: string
- *                       description: Token for authentication
- *                     user:
- *                       $ref: '#/components/schemas/User'
- *       400:
- *         description: Invalid credentials or validation error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiErrorResponse'
- */
 router.post('/auth/login', async (req, res, next) => {
   // Rate limiting for login attempts
   const authBypass = checkTestBypass(req);
@@ -249,41 +87,6 @@ router.post('/auth/login', async (req, res, next) => {
   } satisfies ApiResponse);
 });
 
-/**
- * @swagger
- * /auth/logout:
- *   post:
- *     summary: Logout the current user
- *     description: |
- *       Ends the current user session. This endpoint doesn't actually invalidate the JWT token
- *       since JWTs are stateless, but it can be used to track when a user explicitly logs out.
- *
- *       The client should remove the JWT token from storage after calling this endpoint.
- *     tags: [Authentication]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: User logged out successfully
- *         headers:
- *           Set-Cookie:
- *             description: |
- *               Clears the authentication cookie by setting it to expire immediately.
- *               - Cookie name: `auth_token`
- *             schema:
- *               type: string
- *               example: auth_token=; HttpOnly; Secure; Max-Age=0
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: boolean
- *                   description: Success indicator (true)
- */
 router.post('/auth/logout', async (req, res, next) => {
   try {
     await authCurrentUser(req);
@@ -295,59 +98,6 @@ router.post('/auth/logout', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /auth/register:
- *   post:
- *     summary: Register a new user account
- *     description: |
- *       Creates a new user account with the provided email and password.
- *       Returns a JWT token that can be used for authentication.
- *
- *       If email verification is enabled, the user will need to verify their email
- *       before they can access protected endpoints.
- *     tags: [Authentication]
- *     security: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - password
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *               password:
- *                 type: string
- *                 format: password
- *                 minLength: 6
- *     responses:
- *       200:
- *         description: Registration successful
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     success:
- *                       type: boolean
- *                       description: Success indicator (true)
- *       400:
- *         description: Validation error (e.g., email already in use, invalid email format)
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiErrorResponse'
- */
 router.post('/auth/register', async (req, res, next) => {
   // If the request is coming from a test, bypass restrictions
   const authBypass = checkTestBypass(req);
@@ -389,116 +139,11 @@ router.post('/auth/register', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /auth/oauth2/google/url:
- *   get:
- *     summary: Get Google OAuth2 URL
- *     description: |
- *       Returns the URL to redirect the user to for Google OAuth2 authentication.
- *       This is the first step in the Google OAuth2 flow.
- *
- *       ## Google OAuth2 Flow:
- *       1. Frontend calls this endpoint to get the Google OAuth2 URL
- *       2. Frontend redirects the user to this URL
- *       3. User authenticates with Google and grants permissions
- *       4. Google redirects back to the application with a code
- *       5. Frontend passes this code to the /auth/oauth2/google/verify endpoint
- *       6. Backend verifies the code and returns a JWT token
- *     tags: [Authentication]
- *     security: []
- *     responses:
- *       200:
- *         description: Google OAuth2 URL
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     url:
- *                       type: string
- *                       description: URL to redirect the user to for Google authentication
- *                     state:
- *                       type: string
- *                       description: State parameter for CSRF protection
- */
 router.get('/auth/oauth2/google/url', (req, res, next) => {
   const { url, state } = googleOauth2.getGoogleLoginUrl();
   res.json({ data: { url, state } } satisfies ApiResponse);
 });
 
-/**
- * @swagger
- * /auth/oauth2/google/verify:
- *   post:
- *     summary: Verify Google OAuth2 code
- *     description: |
- *       Verifies the code returned by Google OAuth2 and returns a JWT token.
- *       This is the second step in the Google OAuth2 flow.
- *
- *       If the user doesn't exist, a new account will be created.
- *       If the user exists but hasn't used Google authentication before,
- *       the Google ID will be linked to their account.
- *     tags: [Authentication]
- *     security: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - code
- *               - state
- *             properties:
- *               code:
- *                 type: string
- *                 description: The code returned by Google OAuth2
- *               state:
- *                 type: string
- *                 description: State parameter for CSRF protection
- *               locale:
- *                 type: string
- *                 description: Optional locale to save as user settings for new users
- *     responses:
- *       200:
- *         description: Google OAuth2 verification successful
- *         headers:
- *           Set-Cookie:
- *             description: |
- *               Authentication cookie containing the JWT token.
- *               - Cookie name: `auth_token`
- *               - HttpOnly: true
- *               - Secure: true (in production)
- *               - Max-Age: 2592000 seconds (30 days)
- *             schema:
- *               type: string
- *               example: auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...; HttpOnly; Secure; Max-Age=2592000
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     token:
- *                       type: string
- *                       description: Token for authentication
- *       400:
- *         description: Invalid code, OAuth2 error, or validation error (e.g., email not verified)
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiErrorResponse'
- */
 router.post('/auth/oauth2/google/verify', async (req, res, next) => {
   await rateLimit(req, { maxRequests: 10, windowMs: 60 * 1000 }); // 10 attempts per minute
 
@@ -557,59 +202,6 @@ router.post('/auth/oauth2/google/verify', async (req, res, next) => {
   /* eslint-enable camelcase */
 });
 
-/**
- * @swagger
- * /auth/verify-email:
- *   post:
- *     summary: Verify email via link
- *     tags: [Authentication]
- *     parameters:
- *       - in: path
- *         name: emailVerificationCode
- *         schema:
- *           type: string
- *         required: true
- *         description: The email verification code
- *     responses:
- *       200:
- *         description: Email verified successfully
- *         headers:
- *           Set-Cookie:
- *             description: |
- *               Authentication cookie containing the JWT token.
- *               - Cookie name: `auth_token`
- *               - HttpOnly: true
- *               - Secure: true (in production)
- *               - Max-Age: 2592000 seconds (30 days)
- *             schema:
- *               type: string
- *               example: auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...; HttpOnly; Secure; Max-Age=2592000
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     token:
- *                       type: string
- *                       description: Token for authentication
- *       400:
- *         description: Verification code expired
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiErrorResponse'
- *       404:
- *         description: Verification code not found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiErrorResponse'
- */
 router.post('/auth/verify-email', async (req, res) => {
   // Rate limiting for email verification
   const authBypass = checkTestBypass(req);
@@ -647,52 +239,6 @@ router.post('/auth/verify-email', async (req, res) => {
   res.json({ data: { token } } satisfies ApiResponse);
 });
 
-/**
- * @swagger
- * /auth/resend-email-verification:
- *   post:
- *     summary: Resend verification email (cooldown)
- *     tags: [Authentication]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *             properties:
- *               email:
- *                 type: string
- *               locale:
- *                 type: string
- *     responses:
- *       200:
- *         description: Returns whether resend was queued and cooldown seconds
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: object
- *                   required:
- *                     - success
- *                     - secondsUntilCanRetry
- *                   properties:
- *                     success:
- *                       type: boolean
- *                     secondsUntilCanRetry:
- *                       type: number
- *       400:
- *         description: Validation error (e.g., missing email)
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiErrorResponse'
- */
 router.post('/auth/resend-email-verification', async (req, res) => {
   // Rate limiting for resend requests
   const authBypass = checkTestBypass(req);
@@ -743,48 +289,6 @@ router.post('/auth/resend-email-verification', async (req, res) => {
   emailService.sendUserEmailVerification(updatedUser.email, updatedUser.emailVerificationCode, locale);
 });
 
-/**
- * @swagger
- * /auth/change-password:
- *   put:
- *     summary: Change user password
- *     tags: [Authentication]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - currentPassword
- *               - newPassword
- *             properties:
- *               currentPassword:
- *                 type: string
- *               newPassword:
- *                 type: string
- *     responses:
- *       200:
- *         description: Password changed successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: number
- *                   description: HTTP status code (200)
- *       400:
- *         description: Current password is incorrect
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiErrorResponse'
- */
 router.put('/auth/change-password', async (req, res, next) => {
   // Rate limiting for password change attempts
   const authBypass = checkTestBypass(req);
@@ -813,51 +317,6 @@ router.put('/auth/change-password', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /auth/change-email:
- *   post:
- *     summary: Initiate email change process
- *     tags: [Authentication]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - newEmail
- *               - password
- *             properties:
- *               newEmail:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       200:
- *         description: Email change process initiated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     success:
- *                       type: boolean
- *                       description: Success indicator (true)
- *       400:
- *         description: Validation error
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiErrorResponse'
- */
 router.post('/auth/change-email', async (req, res, next) => {
   // If the request is coming from a test, bypass restrictions
   const authBypass = checkTestBypass(req);
@@ -914,37 +373,6 @@ router.post('/auth/change-email', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /auth/change-email:
- *   get:
- *     summary: Check if there is an email change request in progress
- *     tags: [Authentication]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Email change request status
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     newEmail:
- *                       type: string
- *                       nullable: true
- *                       description: The new email address, or null if no change is pending
- *                     expires:
- *                       type: string
- *                       format: date-time
- *                       nullable: true
- *                       description: Expiration date of the email change request, or null if no change is pending
- */
 router.get('/auth/change-email', async (req, res, next) => {
   try {
     const currentUser = await authCurrentUser(req);
@@ -970,40 +398,6 @@ router.get('/auth/change-email', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /auth/change-email/{newEmailVerificationCode}:
- *   get:
- *     summary: Get email change request by verification code
- *     tags: [Authentication]
- *     parameters:
- *       - in: path
- *         name: newEmailVerificationCode
- *         schema:
- *           type: string
- *         required: true
- *         description: The new email verification code
- *     responses:
- *       200:
- *         description: Email change request found or not found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: object
- *                   nullable: true
- *                   properties:
- *                     newEmail:
- *                       type: string
- *                     expires:
- *                       type: string
- *                       format: date-time
- *                   description: Email change request data if found, null otherwise
- */
 router.get('/auth/change-email/:newEmailVerificationCode', async (req, res, next) => {
   // Rate limiting to prevent enumeration of email change verification codes
   const authBypass = checkTestBypass(req);
@@ -1027,28 +421,6 @@ router.get('/auth/change-email/:newEmailVerificationCode', async (req, res, next
   return res.json({ data: null } satisfies ApiResponse);
 });
 
-/**
- * @swagger
- * /auth/change-email:
- *   delete:
- *     summary: Cancel email change process
- *     tags: [Authentication]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Email change process cancelled successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: boolean
- *                   description: True if cancellation was successful, false if no change was pending
- */
 router.delete('/auth/change-email', async (req, res, next) => {
   try {
     const currentUser = await authCurrentUser(req);
@@ -1067,59 +439,6 @@ router.delete('/auth/change-email', async (req, res, next) => {
   }
 });
 
-/**
- * @swagger
- * /auth/change-email/{newEmailVerificationCode}:
- *   post:
- *     summary: Complete email change process using verification code
- *     tags: [Authentication]
- *     parameters:
- *       - in: path
- *         name: newEmailVerificationCode
- *         schema:
- *           type: string
- *         required: true
- *         description: The new email verification code
- *     responses:
- *       200:
- *         description: Email change completed successfully
- *         headers:
- *           Set-Cookie:
- *             description: |
- *               Authentication cookie containing the JWT token.
- *               - Cookie name: `auth_token`
- *               - HttpOnly: true
- *               - Secure: true (in production)
- *               - Max-Age: 2592000 seconds (30 days)
- *             schema:
- *               type: string
- *               example: auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...; HttpOnly; Secure; Max-Age=2592000
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     token:
- *                       type: string
- *                       description: Token for authentication
- *       400:
- *         description: Verification code expired or email already in use
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiErrorResponse'
- *       404:
- *         description: Email verification code not found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiErrorResponse'
- */
 router.post('/auth/change-email/:newEmailVerificationCode', async (req, res, next) => {
   // Rate limiting for email change completion
   const authBypass = checkTestBypass(req);
@@ -1166,43 +485,6 @@ router.post('/auth/change-email/:newEmailVerificationCode', async (req, res, nex
   res.json({ data: { token } } satisfies ApiResponse);
 });
 
-/**
- * @swagger
- * /auth/reset-password:
- *   post:
- *     summary: Initiate password reset process
- *     tags: [Authentication]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *             properties:
- *               email:
- *                 type: string
- *     responses:
- *       200:
- *         description: |
- *           Password reset process initiated successfully.
- *           Always returns success, whether or not an account exists for the
- *           given email address, to prevent account enumeration.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     success:
- *                       type: boolean
- *                       description: Success indicator (true)
- */
 router.post('/auth/reset-password', async (req, res) => {
   // Rate limiting for password reset requests
   const authBypass = checkTestBypass(req);
@@ -1238,36 +520,6 @@ router.post('/auth/reset-password', async (req, res) => {
   emailService.sendUserPasswordResetLink(updatedUser.email, updatedUser.passwordResetCode, updatedUser.settings.locale as LocaleCode);
 });
 
-/**
- * @swagger
- * /auth/reset-password/{passwordResetCode}/valid:
- *   get:
- *     summary: Check if password reset code is valid
- *     tags: [Authentication]
- *     parameters:
- *       - in: path
- *         name: passwordResetCode
- *         schema:
- *           type: string
- *         required: true
- *         description: The password reset code
- *     responses:
- *       200:
- *         description: Password reset code validity check
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     valid:
- *                       type: boolean
- *                       description: Whether the password reset code is valid
- */
 router.get('/auth/reset-password/:passwordResetCode/valid', async (req, res, next) => {
   // Rate limiting to prevent enumeration of password reset codes
   const authBypass = checkTestBypass(req);
@@ -1288,64 +540,6 @@ router.get('/auth/reset-password/:passwordResetCode/valid', async (req, res, nex
   }
 });
 
-/**
- * @swagger
- * /auth/reset-password/{passwordResetCode}:
- *   post:
- *     summary: Reset password using reset code
- *     tags: [Authentication]
- *     parameters:
- *       - in: path
- *         name: passwordResetCode
- *         schema:
- *           type: string
- *         required: true
- *         description: The password reset code
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - newPassword
- *             properties:
- *               newPassword:
- *                 type: string
- *     responses:
- *       200:
- *         description: Password reset successful
- *         headers:
- *           Set-Cookie:
- *             description: |
- *               Authentication cookie containing the JWT token.
- *               - Cookie name: `auth_token`
- *               - HttpOnly: true
- *               - Secure: true (in production)
- *               - Max-Age: 2592000 seconds (30 days)
- *             schema:
- *               type: string
- *               example: auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...; HttpOnly; Secure; Max-Age=2592000
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               required:
- *                 - data
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     token:
- *                       type: string
- *                       description: Token for authentication
- *       400:
- *         description: Password reset link expired or not valid
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ApiErrorResponse'
- */
 router.post('/auth/reset-password/:passwordResetCode', async (req, res, next) => {
   // Rate limiting for password reset completion
   const authBypass = checkTestBypass(req);

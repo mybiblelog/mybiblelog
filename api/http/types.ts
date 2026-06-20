@@ -68,6 +68,8 @@ export interface RouteDocs {
   summary: string;
   tags: string[];
   description?: string;
+  /** When true the endpoint requires no authentication (emits `security: []`). */
+  public?: boolean;
   /** Request schemas — reuse the exact schemas passed to `validate()`. */
   request?: {
     params?: ZodType;
@@ -79,6 +81,25 @@ export interface RouteDocs {
     description?: string;
     schema: ZodType;
   };
+  /**
+   * Documented error status codes, each rendered as an `ApiErrorResponse`. When
+   * omitted, defaults to `400` plus `404` if the route has path params.
+   */
+  errors?: number[];
+  /** When true, documents that a 200 response sets the `auth_token` cookie. */
+  setsAuthCookie?: boolean;
+}
+
+/**
+ * A documentation-only route descriptor: a path/method paired with `docs`, but
+ * no handler. Used to document endpoints that have not been migrated to the
+ * framework-agnostic handler pattern yet (e.g. the Express-coupled auth routes),
+ * so their OpenAPI spec is still schema-driven rather than hand-written JSDoc.
+ */
+export interface DocumentedRoute {
+  method: HttpMethod;
+  path: string;
+  docs: RouteDocs;
 }
 
 /**
