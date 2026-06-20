@@ -109,6 +109,7 @@ export const createUserRepository = ({ User }: Models) => {
 
       const user = new User();
       user.email = input.email;
+      // allows `null` to be set explicitly to create an OAuth-only account without a local password
       if (input.password !== undefined) {
         user.password = input.password;
       }
