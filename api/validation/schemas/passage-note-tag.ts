@@ -16,3 +16,16 @@ export const passageNoteTagUpdateSchema = passageNoteTagBaseSchema.partial();
 
 export type PassageNoteTagCreateBody = z.infer<typeof passageNoteTagCreateSchema>;
 export type PassageNoteTagUpdateBody = z.infer<typeof passageNoteTagUpdateSchema>;
+
+/**
+ * The serialized shape of a passage note tag (see `toPassageNoteTagJSON`). Used
+ * to generate the OpenAPI response schema; handlers return the serialized record
+ * with a per-request `noteCount` attached.
+ */
+export const passageNoteTagSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  color: z.string().describe('Hex color code'),
+  description: z.string().optional(),
+  noteCount: z.number().describe('The number of notes using this tag'),
+});

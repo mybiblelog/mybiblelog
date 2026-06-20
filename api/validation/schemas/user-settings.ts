@@ -24,3 +24,10 @@ export type UserSettingsPatch = z.infer<typeof userSettingsPatchSchema>;
 export const settingsUpdateBodySchema = z.object({
   settings: userSettingsPatchSchema,
 });
+
+/**
+ * The serialized shape of a user's settings as returned by the API. A stored
+ * settings record always carries every field, so this reuses the (non-partial)
+ * base schema; it is the single source of truth for the generated OpenAPI docs.
+ */
+export const userSettingsSchema = userSettingsBaseSchema;

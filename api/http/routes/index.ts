@@ -3,6 +3,9 @@ import { logEntryRoutes } from './log-entries';
 import { authRoutes } from './auth';
 import { adminRoutes } from './admin';
 import { feedbackRoutes } from './feedback';
+import { settingsRoutes } from './settings';
+import { passageNoteRoutes } from './passage-notes';
+import { passageNoteTagRoutes } from './passage-note-tags';
 
 /**
  * Every route the OpenAPI generator should document. This includes:
@@ -19,4 +22,7 @@ export const documentedRoutes: Array<RouteDefinition | DocumentedRoute> = [
   ...authRoutes,
   ...adminRoutes,
   ...feedbackRoutes,
+  ...settingsRoutes,
+  ...passageNoteRoutes,
+  ...passageNoteTagRoutes,
 ];
