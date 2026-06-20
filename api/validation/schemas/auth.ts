@@ -11,7 +11,15 @@ export const passwordSchema = z
   .refine((value) => Buffer.byteLength(value, 'utf8') <= BCRYPT_MAX_PASSWORD_BYTES);
 
 export const registerBodySchema = z.object({
-  email: z.string().toLowerCase().regex(/^\S+@\S+\.\S+$/),
+  // An empty (or whitespace-only) email reports as `required` rather than
+  // `invalid` so the UI shows "A email is required" — matching the inline
+  // checks the login/email-change handlers use. A present-but-malformed value
+  // still fails the regex as `invalid`. The leading `z.string()` keeps both the
+  // generated OpenAPI schema and the parsed type honest (email stays required).
+  email: z
+    .string()
+    .transform((value) => (value.trim() === '' ? undefined : value.toLowerCase()))
+    .pipe(z.string().regex(/^\S+@\S+\.\S+$/)),
   password: passwordSchema,
 });
 
@@ -22,4 +30,53 @@ export const changePasswordBodySchema = z.object({
 
 export const resetPasswordBodySchema = z.object({
   newPassword: passwordSchema,
+});
+
+/**
+ * The serialized shape of the authenticated user (see `toAuthJSON`). Single
+ * source of truth for both that serializer's return type and the OpenAPI `User`
+ * component.
+ */
+export const userSchema = z.object({
+  hasLocalAccount: z.boolean(),
+  email: z.string(),
+  isAdmin: z.boolean(),
+});
+
+export type UserJSON = z.infer<typeof userSchema>;
+
+/**
+ * Request schemas for the auth endpoints whose handlers validate their input
+ * inline rather than through `validate()`. Those handlers keep hand-rolled
+ * `typeof … === 'string'` guards to reject NoSQL operator-injection payloads
+ * (e.g. `{ email: { $gt: '' } }`) with endpoint-specific error codes. These
+ * schemas mirror the accepted body for the generated OpenAPI docs.
+ */
+export const loginBodySchema = z.object({
+  email: z.string(),
+  password: z.string(),
+});
+
+export const googleVerifyBodySchema = z.object({
+  code: z.string(),
+  state: z.string(),
+  locale: z.string().optional(),
+});
+
+export const verifyEmailBodySchema = z.object({
+  code: z.string(),
+});
+
+export const resendEmailVerificationBodySchema = z.object({
+  email: z.string(),
+  locale: z.string().optional(),
+});
+
+export const changeEmailBodySchema = z.object({
+  newEmail: z.string(),
+  password: z.string(),
+});
+
+export const resetPasswordInitBodySchema = z.object({
+  email: z.string(),
 });

@@ -7,11 +7,11 @@ import errorhandler from 'errorhandler';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger';
 import config from './config';
-import apiRouter from './router/router';
-import { ApiResponse } from './router/response';
-import { AppError } from './router/errors/app-error';
-import { InternalError } from './router/errors/internal-error';
-import { NotFoundError, UnauthorizedError } from './router/errors/http-errors';
+import apiRouter from './express/router';
+import { ApiResponse } from './http/response';
+import { AppError } from './http/errors/app-error';
+import { InternalError } from './http/errors/internal-error';
+import { NotFoundError, UnauthorizedError } from './http/errors/http-errors';
 
 const isProduction = config.nodeEnv === 'production';
 const allowedOrigin = new URL(config.siteUrl).origin;

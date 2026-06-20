@@ -1,15 +1,22 @@
 import config from '../../config';
-import { type Request} from 'express';
+
+/**
+ * Minimal request shape this helper needs. Both Express's `req` and the
+ * normalized `HttpRequest` (`api/http/types.ts`) structurally satisfy it, so the
+ * helper works under any adapter (and inside the framework-agnostic `RateLimiter`).
+ */
+type BypassRequest = {
+  headers: Record<string, string | string[] | undefined>;
+};
 
 /**
  * Check if the request is coming from a test environment.
  *
  * This is used to bypass certain checks in the API for testing purposes.
  *
- * @param {import('express').Request} req
  * @returns {boolean}
  */
-const checkTestBypass = (req: Request): boolean => {
+const checkTestBypass = (req: BypassRequest): boolean => {
   // Never honor the test bypass in production, even if a secret is configured.
   // The bypass can skip rate limiting and grant admin on registration, so it
   // must be impossible to trigger against a production deployment.

@@ -4,8 +4,8 @@ import {
   type PassageCursor,
   type ScripturePassageChunk,
 } from '@mybiblelog/shared';
-import { ApiErrorDetailCode } from '../../router/errors/error-codes';
-import { ValidationError } from '../../router/errors/validation-errors';
+import { ApiErrorDetailCode } from '../../http/errors/error-codes';
+import { ValidationError } from '../../http/errors/validation-errors';
 import { getHelloaoTranslationId } from './helloao-translations';
 import { fetchHelloaoChapter } from './helloao-client';
 import { extractPassageBlocksFromChapter, extractTranslationMeta } from './helloao-parser';

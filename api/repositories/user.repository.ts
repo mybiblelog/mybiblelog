@@ -2,9 +2,9 @@ import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
 import type useMongooseModels from '../mongoose/useMongooseModels';
 import UserSettings from '../mongoose/schemas/UserSettings';
-import { ApiErrorDetailCode } from '../router/errors/error-codes';
-import { NotFoundError } from '../router/errors/http-errors';
-import { ValidationError } from '../router/errors/validation-errors';
+import { ApiErrorDetailCode } from '../http/errors/error-codes';
+import { NotFoundError } from '../http/errors/http-errors';
+import { ValidationError } from '../http/errors/validation-errors';
 import { isDuplicateKeyError } from './helpers/duplicate-key-error';
 import {
   AdminUserListItem,
@@ -166,6 +166,14 @@ export const createUserRepository = ({ User }: Models) => {
       const user = await requireDocById(userId);
       user.password = newPassword;
       await user.save();
+    },
+
+    /** Grants or revokes admin privileges for a user. */
+    async setAdmin(userId: string, isAdmin: boolean): Promise<UserRecord> {
+      const user = await requireDocById(userId);
+      user.isAdmin = isAdmin;
+      await user.save();
+      return toUserRecord(user);
     },
 
     async beginPasswordReset(userId: string): Promise<UserRecord> {

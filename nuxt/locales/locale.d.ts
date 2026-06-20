@@ -1,6 +1,6 @@
 import { LocaleCode } from '@mybiblelog/shared';
 
-// Keep in sync with api/router/helpers/i18n-errors.js
+// Keep in sync with api/http/helpers/i18n-errors.js
 export type Translation = {
   my_bible_log: string;
   api_error: {

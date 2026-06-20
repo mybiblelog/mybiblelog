@@ -1,12 +1,20 @@
 import jwt from 'jsonwebtoken';
 import config from '../../config';
 import useRepositories from '../../repositories/useRepositories';
-import { type Request, type Response } from 'express';
 import { parseCookieHeader } from './parseCookieHeader';
-
 import { AUTH_TOKEN_TTL_DAYS } from '../../repositories/helpers/user-auth';
 import { type UserRecord } from '../../repositories/helpers/types';
 import { UnauthenticatedError, UnauthorizedError } from '../errors/http-errors';
+
+/**
+ * Minimal, framework-agnostic request shape this helper needs. Both the
+ * normalized `HttpRequest` (see `api/http/types.ts`) and Express's `req`
+ * structurally satisfy this, so the helper works under any adapter without
+ * depending on Express.
+ */
+type AuthRequest = {
+  headers: Record<string, string | string[] | undefined>;
+};
 
 export const AUTH_COOKIE_NAME = 'auth_token';
 // Keep the cookie lifetime in sync with the JWT it carries
@@ -17,18 +25,13 @@ const jwtIssuer = new URL(siteUrl).origin;
 const jwtAudience = jwtIssuer;
 const jwtAlgorithms: jwt.Algorithm[] = ['HS256'];
 
-export const setAuthTokenCookie = (res: Response, token: string) => {
-  res.cookie(AUTH_COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: AUTH_COOKIE_MAX_AGE,
-    sameSite: 'lax',
-  });
-};
+// NOTE: the auth-token cookie is set declaratively via `HttpResult.cookies`
+// (see `auth-cookie.ts`); the adapter performs the actual `res.cookie()` call,
+// which keeps this helper framework-agnostic.
 
-const getTokenFromHeader = (req: Request): string | null => {
+const getTokenFromHeader = (req: AuthRequest): string | null => {
   const authorizationHeader = req.headers.authorization;
-  if (authorizationHeader) {
+  if (typeof authorizationHeader === 'string') {
     const [tokenType, token] = authorizationHeader.split(' ');
     if (token && (tokenType === 'Token' || tokenType === 'Bearer')) {
       return token;
@@ -36,7 +39,7 @@ const getTokenFromHeader = (req: Request): string | null => {
   }
 
   const cookieHeader = req.headers.cookie;
-  if (!cookieHeader) {
+  if (typeof cookieHeader !== 'string') {
     return null;
   }
 
@@ -45,20 +48,20 @@ const getTokenFromHeader = (req: Request): string | null => {
 };
 
 async function authCurrentUser(
-  req: Request,
+  req: AuthRequest,
 ): Promise<UserRecord>;
 
 async function authCurrentUser(
-  req: Request,
+  req: AuthRequest,
   opts: { optional?: false; adminOnly?: boolean }
 ): Promise<UserRecord>;
 
 async function authCurrentUser(
-  req: Request,
+  req: AuthRequest,
   opts: { optional: true; adminOnly?: boolean }
 ): Promise<UserRecord | null>;
 
-async function authCurrentUser(req: Request, { optional = false, adminOnly = false } = {}): Promise<UserRecord | null> {
+async function authCurrentUser(req: AuthRequest, { optional = false, adminOnly = false } = {}): Promise<UserRecord | null> {
   const { users } = await useRepositories();
 
   const token = getTokenFromHeader(req);

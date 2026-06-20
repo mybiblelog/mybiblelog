@@ -4,13 +4,14 @@ import {
   PassageNoteRecord,
   PassageNoteTagRecord,
 } from './types';
+import { type LogEntryJSON } from '../../validation/schemas/log-entry';
 
 /**
  * Pure response serializers replicating the custom `toJSON` shapes the
  * Mongoose schemas used to provide. Routes call these to build wire payloads.
  */
 
-export const toLogEntryJSON = (logEntry: LogEntryRecord) => {
+export const toLogEntryJSON = (logEntry: LogEntryRecord): LogEntryJSON => {
   const { id, date, startVerseId, endVerseId } = logEntry;
   return { id, date, startVerseId, endVerseId };
 };

@@ -19,9 +19,12 @@ type Attachment = NonNullable<SendEmailParams['attachments']>[number];
 
 export type EmailService = {
   send: (params: QueueEmailParams) => void;
-  sendUserEmailVerification: (email: string, emailVerificationCode: string, locale: LocaleCode) => Promise<void>;
-  sendUserPasswordResetLink: (email: string, passwordResetLink: string, locale: LocaleCode) => Promise<void>;
-  sendEmailUpdateLink: (currentEmail: string, newEmail: string, newEmailVerificationCode: string, locale: LocaleCode) => Promise<void>;
+  // The `queue*` helpers only enqueue an email and return synchronously; the
+  // actual send happens off the queue (see `createQueue`/`sendFn`). They are
+  // intentionally not async — callers do not wait for delivery.
+  queueUserEmailVerification: (email: string, emailVerificationCode: string, locale: LocaleCode) => void;
+  queuePasswordResetLink: (email: string, passwordResetLink: string, locale: LocaleCode) => void;
+  queueEmailUpdateLink: (currentEmail: string, newEmail: string, newEmailVerificationCode: string, locale: LocaleCode) => void;
 };
 
 const init = async () => {
@@ -100,10 +103,10 @@ const init = async () => {
     enqueue(normalized);
   };
 
-  const sendUserEmailVerification = async (email, emailVerificationCode, locale: LocaleCode = 'en') => {
+  const queueUserEmailVerification = (email: string, emailVerificationCode: string, locale: LocaleCode = 'en'): void => {
     const { subject, html } = renderEmailVerification({ locale, emailVerificationCode });
 
-    await queueEmail({
+    queueEmail({
       from: defaultFromEmailAddress,
       to: email,
       subject,
@@ -111,10 +114,10 @@ const init = async () => {
     });
   };
 
-  const sendUserPasswordResetLink = async (email, passwordResetLink, locale: LocaleCode = 'en') => {
+  const queuePasswordResetLink = (email: string, passwordResetLink: string, locale: LocaleCode = 'en'): void => {
     const { subject, html } = renderPasswordResetLink({ locale, passwordResetLink });
 
-    await queueEmail({
+    queueEmail({
       from: defaultFromEmailAddress,
       to: email,
       subject,
@@ -122,10 +125,10 @@ const init = async () => {
     });
   };
 
-  const sendEmailUpdateLink = async (currentEmail, newEmail, newEmailVerificationCode, locale: LocaleCode = 'en') => {
+  const queueEmailUpdateLink = (currentEmail: string, newEmail: string, newEmailVerificationCode: string, locale: LocaleCode = 'en'): void => {
     const { subject, html } = renderEmailUpdate({ locale, currentEmail, newEmail, newEmailVerificationCode });
 
-    await queueEmail({
+    queueEmail({
       from: defaultFromEmailAddress,
       to: newEmail,
       subject,
@@ -136,9 +139,9 @@ const init = async () => {
 
   return {
     send: queueEmail,
-    sendUserEmailVerification,
-    sendUserPasswordResetLink,
-    sendEmailUpdateLink,
+    queueUserEmailVerification,
+    queuePasswordResetLink,
+    queueEmailUpdateLink,
   };
 };
 

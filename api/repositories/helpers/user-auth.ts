@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import config from '../../config';
 import { UserRecord } from './types';
+import { type UserJSON } from '../../validation/schemas/auth';
 
 /**
  * Pure authentication helpers operating on UserRecord domain objects.
@@ -29,7 +30,7 @@ export const generateUserJWT = (user: Pick<UserRecord, 'id' | 'isAdmin' | 'hasLo
   });
 };
 
-export const toAuthJSON = (user: Pick<UserRecord, 'hasLocalAccount' | 'email' | 'isAdmin'>) => {
+export const toAuthJSON = (user: Pick<UserRecord, 'hasLocalAccount' | 'email' | 'isAdmin'>): UserJSON => {
   return {
     hasLocalAccount: user.hasLocalAccount,
     email: user.email,

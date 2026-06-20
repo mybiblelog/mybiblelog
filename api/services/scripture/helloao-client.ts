@@ -1,5 +1,5 @@
 import config from '../../config';
-import { UpstreamServiceError } from '../../router/errors/upstream-error';
+import { UpstreamServiceError } from '../../http/errors/upstream-error';
 
 // Bounded in-memory cache of chapter payloads. Published chapter content is
 // immutable, so entries never expire; the oldest entry is evicted (FIFO) once

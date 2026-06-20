@@ -1,13 +1,24 @@
-import { type Request } from 'express';
 import { type ZodType } from 'zod';
-import { ValidationError } from '../router/errors/validation-errors';
-import { type ApiErrorDetail } from '../router/response';
+import { ValidationError } from '../http/errors/validation-errors';
+import { type ApiErrorDetail } from '../http/response';
 import { zodErrorToApiDetails } from './zod-error';
 
 interface ValidationSchemas<P, Q, B> {
   params?: ZodType<P>;
   query?: ZodType<Q>;
   body?: ZodType<B>;
+}
+
+/**
+ * The minimal request shape this helper reads. Both Express's `req` and the
+ * framework-agnostic `HttpRequest` (see `api/http/types.ts`) structurally
+ * satisfy this, so `validate` works under any adapter without depending on
+ * Express.
+ */
+interface ValidatableRequest {
+  params?: unknown;
+  query?: unknown;
+  body?: unknown;
 }
 
 /**
@@ -22,7 +33,7 @@ interface ValidationSchemas<P, Q, B> {
  * `ValidationError` (400) so the client sees every problem at once.
  */
 export const validate = <P = unknown, Q = unknown, B = unknown>(
-  req: Request,
+  req: ValidatableRequest,
   schemas: ValidationSchemas<P, Q, B>,
 ): { params: P; query: Q; body: B } => {
   const details: ApiErrorDetail[] = [];

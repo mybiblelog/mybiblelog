@@ -1,29 +1,23 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import express from 'express';
 import xml from 'xml';
 import { locales } from '@mybiblelog/shared';
 import config from '../../config';
+import { type RouteHandler } from '../types';
+
+/**
+ * Framework-agnostic sitemap handler.
+ *
+ * The sitemap is a public, non-JSON endpoint: it enumerates the localized site
+ * URLs (homepages, FAQ pages, generated /about pages, and the printable reading
+ * tracker PDFs) and returns the result as an XML string via `HttpResult.raw`,
+ * bypassing the standard JSON envelope. It needs no auth or repositories.
+ */
 
 const siteLocales = locales.map((locale) => locale.code);
 
-const router = express.Router();
-
-/**
- * @swagger
- * /sitemap.xml:
- *   get:
- *     summary: Get sitemap in XML format
- *     tags: [Sitemap]
- *     responses:
- *       200:
- *         description: Sitemap in XML format
- *         content:
- *           application/xml:
- *             schema:
- *               type: string
- */
-router.get('/sitemap.xml', (req, res, next) => {
+// GET /sitemap.xml - Localized sitemap in XML format
+export const getSitemap: RouteHandler = async () => {
   const relativeUrls: string[] = [];
 
   // start with the homepage of each locale
@@ -89,9 +83,5 @@ router.get('/sitemap.xml', (req, res, next) => {
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>${xml(sitemapObject)}`;
 
-  res.header('Content-Type', 'application/xml');
-  res.send(sitemap);
-});
-
-// Export the router directly
-export default router;
+  return { status: 200, raw: { contentType: 'application/xml', body: sitemap } };
+};

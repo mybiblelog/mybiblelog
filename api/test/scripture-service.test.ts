@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { Bible } from '@mybiblelog/shared';
-import { ValidationError } from '../router/errors/validation-errors';
+import { ValidationError } from '../http/errors/validation-errors';
 import {
   extractPassageBlocksFromChapter,
   extractTranslationMeta,

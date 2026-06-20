@@ -12,7 +12,7 @@ Perform a thorough code review of changes in this repository, checking them agai
 
 ## Project Overview
 My Bible Log is a monorepo with three packages:
-- **`api/`** — Express 5 + TypeScript + Mongoose REST API. Routes live in `api/router/routes/*.ts`. Validation uses Zod. Errors use typed classes (`ValidationError`, `InvalidRequestError`, `UnauthorizedError`, `NotFoundError`). All endpoints return `ApiResponse` from `api/router/response.ts`.
+- **`api/`** — Express 5 + TypeScript + Mongoose REST API. Framework-agnostic route tables, handlers, errors, and helpers live under `api/http/` (`api/http/routes/*.ts`, `api/http/handlers/*.ts`, `api/http/errors/`, `api/http/helpers/`); the Express wiring that mounts them lives in `api/express/router.ts`. Validation uses Zod. Errors use typed classes (`ValidationError`, `InvalidRequestError`, `UnauthorizedError`, `NotFoundError`). All endpoints return `ApiResponse` from `api/http/response.ts`.
 - **`nuxt/`** — Vue 2 + Nuxt 2 frontend with Nuxt Bridge enabled (moving toward full Vue 3 / Nuxt 3 / TypeScript adoption). Components are `.vue` SFCs using the Options API; new code should prefer Composition API (`setup()` or `<script setup lang="ts">`) where practical. State is managed exclusively via **Pinia** stores in `nuxt/stores/`. Styling uses global CSS classes (`mbl-*` prefix) and CSS custom properties — no SCSS modules.
 - **`shared/`** — `@mybiblelog/shared` package consumed by both `api/` and `nuxt/`. Contains domain utilities (`Bible`, `SimpleDate`, etc.).
 
@@ -85,10 +85,10 @@ For each finding, record:
 
 ### Architecture — API routes
 
-- [ ] New Express routes are added to the appropriate file under `api/router/routes/`. Route files are scoped by domain (e.g. `log-entries.ts`, `auth.ts`). Do not add unrelated logic to a route file.
+- [ ] New routes are added to the appropriate route table under `api/http/routes/`. Route files are scoped by domain (e.g. `log-entries.ts`, `auth.ts`). Do not add unrelated logic to a route file.
 - [ ] All request body / query parameter inputs are validated with **Zod** before use. Raw `req.body` values must not be passed to Mongoose queries without validation.
-- [ ] Errors are thrown using the typed error classes (`ValidationError`, `InvalidRequestError`, `UnauthorizedError`, `NotFoundError`) from `api/router/errors/`. Do not send raw `res.status(4xx).json(...)` responses — use the error middleware.
-- [ ] All responses follow the `ApiResponse` shape from `api/router/response.ts`. Success responses have a `data` key; error responses flow through the error middleware.
+- [ ] Errors are thrown using the typed error classes (`ValidationError`, `InvalidRequestError`, `UnauthorizedError`, `NotFoundError`) from `api/http/errors/`. Do not send raw `res.status(4xx).json(...)` responses — use the error middleware.
+- [ ] All responses follow the `ApiResponse` shape from `api/http/response.ts`. Success responses have a `data` key; error responses flow through the error middleware.
 - [ ] Protected routes call `authCurrentUser` middleware before the handler. New admin-only routes must verify the `isAdmin` flag on the resolved user.
 - [ ] No sensitive data (passwords, tokens, full user objects) appears in API response bodies beyond what is explicitly required.
 
@@ -154,7 +154,7 @@ For each finding, record:
 ### 5. Produce the review report
 Group findings by priority. Format each finding as:
 ```
-**[P0]** `api/router/routes/log-entries.ts` (line 42)
+**[P0]** `api/http/routes/log-entries.ts` (line 42)
 **Rule:** All inputs must be validated with Zod before use
 **Issue:** `req.body.date` is passed directly to the Mongoose query without validation.
 **Fix:** Parse the body through the relevant Zod schema first and use the typed output.
