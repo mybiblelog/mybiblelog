@@ -7,7 +7,7 @@ import {
   PassageNoteSearchQuery,
   PassageNoteSearchResultItem,
   PassageRecord,
-} from './types';
+} from './helpers/types';
 
 type Models = Awaited<ReturnType<typeof useMongooseModels>>;
 type PassageNoteDoc = ReturnType<Models['PassageNote']['hydrate']>;

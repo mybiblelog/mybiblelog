@@ -5,8 +5,8 @@ import authCurrentUser, { AUTH_COOKIE_NAME, setAuthTokenCookie } from '../helper
 import googleOauth2 from '../helpers/google-oauth2';
 import { ApiErrorDetailCode } from '../errors/error-codes';
 import useRepositories from '../../repositories/useRepositories';
-import { generateUserJWT, isCodeValid, isEmailVerified, toAuthJSON } from '../../repositories/user-auth';
-import { type UserCreateInput } from '../../repositories/types';
+import { generateUserJWT, isCodeValid, isEmailVerified, toAuthJSON } from '../../repositories/helpers/user-auth';
+import { type UserCreateInput } from '../../repositories/helpers/types';
 import useEmailService from '../../services/email/email-service';
 import checkTestBypass from '../helpers/checkTestBypass';
 import { LocaleCode } from '@mybiblelog/shared';

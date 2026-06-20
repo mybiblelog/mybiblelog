@@ -5,14 +5,14 @@ import UserSettings from '../mongoose/schemas/UserSettings';
 import { ApiErrorDetailCode } from '../router/errors/error-codes';
 import { NotFoundError } from '../router/errors/http-errors';
 import { ValidationError } from '../router/errors/validation-errors';
-import { isDuplicateKeyError } from './duplicate-key-error';
+import { isDuplicateKeyError } from './helpers/duplicate-key-error';
 import {
   AdminUserListItem,
   AdminUserListQuery,
   UserCreateInput,
   UserRecord,
   UserSettingsRecord,
-} from './types';
+} from './helpers/types';
 
 type Models = Awaited<ReturnType<typeof useMongooseModels>>;
 type UserDoc = ReturnType<Models['User']['hydrate']>;

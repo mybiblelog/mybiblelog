@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import dayjs from 'dayjs';
 import { Bible } from '@mybiblelog/shared';
-import { isValidObjectId } from '../repositories/ids';
+import { isValidObjectId } from '../repositories/helpers/ids';
 
 /** A well-formed MongoDB ObjectId string. */
 export const objectId = z.string().refine((id) => isValidObjectId(id));

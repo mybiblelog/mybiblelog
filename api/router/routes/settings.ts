@@ -2,7 +2,7 @@ import express from 'express';
 import authCurrentUser, { AUTH_COOKIE_NAME } from '../helpers/authCurrentUser';
 import deleteAccount from '../helpers/deleteAccount';
 import useRepositories from '../../repositories/useRepositories';
-import { type UserSettingsRecord } from '../../repositories/types';
+import { type UserSettingsRecord } from '../../repositories/helpers/types';
 import { type ApiResponse } from '../response';
 import { InternalError } from '../errors/internal-error';
 import { validate } from '../../validation/validate';

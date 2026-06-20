@@ -1,7 +1,7 @@
 import express from 'express';
 import authCurrentUser from '../helpers/authCurrentUser';
 import useRepositories from '../../repositories/useRepositories';
-import { toPassageNoteTagJSON } from '../../repositories/serializers';
+import { toPassageNoteTagJSON } from '../../repositories/helpers/serializers';
 import { type ApiResponse } from '../response';
 import { NotFoundError } from '../errors/http-errors';
 import { validate } from '../../validation/validate';

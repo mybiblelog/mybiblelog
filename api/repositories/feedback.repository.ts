@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 import type useMongooseModels from '../mongoose/useMongooseModels';
-import { FeedbackCreateInput, FeedbackRecord } from './types';
+import { FeedbackCreateInput, FeedbackRecord } from './helpers/types';
 
 type Models = Awaited<ReturnType<typeof useMongooseModels>>;
 type FeedbackDoc = ReturnType<Models['Feedback']['hydrate']>;

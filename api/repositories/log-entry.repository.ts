@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 import type useMongooseModels from '../mongoose/useMongooseModels';
-import { LogEntryInput, LogEntryRecord } from './types';
+import { LogEntryInput, LogEntryRecord } from './helpers/types';
 
 type Models = Awaited<ReturnType<typeof useMongooseModels>>;
 type LogEntryDoc = ReturnType<Models['LogEntry']['hydrate']>;

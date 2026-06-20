@@ -2,9 +2,9 @@ import { Types } from 'mongoose';
 import type useMongooseModels from '../mongoose/useMongooseModels';
 import { ApiErrorDetailCode } from '../router/errors/error-codes';
 import { ValidationError } from '../router/errors/validation-errors';
-import { isValidObjectId } from './ids';
-import { isDuplicateKeyError } from './duplicate-key-error';
-import { PassageNoteTagInput, PassageNoteTagRecord } from './types';
+import { isValidObjectId } from './helpers/ids';
+import { isDuplicateKeyError } from './helpers/duplicate-key-error';
+import { PassageNoteTagInput, PassageNoteTagRecord } from './helpers/types';
 
 type Models = Awaited<ReturnType<typeof useMongooseModels>>;
 type PassageNoteTagDoc = ReturnType<Models['PassageNoteTag']['hydrate']>;

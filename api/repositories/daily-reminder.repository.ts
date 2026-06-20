@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 import type useMongooseModels from '../mongoose/useMongooseModels';
-import { DailyReminderPatch, DailyReminderRecord } from './types';
+import { DailyReminderPatch, DailyReminderRecord } from './helpers/types';
 
 type Models = Awaited<ReturnType<typeof useMongooseModels>>;
 type DailyReminderDoc = ReturnType<Models['DailyReminder']['hydrate']>;

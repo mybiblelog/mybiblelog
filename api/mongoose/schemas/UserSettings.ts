@@ -5,10 +5,6 @@ import { StartPages, PassageNoteTagSortOrders } from '../../validation/constants
 
 const siteLocales = getLocaleCodes();
 
-// Re-exported for backwards compatibility; the canonical source now lives in
-// the validation layer (`validation/constants.ts`).
-export { StartPages, PassageNoteTagSortOrders };
-
 /**
  * @swagger
  * components:
