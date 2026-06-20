@@ -11,7 +11,15 @@ export const passwordSchema = z
   .refine((value) => Buffer.byteLength(value, 'utf8') <= BCRYPT_MAX_PASSWORD_BYTES);
 
 export const registerBodySchema = z.object({
-  email: z.string().toLowerCase().regex(/^\S+@\S+\.\S+$/),
+  // An empty (or whitespace-only) email reports as `required` rather than
+  // `invalid` so the UI shows "A email is required" — matching the inline
+  // checks the login/email-change handlers use. A present-but-malformed value
+  // still fails the regex as `invalid`. The leading `z.string()` keeps both the
+  // generated OpenAPI schema and the parsed type honest (email stays required).
+  email: z
+    .string()
+    .transform((value) => (value.trim() === '' ? undefined : value.toLowerCase()))
+    .pipe(z.string().regex(/^\S+@\S+\.\S+$/)),
   password: passwordSchema,
 });
 
@@ -38,11 +46,11 @@ export const userSchema = z.object({
 export type UserJSON = z.infer<typeof userSchema>;
 
 /**
- * Documentation-only request schemas for the auth endpoints that still validate
- * their input inline (the handlers are Express-coupled and not yet migrated).
- * They describe the accepted request body for the generated OpenAPI docs; when
- * these endpoints are migrated to framework-agnostic handlers they should be
- * wired into `validate()` so the docs and validation share one definition.
+ * Request schemas for the auth endpoints whose handlers validate their input
+ * inline rather than through `validate()`. Those handlers keep hand-rolled
+ * `typeof … === 'string'` guards to reject NoSQL operator-injection payloads
+ * (e.g. `{ email: { $gt: '' } }`) with endpoint-specific error codes. These
+ * schemas mirror the accepted body for the generated OpenAPI docs.
  */
 export const loginBodySchema = z.object({
   email: z.string(),

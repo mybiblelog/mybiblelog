@@ -9,7 +9,7 @@
     <div class="mbl-field mbl-field--addons">
       <div class="mbl-control">
         <input
-          v-model="userSettingsForm.dailyVerseCountGoal"
+          v-model.number="userSettingsForm.dailyVerseCountGoal"
           class="mbl-input"
           type="number"
           min="1"

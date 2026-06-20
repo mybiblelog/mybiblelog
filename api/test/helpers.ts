@@ -2,6 +2,7 @@ import crypto from 'node:crypto';
 import path from 'node:path';
 import request from 'supertest';
 import dotenv from 'dotenv';
+import useRepositories from '../repositories/useRepositories';
 
 dotenv.config({
   path: path.resolve(__dirname, '../../.env'),
@@ -42,14 +43,28 @@ async function createTestUser({ locale = 'en', isAdmin = false }: CreateTestUser
   const password = crypto.randomBytes(10).toString('hex');
   const testBypassSecret = process.env.TEST_BYPASS_SECRET;
 
-  // Register the user
+  // Register the user. The bypass header only skips rate limiting now; the API
+  // under test must run with REQUIRE_EMAIL_VERIFICATION=false so the user can log
+  // in without verifying (verification skipping is governed by config, not the
+  // bypass — see the auth handler refactor).
   const registerResponse = await api
     .post('/api/auth/register')
     .set('x-test-bypass-secret', testBypassSecret!)
-    .send({ email, password, locale, ...(isAdmin && { isAdmin }) });
+    .send({ email, password, locale });
 
   if (registerResponse.status !== 200) {
     throw new Error(`Failed to register test user: ${registerResponse.body.message}`);
+  }
+
+  // Admin is no longer grantable through the register endpoint; promote directly
+  // via the repository (the test process shares the API's database).
+  if (isAdmin) {
+    const { users } = await useRepositories();
+    const user = await users.findByEmail(email);
+    if (!user) {
+      throw new Error('Failed to load test user for admin promotion');
+    }
+    await users.setAdmin(user.id, true);
   }
 
   // Login to get the token

@@ -30,8 +30,18 @@ export const registerRoutes = (router: Router, routes: RouteDefinition[]): void 
           query: req.query as HttpRequest['query'],
           body: req.body,
           headers: req.headers,
+          ip: req.ip,
+          path: req.path,
         };
         const result = await route.handler(httpReq, deps);
+        for (const cookie of result.cookies ?? []) {
+          if (cookie.value === null) {
+            res.clearCookie(cookie.name);
+          }
+          else {
+            res.cookie(cookie.name, cookie.value, cookie.options ?? {});
+          }
+        }
         res.status(result.status).json(result.body);
       }
       catch (error) {

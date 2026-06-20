@@ -2,6 +2,8 @@ import { type ZodType } from 'zod';
 import { type ApiResponse } from '../router/response';
 import { type Repositories } from '../repositories/useRepositories';
 import { type UserRecord } from '../repositories/helpers/types';
+import { type EmailService } from '../services/email/email-service';
+import { type RateLimiter } from './rate-limit';
 
 /**
  * A framework-agnostic, normalized representation of an inbound HTTP request.
@@ -17,15 +19,45 @@ export interface HttpRequest {
   query: Record<string, string | undefined>;
   body: unknown;
   headers: Record<string, string | string[] | undefined>;
+  /** Client IP, used for rate-limit keying. Optional — not every adapter sets it. */
+  ip?: string;
+  /** Request path, used for rate-limit keying. Optional — not every adapter sets it. */
+  path?: string;
+}
+
+/**
+ * Options for a single cookie the handler wants the adapter to set. Mirrors the
+ * subset of Express/`h3` cookie options the app uses.
+ */
+export interface CookieOptions {
+  httpOnly?: boolean;
+  secure?: boolean;
+  maxAge?: number;
+  sameSite?: 'lax' | 'strict' | 'none';
+  path?: string;
+}
+
+/**
+ * A declarative cookie instruction. `value: null` means "clear this cookie".
+ * Handlers describe cookie intent in their `HttpResult`; the adapter performs the
+ * framework-specific `res.cookie()` / `res.clearCookie()` call. This keeps the
+ * handlers pure (no `res` access).
+ */
+export interface CookieInstruction {
+  name: string;
+  value: string | null;
+  options?: CookieOptions;
 }
 
 /**
  * A framework-agnostic representation of the response a handler wants to send.
- * Adapters translate this into a native response (status code + JSON body).
+ * Adapters translate this into a native response (cookies + status code + JSON body).
  */
 export interface HttpResult<T = any> {
   status: number;
   body: ApiResponse<T>;
+  /** Cookies to set/clear before sending the body. */
+  cookies?: CookieInstruction[];
 }
 
 /**
@@ -48,6 +80,10 @@ export interface Authenticate {
 export interface RouteDependencies {
   repositories: Repositories;
   authenticate: Authenticate;
+  /** Enqueues transactional email (verification, password reset, …). */
+  emailService: EmailService;
+  /** Framework-agnostic rate limiter; honors the test bypass internally. */
+  rateLimiter: RateLimiter;
 }
 
 /**

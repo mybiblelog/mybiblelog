@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { type DocumentedRoute } from '../types';
+import { type RouteDefinition } from '../types';
 import {
   loginBodySchema,
   registerBodySchema,
@@ -12,28 +12,42 @@ import {
   resetPasswordBodySchema,
   userSchema,
 } from '../../validation/schemas/auth';
+import {
+  getUser,
+  login,
+  logout,
+  register,
+  getGoogleOauthUrl,
+  verifyGoogleOauth,
+  verifyEmail,
+  resendEmailVerification,
+  changePassword,
+  beginEmailChange,
+  getEmailChange,
+  getEmailChangeByCode,
+  cancelEmailChange,
+  completeEmailChange,
+  beginPasswordReset,
+  checkPasswordResetCode,
+  completePasswordReset,
+} from '../handlers/auth';
 
 /**
- * Documentation-only descriptors for the auth endpoints. The handlers are still
- * Express-coupled (cookies, post-response email side effects, rate limiting) and
- * have not been migrated to the framework-agnostic pattern, but their OpenAPI
- * spec is generated from these descriptors + the shared zod schemas instead of
- * hand-written JSDoc. See `api/http/openapi/generate.ts`.
- *
- * Request schemas for the endpoints that validate inline (login, google verify,
- * verify-email, resend, change-email, reset-password init) are documentation
- * mirrors defined in `validation/schemas/auth.ts`; the rest reuse the exact
- * schemas the handlers already `validate()` with.
+ * Framework-neutral route table for authentication. Mirrors the log-entry table:
+ * each route pairs its framework-agnostic handler with `docs` that reuse the same
+ * zod schemas, so the generated OpenAPI spec stays in lockstep with the real
+ * contract. Routes flagged `setsAuthCookie` return an `auth_token` cookie.
  */
 const tags = ['Authentication'];
 
 const codeParam = z.object({ newEmailVerificationCode: z.string() });
 const resetCodeParam = z.object({ passwordResetCode: z.string() });
 
-export const authDocRoutes: DocumentedRoute[] = [
+export const authRoutes: RouteDefinition[] = [
   {
     method: 'GET',
     path: '/auth/user',
+    handler: getUser,
     docs: {
       summary: 'Get the currently logged-in user',
       tags,
@@ -47,6 +61,7 @@ export const authDocRoutes: DocumentedRoute[] = [
   {
     method: 'POST',
     path: '/auth/login',
+    handler: login,
     docs: {
       summary: 'Login with email and password',
       tags,
@@ -63,6 +78,7 @@ export const authDocRoutes: DocumentedRoute[] = [
   {
     method: 'POST',
     path: '/auth/logout',
+    handler: logout,
     docs: {
       summary: 'Logout the current user',
       tags,
@@ -73,6 +89,7 @@ export const authDocRoutes: DocumentedRoute[] = [
   {
     method: 'POST',
     path: '/auth/register',
+    handler: register,
     docs: {
       summary: 'Register a new user account',
       tags,
@@ -88,6 +105,7 @@ export const authDocRoutes: DocumentedRoute[] = [
   {
     method: 'GET',
     path: '/auth/oauth2/google/url',
+    handler: getGoogleOauthUrl,
     docs: {
       summary: 'Get Google OAuth2 URL',
       tags,
@@ -102,6 +120,7 @@ export const authDocRoutes: DocumentedRoute[] = [
   {
     method: 'POST',
     path: '/auth/oauth2/google/verify',
+    handler: verifyGoogleOauth,
     docs: {
       summary: 'Verify Google OAuth2 code',
       tags,
@@ -118,6 +137,7 @@ export const authDocRoutes: DocumentedRoute[] = [
   {
     method: 'POST',
     path: '/auth/verify-email',
+    handler: verifyEmail,
     docs: {
       summary: 'Verify email via code',
       tags,
@@ -134,6 +154,7 @@ export const authDocRoutes: DocumentedRoute[] = [
   {
     method: 'POST',
     path: '/auth/resend-email-verification',
+    handler: resendEmailVerification,
     docs: {
       summary: 'Resend verification email (with cooldown)',
       tags,
@@ -149,6 +170,7 @@ export const authDocRoutes: DocumentedRoute[] = [
   {
     method: 'PUT',
     path: '/auth/change-password',
+    handler: changePassword,
     docs: {
       summary: 'Change user password',
       tags,
@@ -163,6 +185,7 @@ export const authDocRoutes: DocumentedRoute[] = [
   {
     method: 'POST',
     path: '/auth/change-email',
+    handler: beginEmailChange,
     docs: {
       summary: 'Initiate email change process',
       tags,
@@ -177,6 +200,7 @@ export const authDocRoutes: DocumentedRoute[] = [
   {
     method: 'GET',
     path: '/auth/change-email',
+    handler: getEmailChange,
     docs: {
       summary: 'Check for an in-progress email change',
       tags,
@@ -190,6 +214,7 @@ export const authDocRoutes: DocumentedRoute[] = [
   {
     method: 'GET',
     path: '/auth/change-email/:newEmailVerificationCode',
+    handler: getEmailChangeByCode,
     docs: {
       summary: 'Get an email change request by verification code',
       tags,
@@ -205,6 +230,7 @@ export const authDocRoutes: DocumentedRoute[] = [
   {
     method: 'DELETE',
     path: '/auth/change-email',
+    handler: cancelEmailChange,
     docs: {
       summary: 'Cancel email change process',
       tags,
@@ -218,6 +244,7 @@ export const authDocRoutes: DocumentedRoute[] = [
   {
     method: 'POST',
     path: '/auth/change-email/:newEmailVerificationCode',
+    handler: completeEmailChange,
     docs: {
       summary: 'Complete email change process using verification code',
       tags,
@@ -234,6 +261,7 @@ export const authDocRoutes: DocumentedRoute[] = [
   {
     method: 'POST',
     path: '/auth/reset-password',
+    handler: beginPasswordReset,
     docs: {
       summary: 'Initiate password reset process',
       tags,
@@ -249,6 +277,7 @@ export const authDocRoutes: DocumentedRoute[] = [
   {
     method: 'GET',
     path: '/auth/reset-password/:passwordResetCode/valid',
+    handler: checkPasswordResetCode,
     docs: {
       summary: 'Check if a password reset code is valid',
       tags,
@@ -264,6 +293,7 @@ export const authDocRoutes: DocumentedRoute[] = [
   {
     method: 'POST',
     path: '/auth/reset-password/:passwordResetCode',
+    handler: completePasswordReset,
     docs: {
       summary: 'Reset password using a reset code',
       tags,

@@ -168,6 +168,14 @@ export const createUserRepository = ({ User }: Models) => {
       await user.save();
     },
 
+    /** Grants or revokes admin privileges for a user. */
+    async setAdmin(userId: string, isAdmin: boolean): Promise<UserRecord> {
+      const user = await requireDocById(userId);
+      user.isAdmin = isAdmin;
+      await user.save();
+      return toUserRecord(user);
+    },
+
     async beginPasswordReset(userId: string): Promise<UserRecord> {
       const user = await requireDocById(userId);
       user.passwordResetCode = generateVerificationCode();
