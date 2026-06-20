@@ -1,18 +1,15 @@
 import express from 'express';
-import authCurrentUser from '../helpers/authCurrentUser';
-import useRepositories from '../../repositories/useRepositories';
-import { toLogEntryJSON } from '../../repositories/helpers/serializers';
-import { type ApiResponse } from '../response';
-import { NotFoundError } from '../errors/http-errors';
-import { validate } from '../../validation/validate';
-import { objectIdParam } from '../../validation/primitives';
-import {
-  logEntryCreateSchema,
-  logEntryUpdateSchema,
-  logEntryListQuerySchema,
-} from '../../validation/schemas/log-entry';
+import { registerRoutes } from '../../http/adapters/express';
+import { logEntryRoutes } from '../../http/routes/log-entries';
 
 const router = express.Router();
+
+/**
+ * The log entry handlers are framework-agnostic (see `api/http/handlers/`).
+ * This file is just the Express adapter wiring: it registers the shared
+ * `logEntryRoutes` table onto an Express router. The Swagger JSDoc below is kept
+ * here so `/api-docs` continues to document these endpoints.
+ */
 
 /**
  * @swagger
@@ -86,19 +83,6 @@ const router = express.Router();
  *             schema:
  *               $ref: '#/components/schemas/ApiErrorResponse'
  */
-router.get('/log-entries', async (req, res, next) => {
-  try {
-    const { logEntries: logEntryRepository } = await useRepositories();
-    const currentUser = await authCurrentUser(req);
-    const { query } = validate(req, { query: logEntryListQuerySchema });
-
-    const logEntries = await logEntryRepository.listByOwner(currentUser.id, query);
-    return res.json({ data: logEntries.map(toLogEntryJSON) } satisfies ApiResponse);
-  }
-  catch (error) {
-    next(error);
-  }
-});
 
 /**
  * @swagger
@@ -140,23 +124,6 @@ router.get('/log-entries', async (req, res, next) => {
  *             schema:
  *               $ref: '#/components/schemas/ApiErrorResponse'
  */
-router.get('/log-entries/:id', async (req, res, next) => {
-  try {
-    const { params } = validate(req, { params: objectIdParam });
-
-    const { logEntries } = await useRepositories();
-    const currentUser = await authCurrentUser(req);
-
-    const logEntry = await logEntries.findByIdForOwner(currentUser.id, params.id);
-    if (!logEntry) {
-      throw new NotFoundError();
-    }
-    res.json({ data: toLogEntryJSON(logEntry) } satisfies ApiResponse);
-  }
-  catch (error) {
-    next(error);
-  }
-});
 
 /**
  * @swagger
@@ -203,20 +170,6 @@ router.get('/log-entries/:id', async (req, res, next) => {
  *             schema:
  *               $ref: '#/components/schemas/ApiErrorResponse'
  */
-router.post('/log-entries', async (req, res, next) => {
-  try {
-    const { logEntries } = await useRepositories();
-    const currentUser = await authCurrentUser(req);
-    const { body } = validate(req, { body: logEntryCreateSchema });
-
-    const logEntry = await logEntries.create(currentUser.id, body);
-
-    res.json({ data: toLogEntryJSON(logEntry) } satisfies ApiResponse);
-  }
-  catch (error) {
-    next(error);
-  }
-});
 
 /**
  * @swagger
@@ -272,24 +225,6 @@ router.post('/log-entries', async (req, res, next) => {
  *             schema:
  *               $ref: '#/components/schemas/ApiErrorResponse'
  */
-router.put('/log-entries/:id', async (req, res, next) => {
-  try {
-    const { params, body } = validate(req, { params: objectIdParam, body: logEntryUpdateSchema });
-
-    const { logEntries } = await useRepositories();
-    const currentUser = await authCurrentUser(req);
-
-    const logEntry = await logEntries.update(currentUser.id, params.id, body);
-    if (!logEntry) {
-      throw new NotFoundError();
-    }
-
-    res.json({ data: toLogEntryJSON(logEntry) } satisfies ApiResponse);
-  }
-  catch (error) {
-    next(error);
-  }
-});
 
 /**
  * @swagger
@@ -332,23 +267,7 @@ router.put('/log-entries/:id', async (req, res, next) => {
  *             schema:
  *               $ref: '#/components/schemas/ApiErrorResponse'
  */
-router.delete('/log-entries/:id', async (req, res, next) => {
-  try {
-    const { params } = validate(req, { params: objectIdParam });
 
-    const { logEntries } = await useRepositories();
-    const currentUser = await authCurrentUser(req);
-
-    const deletedCount = await logEntries.deleteByIdForOwner(currentUser.id, params.id);
-    if (deletedCount === 0) {
-      throw new NotFoundError();
-    }
-
-    res.json({ data: deletedCount } satisfies ApiResponse);
-  }
-  catch (error) {
-    next(error);
-  }
-});
+registerRoutes(router, logEntryRoutes);
 
 export default router;
