@@ -46,15 +46,29 @@ describe('user.repository', () => {
       expect(user.updatedAt).toBeInstanceOf(Date);
     });
 
-    it('creates an account with no local password (OAuth-style) that has no local account', async () => {
+    it('creates an OAuth-only account (password null) with no local account', async () => {
       const { users } = await getRepos();
 
-      // Omitting the password leaves the field unset -> no local account.
-      const user = await users.create({ email: uniqueEmail(), googleId: 'google-123', locale: 'en' });
+      // This is the exact shape the Google OAuth signup handler uses.
+      const user = await users.create({
+        email: uniqueEmail(),
+        password: null,
+        googleId: 'google-123',
+        emailVerificationCode: '', // Google-verified emails skip verification
+        locale: 'en',
+      });
 
       expect(user.hasLocalAccount).toBe(false);
       expect(user.googleId).toBe('google-123');
       expect(await users.verifyPassword(user.id, 'anything')).toBe(false);
+    });
+
+    it('creates an account with no local password when password is omitted', async () => {
+      const { users } = await getRepos();
+
+      const user = await users.create({ email: uniqueEmail(), googleId: 'google-456', locale: 'en' });
+
+      expect(user.hasLocalAccount).toBe(false);
     });
 
     it('marks the user verified when emailVerificationCode is empty', async () => {

@@ -18,8 +18,10 @@ export const UserSchema = new mongoose.Schema({
     maxlength: BCRYPT_MAX_PASSWORD_BYTES,
     validate: {
       // maxlength counts characters; multibyte characters can exceed the
-      // bcrypt byte limit with fewer characters, so also check byte length
-      validator: (value: string) => Buffer.byteLength(value, 'utf8') <= BCRYPT_MAX_PASSWORD_BYTES,
+      // bcrypt byte limit with fewer characters, so also check byte length.
+      // OAuth-only accounts have a null password (no local login); skip the
+      // check for empty values the way Mongoose's built-in length validators do.
+      validator: (value: string | null) => value === null || Buffer.byteLength(value, 'utf8') <= BCRYPT_MAX_PASSWORD_BYTES,
       message: 'maxlength',
       type: 'maxlength',
     },
