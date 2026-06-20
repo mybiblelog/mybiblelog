@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import authCurrentUser, { setAuthTokenCookie } from '../helpers/authCurrentUser';
 import useRepositories from '../../repositories/useRepositories';
-import { generateUserJWT } from '../../repositories/user-auth';
+import { generateUserJWT } from '../../repositories/helpers/user-auth';
 import deleteAccount from '../helpers/deleteAccount';
 import { type ApiResponse } from '../response';
 import { InvalidRequestError, NotFoundError } from '../errors/http-errors';

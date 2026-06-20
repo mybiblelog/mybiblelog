@@ -2,13 +2,19 @@ import express from 'express';
 import authCurrentUser from '../helpers/authCurrentUser';
 import { Bible } from '@mybiblelog/shared';
 import useRepositories from '../../repositories/useRepositories';
-import { isValidObjectId } from '../../repositories/ids';
-import { toPassageNoteJSON } from '../../repositories/serializers';
-import { type PassageNoteSearchQuery } from '../../repositories/types';
+import { isValidObjectId } from '../../repositories/helpers/ids';
+import { toPassageNoteJSON } from '../../repositories/helpers/serializers';
+import { type PassageNoteSearchQuery } from '../../repositories/helpers/types';
 import { ApiErrorDetailCode } from '../errors/error-codes';
 import { type ApiResponse } from '../response';
 import { ValidationError } from '../errors/validation-errors';
 import { InvalidRequestError, NotFoundError } from '../errors/http-errors';
+import { validate } from '../../validation/validate';
+import { objectIdParam } from '../../validation/primitives';
+import {
+  passageNoteCreateSchema,
+  passageNoteUpdateSchema,
+} from '../../validation/schemas/passage-note';
 const router = express.Router();
 
 /**
@@ -400,15 +406,12 @@ router.get('/passage-notes', async (req, res, next) => {
  */
 router.get('/passage-notes/:id', async (req, res, next) => {
   try {
-    const { id } = req.params;
-    if (!isValidObjectId(id)) {
-      throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
-    }
+    const { params } = validate(req, { params: objectIdParam });
 
     const { passageNotes } = await useRepositories();
     const currentUser = await authCurrentUser(req);
 
-    const passageNote = await passageNotes.findByIdForOwner(currentUser.id, id);
+    const passageNote = await passageNotes.findByIdForOwner(currentUser.id, params.id);
     if (!passageNote) {
       throw new NotFoundError();
     }
@@ -479,7 +482,7 @@ router.post('/passage-notes', async (req, res, next) => {
   try {
     const { passageNotes } = await useRepositories();
     const currentUser = await authCurrentUser(req);
-    const { content, passages } = req.body;
+    const { body } = validate(req, { body: passageNoteCreateSchema });
     const tags = normalizeTagIds(req.body.tags);
 
     // validate that all tags exist and belong to the current user
@@ -488,7 +491,7 @@ router.post('/passage-notes', async (req, res, next) => {
       throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'tags' }]);
     }
 
-    const passageNote = await passageNotes.create(currentUser.id, { content, passages, tags });
+    const passageNote = await passageNotes.create(currentUser.id, { content: body.content, passages: body.passages, tags });
 
     res.json({ data: toPassageNoteJSON(passageNote) } satisfies ApiResponse);
   }
@@ -565,23 +568,19 @@ router.post('/passage-notes', async (req, res, next) => {
  */
 router.put('/passage-notes/:id', async (req, res, next) => {
   try {
-    const { id } = req.params;
-    if (!isValidObjectId(id)) {
-      throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
-    }
+    const { params, body } = validate(req, { params: objectIdParam, body: passageNoteUpdateSchema });
 
     const { passageNotes } = await useRepositories();
     const currentUser = await authCurrentUser(req);
-    const { content, passages, tags } = req.body;
 
-    const existingNote = await passageNotes.findByIdForOwner(currentUser.id, id);
+    const existingNote = await passageNotes.findByIdForOwner(currentUser.id, params.id);
     if (!existingNote) {
       throw new NotFoundError();
     }
 
     let tagIds: string[] | undefined;
-    if (tags) {
-      tagIds = normalizeTagIds(tags);
+    if (req.body.tags) {
+      tagIds = normalizeTagIds(req.body.tags);
       // validate that all tags exist and belong to the current user
       const tagsValid = await validateTags(tagIds, currentUser.id);
       if (!tagsValid) {
@@ -589,7 +588,7 @@ router.put('/passage-notes/:id', async (req, res, next) => {
       }
     }
 
-    const passageNote = await passageNotes.update(currentUser.id, id, { content, passages, tags: tagIds });
+    const passageNote = await passageNotes.update(currentUser.id, params.id, { content: body.content, passages: body.passages, tags: tagIds });
     if (!passageNote) {
       throw new NotFoundError();
     }
@@ -644,15 +643,12 @@ router.put('/passage-notes/:id', async (req, res, next) => {
  */
 router.delete('/passage-notes/:id', async (req, res, next) => {
   try {
-    const { id } = req.params;
-    if (!isValidObjectId(id)) {
-      throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
-    }
+    const { params } = validate(req, { params: objectIdParam });
 
     const { passageNotes } = await useRepositories();
     const currentUser = await authCurrentUser(req);
 
-    const deletedCount = await passageNotes.deleteByIdForOwner(currentUser.id, id);
+    const deletedCount = await passageNotes.deleteByIdForOwner(currentUser.id, params.id);
     if (deletedCount === 0) {
       throw new NotFoundError();
     }

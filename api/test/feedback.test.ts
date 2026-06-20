@@ -54,5 +54,30 @@ describe('Feedback routes', () => {
     // Cleanup
     await deleteTestUser(testUser);
   });
+
+  // Negative-path validation (previously enforced by Mongoose). These share
+  // the same IP-based rate limit as the cases above, so they are kept minimal.
+  test('POST /api/feedback rejects an unknown kind', async () => {
+    const res = await requestApi
+      .post('/api/feedback')
+      .send({ email: 'guest@example.com', kind: 'not-a-kind', message: 'Hello' });
+
+    // 400 for validation; 429 is possible if the shared rate limit is hit.
+    expect([400, 429]).toContain(res.statusCode);
+    if (res.statusCode === 400) {
+      expect(res.body.error.code).toBe('validation_error');
+    }
+  });
+
+  test('POST /api/feedback rejects an invalid email', async () => {
+    const res = await requestApi
+      .post('/api/feedback')
+      .send({ email: 'not-an-email', kind: 'bug', message: 'Hello' });
+
+    expect([400, 429]).toContain(res.statusCode);
+    if (res.statusCode === 400) {
+      expect(res.body.error.code).toBe('validation_error');
+    }
+  });
 });
 

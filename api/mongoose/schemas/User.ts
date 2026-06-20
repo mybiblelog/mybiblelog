@@ -1,6 +1,5 @@
 import crypto from 'node:crypto';
 import mongoose, { HydratedDocument, InferSchemaType } from 'mongoose';
-import uniqueValidator from 'mongoose-unique-validator';
 import bcrypt from 'bcrypt';
 import { UserSettingsSchema } from './UserSettings';
 
@@ -51,7 +50,8 @@ export const UserSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-UserSchema.plugin(uniqueValidator);
+// Email uniqueness is enforced by the unique index (declared on the `email`
+// field above) plus an explicit pre-insert check in the user repository.
 
 UserSchema.pre('save', function() {
   // eslint-disable-next-line @typescript-eslint/no-this-alias

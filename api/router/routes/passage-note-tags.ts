@@ -1,12 +1,15 @@
 import express from 'express';
 import authCurrentUser from '../helpers/authCurrentUser';
 import useRepositories from '../../repositories/useRepositories';
-import { isValidObjectId } from '../../repositories/ids';
-import { toPassageNoteTagJSON } from '../../repositories/serializers';
-import { ApiErrorDetailCode } from '../errors/error-codes';
+import { toPassageNoteTagJSON } from '../../repositories/helpers/serializers';
 import { type ApiResponse } from '../response';
-import { ValidationError } from '../errors/validation-errors';
 import { NotFoundError } from '../errors/http-errors';
+import { validate } from '../../validation/validate';
+import { objectIdParam } from '../../validation/primitives';
+import {
+  passageNoteTagCreateSchema,
+  passageNoteTagUpdateSchema,
+} from '../../validation/schemas/passage-note-tag';
 
 const router = express.Router();
 
@@ -133,15 +136,12 @@ router.get('/passage-note-tags', async (req, res, next) => {
  */
 router.get('/passage-note-tags/:id', async (req, res, next) => {
   try {
-    const { id } = req.params;
-    if (!isValidObjectId(id)) {
-      throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
-    }
+    const { params } = validate(req, { params: objectIdParam });
 
     const { passageNoteTags: tagRepository } = await useRepositories();
     const currentUser = await authCurrentUser(req);
 
-    const passageNoteTag = await tagRepository.findByIdForOwner(currentUser.id, id);
+    const passageNoteTag = await tagRepository.findByIdForOwner(currentUser.id, params.id);
     if (!passageNoteTag) {
       throw new NotFoundError();
     }
@@ -201,11 +201,11 @@ router.get('/passage-note-tags/:id', async (req, res, next) => {
  */
 router.post('/passage-note-tags', async (req, res, next) => {
   try {
+    const { body } = validate(req, { body: passageNoteTagCreateSchema });
     const { passageNoteTags: tagRepository } = await useRepositories();
     const currentUser = await authCurrentUser(req);
-    const { label, color, description } = req.body;
 
-    const passageNoteTag = await tagRepository.create(currentUser.id, { label, color, description });
+    const passageNoteTag = await tagRepository.create(currentUser.id, body);
 
     passageNoteTag.noteCount = 0;
     res.json({ data: toPassageNoteTagJSON(passageNoteTag) } satisfies ApiResponse);
@@ -273,16 +273,12 @@ router.post('/passage-note-tags', async (req, res, next) => {
  */
 router.put('/passage-note-tags/:id', async (req, res, next) => {
   try {
-    const { id } = req.params;
-    if (!isValidObjectId(id)) {
-      throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
-    }
+    const { params, body } = validate(req, { params: objectIdParam, body: passageNoteTagUpdateSchema });
 
     const { passageNoteTags: tagRepository } = await useRepositories();
     const currentUser = await authCurrentUser(req);
-    const { label, color, description } = req.body;
 
-    const passageNoteTag = await tagRepository.update(currentUser.id, id, { label, color, description });
+    const passageNoteTag = await tagRepository.update(currentUser.id, params.id, body);
     if (!passageNoteTag) {
       throw new NotFoundError();
     }
@@ -337,15 +333,12 @@ router.put('/passage-note-tags/:id', async (req, res, next) => {
  */
 router.delete('/passage-note-tags/:id', async (req, res, next) => {
   try {
-    const { id } = req.params;
-    if (!isValidObjectId(id)) {
-      throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
-    }
+    const { params } = validate(req, { params: objectIdParam });
 
     const { passageNoteTags: tagRepository } = await useRepositories();
     const currentUser = await authCurrentUser(req);
 
-    const deletedCount = await tagRepository.deleteByIdForOwner(currentUser.id, id);
+    const deletedCount = await tagRepository.deleteByIdForOwner(currentUser.id, params.id);
     if (deletedCount === 0) {
       throw new NotFoundError();
     }

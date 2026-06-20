@@ -1,19 +1,18 @@
 import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
-import { Error as MongooseError } from 'mongoose';
 import type useMongooseModels from '../mongoose/useMongooseModels';
 import UserSettings from '../mongoose/schemas/UserSettings';
 import { ApiErrorDetailCode } from '../router/errors/error-codes';
 import { NotFoundError } from '../router/errors/http-errors';
 import { ValidationError } from '../router/errors/validation-errors';
-import { translateMongooseError } from './translate-mongoose-error';
+import { isDuplicateKeyError } from './helpers/duplicate-key-error';
 import {
   AdminUserListItem,
   AdminUserListQuery,
   UserCreateInput,
   UserRecord,
   UserSettingsRecord,
-} from './types';
+} from './helpers/types';
 
 type Models = Awaited<ReturnType<typeof useMongooseModels>>;
 type UserDoc = ReturnType<Models['User']['hydrate']>;
@@ -62,6 +61,9 @@ const toUserRecord = (user: UserDoc): UserRecord => {
 
 const generateVerificationCode = () => crypto.randomBytes(64).toString('hex');
 
+const emailInUseError = () =>
+  new ValidationError([{ code: ApiErrorDetailCode.EmailInUse, field: 'email' }]);
+
 export const createUserRepository = ({ User }: Models) => {
   const requireDocById = async (id: string): Promise<UserDoc> => {
     const user = await User.findById(id);
@@ -98,6 +100,13 @@ export const createUserRepository = ({ User }: Models) => {
     },
 
     async create(input: UserCreateInput): Promise<UserRecord> {
+      // Enforce email uniqueness manually; the unique index remains as a
+      // backstop against the read-then-write race below.
+      const existing = await User.findOne({ email: input.email }).select({ _id: 1 });
+      if (existing) {
+        throw emailInUseError();
+      }
+
       const user = new User();
       user.email = input.email;
       if (input.password !== undefined) {
@@ -123,11 +132,10 @@ export const createUserRepository = ({ User }: Models) => {
         await user.save();
       }
       catch (error) {
-        // Specifically handle the case where the email is already in use
-        if (error instanceof MongooseError.ValidationError && error.errors.email?.kind === 'unique') {
-          throw new ValidationError([{ code: ApiErrorDetailCode.EmailInUse, field: 'email' }]);
+        if (isDuplicateKeyError(error)) {
+          throw emailInUseError();
         }
-        translateMongooseError(error);
+        throw error;
       }
       return toUserRecord(user);
     },
@@ -157,12 +165,7 @@ export const createUserRepository = ({ User }: Models) => {
     async setPassword(userId: string, newPassword: string): Promise<void> {
       const user = await requireDocById(userId);
       user.password = newPassword;
-      try {
-        await user.save();
-      }
-      catch (error) {
-        translateMongooseError(error);
-      }
+      await user.save();
     },
 
     async beginPasswordReset(userId: string): Promise<UserRecord> {
@@ -179,12 +182,7 @@ export const createUserRepository = ({ User }: Models) => {
       user.password = newPassword;
       user.passwordResetCode = '';
       user.passwordResetExpires = new Date(0);
-      try {
-        await user.save();
-      }
-      catch (error) {
-        translateMongooseError(error);
-      }
+      await user.save();
       return toUserRecord(user);
     },
 
@@ -205,12 +203,7 @@ export const createUserRepository = ({ User }: Models) => {
       user.newEmail = newEmail;
       user.newEmailVerificationCode = generateVerificationCode();
       user.newEmailVerificationExpires = new Date(Date.now() + (60 * 60 * 1000)); // in 1 hour
-      try {
-        await user.save();
-      }
-      catch (error) {
-        translateMongooseError(error);
-      }
+      await user.save();
       return toUserRecord(user);
     },
 
@@ -237,7 +230,13 @@ export const createUserRepository = ({ User }: Models) => {
         await user.save();
       }
       catch (error) {
-        translateMongooseError(error);
+        // The route checks for an existing user before completing, but a
+        // concurrent change could still claim the address first; the unique
+        // index is the authoritative guard.
+        if (isDuplicateKeyError(error)) {
+          throw new ValidationError([{ code: ApiErrorDetailCode.EmailInUse, field: null }]);
+        }
+        throw error;
       }
       return toUserRecord(user);
     },
@@ -271,16 +270,12 @@ export const createUserRepository = ({ User }: Models) => {
         return toUserSettingsRecord(user.settings);
       }
 
-      try {
-        // Perform an atomic update so we don't trigger full-document
-        // validation or `pre('save')` hooks that touch unrelated fields
-        await User.updateOne({ _id: userId }, { $set: set }, { runValidators: true }).exec();
-        const updated = await requireDocById(userId);
-        return toUserSettingsRecord(updated.settings);
-      }
-      catch (error) {
-        return translateMongooseError(error);
-      }
+      // Perform an atomic update so we don't trigger full-document
+      // validation or `pre('save')` hooks that touch unrelated fields.
+      // Values are already validated by zod in the route handler.
+      await User.updateOne({ _id: userId }, { $set: set }).exec();
+      const updated = await requireDocById(userId);
+      return toUserSettingsRecord(updated.settings);
     },
 
     async deleteById(id: string): Promise<boolean> {

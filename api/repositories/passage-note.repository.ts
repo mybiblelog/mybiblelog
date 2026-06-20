@@ -1,14 +1,13 @@
 import { Types } from 'mongoose';
 import { Bible } from '@mybiblelog/shared';
 import type useMongooseModels from '../mongoose/useMongooseModels';
-import { ValidationError } from '../router/errors/validation-errors';
 import {
   PassageNoteInput,
   PassageNoteRecord,
   PassageNoteSearchQuery,
   PassageNoteSearchResultItem,
   PassageRecord,
-} from './types';
+} from './helpers/types';
 
 type Models = Awaited<ReturnType<typeof useMongooseModels>>;
 type PassageNoteDoc = ReturnType<Models['PassageNote']['hydrate']>;
@@ -137,12 +136,6 @@ export const createPassageNoteRepository = ({ PassageNote }: Models) => {
         passages: input.passages,
         tags: input.tags,
       });
-      try {
-        await passageNote.validate();
-      }
-      catch (error) {
-        throw new ValidationError();
-      }
       await passageNote.save();
       return toPassageNoteRecord(passageNote);
     },
@@ -157,12 +150,6 @@ export const createPassageNoteRepository = ({ PassageNote }: Models) => {
       if (patch.passages) { passageNote.set('passages', patch.passages); }
       if (patch.tags) { passageNote.set('tags', patch.tags); }
 
-      try {
-        await passageNote.validate();
-      }
-      catch (error) {
-        throw new ValidationError();
-      }
       await passageNote.save();
       return toPassageNoteRecord(passageNote);
     },

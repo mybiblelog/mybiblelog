@@ -1,7 +1,6 @@
 import { Types } from 'mongoose';
 import type useMongooseModels from '../mongoose/useMongooseModels';
-import { translateMongooseError } from './translate-mongoose-error';
-import { FeedbackCreateInput, FeedbackRecord } from './types';
+import { FeedbackCreateInput, FeedbackRecord } from './helpers/types';
 
 type Models = Awaited<ReturnType<typeof useMongooseModels>>;
 type FeedbackDoc = ReturnType<Models['Feedback']['hydrate']>;
@@ -30,12 +29,7 @@ export const createFeedbackRepository = ({ Feedback }: Models) => {
         kind: input.kind,
         message: input.message,
       });
-      try {
-        await feedback.save();
-      }
-      catch (error) {
-        translateMongooseError(error);
-      }
+      await feedback.save();
       return toFeedbackRecord(feedback);
     },
 

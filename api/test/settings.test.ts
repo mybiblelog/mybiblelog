@@ -131,6 +131,38 @@ describe('settings.test.js', () => {
         await deleteTestUser(testUser);
       }
     });
+
+    // Negative-path validation: each of these values is rejected by the
+    // request schema (previously enforced by Mongoose schema validators).
+    const invalidSettingCases: { name: string; settings: Record<string, unknown> }[] = [
+      { name: 'dailyVerseCountGoal below minimum', settings: { dailyVerseCountGoal: 0 } },
+      { name: 'dailyVerseCountGoal above maximum', settings: { dailyVerseCountGoal: 5000 } },
+      { name: 'lookBackDate not a valid date string', settings: { lookBackDate: 'not-a-date' } },
+      { name: 'preferredBibleVersion not recognized', settings: { preferredBibleVersion: 'NOT_A_VERSION' } },
+      { name: 'startPage not allowed', settings: { startPage: 'not-a-page' } },
+      { name: 'passageNoteTagSortOrder not allowed', settings: { passageNoteTagSortOrder: 'not-a-sort-order' } },
+      { name: 'locale not supported', settings: { locale: 'xx' } },
+    ];
+
+    for (const { name, settings } of invalidSettingCases) {
+      it(`rejects invalid setting: ${name}`, async () => {
+        const testUser = await createTestUser();
+        try {
+          const response = await requestApi
+            .put('/api/settings')
+            .set('Authorization', `Bearer ${testUser.token}`)
+            .send({ settings });
+          expect(response.status).toBe(400);
+          expect(response.body).toHaveProperty('error');
+          expect(response.body).not.toHaveProperty('data');
+          expect(response.body.error.code).toBe('validation_error');
+          expect(Array.isArray(response.body.error.errors)).toBe(true);
+        }
+        finally {
+          await deleteTestUser(testUser);
+        }
+      });
+    }
   });
 
   describe('PUT /api/settings/delete-account', () => {

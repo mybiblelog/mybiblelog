@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import crypto from 'node:crypto';
-import { getNextOccurrence } from '../../repositories/reminder-schedule';
+import { getNextOccurrence } from '../../repositories/helpers/reminder-schedule';
 
 export const DailyReminderSchema = new mongoose.Schema({
   owner: {

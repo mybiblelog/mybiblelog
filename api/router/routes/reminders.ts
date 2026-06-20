@@ -1,9 +1,11 @@
 import express from 'express';
 import authCurrentUser from '../helpers/authCurrentUser';
 import useRepositories from '../../repositories/useRepositories';
-import { toDailyReminderJSON } from '../../repositories/serializers';
+import { toDailyReminderJSON } from '../../repositories/helpers/serializers';
 import { type ApiResponse } from '../response';
 import { NotFoundError } from '../errors/http-errors';
+import { validate } from '../../validation/validate';
+import { dailyReminderPatchSchema } from '../../validation/schemas/daily-reminder';
 import config from '../../config';
 
 const router = express.Router();
@@ -168,8 +170,8 @@ router.put('/reminders/daily-reminder', async (req, res, next) => {
   try {
     const { dailyReminders } = await useRepositories();
     const currentUser = await authCurrentUser(req);
-    const { hour, minute, timezoneOffset, active } = req.body;
-    const reminder = await dailyReminders.updateForOwner(currentUser.id, { hour, minute, timezoneOffset, active });
+    const { body } = validate(req, { body: dailyReminderPatchSchema });
+    const reminder = await dailyReminders.updateForOwner(currentUser.id, body);
     res.json({ data: toDailyReminderJSON(reminder) } satisfies ApiResponse);
   }
   catch (error) {

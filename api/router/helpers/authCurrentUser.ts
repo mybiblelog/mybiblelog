@@ -4,8 +4,8 @@ import useRepositories from '../../repositories/useRepositories';
 import { type Request, type Response } from 'express';
 import { parseCookieHeader } from './parseCookieHeader';
 
-import { AUTH_TOKEN_TTL_DAYS } from '../../repositories/user-auth';
-import { type UserRecord } from '../../repositories/types';
+import { AUTH_TOKEN_TTL_DAYS } from '../../repositories/helpers/user-auth';
+import { type UserRecord } from '../../repositories/helpers/types';
 import { UnauthenticatedError, UnauthorizedError } from '../errors/http-errors';
 
 export const AUTH_COOKIE_NAME = 'auth_token';
