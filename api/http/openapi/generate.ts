@@ -120,8 +120,12 @@ const buildOperation = (route: DocumentableRoute): JsonSchema | undefined => {
       ...(docs.response
         ? {
           content: {
-            'application/json': {
-              schema: successEnvelope(toJsonSchema(docs.response.schema, 'output')),
+            [docs.response.contentType ?? 'application/json']: {
+              // `raw` responses (e.g. XML) are documented as the schema itself;
+              // JSON responses are wrapped in the standard `{ data }` envelope.
+              schema: docs.response.raw
+                ? toJsonSchema(docs.response.schema, 'output')
+                : successEnvelope(toJsonSchema(docs.response.schema, 'output')),
             },
           },
         }

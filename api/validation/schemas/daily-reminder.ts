@@ -8,3 +8,15 @@ export const dailyReminderPatchSchema = z.object({
 }).partial();
 
 export type DailyReminderPatchBody = z.infer<typeof dailyReminderPatchSchema>;
+
+/**
+ * The serialized daily reminder returned to clients (see `toDailyReminderJSON`).
+ * Used by the OpenAPI generator to document the reminder response shape.
+ */
+export const dailyReminderSchema = z.object({
+  id: z.string(),
+  hour: z.number().int(),
+  minute: z.number().int(),
+  timezoneOffset: z.number().int(),
+  active: z.boolean(),
+});

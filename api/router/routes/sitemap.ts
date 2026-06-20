@@ -1,97 +1,15 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import express from 'express';
-import xml from 'xml';
-import { locales } from '@mybiblelog/shared';
-import config from '../../config';
-
-const siteLocales = locales.map((locale) => locale.code);
-
-const router = express.Router();
+import { registerRoutes } from '../../http/adapters/express';
+import { sitemapRoutes } from '../../http/routes/sitemap';
 
 /**
- * @swagger
- * /sitemap.xml:
- *   get:
- *     summary: Get sitemap in XML format
- *     tags: [Sitemap]
- *     responses:
- *       200:
- *         description: Sitemap in XML format
- *         content:
- *           application/xml:
- *             schema:
- *               type: string
+ * Express adapter wiring for the sitemap. The handler is framework-agnostic
+ * (`api/http/handlers/sitemap.ts`) and the route table carries its own OpenAPI
+ * docs (`api/http/routes/sitemap.ts`). This file only registers that table onto
+ * Express; the raw XML response shape is expressed by the handler/adapter, not here.
  */
-router.get('/sitemap.xml', (req, res, next) => {
-  const relativeUrls: string[] = [];
+const router = express.Router();
 
-  // start with the homepage of each locale
-  for (const locale of siteLocales) {
-    // English (default locale) has no prefix
-    const url = locale === 'en' ? '' : `/${locale}`;
-    relativeUrls.push(url);
-  }
+registerRoutes(router, sitemapRoutes);
 
-  // add the FAQ page of each locale
-  for (const locale of siteLocales) {
-    const localePrefix = locale === 'en' ? '' : `/${locale}`;
-    const url = `${localePrefix}/faq`;
-    relativeUrls.push(url);
-  }
-
-  // iterate through the /about directory inside each /content/{locale} directory
-  for (const locale of siteLocales) {
-    const localePrefix = locale === 'en' ? '' : `/${locale}`;
-
-    const aboutDir = path.resolve(process.cwd(), '..', 'nuxt', 'content', locale, 'about');
-    const aboutPageFiles = fs.readdirSync(aboutDir);
-    for (const file of aboutPageFiles) {
-      const slug = file.replace('.md', '');
-      const url = `${localePrefix}/about/${slug}`;
-      relativeUrls.push(url);
-    }
-  }
-
-  // add the printable reading tracker PDF of each locale
-  relativeUrls.push(
-    // these are static files that have non-locale-specific URLs
-    '/downloads/druckbare-bibel-lesetrack.pdf',
-    '/downloads/printable-bible-reading-tracker.pdf',
-    '/downloads/rastreador-de-lectura-de-la-biblia-imprimible.pdf',
-    '/downloads/feuille-de-suivi-de-lecture-de-la-Bible-imprimable.pdf',
-    '/downloads/drukovanyy-vidstezhuvach-chytannya-bibliyi.pdf',
-    '/downloads/rastreador-de-leitura-da-biblia-para-imprimir.pdf',
-    '/downloads/인쇄용 성경 읽기 추적표.pdf',
-  );
-
-  const urls = relativeUrls.map((url) => config.siteUrl + url);
-
-  const sitemapItems = urls.map((url) => ({
-    url: [
-      { loc: url },
-      { lastmod: new Date().toISOString().split('T')[0] },
-      { changefreq: 'monthly' },
-      { priority: 0.8 },
-    ],
-  }));
-
-  const sitemapObject = {
-    urlset: [
-      {
-        _attr: {
-          xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9',
-        },
-      },
-      ...sitemapItems,
-    ],
-  };
-
-  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>${xml(sitemapObject)}`;
-
-  res.header('Content-Type', 'application/xml');
-  res.send(sitemap);
-});
-
-// Export the router directly
 export default router;

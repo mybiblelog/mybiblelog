@@ -6,6 +6,9 @@ import { feedbackRoutes } from './feedback';
 import { settingsRoutes } from './settings';
 import { passageNoteRoutes } from './passage-notes';
 import { passageNoteTagRoutes } from './passage-note-tags';
+import { reminderRoutes } from './reminders';
+import { scriptureRoutes } from './scripture';
+import { sitemapRoutes } from './sitemap';
 
 /**
  * Every route the OpenAPI generator should document. This includes:
@@ -25,4 +28,7 @@ export const documentedRoutes: Array<RouteDefinition | DocumentedRoute> = [
   ...settingsRoutes,
   ...passageNoteRoutes,
   ...passageNoteTagRoutes,
+  ...reminderRoutes,
+  ...scriptureRoutes,
+  ...sitemapRoutes,
 ];

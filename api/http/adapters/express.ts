@@ -42,7 +42,17 @@ export const registerRoutes = (router: Router, routes: RouteDefinition[]): void 
             res.cookie(cookie.name, cookie.value, cookie.options ?? {});
           }
         }
-        res.status(result.status).json(result.body);
+        // A handler returns exactly one of: a redirect, a raw (non-JSON) body,
+        // or the standard JSON envelope.
+        if (result.redirect !== undefined) {
+          res.redirect(result.status, result.redirect);
+        }
+        else if (result.raw !== undefined) {
+          res.status(result.status).set('Content-Type', result.raw.contentType).send(result.raw.body);
+        }
+        else {
+          res.status(result.status).json(result.body);
+        }
       }
       catch (error) {
         next(error);

@@ -50,14 +50,34 @@ export interface CookieInstruction {
 }
 
 /**
+ * A non-JSON response body the adapter should send verbatim under an explicit
+ * content type (e.g. an XML sitemap). Bypasses the standard `{ data }` JSON
+ * envelope entirely.
+ */
+export interface RawBody {
+  contentType: string;
+  body: string;
+}
+
+/**
  * A framework-agnostic representation of the response a handler wants to send.
- * Adapters translate this into a native response (cookies + status code + JSON body).
+ * Adapters translate this into a native response (cookies + status code + body).
+ *
+ * Exactly one of `body`, `redirect`, or `raw` describes the payload:
+ *  - `body`: the standard JSON `{ data }` / `{ error }` envelope (the common case),
+ *  - `redirect`: a `Location` redirect to the given URL using `status` (e.g. 302),
+ *  - `raw`: a verbatim non-JSON body sent under `raw.contentType`.
  */
 export interface HttpResult<T = any> {
   status: number;
-  body: ApiResponse<T>;
+  /** The JSON response envelope. Omitted for `redirect` / `raw` responses. */
+  body?: ApiResponse<T>;
   /** Cookies to set/clear before sending the body. */
   cookies?: CookieInstruction[];
+  /** Target URL for a redirect response; the adapter issues it with `status`. */
+  redirect?: string;
+  /** A verbatim non-JSON body (e.g. XML) the adapter sends under its content type. */
+  raw?: RawBody;
 }
 
 /**
@@ -116,6 +136,14 @@ export interface RouteDocs {
   response?: {
     description?: string;
     schema: ZodType;
+    /** Content type of the 200 body. Defaults to `application/json`. */
+    contentType?: string;
+    /**
+     * When true, the 200 body is documented as `schema` verbatim rather than
+     * wrapped in the standard `{ data }` success envelope. Use for non-JSON /
+     * raw responses (e.g. an XML sitemap).
+     */
+    raw?: boolean;
   };
   /**
    * Documented error status codes, each rendered as an `ApiErrorResponse`. When
