@@ -20,12 +20,6 @@ const PassageSchema = new mongoose.Schema({
   },
 }, { timestamps: false });
 
-PassageSchema.pre('validate', async function() {
-  if (!Bible.validateRange(this.startVerseId, this.endVerseId)) {
-    throw new Error('Invalid Verse Range');
-  }
-});
-
 export const PassageNoteSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -49,11 +43,8 @@ export const PassageNoteSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-PassageNoteSchema.pre('validate', async function() {
-  if (!this.content.length && !this.passages.length) {
-    throw new Error('One of `passages` or `content` required');
-  }
-});
+// Per-passage verse-range validation and the content-or-passages requirement
+// live in the passage-note repository, not in schema hooks.
 
 const PassageNote = mongoose.model('PassageNote', PassageNoteSchema);
 

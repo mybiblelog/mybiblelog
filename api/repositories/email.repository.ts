@@ -35,6 +35,11 @@ export const createEmailRepository = ({ Email }: Models) => {
      * await this — it records the outcome as a side effect of delivery.
      */
     async create(input: EmailCreateInput): Promise<EmailRecord> {
+      // An email must carry a body in at least one format (replaces the
+      // Email pre-validate hook).
+      if (!input.text && !input.html) {
+        throw new Error('Text or HTML required');
+      }
       const email = await Email.create(input);
       return toEmailRecord(email);
     },

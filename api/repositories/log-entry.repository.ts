@@ -1,6 +1,14 @@
 import { Types } from 'mongoose';
+import { Bible } from '@mybiblelog/shared';
 import type useMongooseModels from '../mongoose/useMongooseModels';
 import { LogEntryInput, LogEntryRecord } from './helpers/types';
+
+/** Replaces the LogEntry pre-validate hook. */
+const assertValidRange = (startVerseId: number, endVerseId: number): void => {
+  if (!Bible.validateRange(startVerseId, endVerseId)) {
+    throw new Error('Invalid Verse Range');
+  }
+};
 
 type Models = Awaited<ReturnType<typeof useMongooseModels>>;
 type LogEntryDoc = ReturnType<Models['LogEntry']['hydrate']>;
@@ -49,6 +57,7 @@ export const createLogEntryRepository = ({ LogEntry }: Models) => {
     },
 
     async create(ownerId: string, input: LogEntryInput): Promise<LogEntryRecord> {
+      assertValidRange(input.startVerseId, input.endVerseId);
       const logEntry = new LogEntry({
         owner: new Types.ObjectId(ownerId),
         date: input.date,
@@ -69,6 +78,7 @@ export const createLogEntryRepository = ({ LogEntry }: Models) => {
       if (patch.startVerseId) { logEntry.startVerseId = patch.startVerseId; }
       if (patch.endVerseId) { logEntry.endVerseId = patch.endVerseId; }
 
+      assertValidRange(logEntry.startVerseId, logEntry.endVerseId);
       await logEntry.save();
       return toLogEntryRecord(logEntry);
     },

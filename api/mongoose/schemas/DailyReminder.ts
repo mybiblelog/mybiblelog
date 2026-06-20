@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import crypto from 'node:crypto';
-import { getNextOccurrence } from '../../repositories/helpers/reminder-schedule';
 
 export const DailyReminderSchema = new mongoose.Schema({
   owner: {
@@ -46,21 +45,8 @@ export const DailyReminderSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-DailyReminderSchema.pre('save', async function() {
-  const nextOccurrence = getNextOccurrence({
-    hour: this.hour,
-    minute: this.minute,
-    timezoneOffset: this.timezoneOffset,
-  });
-  this.nextOccurrence = nextOccurrence.getTime();
-
-  // If the daily reminder was just activated,
-  // rotate the public token (email links, tracking, unsubscribe)
-  if (this.isModified('active') && this.active) {
-    this.publicToken = crypto.randomBytes(16).toString('base64url');
-    this.lastEmailEngagementAt = new Date();
-  }
-});
+// nextOccurrence recomputation and public-token rotation on activation live in
+// the daily-reminder repository, not in a schema hook.
 
 const DailyReminder = mongoose.model('DailyReminder', DailyReminderSchema);
 

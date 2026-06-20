@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 
-import useMongooseModels, { closeConnection } from '../mongoose/useMongooseModels';
+import useRepositories from '../repositories/useRepositories';
+import { closeConnection } from '../mongoose/useMongooseModels';
 import dayjs from 'dayjs';
 import { Bible } from '@mybiblelog/shared';
 
@@ -11,9 +12,9 @@ const EMAIL = 'user@example.com';
 const DATE = dayjs().format('YYYY-MM-DD'); // e.g. '2026-01-01'
 
 const main = async (): Promise<void> => {
-  const { User, LogEntry } = await useMongooseModels();
+  const { users, logEntries } = await useRepositories();
 
-  const user = await User.findOne({ email: EMAIL });
+  const user = await users.findByEmail(EMAIL);
   if (!user) {
     console.error(`No user found for email: ${EMAIL}`);
     await closeConnection();
@@ -27,16 +28,8 @@ const main = async (): Promise<void> => {
     const startVerseId = Bible.getFirstBookVerseId(book);
     const endVerseId = Bible.getLastBookVerseId(book);
 
-    const entry = new LogEntry({
-      owner: user._id,
-      date: DATE,
-      startVerseId,
-      endVerseId,
-    });
-
     try {
-      await entry.validate();
-      await entry.save();
+      await logEntries.create(user.id, { date: DATE, startVerseId, endVerseId });
       console.log(`  Created entry for book ${book}: ${Bible.getBookName(book)}`);
     }
     catch (err) {

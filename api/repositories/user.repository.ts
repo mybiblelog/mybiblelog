@@ -6,6 +6,7 @@ import { ApiErrorDetailCode } from '../http/errors/error-codes';
 import { NotFoundError } from '../http/errors/http-errors';
 import { ValidationError } from '../http/errors/validation-errors';
 import { isDuplicateKeyError } from './helpers/duplicate-key-error';
+import { hashPassword } from './helpers/user-auth';
 import {
   AdminUserListItem,
   AdminUserListQuery,
@@ -109,9 +110,10 @@ export const createUserRepository = ({ User }: Models) => {
 
       const user = new User();
       user.email = input.email;
-      // allows `null` to be set explicitly to create an OAuth-only account without a local password
+      // allows `null` to be set explicitly to create an OAuth-only account without a local password.
+      // A real password is hashed before saving (replacing the User pre-save hook); null is stored as-is.
       if (input.password !== undefined) {
-        user.password = input.password;
+        user.password = input.password === null ? null : await hashPassword(input.password);
       }
       // remaining settings will be set by Mongoose default
       user.settings = new UserSettings({ locale: input.locale });
@@ -165,7 +167,7 @@ export const createUserRepository = ({ User }: Models) => {
 
     async setPassword(userId: string, newPassword: string): Promise<void> {
       const user = await requireDocById(userId);
-      user.password = newPassword;
+      user.password = await hashPassword(newPassword);
       await user.save();
     },
 
@@ -188,7 +190,7 @@ export const createUserRepository = ({ User }: Models) => {
     /** Sets the new password and clears the password reset code in one save. */
     async completePasswordReset(userId: string, newPassword: string): Promise<UserRecord> {
       const user = await requireDocById(userId);
-      user.password = newPassword;
+      user.password = await hashPassword(newPassword);
       user.passwordResetCode = '';
       user.passwordResetExpires = new Date(0);
       await user.save();

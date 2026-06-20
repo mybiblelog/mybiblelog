@@ -1,9 +1,23 @@
+import crypto from 'node:crypto';
 import { Types } from 'mongoose';
 import type useMongooseModels from '../mongoose/useMongooseModels';
+import { getNextOccurrence } from './helpers/reminder-schedule';
 import { DailyReminderPatch, DailyReminderRecord } from './helpers/types';
 
 type Models = Awaited<ReturnType<typeof useMongooseModels>>;
 type DailyReminderDoc = ReturnType<Models['DailyReminder']['hydrate']>;
+
+/**
+ * Recomputes a reminder's nextOccurrence from its schedule. The old schema
+ * pre-save hook did this on every save, so callers invoke it before each save.
+ */
+const recomputeNextOccurrence = (reminder: DailyReminderDoc): void => {
+  reminder.nextOccurrence = getNextOccurrence({
+    hour: reminder.hour,
+    minute: reminder.minute,
+    timezoneOffset: reminder.timezoneOffset,
+  }).getTime();
+};
 
 const toDailyReminderRecord = (reminder: DailyReminderDoc): DailyReminderRecord => {
   return {
@@ -38,6 +52,7 @@ export const createDailyReminderRepository = ({ DailyReminder }: Models) => {
         nextOccurrence: Date.now(),
         active: false,
       });
+      recomputeNextOccurrence(reminder);
       await reminder.save();
     }
     return reminder;
@@ -51,12 +66,20 @@ export const createDailyReminderRepository = ({ DailyReminder }: Models) => {
 
     async updateForOwner(ownerId: string, patch: DailyReminderPatch): Promise<DailyReminderRecord> {
       const reminder = await getOrCreateDocForOwner(ownerId);
-      // Assign through the hydrated document and save so the pre-save hook
-      // recomputes nextOccurrence and rotates the public token on activation.
+      const wasActive = reminder.active;
       if (typeof patch.hour !== 'undefined') { reminder.hour = patch.hour; }
       if (typeof patch.minute !== 'undefined') { reminder.minute = patch.minute; }
       if (typeof patch.timezoneOffset !== 'undefined') { reminder.timezoneOffset = patch.timezoneOffset; }
       if (typeof patch.active !== 'undefined') { reminder.active = patch.active; }
+
+      // If the daily reminder was just activated, rotate the public token
+      // (email links, tracking, unsubscribe) and seed engagement tracking.
+      if (!wasActive && reminder.active) {
+        reminder.publicToken = crypto.randomBytes(16).toString('base64url');
+        reminder.lastEmailEngagementAt = new Date();
+      }
+
+      recomputeNextOccurrence(reminder);
       await reminder.save();
       return toDailyReminderRecord(reminder);
     },
@@ -66,6 +89,7 @@ export const createDailyReminderRepository = ({ DailyReminder }: Models) => {
       const reminder = await DailyReminder.findOne({ publicToken });
       if (reminder) {
         reminder.lastEmailEngagementAt = new Date();
+        recomputeNextOccurrence(reminder);
         await reminder.save();
       }
     },
@@ -76,6 +100,7 @@ export const createDailyReminderRepository = ({ DailyReminder }: Models) => {
         return null;
       }
       reminder.active = false;
+      recomputeNextOccurrence(reminder);
       await reminder.save();
       return toDailyReminderRecord(reminder);
     },
@@ -98,15 +123,15 @@ export const createDailyReminderRepository = ({ DailyReminder }: Models) => {
       const reminder = await DailyReminder.findById(id);
       if (reminder) {
         reminder.active = false;
+        recomputeNextOccurrence(reminder);
         await reminder.save();
       }
     },
 
     /**
-     * Advances a reminder's schedule by saving the document, which triggers the
-     * pre-save hook that recomputes nextOccurrence. Reminders created before
-     * engagement tracking have no lastEmailEngagementAt; this seeds it so they
-     * are not deactivated on the next cycle.
+     * Advances a reminder's schedule by recomputing nextOccurrence and saving.
+     * Reminders created before engagement tracking have no lastEmailEngagementAt;
+     * this seeds it so they are not deactivated on the next cycle.
      */
     async advanceSchedule(id: string): Promise<void> {
       const reminder = await DailyReminder.findById(id);
@@ -116,6 +141,7 @@ export const createDailyReminderRepository = ({ DailyReminder }: Models) => {
       if (!reminder.lastEmailEngagementAt) {
         reminder.lastEmailEngagementAt = new Date();
       }
+      recomputeNextOccurrence(reminder);
       await reminder.save();
     },
   };

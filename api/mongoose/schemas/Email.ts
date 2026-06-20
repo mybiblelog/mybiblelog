@@ -15,11 +15,7 @@ export const EmailSchema = new mongoose.Schema({
   status: { type: String, enum: ['pending', 'sent', 'failed', 'log_only'], default: 'pending' },
 }, { timestamps: true });
 
-EmailSchema.pre('validate', async function() {
-  if (!this.text && !this.html) {
-    throw new Error('Text or HTML required');
-  }
-});
+// The "text or html required" check lives in the email repository, not a hook.
 
 const Email = mongoose.model('Email', EmailSchema);
 

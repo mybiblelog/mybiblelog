@@ -12,6 +12,25 @@ import {
 type Models = Awaited<ReturnType<typeof useMongooseModels>>;
 type PassageNoteDoc = ReturnType<Models['PassageNote']['hydrate']>;
 
+/**
+ * Validates a passage note's final state. Replaces the two PassageNote
+ * pre-validate hooks (per-passage verse range, and content-or-passages
+ * required).
+ */
+const assertValidPassageNote = (
+  passages: { startVerseId: number; endVerseId: number }[],
+  content: string,
+): void => {
+  for (const passage of passages) {
+    if (!Bible.validateRange(passage.startVerseId, passage.endVerseId)) {
+      throw new Error('Invalid Verse Range');
+    }
+  }
+  if (!content.length && !passages.length) {
+    throw new Error('One of `passages` or `content` required');
+  }
+};
+
 const toPassageRecords = (passages: { _id?: unknown; startVerseId: number; endVerseId: number }[]): PassageRecord[] => {
   return passages.map((passage) => ({
     _id: String(passage._id),
@@ -136,6 +155,7 @@ export const createPassageNoteRepository = ({ PassageNote }: Models) => {
         passages: input.passages,
         tags: input.tags,
       });
+      assertValidPassageNote(passageNote.passages, passageNote.content);
       await passageNote.save();
       return toPassageNoteRecord(passageNote);
     },
@@ -150,6 +170,7 @@ export const createPassageNoteRepository = ({ PassageNote }: Models) => {
       if (patch.passages) { passageNote.set('passages', patch.passages); }
       if (patch.tags) { passageNote.set('tags', patch.tags); }
 
+      assertValidPassageNote(passageNote.passages, passageNote.content);
       await passageNote.save();
       return toPassageNoteRecord(passageNote);
     },

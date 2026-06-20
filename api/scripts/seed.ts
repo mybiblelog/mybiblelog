@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
-import mongoose from 'mongoose';
 import useMongooseModels, { closeConnection } from '../mongoose/useMongooseModels';
+import useRepositories from '../repositories/useRepositories';
 
 // Main
 const main = async (): Promise<void> => {
@@ -16,7 +16,8 @@ const main = async (): Promise<void> => {
     Feedback,
   } = await useMongooseModels();
 
-  // delete all documents
+  // Delete all documents. Wholesale collection wipes have no repository
+  // equivalent, so this is sanctioned direct model access for admin scripts.
   await DailyReminder.deleteMany({});
   await Email.deleteMany({});
   await LogEntry.deleteMany({});
@@ -25,24 +26,25 @@ const main = async (): Promise<void> => {
   await User.deleteMany({});
   await Feedback.deleteMany({});
 
-  // seed users
-  const adminUser = await new User({
-    _id: new mongoose.Types.ObjectId(),
-    email: 'admin@example.com',
-    isAdmin: true,
-    password: 'password',
-    emailVerificationCode: null,
-  });
-  await adminUser.save();
+  // Seed users through the repository, which handles password hashing, settings
+  // defaults, and email-verification bookkeeping. An empty verification code
+  // marks the account as already verified.
+  const { users } = await useRepositories();
 
-  const user = await new User({
-    _id: new mongoose.Types.ObjectId(),
-    email: 'user@example.com',
-    isAdmin: false,
+  await users.create({
+    email: 'admin@example.com',
     password: 'password',
-    emailVerificationCode: null,
+    isAdmin: true,
+    locale: 'en',
+    emailVerificationCode: '',
   });
-  await user.save();
+
+  await users.create({
+    email: 'user@example.com',
+    password: 'password',
+    locale: 'en',
+    emailVerificationCode: '',
+  });
 
   // close connection
   await closeConnection();

@@ -37,11 +37,7 @@ export const LogEntrySchema = new mongoose.Schema({
   timestamps: true,
 });
 
-LogEntrySchema.pre('validate', async function() {
-  if (!Bible.validateRange(this.startVerseId, this.endVerseId)) {
-    throw new Error('Invalid Verse Range');
-  }
-});
+// Verse-range validation lives in the log-entry repository, not a hook.
 
 const LogEntry = mongoose.model('LogEntry', LogEntrySchema);
 

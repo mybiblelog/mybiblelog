@@ -1,9 +1,6 @@
 import crypto from 'node:crypto';
 import mongoose, { HydratedDocument, InferSchemaType } from 'mongoose';
-import bcrypt from 'bcrypt';
 import { UserSettingsSchema } from './UserSettings';
-
-const SALT_WORK_FACTOR = 10;
 
 // bcrypt only uses the first 72 bytes of a password; longer values would be
 // silently truncated, so we reject them at validation time instead.
@@ -54,25 +51,8 @@ export const UserSchema = new mongoose.Schema({
 
 // Email uniqueness is enforced by the unique index (declared on the `email`
 // field above) plus an explicit pre-insert check in the user repository.
-
-UserSchema.pre('save', function() {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
-  return new Promise((resolve, reject) => {
-    // only hash the password if it has been modified (or is new)
-    if (user.password === null || !user.isModified('password')) {
-      return resolve();
-    }
-    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-      if (err) { return reject(err); }
-      bcrypt.hash(String(user.password), salt, function(err, hash) {
-        if (err) { return reject(err); }
-        user.password = hash;
-        resolve();
-      });
-    });
-  });
-});
+// Password hashing lives in the user repository (see hashPassword in
+// repositories/helpers/user-auth.ts), not in a schema hook.
 
 const User = mongoose.model('User', UserSchema);
 
