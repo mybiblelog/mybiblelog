@@ -12,6 +12,7 @@
     "start": "cross-env NODE_ENV=production node dist/server.js",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:repositories": "vitest run --config vitest.repositories.config.ts",
     "type-check": "tsc --noEmit",
     "lint": "eslint --ext .ts,.js .",
     "lint:fix": "eslint --ext .ts,.js . --fix",
