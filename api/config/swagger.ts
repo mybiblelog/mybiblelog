@@ -1,4 +1,6 @@
 import swaggerJSDoc from 'swagger-jsdoc';
+import { generateOpenApiPaths } from '../http/openapi/generate';
+import { documentedRoutes } from '../http/routes';
 
 // Swagger definition
 const swaggerDefinition = {
@@ -88,7 +90,13 @@ const options = {
   ],
 };
 
-// Initialize swagger-jsdoc
-const swaggerSpec = swaggerJSDoc(options);
+// Initialize swagger-jsdoc for the routers still using hand-written JSDoc.
+const swaggerSpec = swaggerJSDoc(options) as Record<string, any>;
+
+// Overlay the paths generated from migrated, schema-driven route tables. These
+// take precedence over any JSDoc for the same path (there should be none, since
+// migrated routers have their JSDoc removed).
+const generated = generateOpenApiPaths(documentedRoutes);
+swaggerSpec.paths = { ...swaggerSpec.paths, ...generated.paths };
 
 export default swaggerSpec;

@@ -1,3 +1,4 @@
+import { type ZodType } from 'zod';
 import { type ApiResponse } from '../router/response';
 import { type Repositories } from '../repositories/useRepositories';
 import { type UserRecord } from '../repositories/helpers/types';
@@ -58,11 +59,37 @@ export type RouteHandler = (req: HttpRequest, deps: RouteDependencies) => Promis
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 /**
+ * OpenAPI documentation for a route, expressed in terms of the *same* zod
+ * schemas the handler validates with. Because the docs reference the validation
+ * schemas (rather than re-describing them by hand) the generated spec cannot
+ * drift from what the endpoint actually accepts and returns.
+ */
+export interface RouteDocs {
+  summary: string;
+  tags: string[];
+  description?: string;
+  /** Request schemas — reuse the exact schemas passed to `validate()`. */
+  request?: {
+    params?: ZodType;
+    query?: ZodType;
+    body?: ZodType;
+  };
+  /** The schema of the `data` payload returned on a 200 response. */
+  response?: {
+    description?: string;
+    schema: ZodType;
+  };
+}
+
+/**
  * A framework-neutral description of a single route. A list of these is the
- * contract every adapter consumes.
+ * contract every adapter consumes. The optional `docs` field is consumed only
+ * by the OpenAPI generator (see `api/http/openapi/generate.ts`); adapters ignore
+ * it.
  */
 export interface RouteDefinition {
   method: HttpMethod;
   path: string;
   handler: RouteHandler;
+  docs?: RouteDocs;
 }

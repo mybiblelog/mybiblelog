@@ -39,3 +39,17 @@ export const logEntryListQuerySchema = z.object({
 });
 
 export type LogEntryListQuery = z.infer<typeof logEntryListQuerySchema>;
+
+/**
+ * The serialized shape of a log entry as returned by the API (see
+ * `toLogEntryJSON`). Kept here so it is the single source of truth for both the
+ * response serializer's type and the generated OpenAPI docs.
+ */
+export const logEntrySchema = z.object({
+  id: z.string(),
+  date: dateString,
+  startVerseId: verseId,
+  endVerseId: verseId,
+});
+
+export type LogEntryJSON = z.infer<typeof logEntrySchema>;
