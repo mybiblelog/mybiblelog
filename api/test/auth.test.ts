@@ -405,7 +405,7 @@ describe('Auth routes', () => {
     // Note: A full test that verifies token and cookie would require mocking
     // the Google OAuth API calls (getAccessTokenFromCode and getUserProfileFromToken).
     // The endpoint does set a cookie and return a token when successful,
-    // as seen in the route implementation at api/router/routes/auth.ts:414-483
+    // as seen in the route implementation at api/http/routes/auth.ts:414-483
   });
 
   describe('POST /api/auth/change-email', () => {

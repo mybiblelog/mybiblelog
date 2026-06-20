@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 
 // The google-verify handler imports the OAuth helper directly; mock it so the
 // CSRF-state branch is testable without real Google config.
-vi.mock('../router/helpers/google-oauth2', () => ({
+vi.mock('../http/helpers/google-oauth2', () => ({
   default: {
     getGoogleLoginUrl: () => ({ url: 'https://example.com', state: 'state' }),
     verifyState: () => false,
@@ -26,9 +26,9 @@ import {
 } from '../http/handlers/auth';
 import { type HttpRequest, type RouteDependencies } from '../http/types';
 import { type UserRecord } from '../repositories/helpers/types';
-import { AUTH_COOKIE_NAME } from '../router/helpers/authCurrentUser';
-import { ValidationError } from '../router/errors/validation-errors';
-import { UnauthorizedError, NotFoundError, InvalidRequestError } from '../router/errors/http-errors';
+import { AUTH_COOKIE_NAME } from '../http/helpers/authCurrentUser';
+import { ValidationError } from '../http/errors/validation-errors';
+import { UnauthorizedError, NotFoundError, InvalidRequestError } from '../http/errors/http-errors';
 
 /**
  * Pure unit tests for the framework-agnostic auth handlers. They call the

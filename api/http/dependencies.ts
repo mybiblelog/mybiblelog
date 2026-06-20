@@ -1,5 +1,5 @@
 import useRepositories from '../repositories/useRepositories';
-import authCurrentUser from '../router/helpers/authCurrentUser';
+import authCurrentUser from './helpers/authCurrentUser';
 import useEmailService from '../services/email/email-service';
 import { sharedRateLimiter } from './rate-limit';
 import { type RouteDependencies } from './types';

@@ -1,5 +1,5 @@
 import { toLogEntryJSON } from '../../repositories/helpers/serializers';
-import { NotFoundError } from '../../router/errors/http-errors';
+import { NotFoundError } from '../errors/http-errors';
 import { validate } from '../../validation/validate';
 import { objectIdParam } from '../../validation/primitives';
 import {

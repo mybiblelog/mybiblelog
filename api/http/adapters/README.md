@@ -15,8 +15,8 @@ A small shared helper turns a thrown `AppError` into a normalized result. Every 
 reuse it:
 
 ```ts
-import { AppError } from '../../router/errors/app-error';
-import { InternalError } from '../../router/errors/internal-error';
+import { AppError } from '../errors/app-error';
+import { InternalError } from '../errors/internal-error';
 import { type HttpResult } from '../types';
 
 export const toErrorResult = (err: unknown): HttpResult => {

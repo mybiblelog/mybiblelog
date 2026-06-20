@@ -1,7 +1,7 @@
 import config from '../../config';
-import { ApiErrorDetailCode } from '../../router/errors/error-codes';
-import { ValidationError } from '../../router/errors/validation-errors';
-import { InvalidRequestError, UnauthorizedError, NotFoundError } from '../../router/errors/http-errors';
+import { ApiErrorDetailCode } from '../errors/error-codes';
+import { ValidationError } from '../errors/validation-errors';
+import { InvalidRequestError, UnauthorizedError, NotFoundError } from '../errors/http-errors';
 import {
   generateUserJWT,
   isCodeValid,
@@ -9,7 +9,7 @@ import {
   toAuthJSON,
 } from '../../repositories/helpers/user-auth';
 import { type UserCreateInput } from '../../repositories/helpers/types';
-import googleOauth2 from '../../router/helpers/google-oauth2';
+import googleOauth2 from '../helpers/google-oauth2';
 import { validate } from '../../validation/validate';
 import {
   registerBodySchema,

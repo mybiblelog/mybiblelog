@@ -8,9 +8,9 @@ import {
 } from '../http/handlers/log-entries';
 import { type HttpRequest, type RouteDependencies } from '../http/types';
 import { type LogEntryRecord, type UserRecord } from '../repositories/types';
-import { ValidationError } from '../router/errors/validation-errors';
-import { NotFoundError } from '../router/errors/http-errors';
-import { UnauthenticatedError } from '../router/errors/http-errors';
+import { ValidationError } from '../http/errors/validation-errors';
+import { NotFoundError } from '../http/errors/http-errors';
+import { UnauthenticatedError } from '../http/errors/http-errors';
 
 /**
  * Pure unit tests for the framework-agnostic log entry handlers. These call the

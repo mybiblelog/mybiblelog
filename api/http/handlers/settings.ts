@@ -1,6 +1,6 @@
 import { type UserSettingsRecord } from '../../repositories/helpers/types';
-import deleteAccount from '../../router/helpers/deleteAccount';
-import { InternalError } from '../../router/errors/internal-error';
+import deleteAccount from '../helpers/deleteAccount';
+import { InternalError } from '../errors/internal-error';
 import { validate } from '../../validation/validate';
 import { settingsUpdateBodySchema } from '../../validation/schemas/user-settings';
 import { clearAuthCookie } from '../helpers/auth-cookie';

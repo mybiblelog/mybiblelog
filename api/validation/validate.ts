@@ -1,6 +1,6 @@
 import { type ZodType } from 'zod';
-import { ValidationError } from '../router/errors/validation-errors';
-import { type ApiErrorDetail } from '../router/response';
+import { ValidationError } from '../http/errors/validation-errors';
+import { type ApiErrorDetail } from '../http/response';
 import { zodErrorToApiDetails } from './zod-error';
 
 interface ValidationSchemas<P, Q, B> {

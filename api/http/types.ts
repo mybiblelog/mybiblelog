@@ -1,5 +1,5 @@
 import { type ZodType } from 'zod';
-import { type ApiResponse } from '../router/response';
+import { type ApiResponse } from './response';
 import { type Repositories } from '../repositories/useRepositories';
 import { type UserRecord } from '../repositories/helpers/types';
 import { type EmailService } from '../services/email/email-service';

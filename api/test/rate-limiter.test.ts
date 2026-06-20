@@ -2,12 +2,12 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // Mock the test-bypass check so bypass behavior is deterministic regardless of
 // the ambient TEST_BYPASS_SECRET / NODE_ENV. Defaults to "not bypassed".
-vi.mock('../router/helpers/checkTestBypass', () => ({ default: vi.fn(() => false) }));
+vi.mock('../http/helpers/checkTestBypass', () => ({ default: vi.fn(() => false) }));
 
-import checkTestBypass from '../router/helpers/checkTestBypass';
+import checkTestBypass from '../http/helpers/checkTestBypass';
 import { MemoryRateLimitStore } from '../http/rate-limit/store';
 import { RateLimiter, type RateLimitRequest } from '../http/rate-limit/rate-limiter';
-import { TooManyRequestsError } from '../router/errors/http-errors';
+import { TooManyRequestsError } from '../http/errors/http-errors';
 
 const mockedBypass = vi.mocked(checkTestBypass);
 

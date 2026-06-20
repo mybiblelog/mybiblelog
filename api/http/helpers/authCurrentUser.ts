@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import config from '../../config';
 import useRepositories from '../../repositories/useRepositories';
-import { type Response } from 'express';
 import { parseCookieHeader } from './parseCookieHeader';
 import { AUTH_TOKEN_TTL_DAYS } from '../../repositories/helpers/user-auth';
 import { type UserRecord } from '../../repositories/helpers/types';
@@ -26,14 +25,9 @@ const jwtIssuer = new URL(siteUrl).origin;
 const jwtAudience = jwtIssuer;
 const jwtAlgorithms: jwt.Algorithm[] = ['HS256'];
 
-export const setAuthTokenCookie = (res: Response, token: string) => {
-  res.cookie(AUTH_COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: AUTH_COOKIE_MAX_AGE,
-    sameSite: 'lax',
-  });
-};
+// NOTE: the auth-token cookie is set declaratively via `HttpResult.cookies`
+// (see `auth-cookie.ts`); the adapter performs the actual `res.cookie()` call,
+// which keeps this helper framework-agnostic.
 
 const getTokenFromHeader = (req: AuthRequest): string | null => {
   const authorizationHeader = req.headers.authorization;

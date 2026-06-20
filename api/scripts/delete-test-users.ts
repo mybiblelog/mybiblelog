@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 import useMongooseModels, { closeConnection } from '../mongoose/useMongooseModels';
-import deleteAccount from '../router/helpers/deleteAccount';
+import deleteAccount from '../http/helpers/deleteAccount';
 
 // Main
 const main = async (): Promise<void> => {

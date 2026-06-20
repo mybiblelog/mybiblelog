@@ -21,7 +21,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { Bible } from '@mybiblelog/shared';
 import useMongooseModels, { closeConnection } from '../api/mongoose/useMongooseModels';
-import deleteAccount from '../api/router/helpers/deleteAccount';
+import deleteAccount from '../api/http/helpers/deleteAccount';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
 

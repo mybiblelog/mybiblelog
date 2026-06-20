@@ -1,4 +1,4 @@
-import { sharedRateLimiter, type RateLimitRequest } from '../../http/rate-limit';
+import { sharedRateLimiter, type RateLimitRequest } from '../rate-limit';
 
 /**
  * Legacy Express-facing rate-limit helper, kept for routers not yet migrated to

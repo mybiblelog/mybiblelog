@@ -3,9 +3,9 @@ import utc from 'dayjs/plugin/utc';
 import { generateUserJWT } from '../../repositories/helpers/user-auth';
 import { type Repositories } from '../../repositories/useRepositories';
 import { type AdminUserListQuery } from '../../repositories/helpers/types';
-import deleteAccount from '../../router/helpers/deleteAccount';
-import { InvalidRequestError, NotFoundError } from '../../router/errors/http-errors';
-import { ApiErrorDetailCode } from '../../router/errors/error-codes';
+import deleteAccount from '../helpers/deleteAccount';
+import { InvalidRequestError, NotFoundError } from '../errors/http-errors';
+import { ApiErrorDetailCode } from '../errors/error-codes';
 import { authCookie } from '../helpers/auth-cookie';
 import { type RouteHandler } from '../types';
 

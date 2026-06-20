@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 import type useMongooseModels from '../mongoose/useMongooseModels';
-import { ApiErrorDetailCode } from '../router/errors/error-codes';
-import { ValidationError } from '../router/errors/validation-errors';
+import { ApiErrorDetailCode } from '../http/errors/error-codes';
+import { ValidationError } from '../http/errors/validation-errors';
 import { isValidObjectId } from './helpers/ids';
 import { isDuplicateKeyError } from './helpers/duplicate-key-error';
 import { PassageNoteTagInput, PassageNoteTagRecord } from './helpers/types';

@@ -1,5 +1,5 @@
 import config from '../../config';
-import { NotFoundError } from '../../router/errors/http-errors';
+import { NotFoundError } from '../errors/http-errors';
 import { toDailyReminderJSON } from '../../repositories/helpers/serializers';
 import { validate } from '../../validation/validate';
 import { dailyReminderPatchSchema } from '../../validation/schemas/daily-reminder';

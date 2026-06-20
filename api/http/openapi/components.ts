@@ -1,11 +1,11 @@
 import { z } from 'zod';
-import { ApiErrorCode } from '../../router/errors/error-codes';
+import { ApiErrorCode } from '../errors/error-codes';
 import { userSchema } from '../../validation/schemas/auth';
 
 /**
  * Reusable OpenAPI component schemas referenced by `$ref` across the docs.
  *
- * The error-envelope schemas mirror the response types in `router/response.ts`
+ * The error-envelope schemas mirror the response types in `http/response.ts`
  * and are authored here once (rather than re-declared as JSDoc in every router).
  * The top-level error `enum` is sourced from `ApiErrorCode` so it cannot drift
  * from the codes the API actually emits. `User` is derived from the same

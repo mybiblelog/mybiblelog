@@ -2,9 +2,9 @@ import { Bible } from '@mybiblelog/shared';
 import { isValidObjectId } from '../../repositories/helpers/ids';
 import { toPassageNoteJSON } from '../../repositories/helpers/serializers';
 import { type PassageNoteSearchQuery } from '../../repositories/helpers/types';
-import { ApiErrorDetailCode } from '../../router/errors/error-codes';
-import { ValidationError } from '../../router/errors/validation-errors';
-import { InvalidRequestError, NotFoundError } from '../../router/errors/http-errors';
+import { ApiErrorDetailCode } from '../errors/error-codes';
+import { ValidationError } from '../errors/validation-errors';
+import { InvalidRequestError, NotFoundError } from '../errors/http-errors';
 import { validate } from '../../validation/validate';
 import { objectIdParam } from '../../validation/primitives';
 import {

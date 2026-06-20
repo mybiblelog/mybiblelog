@@ -2,8 +2,8 @@ import {
   getDefaultBibleVersion,
   isBibleVersionKey,
 } from '@mybiblelog/shared';
-import { ApiErrorDetailCode } from '../../router/errors/error-codes';
-import { ValidationError } from '../../router/errors/validation-errors';
+import { ApiErrorDetailCode } from '../errors/error-codes';
+import { ValidationError } from '../errors/validation-errors';
 import { getPassageChunk } from '../../services/scripture/scripture.service';
 import { type RouteHandler } from '../types';
 

@@ -1,6 +1,6 @@
 import { ZodError } from 'zod';
-import { ApiErrorDetailCode } from '../router/errors/error-codes';
-import { ApiErrorDetail } from '../router/response';
+import { ApiErrorDetailCode } from '../http/errors/error-codes';
+import { ApiErrorDetail } from '../http/response';
 
 /**
  * Translates zod validation errors into the API's `ApiErrorDetail[]` shape.

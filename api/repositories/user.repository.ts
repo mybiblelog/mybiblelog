@@ -2,9 +2,9 @@ import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
 import type useMongooseModels from '../mongoose/useMongooseModels';
 import UserSettings from '../mongoose/schemas/UserSettings';
-import { ApiErrorDetailCode } from '../router/errors/error-codes';
-import { NotFoundError } from '../router/errors/http-errors';
-import { ValidationError } from '../router/errors/validation-errors';
+import { ApiErrorDetailCode } from '../http/errors/error-codes';
+import { NotFoundError } from '../http/errors/http-errors';
+import { ValidationError } from '../http/errors/validation-errors';
 import { isDuplicateKeyError } from './helpers/duplicate-key-error';
 import {
   AdminUserListItem,

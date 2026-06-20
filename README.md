@@ -269,7 +269,7 @@ Use this checklist when introducing a **new** locale code (e.g. `ja`). English (
 
 1. Add a PDF under **`nuxt/static/downloads/`** (stable filename).
 1. In [`nuxt/pages/resources/printable-bible-reading-tracker.vue`](nuxt/pages/resources/printable-bible-reading-tracker.vue), add a `"<code>"` section to the `<i18n lang="json">` block (same keys as `"en"`; set `content.download_directly` to the new PDF’s `/downloads/...` URL).
-1. Append the PDF path to the static URL list in [`api/router/routes/sitemap.ts`](api/router/routes/sitemap.ts).
+1. Append the PDF path to the static URL list in [`api/http/routes/sitemap.ts`](api/http/routes/sitemap.ts).
 
 **Optional**
 
