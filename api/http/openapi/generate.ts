@@ -1,6 +1,8 @@
-import { z, type ZodType } from 'zod';
+import { type ZodType } from 'zod';
 import { type RouteDocs } from '../types';
 import { componentSchemas } from './components';
+import { openApiRegistry } from './entity-schemas';
+import { zodToJsonSchema, zodToOpenApiSchema } from './to-json-schema';
 
 /**
  * Generates an OpenAPI `paths` fragment from framework-neutral route tables.
@@ -25,41 +27,19 @@ interface DocumentableRoute {
   docs?: RouteDocs;
 }
 
-const JS_INT_MIN = -9007199254740991;
-const JS_INT_MAX = 9007199254740991;
-
 /**
- * Strips JSON Schema bookkeeping that OpenAPI 3.0 / Swagger UI does not need:
- * the `$schema`/`$id` dialect markers and the noisy safe-integer bounds zod
- * emits for `.int()`.
+ * Converts a request/response schema, emitting `$ref`s to entity components for
+ * any registered entity (top-level or nested) instead of inlining them.
  */
-const clean = (node: any): any => {
-  if (Array.isArray(node)) {
-    return node.map(clean);
-  }
-  if (node && typeof node === 'object') {
-    const rest: JsonSchema = { ...node };
-    delete rest.$schema;
-    delete rest.$id;
-    if (rest.minimum === JS_INT_MIN) { delete rest.minimum; }
-    if (rest.maximum === JS_INT_MAX) { delete rest.maximum; }
-    for (const key of Object.keys(rest)) {
-      rest[key] = clean(rest[key]);
-    }
-    return rest;
-  }
-  return node;
-};
-
-const toJsonSchema = (schema: ZodType, io: 'input' | 'output'): JsonSchema =>
-  clean(z.toJSONSchema(schema, { io }));
+const toRefAwareSchema = (schema: ZodType, io: 'input' | 'output'): JsonSchema =>
+  zodToOpenApiSchema(schema, io, openApiRegistry);
 
 /** Converts an Express-style path (`/log-entries/:id`) to OpenAPI (`/log-entries/{id}`). */
 const toOpenApiPath = (path: string): string => path.replace(/:([A-Za-z0-9_]+)/g, '{$1}');
 
 /** Expands an object schema into a list of OpenAPI `parameters`. */
 const toParameters = (schema: ZodType, location: 'path' | 'query'): JsonSchema[] => {
-  const js = toJsonSchema(schema, 'input');
+  const js = zodToJsonSchema(schema, 'input');
   const required = new Set<string>(js.required ?? []);
   return Object.entries(js.properties ?? {}).map(([name, propSchema]) => ({
     name,
@@ -124,8 +104,8 @@ const buildOperation = (route: DocumentableRoute): JsonSchema | undefined => {
               // `raw` responses (e.g. XML) are documented as the schema itself;
               // JSON responses are wrapped in the standard `{ data }` envelope.
               schema: docs.response.raw
-                ? toJsonSchema(docs.response.schema, 'output')
-                : successEnvelope(toJsonSchema(docs.response.schema, 'output')),
+                ? toRefAwareSchema(docs.response.schema, 'output')
+                : successEnvelope(toRefAwareSchema(docs.response.schema, 'output')),
             },
           },
         }
@@ -148,7 +128,7 @@ const buildOperation = (route: DocumentableRoute): JsonSchema | undefined => {
           required: true,
           content: {
             'application/json': {
-              schema: toJsonSchema(docs.request.body, 'input'),
+              schema: toRefAwareSchema(docs.request.body, 'input'),
             },
           },
         },

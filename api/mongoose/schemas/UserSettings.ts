@@ -5,34 +5,6 @@ import { StartPages, PassageNoteTagSortOrders } from '../../validation/constants
 
 const siteLocales = getLocaleCodes();
 
-/**
- * @swagger
- * components:
- *   schemas:
- *     UserSettings:
- *       type: object
- *       properties:
- *         dailyVerseCountGoal:
- *           type: number
- *           description: The user's daily verse count goal
- *         lookBackDate:
- *           type: string
- *           format: date
- *           description: The date to look back to for statistics
- *         preferredBibleVersion:
- *           type: string
- *           description: The user's preferred Bible version
- *         startPage:
- *           type: string
- *           description: The user's preferred start page
- *         passageNoteTagSortOrder:
- *           type: string
- *           description: The user's preferred sort order for passage note tags
- *         locale:
- *           type: string
- *           description: The user's preferred locale
- */
-
 export const UserSettingsSchema = new Schema({
   dailyVerseCountGoal: {
     type: Number,

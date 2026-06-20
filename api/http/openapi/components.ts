@@ -1,6 +1,5 @@
-import { z } from 'zod';
 import { ApiErrorCode } from '../errors/error-codes';
-import { userSchema } from '../../validation/schemas/auth';
+import { entityComponentSchemas } from './entity-schemas';
 
 /**
  * Reusable OpenAPI component schemas referenced by `$ref` across the docs.
@@ -8,10 +7,11 @@ import { userSchema } from '../../validation/schemas/auth';
  * The error-envelope schemas mirror the response types in `http/response.ts`
  * and are authored here once (rather than re-declared as JSDoc in every router).
  * The top-level error `enum` is sourced from `ApiErrorCode` so it cannot drift
- * from the codes the API actually emits. `User` is derived from the same
- * `userSchema` that types `toAuthJSON`.
+ * from the codes the API actually emits. The entity schemas (`User`,
+ * `Feedback`, `LogEntry`, ...) are generated from their zod schemas in
+ * `entity-schemas.ts`.
  */
-export const componentSchemas: Record<string, any> = {
+const errorEnvelopeSchemas: Record<string, any> = {
   ApiErrorDetail: {
     type: 'object',
     required: ['code'],
@@ -52,9 +52,9 @@ export const componentSchemas: Record<string, any> = {
       error: { $ref: '#/components/schemas/ApiError' },
     },
   },
-  User: (() => {
-    const schema: any = z.toJSONSchema(userSchema, { io: 'output' });
-    delete schema.$schema;
-    return schema;
-  })(),
+};
+
+export const componentSchemas: Record<string, any> = {
+  ...errorEnvelopeSchemas,
+  ...entityComponentSchemas,
 };
