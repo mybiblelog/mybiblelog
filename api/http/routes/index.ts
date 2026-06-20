@@ -1,6 +1,8 @@
 import { type RouteDefinition, type DocumentedRoute } from '../types';
 import { logEntryRoutes } from './log-entries';
 import { authRoutes } from './auth';
+import { adminRoutes } from './admin';
+import { feedbackRoutes } from './feedback';
 
 /**
  * Every route the OpenAPI generator should document. This includes:
@@ -15,4 +17,6 @@ import { authRoutes } from './auth';
 export const documentedRoutes: Array<RouteDefinition | DocumentedRoute> = [
   ...logEntryRoutes,
   ...authRoutes,
+  ...adminRoutes,
+  ...feedbackRoutes,
 ];
