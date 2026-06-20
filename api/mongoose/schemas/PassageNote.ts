@@ -47,12 +47,6 @@ export const PassageNoteSchema = new mongoose.Schema({
   }],
 }, {
   timestamps: true,
-  methods: {
-    toJSON() {
-      const { _id, passages, content, tags } = this;
-      return { id: _id, passages, content, tags };
-    },
-  },
 });
 
 PassageNoteSchema.pre('validate', async function() {

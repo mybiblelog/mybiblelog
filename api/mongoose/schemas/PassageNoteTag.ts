@@ -37,12 +37,6 @@ export const PassageNoteTagSchema = new mongoose.Schema({
   },
 }, {
   timestamps: true,
-  methods: {
-    toJSON() {
-      const { _id, label, color, description, noteCount } = this;
-      return { id: _id, label, color, description, noteCount };
-    },
-  },
 });
 
 // Make sure labels are unique per user

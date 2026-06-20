@@ -35,12 +35,6 @@ export const LogEntrySchema = new mongoose.Schema({
   },
 }, {
   timestamps: true,
-  methods: {
-    toJSON() {
-      const { _id, date, startVerseId, endVerseId } = this;
-      return { id: _id, date, startVerseId, endVerseId };
-    },
-  },
 });
 
 LogEntrySchema.pre('validate', async function() {

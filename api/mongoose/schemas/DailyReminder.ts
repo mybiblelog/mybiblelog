@@ -44,28 +44,14 @@ export const DailyReminderSchema = new mongoose.Schema({
   },
 }, {
   timestamps: true,
-  methods: {
-    /**
-     * Returns a Date() representing the next occurrence of this reminder.
-     * This code is meant to run in the UTC timezone.
-     * When testing this code in a local timezone, the offset is not needed.
-     */
-    getNextOccurrence() {
-      return getNextOccurrence({
-        hour: this.hour,
-        minute: this.minute,
-        timezoneOffset: this.timezoneOffset,
-      });
-    },
-    toJSON() {
-      const { _id, hour, minute, timezoneOffset, active } = this;
-      return { id: _id, hour, minute, timezoneOffset, active };
-    },
-  },
 });
 
 DailyReminderSchema.pre('save', async function() {
-  const nextOccurrence = this.schema.methods.getNextOccurrence.call(this);
+  const nextOccurrence = getNextOccurrence({
+    hour: this.hour,
+    minute: this.minute,
+    timezoneOffset: this.timezoneOffset,
+  });
   this.nextOccurrence = nextOccurrence.getTime();
 
   // If the daily reminder was just activated,
