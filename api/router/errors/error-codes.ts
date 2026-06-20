@@ -26,13 +26,12 @@ export type ApiErrorCode = typeof ApiErrorCode[keyof typeof ApiErrorCode];
  */
 export const ApiErrorDetailCode = {
   // Request Input Validation Errors
-  // (these come from mongoose validation errors)
+  // (produced by zod request validation; see validation/zod-error.ts)
   Required: 'required',
   NotValid: 'not_valid',
   Unique: 'unique',
   MinLength: 'min_length', // properties.minlength
   MaxLength: 'max_length', // properties.maxlength
-  // mongoose also validates enums and numbers, which can be added here
   Review: 'review',
 
   // Custom Errors

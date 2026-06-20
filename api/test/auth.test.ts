@@ -133,7 +133,7 @@ describe('Auth routes', () => {
       expect(response.body).not.toHaveProperty('data');
       expect(response.body.error).toEqual({
         code: 'validation_error',
-        errors: [{ field: 'email', code: 'review', properties: {} }],
+        errors: [{ field: 'email', code: 'not_valid' }],
       });
     });
 

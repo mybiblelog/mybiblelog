@@ -1,6 +1,5 @@
 import { Types } from 'mongoose';
 import type useMongooseModels from '../mongoose/useMongooseModels';
-import { translateMongooseError } from './translate-mongoose-error';
 import { DailyReminderPatch, DailyReminderRecord } from './types';
 
 type Models = Awaited<ReturnType<typeof useMongooseModels>>;
@@ -58,12 +57,7 @@ export const createDailyReminderRepository = ({ DailyReminder }: Models) => {
       if (typeof patch.minute !== 'undefined') { reminder.minute = patch.minute; }
       if (typeof patch.timezoneOffset !== 'undefined') { reminder.timezoneOffset = patch.timezoneOffset; }
       if (typeof patch.active !== 'undefined') { reminder.active = patch.active; }
-      try {
-        await reminder.save();
-      }
-      catch (error) {
-        translateMongooseError(error);
-      }
+      await reminder.save();
       return toDailyReminderRecord(reminder);
     },
 

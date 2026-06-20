@@ -1,6 +1,5 @@
 import { Types } from 'mongoose';
 import type useMongooseModels from '../mongoose/useMongooseModels';
-import { ValidationError } from '../router/errors/validation-errors';
 import { LogEntryInput, LogEntryRecord } from './types';
 
 type Models = Awaited<ReturnType<typeof useMongooseModels>>;
@@ -47,12 +46,6 @@ export const createLogEntryRepository = ({ LogEntry }: Models) => {
         startVerseId: input.startVerseId,
         endVerseId: input.endVerseId,
       });
-      try {
-        await logEntry.validate();
-      }
-      catch (error) {
-        throw new ValidationError();
-      }
       await logEntry.save();
       return toLogEntryRecord(logEntry);
     },
@@ -67,12 +60,6 @@ export const createLogEntryRepository = ({ LogEntry }: Models) => {
       if (patch.startVerseId) { logEntry.startVerseId = patch.startVerseId; }
       if (patch.endVerseId) { logEntry.endVerseId = patch.endVerseId; }
 
-      try {
-        await logEntry.validate();
-      }
-      catch (error) {
-        throw new ValidationError();
-      }
       await logEntry.save();
       return toLogEntryRecord(logEntry);
     },

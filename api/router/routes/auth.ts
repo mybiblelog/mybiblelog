@@ -13,6 +13,13 @@ import { LocaleCode } from '@mybiblelog/shared';
 import { type ApiResponse } from '../response';
 import { ValidationError } from '../errors/validation-errors';
 import { InvalidRequestError, UnauthorizedError, NotFoundError } from '../errors/http-errors';
+import { validate } from '../../validation/validate';
+import {
+  registerBodySchema,
+  changePasswordBodySchema,
+  resetPasswordBodySchema,
+} from '../../validation/schemas/auth';
+import { emailString } from '../../validation/primitives';
 
 const { requireEmailVerification } = config;
 
@@ -350,8 +357,6 @@ router.post('/auth/register', async (req, res, next) => {
   }
 
   const {
-    email,
-    password,
     isAdmin,
     locale,
     emailVerificationCode,
@@ -359,6 +364,8 @@ router.post('/auth/register', async (req, res, next) => {
 
   const { users } = await useRepositories();
   try {
+    const { body } = validate(req, { body: registerBodySchema });
+    const { email, password } = body;
     const input: UserCreateInput = { email, password, locale };
 
     if (authBypass) {
@@ -788,7 +795,8 @@ router.put('/auth/change-password', async (req, res, next) => {
   try {
     const { users } = await useRepositories();
     const currentUser = await authCurrentUser(req);
-    const { currentPassword, newPassword } = req.body;
+    const { body } = validate(req, { body: changePasswordBodySchema });
+    const { currentPassword, newPassword } = body;
 
     // If the user's password is invalid, throw error
     const passwordValid = await users.verifyPassword(currentUser.id, currentPassword);
@@ -796,20 +804,9 @@ router.put('/auth/change-password', async (req, res, next) => {
       throw new ValidationError([{ code: ApiErrorDetailCode.PasswordIncorrect, field: 'currentPassword' }]);
     }
 
-    // Set new password
-    try {
-      await users.setPassword(currentUser.id, newPassword);
-      res.json({ data: { success: true } } satisfies ApiResponse);
-    }
-    catch (err) {
-      // Any 'password' validation errors should be seen on the 'newPassword' field
-      // The 'password' errors come from validation of a new password,
-      // but the input field is 'newPassword'
-      if (err instanceof ValidationError) {
-        throw new ValidationError(err.details?.map((detail) => ({ ...detail, field: detail.field === 'password' ? 'newPassword' : detail.field })));
-      }
-      throw err;
-    }
+    // Set new password (already validated by zod on the 'newPassword' field)
+    await users.setPassword(currentUser.id, newPassword);
+    res.json({ data: { success: true } } satisfies ApiResponse);
   }
   catch (error) {
     next(error);
@@ -874,7 +871,7 @@ router.post('/auth/change-email', async (req, res, next) => {
     const { newEmail, password } = req.body;
 
     // Require string values to prevent NoSQL operator injection
-    if (typeof newEmail !== 'string' || !newEmail) {
+    if (typeof newEmail !== 'string' || !newEmail || !emailString.safeParse(newEmail).success) {
       throw new ValidationError([{ code: ApiErrorDetailCode.NewEmailRequired, field: 'newEmail' }]);
     }
     if (typeof password !== 'string' || !password) {
@@ -1357,7 +1354,8 @@ router.post('/auth/reset-password/:passwordResetCode', async (req, res, next) =>
   }
 
   const { passwordResetCode } = req.params;
-  const { newPassword } = req.body;
+  const { body } = validate(req, { body: resetPasswordBodySchema });
+  const { newPassword } = body;
 
   // Find the user (if not found, error)
   const { users } = await useRepositories();
@@ -1376,16 +1374,8 @@ router.post('/auth/reset-password/:passwordResetCode', async (req, res, next) =>
   }
 
   // Set new password and disable the password reset link
-  let updatedUser;
-  try {
-    updatedUser = await users.completePasswordReset(user.id, newPassword);
-  }
-  catch (err) {
-    if (err instanceof ValidationError) {
-      throw new ValidationError(err.details?.map((detail) => ({ ...detail, field: detail.field === 'password' ? 'newPassword' : detail.field })));
-    }
-    throw err;
-  }
+  // (newPassword is already validated by zod above)
+  const updatedUser = await users.completePasswordReset(user.id, newPassword);
   // Send a JWT back for auto-login
   const token = generateUserJWT(updatedUser);
   setAuthTokenCookie(res, token);

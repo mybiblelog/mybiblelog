@@ -67,6 +67,30 @@ describe('Reminders routes', () => {
     expect(res.body.data.active).toBe(true);
   });
 
+  // Negative-path validation: bounds previously enforced by Mongoose.
+  const invalidReminderCases: { name: string; body: Record<string, unknown> }[] = [
+    { name: 'hour above maximum', body: { hour: 24 } },
+    { name: 'hour below minimum', body: { hour: -1 } },
+    { name: 'minute above maximum', body: { minute: 60 } },
+    { name: 'minute below minimum', body: { minute: -1 } },
+    { name: 'timezoneOffset below minimum', body: { timezoneOffset: -721 } },
+    { name: 'timezoneOffset above maximum', body: { timezoneOffset: 841 } },
+  ];
+
+  for (const { name, body } of invalidReminderCases) {
+    test(`PUT /api/reminders/daily-reminder rejects ${name}`, async () => {
+      const res = await requestApi
+        .put('/api/reminders/daily-reminder')
+        .set('Authorization', `Bearer ${testUser.token}`)
+        .send(body);
+
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error');
+      expect(res.body).not.toHaveProperty('data');
+      expect(res.body.error.code).toBe('validation_error');
+    });
+  }
+
   test('GET /api/reminders/daily-reminder/track/:token (redirects safely)', async () => {
     const res = await requestApi
       .get('/api/reminders/daily-reminder/track/not-a-real-token?to=/start');

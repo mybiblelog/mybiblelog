@@ -1,13 +1,16 @@
 import express from 'express';
-import dayjs from 'dayjs';
 import authCurrentUser from '../helpers/authCurrentUser';
 import useRepositories from '../../repositories/useRepositories';
-import { isValidObjectId } from '../../repositories/ids';
 import { toLogEntryJSON } from '../../repositories/serializers';
-import { ApiErrorDetailCode } from '../errors/error-codes';
 import { type ApiResponse } from '../response';
-import { ValidationError } from '../errors/validation-errors';
 import { NotFoundError } from '../errors/http-errors';
+import { validate } from '../../validation/validate';
+import { objectIdParam } from '../../validation/primitives';
+import {
+  logEntryCreateSchema,
+  logEntryUpdateSchema,
+  logEntryListQuerySchema,
+} from '../../validation/schemas/log-entry';
 
 const router = express.Router();
 
@@ -87,17 +90,9 @@ router.get('/log-entries', async (req, res, next) => {
   try {
     const { logEntries: logEntryRepository } = await useRepositories();
     const currentUser = await authCurrentUser(req);
-    const { startDate, endDate } = req.query as { startDate: string; endDate: string };
+    const { query } = validate(req, { query: logEntryListQuerySchema });
 
-    if (startDate && !dayjs(startDate, 'YYYY-MM-DD', true).isValid()) {
-      throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'startDate' }]);
-    }
-
-    if (endDate && !dayjs(endDate, 'YYYY-MM-DD', true).isValid()) {
-      throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'endDate' }]);
-    }
-
-    const logEntries = await logEntryRepository.listByOwner(currentUser.id, { startDate, endDate });
+    const logEntries = await logEntryRepository.listByOwner(currentUser.id, query);
     return res.json({ data: logEntries.map(toLogEntryJSON) } satisfies ApiResponse);
   }
   catch (error) {
@@ -147,15 +142,12 @@ router.get('/log-entries', async (req, res, next) => {
  */
 router.get('/log-entries/:id', async (req, res, next) => {
   try {
-    const { id } = req.params;
-    if (!isValidObjectId(id)) {
-      throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
-    }
+    const { params } = validate(req, { params: objectIdParam });
 
     const { logEntries } = await useRepositories();
     const currentUser = await authCurrentUser(req);
 
-    const logEntry = await logEntries.findByIdForOwner(currentUser.id, id);
+    const logEntry = await logEntries.findByIdForOwner(currentUser.id, params.id);
     if (!logEntry) {
       throw new NotFoundError();
     }
@@ -215,9 +207,9 @@ router.post('/log-entries', async (req, res, next) => {
   try {
     const { logEntries } = await useRepositories();
     const currentUser = await authCurrentUser(req);
-    const { date, startVerseId, endVerseId } = req.body;
+    const { body } = validate(req, { body: logEntryCreateSchema });
 
-    const logEntry = await logEntries.create(currentUser.id, { date, startVerseId, endVerseId });
+    const logEntry = await logEntries.create(currentUser.id, body);
 
     res.json({ data: toLogEntryJSON(logEntry) } satisfies ApiResponse);
   }
@@ -282,16 +274,12 @@ router.post('/log-entries', async (req, res, next) => {
  */
 router.put('/log-entries/:id', async (req, res, next) => {
   try {
-    const { id } = req.params;
-    if (!isValidObjectId(id)) {
-      throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
-    }
+    const { params, body } = validate(req, { params: objectIdParam, body: logEntryUpdateSchema });
 
     const { logEntries } = await useRepositories();
     const currentUser = await authCurrentUser(req);
-    const { date, startVerseId, endVerseId } = req.body;
 
-    const logEntry = await logEntries.update(currentUser.id, id, { date, startVerseId, endVerseId });
+    const logEntry = await logEntries.update(currentUser.id, params.id, body);
     if (!logEntry) {
       throw new NotFoundError();
     }
@@ -346,15 +334,12 @@ router.put('/log-entries/:id', async (req, res, next) => {
  */
 router.delete('/log-entries/:id', async (req, res, next) => {
   try {
-    const { id } = req.params;
-    if (!isValidObjectId(id)) {
-      throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'id' }]);
-    }
+    const { params } = validate(req, { params: objectIdParam });
 
     const { logEntries } = await useRepositories();
     const currentUser = await authCurrentUser(req);
 
-    const deletedCount = await logEntries.deleteByIdForOwner(currentUser.id, id);
+    const deletedCount = await logEntries.deleteByIdForOwner(currentUser.id, params.id);
     if (deletedCount === 0) {
       throw new NotFoundError();
     }

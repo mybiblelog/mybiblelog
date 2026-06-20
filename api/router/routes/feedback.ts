@@ -3,6 +3,8 @@ import authCurrentUser from '../helpers/authCurrentUser';
 import useRepositories from '../../repositories/useRepositories';
 import { type ApiResponse } from '../response';
 import rateLimit from '../helpers/rateLimit';
+import { validate } from '../../validation/validate';
+import { feedbackBodySchema } from '../../validation/schemas/feedback';
 
 const router = express.Router();
 
@@ -99,14 +101,14 @@ router.post('/feedback', async (req, res, next) => {
     // If the user is logged in, we can associate the feedback with their account
     const ownerId = currentUser?.id || null;
 
-    const { email, kind, message } = req.body;
+    const { body } = validate(req, { body: feedbackBodySchema });
 
     const feedback = await feedbackRepository.create({
       ip,
       ownerId,
-      email,
-      kind,
-      message,
+      email: body.email,
+      kind: body.kind,
+      message: body.message,
     });
 
     res.status(201).send({ data: feedback } satisfies ApiResponse);

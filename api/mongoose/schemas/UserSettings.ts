@@ -1,19 +1,13 @@
 import mongoose, { Schema } from 'mongoose';
 import dayjs from 'dayjs';
 import { BibleVersions, getLocaleCodes, defaultLocaleBibleVersions } from '@mybiblelog/shared';
+import { StartPages, PassageNoteTagSortOrders } from '../../validation/constants';
 
 const siteLocales = getLocaleCodes();
 
-export const StartPages = ['start', 'today', 'books', 'checklist', 'calendar', 'notes'] as const;
-
-export const PassageNoteTagSortOrders = [
-  'label:ascending',
-  'createdAt:descending',
-  'createdAt:ascending',
-  'noteCount:descending',
-  'noteCount:ascending',
-  'color:hue',
-] as const;
+// Re-exported for backwards compatibility; the canonical source now lives in
+// the validation layer (`validation/constants.ts`).
+export { StartPages, PassageNoteTagSortOrders };
 
 /**
  * @swagger

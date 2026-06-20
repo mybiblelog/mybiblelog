@@ -5,6 +5,8 @@ import useRepositories from '../../repositories/useRepositories';
 import { type UserSettingsRecord } from '../../repositories/types';
 import { type ApiResponse } from '../response';
 import { InternalError } from '../errors/internal-error';
+import { validate } from '../../validation/validate';
+import { settingsUpdateBodySchema } from '../../validation/schemas/user-settings';
 
 const router = express.Router();
 
@@ -101,20 +103,10 @@ router.put('/settings', async (req, res, next) => {
   try {
     const { users } = await useRepositories();
     const currentUser = await authCurrentUser(req);
-    const { settings } = req.body;
-    const patch: Partial<UserSettingsRecord> = {};
-    ([
-      'dailyVerseCountGoal',
-      'lookBackDate',
-      'preferredBibleVersion',
-      'startPage',
-      'passageNoteTagSortOrder',
-      'locale',
-    ] as const).forEach((property) => {
-      if (typeof settings[property] !== 'undefined') {
-        patch[property] = settings[property];
-      }
-    });
+    const { body } = validate(req, { body: settingsUpdateBodySchema });
+    // `settings` is a validated partial containing only the provided, known
+    // keys; updateSettings ignores any that are undefined.
+    const patch: Partial<UserSettingsRecord> = body.settings;
     const updatedSettings = await users.updateSettings(currentUser.id, patch);
     return res.json({ data: updatedSettings } satisfies ApiResponse);
   }
