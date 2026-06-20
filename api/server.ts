@@ -4,7 +4,7 @@ import http from 'node:http';
 import debug from 'debug';
 
 import config from './config';
-import useMongooseModels from './mongoose/useMongooseModels';
+import useRepositories from './repositories/useRepositories';
 import initReminderService from './services/reminder.service';
 import buildApp from './app';
 import useEmailService from './services/email/email-service';
@@ -62,7 +62,7 @@ const port = normalizePort(config.apiPort || '8080');
 
 const startServer = async () => {
   // make sure mongoose is connected
-  useMongooseModels();
+  await useRepositories();
   const emailService = await useEmailService();
   await initReminderService({ emailService });
   const app = buildApp();

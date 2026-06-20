@@ -83,6 +83,41 @@ export const createDailyReminderRepository = ({ DailyReminder }: Models) => {
     async deleteAllByOwner(ownerId: string): Promise<void> {
       await DailyReminder.deleteMany({ owner: new Types.ObjectId(ownerId) });
     },
+
+    /** Returns active reminders whose nextOccurrence is at or before the given UTC time (ms). */
+    async findDue(utcNowMs: number): Promise<DailyReminderRecord[]> {
+      const reminders = await DailyReminder.find({
+        nextOccurrence: { $lte: utcNowMs },
+        active: true,
+      });
+      return reminders.map(toDailyReminderRecord);
+    },
+
+    /** Deactivates a single reminder by id (used when a user stops engaging). */
+    async deactivate(id: string): Promise<void> {
+      const reminder = await DailyReminder.findById(id);
+      if (reminder) {
+        reminder.active = false;
+        await reminder.save();
+      }
+    },
+
+    /**
+     * Advances a reminder's schedule by saving the document, which triggers the
+     * pre-save hook that recomputes nextOccurrence. Reminders created before
+     * engagement tracking have no lastEmailEngagementAt; this seeds it so they
+     * are not deactivated on the next cycle.
+     */
+    async advanceSchedule(id: string): Promise<void> {
+      const reminder = await DailyReminder.findById(id);
+      if (!reminder) {
+        return;
+      }
+      if (!reminder.lastEmailEngagementAt) {
+        reminder.lastEmailEngagementAt = new Date();
+      }
+      await reminder.save();
+    },
   };
 };
 

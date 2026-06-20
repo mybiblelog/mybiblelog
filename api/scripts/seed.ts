@@ -14,7 +14,6 @@ const main = async (): Promise<void> => {
     User,
     // UserSettings, // Embedded in "User",
     Feedback,
-    Report,
   } = await useMongooseModels();
 
   // delete all documents
@@ -25,7 +24,6 @@ const main = async (): Promise<void> => {
   await PassageNoteTag.deleteMany({});
   await User.deleteMany({});
   await Feedback.deleteMany({});
-  await Report.deleteMany({});
 
   // seed users
   const adminUser = await new User({

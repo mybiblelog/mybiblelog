@@ -34,6 +34,15 @@ export const createLogEntryRepository = ({ LogEntry }: Models) => {
       return logEntries.map(toLogEntryRecord);
     },
 
+    async listRecentByOwner(ownerId: string, limit = 10): Promise<LogEntryRecord[]> {
+      const logEntries = await LogEntry
+        .find({ owner: new Types.ObjectId(ownerId) })
+        .sort({ date: -1 })
+        .limit(limit)
+        .exec();
+      return logEntries.map(toLogEntryRecord);
+    },
+
     async findByIdForOwner(ownerId: string, id: string): Promise<LogEntryRecord | null> {
       const logEntry = await LogEntry.findOne({ owner: new Types.ObjectId(ownerId), _id: id });
       return logEntry && toLogEntryRecord(logEntry);

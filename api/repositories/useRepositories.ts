@@ -1,5 +1,6 @@
 import useMongooseModels from '../mongoose/useMongooseModels';
 import { createDailyReminderRepository } from './daily-reminder.repository';
+import { createEmailRepository } from './email.repository';
 import { createFeedbackRepository } from './feedback.repository';
 import { createLogEntryRepository } from './log-entry.repository';
 import { createPassageNoteRepository } from './passage-note.repository';
@@ -21,6 +22,7 @@ const useRepositories = async () => {
     passageNoteTags: createPassageNoteTagRepository(models),
     dailyReminders: createDailyReminderRepository(models),
     feedback: createFeedbackRepository(models),
+    emails: createEmailRepository(models),
   };
 };
 
