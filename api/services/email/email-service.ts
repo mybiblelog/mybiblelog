@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import useMongooseModels from '../../mongoose/useMongooseModels';
+import useRepositories from '../../repositories/useRepositories';
 import { LocaleCode } from '@mybiblelog/shared';
 import renderEmailVerification from './email-templates/email-verification';
 import renderPasswordResetLink from './email-templates/password-reset-link';
@@ -28,7 +28,7 @@ export type EmailService = {
 };
 
 const init = async () => {
-  const { Email } = await useMongooseModels();
+  const { emails } = await useRepositories();
 
   let cachedBrandLogoAttachment: Attachment | null | undefined;
   const getBrandLogoAttachment = (): Attachment | undefined => {
@@ -78,7 +78,7 @@ const init = async () => {
 
     // record email, but do not block with `await`
     const { attachments, ...forRecord } = params;
-    Email.create({ ...forRecord, status });
+    emails.create({ ...forRecord, status });
   };
 
   const { enqueue } = createQueue<SendEmailParams>(sendFn);

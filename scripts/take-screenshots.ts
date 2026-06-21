@@ -17,10 +17,10 @@ import { chromium, type BrowserContext, type Page } from 'playwright';
 import sharp from 'sharp';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { Bible } from '@mybiblelog/shared';
-import useMongooseModels, { closeConnection } from '../api/mongoose/useMongooseModels';
+import { closeConnection } from '../api/mongo/useCollections';
+import useRepositories from '../api/repositories/useRepositories';
 import deleteAccount from '../api/http/helpers/deleteAccount';
 
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
@@ -118,7 +118,7 @@ const NOTE_PASSAGES = [
   [{ startVerseId: 101012001, endVerseId: 101012003 }], // Gen 12:1-3
   [{ startVerseId: 101022001, endVerseId: 101022014 }], // Gen 22:1-14
   [{ startVerseId: 101050020, endVerseId: 101050020 }], // Gen 50:20
-] as const;
+];
 
 // Tag index assignments: [Creation=0, Prophecy=1, Faith=2, History=3]
 const NOTE_TAG_INDICES: number[][] = [[0], [0, 2], [1], [1, 2], [1, 2], [3, 2]];
@@ -240,8 +240,8 @@ const LOCALE_SEED_DATA: Record<Locale, LocaleSeedData> = {
 
 // --- Module-level state (set during setupUser, reused by seed/delete/prepare helpers) ---
 
-let models: Awaited<ReturnType<typeof useMongooseModels>>;
-let screenshotUserId: mongoose.Types.ObjectId;
+let repositories: Awaited<ReturnType<typeof useRepositories>>;
+let screenshotUserId: string;
 
 // --- DB helpers ---
 
@@ -251,17 +251,17 @@ async function setupUser(): Promise<void> {
     console.log(`Removed existing screenshot user: ${SCREENSHOT_EMAIL}`);
   }
 
-  models = await useMongooseModels();
+  repositories = await useRepositories();
 
-  const user = new models.User({
-    _id: new mongoose.Types.ObjectId(),
+  const user = await repositories.users.create({
     email: SCREENSHOT_EMAIL,
     password: SCREENSHOT_PASSWORD,
-    emailVerificationCode: '',
-    settings: { locale: 'en', lookBackDate: dateString(30) },
+    locale: 'en',
+    emailVerificationCode: '', // empty code marks the account as already verified
   });
-  await user.save();
-  screenshotUserId = user._id as mongoose.Types.ObjectId;
+  // Backdate the look-back window so calendar/progress views show history.
+  await repositories.users.updateSettings(user.id, { lookBackDate: dateString(30) });
+  screenshotUserId = user.id;
   console.log(`Created screenshot user: ${SCREENSHOT_EMAIL}`);
 
   // Sequential chapter readings: Genesis 1-50, then Exodus 1-26 (76 chapters total)
@@ -270,49 +270,48 @@ async function setupUser(): Promise<void> {
   for (let ch = 1; ch <= 26; ch++) chapters.push([2, ch]);
 
   let chapterIdx = 0;
-  const logEntries: {
-    owner: mongoose.Types.ObjectId;
-    date: string;
-    startVerseId: number;
-    endVerseId: number;
-  }[] = [];
-
+  let logEntryCount = 0;
   for (const { daysAgo, count } of DAY_PLANS) {
     const date = dateString(daysAgo);
     for (let i = 0; i < count && chapterIdx < chapters.length; i++) {
       const [book, chapter] = chapters[chapterIdx++];
       const startVerseId = Bible.makeVerseId(book, chapter, 1);
       const endVerseId = Bible.makeVerseId(book, chapter, Bible.getChapterVerseCount(book, chapter));
-      logEntries.push({ owner: screenshotUserId, date, startVerseId, endVerseId });
+      await repositories.logEntries.create(screenshotUserId, { date, startVerseId, endVerseId });
+      logEntryCount++;
     }
   }
 
-  await models.LogEntry.insertMany(logEntries);
-  console.log(`Created ${logEntries.length} log entries across ${DAY_PLANS.length} active days`);
+  console.log(`Created ${logEntryCount} log entries across ${DAY_PLANS.length} active days`);
 }
 
 async function resetLocaleData(): Promise<void> {
-  await models.PassageNote.deleteMany({ owner: screenshotUserId });
-  await models.PassageNoteTag.deleteMany({ owner: screenshotUserId });
+  await repositories.passageNotes.deleteAllByOwner(screenshotUserId);
+  await repositories.passageNoteTags.deleteAllByOwner(screenshotUserId);
   // Delete any Jude log entry so sc2 can click it fresh for the achievement modal
   const judeStart = Bible.makeVerseId(65, 1, 1);
-  await models.LogEntry.deleteMany({ owner: screenshotUserId, startVerseId: judeStart });
+  const entries = await repositories.logEntries.listByOwner(screenshotUserId);
+  for (const entry of entries) {
+    if (entry.startVerseId === judeStart) {
+      await repositories.logEntries.deleteByIdForOwner(screenshotUserId, entry.id);
+    }
+  }
 }
 
 async function seedLocaleContent(locale: Locale): Promise<void> {
   const { tags: tagSeeds, notes: noteSeeds } = LOCALE_SEED_DATA[locale];
-  const tagDocs = await models.PassageNoteTag.insertMany(
-    tagSeeds.map(t => ({ owner: screenshotUserId, ...t })),
+  // Create tags first so their ids can be referenced by the notes below.
+  const tagRecords = await Promise.all(
+    tagSeeds.map(tag => repositories.passageNoteTags.create(screenshotUserId, tag)),
   );
-  await models.PassageNote.insertMany(
-    noteSeeds.map(n => ({
-      owner: screenshotUserId,
-      passages: n.passages,
-      content: n.content,
-      tags: n.tagIndices.map(i => tagDocs[i]._id),
+  await Promise.all(
+    noteSeeds.map(note => repositories.passageNotes.create(screenshotUserId, {
+      passages: note.passages,
+      content: note.content,
+      tags: note.tagIndices.map(i => tagRecords[i].id),
     })),
   );
-  console.log(`  Seeded ${tagDocs.length} tags and ${noteSeeds.length} notes for ${locale}`);
+  console.log(`  Seeded ${tagRecords.length} tags and ${noteSeeds.length} notes for ${locale}`);
 }
 
 async function teardownUser(): Promise<void> {
@@ -357,26 +356,14 @@ async function prepareAchievements(page: Page): Promise<void> {
 // Exo 27 (21 v) + Exo 28 (43 v) + Exo 29 (46 v) = 110 new verses → 100% of the 86-verse default goal
 async function prepareDailyGoal(page: Page): Promise<void> {
   const today = dateString(0);
-  await models.LogEntry.insertMany([
-    {
-      owner: screenshotUserId,
+  const dailyGoalChapters: [number, number][] = [[2, 27], [2, 28], [2, 29]];
+  for (const [book, chapter] of dailyGoalChapters) {
+    await repositories.logEntries.create(screenshotUserId, {
       date: today,
-      startVerseId: Bible.makeVerseId(2, 27, 1),
-      endVerseId: Bible.makeVerseId(2, 27, Bible.getChapterVerseCount(2, 27)),
-    },
-    {
-      owner: screenshotUserId,
-      date: today,
-      startVerseId: Bible.makeVerseId(2, 28, 1),
-      endVerseId: Bible.makeVerseId(2, 28, Bible.getChapterVerseCount(2, 28)),
-    },
-    {
-      owner: screenshotUserId,
-      date: today,
-      startVerseId: Bible.makeVerseId(2, 29, 1),
-      endVerseId: Bible.makeVerseId(2, 29, Bible.getChapterVerseCount(2, 29)),
-    },
-  ]);
+      startVerseId: Bible.makeVerseId(book, chapter, 1),
+      endVerseId: Bible.makeVerseId(book, chapter, Bible.getChapterVerseCount(book, chapter)),
+    });
+  }
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.waitForSelector('[data-screenshot="daily-goal"]', { timeout: 5000 });
   await page.waitForTimeout(800);
@@ -384,7 +371,11 @@ async function prepareDailyGoal(page: Page): Promise<void> {
 
 async function cleanupDailyGoal(): Promise<void> {
   // Remove today's entries so sc1 (reading suggestions) shows no today reading in subsequent locales
-  await models.LogEntry.deleteMany({ owner: screenshotUserId, date: dateString(0) });
+  const today = dateString(0);
+  const entries = await repositories.logEntries.listByOwner(screenshotUserId, { startDate: today, endDate: today });
+  for (const entry of entries) {
+    await repositories.logEntries.deleteByIdForOwner(screenshotUserId, entry.id);
+  }
 }
 
 async function prepareChecklist(page: Page): Promise<void> {

@@ -1,30 +1,30 @@
 /* eslint-disable no-console */
 
-import mongoose from 'mongoose';
-import useMongooseModels, { closeConnection } from '../mongoose/useMongooseModels';
+import { Collection, Document } from 'mongodb';
+import useCollections, { closeConnection } from '../mongo/useCollections';
 
 // Main
 const main = async (): Promise<void> => {
   const {
-    DailyReminder,
-    LogEntry,
-    PassageNote,
-    PassageNoteTag,
-    User,
-  } = await useMongooseModels();
+    dailyReminders,
+    logEntries,
+    passageNotes,
+    passageNoteTags,
+    users,
+  } = await useCollections();
 
   // delete all documents with an owner that is not in the active user list
-  const ownedEntities = [
-    DailyReminder,
-    LogEntry,
-    PassageNote,
-    PassageNoteTag,
+  const ownedEntities: { name: string; collection: Collection<Document> }[] = [
+    { name: 'dailyreminders', collection: dailyReminders as unknown as Collection<Document> },
+    { name: 'logentries', collection: logEntries as unknown as Collection<Document> },
+    { name: 'passagenotes', collection: passageNotes as unknown as Collection<Document> },
+    { name: 'passagenotetags', collection: passageNoteTags as unknown as Collection<Document> },
   ];
 
-  const activeUserIds = await User.distinct('_id');
-  for (const entity of ownedEntities) {
-    const result = await (entity as mongoose.Model<any>).deleteMany({ owner: { $nin: activeUserIds } });
-    console.log(`Deleted ${result.deletedCount} documents from ${entity.modelName}`);
+  const activeUserIds = await users.distinct('_id');
+  for (const { name, collection } of ownedEntities) {
+    const result = await collection.deleteMany({ owner: { $nin: activeUserIds } });
+    console.log(`Deleted ${result.deletedCount} documents from ${name}`);
   }
 
   // close connection

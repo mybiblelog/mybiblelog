@@ -123,9 +123,9 @@ export const useReadingSuggestionsStore = defineStore('reading-suggestions', {
       const suggestionsNT = getReadingPathSuggestions(readingPathNT, logEntries);
       const suggestionsOT = getReadingPathSuggestions(readingPathOT, logEntries);
       const suggestionsWisdom = getReadingPathSuggestions(readingPathWisdom, logEntries);
-      suggestionsNT.forEach(s => { s.suggestionContext = readingPathContextNT; });
-      suggestionsOT.forEach(s => { s.suggestionContext = readingPathContextOT; });
-      suggestionsWisdom.forEach(s => { s.suggestionContext = readingPathContextWisdom; });
+      suggestionsNT.forEach((s) => { s.suggestionContext = readingPathContextNT; });
+      suggestionsOT.forEach((s) => { s.suggestionContext = readingPathContextOT; });
+      suggestionsWisdom.forEach((s) => { s.suggestionContext = readingPathContextWisdom; });
 
       // Pull suggestions evenly from all reading paths
       const sources: ReadingSuggestionPassage[][] = [suggestionsNT, suggestionsOT, suggestionsWisdom]

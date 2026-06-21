@@ -12,6 +12,7 @@
     "start": "cross-env NODE_ENV=production node dist/server.js",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:repositories": "vitest run --config vitest.repositories.config.ts",
     "type-check": "tsc --noEmit",
     "lint": "eslint --ext .ts,.js .",
     "lint:fix": "eslint --ext .ts,.js . --fix",
@@ -38,12 +39,10 @@
     "form-data": "^4.0.4",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^9.0.0",
-    "mongoose-unique-validator": "^5.0.2",
+    "mongodb": "^7.2.0",
     "morgan": "^1.10.0",
     "resend": "^6.8.0",
     "supertest": "^7.1.4",
-    "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "xml": "^1.0.1",
     "xml2js": "^0.6.2",
@@ -59,7 +58,6 @@
     "@types/node": "^24.9.1",
     "@types/nodemailer": "^7.0.5",
     "@types/supertest": "^6.0.3",
-    "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/xml2js": "^0.4.14",
     "nodemon": "^3.1.10",
@@ -67,10 +65,5 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3"
-  },
-  "overrides": {
-    "mongoose-unique-validator": {
-      "mongoose": "^9.0.0"
-    }
   }
 }

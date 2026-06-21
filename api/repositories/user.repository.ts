@@ -1,11 +1,14 @@
 import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
-import type useMongooseModels from '../mongoose/useMongooseModels';
-import UserSettings from '../mongoose/schemas/UserSettings';
+import { ObjectId } from 'mongodb';
+import type { Collections } from '../mongo/useCollections';
+import type { UserDocument, UserSettingsDocument } from '../mongo/documents';
 import { ApiErrorDetailCode } from '../http/errors/error-codes';
 import { NotFoundError } from '../http/errors/http-errors';
 import { ValidationError } from '../http/errors/validation-errors';
 import { isDuplicateKeyError } from './helpers/duplicate-key-error';
+import { hashPassword } from './helpers/user-auth';
+import { buildDefaultUserSettings } from './helpers/user-settings';
 import {
   AdminUserListItem,
   AdminUserListQuery,
@@ -13,9 +16,6 @@ import {
   UserRecord,
   UserSettingsRecord,
 } from './helpers/types';
-
-type Models = Awaited<ReturnType<typeof useMongooseModels>>;
-type UserDoc = ReturnType<Models['User']['hydrate']>;
 
 const USER_SETTINGS_KEYS: (keyof UserSettingsRecord)[] = [
   'dailyVerseCountGoal',
@@ -26,7 +26,7 @@ const USER_SETTINGS_KEYS: (keyof UserSettingsRecord)[] = [
   'locale',
 ];
 
-const toUserSettingsRecord = (settings: UserDoc['settings']): UserSettingsRecord => {
+const toUserSettingsRecord = (settings: UserSettingsDocument): UserSettingsRecord => {
   return {
     dailyVerseCountGoal: settings.dailyVerseCountGoal,
     lookBackDate: settings.lookBackDate,
@@ -37,7 +37,7 @@ const toUserSettingsRecord = (settings: UserDoc['settings']): UserSettingsRecord
   };
 };
 
-const toUserRecord = (user: UserDoc): UserRecord => {
+const toUserRecord = (user: UserDocument): UserRecord => {
   return {
     id: user._id.toString(),
     email: user.email,
@@ -64,72 +64,93 @@ const generateVerificationCode = () => crypto.randomBytes(64).toString('hex');
 const emailInUseError = () =>
   new ValidationError([{ code: ApiErrorDetailCode.EmailInUse, field: 'email' }]);
 
-export const createUserRepository = ({ User }: Models) => {
-  const requireDocById = async (id: string): Promise<UserDoc> => {
-    const user = await User.findById(id);
+export const createUserRepository = ({ users }: Collections) => {
+  const requireDocById = async (id: string): Promise<UserDocument> => {
+    const user = await users.findOne({ _id: new ObjectId(id) });
     if (!user) {
       throw new NotFoundError();
     }
     return user;
   };
 
+  // Persists the given subset of fields, advancing updatedAt (Mongoose used to
+  // maintain timestamps automatically).
+  const persist = async (user: UserDocument, fields: Partial<UserDocument>): Promise<void> => {
+    user.updatedAt = new Date();
+    await users.updateOne({ _id: user._id }, { $set: { ...fields, updatedAt: user.updatedAt } });
+  };
+
   return {
     async findById(id: string): Promise<UserRecord | null> {
-      const user = await User.findById(id);
+      const user = await users.findOne({ _id: new ObjectId(id) });
       return user && toUserRecord(user);
     },
 
     async findByEmail(email: string): Promise<UserRecord | null> {
-      const user = await User.findOne({ email });
+      const user = await users.findOne({ email: email.toLowerCase() });
       return user && toUserRecord(user);
     },
 
     async findByEmailVerificationCode(emailVerificationCode: string): Promise<UserRecord | null> {
-      const user = await User.findOne({ emailVerificationCode });
+      const user = await users.findOne({ emailVerificationCode });
       return user && toUserRecord(user);
     },
 
     async findByNewEmailVerificationCode(newEmailVerificationCode: string): Promise<UserRecord | null> {
-      const user = await User.findOne({ newEmailVerificationCode });
+      const user = await users.findOne({ newEmailVerificationCode });
       return user && toUserRecord(user);
     },
 
     async findByPasswordResetCode(passwordResetCode: string): Promise<UserRecord | null> {
-      const user = await User.findOne({ passwordResetCode });
+      const user = await users.findOne({ passwordResetCode });
       return user && toUserRecord(user);
     },
 
     async create(input: UserCreateInput): Promise<UserRecord> {
+      const email = input.email.toLowerCase();
+
       // Enforce email uniqueness manually; the unique index remains as a
       // backstop against the read-then-write race below.
-      const existing = await User.findOne({ email: input.email }).select({ _id: 1 });
+      const existing = await users.findOne({ email }, { projection: { _id: 1 } });
       if (existing) {
         throw emailInUseError();
       }
 
-      const user = new User();
-      user.email = input.email;
-      if (input.password !== undefined) {
-        user.password = input.password;
+      // Allow `null` to be set explicitly to create an OAuth-only account
+      // without a local password. A real password is hashed before saving
+      // (replacing the User pre-save hook); null/omitted is stored as null.
+      let password: string | null = null;
+      if (input.password) {
+        password = await hashPassword(input.password);
       }
-      // remaining settings will be set by Mongoose default
-      user.settings = new UserSettings({ locale: input.locale });
-      if (input.googleId !== undefined) {
-        user.googleId = input.googleId;
-      }
-      if (input.emailVerificationCode !== undefined) {
-        // setting emailVerificationCode to '' will mark the user as email verified
-        user.emailVerificationCode = input.emailVerificationCode;
-      }
-      // Track when the initial verification email is sent so resend can enforce a cooldown
-      if (user.emailVerificationCode !== '') {
-        user.emailVerificationCodeLastSentAt = new Date();
-      }
-      if (input.isAdmin) {
-        user.isAdmin = true;
-      }
+
+      // An empty verification code marks the account as already verified.
+      const emailVerificationCode = input.emailVerificationCode ?? generateVerificationCode();
+      const now = new Date();
+
+      const user: UserDocument = {
+        _id: new ObjectId(),
+        email,
+        isAdmin: Boolean(input.isAdmin),
+        password,
+        googleId: input.googleId ?? null,
+        emailVerificationCode,
+        emailVerificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        // Track when the initial verification email is sent so resend can enforce a cooldown.
+        emailVerificationCodeLastSentAt: emailVerificationCode !== '' ? now : new Date(0),
+        newEmail: null,
+        newEmailVerificationCode: '',
+        newEmailVerificationExpires: new Date(0),
+        oldEmails: [],
+        passwordResetCode: '',
+        passwordResetExpires: new Date(0),
+        settings: buildDefaultUserSettings(input.locale),
+        createdAt: now,
+        updatedAt: now,
+      };
+
       try {
-        await user.save();
+        await users.insertOne(user);
       }
       catch (error) {
         if (isDuplicateKeyError(error)) {
@@ -145,7 +166,7 @@ export const createUserRepository = ({ User }: Models) => {
      * Resolves false for users without a local password.
      */
     async verifyPassword(userId: string, password: string): Promise<boolean> {
-      const user = await User.findById(userId);
+      const user = await users.findOne({ _id: new ObjectId(userId) });
       const userPassword = user?.password ?? '';
       if (!userPassword) {
         return false;
@@ -164,15 +185,15 @@ export const createUserRepository = ({ User }: Models) => {
 
     async setPassword(userId: string, newPassword: string): Promise<void> {
       const user = await requireDocById(userId);
-      user.password = newPassword;
-      await user.save();
+      user.password = await hashPassword(newPassword);
+      await persist(user, { password: user.password });
     },
 
     /** Grants or revokes admin privileges for a user. */
     async setAdmin(userId: string, isAdmin: boolean): Promise<UserRecord> {
       const user = await requireDocById(userId);
       user.isAdmin = isAdmin;
-      await user.save();
+      await persist(user, { isAdmin: user.isAdmin });
       return toUserRecord(user);
     },
 
@@ -180,17 +201,21 @@ export const createUserRepository = ({ User }: Models) => {
       const user = await requireDocById(userId);
       user.passwordResetCode = generateVerificationCode();
       user.passwordResetExpires = new Date(Date.now() + (60 * 60 * 1000)); // in 1 hour
-      await user.save();
+      await persist(user, { passwordResetCode: user.passwordResetCode, passwordResetExpires: user.passwordResetExpires });
       return toUserRecord(user);
     },
 
     /** Sets the new password and clears the password reset code in one save. */
     async completePasswordReset(userId: string, newPassword: string): Promise<UserRecord> {
       const user = await requireDocById(userId);
-      user.password = newPassword;
+      user.password = await hashPassword(newPassword);
       user.passwordResetCode = '';
       user.passwordResetExpires = new Date(0);
-      await user.save();
+      await persist(user, {
+        password: user.password,
+        passwordResetCode: user.passwordResetCode,
+        passwordResetExpires: user.passwordResetExpires,
+      });
       return toUserRecord(user);
     },
 
@@ -199,7 +224,7 @@ export const createUserRepository = ({ User }: Models) => {
       const user = await requireDocById(userId);
       user.emailVerificationCode = '';
       user.emailVerificationExpires = new Date(0);
-      await user.save();
+      await persist(user, { emailVerificationCode: user.emailVerificationCode, emailVerificationExpires: user.emailVerificationExpires });
       return toUserRecord(user);
     },
 
@@ -208,10 +233,14 @@ export const createUserRepository = ({ User }: Models) => {
       // Allow any user to request to change their email address to any
       // other email address -- if they don't own that other email address,
       // they simply won't be able to take control of it.
-      user.newEmail = newEmail;
+      user.newEmail = newEmail.toLowerCase();
       user.newEmailVerificationCode = generateVerificationCode();
       user.newEmailVerificationExpires = new Date(Date.now() + (60 * 60 * 1000)); // in 1 hour
-      await user.save();
+      await persist(user, {
+        newEmail: user.newEmail,
+        newEmailVerificationCode: user.newEmailVerificationCode,
+        newEmailVerificationExpires: user.newEmailVerificationExpires,
+      });
       return toUserRecord(user);
     },
 
@@ -220,7 +249,11 @@ export const createUserRepository = ({ User }: Models) => {
       user.newEmail = null;
       user.newEmailVerificationCode = '';
       user.newEmailVerificationExpires = new Date(0);
-      await user.save();
+      await persist(user, {
+        newEmail: user.newEmail,
+        newEmailVerificationCode: user.newEmailVerificationCode,
+        newEmailVerificationExpires: user.newEmailVerificationExpires,
+      });
     },
 
     /**
@@ -235,7 +268,13 @@ export const createUserRepository = ({ User }: Models) => {
       user.newEmailVerificationCode = '';
       user.newEmailVerificationExpires = new Date(0);
       try {
-        await user.save();
+        await persist(user, {
+          oldEmails: user.oldEmails,
+          email: user.email,
+          newEmail: user.newEmail,
+          newEmailVerificationCode: user.newEmailVerificationCode,
+          newEmailVerificationExpires: user.newEmailVerificationExpires,
+        });
       }
       catch (error) {
         // The route checks for an existing user before completing, but a
@@ -254,21 +293,25 @@ export const createUserRepository = ({ User }: Models) => {
       user.emailVerificationCode = generateVerificationCode();
       user.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
       user.emailVerificationCodeLastSentAt = new Date();
-      await user.save();
+      await persist(user, {
+        emailVerificationCode: user.emailVerificationCode,
+        emailVerificationExpires: user.emailVerificationExpires,
+        emailVerificationCodeLastSentAt: user.emailVerificationCodeLastSentAt,
+      });
       return toUserRecord(user);
     },
 
     async linkGoogleAccount(userId: string, googleId: string): Promise<void> {
       const user = await requireDocById(userId);
       user.googleId = googleId;
-      await user.save();
+      await persist(user, { googleId: user.googleId });
     },
 
     async updateSettings(userId: string, patch: Partial<UserSettingsRecord>): Promise<UserSettingsRecord> {
       const set: Record<string, string | number> = {};
       for (const key of USER_SETTINGS_KEYS) {
         if (typeof patch[key] !== 'undefined') {
-          set[`settings.${key}`] = patch[key];
+          set[`settings.${key}`] = patch[key] as string | number;
         }
       }
 
@@ -278,26 +321,24 @@ export const createUserRepository = ({ User }: Models) => {
         return toUserSettingsRecord(user.settings);
       }
 
-      // Perform an atomic update so we don't trigger full-document
-      // validation or `pre('save')` hooks that touch unrelated fields.
       // Values are already validated by zod in the route handler.
-      await User.updateOne({ _id: userId }, { $set: set }).exec();
+      await users.updateOne({ _id: new ObjectId(userId) }, { $set: { ...set, updatedAt: new Date() } });
       const updated = await requireDocById(userId);
       return toUserSettingsRecord(updated.settings);
     },
 
     async deleteById(id: string): Promise<boolean> {
-      const result = await User.deleteOne({ _id: id });
+      const result = await users.deleteOne({ _id: new ObjectId(id) });
       return result.deletedCount > 0;
     },
 
     async countCreatedBetween(start: Date, end: Date): Promise<number> {
-      return User.countDocuments({
+      return users.countDocuments({
         createdAt: {
           $gte: start,
           $lte: end,
         },
-      }).exec();
+      });
     },
 
     async listAdminUsers(query: AdminUserListQuery): Promise<{ users: AdminUserListItem[]; total: number }> {
@@ -313,8 +354,8 @@ export const createUserRepository = ({ User }: Models) => {
         [query.sortOn]: query.sortDirection,
       };
 
-      const users = await User
-        .aggregate([
+      const results = await users
+        .aggregate<AdminUserListItem & { id: ObjectId }>([
           { $match: filterQuery },
           { $sort: sortQuery },
           { $skip: query.offset },
@@ -336,13 +377,14 @@ export const createUserRepository = ({ User }: Models) => {
               passwordResetExpires: 0,
             },
           },
-        ]);
+        ])
+        .toArray();
 
       // Count the total number of results for all applied filters
-      const total = await User.countDocuments(filterQuery);
+      const total = await users.countDocuments(filterQuery);
 
       return {
-        users: users.map((user) => ({ ...user, id: String(user.id) })),
+        users: results.map((user) => ({ ...user, id: String(user.id) })),
         total,
       };
     },
@@ -352,10 +394,7 @@ export const createUserRepository = ({ User }: Models) => {
      * endpoint has always responded with.
      */
     async getAdminUserSummary(email: string): Promise<{ _id: string; email: string } | null> {
-      const user = await User
-        .findOne({ email })
-        .select({ email: 1 })
-        .exec();
+      const user = await users.findOne({ email: email.toLowerCase() }, { projection: { email: 1 } });
       if (!user) {
         return null;
       }

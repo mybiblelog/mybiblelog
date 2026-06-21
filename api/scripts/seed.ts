@@ -1,50 +1,49 @@
 /* eslint-disable no-console */
 
-import mongoose from 'mongoose';
-import useMongooseModels, { closeConnection } from '../mongoose/useMongooseModels';
+import useCollections, { closeConnection } from '../mongo/useCollections';
+import useRepositories from '../repositories/useRepositories';
 
 // Main
 const main = async (): Promise<void> => {
   const {
-    DailyReminder,
-    Email,
-    LogEntry,
-    PassageNote,
-    PassageNoteTag,
-    User,
-    // UserSettings, // Embedded in "User",
-    Feedback,
-    Report,
-  } = await useMongooseModels();
+    dailyReminders,
+    emails,
+    logEntries,
+    passageNotes,
+    passageNoteTags,
+    users,
+    feedback,
+  } = await useCollections();
 
-  // delete all documents
-  await DailyReminder.deleteMany({});
-  await Email.deleteMany({});
-  await LogEntry.deleteMany({});
-  await PassageNote.deleteMany({});
-  await PassageNoteTag.deleteMany({});
-  await User.deleteMany({});
-  await Feedback.deleteMany({});
-  await Report.deleteMany({});
+  // Delete all documents. Wholesale collection wipes have no repository
+  // equivalent, so this is sanctioned direct collection access for admin scripts.
+  await dailyReminders.deleteMany({});
+  await emails.deleteMany({});
+  await logEntries.deleteMany({});
+  await passageNotes.deleteMany({});
+  await passageNoteTags.deleteMany({});
+  await users.deleteMany({});
+  await feedback.deleteMany({});
 
-  // seed users
-  const adminUser = await new User({
-    _id: new mongoose.Types.ObjectId(),
+  // Seed users through the repository, which handles password hashing, settings
+  // defaults, and email-verification bookkeeping. An empty verification code
+  // marks the account as already verified.
+  const { users: usersRepo } = await useRepositories();
+
+  await usersRepo.create({
     email: 'admin@example.com',
+    password: 'password',
     isAdmin: true,
-    password: 'password',
-    emailVerificationCode: null,
+    locale: 'en',
+    emailVerificationCode: '',
   });
-  await adminUser.save();
 
-  const user = await new User({
-    _id: new mongoose.Types.ObjectId(),
+  await usersRepo.create({
     email: 'user@example.com',
-    isAdmin: false,
     password: 'password',
-    emailVerificationCode: null,
+    locale: 'en',
+    emailVerificationCode: '',
   });
-  await user.save();
 
   // close connection
   await closeConnection();

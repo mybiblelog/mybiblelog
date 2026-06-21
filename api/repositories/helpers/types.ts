@@ -200,3 +200,30 @@ export interface FeedbackCreateInput {
   kind: string;
   message: string;
 }
+
+export type EmailStatus = 'pending' | 'sent' | 'failed' | 'log_only';
+
+export interface EmailRecord {
+  id: string;
+  from: string;
+  to: string;
+  replyTo: string | null;
+  headers: Record<string, string>;
+  subject: string;
+  text: string | null;
+  html: string | null;
+  status: EmailStatus;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface EmailCreateInput {
+  from: string;
+  to: string;
+  replyTo?: string;
+  headers?: Record<string, string>;
+  subject: string;
+  text?: string;
+  html?: string;
+  status: EmailStatus;
+}

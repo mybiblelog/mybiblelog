@@ -53,10 +53,5 @@
     "eslint": "^8.57.1",
     "openai": "^4.54.0",
     "sharp": "^0.34.5"
-  },
-  "overrides": {
-    "mongoose-unique-validator": {
-      "mongoose": "^9.1.6"
-    }
   }
 }

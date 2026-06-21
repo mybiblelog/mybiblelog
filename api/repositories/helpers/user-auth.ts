@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 import config from '../../config';
 import { UserRecord } from './types';
 import { type UserJSON } from '../../validation/schemas/auth';
@@ -8,6 +9,16 @@ import { type UserJSON } from '../../validation/schemas/auth';
  * These replace the instance methods that previously lived on the
  * Mongoose User schema.
  */
+
+const SALT_WORK_FACTOR = 10;
+
+/**
+ * Hashes a plaintext password with bcrypt. The user repository calls this
+ * before persisting a password; it replaces the User schema's pre-save hook.
+ */
+export const hashPassword = (plain: string): Promise<string> => {
+  return bcrypt.hash(plain, SALT_WORK_FACTOR);
+};
 
 // JWT lifetime; the auth cookie max age (authCurrentUser.ts) is derived from
 // this so the cookie and the token it carries expire together.

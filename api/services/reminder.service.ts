@@ -1,6 +1,7 @@
 import config from '../config';
-import { Bible } from '@mybiblelog/shared';
-import useMongooseModels from '../mongoose/useMongooseModels';
+import { Bible, LocaleCode } from '@mybiblelog/shared';
+import useRepositories from '../repositories/useRepositories';
+import { DailyReminderRecord, LogEntryRecord, UserRecord } from '../repositories/helpers/types';
 import renderDailyReminderEmail from './email/email-templates/daily-reminder';
 import { EmailService } from './email/email-service';
 
@@ -21,34 +22,27 @@ const buildDailyReminderTrackedLink = ({ publicToken, to }: { publicToken: strin
 };
 
 const init = async ({ emailService }: { emailService: EmailService }) => {
-  const { DailyReminder, User, LogEntry } = await useMongooseModels();
+  const { dailyReminders, users, logEntries } = await useRepositories();
 
-  const getRecentLogEntries = async (user) => {
+  const getRecentLogEntries = async (user: UserRecord) => {
     const { locale } = user.settings;
 
-    const recentLogEntries = await LogEntry.aggregate([
-      // log entries must belong to current user
-      { $match: { owner: user._id } },
-      // sort by most recent date first
-      { $sort: { date: -1 } },
-      // limit to 10, max
-      { $limit: 10 },
-    ]);
+    const recentLogEntries = await logEntries.listRecentByOwner(user.id, 10);
 
     // Add human-readable 'displayDate' and 'passage'
     const dateFormatOptions: Intl.DateTimeFormatOptions = { weekday: 'long', month: 'short', day: 'numeric' };
     const dateTimeFormat = new Intl.DateTimeFormat(locale, dateFormatOptions);
-    recentLogEntries.forEach((logEntry) => {
-      const logEntryDate = new Date(logEntry.date);
-      logEntry.displayDate = dateTimeFormat.format(logEntryDate);
-      logEntry.passage = Bible.displayVerseRange(logEntry.startVerseId, logEntry.endVerseId, locale);
-    });
-
-    return recentLogEntries;
+    return recentLogEntries.map((logEntry) => ({
+      ...logEntry,
+      displayDate: dateTimeFormat.format(new Date(logEntry.date)),
+      passage: Bible.displayVerseRange(logEntry.startVerseId, logEntry.endVerseId, locale),
+    }));
   };
 
-  const buildEmail = (user, reminder, recentLogEntries) => {
-    const { locale } = user.settings;
+  type DecoratedLogEntry = LogEntryRecord & { displayDate: string; passage: string };
+
+  const buildEmail = (user: UserRecord, reminder: DailyReminderRecord, recentLogEntries: DecoratedLogEntry[]) => {
+    const locale = user.settings.locale as LocaleCode;
 
     // Get server timezone offset in milliseconds
     // This allows a localhost server running in a non-UTC timezone to act as if it is
@@ -136,26 +130,26 @@ const init = async ({ emailService }: { emailService: EmailService }) => {
     };
   };
 
-  const sendReminder = async (reminder) => {
+  const sendReminder = async (reminder: DailyReminderRecord) => {
     const engagementCutoffMs = Date.now() - TIME_BEFORE_DISABLING_DAILY_REMINDER_EMAIL_MS;
 
-    if (!reminder.lastEmailEngagementAt) {
-      // Backward-compatibility for reminders that existed before engagement tracking
-      reminder.lastEmailEngagementAt = new Date();
-    }
-    else if (reminder.lastEmailEngagementAt.getTime() < engagementCutoffMs) {
-      reminder.active = false;
-      await reminder.save();
+    // Reminders created before engagement tracking have no lastEmailEngagementAt;
+    // treat them as engaged (advanceSchedule seeds the field when it saves).
+    if (reminder.lastEmailEngagementAt && reminder.lastEmailEngagementAt.getTime() < engagementCutoffMs) {
+      await dailyReminders.deactivate(reminder.id);
       return;
     }
 
-    const user = await User.findOne({ _id: reminder.owner });
+    const user = await users.findById(reminder.ownerId);
+    if (!user) {
+      return;
+    }
     const recentLogEntries = await getRecentLogEntries(user);
     const email = buildEmail(user, reminder, recentLogEntries);
 
     // Update nextOccurrence before sending email to avoid duplicate emails
-    // (trigger pre-save hook to re-calculate nextOccurrence)
-    await reminder.save();
+    // (the repository saves the document, triggering the pre-save hook).
+    await dailyReminders.advanceSchedule(reminder.id);
 
     // Send email after database is updated
     await emailService.send(email);
@@ -169,12 +163,7 @@ const init = async ({ emailService }: { emailService: EmailService }) => {
     const utcNow = new Date().valueOf() + serverTimezoneOffset;
 
     // Find all active reminders whose nextOccurrence has been reached
-    const remindersToTrigger = await DailyReminder.find({
-      nextOccurrence: {
-        $lte: utcNow,
-      },
-      active: true,
-    });
+    const remindersToTrigger = await dailyReminders.findDue(utcNow);
 
     for (const reminder of remindersToTrigger) {
       await sendReminder(reminder);

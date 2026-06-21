@@ -1,4 +1,3 @@
-import swaggerJSDoc from 'swagger-jsdoc';
 import { generateOpenApiPaths, generateOpenApiComponents } from '../http/openapi/generate';
 import { documentedRoutes } from '../http/routes';
 
@@ -79,34 +78,15 @@ const swaggerDefinition = {
   ],
 };
 
-// Options for the swagger docs
-// Paths are relative to the api directory (where the server runs from)
-const options = {
-  swaggerDefinition,
-  // Paths to files containing OpenAPI definitions
-  apis: [
-    './mongoose/schemas/*.ts',
-  ],
-};
-
-// Initialize swagger-jsdoc for the routers still using hand-written JSDoc.
-const swaggerSpec = swaggerJSDoc(options) as Record<string, any>;
-
-// Overlay the paths generated from schema-driven route tables. These take
-// precedence over any JSDoc for the same path (there should be none, since
-// migrated/documented routers have their JSDoc removed).
-const generated = generateOpenApiPaths(documentedRoutes);
-swaggerSpec.paths = { ...swaggerSpec.paths, ...generated.paths };
-
-// Merge in the shared component schemas (ApiErrorResponse & friends, User) that
-// generated and JSDoc paths reference by $ref. These previously lived as JSDoc
-// in the auth router.
-const generatedComponents = generateOpenApiComponents();
-swaggerSpec.components = {
-  ...swaggerSpec.components,
-  schemas: {
-    ...swaggerSpec.components?.schemas,
-    ...generatedComponents.schemas,
+// The spec is assembled entirely programmatically: paths are generated from the
+// schema-driven route tables, and the component schemas (error envelopes plus
+// every entity) are generated from the same zod schemas the handlers use.
+const swaggerSpec = {
+  ...swaggerDefinition,
+  paths: generateOpenApiPaths(documentedRoutes).paths,
+  components: {
+    ...swaggerDefinition.components,
+    schemas: generateOpenApiComponents().schemas,
   },
 };
 

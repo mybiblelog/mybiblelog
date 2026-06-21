@@ -1,26 +1,40 @@
-import { Types } from 'mongoose';
-import type useMongooseModels from '../mongoose/useMongooseModels';
+import { ObjectId } from 'mongodb';
+import dayjs from 'dayjs';
+import { Bible } from '@mybiblelog/shared';
+import type { Collections } from '../mongo/useCollections';
+import type { LogEntryDocument } from '../mongo/documents';
 import { LogEntryInput, LogEntryRecord } from './helpers/types';
 
-type Models = Awaited<ReturnType<typeof useMongooseModels>>;
-type LogEntryDoc = ReturnType<Models['LogEntry']['hydrate']>;
+/** Replaces the LogEntry `date` schema validator. */
+const assertValidDate = (date: string): void => {
+  if (!dayjs(date, 'YYYY-MM-DD', true).isValid()) {
+    throw new Error(`${date} is not a valid date string`);
+  }
+};
 
-const toLogEntryRecord = (logEntry: LogEntryDoc): LogEntryRecord => {
+/** Replaces the LogEntry pre-validate hook and verse-existence validators. */
+const assertValidRange = (startVerseId: number, endVerseId: number): void => {
+  if (!Bible.validateRange(startVerseId, endVerseId)) {
+    throw new Error('Invalid Verse Range');
+  }
+};
+
+const toLogEntryRecord = (doc: LogEntryDocument): LogEntryRecord => {
   return {
-    id: logEntry._id.toString(),
-    ownerId: logEntry.owner.toString(),
-    date: logEntry.date,
-    startVerseId: logEntry.startVerseId,
-    endVerseId: logEntry.endVerseId,
-    createdAt: logEntry.createdAt,
-    updatedAt: logEntry.updatedAt,
+    id: doc._id.toString(),
+    ownerId: doc.owner.toString(),
+    date: doc.date,
+    startVerseId: doc.startVerseId,
+    endVerseId: doc.endVerseId,
+    createdAt: doc.createdAt,
+    updatedAt: doc.updatedAt,
   };
 };
 
-export const createLogEntryRepository = ({ LogEntry }: Models) => {
+export const createLogEntryRepository = ({ logEntries }: Collections) => {
   return {
     async listByOwner(ownerId: string, range: { startDate?: string; endDate?: string } = {}): Promise<LogEntryRecord[]> {
-      const filter: Record<string, unknown> = { owner: new Types.ObjectId(ownerId) };
+      const filter: Record<string, unknown> = { owner: new ObjectId(ownerId) };
       if (range.startDate && range.endDate) {
         filter.date = { $gte: range.startDate, $lte: range.endDate };
       }
@@ -30,64 +44,83 @@ export const createLogEntryRepository = ({ LogEntry }: Models) => {
       else if (range.endDate) {
         filter.date = { $lte: range.endDate };
       }
-      const logEntries = await LogEntry.find(filter);
-      return logEntries.map(toLogEntryRecord);
+      const docs = await logEntries.find(filter).toArray();
+      return docs.map(toLogEntryRecord);
+    },
+
+    async listRecentByOwner(ownerId: string, limit = 10): Promise<LogEntryRecord[]> {
+      const docs = await logEntries
+        .find({ owner: new ObjectId(ownerId) })
+        .sort({ date: -1 })
+        .limit(limit)
+        .toArray();
+      return docs.map(toLogEntryRecord);
     },
 
     async findByIdForOwner(ownerId: string, id: string): Promise<LogEntryRecord | null> {
-      const logEntry = await LogEntry.findOne({ owner: new Types.ObjectId(ownerId), _id: id });
-      return logEntry && toLogEntryRecord(logEntry);
+      const doc = await logEntries.findOne({ owner: new ObjectId(ownerId), _id: new ObjectId(id) });
+      return doc && toLogEntryRecord(doc);
     },
 
     async create(ownerId: string, input: LogEntryInput): Promise<LogEntryRecord> {
-      const logEntry = new LogEntry({
-        owner: new Types.ObjectId(ownerId),
+      assertValidDate(input.date);
+      assertValidRange(input.startVerseId, input.endVerseId);
+      const now = new Date();
+      const doc: LogEntryDocument = {
+        _id: new ObjectId(),
+        owner: new ObjectId(ownerId),
         date: input.date,
         startVerseId: input.startVerseId,
         endVerseId: input.endVerseId,
-      });
-      await logEntry.save();
-      return toLogEntryRecord(logEntry);
+        createdAt: now,
+        updatedAt: now,
+      };
+      await logEntries.insertOne(doc);
+      return toLogEntryRecord(doc);
     },
 
     async update(ownerId: string, id: string, patch: Partial<LogEntryInput>): Promise<LogEntryRecord | null> {
-      const logEntry = await LogEntry.findOne({ owner: new Types.ObjectId(ownerId), _id: id });
-      if (!logEntry) {
+      const doc = await logEntries.findOne({ owner: new ObjectId(ownerId), _id: new ObjectId(id) });
+      if (!doc) {
         return null;
       }
 
-      if (patch.date) { logEntry.date = patch.date; }
-      if (patch.startVerseId) { logEntry.startVerseId = patch.startVerseId; }
-      if (patch.endVerseId) { logEntry.endVerseId = patch.endVerseId; }
+      if (patch.date) { assertValidDate(patch.date); doc.date = patch.date; }
+      if (patch.startVerseId) { doc.startVerseId = patch.startVerseId; }
+      if (patch.endVerseId) { doc.endVerseId = patch.endVerseId; }
 
-      await logEntry.save();
-      return toLogEntryRecord(logEntry);
+      assertValidRange(doc.startVerseId, doc.endVerseId);
+      doc.updatedAt = new Date();
+      await logEntries.updateOne(
+        { _id: doc._id },
+        { $set: { date: doc.date, startVerseId: doc.startVerseId, endVerseId: doc.endVerseId, updatedAt: doc.updatedAt } },
+      );
+      return toLogEntryRecord(doc);
     },
 
     async deleteByIdForOwner(ownerId: string, id: string): Promise<number> {
-      const result = await LogEntry.deleteOne({ owner: new Types.ObjectId(ownerId), _id: id });
+      const result = await logEntries.deleteOne({ owner: new ObjectId(ownerId), _id: new ObjectId(id) });
       return result.deletedCount;
     },
 
     async deleteAllByOwner(ownerId: string): Promise<void> {
-      await LogEntry.deleteMany({ owner: new Types.ObjectId(ownerId) });
+      await logEntries.deleteMany({ owner: new ObjectId(ownerId) });
     },
 
     async countByOwner(ownerId: string): Promise<number> {
-      return LogEntry.countDocuments({ owner: new Types.ObjectId(ownerId) });
+      return logEntries.countDocuments({ owner: new ObjectId(ownerId) });
     },
 
     async findLatestEntryDate(ownerId: string): Promise<string | null> {
-      const logEntry = await LogEntry
-        .findOne({ owner: new Types.ObjectId(ownerId) })
-        .sort({ date: -1 })
-        .select({ date: 1 })
-        .exec();
-      return logEntry?.date ?? null;
+      const doc = await logEntries.findOne(
+        { owner: new ObjectId(ownerId) },
+        { sort: { date: -1 }, projection: { date: 1 } },
+      );
+      return doc?.date ?? null;
     },
 
     async countDistinctOwnersOnDate(date: string): Promise<number> {
-      const result = await LogEntry.aggregate([
+      const result = await logEntries.aggregate<{ uniqueOwners: number }>([
         {
           // Match log entries by the exact date string
           $match: { date },
@@ -102,9 +135,9 @@ export const createLogEntryRepository = ({ LogEntry }: Models) => {
           // Count the number of distinct owners
           $count: 'uniqueOwners',
         },
-      ]).exec();
+      ]).toArray();
 
-      return result.length > 0 ? result[0].uniqueOwners : 0;
+      return result.length > 0 ? result[0]!.uniqueOwners : 0;
     },
   };
 };
