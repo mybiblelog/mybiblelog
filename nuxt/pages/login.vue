@@ -18,6 +18,9 @@
         <p>{{ $t('password_reset_link_sent') }}</p>
       </template>
       <template v-else>
+        <div v-if="$route.query.reason === 'session_expired'" class="mbl-notification mbl-notification--warning">
+          {{ $t('session_expired') }}
+        </div>
         <div v-if="errors._form" class="mbl-help mbl-help--danger">
           <div class="mbl-help mbl-help--danger">
             {{ $terr(errors._form) }}
@@ -188,7 +191,8 @@ export default {
     "password_reset_link_sent": "A password reset link has been sent to your email address.",
     "email": "Email",
     "password": "Password",
-    "forgot_your_password": "Forgot your password? Reset it via email."
+    "forgot_your_password": "Forgot your password? Reset it via email.",
+    "session_expired": "Your session has expired. Please sign in again."
   },
   "de": {
     "your_email_address_is_required": "Ihre E-Mail-Adresse ist erforderlich.",
@@ -197,7 +201,8 @@ export default {
     "password_reset_link_sent": "Ein Link zum Zurücksetzen des Passworts wurde an Ihre E-Mail-Adresse gesendet.",
     "email": "E-Mail",
     "password": "Passwort",
-    "forgot_your_password": "Passwort vergessen? Setzen Sie es per E-Mail zurück."
+    "forgot_your_password": "Passwort vergessen? Setzen Sie es per E-Mail zurück.",
+    "session_expired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."
   },
   "es": {
     "your_email_address_is_required": "Su dirección de correo electrónico es obligatoria.",
@@ -206,7 +211,8 @@ export default {
     "password_reset_link_sent": "Se ha enviado un enlace de restablecimiento de contraseña a su dirección de correo electrónico.",
     "email": "Correo electrónico",
     "password": "Contraseña",
-    "forgot_your_password": "¿Olvidaste tu contraseña? Restablézcalo por correo electrónico."
+    "forgot_your_password": "¿Olvidaste tu contraseña? Restablézcalo por correo electrónico.",
+    "session_expired": "Tu sesión ha expirado. Por favor, inicia sesión de nuevo."
   },
   "fr": {
     "your_email_address_is_required": "Votre adresse e-mail est requise.",
@@ -215,7 +221,8 @@ export default {
     "password_reset_link_sent": "Un lien de réinitialisation de mot de passe a été envoyé à votre adresse e-mail.",
     "email": "Email",
     "password": "Mot de passe",
-    "forgot_your_password": "Mot de passe oublié ? Réinitialisez-le via e-mail."
+    "forgot_your_password": "Mot de passe oublié ? Réinitialisez-le via e-mail.",
+    "session_expired": "Votre session a expiré. Veuillez vous reconnecter."
   },
   "ko": {
     "your_email_address_is_required": "이메일 주소를 입력해 주세요.",
@@ -224,7 +231,8 @@ export default {
     "password_reset_link_sent": "암호 재설정 링크가 이메일 주소로 발송되었습니다.",
     "email": "이메일",
     "password": "비밀번호",
-    "forgot_your_password": "비밀번호를 잊으셨나요? 이메일을 통해 재설정해보세요."
+    "forgot_your_password": "비밀번호를 잊으셨나요? 이메일을 통해 재설정해보세요.",
+    "session_expired": "세션이 만료되었습니다. 다시 로그인해 주세요."
   },
   "pt": {
     "your_email_address_is_required": "Seu endereço de e-mail é obrigatório.",
@@ -233,7 +241,8 @@ export default {
     "password_reset_link_sent": "Um link de redefinição de senha foi enviado para o seu endereço de email.",
     "email": "E-mail",
     "password": "Senha",
-    "forgot_your_password": "Esqueceu sua senha? Redefina-a via email."
+    "forgot_your_password": "Esqueceu sua senha? Redefina-a via email.",
+    "session_expired": "Sua sessão expirou. Por favor, faça login novamente."
   },
   "uk": {
     "your_email_address_is_required": "Ваша електронна адреса обов'язкова.",
@@ -242,7 +251,8 @@ export default {
     "password_reset_link_sent": "Посилання на скидання пароля було надіслано на вашу електронну адресу.",
     "email": "Електронна пошта",
     "password": "Пароль",
-    "forgot_your_password": "Забули пароль? Скиньте його електронною поштою."
+    "forgot_your_password": "Забули пароль? Скиньте його електронною поштою.",
+    "session_expired": "Термін дії вашого сеансу закінчився. Будь ласка, увійдіть знову."
   }
 }
 </i18n>
