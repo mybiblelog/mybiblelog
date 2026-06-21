@@ -267,6 +267,7 @@ export const createUserRepository = ({ users }: Collections) => {
       user.newEmail = null;
       user.newEmailVerificationCode = '';
       user.newEmailVerificationExpires = new Date(0);
+      user.googleId = null;
       try {
         await persist(user, {
           oldEmails: user.oldEmails,
@@ -274,6 +275,7 @@ export const createUserRepository = ({ users }: Collections) => {
           newEmail: user.newEmail,
           newEmailVerificationCode: user.newEmailVerificationCode,
           newEmailVerificationExpires: user.newEmailVerificationExpires,
+          googleId: user.googleId,
         });
       }
       catch (error) {
