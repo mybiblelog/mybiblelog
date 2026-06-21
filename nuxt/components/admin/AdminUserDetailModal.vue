@@ -145,11 +145,13 @@ export default {
     },
     async signInAsUser() {
       const dialogStore = useDialogStore();
+      const authStore = useAuthStore();
       const confirmed = await dialogStore.confirm({ message: 'Are you sure you want to sign in as this user? You will be logged out of your own account.' });
       if (!confirmed) { return; }
       try {
         sessionStorage.clear();
         await this.$http.get(`/api/admin/users/${this.user.email}/login`);
+        await authStore.refreshUser();
         this.$emit('close');
         this.$router.push('/start');
       }
