@@ -448,8 +448,8 @@ export default {
   "en": {
     "start_page": {
       "daily_verse_count_goal": {
-        "title": "Daily Verse Count Goal",
-        "description": "Your Daily Verse Count Goal is the number of verses you want to read each day. My Bible Log will show your progress toward this goal.",
+        "title": "Daily Reading Goal",
+        "description": "How many verses do you want to read each day? My Bible Log will show your progress toward this goal.",
         "i_want_to": "I want to...",
         "read_in_2_years": "Read the Bible in 2 years",
         "read_in_year": "Read the Bible in a year",
@@ -474,8 +474,8 @@ export default {
   "de": {
     "start_page": {
       "daily_verse_count_goal": {
-        "title": "Tägliche Verszahl Ziel",
-        "description": "Ihr Tägliches Verszahl-Ziel ist die Anzahl der Verse, die Sie jeden Tag lesen möchten. My Bible Log zeigt Ihnen Ihren Fortschritt zu diesem Ziel.",
+        "title": "Tägliches Leseziel",
+        "description": "Wie viele Verse möchten Sie jeden Tag lesen? My Bible Log zeigt Ihnen Ihren Fortschritt zu diesem Ziel.",
         "i_want_to": "Ich möchte...",
         "read_in_2_years": "Die Bibel in 2 Jahren lesen",
         "read_in_year": "Die Bibel in einem Jahr lesen",
@@ -500,8 +500,8 @@ export default {
   "es": {
     "start_page": {
       "daily_verse_count_goal": {
-        "title": "Meta de Versículos Diarios",
-        "description": "Su Meta de Versículos Diarios es el número de versículos que desea leer cada día. My Bible Log mostrará su progreso hacia este objetivo.",
+        "title": "Meta Diaria de Lectura",
+        "description": "¿Cuántos versículos quiere leer cada día? My Bible Log mostrará su progreso hacia este objetivo.",
         "i_want_to": "Quiero...",
         "read_in_2_years": "Leer la Biblia en 2 años",
         "read_in_year": "Leer la Biblia en un año",
@@ -526,8 +526,8 @@ export default {
   "fr": {
     "start_page": {
       "daily_verse_count_goal": {
-        "title": "Objectif de nombre de versets quotidiens",
-        "description": "Votre Objectif de nombre de versets quotidiens est le nombre de versets que vous souhaitez lire chaque jour. My Bible Log affichera vos progrès vers cet objectif.",
+        "title": "Objectif de lecture quotidien",
+        "description": "Combien de versets voulez-vous lire chaque jour ? My Bible Log affichera vos progrès vers cet objectif.",
         "i_want_to": "Je veux...",
         "read_in_2_years": "Lire la Bible en 2 ans",
         "read_in_year": "Lire la Bible en un an",
@@ -552,8 +552,8 @@ export default {
   "ko": {
     "start_page": {
       "daily_verse_count_goal": {
-        "title": "일일 구절 목표",
-        "description": "일일 구절 목표는 매일 읽고자 하는 구절 수를 의미합니다. My Bible Log는 해당 목표까지 진도를 표시해줍니다.",
+        "title": "일일 읽기 목표",
+        "description": "매일 몇 구절을 읽고 싶으신가요? My Bible Log는 이 목표를 향한 진도를 표시해줍니다.",
         "i_want_to": "저는…",
         "read_in_2_years": "2년 1독하고 싶어요",
         "read_in_year": "1년 1독하고 싶어요",
@@ -578,8 +578,8 @@ export default {
   "pt": {
     "start_page": {
       "daily_verse_count_goal": {
-        "title": "Meta Diária de Versículos",
-        "description": "Sua Meta Diária de Versículos é o número de versículos que você deseja ler a cada dia. My Bible Log mostrará seu progresso em direção a este objetivo.",
+        "title": "Meta Diária de Leitura",
+        "description": "Quantos versículos você quer ler cada dia? My Bible Log mostrará seu progresso em direção a este objetivo.",
         "i_want_to": "Eu quero...",
         "read_in_2_years": "Ler a Bíblia em 2 anos",
         "read_in_year": "Ler a Bíblia em um ano",
@@ -604,8 +604,8 @@ export default {
   "uk": {
     "start_page": {
       "daily_verse_count_goal": {
-        "title": "Мета щоденної кількості віршів",
-        "description": "Ваша Мета щоденної кількості віршів - це кількість віршів, яку ви хочете читати кожен день. My Bible Log покаже ваш прогрес до цієї мети.",
+        "title": "Щоденна мета читання",
+        "description": "Скільки віршів ви хочете читати кожного дня? My Bible Log покаже ваш прогрес до цієї мети.",
         "i_want_to": "Я хочу...",
         "read_in_2_years": "Прочитати Біблію за 2 роки",
         "read_in_year": "Прочитати Біблію за рік",
