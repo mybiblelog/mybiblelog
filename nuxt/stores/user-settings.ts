@@ -54,6 +54,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
     settings: { ...defaultSettings } as UserSettings,
     // Frontend-only: tracks whether the user dismissed the ReadingTrackerResetCard for this session.
     readingTrackerResetDelayed: false as boolean,
+    isLoaded: false,
   }),
   getters: {
     getReadingUrl: state => (bookIndex: number, chapterIndex: number): string => {
@@ -180,6 +181,8 @@ export const useUserSettingsStore = defineStore('user-settings', {
         passageNoteTagSortOrder: typeof passageNoteTagSortOrder === 'string' ? passageNoteTagSortOrder : undefined,
         locale: typeof locale === 'string' ? locale : undefined,
       });
+
+      this.isLoaded = true;
 
       if (typeof passageNoteTagSortOrder === 'string' && passageNoteTagSortOrder) {
         // Avoid a static import here (passage-note-tags store reads user-settings store).
