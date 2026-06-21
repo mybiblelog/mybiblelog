@@ -87,8 +87,12 @@ export default {
         }
       }
     }
-    catch {
-      // If settings fail to load, show the start page
+    catch (err) {
+      const status = err?.statusCode || err?.status || err?.response?.status;
+      if (status === 401) {
+        return redirect(app.localePath('/login'));
+      }
+      // If settings fail to load for other reasons, show the start page
     }
 
     return {};
