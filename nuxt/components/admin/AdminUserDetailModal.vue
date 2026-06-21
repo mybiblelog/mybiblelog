@@ -12,6 +12,17 @@
         <p>{{ user?.email || '—' }}</p>
       </div>
       <br>
+      <div>
+        <p class="mbl-text-small mbl-text-muted">
+          Login Methods
+        </p>
+        <div class="admin-user-detail__login-methods">
+          <span v-if="user?.googleId" class="admin-user-detail__login-badge">Google</span>
+          <span v-if="user?.hasLocalAccount" class="admin-user-detail__login-badge">Password</span>
+          <span v-if="!user?.googleId && !user?.hasLocalAccount" class="mbl-text-muted">—</span>
+        </div>
+      </div>
+      <br>
       <div v-if="statsLoading" class="admin-user-detail__loading mbl-text-muted mbl-text-small">
         Loading...
       </div>
@@ -200,5 +211,22 @@ export default {
   font-weight: 400;
   opacity: 0.6;
   font-size: 0.875em;
+}
+
+.admin-user-detail__login-methods {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+
+.admin-user-detail__login-badge {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: var(--mbl-surface-2, #e9ecef);
+  color: var(--mbl-text, inherit);
 }
 </style>

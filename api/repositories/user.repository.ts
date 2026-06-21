@@ -363,6 +363,7 @@ export const createUserRepository = ({ users }: Collections) => {
           {
             $addFields: {
               id: '$_id',
+              hasLocalAccount: { $ne: ['$password', null] },
             },
           },
           {

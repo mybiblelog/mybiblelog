@@ -59,6 +59,7 @@ export interface AdminUserListItem {
   id: string;
   email: string;
   isAdmin: boolean;
+  hasLocalAccount: boolean;
   googleId: string | null;
   emailVerificationExpires: Date;
   newEmail?: string | null;
