@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 import useRepositories from '../repositories/useRepositories';
-import { closeConnection } from '../mongoose/useMongooseModels';
+import { closeConnection } from '../mongo/useCollections';
 import dayjs from 'dayjs';
 import { Bible } from '@mybiblelog/shared';
 

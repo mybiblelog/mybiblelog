@@ -1,8 +1,8 @@
 import crypto from 'node:crypto';
-import { Types } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { expect } from 'vitest';
 import useRepositories from '../../repositories/useRepositories';
-import useMongooseModels from '../../mongoose/useMongooseModels';
+import useCollections, { ensureIndexes as ensureCollectionIndexes } from '../../mongo/useCollections';
 import type { UserRecord } from '../../repositories/helpers/types';
 
 /**
@@ -11,7 +11,7 @@ import type { UserRecord } from '../../repositories/helpers/types';
  */
 
 export const getRepos = () => useRepositories();
-export const getModels = () => useMongooseModels();
+export const getCollections = () => useCollections();
 
 /** A unique, lowercase email so the unique index never collides across tests. */
 export const uniqueEmail = (): string =>
@@ -21,19 +21,17 @@ export const sleep = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
- * Ensures Mongoose has built every collection's indexes (unique constraints,
- * the PassageNote `$text` index, etc.). Mongoose builds indexes lazily, so
- * tests that depend on them call this first.
+ * Ensures the application indexes exist (unique constraints, the PassageNote
+ * `$text` index, etc.). Tests that depend on them call this first.
  */
 export const ensureIndexes = async (): Promise<void> => {
-  const models = await getModels();
-  await Promise.all(Object.values(models).map((model) => model.init()));
+  await ensureCollectionIndexes();
 };
 
 /** Empties every collection (indexes are preserved). Used between tests. */
 export const clearCollections = async (): Promise<void> => {
-  const models = await getModels();
-  await Promise.all(Object.values(models).map((model) => model.deleteMany({})));
+  const collections = await getCollections();
+  await Promise.all(Object.values(collections).map((collection) => collection.deleteMany({})));
 };
 
 /** Creates a throwaway verified user and returns the full record (use `.id` as an owner). */
@@ -49,10 +47,10 @@ export const makeOwner = async (overrides: { email?: string } = {}): Promise<Use
 
 const OBJECT_ID_PATTERN = /^[a-f0-9]{24}$/;
 
-/** Asserts a value is a stringified Mongoose/Mongo ObjectId. */
+/** Asserts a value is a stringified Mongo ObjectId. */
 export const expectObjectId = (id: unknown): void => {
   expect(typeof id).toBe('string');
   expect(id as string).toMatch(OBJECT_ID_PATTERN);
   // Round-trips back to an ObjectId whose string form is unchanged.
-  expect(new Types.ObjectId(id as string).toString()).toBe(id);
+  expect(new ObjectId(id as string).toString()).toBe(id);
 };

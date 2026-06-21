@@ -1,6 +1,7 @@
-import { Types } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { Bible } from '@mybiblelog/shared';
-import type useMongooseModels from '../mongoose/useMongooseModels';
+import type { Collections } from '../mongo/useCollections';
+import type { PassageNoteDocument, PassageSubdocument } from '../mongo/documents';
 import {
   PassageNoteInput,
   PassageNoteRecord,
@@ -9,13 +10,12 @@ import {
   PassageRecord,
 } from './helpers/types';
 
-type Models = Awaited<ReturnType<typeof useMongooseModels>>;
-type PassageNoteDoc = ReturnType<Models['PassageNote']['hydrate']>;
+const CONTENT_MAX_LENGTH = 3000; // an average single-spaced page
 
 /**
  * Validates a passage note's final state. Replaces the two PassageNote
  * pre-validate hooks (per-passage verse range, and content-or-passages
- * required).
+ * required) plus the content max-length validator.
  */
 const assertValidPassageNote = (
   passages: { startVerseId: number; endVerseId: number }[],
@@ -26,9 +26,21 @@ const assertValidPassageNote = (
       throw new Error('Invalid Verse Range');
     }
   }
+  if (content.length > CONTENT_MAX_LENGTH) {
+    throw new Error('Content is too long');
+  }
   if (!content.length && !passages.length) {
     throw new Error('One of `passages` or `content` required');
   }
+};
+
+/** Builds passage subdocuments, giving each its own ObjectId (as Mongoose did). */
+const toPassageSubdocuments = (passages: { startVerseId: number; endVerseId: number }[]): PassageSubdocument[] => {
+  return passages.map((passage) => ({
+    _id: new ObjectId(),
+    startVerseId: passage.startVerseId,
+    endVerseId: passage.endVerseId,
+  }));
 };
 
 const toPassageRecords = (passages: { _id?: unknown; startVerseId: number; endVerseId: number }[]): PassageRecord[] => {
@@ -39,24 +51,24 @@ const toPassageRecords = (passages: { _id?: unknown; startVerseId: number; endVe
   }));
 };
 
-const toPassageNoteRecord = (passageNote: PassageNoteDoc): PassageNoteRecord => {
+const toPassageNoteRecord = (doc: PassageNoteDocument): PassageNoteRecord => {
   return {
-    id: passageNote._id.toString(),
-    ownerId: String(passageNote.owner),
-    content: passageNote.content,
-    passages: toPassageRecords(passageNote.passages),
-    tags: passageNote.tags.map(String),
-    createdAt: passageNote.createdAt,
-    updatedAt: passageNote.updatedAt,
+    id: doc._id.toString(),
+    ownerId: doc.owner.toString(),
+    content: doc.content,
+    passages: toPassageRecords(doc.passages),
+    tags: doc.tags.map(String),
+    createdAt: doc.createdAt,
+    updatedAt: doc.updatedAt,
   };
 };
 
 const buildSearchFilter = (ownerId: string, query: PassageNoteSearchQuery): Record<string, unknown> => {
   const filterQuery: Record<string, unknown> = {
-    owner: new Types.ObjectId(ownerId),
+    owner: new ObjectId(ownerId),
   };
 
-  const filterTags = query.filterTags.map((tagId) => new Types.ObjectId(tagId));
+  const filterTags = query.filterTags.map((tagId) => new ObjectId(tagId));
 
   if (filterTags.length || query.filterTagMatching === 'exact') {
     if (query.filterTagMatching === 'any') {
@@ -102,7 +114,7 @@ const buildSearchFilter = (ownerId: string, query: PassageNoteSearchQuery): Reco
   return filterQuery;
 };
 
-export const createPassageNoteRepository = ({ PassageNote }: Models) => {
+export const createPassageNoteRepository = ({ passageNotes }: Collections) => {
   return {
     async search(ownerId: string, query: PassageNoteSearchQuery): Promise<{ results: PassageNoteSearchResultItem[]; total: number }> {
       const filterQuery = buildSearchFilter(ownerId, query);
@@ -111,7 +123,7 @@ export const createPassageNoteRepository = ({ PassageNote }: Models) => {
         [query.sortOn]: query.sortDirection,
       };
 
-      const passageNotes = await PassageNote
+      const docs = await passageNotes
         .aggregate([
           { $match: filterQuery },
           { $sort: sortQuery },
@@ -129,13 +141,17 @@ export const createPassageNoteRepository = ({ PassageNote }: Models) => {
               owner: 0,
             },
           },
-        ]);
+        ])
+        .toArray();
 
-      const total = await PassageNote.countDocuments(filterQuery);
+      const total = await passageNotes.countDocuments(filterQuery);
 
-      const results: PassageNoteSearchResultItem[] = passageNotes.map((item) => ({
+      const results: PassageNoteSearchResultItem[] = docs.map((item) => ({
         ...item,
         id: String(item.id),
+        content: item.content,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
         tags: (item.tags ?? []).map(String),
         passages: toPassageRecords(item.passages ?? []),
       }));
@@ -144,44 +160,55 @@ export const createPassageNoteRepository = ({ PassageNote }: Models) => {
     },
 
     async findByIdForOwner(ownerId: string, id: string): Promise<PassageNoteRecord | null> {
-      const passageNote = await PassageNote.findOne({ owner: new Types.ObjectId(ownerId), _id: id });
-      return passageNote && toPassageNoteRecord(passageNote);
+      const doc = await passageNotes.findOne({ owner: new ObjectId(ownerId), _id: new ObjectId(id) });
+      return doc && toPassageNoteRecord(doc);
     },
 
     async create(ownerId: string, input: PassageNoteInput): Promise<PassageNoteRecord> {
-      const passageNote = new PassageNote({
-        owner: new Types.ObjectId(ownerId),
-        content: input.content,
-        passages: input.passages,
-        tags: input.tags,
-      });
-      assertValidPassageNote(passageNote.passages, passageNote.content);
-      await passageNote.save();
-      return toPassageNoteRecord(passageNote);
+      const content = (input.content ?? '').trim();
+      const inputPassages = input.passages ?? [];
+      assertValidPassageNote(inputPassages, content);
+
+      const now = new Date();
+      const doc: PassageNoteDocument = {
+        _id: new ObjectId(),
+        owner: new ObjectId(ownerId),
+        content,
+        passages: toPassageSubdocuments(inputPassages),
+        tags: (input.tags ?? []).map((tagId) => new ObjectId(tagId)),
+        createdAt: now,
+        updatedAt: now,
+      };
+      await passageNotes.insertOne(doc);
+      return toPassageNoteRecord(doc);
     },
 
     async update(ownerId: string, id: string, patch: PassageNoteInput): Promise<PassageNoteRecord | null> {
-      const passageNote = await PassageNote.findOne({ owner: new Types.ObjectId(ownerId), _id: id });
-      if (!passageNote) {
+      const doc = await passageNotes.findOne({ owner: new ObjectId(ownerId), _id: new ObjectId(id) });
+      if (!doc) {
         return null;
       }
 
-      if (typeof patch.content === 'string') { passageNote.content = patch.content; }
-      if (patch.passages) { passageNote.set('passages', patch.passages); }
-      if (patch.tags) { passageNote.set('tags', patch.tags); }
+      if (typeof patch.content === 'string') { doc.content = patch.content.trim(); }
+      if (patch.passages) { doc.passages = toPassageSubdocuments(patch.passages); }
+      if (patch.tags) { doc.tags = patch.tags.map((tagId) => new ObjectId(tagId)); }
 
-      assertValidPassageNote(passageNote.passages, passageNote.content);
-      await passageNote.save();
-      return toPassageNoteRecord(passageNote);
+      assertValidPassageNote(doc.passages, doc.content);
+      doc.updatedAt = new Date();
+      await passageNotes.updateOne(
+        { _id: doc._id },
+        { $set: { content: doc.content, passages: doc.passages, tags: doc.tags, updatedAt: doc.updatedAt } },
+      );
+      return toPassageNoteRecord(doc);
     },
 
     async deleteByIdForOwner(ownerId: string, id: string): Promise<number> {
-      const result = await PassageNote.deleteOne({ owner: new Types.ObjectId(ownerId), _id: id });
+      const result = await passageNotes.deleteOne({ owner: new ObjectId(ownerId), _id: new ObjectId(id) });
       return result.deletedCount;
     },
 
     async deleteAllByOwner(ownerId: string): Promise<void> {
-      await PassageNote.deleteMany({ owner: new Types.ObjectId(ownerId) });
+      await passageNotes.deleteMany({ owner: new ObjectId(ownerId) });
     },
 
     /**
@@ -227,10 +254,10 @@ export const createPassageNoteRepository = ({ PassageNote }: Models) => {
         };
       }
 
-      const result = await PassageNote.aggregate([
+      const result = await passageNotes.aggregate<Record<string, number>>([
         {
           $match: {
-            owner: new Types.ObjectId(ownerId),
+            owner: new ObjectId(ownerId),
           },
         },
         {
@@ -239,30 +266,29 @@ export const createPassageNoteRepository = ({ PassageNote }: Models) => {
         {
           $project: projectQuery,
         },
-      ]);
+      ]).toArray();
 
-      return result[0];
+      return result[0] ?? {};
     },
 
     async countByTag(tagId: string): Promise<number> {
-      return PassageNote.countDocuments({ tags: new Types.ObjectId(tagId) });
+      return passageNotes.countDocuments({ tags: new ObjectId(tagId) });
     },
 
     async countByOwner(ownerId: string): Promise<number> {
-      return PassageNote.countDocuments({ owner: new Types.ObjectId(ownerId) });
+      return passageNotes.countDocuments({ owner: new ObjectId(ownerId) });
     },
 
     async findLatestCreatedAt(ownerId: string): Promise<Date | null> {
-      const passageNote = await PassageNote
-        .findOne({ owner: new Types.ObjectId(ownerId) })
-        .sort({ createdAt: -1 })
-        .select({ createdAt: 1 })
-        .exec();
-      return passageNote?.createdAt ?? null;
+      const doc = await passageNotes.findOne(
+        { owner: new ObjectId(ownerId) },
+        { sort: { createdAt: -1 }, projection: { createdAt: 1 } },
+      );
+      return doc?.createdAt ?? null;
     },
 
     async countDistinctOwnersCreatedBetween(start: Date, end: Date): Promise<number> {
-      const result = await PassageNote.aggregate([
+      const result = await passageNotes.aggregate<{ uniqueOwners: number }>([
         {
           // Filter notes by the createdAt date range
           $match: {
@@ -279,9 +305,9 @@ export const createPassageNoteRepository = ({ PassageNote }: Models) => {
           // Count the number of distinct owners
           $count: 'uniqueOwners',
         },
-      ]).exec();
+      ]).toArray();
 
-      return result.length > 0 ? result[0].uniqueOwners : 0;
+      return result.length > 0 ? result[0]!.uniqueOwners : 0;
     },
   };
 };

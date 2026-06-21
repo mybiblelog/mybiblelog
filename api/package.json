@@ -39,8 +39,7 @@
     "form-data": "^4.0.4",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^9.0.0",
-    "mongoose-unique-validator": "^5.0.2",
+    "mongodb": "^7.2.0",
     "morgan": "^1.10.0",
     "resend": "^6.8.0",
     "supertest": "^7.1.4",
@@ -66,10 +65,5 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3"
-  },
-  "overrides": {
-    "mongoose-unique-validator": {
-      "mongoose": "^9.0.0"
-    }
   }
 }

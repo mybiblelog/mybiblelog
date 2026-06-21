@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
+import { ObjectId } from 'mongodb';
 import { getNextOccurrence } from '../../repositories/helpers/reminder-schedule';
-import { getRepos, getModels, clearCollections, makeOwner, expectObjectId } from './helpers';
+import { getRepos, getCollections, clearCollections, makeOwner, expectObjectId } from './helpers';
 
 describe('daily-reminder.repository', () => {
   let ownerId: string;
@@ -28,21 +29,21 @@ describe('daily-reminder.repository', () => {
 
     it('is idempotent (returns the same reminder, never a second document)', async () => {
       const { dailyReminders } = await getRepos();
-      const { DailyReminder } = await getModels();
+      const { dailyReminders: dailyRemindersCollection } = await getCollections();
 
       const first = await dailyReminders.getOrCreateForOwner(ownerId);
       const second = await dailyReminders.getOrCreateForOwner(ownerId);
 
       expect(second.id).toBe(first.id);
-      expect(await DailyReminder.countDocuments({})).toBe(1);
+      expect(await dailyRemindersCollection.countDocuments({})).toBe(1);
     });
 
     it('records createdAt/updatedAt on the underlying document', async () => {
       const { dailyReminders } = await getRepos();
-      const { DailyReminder } = await getModels();
+      const { dailyReminders: dailyRemindersCollection } = await getCollections();
       const reminder = await dailyReminders.getOrCreateForOwner(ownerId);
 
-      const doc = await DailyReminder.findById(reminder.id);
+      const doc = await dailyRemindersCollection.findOne({ _id: new ObjectId(reminder.id) });
       expect(doc?.createdAt).toBeInstanceOf(Date);
       expect(doc?.updatedAt).toBeInstanceOf(Date);
     });
@@ -143,10 +144,10 @@ describe('daily-reminder.repository', () => {
 
   it('deleteAllByOwner removes the owner reminder', async () => {
     const { dailyReminders } = await getRepos();
-    const { DailyReminder } = await getModels();
+    const { dailyReminders: dailyRemindersCollection } = await getCollections();
     await dailyReminders.getOrCreateForOwner(ownerId);
 
     await dailyReminders.deleteAllByOwner(ownerId);
-    expect(await DailyReminder.countDocuments({})).toBe(0);
+    expect(await dailyRemindersCollection.countDocuments({})).toBe(0);
   });
 });

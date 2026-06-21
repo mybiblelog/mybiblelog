@@ -1,37 +1,36 @@
 /* eslint-disable no-console */
 
-import useMongooseModels, { closeConnection } from '../mongoose/useMongooseModels';
+import useCollections, { closeConnection } from '../mongo/useCollections';
 import useRepositories from '../repositories/useRepositories';
 
 // Main
 const main = async (): Promise<void> => {
   const {
-    DailyReminder,
-    Email,
-    LogEntry,
-    PassageNote,
-    PassageNoteTag,
-    User,
-    // UserSettings, // Embedded in "User",
-    Feedback,
-  } = await useMongooseModels();
+    dailyReminders,
+    emails,
+    logEntries,
+    passageNotes,
+    passageNoteTags,
+    users,
+    feedback,
+  } = await useCollections();
 
   // Delete all documents. Wholesale collection wipes have no repository
-  // equivalent, so this is sanctioned direct model access for admin scripts.
-  await DailyReminder.deleteMany({});
-  await Email.deleteMany({});
-  await LogEntry.deleteMany({});
-  await PassageNote.deleteMany({});
-  await PassageNoteTag.deleteMany({});
-  await User.deleteMany({});
-  await Feedback.deleteMany({});
+  // equivalent, so this is sanctioned direct collection access for admin scripts.
+  await dailyReminders.deleteMany({});
+  await emails.deleteMany({});
+  await logEntries.deleteMany({});
+  await passageNotes.deleteMany({});
+  await passageNoteTags.deleteMany({});
+  await users.deleteMany({});
+  await feedback.deleteMany({});
 
   // Seed users through the repository, which handles password hashing, settings
   // defaults, and email-verification bookkeeping. An empty verification code
   // marks the account as already verified.
-  const { users } = await useRepositories();
+  const { users: usersRepo } = await useRepositories();
 
-  await users.create({
+  await usersRepo.create({
     email: 'admin@example.com',
     password: 'password',
     isAdmin: true,
@@ -39,7 +38,7 @@ const main = async (): Promise<void> => {
     emailVerificationCode: '',
   });
 
-  await users.create({
+  await usersRepo.create({
     email: 'user@example.com',
     password: 'password',
     locale: 'en',

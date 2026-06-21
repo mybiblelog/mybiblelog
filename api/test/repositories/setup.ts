@@ -1,18 +1,17 @@
 import path from 'node:path';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
 import { afterAll } from 'vitest';
 
 /**
  * Repository test setup. Runs (via Vitest `setupFiles`) before any test module
- * imports `config`/`useMongooseModels`, so it can redirect the data layer at a
+ * imports `config`/`useCollections`, so it can redirect the data layer at a
  * dedicated test database. Dev data is therefore never touched and the suite is
  * free to make whole-collection assertions.
  *
- * Important: this file must NOT statically import `config` or
- * `useMongooseModels` — those evaluate `config` (which reads `MONGODB_URI`) at
- * import time, which would happen before the override below. Teardown therefore
- * uses the `mongoose` singleton directly.
+ * Important: this file must NOT statically import `config` or `useCollections`
+ * — those evaluate `config` (which reads `MONGODB_URI`) at import time, which
+ * would happen before the override below. Teardown therefore imports the
+ * connection module lazily, after the override is in place.
  */
 
 // Load the root .env to obtain the base connection string.
@@ -53,8 +52,9 @@ process.env.MONGODB_URI = deriveTestUri(baseUri);
 // Drop the dedicated test database and release the connection after each test
 // file so dev data stays clean and Vitest can exit without open handles.
 afterAll(async () => {
-  if (mongoose.connection.readyState !== 0) {
-    await mongoose.connection.dropDatabase();
-    await mongoose.disconnect();
-  }
+  // Imported lazily so the MONGODB_URI override above is already in place when
+  // `config` is first evaluated.
+  const { dropDatabase, closeConnection } = await import('../../mongo/useCollections');
+  await dropDatabase();
+  await closeConnection();
 });

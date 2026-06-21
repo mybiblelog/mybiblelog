@@ -1,60 +1,96 @@
-import { Types } from 'mongoose';
-import type useMongooseModels from '../mongoose/useMongooseModels';
+import { ObjectId } from 'mongodb';
+import type { Collections } from '../mongo/useCollections';
+import type { PassageNoteTagDocument } from '../mongo/documents';
 import { ApiErrorDetailCode } from '../http/errors/error-codes';
 import { ValidationError } from '../http/errors/validation-errors';
 import { isValidObjectId } from './helpers/ids';
 import { isDuplicateKeyError } from './helpers/duplicate-key-error';
 import { PassageNoteTagInput, PassageNoteTagRecord } from './helpers/types';
 
-type Models = Awaited<ReturnType<typeof useMongooseModels>>;
-type PassageNoteTagDoc = ReturnType<Models['PassageNoteTag']['hydrate']>;
+const HEX_COLOR_PATTERN = /^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/;
+const LABEL_MAX_LENGTH = 32;
+const DESCRIPTION_MAX_LENGTH = 1500;
 
-const toPassageNoteTagRecord = (tag: PassageNoteTagDoc): PassageNoteTagRecord => {
+/**
+ * Validates and normalizes tag fields. Replaces the field-level validators
+ * (required, trim, length, hex color) that lived on the Mongoose schema.
+ */
+const normalizeLabel = (label: string): string => {
+  const trimmed = label.trim();
+  if (trimmed.length < 1 || trimmed.length > LABEL_MAX_LENGTH) {
+    throw new Error('Invalid tag label');
+  }
+  return trimmed;
+};
+
+const validateColor = (color: string): void => {
+  if (!HEX_COLOR_PATTERN.test(color)) {
+    throw new Error(`${color} is not a valid hexadecimal color`);
+  }
+};
+
+const normalizeDescription = (description: string): string => {
+  const trimmed = description.trim();
+  if (trimmed.length > DESCRIPTION_MAX_LENGTH) {
+    throw new Error('Tag description is too long');
+  }
+  return trimmed;
+};
+
+const toPassageNoteTagRecord = (doc: PassageNoteTagDocument): PassageNoteTagRecord => {
   return {
-    id: tag._id.toString(),
-    ownerId: String(tag.owner),
-    label: tag.label,
-    color: tag.color,
-    description: tag.description,
-    noteCount: tag.noteCount ?? undefined,
-    createdAt: tag.createdAt,
-    updatedAt: tag.updatedAt,
+    id: doc._id.toString(),
+    ownerId: doc.owner.toString(),
+    label: doc.label,
+    color: doc.color,
+    description: doc.description,
+    // noteCount is not stored; it is computed and attached per request.
+    noteCount: undefined,
+    createdAt: doc.createdAt,
+    updatedAt: doc.updatedAt,
   };
 };
 
 const labelInUseError = () =>
   new ValidationError([{ field: 'label', code: ApiErrorDetailCode.Unique }]);
 
-export const createPassageNoteTagRepository = ({ PassageNoteTag }: Models) => {
+export const createPassageNoteTagRepository = ({ passageNoteTags }: Collections) => {
   return {
     async listByOwner(ownerId: string): Promise<PassageNoteTagRecord[]> {
-      const tags = await PassageNoteTag.find({ owner: new Types.ObjectId(ownerId) });
-      return tags.map(toPassageNoteTagRecord);
+      const docs = await passageNoteTags.find({ owner: new ObjectId(ownerId) }).toArray();
+      return docs.map(toPassageNoteTagRecord);
     },
 
     async findByIdForOwner(ownerId: string, id: string): Promise<PassageNoteTagRecord | null> {
-      const tag = await PassageNoteTag.findOne({ owner: new Types.ObjectId(ownerId), _id: id });
-      return tag && toPassageNoteTagRecord(tag);
+      const doc = await passageNoteTags.findOne({ owner: new ObjectId(ownerId), _id: new ObjectId(id) });
+      return doc && toPassageNoteTagRecord(doc);
     },
 
     async create(ownerId: string, input: PassageNoteTagInput): Promise<PassageNoteTagRecord> {
-      const owner = new Types.ObjectId(ownerId);
+      const owner = new ObjectId(ownerId);
+      const label = normalizeLabel(input.label ?? '');
+      validateColor(input.color ?? '');
+      const description = normalizeDescription(input.description ?? '');
 
       // Enforce the per-user label uniqueness manually (the unique index
       // remains as a backstop against the read-then-write race below).
-      const existing = await PassageNoteTag.countDocuments({ owner, label: input.label });
+      const existing = await passageNoteTags.countDocuments({ owner, label });
       if (existing > 0) {
         throw labelInUseError();
       }
 
-      const tag = new PassageNoteTag({
+      const now = new Date();
+      const doc: PassageNoteTagDocument = {
+        _id: new ObjectId(),
         owner,
-        label: input.label,
-        color: input.color,
-        description: input.description,
-      });
+        label,
+        color: input.color as string,
+        description,
+        createdAt: now,
+        updatedAt: now,
+      };
       try {
-        await tag.save();
+        await passageNoteTags.insertOne(doc);
       }
       catch (error) {
         if (isDuplicateKeyError(error)) {
@@ -62,30 +98,36 @@ export const createPassageNoteTagRepository = ({ PassageNoteTag }: Models) => {
         }
         throw error;
       }
-      return toPassageNoteTagRecord(tag);
+      return toPassageNoteTagRecord(doc);
     },
 
     async update(ownerId: string, id: string, patch: PassageNoteTagInput): Promise<PassageNoteTagRecord | null> {
-      const owner = new Types.ObjectId(ownerId);
-      const tag = await PassageNoteTag.findOne({ owner, _id: id });
-      if (!tag) {
+      const owner = new ObjectId(ownerId);
+      const doc = await passageNoteTags.findOne({ owner, _id: new ObjectId(id) });
+      if (!doc) {
         return null;
       }
 
-      // Reject a rename that would collide with another tag owned by this user.
-      if (patch.label && patch.label !== tag.label) {
-        const conflict = await PassageNoteTag.countDocuments({ owner, label: patch.label, _id: { $ne: tag._id } });
-        if (conflict > 0) {
-          throw labelInUseError();
+      if (patch.label) {
+        const label = normalizeLabel(patch.label);
+        // Reject a rename that would collide with another tag owned by this user.
+        if (label !== doc.label) {
+          const conflict = await passageNoteTags.countDocuments({ owner, label, _id: { $ne: doc._id } });
+          if (conflict > 0) {
+            throw labelInUseError();
+          }
         }
+        doc.label = label;
       }
+      if (patch.color) { validateColor(patch.color); doc.color = patch.color; }
+      if (patch.description) { doc.description = normalizeDescription(patch.description); }
 
-      if (patch.label) { tag.label = patch.label; }
-      if (patch.color) { tag.color = patch.color; }
-      if (patch.description) { tag.description = patch.description; }
-
+      doc.updatedAt = new Date();
       try {
-        await tag.save();
+        await passageNoteTags.updateOne(
+          { _id: doc._id },
+          { $set: { label: doc.label, color: doc.color, description: doc.description, updatedAt: doc.updatedAt } },
+        );
       }
       catch (error) {
         if (isDuplicateKeyError(error)) {
@@ -93,16 +135,16 @@ export const createPassageNoteTagRepository = ({ PassageNoteTag }: Models) => {
         }
         throw error;
       }
-      return toPassageNoteTagRecord(tag);
+      return toPassageNoteTagRecord(doc);
     },
 
     async deleteByIdForOwner(ownerId: string, id: string): Promise<number> {
-      const result = await PassageNoteTag.deleteOne({ owner: new Types.ObjectId(ownerId), _id: id });
+      const result = await passageNoteTags.deleteOne({ owner: new ObjectId(ownerId), _id: new ObjectId(id) });
       return result.deletedCount;
     },
 
     async deleteAllByOwner(ownerId: string): Promise<void> {
-      await PassageNoteTag.deleteMany({ owner: new Types.ObjectId(ownerId) });
+      await passageNoteTags.deleteMany({ owner: new ObjectId(ownerId) });
     },
 
     /**
@@ -116,7 +158,7 @@ export const createPassageNoteTagRepository = ({ PassageNoteTag }: Models) => {
         if (!isValidObjectId(tagId)) {
           return false;
         }
-        const count = await PassageNoteTag.countDocuments({ _id: tagId, owner: new Types.ObjectId(ownerId) });
+        const count = await passageNoteTags.countDocuments({ _id: new ObjectId(tagId), owner: new ObjectId(ownerId) });
         if (!count) {
           return false;
         }

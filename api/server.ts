@@ -4,6 +4,7 @@ import http from 'node:http';
 import debug from 'debug';
 
 import config from './config';
+import { ensureIndexes } from './mongo/useCollections';
 import useRepositories from './repositories/useRepositories';
 import initReminderService from './services/reminder.service';
 import buildApp from './app';
@@ -61,8 +62,11 @@ const onListening = (server: http.Server) => () => {
 const port = normalizePort(config.apiPort || '8080');
 
 const startServer = async () => {
-  // make sure mongoose is connected
+  // make sure the database connection is established
   await useRepositories();
+  // Build the unique/text indexes the data layer relies on. Mongoose used to
+  // create these automatically on connection; the native driver does not.
+  await ensureIndexes();
   const emailService = await useEmailService();
   await initReminderService({ emailService });
   const app = buildApp();

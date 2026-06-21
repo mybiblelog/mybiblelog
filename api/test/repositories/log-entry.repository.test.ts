@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { Types } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { getRepos, clearCollections, makeOwner, sleep, expectObjectId } from './helpers';
 
 // Genesis 1:1-5 and Genesis 1:6-10 (verse ids encode book/chapter/verse).
@@ -161,6 +161,6 @@ describe('log-entry.repository', () => {
 
   it('treats a random ObjectId as not found', async () => {
     const { logEntries } = await getRepos();
-    expect(await logEntries.findByIdForOwner(ownerId, new Types.ObjectId().toString())).toBeNull();
+    expect(await logEntries.findByIdForOwner(ownerId, new ObjectId().toString())).toBeNull();
   });
 });

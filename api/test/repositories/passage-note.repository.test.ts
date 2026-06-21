@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
-import { Types } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import type { PassageNoteSearchQuery } from '../../repositories/helpers/types';
 import { getRepos, ensureIndexes, clearCollections, makeOwner, sleep, expectObjectId } from './helpers';
 
@@ -105,7 +105,7 @@ describe('passage-note.repository', () => {
       expect(await passageNotes.update(otherOwner, created.id, { content: 'hax' })).toBeNull();
       expect(await passageNotes.findByIdForOwner(otherOwner, created.id)).toBeNull();
       expect((await passageNotes.findByIdForOwner(ownerId, created.id))?.id).toBe(created.id);
-      expect(await passageNotes.findByIdForOwner(ownerId, new Types.ObjectId().toString())).toBeNull();
+      expect(await passageNotes.findByIdForOwner(ownerId, new ObjectId().toString())).toBeNull();
     });
   });
 

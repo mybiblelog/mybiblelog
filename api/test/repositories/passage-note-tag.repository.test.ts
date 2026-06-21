@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
-import { Types } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { ValidationError } from '../../http/errors/validation-errors';
 import { getRepos, ensureIndexes, clearCollections, makeOwner, sleep, expectObjectId } from './helpers';
 
@@ -141,7 +141,7 @@ describe('passage-note-tag.repository', () => {
 
       expect(await passageNoteTags.ownsAll(ownerId, [a.id, b.id])).toBe(true);
       expect(await passageNoteTags.ownsAll(ownerId, [a.id, foreign.id])).toBe(false);
-      expect(await passageNoteTags.ownsAll(ownerId, [a.id, new Types.ObjectId().toString()])).toBe(false);
+      expect(await passageNoteTags.ownsAll(ownerId, [a.id, new ObjectId().toString()])).toBe(false);
       expect(await passageNoteTags.ownsAll(ownerId, ['not-an-object-id'])).toBe(false);
     });
   });

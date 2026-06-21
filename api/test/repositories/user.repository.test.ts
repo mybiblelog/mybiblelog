@@ -1,11 +1,11 @@
 import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
-import { Types } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { ValidationError } from '../../http/errors/validation-errors';
 import { NotFoundError } from '../../http/errors/http-errors';
 import type { UserCreateInput, UserRecord } from '../../repositories/helpers/types';
 import {
   getRepos,
-  getModels,
+  getCollections,
   ensureIndexes,
   clearCollections,
   uniqueEmail,
@@ -96,11 +96,11 @@ describe('user.repository', () => {
 
   describe('password hashing (pre-save hook)', () => {
     it('stores a bcrypt hash rather than the plaintext password', async () => {
-      const { User } = await getModels();
+      const { users } = await getCollections();
 
       const user = await createUser();
 
-      const doc = await User.findById(user.id);
+      const doc = await users.findOne({ _id: new ObjectId(user.id) });
       expect(doc?.password).toBeTruthy();
       expect(doc?.password).not.toBe('password123');
       expect(doc?.password?.startsWith('$2')).toBe(true);
@@ -146,7 +146,7 @@ describe('user.repository', () => {
 
     it('returns null for a missing user', async () => {
       const { users } = await getRepos();
-      expect(await users.findById(new Types.ObjectId().toString())).toBeNull();
+      expect(await users.findById(new ObjectId().toString())).toBeNull();
     });
   });
 
@@ -247,22 +247,22 @@ describe('user.repository', () => {
 
     it('throws NotFoundError when mutating a missing user', async () => {
       const { users } = await getRepos();
-      await expect(users.setPassword(new Types.ObjectId().toString(), 'whatever123')).rejects.toBeInstanceOf(NotFoundError);
+      await expect(users.setPassword(new ObjectId().toString(), 'whatever123')).rejects.toBeInstanceOf(NotFoundError);
     });
   });
 
   describe('updateSettings', () => {
     it('applies a partial patch without touching the password (no pre-save re-hash)', async () => {
       const { users } = await getRepos();
-      const { User } = await getModels();
+      const { users: usersCollection } = await getCollections();
       const created = await createUser();
-      const hashBefore = (await User.findById(created.id))?.password;
+      const hashBefore = (await usersCollection.findOne({ _id: new ObjectId(created.id) }))?.password;
 
       const settings = await users.updateSettings(created.id, { dailyVerseCountGoal: 100 });
 
       expect(settings.dailyVerseCountGoal).toBe(100);
       expect(settings.locale).toBe('en'); // untouched fields preserved
-      const hashAfter = (await User.findById(created.id))?.password;
+      const hashAfter = (await usersCollection.findOne({ _id: new ObjectId(created.id) }))?.password;
       expect(hashAfter).toBe(hashBefore);
     });
 
@@ -282,7 +282,7 @@ describe('user.repository', () => {
 
       expect(await users.deleteById(created.id)).toBe(true);
       expect(await users.findById(created.id)).toBeNull();
-      expect(await users.deleteById(new Types.ObjectId().toString())).toBe(false);
+      expect(await users.deleteById(new ObjectId().toString())).toBe(false);
     });
 
     it('countCreatedBetween counts users in the date range', async () => {

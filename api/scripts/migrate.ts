@@ -3,96 +3,94 @@
 // This is an evergreen migration script, meant to update MongoDB data to the latest schema.
 
 import dayjs from 'dayjs';
-import useMongooseModels, { closeConnection } from '../mongoose/useMongooseModels';
+import { Collection, Document } from 'mongodb';
+import useCollections, { closeConnection } from '../mongo/useCollections';
 
 // Main
 const main = async (): Promise<void> => {
-  const { User, DailyReminder } = await useMongooseModels();
+  const collections = await useCollections();
+  // The migration touches legacy/non-conforming documents, so it works against
+  // the untyped collection shape rather than the current document interfaces.
+  const users = collections.users as unknown as Collection<Document>;
+  const dailyReminders = collections.dailyReminders as unknown as Collection<Document>;
 
   // users without a locale need 'en' locale (original default)
-  const usersWithoutLocale = await User.find({ 'settings.locale': { $exists: false } });
+  const usersWithoutLocale = await users.find({ 'settings.locale': { $exists: false } }).toArray();
   for (const user of usersWithoutLocale) {
     console.log(`Migrating user ${user.email} to 'en' locale...`);
-    user.settings.locale = 'en';
-    await user.save();
+    await users.updateOne({ _id: user._id }, { $set: { 'settings.locale': 'en' } });
   }
 
   // users without a preferred Bible version need 'NASB2020' (original default)
-  const usersWithoutPreferredBibleVersion = await User.find({ 'settings.preferredBibleVersion': { $exists: false } });
+  const usersWithoutPreferredBibleVersion = await users.find({ 'settings.preferredBibleVersion': { $exists: false } }).toArray();
   for (const user of usersWithoutPreferredBibleVersion) {
     console.log(`Migrating user ${user.email} to 'NASB2020' preferred Bible version...`);
-    user.settings.preferredBibleVersion = 'NASB2020';
-    await user.save();
+    await users.updateOne({ _id: user._id }, { $set: { 'settings.preferredBibleVersion': 'NASB2020' } });
   }
 
   // users without a start page need 'today' start page (original behavior)
-  const usersWithoutStartPage = await User.find({ 'settings.startPage': { $exists: false } });
+  const usersWithoutStartPage = await users.find({ 'settings.startPage': { $exists: false } }).toArray();
   for (const user of usersWithoutStartPage) {
     console.log(`Migrating user ${user.email} to 'today' start page...`);
-    user.settings.startPage = 'today';
-    await user.save();
+    await users.updateOne({ _id: user._id }, { $set: { 'settings.startPage': 'today' } });
   }
 
   // users with invalid lookBackDate need to have the format fixed
-  const usersWithInvalidLookBackDate = await User.find({ 'settings.lookBackDate': { $not: /^\d\d\d\d-\d\d-\d\d$/ } });
+  const usersWithInvalidLookBackDate = await users.find({ 'settings.lookBackDate': { $not: /^\d\d\d\d-\d\d-\d\d$/ } }).toArray();
   for (const user of usersWithInvalidLookBackDate) {
     console.log(`Migrating user ${user.email} to valid lookBackDate format...`);
-    const justDate = user.settings.lookBackDate.split('T')[0];
-    if (justDate && dayjs(justDate, 'YYYY-MM-DD', true).isValid()) {
-      user.settings.lookBackDate = justDate;
-    }
-    else {
-      user.settings.lookBackDate = dayjs().format('YYYY-MM-DD');
-    }
-    await user.save();
+    const justDate = (user.settings?.lookBackDate ?? '').split('T')[0];
+    const fixed = justDate && dayjs(justDate, 'YYYY-MM-DD', true).isValid() ? justDate : dayjs().format('YYYY-MM-DD');
+    await users.updateOne({ _id: user._id }, { $set: { 'settings.lookBackDate': fixed } });
   }
 
   // users with null verification codes or expiration dates need to use empty strings and dates in the past
-  const usersWithNullVerificationCodesOrExpirationDates = await User.find({ $or: [
+  const usersWithNullVerificationCodesOrExpirationDates = await users.find({ $or: [
     { 'emailVerificationCode': null },
     { 'emailVerificationExpires': null },
     { 'newEmailVerificationCode': null },
     { 'newEmailVerificationExpires': null },
     { 'passwordResetCode': null },
     { 'passwordResetExpires': null },
-  ] });
+  ] }).toArray();
   for (const user of usersWithNullVerificationCodesOrExpirationDates) {
     console.log(`User ${user.email} has at least one null verification code or expiration date...`);
+    const set: Record<string, string | Date> = {};
     if (user.emailVerificationCode === null) {
       console.log(`  emailVerificationCode is null, setting to empty string...`);
-      user.emailVerificationCode = '';
+      set.emailVerificationCode = '';
     }
     if (user.emailVerificationExpires === null) {
       console.log(`  emailVerificationExpires is null, setting to date in the past...`);
-      user.emailVerificationExpires = new Date(0);
+      set.emailVerificationExpires = new Date(0);
     }
     if (user.newEmailVerificationCode === null) {
       console.log(`  newEmailVerificationCode is null, setting to empty string...`);
-      user.newEmailVerificationCode = '';
+      set.newEmailVerificationCode = '';
     }
     if (user.newEmailVerificationExpires === null) {
       console.log(`  newEmailVerificationExpires is null, setting to date in the past...`);
-      user.newEmailVerificationExpires = new Date(0);
+      set.newEmailVerificationExpires = new Date(0);
     }
     if (user.passwordResetCode === null) {
       console.log(`  passwordResetCode is null, setting to empty string...`);
-      user.passwordResetCode = '';
+      set.passwordResetCode = '';
     }
     if (user.passwordResetExpires === null) {
       console.log(`  passwordResetExpires is null, setting to date in the past...`);
-      user.passwordResetExpires = new Date(0);
+      set.passwordResetExpires = new Date(0);
     }
-    await user.save();
+    await users.updateOne({ _id: user._id }, { $set: set });
   }
 
   // DailyReminder: rename legacy field unsubscribeCode -> publicToken (run this migration before deploying API code that only queries publicToken)
-  const remindersWithLegacyField = await DailyReminder.countDocuments({ unsubscribeCode: { $exists: true } });
+  const remindersWithLegacyField = await dailyReminders.countDocuments({ unsubscribeCode: { $exists: true } });
   if (remindersWithLegacyField === 0) {
     console.log('DailyReminder unsubscribeCode -> publicToken: already migrated (no legacy field).');
   }
   else {
     console.log(`DailyReminder: renaming unsubscribeCode to publicToken on ${remindersWithLegacyField} document(s)...`);
-    const result = await DailyReminder.collection.updateMany(
+    const result = await dailyReminders.updateMany(
       {},
       { $rename: { unsubscribeCode: 'publicToken' } },
     );

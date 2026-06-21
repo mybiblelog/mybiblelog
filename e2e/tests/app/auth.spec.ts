@@ -2,6 +2,11 @@ import { test as base, expect } from '@playwright/test';
 import { createTestUser, deleteTestUser, login, generateTestEmail, generateRandomString, type TestUser } from '../../helpers/api-client';
 import { env } from '../../helpers/env';
 
+/** The Nuxt runtime config exposed on `window.$nuxt` inside the browser. */
+type NuxtWindow = Window & {
+  $nuxt?: { $config?: { requireEmailVerification?: boolean } };
+};
+
 /**
  * True UI auth flows (registration, login, logout, password reset request).
  *
@@ -39,9 +44,9 @@ test.describe('Registration', () => {
     // verification enabled (e.g. a reused dev server started without
     // REQUIRE_EMAIL_VERIFICATION=false) — otherwise registration cannot
     // auto-login and the test would time out waiting for onboarding.
-    await page.waitForFunction(() => Boolean((window as any).$nuxt?.$config));
+    await page.waitForFunction(() => Boolean((window as NuxtWindow).$nuxt?.$config));
     const requireEmailVerification = await page.evaluate(
-      () => (window as any).$nuxt.$config.requireEmailVerification,
+      () => (window as NuxtWindow).$nuxt?.$config?.requireEmailVerification,
     );
     if (requireEmailVerification) {
       throw new Error(

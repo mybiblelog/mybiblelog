@@ -1,18 +1,18 @@
 /* eslint-disable no-console */
 
-import useMongooseModels, { closeConnection } from '../mongoose/useMongooseModels';
+import useCollections, { closeConnection } from '../mongo/useCollections';
 import deleteAccount from '../http/helpers/deleteAccount';
 
 // Main
 const main = async (): Promise<void> => {
-  const { User } = await useMongooseModels();
+  const { users } = await useCollections();
 
-  const testUsers = await User.find({
+  const testUsers = await users.find({
     email: {
       $regex: '^test_user_.*@example\\.com$',
       $options: 'i',
     },
-  });
+  }).toArray();
 
   console.log(`Found ${testUsers.length} test users.`);
 
