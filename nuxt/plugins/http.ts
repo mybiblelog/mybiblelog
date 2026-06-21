@@ -2,6 +2,7 @@ import type { Plugin } from '@nuxt/types';
 
 import { ApiError } from '@/helpers/api-error';
 import type { ApiErrorPayload } from '@/helpers/api-error';
+import { useAuthStore } from '@/stores/auth';
 
 type ApiErrorEnvelope = {
   error: ApiErrorPayload;
@@ -56,7 +57,11 @@ const plugin: Plugin = (context, inject) => {
       const json = (await response.json()) as T | ApiErrorEnvelope;
 
       if ((json as ApiErrorEnvelope | undefined)?.error) {
-        throw new ApiError((json as ApiErrorEnvelope).error);
+        const errorPayload = (json as ApiErrorEnvelope).error;
+        if (process.client && errorPayload.code === 'unauthenticated' && path !== '/api/auth/logout') {
+          useAuthStore().logout('session_expired');
+        }
+        throw new ApiError(errorPayload);
       }
 
       return json as T;

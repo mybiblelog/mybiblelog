@@ -12,6 +12,8 @@ export type AuthState = {
   user: AuthUser | null;
 };
 
+export type LogoutReason = 'session_expired';
+
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     loggedIn: false,
@@ -42,7 +44,7 @@ export const useAuthStore = defineStore('auth', {
       this.setUser(data?.user ?? null);
     },
 
-    async logout(): Promise<void> {
+    async logout(reason?: LogoutReason): Promise<void> {
       try {
         // Send API request to delete token from HttpOnly cookie
         await this.$http.post('/api/auth/logout');
@@ -59,7 +61,7 @@ export const useAuthStore = defineStore('auth', {
         sessionStorage.clear();
         const locale = this.$i18n.locale;
         const loginPath = locale === defaultLocale ? '/login' : `/${locale}/login`;
-        window.location.href = loginPath;
+        window.location.href = reason ? `${loginPath}?reason=${reason}` : loginPath;
       }
     },
   },

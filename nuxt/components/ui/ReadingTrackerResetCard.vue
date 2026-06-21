@@ -35,6 +35,8 @@ const dialogStore = useDialogStore();
 const saving = ref(false);
 
 const showCard = computed(() =>
+  logEntriesStore.isLoaded &&
+  userSettingsStore.isLoaded &&
   logEntriesStore.isBibleComplete &&
   !logEntriesStore.hasLogEntriesForToday &&
   !userSettingsStore.readingTrackerResetDelayed,

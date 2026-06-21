@@ -80,3 +80,8 @@ export const changeEmailBodySchema = z.object({
 export const resetPasswordInitBodySchema = z.object({
   email: z.string(),
 });
+
+export const setPasswordBodySchema = z.object({
+  password: passwordSchema,
+  confirmPassword: passwordSchema,
+});

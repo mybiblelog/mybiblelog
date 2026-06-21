@@ -10,6 +10,7 @@ import {
   changeEmailBodySchema,
   resetPasswordInitBodySchema,
   resetPasswordBodySchema,
+  setPasswordBodySchema,
   userSchema,
 } from '../../validation/schemas/auth';
 import {
@@ -22,6 +23,7 @@ import {
   verifyEmail,
   resendEmailVerification,
   changePassword,
+  setPassword,
   beginEmailChange,
   getEmailChange,
   getEmailChangeByCode,
@@ -177,6 +179,21 @@ export const authRoutes: RouteDefinition[] = [
       request: { body: changePasswordBodySchema },
       response: {
         description: 'Password changed successfully',
+        schema: z.object({ success: z.boolean() }),
+      },
+      errors: [400],
+    },
+  },
+  {
+    method: 'POST',
+    path: '/auth/set-password',
+    handler: setPassword,
+    docs: {
+      summary: 'Set a password for a Google-only account',
+      tags,
+      request: { body: setPasswordBodySchema },
+      response: {
+        description: 'Password set successfully',
         schema: z.object({ success: z.boolean() }),
       },
       errors: [400],

@@ -15,6 +15,7 @@ import {
   registerBodySchema,
   changePasswordBodySchema,
   resetPasswordBodySchema,
+  setPasswordBodySchema,
 } from '../../validation/schemas/auth';
 import { emailString } from '../../validation/primitives';
 import { LocaleCode } from '@mybiblelog/shared';
@@ -254,6 +255,26 @@ export const changePassword: RouteHandler = async (req, deps) => {
 
   // newPassword is already validated by zod above
   await users.setPassword(currentUser.id, newPassword);
+  return { status: 200, body: { data: { success: true } } };
+};
+
+// POST /auth/set-password - Set a password for a Google-only (no local password) account
+export const setPassword: RouteHandler = async (req, deps) => {
+  await deps.rateLimiter.check(req, { maxRequests: 10, windowMs: 60 * 60 * 1000 });
+
+  const currentUser = await deps.authenticate(req);
+
+  if (currentUser.hasLocalAccount) {
+    throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: null }]);
+  }
+
+  const { body } = validate(req, { body: setPasswordBodySchema });
+
+  if (body.password !== body.confirmPassword) {
+    throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'confirmPassword' }]);
+  }
+
+  await deps.repositories.users.setPassword(currentUser.id, body.password);
   return { status: 200, body: { data: { success: true } } };
 };
 

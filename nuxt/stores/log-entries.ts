@@ -55,6 +55,7 @@ const getBookIndexFromVerseId = (verseId: number): number => {
 export const useLogEntriesStore = defineStore('log-entries', {
   state: () => ({
     logEntries: [] as LogEntry[],
+    isLoaded: false,
   }),
   getters: {
     currentLogEntries(state): LogEntry[] {
@@ -77,6 +78,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
     async loadLogEntries(): Promise<LogEntry[]> {
       const { data } = await this.$http.get<LogEntry[]>('/api/log-entries');
       this.logEntries = Array.isArray(data) ? data : [];
+      this.isLoaded = true;
       return this.logEntries;
     },
 
