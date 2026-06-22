@@ -32,26 +32,7 @@ const envSchema = z.object({
   HELLOAO_API_BASE_URL: z.string().url().default('https://bible.helloao.org/api'),
 });
 
-type Config = {
-  nodeEnv: 'development' | 'production' | 'test';
-  siteUrl: string;
-  apiPort: string;
-  testBypassSecret: string | undefined;
-  jwtSecret: string;
-  requireEmailVerification: boolean;
-  emailSendingDomain: string;
-  emailUnsubscribeAddress: string;
-  resendApiKey: string;
-  mongo: { uri: string };
-  google: { clientId: string; clientSecret: string; redirectUri: string };
-  helloao: { apiBaseUrl: string };
-};
-
-let _config: Config | null = null;
-
-export function getConfig(): Config {
-  if (_config) return _config;
-
+const initConfig = () => {
   const result = envSchema.safeParse(process.env);
   if (!result.success) {
     // process.exit is unavailable on edge runtimes; throw is the universal mechanism.
@@ -59,7 +40,7 @@ export function getConfig(): Config {
     throw new Error(`Invalid environment variables: ${details}`);
   }
 
-  _config = {
+  return {
     nodeEnv: result.data.NODE_ENV,
     siteUrl: result.data.SITE_URL,
     apiPort: result.data.API_PORT || '8080',
@@ -77,7 +58,15 @@ export function getConfig(): Config {
     },
     helloao: { apiBaseUrl: result.data.HELLOAO_API_BASE_URL },
   };
+};
 
+type Config = ReturnType<typeof initConfig>;
+
+let _config: Config | null = null;
+
+export function getConfig(): Config {
+  if (_config) return _config;
+  _config = initConfig();
   return _config;
 }
 
