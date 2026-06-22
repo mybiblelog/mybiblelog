@@ -1,10 +1,9 @@
 import { Resend } from 'resend';
 import { SendMail } from '../email-types';
-import config from '../../../config';
-
-const resend = new Resend(config.resendApiKey);
+import { getConfig } from '../../../config';
 
 const sendEmail: SendMail = async ({ from, to, replyTo, subject, headers = {}, attachments = [], ...rest }) => {
+  const resend = new Resend(getConfig().resendApiKey);
   const { data, error } = await resend.emails.send({
     from,
     to,

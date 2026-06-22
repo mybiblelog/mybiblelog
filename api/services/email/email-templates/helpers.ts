@@ -1,9 +1,7 @@
 import { LocaleCode } from '@shared/dist/i18n';
-import config from '../../../config';
-
-const baseUrl = config.siteUrl;
+import { getConfig } from '../../../config';
 
 export const getLocaleBaseUrl = (locale: LocaleCode) => {
   const localePathSegment = locale === 'en' ? '' : '/' + locale;
-  return baseUrl + localePathSegment;
+  return getConfig().siteUrl + localePathSegment;
 };

@@ -1,27 +1,28 @@
-import config from '../config';
+import { getConfig } from '../config';
 import { Bible, LocaleCode } from '@mybiblelog/shared';
 import useRepositories from '../repositories/useRepositories';
 import { DailyReminderRecord, LogEntryRecord, UserRecord } from '../repositories/helpers/types';
 import renderDailyReminderEmail from './email/email-templates/daily-reminder';
 import { EmailService } from './email/email-service';
 
-const baseUrl = config.siteUrl;
-
 const DAY_MS = 24 * 60 * 60 * 1000;
 const TIME_BEFORE_DISABLING_DAILY_REMINDER_EMAIL_MS = 3 * DAY_MS;
 
-const getLocaleBaseUrl = (locale) => {
-  const localePathSegment = locale === 'en' ? '' : '/' + locale;
-  return baseUrl + localePathSegment;
-};
-
-const buildDailyReminderTrackedLink = ({ publicToken, to }: { publicToken: string; to: string }) => {
-  const trackUrl = new URL(`/api/reminders/daily-reminder/track/${publicToken}`, baseUrl);
-  trackUrl.searchParams.set('to', to);
-  return trackUrl.toString();
-};
-
 const init = async ({ emailService }: { emailService: EmailService }) => {
+  const { siteUrl, emailUnsubscribeAddress, emailSendingDomain } = getConfig();
+  const baseUrl = siteUrl;
+
+  const getLocaleBaseUrl = (locale) => {
+    const localePathSegment = locale === 'en' ? '' : '/' + locale;
+    return baseUrl + localePathSegment;
+  };
+
+  const buildDailyReminderTrackedLink = ({ publicToken, to }: { publicToken: string; to: string }) => {
+    const trackUrl = new URL(`/api/reminders/daily-reminder/track/${publicToken}`, baseUrl);
+    trackUrl.searchParams.set('to', to);
+    return trackUrl.toString();
+  };
+
   const { dailyReminders, users, logEntries } = await useRepositories();
 
   const getRecentLogEntries = async (user: UserRecord) => {
@@ -95,8 +96,8 @@ const init = async ({ emailService }: { emailService: EmailService }) => {
     // Build an unsubscribe email address that includes the reminder public token
     // This can be send to a Cloudflare email worker to unsubscribe the user
     let unsubscribeEmail = '';
-    if (config.emailUnsubscribeAddress) {
-      const [address, domain] = config.emailUnsubscribeAddress.split('@');
+    if (emailUnsubscribeAddress) {
+      const [address, domain] = emailUnsubscribeAddress.split('@');
       unsubscribeEmail = `${address}+${reminder.publicToken}@${domain}`;
     }
 
@@ -118,7 +119,7 @@ const init = async ({ emailService }: { emailService: EmailService }) => {
     }
 
     return {
-      from: `My Bible Log <team@${config.emailSendingDomain}>`,
+      from: `My Bible Log <team@${emailSendingDomain}>`,
       to: user.email,
       headers: {
         // RFC 2369 compliant List-Unsubscribe header

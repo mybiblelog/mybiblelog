@@ -1,4 +1,4 @@
-import config from '../../config';
+import { getConfig } from '../../config';
 import { UpstreamServiceError } from '../../http/errors/upstream-error';
 
 // Bounded in-memory cache of chapter payloads. Published chapter content is
@@ -21,7 +21,7 @@ export const fetchHelloaoChapter = async (
     return chapterCache.get(cacheKey);
   }
 
-  const url = `${config.helloao.apiBaseUrl}/${encodeURIComponent(translationId)}/${encodeURIComponent(usfm)}/${chapter}.json`;
+  const url = `${getConfig().helloao.apiBaseUrl}/${encodeURIComponent(translationId)}/${encodeURIComponent(usfm)}/${chapter}.json`;
 
   let response: Response;
   try {

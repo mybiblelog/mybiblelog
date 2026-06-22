@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import config from '../../config';
+import { getConfig } from '../../config';
 import { UserRecord } from './types';
 import { type UserJSON } from '../../validation/schemas/auth';
 
@@ -25,6 +25,8 @@ export const hashPassword = (plain: string): Promise<string> => {
 export const AUTH_TOKEN_TTL_DAYS = 30;
 
 export const generateUserJWT = (user: Pick<UserRecord, 'id' | 'isAdmin' | 'hasLocalAccount'>): string => {
+  const { jwtSecret, siteUrl } = getConfig();
+  const issuer = new URL(siteUrl).origin;
   const today = new Date();
   const exp = new Date(today);
   exp.setDate(today.getDate() + AUTH_TOKEN_TTL_DAYS);
@@ -34,10 +36,10 @@ export const generateUserJWT = (user: Pick<UserRecord, 'id' | 'isAdmin' | 'hasLo
     hasLocalAccount: user.hasLocalAccount,
     isAdmin: user.isAdmin,
     exp: Math.round(exp.getTime() / 1000),
-  }, config.jwtSecret, {
+  }, jwtSecret, {
     algorithm: 'HS256',
-    issuer: new URL(config.siteUrl).origin,
-    audience: new URL(config.siteUrl).origin,
+    issuer,
+    audience: issuer,
   });
 };
 
