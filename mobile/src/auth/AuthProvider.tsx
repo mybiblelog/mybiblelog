@@ -17,7 +17,8 @@ import {
   saveLastLoggedInEmail,
 } from "./authStorage";
 import { getApiBaseUrl } from "../api/apiBase";
-import { googleIdTokenLogin } from "../api/authApi";
+import type { ApiErrorPayload } from "../api/apiError";
+import { emailPasswordLogin, googleIdTokenLogin } from "../api/authApi";
 import { signOutGoogle } from "./googleSignIn";
 
 type AuthState =
@@ -28,6 +29,10 @@ type AuthState =
 type AuthContextValue = {
   state: AuthState;
   finishGoogleLogin: (idToken: string, locale?: string) => Promise<{ ok: true } | { ok: false }>;
+  loginWithEmailPassword: (
+    email: string,
+    password: string
+  ) => Promise<{ ok: true } | { ok: false; error: ApiErrorPayload }>;
   logout: () => Promise<void>;
 };
 
@@ -106,6 +111,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // returns the token + user, so no extra /auth/user round-trip is needed.
         const result = await googleIdTokenLogin(idToken, locale);
         if (!result) return { ok: false };
+        const session: AuthSession = { token: result.token, user: { email: result.email } };
+        await clearLastLoggedInEmail();
+        await saveAuthSession(session);
+        setState({ status: "authenticated", session });
+        return { ok: true };
+      },
+      loginWithEmailPassword: async (email: string, password: string) => {
+        // Mirrors the Nuxt web flow: POST /auth/login returns the token + user,
+        // so no extra /auth/user round-trip is needed.
+        const result = await emailPasswordLogin(email, password);
+        if (!result.ok) return { ok: false, error: result.error };
         const session: AuthSession = { token: result.token, user: { email: result.email } };
         await clearLastLoggedInEmail();
         await saveAuthSession(session);

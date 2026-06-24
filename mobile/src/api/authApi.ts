@@ -1,4 +1,5 @@
 import { getApiBaseUrl } from "@/src/api/apiBase";
+import { type ApiErrorPayload, parseApiErrorBody } from "@/src/api/apiError";
 
 /**
  * Exchanges a Google `id_token` (obtained natively, see `auth/googleSignIn.ts`)
@@ -43,4 +44,61 @@ export async function googleIdTokenLogin(
   } catch {
     return null;
   }
+}
+
+/**
+ * Exchanges an email + password for a MyBibleLog session via `POST /auth/login`
+ * (the same endpoint the Nuxt web app uses). On success the endpoint returns
+ * `{ data: { token, user } }`; on failure `{ error: { code, errors } }`.
+ *
+ * Unlike `googleIdTokenLogin`, this surfaces the full structured error payload so
+ * the form can show the same top-level and field-level messages as the web app
+ * (e.g. `invalid_login`, `verify_email`, `required`). Network/parse failures map
+ * to a generic `unknown_error` payload.
+ */
+type EmailPasswordLoginResponse = {
+  data?: {
+    token?: string;
+    user?: { email?: string } | null;
+  };
+};
+
+export type EmailPasswordLoginResult =
+  | { ok: true; token: string; email: string }
+  | { ok: false; error: ApiErrorPayload };
+
+export async function emailPasswordLogin(
+  email: string,
+  password: string
+): Promise<EmailPasswordLoginResult> {
+  let res: Response;
+  let body: unknown;
+  try {
+    res = await fetch(`${getApiBaseUrl()}/auth/login`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+    body = await res.json().catch(() => undefined);
+  } catch {
+    return { ok: false, error: { code: "unknown_error", errors: [] } };
+  }
+
+  if (!res.ok) {
+    return { ok: false, error: parseApiErrorBody(body) };
+  }
+
+  const json = body as EmailPasswordLoginResponse | undefined;
+  const token = json?.data?.token;
+  const resolvedEmail = json?.data?.user?.email;
+  if (typeof token !== "string" || token.length === 0) {
+    return { ok: false, error: { code: "unknown_error", errors: [] } };
+  }
+  if (typeof resolvedEmail !== "string" || resolvedEmail.length === 0) {
+    return { ok: false, error: { code: "unknown_error", errors: [] } };
+  }
+  return { ok: true, token, email: resolvedEmail };
 }
