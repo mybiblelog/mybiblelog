@@ -1,0 +1,16 @@
+.mbl-card {
+  background-color: var(--mbl-bg);
+  border-radius: var(--mbl-radius-card);
+  box-shadow: var(--mbl-shadow);
+  color: var(--mbl-text);
+  max-width: 100%;
+  position: relative;
+}
+
+.mbl-card__content {
+  padding: 1.5rem;
+}
+
+.mbl-card__content .mbl-field:last-child {
+  margin-bottom: 0;
+}

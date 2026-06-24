@@ -1,0 +1,40 @@
+.mbl-table-wrap {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+}
+
+.mbl-table {
+  background-color: transparent;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: var(--mbl-text);
+  width: 100%;
+}
+
+.mbl-table td,
+.mbl-table th {
+  border: 1px solid var(--mbl-border);
+  border-width: 0 0 1px;
+  padding: 0.5em 0.75em;
+  vertical-align: top;
+}
+
+.mbl-table thead td,
+.mbl-table thead th {
+  border-width: 0 0 2px;
+  color: var(--mbl-text-muted);
+}
+
+.mbl-table--striped tbody tr:nth-child(even) {
+  background-color: var(--mbl-bg-subtle);
+}
+
+.mbl-table--narrow td,
+.mbl-table--narrow th {
+  padding: 0.25em 0.5em;
+}
+
+.mbl-table--full {
+  width: 100%;
+}

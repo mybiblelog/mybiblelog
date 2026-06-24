@@ -10,6 +10,7 @@
   "workspaces": [
     "api",
     "nuxt",
+    "nuxt4",
     "shared"
   ],
   "engines": {
@@ -19,10 +20,13 @@
     "dev": "npm-run-all --parallel dev:api dev:nuxt",
     "dev:api": "npm run -w api dev:ts",
     "dev:nuxt": "npm run -w nuxt dev",
+    "dev:nuxt4": "npm run -w nuxt4 dev",
     "start": "npm-run-all --parallel start:api start:nuxt",
     "start:api": "npm run -w api start",
     "start:nuxt": "npm run -w nuxt start",
+    "start:nuxt4": "npm run -w nuxt4 start",
     "build": "npm run build -w api && npm run build -w nuxt",
+    "build:nuxt4": "npm run -w nuxt4 build",
     "heroku-prebuild": "npm install --include=dev && npm install --include=dev -w shared && npm install -w nuxt && npm install -w api",
     "heroku-postbuild": "npm run build",
     "clean": "rm -rf node_modules && npm run clean -w api && npm run clean -w nuxt && npm run clean -w shared",

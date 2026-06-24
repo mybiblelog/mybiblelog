@@ -7,7 +7,9 @@ dotenv.config({
   quiet: true,
 });
 
-const siteUrl = process.env.TEST_SITE_URL || 'http://localhost:3000';
+const isNuxt4 = process.env.E2E_TARGET === 'nuxt4';
+const defaultSitePort = isNuxt4 ? 'http://localhost:3001' : 'http://localhost:3000';
+const siteUrl = process.env.TEST_SITE_URL || defaultSitePort;
 const apiUrl = process.env.TEST_API_URL || 'http://localhost:8080';
 
 /**
@@ -65,10 +67,10 @@ export default defineConfig({
         env: { REQUIRE_EMAIL_VERIFICATION: 'false' },
       },
       {
-        command: 'npm run dev:nuxt',
+        command: isNuxt4 ? 'npm run dev:nuxt4' : 'npm run dev:nuxt',
         url: siteUrl,
         reuseExistingServer: !process.env.CI,
-        timeout: 300_000, // Nuxt 2 bridge dev build is slow on cold start
+        timeout: 300_000,
         env: { REQUIRE_EMAIL_VERIFICATION: 'false' },
       },
     ],

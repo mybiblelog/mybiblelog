@@ -1,0 +1,181 @@
+/* Buttons */
+/* Base sizing (padding-driven, no fixed height) */
+.mbl-button {
+  align-items: center;
+  appearance: none;
+  background-color: var(--mbl-bg);
+  border: 1px solid var(--mbl-border);
+  border-radius: var(--mbl-radius-button);
+  box-shadow: none;
+  color: var(--mbl-text);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 1rem;
+  justify-content: center;
+  line-height: 1.5;
+  padding-bottom: calc(0.5em - 1px);
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: calc(0.5em - 1px);
+  position: relative;
+  text-align: center;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.mbl-button:hover {
+  border-color: var(--mbl-border-strong);
+  color: var(--mbl-text);
+}
+
+.mbl-button:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.mbl-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.mbl-button--primary {
+  background-color: var(--primary-color);
+  border-color: transparent;
+  color: var(--mbl-on-accent);
+}
+
+.mbl-button--primary:hover {
+  background-color: var(--primary-color-hover);
+  border-color: transparent;
+  color: var(--mbl-on-accent);
+}
+
+.mbl-button--light {
+  background-color: var(--mbl-bg-muted);
+  border-color: var(--mbl-border);
+  color: var(--mbl-text);
+}
+
+.mbl-button--light:hover {
+  background-color: var(--mbl-bg-hover-light);
+}
+
+.mbl-button--danger {
+  background-color: var(--mbl-danger);
+  border-color: transparent;
+  color: var(--mbl-on-accent);
+}
+
+.mbl-button--danger:hover {
+  border-color: transparent;
+  filter: brightness(0.95);
+  color: var(--mbl-on-accent);
+}
+
+.mbl-button--text {
+  background-color: transparent;
+  border-color: transparent;
+  color: var(--mbl-text);
+  text-decoration: none;
+}
+
+.mbl-button--text:hover {
+  background-color: var(--mbl-bg-muted);
+}
+
+.mbl-button--sm {
+  border-radius: 2px;
+  font-size: 0.75rem;
+}
+
+.mbl-button--lg {
+  font-size: 1.25rem;
+}
+
+.mbl-button--static {
+  background-color: var(--mbl-bg-muted);
+  border-color: var(--mbl-border);
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.mbl-button-group {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.mbl-button-group .mbl-button:not(:last-child) {
+  margin-right: 0.5rem;
+}
+
+.mbl-button-group--start {
+  align-items: flex-start;
+}
+
+.mbl-button-group--end {
+  justify-content: flex-end;
+}
+
+.mbl-button-group--center {
+  justify-content: center;
+}
+
+/* Close / delete control — circular hit target, thick X (pseudo-elements) */
+.mbl-delete {
+  --mbl-delete-size: 20px;
+  --mbl-delete-stroke: 2px;
+  --mbl-delete-arm: 50%;
+
+  -webkit-touch-callout: none;
+  background-color: var(--mbl-overlay-soft);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-block;
+  flex-grow: 0;
+  flex-shrink: 0;
+  font-size: 0;
+  height: var(--mbl-delete-size);
+  max-height: var(--mbl-delete-size);
+  max-width: var(--mbl-delete-size);
+  min-height: var(--mbl-delete-size);
+  min-width: var(--mbl-delete-size);
+  outline: none;
+  position: relative;
+  vertical-align: top;
+  width: var(--mbl-delete-size);
+}
+
+.mbl-delete::before,
+.mbl-delete::after {
+  background-color: var(--mbl-on-accent);
+  content: '';
+  display: block;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%) rotate(45deg);
+  transform-origin: center center;
+}
+
+.mbl-delete::before {
+  height: var(--mbl-delete-stroke);
+  width: var(--mbl-delete-arm);
+}
+
+.mbl-delete::after {
+  height: var(--mbl-delete-arm);
+  width: var(--mbl-delete-stroke);
+}
+
+.mbl-delete:hover {
+  background-color: var(--mbl-overlay-soft-strong);
+}
+
+.mbl-delete--sm {
+  --mbl-delete-size: 22px;
+  --mbl-delete-stroke: 2px;
+  --mbl-delete-arm: 50%;
+}

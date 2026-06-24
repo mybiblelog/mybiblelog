@@ -98,6 +98,11 @@ const buildApp = (): express.Application => {
       throw new UnauthorizedError();
     }
 
+    // Mirror the CORS policy: allow any localhost origin in development.
+    if (!isProduction && requestOrigin.startsWith('http://localhost:')) {
+      return next();
+    }
+
     if (requestOrigin !== allowedOrigin) {
       throw new UnauthorizedError();
     }
