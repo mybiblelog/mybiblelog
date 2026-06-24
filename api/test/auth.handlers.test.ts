@@ -1,15 +1,24 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { withEnvConfig, restoreEnvConfig } from './config-helpers';
 
 // The google-verify handler imports the OAuth helper directly; mock it so the
-// CSRF-state branch is testable without real Google config.
+// CSRF-state branch is testable without real Google config. `verifyState` is a
+// spy (defaulting to false) so individual tests can let the state check pass.
+const { mockVerifyState } = vi.hoisted(() => ({ mockVerifyState: vi.fn(() => false) }));
 vi.mock('../http/helpers/google-oauth2', () => ({
   default: {
     getGoogleLoginUrl: () => ({ url: 'https://example.com', state: 'state' }),
-    verifyState: () => false,
+    verifyState: mockVerifyState,
     getAccessTokenFromCode: async () => 'token',
     getUserProfileFromToken: async () => ({ id: 'g', email: 'g@example.com', verified_email: true }),
   },
+}));
+
+// The id-token login handler verifies the token via this helper (which talks to
+// Google's tokeninfo endpoint); mock it so the handler is testable without a
+// real token or network access.
+vi.mock('../http/helpers/google-id-token', () => ({
+  default: { verifyGoogleIdToken: vi.fn() },
 }));
 
 import {
@@ -24,12 +33,16 @@ import {
   completeEmailChange,
   resendEmailVerification,
   verifyGoogleOauth,
+  googleIdTokenLogin,
 } from '../http/handlers/auth';
 import { type HttpRequest, type RouteDependencies } from '../http/types';
 import { type UserRecord } from '../repositories/helpers/types';
 import { AUTH_COOKIE_NAME } from '../http/helpers/authCurrentUser';
 import { ValidationError } from '../http/errors/validation-errors';
 import { UnauthorizedError, NotFoundError, InvalidRequestError } from '../http/errors/http-errors';
+import googleIdToken from '../http/helpers/google-id-token';
+
+const mockedVerifyIdToken = vi.mocked(googleIdToken.verifyGoogleIdToken);
 
 /**
  * Pure unit tests for the framework-agnostic auth handlers. They call the
@@ -399,11 +412,112 @@ describe('auth handlers (unit)', () => {
   });
 
   describe('verifyGoogleOauth', () => {
+    beforeEach(() => {
+      mockVerifyState.mockReset();
+      mockVerifyState.mockReturnValue(false);
+    });
+
     it('rejects an invalid CSRF state', async () => {
       const deps = makeDeps();
       await expect(
         verifyGoogleOauth(makeRequest({ body: { code: 'c', state: 'invalid', locale: 'en' } }), deps),
       ).rejects.toBeInstanceOf(InvalidRequestError);
+    });
+
+    it('rejects a non-string code once the state is valid (NoSQL injection guard)', async () => {
+      mockVerifyState.mockReturnValue(true);
+      const deps = makeDeps();
+      await expect(
+        verifyGoogleOauth(makeRequest({ body: { code: { $gt: '' }, state: 'ok', locale: 'en' } }), deps),
+      ).rejects.toBeInstanceOf(InvalidRequestError);
+    });
+  });
+
+  describe('googleIdTokenLogin', () => {
+    beforeEach(() => {
+      mockedVerifyIdToken.mockReset();
+    });
+
+    it('rejects a missing idToken with a ValidationError', async () => {
+      const deps = makeDeps();
+      await expect(googleIdTokenLogin(makeRequest({ body: {} }), deps))
+        .rejects.toBeInstanceOf(ValidationError);
+      expect(mockedVerifyIdToken).not.toHaveBeenCalled();
+    });
+
+    it('rejects a non-string idToken (NoSQL injection guard)', async () => {
+      const deps = makeDeps();
+      await expect(googleIdTokenLogin(makeRequest({ body: { idToken: { $gt: '' } } }), deps))
+        .rejects.toBeInstanceOf(ValidationError);
+    });
+
+    it('maps a verification failure to an InvalidRequestError', async () => {
+      mockedVerifyIdToken.mockRejectedValue(new Error('Invalid Google id_token (status 400)'));
+      const deps = makeDeps();
+      await expect(googleIdTokenLogin(makeRequest({ body: { idToken: 'bad' } }), deps))
+        .rejects.toBeInstanceOf(InvalidRequestError);
+    });
+
+    it('links the Google account to an existing user and returns a token + cookie', async () => {
+      mockedVerifyIdToken.mockResolvedValue({
+        googleUserId: 'g-sub-1',
+        email: 'user@example.com',
+        audience: 'aud',
+      });
+      const existing = { ...verifiedUser, googleId: null } as unknown as UserRecord;
+      const linkGoogleAccount = vi.fn(async () => existing);
+      const create = vi.fn();
+      const deps = makeDeps({
+        users: { findByEmail: async () => existing, linkGoogleAccount, create },
+      });
+
+      const result = await googleIdTokenLogin(makeRequest({ body: { idToken: 'good' } }), deps);
+
+      expect(linkGoogleAccount).toHaveBeenCalledWith(USER_ID, 'g-sub-1');
+      expect(create).not.toHaveBeenCalled();
+      expect(typeof (result.body.data as { token: string }).token).toBe('string');
+      expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
+    });
+
+    it('does not re-link when the existing user already has a googleId', async () => {
+      mockedVerifyIdToken.mockResolvedValue({
+        googleUserId: 'g-sub-1',
+        email: 'user@example.com',
+        audience: 'aud',
+      });
+      const existing = { ...verifiedUser, googleId: 'already-linked' } as unknown as UserRecord;
+      const linkGoogleAccount = vi.fn();
+      const deps = makeDeps({ users: { findByEmail: async () => existing, linkGoogleAccount } });
+
+      await googleIdTokenLogin(makeRequest({ body: { idToken: 'good' } }), deps);
+
+      expect(linkGoogleAccount).not.toHaveBeenCalled();
+    });
+
+    it('creates a new OAuth-only account for an unknown email', async () => {
+      mockedVerifyIdToken.mockResolvedValue({
+        googleUserId: 'g-sub-2',
+        email: 'new@example.com',
+        audience: 'aud',
+      });
+      const created = { ...verifiedUser, email: 'new@example.com', hasLocalAccount: false } as unknown as UserRecord;
+      const create = vi.fn(async () => created);
+      const deps = makeDeps({ users: { findByEmail: async () => null, create } });
+
+      const result = await googleIdTokenLogin(
+        makeRequest({ body: { idToken: 'good', locale: 'en' } }),
+        deps,
+      );
+
+      expect(create).toHaveBeenCalledWith({
+        email: 'new@example.com',
+        emailVerificationCode: '',
+        password: null,
+        googleId: 'g-sub-2',
+        locale: 'en',
+      });
+      expect(typeof (result.body.data as { token: string }).token).toBe('string');
+      expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
   });
 });

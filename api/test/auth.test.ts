@@ -408,6 +408,24 @@ describe('Auth routes', () => {
     // as seen in the route implementation at api/http/routes/auth.ts:414-483
   });
 
+  describe('POST /api/auth/oauth2/google/id-token', () => {
+    it('returns 400 when idToken is missing', async () => {
+      const res = await requestApi
+        .post('/api/auth/oauth2/google/id-token')
+        .send({ locale: 'en' });
+      expect(res.statusCode).toBe(400);
+      expect(res.body).toHaveProperty('error');
+      expect(res.body).not.toHaveProperty('data');
+      expect(res.body.error.errors).toEqual([{ code: 'required', field: 'idToken' }]);
+    });
+
+    // Note: the success path (verifying a real Google id_token via the tokeninfo
+    // endpoint, then returning a token + auth cookie) can't be exercised here
+    // because the out-of-process live API server can't intercept Google's HTTP
+    // call. That behavior is covered by the `googleIdTokenLogin` handler unit
+    // tests in auth.handlers.test.ts.
+  });
+
   describe('POST /api/auth/change-email', () => {
     it('never includes the new email verification code in the response body', async () => {
       const testUser = await createTestUser();

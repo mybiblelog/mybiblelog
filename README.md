@@ -127,6 +127,9 @@ RESEND_API_KEY=xxxxxxxxxx
 GOOGLE_CLIENT_ID=xxxxxxxxxx.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=xxxxxxxxxx
 GOOGLE_REDIRECT=http://xxxxxxxxxx:xxxx/google-login
+# Comma-separated extra Google client IDs accepted as the audience of a
+# native-mobile id_token (iOS / Android / web). GOOGLE_CLIENT_ID is always allowed.
+GOOGLE_ALLOWED_CLIENT_IDS=xxxxxxxxxx-ios.apps.googleusercontent.com,xxxxxxxxxx-web.apps.googleusercontent.com
 
 # Google Analytics ID (only needed if verifying GA connection)
 GA_MEASUREMENT_ID=G-xxxxxxxxxx

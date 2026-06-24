@@ -29,6 +29,16 @@ const envSchema = z.object({
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
   GOOGLE_REDIRECT: z.string(),
+  // Comma-separated list of additional Google OAuth client IDs accepted as the
+  // audience of a native-mobile id_token (e.g. iOS / Android / web client IDs).
+  // GOOGLE_CLIENT_ID is always included.
+  GOOGLE_ALLOWED_CLIENT_IDS: z.string().optional(),
+  MOBILE_IOS_MIN_VERSION: z.string().default('0.0.0'),
+  MOBILE_ANDROID_MIN_VERSION: z.string().default('0.0.0'),
+  MOBILE_IOS_LATEST_VERSION: z.string().optional(),
+  MOBILE_ANDROID_LATEST_VERSION: z.string().optional(),
+  MOBILE_IOS_STORE_URL: z.string().optional(),
+  MOBILE_ANDROID_STORE_URL: z.string().optional(),
   HELLOAO_API_BASE_URL: z.string().url().default('https://bible.helloao.org/api'),
 });
 
@@ -55,8 +65,36 @@ const initConfig = () => {
       clientId: result.data.GOOGLE_CLIENT_ID,
       clientSecret: result.data.GOOGLE_CLIENT_SECRET,
       redirectUri: result.data.GOOGLE_REDIRECT,
+      // Audiences accepted on a verified Google id_token. Always includes the
+      // primary client ID, plus any extra (mobile/web) IDs from the env var.
+      allowedClientIds: [
+        ...new Set(
+          [
+            result.data.GOOGLE_CLIENT_ID,
+            ...(result.data.GOOGLE_ALLOWED_CLIENT_IDS ?? '')
+              .split(',')
+              .map((id) => id.trim()),
+          ].filter((id) => id.length > 0),
+        ),
+      ],
     },
-    helloao: { apiBaseUrl: result.data.HELLOAO_API_BASE_URL },
+    mobileApp: {
+      minVersion: {
+        ios: result.data.MOBILE_IOS_MIN_VERSION,
+        android: result.data.MOBILE_ANDROID_MIN_VERSION,
+      },
+      latestVersion: {
+        ios: result.data.MOBILE_IOS_LATEST_VERSION ?? null,
+        android: result.data.MOBILE_ANDROID_LATEST_VERSION ?? null,
+      },
+      storeUrl: {
+        ios: result.data.MOBILE_IOS_STORE_URL ?? null,
+        android: result.data.MOBILE_ANDROID_STORE_URL ?? null,
+      },
+    },
+    helloao: {
+      apiBaseUrl: result.data.HELLOAO_API_BASE_URL,
+    },
   };
 };
 
