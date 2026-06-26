@@ -72,7 +72,12 @@
 import { computed, getCurrentInstance, ref } from 'vue';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
-import { computeDailyVerseSeries, type InsightsLogEntry } from '@mybiblelog/shared';
+import {
+  DEFAULT_CHART_DIMENSIONS,
+  buildLineChartGeometry,
+  computeDailyVerseSeries,
+  type InsightsLogEntry,
+} from '@mybiblelog/shared';
 
 dayjs.extend(localizedFormat);
 
@@ -89,60 +94,25 @@ const locale = computed(() => proxy.$i18n.locale);
 const windowOptions = [7, 14, 30, 60, 90, 180, 365];
 const days = ref(30);
 
-const width = 720;
-const height = 240;
-const padLeft = 34;
-const padRight = 12;
-const padTop = 12;
-const padBottom = 22;
+const { width, height, padLeft, padRight } = DEFAULT_CHART_DIMENSIONS;
 
 const series = computed(() => computeDailyVerseSeries(props.entries as InsightsLogEntry[], days.value));
 
-const maxCount = computed(() => Math.max(1, ...series.value.map(p => p.count)));
+const geometry = computed(() => buildLineChartGeometry(series.value));
 
 const showPoints = computed(() => series.value.length <= 60);
 
-const points = computed(() => {
-  const data = series.value;
-  const innerW = width - padLeft - padRight;
-  const innerH = height - padTop - padBottom;
-  const n = data.length;
-  return data.map((p, i) => {
-    const x = n <= 1 ? padLeft + innerW / 2 : padLeft + (i / (n - 1)) * innerW;
-    const y = padTop + innerH - (p.count / maxCount.value) * innerH;
-    return {
-      date: p.date,
-      count: p.count,
-      x,
-      y,
-      title: `${proxy.$tc('verses_read', p.count, { count: p.count })} — ${dayjs(p.date).locale(locale.value).format('LL')}`,
-    };
-  });
-});
+// Decorate the framework-agnostic geometry points with a localized tooltip.
+const points = computed(() => geometry.value.points.map(p => ({
+  ...p,
+  title: `${proxy.$tc('verses_read', p.count, { count: p.count })} — ${dayjs(p.date).locale(locale.value).format('LL')}`,
+})));
 
-const linePoints = computed(() => points.value.map(p => `${p.x},${p.y}`).join(' '));
+const linePoints = computed(() => geometry.value.linePoints);
 
-const areaPath = computed(() => {
-  const pts = points.value;
-  if (pts.length === 0) { return ''; }
-  const baseY = height - padBottom;
-  const first = pts[0];
-  const last = pts[pts.length - 1];
-  const segments = pts.map(p => `L ${p.x} ${p.y}`).join(' ');
-  return `M ${first.x} ${baseY} ${segments} L ${last.x} ${baseY} Z`;
-});
+const areaPath = computed(() => geometry.value.areaPath);
 
-const yTicks = computed(() => {
-  const innerH = height - padTop - padBottom;
-  const steps = 4;
-  const ticks = [];
-  for (let i = 0; i <= steps; i++) {
-    const value = Math.round((maxCount.value / steps) * i);
-    const y = padTop + innerH - (i / steps) * innerH;
-    ticks.push({ value, y });
-  }
-  return ticks;
-});
+const yTicks = computed(() => geometry.value.yTicks);
 
 const firstLabel = computed(() => {
   const first = series.value[0];

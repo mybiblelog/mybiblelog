@@ -141,7 +141,12 @@
 </template>
 
 <script>
-import { Bible } from '@mybiblelog/shared';
+import {
+  Bible,
+  PassageSelection,
+  filterAndSortBookOptions,
+  getBookOptions,
+} from '@mybiblelog/shared';
 import AppModal from '@/components/popups/AppModal';
 import GridSelector from '@/components/forms/GridSelector';
 import TapRangeSelector from '@/components/forms/TapRangeSelector';
@@ -172,38 +177,27 @@ export default {
     return {
       SELECTION,
 
-      selected: {
-        book: 0,
-        startChapter: 0,
-        startVerse: 0,
-        endChapter: 0,
-        endVerse: 0,
-      },
-
-      chapterVerses: {},
+      // Selection state owned by the framework-agnostic passage-selection machine.
+      selected: PassageSelection.emptyPassageSelection(),
 
       selectionTarget: null,
 
-      books: [],
-      bookOptions: [],
+      // Option lists derived from the machine for each selection step.
       startChapters: [],
       startVerses: [],
       endChapters: [],
       endVerses: [],
-
-      silent: false,
-      currentValue: {
-        startVerseId: null,
-        endVerseId: null,
-      },
 
       selectedTestament: 'old',
       bookSortOrder: 'numerical',
     };
   },
   computed: {
+    locale() {
+      return this.$i18n?.locale || 'en';
+    },
     bookName() {
-      return Bible.getBookName(this.selected.book, this.$i18n.locale);
+      return Bible.getBookName(this.selected.book, this.locale);
     },
     modalTitle() {
       switch (this.selectionTarget) {
@@ -224,172 +218,37 @@ export default {
       }
     },
     filteredBookOptions() {
-      let filtered = this.bookOptions.filter((book) => {
-        const bookData = this.books.find(b => b.bibleOrder === book.value);
-        if (!bookData) {
-          return false;
-        }
-        if (this.selectedTestament === 'old') {
-          return !bookData.newTestament;
-        }
-        else {
-          return bookData.newTestament;
-        }
+      return filterAndSortBookOptions(getBookOptions(this.locale), {
+        testament: this.selectedTestament,
+        sortOrder: this.bookSortOrder,
+        locale: this.locale,
       });
-
-      if (this.bookSortOrder === 'alphabetical') {
-        filtered = [...filtered].sort((a, b) => {
-          // Strip leading numbers and whitespace for sorting
-          const stripLeadingNumbers = (str) => {
-            return str.replace(/^\d+\s*/, '').trim();
-          };
-          const aLabel = stripLeadingNumbers(a.label);
-          const bLabel = stripLeadingNumbers(b.label);
-          return aLabel.localeCompare(bLabel, this.$i18n.locale);
-        });
-      }
-      else {
-        // Numerical order (bible order)
-        filtered = [...filtered].sort((a, b) => {
-          return a.value - b.value;
-        });
-      }
-
-      return filtered;
     },
   },
   created() {
     if (!this.populateWith.empty) {
-      this.silent = true;
-
       const { startVerseId, endVerseId } = this.populateWith;
-      const start = Bible.parseVerseId(startVerseId);
-      const book = start.book;
-      const startChapter = start.chapter;
-      const startVerse = start.verse;
-      const end = Bible.parseVerseId(endVerseId);
-      const endChapter = end.chapter;
-      const endVerse = end.verse;
-
-      this.selected.book = book;
-      this.onSelectBook();
-      this.selected.startChapter = startChapter;
-      this.selected.endChapter = endChapter;
-      this.onSelectChapters();
-      this.selected.startVerse = startVerse;
-      this.onSelectStartVerse();
-      this.selected.endVerse = endVerse;
-
-      this.silent = false;
+      // Hydrate from the existing range without emitting a change.
+      const { state, options } = PassageSelection.passageSelectionFromRange({ startVerseId, endVerseId });
+      this.selected = state;
+      this.applyOptions(options);
     }
   },
-  mounted() {
-    this.books = Bible.getBooks();
-    this.bookOptions = this.books.map(book => ({
-      label: Bible.getBookName(book.bibleOrder, this.$i18n.locale),
-      value: book.bibleOrder,
-    }));
-  },
   methods: {
-    emitCurrentValue() {
-      if (this.silent) { return; }
-      const book = this.selected.book;
-      const startChapter = this.selected.startChapter || 1;
-      const endChapter = this.selected.endChapter || Bible.getBookChapterCount(book);
-      const startVerse = this.selected.startVerse || 1;
-      const endVerse = this.selected.endVerse || Bible.getChapterVerseCount(book, endChapter);
-      const startVerseId = Bible.makeVerseId(book, startChapter, startVerse);
-      const endVerseId = Bible.makeVerseId(book, endChapter, endVerse);
-      this.$emit('change', { startVerseId, endVerseId });
-    },
-    resetStartChapter() {
-      this.selected.startChapter = 0;
-      this.startChapters = [];
-    },
-    resetStartVerse() {
-      this.selected.startVerse = 0;
-      this.startVerses = [];
-    },
-    resetEndChapter() {
-      this.selected.endChapter = 0;
-      this.endChapters = [];
-    },
-    resetEndVerse() {
-      this.selected.endVerse = 0;
-      this.endVerses = [];
-    },
-    onSelectBook() {
-      this.resetStartChapter();
-      this.resetStartVerse();
-      this.resetEndChapter();
-      this.resetEndVerse();
-
-      const bookIndex = this.selected.book;
-      const chapterCount = Bible.getBookChapterCount(bookIndex);
-      const chapters = [];
-      for (let i = 1; i <= chapterCount; i++) { chapters.push(i); }
-      this.startChapters = chapters;
-
-      // Make it easier to log an entry in a book with only one chapter
-      if (chapterCount === 1) {
-        this.selectChapters({ from: 1, to: 1 });
+    // Applies a passage-selection result: adopt the new state, refresh the
+    // derived option lists, and emit the resulting range to the parent.
+    applyResult(result, { emit = true } = {}) {
+      this.selected = result.state;
+      this.applyOptions(result.options);
+      if (emit && result.range) {
+        this.$emit('change', result.range);
       }
-
-      this.emitCurrentValue();
     },
-    onSelectChapters() {
-      this.resetStartVerse();
-      this.resetEndVerse();
-
-      const startChapterVerseCount = Bible.getChapterVerseCount(this.selected.book, this.selected.startChapter);
-      const startVerses = [];
-      for (let i = 1; i <= startChapterVerseCount; i++) { startVerses.push(i); }
-      this.startVerses = startVerses;
-
-      const bookIndex = this.selected.book;
-      const chapterCount = Bible.getBookChapterCount(bookIndex);
-      const chapters = [];
-      for (let i = this.selected.startChapter; i <= chapterCount; i++) { chapters.push(i); }
-      this.endChapters = chapters;
-
-      const endChapterVerseCount = Bible.getChapterVerseCount(this.selected.book, this.selected.endChapter);
-      const endVerses = [];
-      for (let i = 1; i <= endChapterVerseCount; i++) { endVerses.push(i); }
-      this.endVerses = endVerses;
-
-      this.emitCurrentValue();
-    },
-    onSelectEndChapter() {
-      this.resetEndVerse();
-
-      const endChapterVerseCount = Bible.getChapterVerseCount(this.selected.book, this.selected.endChapter);
-      const endVerses = [];
-      const initialVerse = (this.selected.startChapter === this.selected.endChapter) ? (this.selected.startVerse || 1) : 1;
-      for (let i = initialVerse; i <= endChapterVerseCount; i++) { endVerses.push(i); }
-      this.endVerses = endVerses;
-
-      this.emitCurrentValue();
-    },
-    onSelectVerses() {
-      const chapterVerseCount = Bible.getChapterVerseCount(this.selected.book, this.selected.endChapter);
-      const endVerses = [];
-      for (let i = this.selected.startVerse; i <= chapterVerseCount; i++) { endVerses.push(i); }
-      this.endVerses = endVerses;
-
-      this.emitCurrentValue();
-    },
-    onSelectStartVerse() {
-      if (this.selected.endChapter === this.selected.startChapter) {
-        const chapterVerseCount = Bible.getChapterVerseCount(this.selected.book, this.selected.endChapter);
-        const endVerses = [];
-        for (let i = this.selected.startVerse; i <= chapterVerseCount; i++) { endVerses.push(i); }
-        this.endVerses = endVerses;
-      }
-
-      this.emitCurrentValue();
-    },
-    onSelectEndVerse() {
-      this.emitCurrentValue();
+    applyOptions(options) {
+      this.startChapters = options.startChapters;
+      this.startVerses = options.startVerses;
+      this.endChapters = options.endChapters;
+      this.endVerses = options.endVerses;
     },
 
     openSelectBook() {
@@ -416,35 +275,27 @@ export default {
     },
 
     selectBook(bookIndex) {
-      this.selected.book = bookIndex;
-      this.onSelectBook();
+      this.applyResult(PassageSelection.selectBook(bookIndex));
       this.selectionTarget = null;
     },
     selectChapters({ from, to }) {
-      this.selected.startChapter = from;
-      this.selected.endChapter = to;
-      this.onSelectChapters();
+      this.applyResult(PassageSelection.selectChapters(this.selected, { from, to }));
       this.selectionTarget = null;
     },
     selectEndChapter({ from, to }) {
-      this.selected.endChapter = to || from;
-      this.onSelectEndChapter();
+      this.applyResult(PassageSelection.selectEndChapter(this.selected, to || from));
       this.selectionTarget = null;
     },
     selectVerses({ from, to }) {
-      this.selected.startVerse = from;
-      this.selected.endVerse = to;
-      this.onSelectVerses();
+      this.applyResult(PassageSelection.selectVerses(this.selected, { from, to }));
       this.selectionTarget = null;
     },
     selectStartVerse({ from, to }) {
-      this.selected.startVerse = from || to;
-      this.onSelectStartVerse();
+      this.applyResult(PassageSelection.selectStartVerse(this.selected, from || to));
       this.selectionTarget = null;
     },
     selectEndVerse({ from, to }) {
-      this.selected.endVerse = to || from;
-      this.onSelectEndVerse();
+      this.applyResult(PassageSelection.selectEndVerse(this.selected, to || from));
       this.selectionTarget = null;
     },
   },

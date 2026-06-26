@@ -117,7 +117,15 @@
 </template>
 
 <script>
-import { Bible } from '@mybiblelog/shared';
+import {
+  Bible,
+  PassageSelection,
+  coerceVerseRange,
+  filterAndSortBookOptions,
+  formatVerseRange,
+  getBookOptions,
+  parseVerseInput,
+} from '@mybiblelog/shared';
 import AppModal from '@/components/popups/AppModal';
 import GridSelector from '@/components/forms/GridSelector';
 import TapRangeSelector from '@/components/forms/TapRangeSelector';
@@ -127,6 +135,13 @@ const SINGLE_SELECTION = {
   BOOK: 'BOOK',
   CHAPTER: 'CHAPTER',
   VERSE: 'VERSE',
+};
+
+// Maps the single-verse machine's next-step hint to a modal target.
+const STEP_TO_TARGET = {
+  book: SINGLE_SELECTION.BOOK,
+  chapter: SINGLE_SELECTION.CHAPTER,
+  verse: SINGLE_SELECTION.VERSE,
 };
 
 export default {
@@ -148,17 +163,11 @@ export default {
       localText: '',
       isEditing: false,
 
-      books: [],
-      bookOptions: [],
       selectedTestament: 'old',
       bookSortOrder: 'numerical',
 
       singleSelectionTarget: null,
-      singleSelected: {
-        book: 0,
-        chapter: 0,
-        verse: 0,
-      },
+      singleSelected: PassageSelection.emptySingleVerseSelection(),
 
       passageSelectorKey: 0,
       passageSelectorPopulateWith: { empty: true },
@@ -192,32 +201,19 @@ export default {
       return `${prefix} ${example}`;
     },
     valueRange() {
-      const v = this.value;
-      if (!v) { return null; }
-      const startVerseId = Number(v.startVerseId);
-      const endVerseId = Number(v.endVerseId);
-      if (!Number.isFinite(startVerseId) || !Number.isFinite(endVerseId)) { return null; }
-      return { startVerseId, endVerseId };
+      return coerceVerseRange(this.value);
+    },
+    parsedInput() {
+      return parseVerseInput(this.localText, { locale: this.locale, multiVerse: this.multiVerse });
     },
     hasText() {
-      return !!(this.localText && String(this.localText).trim().length);
+      return this.parsedInput.hasText;
     },
     parsedRangeFromText() {
-      const raw = String(this.localText || '').trim();
-      if (!raw) { return null; }
-      try {
-        const range = Bible.parseVerseRange(raw, this.locale);
-        return range || null;
-      }
-      catch (e) {
-        return null;
-      }
+      return this.parsedInput.range;
     },
     isValid() {
-      if (!this.hasText) { return true; }
-      if (!this.parsedRangeFromText) { return false; }
-      if (this.multiVerse) { return true; }
-      return this.parsedRangeFromText.startVerseId === this.parsedRangeFromText.endVerseId;
+      return this.parsedInput.isValid;
     },
     showInvalid() {
       return this.hasText && !this.isValid;
@@ -244,28 +240,11 @@ export default {
       }
     },
     filteredBookOptions() {
-      let filtered = this.bookOptions.filter((book) => {
-        const bookData = this.books.find(b => b.bibleOrder === book.value);
-        if (!bookData) { return false; }
-        if (this.selectedTestament === 'old') {
-          return !bookData.newTestament;
-        }
-        return bookData.newTestament;
+      return filterAndSortBookOptions(getBookOptions(this.locale), {
+        testament: this.selectedTestament,
+        sortOrder: this.bookSortOrder,
+        locale: this.locale,
       });
-
-      if (this.bookSortOrder === 'alphabetical') {
-        filtered = [...filtered].sort((a, b) => {
-          const stripLeadingNumbers = str => str.replace(/^\d+\s*/, '').trim();
-          const aLabel = stripLeadingNumbers(a.label);
-          const bLabel = stripLeadingNumbers(b.label);
-          return aLabel.localeCompare(bLabel, this.locale);
-        });
-      }
-      else {
-        filtered = [...filtered].sort((a, b) => a.value - b.value);
-      }
-
-      return filtered;
     },
     singleChapterMax() {
       if (!this.singleSelected.book) { return 1; }
@@ -286,26 +265,14 @@ export default {
           this.localText = '';
           return;
         }
-        this.localText = Bible.displayVerseRange(range.startVerseId, range.endVerseId, this.locale);
+        this.localText = formatVerseRange(range, this.locale);
       },
     },
     locale() {
-      if (!this.books?.length) { return; }
-      this.bookOptions = this.books.map(book => ({
-        label: Bible.getBookName(book.bibleOrder, this.locale),
-        value: book.bibleOrder,
-      }));
       if (!this.isEditing && this.valueRange) {
-        this.localText = Bible.displayVerseRange(this.valueRange.startVerseId, this.valueRange.endVerseId, this.locale);
+        this.localText = formatVerseRange(this.valueRange, this.locale);
       }
     },
-  },
-  mounted() {
-    this.books = Bible.getBooks();
-    this.bookOptions = this.books.map(book => ({
-      label: Bible.getBookName(book.bibleOrder, this.locale),
-      value: book.bibleOrder,
-    }));
   },
   methods: {
     emitRange(rangeOrNull) {
@@ -339,8 +306,7 @@ export default {
     onBlurNormalize() {
       this.isEditing = false;
       if (!this.isValid || !this.parsedRangeFromText) { return; }
-      const { startVerseId, endVerseId } = this.parsedRangeFromText;
-      this.localText = Bible.displayVerseRange(startVerseId, endVerseId, this.locale);
+      this.localText = formatVerseRange(this.parsedRangeFromText, this.locale);
     },
     openPicker() {
       if (this.multiVerse) {
@@ -357,10 +323,7 @@ export default {
 
       const range = this.valueRange;
       if (range && range.startVerseId === range.endVerseId) {
-        const parsed = Bible.parseVerseId(range.startVerseId);
-        this.singleSelected.book = parsed.book;
-        this.singleSelected.chapter = parsed.chapter;
-        this.singleSelected.verse = parsed.verse;
+        this.singleSelected = PassageSelection.singleSelectionFromVerseId(range.startVerseId);
       }
 
       this.singleSelectionTarget = SINGLE_SELECTION.BOOK;
@@ -369,40 +332,29 @@ export default {
       this.singleSelectionTarget = null;
     },
     resetSingleSelection() {
-      this.singleSelected = { book: 0, chapter: 0, verse: 0 };
+      this.singleSelected = PassageSelection.emptySingleVerseSelection();
+    },
+    applySingleResult(result) {
+      this.singleSelected = result.selection;
+      if (result.step === 'done') {
+        this.finalizeSingleSelection(result.verseId);
+      }
+      else {
+        this.singleSelectionTarget = STEP_TO_TARGET[result.step];
+      }
     },
     selectSingleBook(bookIndex) {
-      this.singleSelected.book = bookIndex;
-      const chapterCount = Bible.getBookChapterCount(bookIndex);
-      if (chapterCount === 1) {
-        this.singleSelected.chapter = 1;
-        this.singleSelectionTarget = SINGLE_SELECTION.VERSE;
-      }
-      else {
-        this.singleSelectionTarget = SINGLE_SELECTION.CHAPTER;
-      }
+      this.applySingleResult(PassageSelection.singleSelectBook(bookIndex));
     },
     selectSingleChapter({ from, to }) {
-      this.singleSelected.chapter = to || from;
-      const verseCount = Bible.getChapterVerseCount(this.singleSelected.book, this.singleSelected.chapter);
-      if (verseCount === 1) {
-        this.singleSelected.verse = 1;
-        this.finalizeSingleSelection();
-      }
-      else {
-        this.singleSelectionTarget = SINGLE_SELECTION.VERSE;
-      }
+      this.applySingleResult(PassageSelection.singleSelectChapter(this.singleSelected, to || from));
     },
     selectSingleVerse({ from, to }) {
-      this.singleSelected.verse = to || from;
-      this.finalizeSingleSelection();
+      this.applySingleResult(PassageSelection.singleSelectVerse(this.singleSelected, to || from));
     },
-    finalizeSingleSelection() {
-      const { book, chapter, verse } = this.singleSelected;
-      if (!book || !chapter || !verse) { return; }
-      const verseId = Bible.makeVerseId(book, chapter, verse);
-      const display = Bible.displayVerseRange(verseId, verseId, this.locale);
-      this.localText = display;
+    finalizeSingleSelection(verseId) {
+      if (!verseId) { return; }
+      this.localText = formatVerseRange({ startVerseId: verseId, endVerseId: verseId }, this.locale);
       this.isEditing = false;
       this.emitRange({ startVerseId: verseId, endVerseId: verseId });
       this.closeSinglePicker();
@@ -421,8 +373,7 @@ export default {
       });
     },
     onPassageSelectorChange({ startVerseId, endVerseId }) {
-      const display = Bible.displayVerseRange(startVerseId, endVerseId, this.locale);
-      this.localText = display;
+      this.localText = formatVerseRange({ startVerseId, endVerseId }, this.locale);
       this.isEditing = false;
       this.emitRange({ startVerseId, endVerseId });
     },
