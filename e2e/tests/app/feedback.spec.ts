@@ -1,6 +1,33 @@
 import { test, expect } from '../../fixtures';
 import { env } from '../../helpers/env';
 
+test.describe('/feedback page', () => {
+  test('form is visible for anonymous visitors', async ({ browser }) => {
+    const anonContext = await browser.newContext();
+    await anonContext.addCookies([{ name: 'i18n_redirected', value: 'en', url: env.siteUrl }]);
+    const anonPage = await anonContext.newPage();
+
+    await anonPage.goto(env.siteUrl + '/feedback');
+    await expect(anonPage.getByTestId('feedback-form')).toBeVisible();
+    await expect(anonPage.getByTestId('feedback-email')).toBeEnabled();
+    await expect(anonPage.getByTestId('feedback-kind')).toBeVisible();
+    await expect(anonPage.getByTestId('feedback-message')).toBeVisible();
+    await expect(anonPage.getByTestId('feedback-submit')).toBeVisible();
+
+    await anonContext.close();
+  });
+
+  test('form is visible for logged-in users with email pre-filled and locked', async ({ page }) => {
+    await page.goto('/feedback');
+
+    await expect(page.getByTestId('feedback-form')).toBeVisible();
+    await expect(page.getByTestId('feedback-email')).toBeDisabled();
+    await expect(page.getByTestId('feedback-kind')).toBeVisible();
+    await expect(page.getByTestId('feedback-message')).toBeVisible();
+    await expect(page.getByTestId('feedback-submit')).toBeVisible();
+  });
+});
+
 test.describe('Floating feedback button', () => {
   test('is hidden for anonymous visitors', async ({ browser }) => {
     const anonContext = await browser.newContext();
