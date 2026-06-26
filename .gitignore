@@ -107,3 +107,4 @@ nuxt/locales/crowdin/
 
 # Nuxt 4 build output
 .output
+.data

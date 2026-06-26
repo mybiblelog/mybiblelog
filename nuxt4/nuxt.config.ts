@@ -41,7 +41,16 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@nuxtjs/i18n',
+    '@nuxt/content',
+    '@vite-pwa/nuxt',
   ],
+
+  content: {
+    // Content directory at project root (nuxt4/content -> ../nuxt/content symlink)
+    renderer: {
+      anchorLinks: false,
+    },
+  },
 
   i18n: {
     baseUrl: process.env.SITE_URL,
@@ -61,6 +70,32 @@ export default defineNuxtConfig({
       cookieKey: 'i18n_redirected',
       alwaysRedirect: true,
       redirectOn: 'root',
+    },
+  },
+
+  pwa: {
+    manifest: {
+      name: 'My Bible Log',
+      short_name: 'My Bible Log',
+      lang: 'en',
+      display: 'standalone',
+      theme_color: '#0099FF',
+    },
+    workbox: {
+      navigateFallback: null,
+      globPatterns: [],
+      runtimeCaching: [
+        {
+          urlPattern: /^https?:\/\/.*/i,
+          handler: 'NetworkFirst',
+          options: {
+            cacheName: 'my-bible-log-cache',
+            cacheableResponse: {
+              statuses: [0, 200],
+            },
+          },
+        },
+      ],
     },
   },
 
