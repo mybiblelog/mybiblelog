@@ -121,7 +121,12 @@
 </template>
 
 <script setup lang="ts">
-import { Bible } from '@mybiblelog/shared';
+import {
+  Bible,
+  PassageSelection,
+  filterAndSortBookOptions,
+  getBookOptions,
+} from '@mybiblelog/shared';
 import AppModal from '~/components/popups/AppModal.vue';
 import GridSelector from '~/components/forms/GridSelector.vue';
 import TapRangeSelector from '~/components/forms/TapRangeSelector.vue';
@@ -147,26 +152,21 @@ const SELECTION = {
 
 type SelectionTarget = typeof SELECTION[keyof typeof SELECTION] | null;
 
-const selected = reactive({
-  book: 0,
-  startChapter: 0,
-  startVerse: 0,
-  endChapter: 0,
-  endVerse: 0,
-});
+// Selection state owned by the framework-agnostic passage-selection machine.
+const selected = ref(PassageSelection.emptyPassageSelection());
 
 const selectionTarget = ref<SelectionTarget>(null);
-const books = ref<Array<{ bibleOrder: number; newTestament: boolean }>>([]);
-const bookOptions = ref<Array<{ label: string; value: number }>>([]);
+
+// Option lists derived from the machine for each selection step.
 const startChapters = ref<number[]>([]);
 const startVerses = ref<number[]>([]);
 const endChapters = ref<number[]>([]);
 const endVerses = ref<number[]>([]);
-const silent = ref(false);
+
 const selectedTestament = ref<'old' | 'new'>('old');
 const bookSortOrder = ref<'numerical' | 'alphabetical'>('numerical');
 
-const bookName = computed(() => Bible.getBookName(selected.book, locale.value));
+const bookName = computed(() => Bible.getBookName(selected.value.book, locale.value));
 
 const modalTitle = computed(() => {
   switch (selectionTarget.value) {
@@ -180,92 +180,30 @@ const modalTitle = computed(() => {
   }
 });
 
-const filteredBookOptions = computed(() => {
-  let filtered = bookOptions.value.filter((book) => {
-    const bookData = books.value.find(b => b.bibleOrder === book.value);
-    if (!bookData) { return false; }
-    return selectedTestament.value === 'old' ? !bookData.newTestament : bookData.newTestament;
-  });
+const filteredBookOptions = computed(() => filterAndSortBookOptions(getBookOptions(locale.value), {
+  testament: selectedTestament.value,
+  sortOrder: bookSortOrder.value,
+  locale: locale.value,
+}));
 
-  if (bookSortOrder.value === 'alphabetical') {
-    filtered = [...filtered].sort((a, b) => {
-      const strip = (s: string) => s.replace(/^\d+\s*/, '').trim();
-      return strip(a.label).localeCompare(strip(b.label), locale.value);
-    });
+function applyOptions(options: PassageSelection.PassageSelectionOptions) {
+  startChapters.value = options.startChapters;
+  startVerses.value = options.startVerses;
+  endChapters.value = options.endChapters;
+  endVerses.value = options.endVerses;
+}
+
+// Applies a passage-selection result: adopt the new state, refresh the derived
+// option lists, and emit the resulting range to the parent.
+function applyResult(
+  result: PassageSelection.PassageSelectionResult,
+  { emit: doEmit = true }: { emit?: boolean } = {},
+) {
+  selected.value = result.state;
+  applyOptions(result.options);
+  if (doEmit && result.range) {
+    emit('change', result.range);
   }
-  else {
-    filtered = [...filtered].sort((a, b) => a.value - b.value);
-  }
-
-  return filtered;
-});
-
-function emitCurrentValue() {
-  if (silent.value) { return; }
-  const book = selected.book;
-  const startChapter = selected.startChapter || 1;
-  const endChapter = selected.endChapter || Bible.getBookChapterCount(book);
-  const startVerse = selected.startVerse || 1;
-  const endVerse = selected.endVerse || Bible.getChapterVerseCount(book, endChapter);
-  const startVerseId = Bible.makeVerseId(book, startChapter, startVerse);
-  const endVerseId = Bible.makeVerseId(book, endChapter, endVerse);
-  emit('change', { startVerseId, endVerseId });
-}
-
-function resetStartChapter() { selected.startChapter = 0; startChapters.value = []; }
-function resetStartVerse() { selected.startVerse = 0; startVerses.value = []; }
-function resetEndChapter() { selected.endChapter = 0; endChapters.value = []; }
-function resetEndVerse() { selected.endVerse = 0; endVerses.value = []; }
-
-function onSelectBook() {
-  resetStartChapter(); resetStartVerse(); resetEndChapter(); resetEndVerse();
-  const bookIndex = selected.book;
-  const chapterCount = Bible.getBookChapterCount(bookIndex);
-  const chapters: number[] = [];
-  for (let i = 1; i <= chapterCount; i++) { chapters.push(i); }
-  startChapters.value = chapters;
-  if (chapterCount === 1) { selectChapters({ from: 1, to: 1 }); }
-  emitCurrentValue();
-}
-
-function onSelectChapters() {
-  resetStartVerse(); resetEndVerse();
-  const startChapterVerseCount = Bible.getChapterVerseCount(selected.book, selected.startChapter);
-  const sv: number[] = [];
-  for (let i = 1; i <= startChapterVerseCount; i++) { sv.push(i); }
-  startVerses.value = sv;
-
-  const chapterCount = Bible.getBookChapterCount(selected.book);
-  const ec: number[] = [];
-  for (let i = selected.startChapter; i <= chapterCount; i++) { ec.push(i); }
-  endChapters.value = ec;
-
-  const endChapterVerseCount = Bible.getChapterVerseCount(selected.book, selected.endChapter);
-  const ev: number[] = [];
-  for (let i = 1; i <= endChapterVerseCount; i++) { ev.push(i); }
-  endVerses.value = ev;
-
-  emitCurrentValue();
-}
-
-function onSelectEndChapter() {
-  resetEndVerse();
-  const endChapterVerseCount = Bible.getChapterVerseCount(selected.book, selected.endChapter);
-  const initialVerse = (selected.startChapter === selected.endChapter) ? (selected.startVerse || 1) : 1;
-  const ev: number[] = [];
-  for (let i = initialVerse; i <= endChapterVerseCount; i++) { ev.push(i); }
-  endVerses.value = ev;
-  emitCurrentValue();
-}
-
-function onSelectStartVerse() {
-  if (selected.endChapter === selected.startChapter) {
-    const chapterVerseCount = Bible.getChapterVerseCount(selected.book, selected.endChapter);
-    const ev: number[] = [];
-    for (let i = selected.startVerse; i <= chapterVerseCount; i++) { ev.push(i); }
-    endVerses.value = ev;
-  }
-  emitCurrentValue();
 }
 
 function openSelectBook() { selectionTarget.value = SELECTION.BOOK; }
@@ -277,72 +215,44 @@ function openSelectEndVerse() { selectionTarget.value = SELECTION.END_VERSE; }
 function endSelection() { selectionTarget.value = null; }
 
 function selectBook(bookIndex: number) {
-  selected.book = bookIndex;
-  onSelectBook();
+  applyResult(PassageSelection.selectBook(bookIndex));
   selectionTarget.value = null;
 }
 
 function selectChapters({ from, to }: { from: number; to: number }) {
-  selected.startChapter = from;
-  selected.endChapter = to;
-  onSelectChapters();
+  applyResult(PassageSelection.selectChapters(selected.value, { from, to }));
   selectionTarget.value = null;
 }
 
 function selectEndChapter({ from, to }: { from: number; to: number }) {
-  selected.endChapter = to || from;
-  onSelectEndChapter();
+  applyResult(PassageSelection.selectEndChapter(selected.value, to || from));
   selectionTarget.value = null;
 }
 
 function selectVerses({ from, to }: { from: number; to: number }) {
-  selected.startVerse = from;
-  selected.endVerse = to;
-  const chapterVerseCount = Bible.getChapterVerseCount(selected.book, selected.endChapter);
-  const ev: number[] = [];
-  for (let i = selected.startVerse; i <= chapterVerseCount; i++) { ev.push(i); }
-  endVerses.value = ev;
-  emitCurrentValue();
+  applyResult(PassageSelection.selectVerses(selected.value, { from, to }));
   selectionTarget.value = null;
 }
 
 function selectStartVerse({ from, to }: { from: number; to: number }) {
-  selected.startVerse = from || to;
-  onSelectStartVerse();
+  applyResult(PassageSelection.selectStartVerse(selected.value, from || to));
   selectionTarget.value = null;
 }
 
 function selectEndVerse({ from, to }: { from: number; to: number }) {
-  selected.endVerse = to || from;
-  emitCurrentValue();
+  applyResult(PassageSelection.selectEndVerse(selected.value, to || from));
   selectionTarget.value = null;
 }
 
 defineExpose({ openSelectBook });
 
 onMounted(() => {
-  books.value = Bible.getBooks() as Array<{ bibleOrder: number; newTestament: boolean }>;
-  bookOptions.value = books.value.map(book => ({
-    label: Bible.getBookName(book.bibleOrder, locale.value),
-    value: book.bibleOrder,
-  }));
-
   if (!props.populateWith.empty) {
-    silent.value = true;
     const { startVerseId, endVerseId } = props.populateWith as { startVerseId: number; endVerseId: number };
-    const start = Bible.parseVerseId(startVerseId);
-    const end = Bible.parseVerseId(endVerseId);
-
-    selected.book = start.book;
-    onSelectBook();
-    selected.startChapter = start.chapter;
-    selected.endChapter = end.chapter;
-    onSelectChapters();
-    selected.startVerse = start.verse;
-    onSelectStartVerse();
-    selected.endVerse = end.verse;
-
-    silent.value = false;
+    // Hydrate from the existing range without emitting a change.
+    const { state, options } = PassageSelection.passageSelectionFromRange({ startVerseId, endVerseId });
+    selected.value = state;
+    applyOptions(options);
   }
 });
 </script>

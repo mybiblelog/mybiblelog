@@ -38,6 +38,8 @@
     "test:api": "npm run -w api test",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "test:e2e:nuxt4": "E2E_TARGET=nuxt4 playwright test",
+    "test:e2e:nuxt4:ui": "E2E_TARGET=nuxt4 playwright test --ui",
     "script:seed": "npm run -w api script:seed",
     "script:backup": "npm run -w api script:backup",
     "script:delete-test-users": "npm run -w api script:delete-test-users",

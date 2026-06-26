@@ -19,7 +19,7 @@ if (authStore.loggedIn) {
 }
 
 const { data: page } = await useAsyncData('home', () =>
-  queryCollection('content').path(`/${locale.value}/index`).first(),
+  queryCollection('content').path(`/${locale.value}`).first(),
 );
 
 if (!page.value) {

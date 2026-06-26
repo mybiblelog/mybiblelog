@@ -1,6 +1,21 @@
 import { defineStore } from 'pinia';
-import { Bible } from '@mybiblelog/shared';
+import {
+  deleteLogEntryRequest,
+  evaluateAchievement,
+  fetchLogEntries,
+  getBookIndexFromVerseId,
+  isBibleComplete,
+  postLogEntry,
+  putLogEntry,
+  type CreateLogEntryInput,
+  type HttpClient,
+  type LogEntry,
+  type UpdateLogEntryInput,
+} from '@mybiblelog/shared';
+import { useAchievementsStore } from '~/stores/achievements';
 import { useUserSettingsStore } from '~/stores/user-settings';
+
+export type { CreateLogEntryInput, LogEntry, UpdateLogEntryInput };
 
 const refreshDateVerseCounts = async (): Promise<void> => {
   const { useDateVerseCountsStore } = await import('~/stores/date-verse-counts');
@@ -12,50 +27,18 @@ const refreshReadingSuggestions = async (): Promise<void> => {
   useReadingSuggestionsStore().refreshReadingSuggestions();
 };
 
-export type LogEntry = {
-  id: number | string;
-  date: string; // YYYY-MM-DD
-  startVerseId: number;
-  endVerseId: number;
-  [key: string]: unknown;
-};
-
-export type CreateLogEntryInput = {
-  date: string;
-  startVerseId: number;
-  endVerseId: number;
-};
-
-export type UpdateLogEntryInput = CreateLogEntryInput & {
-  id: number | string;
-};
-
-const isBookComplete = (bookIndex: number, logEntries: LogEntry[]): boolean => {
-  const totalVerses = Bible.getBookVerseCount(bookIndex);
-  const versesRead = Bible.countUniqueBookRangeVerses(bookIndex, logEntries);
-  return versesRead === totalVerses;
-};
-
-const isBibleComplete = (logEntries: LogEntry[]): boolean => {
-  const totalBooks = Bible.getBookCount();
-  for (let i = 1; i <= totalBooks; i++) {
-    if (!isBookComplete(i, logEntries)) {
-      return false;
-    }
+const applyAchievement = (
+  bookIndex: number,
+  before: LogEntry[],
+  after: LogEntry[],
+): void => {
+  const achievement = evaluateAchievement(bookIndex, before, after);
+  if (achievement?.type === 'bible') {
+    useAchievementsStore().showBibleCompleteAchievement();
   }
-  return true;
-};
-
-const getBookIndexFromVerseId = (verseId: number): number => {
-  const parsed = Bible.parseVerseId(verseId);
-  return parsed.book;
-};
-
-type Http = {
-  get: <T>(path: string) => Promise<{ data: T }>;
-  post: <T>(path: string, body?: unknown) => Promise<{ data: T }>;
-  put: <T>(path: string, body?: unknown) => Promise<{ data: T }>;
-  delete: <T>(path: string) => Promise<{ data: T }>;
+  else if (achievement?.type === 'book') {
+    useAchievementsStore().showBookCompleteAchievement(achievement.bookIndex);
+  }
 };
 
 export const useLogEntriesStore = defineStore('log-entries', {
@@ -82,65 +65,34 @@ export const useLogEntriesStore = defineStore('log-entries', {
   },
   actions: {
     async loadLogEntries(): Promise<LogEntry[]> {
-      const { $http } = useNuxtApp() as { $http: Http };
-      const { data } = await $http.get<LogEntry[]>('/api/log-entries');
-      this.logEntries = Array.isArray(data) ? data : [];
+      const http = useNuxtApp().$http as unknown as HttpClient;
+      this.logEntries = await fetchLogEntries(http);
       this.isLoaded = true;
       return this.logEntries;
     },
 
     async createLogEntry(input: CreateLogEntryInput): Promise<LogEntry> {
-      const { $http } = useNuxtApp() as { $http: Http };
-      const { date, startVerseId, endVerseId } = input;
+      const http = useNuxtApp().$http as unknown as HttpClient;
+      const before = this.currentLogEntries;
+      const bookIndex = getBookIndexFromVerseId(input.startVerseId);
 
-      const currentLogEntries = this.currentLogEntries;
-      const bookIndex = getBookIndexFromVerseId(startVerseId);
+      const created = await postLogEntry(http, input);
+      this.logEntries.push(created);
 
-      const wasBookComplete = isBookComplete(bookIndex, currentLogEntries);
-      const wasBibleComplete = isBibleComplete(currentLogEntries);
-
-      const { data } = await $http.post<LogEntry>('/api/log-entries', {
-        date,
-        startVerseId,
-        endVerseId,
-      });
-
-      this.logEntries.push(data);
-
-      const updatedLogEntries = this.currentLogEntries;
-      const isBookNowComplete = isBookComplete(bookIndex, updatedLogEntries);
-      const isBibleNowComplete = isBibleComplete(updatedLogEntries);
-
-      if (!wasBibleComplete && isBibleNowComplete) {
-        const { useAchievementsStore } = await import('~/stores/achievements');
-        useAchievementsStore().showBibleCompleteAchievement();
-      }
-      else if (!wasBookComplete && isBookNowComplete) {
-        const { useAchievementsStore } = await import('~/stores/achievements');
-        useAchievementsStore().showBookCompleteAchievement(bookIndex);
-      }
+      applyAchievement(bookIndex, before, this.currentLogEntries);
 
       await refreshReadingSuggestions();
       refreshDateVerseCounts();
 
-      return data;
+      return created;
     },
 
     async updateLogEntry(input: UpdateLogEntryInput): Promise<LogEntry> {
-      const { $http } = useNuxtApp() as { $http: Http };
-      const { id, date, startVerseId, endVerseId } = input;
+      const http = useNuxtApp().$http as unknown as HttpClient;
+      const before = this.currentLogEntries;
+      const bookIndex = getBookIndexFromVerseId(input.startVerseId);
 
-      const currentLogEntries = this.currentLogEntries;
-      const bookIndex = getBookIndexFromVerseId(startVerseId);
-
-      const wasBookComplete = isBookComplete(bookIndex, currentLogEntries);
-      const wasBibleComplete = isBibleComplete(currentLogEntries);
-
-      const { data: updated } = await $http.put<LogEntry>(`/api/log-entries/${id}`, {
-        date,
-        startVerseId,
-        endVerseId,
-      });
+      const updated = await putLogEntry(http, input);
 
       const existing = this.logEntries.find(le => le.id === updated.id);
       if (existing) {
@@ -150,18 +102,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
         this.logEntries.push(updated);
       }
 
-      const updatedLogEntries = this.currentLogEntries;
-      const isBookNowComplete = isBookComplete(bookIndex, updatedLogEntries);
-      const isBibleNowComplete = isBibleComplete(updatedLogEntries);
-
-      if (!wasBibleComplete && isBibleNowComplete) {
-        const { useAchievementsStore } = await import('~/stores/achievements');
-        useAchievementsStore().showBibleCompleteAchievement();
-      }
-      else if (!wasBookComplete && isBookNowComplete) {
-        const { useAchievementsStore } = await import('~/stores/achievements');
-        useAchievementsStore().showBookCompleteAchievement(bookIndex);
-      }
+      applyAchievement(bookIndex, before, this.currentLogEntries);
 
       await refreshReadingSuggestions();
       refreshDateVerseCounts();
@@ -170,12 +111,12 @@ export const useLogEntriesStore = defineStore('log-entries', {
     },
 
     async deleteLogEntry(logEntryId: number | string): Promise<boolean> {
-      const { $http } = useNuxtApp() as { $http: Http };
+      const http = useNuxtApp().$http as unknown as HttpClient;
       const logEntry = this.logEntries.find(le => le.id === logEntryId);
       const date = logEntry?.date;
 
-      const { data } = await $http.delete<unknown>(`/api/log-entries/${logEntryId}`);
-      if (!data) {
+      const deleted = await deleteLogEntryRequest(http, logEntryId);
+      if (!deleted) {
         return false;
       }
 

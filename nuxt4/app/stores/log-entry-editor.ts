@@ -1,18 +1,12 @@
 import dayjs from 'dayjs';
 import { defineStore } from 'pinia';
-import { Bible } from '@mybiblelog/shared';
+import { LogEntryEditorMachine, type LogEntryEditorModel } from '@mybiblelog/shared';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useDialogStore } from '~/stores/dialog';
 import { ApiError } from '~/helpers/api-error';
 import { useLogEntriesStore } from '~/stores/log-entries';
 
-export type LogEntryEditorModel = {
-  id: number | string | null;
-  date: string | null;
-  book: number | null;
-  startVerseId: number | null;
-  endVerseId: number | null;
-};
+export type { LogEntryEditorModel };
 
 export type LogEntryEditorOpenPayload =
   | (Partial<LogEntryEditorModel> & { empty?: false })
@@ -30,18 +24,6 @@ export type LogEntryEditorState = {
   isValid: boolean;
 };
 
-const newLogEntry: LogEntryEditorModel = {
-  id: null,
-  date: null,
-  book: null,
-  startVerseId: null,
-  endVerseId: null,
-};
-
-function clone<T>(value: T): T {
-  return JSON.parse(JSON.stringify(value)) as T;
-}
-
 function isEmptyOpenPayload(payload: LogEntryEditorOpenPayload): payload is { empty: true; date?: string | null } {
   return Boolean(
     payload &&
@@ -55,22 +37,17 @@ export const useLogEntryEditorStore = defineStore('log-entry-editor', {
   state: (): LogEntryEditorState => ({
     open: false,
     cleanFormValue: null,
-    logEntry: clone(newLogEntry),
+    logEntry: LogEntryEditorMachine.emptyLogEntryEditorModel(),
     errors: {},
     isValid: false,
   }),
   actions: {
     openEditor(payload: LogEntryEditorOpenPayload = null): void {
       if (payload && !isEmptyOpenPayload(payload)) {
-        this.logEntry = clone({ ...newLogEntry, ...payload });
-
-        if (!this.logEntry.book && this.logEntry.startVerseId) {
-          const start = Bible.parseVerseId(this.logEntry.startVerseId);
-          this.logEntry.book = start.book;
-        }
+        this.logEntry = LogEntryEditorMachine.initLogEntryEditorModel(payload);
       }
       else {
-        this.logEntry = clone(newLogEntry);
+        this.logEntry = LogEntryEditorMachine.emptyLogEntryEditorModel();
         if (isEmptyOpenPayload(payload) && payload.date) {
           this.logEntry.date = String(payload.date);
         }
@@ -81,7 +58,7 @@ export const useLogEntryEditorStore = defineStore('log-entry-editor', {
 
       this.cleanFormValue = JSON.stringify(this.logEntry);
       this.errors = {};
-      this.isValid = Boolean(this.logEntry.endVerseId && this.logEntry.date);
+      this.isValid = LogEntryEditorMachine.isLogEntryEditorValid(this.logEntry);
       this.open = true;
     },
 
@@ -104,8 +81,8 @@ export const useLogEntryEditorStore = defineStore('log-entry-editor', {
     },
 
     updateLogEntry(logEntry: LogEntryEditorModel): void {
-      this.logEntry = clone(logEntry);
-      this.isValid = Boolean(this.logEntry.endVerseId && this.logEntry.date);
+      this.logEntry = { ...logEntry };
+      this.isValid = LogEntryEditorMachine.isLogEntryEditorValid(this.logEntry);
     },
 
     setErrors(errors: LogEntryEditorErrors): void {
@@ -117,86 +94,27 @@ export const useLogEntryEditorStore = defineStore('log-entry-editor', {
     },
 
     selectBook(bookIndex: number): void {
-      const updated = clone(this.logEntry);
-      updated.book = bookIndex;
-      updated.startVerseId = null;
-      updated.endVerseId = null;
-      this.updateLogEntry(updated);
-
-      const chapterCount = Bible.getBookChapterCount(bookIndex);
-      if (chapterCount === 1) {
-        this.selectStartChapter(1);
-      }
+      this.updateLogEntry(LogEntryEditorMachine.selectBook(this.logEntry, bookIndex));
     },
 
     selectStartChapter(chapterIndex: number): void {
-      const bookIndex = this.logEntry.book;
-      if (!bookIndex || bookIndex === 0) { return; }
-
-      const updated = clone(this.logEntry);
-      updated.startVerseId = Bible.makeVerseId(bookIndex, chapterIndex, 1);
-      this.updateLogEntry(updated);
-
-      const chapterVerseCount = Bible.getChapterVerseCount(bookIndex, chapterIndex);
-      const finalLogEntry = clone(updated);
-      finalLogEntry.endVerseId = Bible.makeVerseId(bookIndex, chapterIndex, chapterVerseCount);
-      this.updateLogEntry(finalLogEntry);
+      this.updateLogEntry(LogEntryEditorMachine.selectStartChapter(this.logEntry, chapterIndex));
     },
 
     selectStartVerse(verseIndex: number): void {
-      const bookIndex = this.logEntry.book;
-      const startChapter = this.logEntry.startVerseId
-        ? Bible.parseVerseId(this.logEntry.startVerseId).chapter
-        : 0;
-
-      if (!bookIndex || bookIndex === 0 || !startChapter || startChapter === 0) { return; }
-
-      const updated = clone(this.logEntry);
-      updated.startVerseId = Bible.makeVerseId(bookIndex, startChapter, verseIndex);
-
-      if (!updated.endVerseId) {
-        const chapterVerseCount = Bible.getChapterVerseCount(bookIndex, startChapter);
-        updated.endVerseId = Bible.makeVerseId(bookIndex, startChapter, chapterVerseCount);
-      }
-      else {
-        const end = Bible.parseVerseId(updated.endVerseId);
-        if (end.chapter === startChapter && end.verse < verseIndex) {
-          const chapterVerseCount = Bible.getChapterVerseCount(bookIndex, startChapter);
-          updated.endVerseId = Bible.makeVerseId(bookIndex, startChapter, chapterVerseCount);
-        }
-      }
-
-      this.updateLogEntry(updated);
+      this.updateLogEntry(LogEntryEditorMachine.selectStartVerse(this.logEntry, verseIndex));
     },
 
     selectEndChapter(chapterIndex: number): void {
-      const bookIndex = this.logEntry.book;
-      if (!bookIndex || bookIndex === 0) { return; }
-
-      const chapterVerseCount = Bible.getChapterVerseCount(bookIndex, chapterIndex);
-      const updated = clone(this.logEntry);
-      updated.endVerseId = Bible.makeVerseId(bookIndex, chapterIndex, chapterVerseCount);
-      this.updateLogEntry(updated);
+      this.updateLogEntry(LogEntryEditorMachine.selectEndChapter(this.logEntry, chapterIndex));
     },
 
     selectEndVerse(verseIndex: number): void {
-      const bookIndex = this.logEntry.book;
-      const endChapter = this.logEntry.endVerseId
-        ? Bible.parseVerseId(this.logEntry.endVerseId).chapter
-        : 0;
-
-      if (!bookIndex || bookIndex === 0 || !endChapter || endChapter === 0) { return; }
-
-      const updated = clone(this.logEntry);
-      updated.endVerseId = Bible.makeVerseId(bookIndex, endChapter, verseIndex);
-      this.updateLogEntry(updated);
+      this.updateLogEntry(LogEntryEditorMachine.selectEndVerse(this.logEntry, verseIndex));
     },
 
     updateDate(date: string): void {
-      if (!date) { return; }
-      const updated = clone(this.logEntry);
-      updated.date = date;
-      this.updateLogEntry(updated);
+      this.updateLogEntry(LogEntryEditorMachine.updateDate(this.logEntry, date));
     },
 
     async saveLogEntry(): Promise<unknown | null> {

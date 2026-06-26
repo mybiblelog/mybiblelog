@@ -114,7 +114,15 @@
 </template>
 
 <script setup lang="ts">
-import { Bible } from '@mybiblelog/shared';
+import {
+  Bible,
+  PassageSelection,
+  coerceVerseRange,
+  filterAndSortBookOptions,
+  formatVerseRange,
+  getBookOptions,
+  parseVerseInput,
+} from '@mybiblelog/shared';
 import AppModal from '~/components/popups/AppModal.vue';
 import GridSelector from '~/components/forms/GridSelector.vue';
 import TapRangeSelector from '~/components/forms/TapRangeSelector.vue';
@@ -135,46 +143,32 @@ const { t, locale } = useI18n();
 const SINGLE_SELECTION = { BOOK: 'BOOK', CHAPTER: 'CHAPTER', VERSE: 'VERSE' } as const;
 type SingleSelection = typeof SINGLE_SELECTION[keyof typeof SINGLE_SELECTION] | null;
 
+// Maps the single-verse machine's next-step hint to a modal target.
+const STEP_TO_TARGET: Record<'book' | 'chapter' | 'verse', SingleSelection> = {
+  book: SINGLE_SELECTION.BOOK,
+  chapter: SINGLE_SELECTION.CHAPTER,
+  verse: SINGLE_SELECTION.VERSE,
+};
+
 const localText = ref('');
 const isEditing = ref(false);
-const books = ref<Array<{ bibleOrder: number; newTestament: boolean }>>([]);
-const bookOptions = ref<Array<{ label: string; value: number }>>([]);
 const selectedTestament = ref<'old' | 'new'>('old');
 const bookSortOrder = ref<'numerical' | 'alphabetical'>('numerical');
 const singleSelectionTarget = ref<SingleSelection>(null);
-const singleSelected = reactive({ book: 0, chapter: 0, verse: 0 });
+const singleSelected = ref(PassageSelection.emptySingleVerseSelection());
 const passageSelectorKey = ref(0);
 const passageSelectorPopulateWith = ref<Record<string, unknown>>({ empty: true });
 const passageSelectorRef = ref<{ openSelectBook: () => void } | null>(null);
 
-const valueRange = computed(() => {
-  const v = props.modelValue;
-  if (!v) { return null; }
-  const startVerseId = Number(v.startVerseId);
-  const endVerseId = Number(v.endVerseId);
-  if (!Number.isFinite(startVerseId) || !Number.isFinite(endVerseId)) { return null; }
-  return { startVerseId, endVerseId };
-});
+const valueRange = computed(() => coerceVerseRange(props.modelValue));
 
-const hasText = computed(() => !!(localText.value && String(localText.value).trim().length));
+const parsedInput = computed(() => parseVerseInput(localText.value, { locale: locale.value, multiVerse: props.multiVerse }));
 
-const parsedRangeFromText = computed(() => {
-  const raw = String(localText.value || '').trim();
-  if (!raw) { return null; }
-  try {
-    return Bible.parseVerseRange(raw, locale.value) || null;
-  }
-  catch {
-    return null;
-  }
-});
+const hasText = computed(() => parsedInput.value.hasText);
 
-const isValid = computed(() => {
-  if (!hasText.value) { return true; }
-  if (!parsedRangeFromText.value) { return false; }
-  if (props.multiVerse) { return true; }
-  return parsedRangeFromText.value.startVerseId === parsedRangeFromText.value.endVerseId;
-});
+const parsedRangeFromText = computed(() => parsedInput.value.range);
+
+const isValid = computed(() => parsedInput.value.isValid);
 
 const showInvalid = computed(() => hasText.value && !isValid.value);
 
@@ -219,34 +213,20 @@ const singleModalTitle = computed(() => {
   }
 });
 
-const filteredBookOptions = computed(() => {
-  let filtered = bookOptions.value.filter((book) => {
-    const bookData = books.value.find(b => b.bibleOrder === book.value);
-    if (!bookData) { return false; }
-    return selectedTestament.value === 'old' ? !bookData.newTestament : bookData.newTestament;
-  });
-
-  if (bookSortOrder.value === 'alphabetical') {
-    filtered = [...filtered].sort((a, b) => {
-      const strip = (s: string) => s.replace(/^\d+\s*/, '').trim();
-      return strip(a.label).localeCompare(strip(b.label), locale.value);
-    });
-  }
-  else {
-    filtered = [...filtered].sort((a, b) => a.value - b.value);
-  }
-
-  return filtered;
-});
+const filteredBookOptions = computed(() => filterAndSortBookOptions(getBookOptions(locale.value), {
+  testament: selectedTestament.value,
+  sortOrder: bookSortOrder.value,
+  locale: locale.value,
+}));
 
 const singleChapterMax = computed(() => {
-  if (!singleSelected.book) { return 1; }
-  return Bible.getBookChapterCount(singleSelected.book);
+  if (!singleSelected.value.book) { return 1; }
+  return Bible.getBookChapterCount(singleSelected.value.book);
 });
 
 const singleVerseMax = computed(() => {
-  if (!singleSelected.book || !singleSelected.chapter) { return 1; }
-  return Bible.getChapterVerseCount(singleSelected.book, singleSelected.chapter);
+  if (!singleSelected.value.book || !singleSelected.value.chapter) { return 1; }
+  return Bible.getChapterVerseCount(singleSelected.value.book, singleSelected.value.chapter);
 });
 
 watch(() => props.modelValue, (next) => {
@@ -256,26 +236,13 @@ watch(() => props.modelValue, (next) => {
     localText.value = '';
     return;
   }
-  localText.value = Bible.displayVerseRange(range.startVerseId, range.endVerseId, locale.value);
+  localText.value = formatVerseRange(range, locale.value);
 }, { immediate: true });
 
 watch(locale, () => {
-  if (!books.value?.length) { return; }
-  bookOptions.value = books.value.map(book => ({
-    label: Bible.getBookName(book.bibleOrder, locale.value),
-    value: book.bibleOrder,
-  }));
   if (!isEditing.value && valueRange.value) {
-    localText.value = Bible.displayVerseRange(valueRange.value.startVerseId, valueRange.value.endVerseId, locale.value);
+    localText.value = formatVerseRange(valueRange.value, locale.value);
   }
-});
-
-onMounted(() => {
-  books.value = Bible.getBooks() as Array<{ bibleOrder: number; newTestament: boolean }>;
-  bookOptions.value = books.value.map(book => ({
-    label: Bible.getBookName(book.bibleOrder, locale.value),
-    value: book.bibleOrder,
-  }));
 });
 
 function onTextInput(e: Event) {
@@ -298,8 +265,7 @@ function clear() {
 function onBlurNormalize() {
   isEditing.value = false;
   if (!isValid.value || !parsedRangeFromText.value) { return; }
-  const { startVerseId, endVerseId } = parsedRangeFromText.value;
-  localText.value = Bible.displayVerseRange(startVerseId, endVerseId, locale.value);
+  localText.value = formatVerseRange(parsedRangeFromText.value, locale.value);
 }
 
 function openPicker() {
@@ -308,53 +274,41 @@ function openPicker() {
 }
 
 function openSinglePicker() {
-  Object.assign(singleSelected, { book: 0, chapter: 0, verse: 0 });
+  singleSelected.value = PassageSelection.emptySingleVerseSelection();
   const range = valueRange.value;
   if (range && range.startVerseId === range.endVerseId) {
-    const parsed = Bible.parseVerseId(range.startVerseId);
-    singleSelected.book = parsed.book;
-    singleSelected.chapter = parsed.chapter;
-    singleSelected.verse = parsed.verse;
+    singleSelected.value = PassageSelection.singleSelectionFromVerseId(range.startVerseId);
   }
   singleSelectionTarget.value = SINGLE_SELECTION.BOOK;
 }
 
 function closeSinglePicker() { singleSelectionTarget.value = null; }
 
-function selectSingleBook(bookIndex: number) {
-  singleSelected.book = bookIndex;
-  const chapterCount = Bible.getBookChapterCount(bookIndex);
-  if (chapterCount === 1) {
-    singleSelected.chapter = 1;
-    singleSelectionTarget.value = SINGLE_SELECTION.VERSE;
+function applySingleResult(result: PassageSelection.SingleSelectionResult) {
+  singleSelected.value = result.selection;
+  if (result.step === 'done') {
+    finalizeSingleSelection(result.verseId);
   }
   else {
-    singleSelectionTarget.value = SINGLE_SELECTION.CHAPTER;
+    singleSelectionTarget.value = STEP_TO_TARGET[result.step];
   }
+}
+
+function selectSingleBook(bookIndex: number) {
+  applySingleResult(PassageSelection.singleSelectBook(bookIndex));
 }
 
 function selectSingleChapter({ from, to }: { from: number; to: number }) {
-  singleSelected.chapter = to || from;
-  const verseCount = Bible.getChapterVerseCount(singleSelected.book, singleSelected.chapter);
-  if (verseCount === 1) {
-    singleSelected.verse = 1;
-    finalizeSingleSelection();
-  }
-  else {
-    singleSelectionTarget.value = SINGLE_SELECTION.VERSE;
-  }
+  applySingleResult(PassageSelection.singleSelectChapter(singleSelected.value, to || from));
 }
 
 function selectSingleVerse({ from, to }: { from: number; to: number }) {
-  singleSelected.verse = to || from;
-  finalizeSingleSelection();
+  applySingleResult(PassageSelection.singleSelectVerse(singleSelected.value, to || from));
 }
 
-function finalizeSingleSelection() {
-  const { book, chapter, verse } = singleSelected;
-  if (!book || !chapter || !verse) { return; }
-  const verseId = Bible.makeVerseId(book, chapter, verse);
-  localText.value = Bible.displayVerseRange(verseId, verseId, locale.value);
+function finalizeSingleSelection(verseId: number | null) {
+  if (!verseId) { return; }
+  localText.value = formatVerseRange({ startVerseId: verseId, endVerseId: verseId }, locale.value);
   isEditing.value = false;
   emit('update:modelValue', { startVerseId: verseId, endVerseId: verseId });
   closeSinglePicker();
@@ -370,7 +324,7 @@ function openMultiPicker() {
 }
 
 function onPassageSelectorChange({ startVerseId, endVerseId }: { startVerseId: number; endVerseId: number }) {
-  localText.value = Bible.displayVerseRange(startVerseId, endVerseId, locale.value);
+  localText.value = formatVerseRange({ startVerseId, endVerseId }, locale.value);
   isEditing.value = false;
   emit('update:modelValue', { startVerseId, endVerseId });
 }

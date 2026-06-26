@@ -27,16 +27,12 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import weekday from 'dayjs/plugin/weekday';
-import weekOfYear from 'dayjs/plugin/weekOfYear';
+import { buildMonthGrid } from '@mybiblelog/shared';
 import CalendarMonthDayItem from '~/components/calendar/CalendarMonthDayItem.vue';
 import CalendarDateIndicator from '~/components/calendar/CalendarDateIndicator.vue';
 import CalendarDateSelector from '~/components/calendar/CalendarDateSelector.vue';
 import CalendarWeekdays from '~/components/calendar/CalendarWeekdays.vue';
 import type { DateVerseCounts } from '~/stores/date-verse-counts';
-
-dayjs.extend(weekday);
-dayjs.extend(weekOfYear);
 
 const props = defineProps<{
   getDateVerseCounts: (date: string) => DateVerseCounts;
@@ -52,55 +48,14 @@ const selectedDay = ref(todayStr);
 
 const month = computed(() => Number(selectedDate.value.format('M')));
 const year = computed(() => Number(selectedDate.value.format('YYYY')));
-const numberOfDaysInMonth = computed(() => dayjs(selectedDate.value).daysInMonth());
 
-const currentMonthDays = computed(() => {
-  const goal = props.dailyVerseCountGoal;
-  const trackerStart = props.trackerStartDate;
-  return [...Array(numberOfDaysInMonth.value)].map((_, index) => {
-    const date = dayjs(`${year.value}-${month.value}-${index + 1}`).format('YYYY-MM-DD');
-    const { unique, total } = props.getDateVerseCounts(date);
-    return {
-      date,
-      isCurrentMonth: true,
-      uniqueVerseCountPercentage: goal > 0 ? unique / goal * 100 : 0,
-      totalVerseCountPercentage: goal > 0 ? total / goal * 100 : 0,
-      isBeforeTrackerStartDate: trackerStart ? date < trackerStart : false,
-      isTrackerStartDate: trackerStart ? date === trackerStart : false,
-    };
-  });
-});
-
-const previousMonthDays = computed(() => {
-  const firstDayWeekday = getWeekday(currentMonthDays.value[0].date);
-  const previousMonth = dayjs(`${year.value}-${month.value}-01`).subtract(1, 'month');
-  const visibleCount = firstDayWeekday ? firstDayWeekday - 1 : 6;
-  const startDay = dayjs(currentMonthDays.value[0].date).subtract(visibleCount, 'day').date();
-  return [...Array(visibleCount)].map((_, index) => ({
-    date: dayjs(`${previousMonth.year()}-${previousMonth.month() + 1}-${startDay + index}`).format('YYYY-MM-DD'),
-    isCurrentMonth: false,
-  }));
-});
-
-const nextMonthDays = computed(() => {
-  const lastDayWeekday = getWeekday(`${year.value}-${month.value}-${currentMonthDays.value.length}`);
-  const nextMonth = dayjs(`${year.value}-${month.value}-01`).add(1, 'month');
-  const visibleCount = lastDayWeekday ? 7 - lastDayWeekday : lastDayWeekday;
-  return [...Array(visibleCount)].map((_, index) => ({
-    date: dayjs(`${nextMonth.year()}-${nextMonth.month() + 1}-${index + 1}`).format('YYYY-MM-DD'),
-    isCurrentMonth: false,
-  }));
-});
-
-const days = computed(() => [
-  ...previousMonthDays.value,
-  ...currentMonthDays.value,
-  ...nextMonthDays.value,
-]);
-
-function getWeekday(date: string) {
-  return (dayjs(date) as ReturnType<typeof dayjs> & { weekday: () => number }).weekday();
-}
+const days = computed(() => buildMonthGrid({
+  year: year.value,
+  month: month.value,
+  dailyVerseCountGoal: props.dailyVerseCountGoal,
+  trackerStartDate: props.trackerStartDate,
+  getDateVerseCounts: props.getDateVerseCounts,
+}));
 
 function selectDate(newDate: ReturnType<typeof dayjs>) {
   selectedDate.value = newDate;

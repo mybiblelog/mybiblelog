@@ -16,8 +16,8 @@
         <h2 class="fifty-fifty-title" v-html="title" />
         <p class="fifty-fifty-subtitle" v-html="subtitle" />
         <p class="fifty-fifty-description" v-html="description" />
-        <ul v-if="list && list.length > 0" class="fifty-fifty-list">
-          <li v-for="(item, index) in list" :key="index" v-html="item" />
+        <ul v-if="resolvedList.length > 0" class="fifty-fifty-list">
+          <li v-for="(item, index) in resolvedList" :key="index" v-html="item" />
         </ul>
         <div v-if="buttonText && buttonDestination" class="fifty-fifty-cta">
           <NuxtLink :to="localePath(buttonDestination)" class="mbl-button mbl-button--primary">
@@ -31,17 +31,17 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
   imageSrc: string;
   imageAlt?: string;
   imageWidth?: string;
   imageHeight?: string;
   imageContainerClass?: string;
-  imageFetchPriority?: string;
+  imageFetchPriority?: 'high' | 'low' | 'auto';
   title: string;
   subtitle?: string;
   description?: string;
-  list?: string[];
+  list?: string[] | string;
   buttonText?: string;
   buttonDestination?: string;
   note?: string;
@@ -51,7 +51,7 @@ withDefaults(defineProps<{
   imageWidth: '',
   imageHeight: '',
   imageContainerClass: '',
-  imageFetchPriority: '',
+  imageFetchPriority: 'auto',
   subtitle: '',
   description: '',
   list: () => [],
@@ -59,6 +59,30 @@ withDefaults(defineProps<{
   buttonDestination: '',
   note: '',
   reverse: false,
+});
+
+// @nuxt/content v3 MDC passes array props as single-quoted JS array strings
+// FIXME: tech debt from Nuxt migration
+const resolvedList = computed((): string[] => {
+  if (!props.list) return [];
+  if (Array.isArray(props.list)) return props.list;
+  const str = (props.list as string).trim();
+  if (!str.startsWith('[')) return [];
+  try {
+    return JSON.parse(str);
+  } catch {
+    // Convert single-quoted JS array to JSON; protect escaped apostrophes first
+    const APOS = '\x00';
+    const jsonStr = str
+      .replace(/\\'/g, APOS)
+      .replace(/'/g, '"')
+      .replace(new RegExp(APOS, 'g'), "'");
+    try {
+      return JSON.parse(jsonStr);
+    } catch {
+      return [];
+    }
+  }
 });
 
 const localePath = useLocalePath();

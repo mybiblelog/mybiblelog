@@ -35,7 +35,7 @@ export function useContentSeo(options: {
     ],
   );
 
-  const headMeta: Record<string, unknown>[] = [];
+  const headMeta: Record<string, string>[] = [];
   if (options.noIndex) {
     headMeta.push({ name: 'robots', content: 'noindex' });
   }
