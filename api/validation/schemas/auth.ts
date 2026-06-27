@@ -63,6 +63,11 @@ export const googleVerifyBodySchema = z.object({
   locale: z.string().optional(),
 });
 
+export const googleIdTokenBodySchema = z.object({
+  idToken: z.string(),
+  locale: z.string().optional(),
+});
+
 export const verifyEmailBodySchema = z.object({
   code: z.string(),
 });

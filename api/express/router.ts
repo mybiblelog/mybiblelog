@@ -11,6 +11,7 @@ import { feedbackRoutes } from '../http/routes/feedback';
 import { adminRoutes } from '../http/routes/admin';
 import { scriptureRoutes } from '../http/routes/scripture';
 import { sitemapRoutes } from '../http/routes/sitemap';
+import { mobileAppRoutes } from '../http/routes/mobile-app';
 
 /**
  * Express wiring for the API. The handlers are framework-agnostic
@@ -32,6 +33,7 @@ registerRoutes(apiRouter, [
   ...adminRoutes,
   ...scriptureRoutes,
   ...sitemapRoutes,
+  ...mobileAppRoutes,
 ]);
 
 export default apiRouter;

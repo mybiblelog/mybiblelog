@@ -10,6 +10,7 @@ import {
 } from '../../repositories/helpers/user-auth';
 import { type UserCreateInput } from '../../repositories/helpers/types';
 import googleOauth2 from '../helpers/google-oauth2';
+import googleIdToken from '../helpers/google-id-token';
 import { validate } from '../../validation/validate';
 import {
   registerBodySchema,
@@ -132,8 +133,14 @@ export const verifyGoogleOauth: RouteHandler = async (req, deps) => {
     throw new InvalidRequestError();
   }
 
+  // Require a string `code` to prevent NoSQL operator injection / malformed
+  // payloads (mirrors the guard in googleIdTokenLogin below).
+  if (typeof code !== 'string' || !code) {
+    throw new InvalidRequestError();
+  }
+
   const { users } = deps.repositories;
-  const accessToken = await googleOauth2.getAccessTokenFromCode(code as string);
+  const accessToken = await googleOauth2.getAccessTokenFromCode(code);
   const profile = await googleOauth2.getUserProfileFromToken(accessToken);
 
   /* eslint-disable camelcase */
@@ -167,6 +174,64 @@ export const verifyGoogleOauth: RouteHandler = async (req, deps) => {
 
   const token = generateUserJWT(user);
   return { status: 200, body: { data: { token } }, cookies: [authCookie(token)] };
+};
+
+// POST /auth/oauth2/google/id-token - Exchange a native Google id_token for a session
+// (mobile-friendly: no redirect/callback). Mirrors verifyGoogleOauth but verifies the
+// id_token directly via Google's tokeninfo endpoint.
+export const googleIdTokenLogin: RouteHandler = async (req, deps) => {
+  await deps.rateLimiter.check(req, { maxRequests: 10, windowMs: 60 * 1000 });
+
+  const { idToken, locale } = asRecord(req.body);
+
+  // Require a string to prevent NoSQL operator injection / malformed payloads.
+  if (typeof idToken !== 'string' || !idToken) {
+    throw new ValidationError([{ code: ApiErrorDetailCode.Required, field: 'idToken' }]);
+  }
+
+  let googleUserId: string;
+  let email: string;
+  try {
+    ({ googleUserId, email } = await googleIdToken.verifyGoogleIdToken(idToken));
+  }
+  catch {
+    // Any verification failure (bad signature, wrong audience, unverified email,
+    // expired token, …) is surfaced to the client as a 400 invalid request,
+    // without leaking which check failed.
+    throw new InvalidRequestError();
+  }
+
+  const { users } = deps.repositories;
+  const existingUser = await users.findByEmail(email);
+  if (existingUser) {
+    // Link the Google account to the existing account if not already linked.
+    if (!existingUser.googleId) {
+      await users.linkGoogleAccount(existingUser.id, googleUserId);
+    }
+
+    const token = generateUserJWT(existingUser);
+    return {
+      status: 200,
+      body: { data: { token, user: toAuthJSON(existingUser) } },
+      cookies: [authCookie(token)],
+    };
+  }
+
+  // Create a new OAuth-only account (Google-verified email needs no verification).
+  const user = await users.create({
+    email,
+    emailVerificationCode: '',
+    password: null,
+    googleId: googleUserId,
+    locale: locale as string | undefined,
+  });
+
+  const token = generateUserJWT(user);
+  return {
+    status: 200,
+    body: { data: { token, user: toAuthJSON(user) } },
+    cookies: [authCookie(token)],
+  };
 };
 
 // POST /auth/verify-email - Verify an email via code, set the auth cookie for auto-login

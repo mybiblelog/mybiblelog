@@ -4,6 +4,7 @@ import {
   loginBodySchema,
   registerBodySchema,
   googleVerifyBodySchema,
+  googleIdTokenBodySchema,
   verifyEmailBodySchema,
   resendEmailVerificationBodySchema,
   changePasswordBodySchema,
@@ -20,6 +21,7 @@ import {
   register,
   getGoogleOauthUrl,
   verifyGoogleOauth,
+  googleIdTokenLogin,
   verifyEmail,
   resendEmailVerification,
   changePassword,
@@ -131,6 +133,27 @@ export const authRoutes: RouteDefinition[] = [
       response: {
         description: 'Google OAuth2 verification successful',
         schema: z.object({ token: z.string() }),
+      },
+      setsAuthCookie: true,
+      errors: [400],
+    },
+  },
+  {
+    method: 'POST',
+    path: '/auth/oauth2/google/id-token',
+    handler: googleIdTokenLogin,
+    docs: {
+      summary: 'Login with a Google ID token (mobile-friendly)',
+      description:
+        'Accepts a Google `id_token` from a native/mobile Google sign-in flow and '
+        + 'exchanges it for a MyBibleLog session. Recommended for mobile apps (no '
+        + 'redirect/callback handling needed).',
+      tags,
+      public: true,
+      request: { body: googleIdTokenBodySchema },
+      response: {
+        description: 'Google login successful',
+        schema: z.object({ token: z.string(), user: userSchema }),
       },
       setsAuthCookie: true,
       errors: [400],

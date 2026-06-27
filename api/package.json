@@ -37,6 +37,7 @@
     "errorhandler": "^1.5.1",
     "express": "^5.1.0",
     "form-data": "^4.0.4",
+    "google-auth-library": "^10.9.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^7.2.0",
@@ -61,9 +62,9 @@
     "@types/swagger-ui-express": "^4.1.8",
     "@types/xml2js": "^0.4.14",
     "nodemon": "^3.1.10",
-    "vitest": "^3.0.0",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^3.0.0"
   }
 }

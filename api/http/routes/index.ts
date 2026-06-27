@@ -9,6 +9,7 @@ import { feedbackRoutes } from './feedback';
 import { adminRoutes } from './admin';
 import { scriptureRoutes } from './scripture';
 import { sitemapRoutes } from './sitemap';
+import { mobileAppRoutes } from './mobile-app';
 
 /**
  * Every route the OpenAPI generator should document. This includes:
@@ -31,4 +32,5 @@ export const documentedRoutes: Array<RouteDefinition | DocumentedRoute> = [
   ...adminRoutes,
   ...scriptureRoutes,
   ...sitemapRoutes,
+  ...mobileAppRoutes,
 ];
