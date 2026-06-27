@@ -10,7 +10,7 @@
       </ul>
     </div>
     <div class="passage-note--created-date">
-      <span class="mbl-text-muted mbl-text-small">{{ timeSince(note.createdAt) }}</span>
+      <span class="mbl-text-muted mbl-text-small" :title="noteCreatedAtDisplayTime">{{ timeSince(note.createdAt) }}</span>
     </div>
     <div class="passage-note--content" data-testid="passage-note-content">{{ note.content }}</div>
     <div class="passage-note--tags" data-testid="passage-note-tags">
@@ -64,6 +64,10 @@ function timeSince(date?: string) {
   if (!date) { return ''; }
   return displayTimeSince(date, locale.value);
 }
+
+const noteCreatedAtDisplayTime = computed(() => {
+  return props.note.createdAt ? new Date(props.note.createdAt).toLocaleString(locale.value) : '';
+});
 
 const resolvedTags = computed(() => {
   const tagIds = props.note.tags ?? [];

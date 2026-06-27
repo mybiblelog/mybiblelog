@@ -4,7 +4,7 @@
 
     <button
       v-if="actions.length > 0"
-      :aria-label="$t('open_menu')"
+      :aria-label="t('open_menu')"
       class="action-menu-button"
       data-testid="action-menu-toggle"
       @click.stop="toggle"
@@ -27,6 +27,8 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
+
 type Action = { label: string; callback?: () => void };
 
 const props = withDefaults(defineProps<{ actions?: Action[] }>(), { actions: () => [] });
@@ -153,3 +155,29 @@ onBeforeUnmount(() => {
   border-bottom-right-radius: 0.25rem;
 }
 </style>
+
+<i18n lang="json">
+{
+  "en": {
+    "open_menu": "Open menu"
+  },
+  "de": {
+    "open_menu": "Menü öffnen"
+  },
+  "es": {
+    "open_menu": "Abrir menú"
+  },
+  "fr": {
+    "open_menu": "Ouvrir le menu"
+  },
+  "ko": {
+    "open_menu": "메뉴 열기"
+  },
+  "pt": {
+    "open_menu": "Abrir menu"
+  },
+  "uk": {
+    "open_menu": "Відкрити меню"
+  }
+}
+</i18n>

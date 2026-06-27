@@ -15,7 +15,7 @@
               class="site-nav__brand-text"
               :to="localePath(authStore.loggedIn ? '/start' : '/')"
             >
-              {{ $t('my_bible_log') }}
+              {{ t('my_bible_log') }}
             </NuxtLink>
           </div>
           <button
@@ -23,7 +23,7 @@
             class="site-nav__icon-btn site-nav__menu-btn"
             :aria-expanded="navOpen ? 'true' : 'false'"
             aria-controls="site-nav-drawer"
-            :aria-label="$t('open_menu')"
+            :aria-label="t('open_menu')"
             @click="toggleNav"
           >
             <span class="site-nav__menu-icon" aria-hidden="true">
@@ -48,7 +48,7 @@
               class="site-nav__brand-text"
               :to="localePath('/')"
             >
-              {{ $t('my_bible_log') }}
+              {{ t('my_bible_log') }}
             </NuxtLink>
           </div>
 
@@ -63,7 +63,7 @@
                 class="site-nav__link"
                 :to="localePath(item.to)"
               >
-                {{ $t(item.labelKey) }}
+                {{ t(item.labelKey) }}
               </NuxtLink>
             </template>
             <span
@@ -82,7 +82,7 @@
                 :aria-expanded="adminDropdownOpen ? 'true' : 'false'"
                 @click="toggleAdminDropdown"
               >
-                {{ $t('admin') }}
+                {{ t('admin') }}
               </button>
               <div
                 v-if="adminDropdownOpen"
@@ -97,7 +97,7 @@
                   :to="localePath(item.to)"
                   role="menuitem"
                 >
-                  {{ $t(item.labelKey) }}
+                  {{ t(item.labelKey) }}
                 </NuxtLink>
               </div>
             </div>
@@ -112,7 +112,7 @@
                   :aria-expanded="accountDropdownOpen ? 'true' : 'false'"
                   @click="toggleAccountDropdown"
                 >
-                  {{ $t('account') }}
+                  {{ t('account') }}
                 </button>
                 <div
                   v-if="accountDropdownOpen"
@@ -125,26 +125,26 @@
                     :to="localePath('/settings')"
                     role="menuitem"
                   >
-                    {{ $t('settings') }}
+                    {{ t('settings') }}
                   </NuxtLink>
                   <a
                     class="site-nav__account-item"
                     href="#"
                     role="menuitem"
                     @click.prevent="logout"
-                  >{{ $t('log_out') }}</a>
+                  >{{ t('log_out') }}</a>
                 </div>
               </div>
             </template>
             <template v-if="!authStore.loggedIn">
               <span class="site-nav__auth-slot">
                 <NuxtLink class="site-nav__link" :to="localePath('/register')">
-                  {{ $t('sign_up') }}
+                  {{ t('sign_up') }}
                 </NuxtLink>
               </span>
               <span class="site-nav__auth-slot">
                 <NuxtLink class="site-nav__link" :to="localePath('/login')">
-                  {{ $t('sign_in') }}
+                  {{ t('sign_in') }}
                 </NuxtLink>
               </span>
             </template>
@@ -175,7 +175,7 @@
           class="site-nav__drawer"
           role="dialog"
           aria-modal="true"
-          :aria-label="$t('open_menu')"
+          :aria-label="t('open_menu')"
           tabindex="-1"
         >
           <div class="site-nav__drawer-scroll">
@@ -185,11 +185,11 @@
               class="site-nav__drawer-link"
               :to="localePath(item.to)"
             >
-              {{ $t(item.labelKey) }}
+              {{ t(item.labelKey) }}
             </NuxtLink>
             <template v-if="showAdminNav">
               <div class="site-nav__drawer-subhead">
-                {{ $t('admin') }}
+                {{ t('admin') }}
               </div>
               <NuxtLink
                 v-for="item in ADMIN_CHILD_LINKS"
@@ -197,35 +197,35 @@
                 class="site-nav__drawer-link site-nav__drawer-link--indent"
                 :to="localePath(item.to)"
               >
-                {{ $t(item.labelKey) }}
+                {{ t(item.labelKey) }}
               </NuxtLink>
             </template>
             <template v-if="authStore.loggedIn">
               <div class="site-nav__drawer-subhead">
-                {{ $t('account') }}
+                {{ t('account') }}
               </div>
               <NuxtLink
                 class="site-nav__drawer-link site-nav__drawer-link--indent"
                 :to="localePath('/settings')"
               >
-                {{ $t('settings') }}
+                {{ t('settings') }}
               </NuxtLink>
               <a
                 class="site-nav__drawer-link site-nav__drawer-link--indent"
                 href="#"
                 role="button"
                 @click.prevent="logout"
-              >{{ $t('log_out') }}</a>
+              >{{ t('log_out') }}</a>
             </template>
             <template v-if="!authStore.loggedIn">
               <span class="site-nav__auth-slot">
                 <NuxtLink class="site-nav__drawer-link" :to="localePath('/register')">
-                  {{ $t('sign_up') }}
+                  {{ t('sign_up') }}
                 </NuxtLink>
               </span>
               <span class="site-nav__auth-slot">
                 <NuxtLink class="site-nav__drawer-link" :to="localePath('/login')">
-                  {{ $t('sign_in') }}
+                  {{ t('sign_in') }}
                 </NuxtLink>
               </span>
             </template>
@@ -238,6 +238,8 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '~/stores/auth';
+
+const { t } = useI18n();
 
 const ORDERED_ROUTE_NAV = [
   { labelKey: 'today', to: '/today', authOnly: true, spaceBefore: false },
@@ -830,3 +832,148 @@ const onDrawerAfterLeave = (el: Element) => { clearDrawerTransitionInlineStyles(
   }
 }
 </style>
+
+<i18n lang="json">
+{
+  "en": {
+    "today": "Today",
+    "bible_books": "Bible Books",
+    "chapter_checklist": "Chapter Checklist",
+    "calendar": "Calendar",
+    "log": "Log",
+    "notes": "Notes",
+    "insights": "Insights",
+    "about": "About",
+    "account": "Account",
+    "settings": "Settings",
+    "admin": "Admin",
+    "users": "Users",
+    "feedback": "Feedback",
+    "engagement": "Engagement",
+    "log_out": "Log Out",
+    "sign_up": "Sign Up",
+    "sign_in": "Sign In",
+    "open_menu": "Menu"
+  },
+  "de": {
+    "today": "Heute",
+    "bible_books": "Bibelbücher",
+    "chapter_checklist": "Kapitel Checkliste",
+    "calendar": "Kalender",
+    "log": "Journal",
+    "notes": "Notizen",
+    "insights": "Einblicke",
+    "about": "Über",
+    "account": "Konto",
+    "settings": "Einstellungen",
+    "admin": "Administrator",
+    "users": "Benutzer",
+    "feedback": "Feedback",
+    "engagement": "Engagement",
+    "log_out": "Abmelden",
+    "sign_up": "Registrieren",
+    "sign_in": "Anmelden",
+    "open_menu": "Menü"
+  },
+  "es": {
+    "today": "Hoy",
+    "bible_books": "Libros Bíblicos",
+    "chapter_checklist": "Lista de Capítulos",
+    "calendar": "Calendario",
+    "log": "Registro",
+    "notes": "Notas",
+    "insights": "Estadísticas",
+    "about": "Acerca de",
+    "account": "Cuenta",
+    "settings": "Configuración",
+    "admin": "Administrador",
+    "users": "Usuarios",
+    "feedback": "Comentarios",
+    "engagement": "Participación",
+    "log_out": "Cerrar sesión",
+    "sign_up": "Registrarse",
+    "sign_in": "Iniciar sesión",
+    "open_menu": "Menú"
+  },
+  "fr": {
+    "today": "Aujourd'hui",
+    "bible_books": "Livres de la Bible",
+    "chapter_checklist": "Liste de Contrôle",
+    "calendar": "Calendrier",
+    "log": "Journal",
+    "notes": "Notes",
+    "insights": "Analyses",
+    "about": "À Propos",
+    "account": "Compte",
+    "settings": "Paramètres",
+    "admin": "Administrateur",
+    "users": "Utilisateurs",
+    "feedback": "Retour d'Information",
+    "engagement": "Engagement",
+    "log_out": "Déconnexion",
+    "sign_up": "S'inscrire",
+    "sign_in": "Se connecter",
+    "open_menu": "Menu"
+  },
+  "ko": {
+    "today": "오늘의 성경",
+    "bible_books": "성경 일람",
+    "chapter_checklist": "장별 체크",
+    "calendar": "달력",
+    "log": "기록",
+    "notes": "노트",
+    "insights": "통계",
+    "about": "소개",
+    "account": "계정",
+    "settings": "설정",
+    "admin": "관리자",
+    "users": "사용자",
+    "feedback": "피드백",
+    "engagement": "참여",
+    "log_out": "로그아웃",
+    "sign_up": "회원가입",
+    "sign_in": "로그인",
+    "open_menu": "메뉴"
+  },
+  "pt": {
+    "today": "Hoje",
+    "bible_books": "Livros da Bíblia",
+    "chapter_checklist": "Lista de Capítulos",
+    "calendar": "Calendário",
+    "log": "Registro",
+    "notes": "Notas",
+    "insights": "Estatísticas",
+    "about": "Sobre",
+    "account": "Conta",
+    "settings": "Configurações",
+    "admin": "Administrador",
+    "users": "Usuários",
+    "feedback": "Feedback",
+    "engagement": "Engajamento",
+    "log_out": "Sair",
+    "sign_up": "Inscrever-se",
+    "sign_in": "Entrar",
+    "open_menu": "Menu"
+  },
+  "uk": {
+    "today": "Сьогодні",
+    "bible_books": "Книги Біблії",
+    "chapter_checklist": "Список розділів",
+    "calendar": "Календар",
+    "log": "Журнал",
+    "notes": "Нотатки",
+    "insights": "Аналітика",
+    "about": "Про нас",
+    "account": "Обліковий запис",
+    "settings": "Налаштування",
+    "admin": "Адміністратор",
+    "users": "Користувачі",
+    "feedback": "Зворотній зв'язок",
+    "engagement": "Залученість",
+    "log_out": "Вийти",
+    "sign_up": "Зареєструватися",
+    "sign_in": "Увійти",
+    "open_menu": "Меню"
+  }
+}
+</i18n>

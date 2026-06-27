@@ -11,15 +11,15 @@
           </div>
           <div v-if="dialog.type === 'alert'" class="mbl-button-group">
             <button class="mbl-button" :class="buttonClass" data-testid="dialog-ok" @click="dialog.closeAlert()">
-              {{ dialog.buttonText || $t('ok') }}
+              {{ dialog.buttonText || t('ok') }}
             </button>
           </div>
           <div v-if="dialog.type === 'confirm'" class="mbl-button-group popup-modal__actions">
             <button class="mbl-button" :class="confirmButtonClass" data-testid="dialog-confirm" @click="dialog.acceptConfirm()">
-              {{ dialog.confirmButtonText || $t('confirm') }}
+              {{ dialog.confirmButtonText || t('confirm') }}
             </button>
             <button class="mbl-button mbl-button--light" data-testid="dialog-cancel" @click="dialog.cancelConfirm()">
-              {{ dialog.cancelButtonText || $t('cancel') }}
+              {{ dialog.cancelButtonText || t('cancel') }}
             </button>
           </div>
         </div>
@@ -31,6 +31,7 @@
 <script setup lang="ts">
 import { useDialogStore } from '~/stores/dialog';
 
+const { t } = useI18n();
 const dialog = useDialogStore();
 
 const buttonTypeToClass = (type: string) => ({

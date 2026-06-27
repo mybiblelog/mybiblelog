@@ -10,10 +10,10 @@
         data-testid="log-entry-editor-submit"
         @click="handleSave"
       >
-        {{ logEntryEditorStore.logEntry.id ? $t('save') : $t('add') }}
+        {{ logEntryEditorStore.logEntry.id ? t('save') : t('add') }}
       </button>
       <button class="mbl-button mbl-button--light" data-testid="log-entry-editor-close" @click="handleClose">
-        {{ $t('close') }}
+        {{ t('close') }}
       </button>
     </template>
   </AppModal>

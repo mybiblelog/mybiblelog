@@ -50,8 +50,8 @@
         </div>
       </form>
 
-      <ContentPageFooter />
     </div>
+    <ContentPageFooter />
   </main>
 </template>
 
