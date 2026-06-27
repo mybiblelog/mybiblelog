@@ -148,6 +148,8 @@
                 </NuxtLink>
               </span>
             </template>
+            <LayoutThemeSwitcher variant="toolbar" class="site-nav__theme-desktop" />
+            <LayoutLanguageSwitcher variant="toolbar" class="site-nav__locale-desktop" />
           </div>
         </div>
       </div>
@@ -229,6 +231,8 @@
                 </NuxtLink>
               </span>
             </template>
+            <LayoutThemeSwitcher variant="drawer" class="site-nav__theme-drawer" />
+            <LayoutLanguageSwitcher variant="drawer" class="site-nav__locale-drawer" />
           </div>
         </aside>
       </div>
@@ -680,8 +684,28 @@ const onDrawerAfterLeave = (el: Element) => { clearDrawerTransitionInlineStyles(
   color: var(--mbl-text-stronger);
 }
 
+.site-nav__theme-desktop {
+  flex-shrink: 0;
+  margin-left: 0.25rem;
+}
+
+.site-nav__locale-desktop {
+  flex-shrink: 0;
+  margin-left: 0.125rem;
+}
+
 .site-nav__auth-slot {
   display: contents;
+}
+
+.site-nav__locale-drawer {
+  margin-top: 0.5rem;
+  padding: 0 1rem;
+}
+
+.site-nav__theme-drawer {
+  margin-top: 0.5rem;
+  padding: 0 1rem;
 }
 
 .site-nav__icon-btn {
