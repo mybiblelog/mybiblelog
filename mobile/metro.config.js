@@ -16,7 +16,5 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, "node_modules"),
 ];
 
-// Avoid Metro walking up the directory tree in monorepo setups.
-config.resolver.disableHierarchicalLookup = true;
 
 module.exports = config;
