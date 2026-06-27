@@ -1,0 +1,275 @@
+/* Form layout */
+.mbl-field:not(:last-child) {
+  margin-bottom: 0.75rem;
+}
+
+.mbl-field--addons {
+  --mbl-addon-control-height: 2.5em;
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Equal-height controls in horizontal addon rows (static label + select, input + button, etc.) */
+.mbl-field--addons .mbl-control .mbl-button,
+.mbl-field--addons .mbl-control .mbl-input:not([type="color"]),
+.mbl-field--addons .mbl-control .mbl-select {
+  box-sizing: border-box;
+  height: var(--mbl-addon-control-height);
+  min-height: var(--mbl-addon-control-height);
+}
+
+.mbl-field--addons .mbl-control .mbl-button {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+.mbl-field--addons .mbl-control .mbl-input:not([type="color"]) {
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+.mbl-field--addons .mbl-control .mbl-select {
+  height: var(--mbl-addon-control-height);
+}
+
+.mbl-field--addons .mbl-control .mbl-select select {
+  box-sizing: border-box;
+  height: 100%;
+  line-height: calc(var(--mbl-addon-control-height) - 2px);
+  min-height: 100%;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+.mbl-field--addons .mbl-control:not(:last-child) {
+  margin-right: -1px;
+}
+
+.mbl-field--addons .mbl-control:first-child .mbl-button,
+.mbl-field--addons .mbl-control:first-child .mbl-input,
+.mbl-field--addons .mbl-control:first-child .mbl-select select {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.mbl-field--addons .mbl-control:last-child .mbl-button,
+.mbl-field--addons .mbl-control:last-child .mbl-input,
+.mbl-field--addons .mbl-control:last-child .mbl-select select {
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+}
+
+.mbl-field--addons .mbl-control:not(:first-child):not(:last-child) .mbl-button,
+.mbl-field--addons .mbl-control:not(:first-child):not(:last-child) .mbl-input,
+.mbl-field--addons .mbl-control:not(:first-child):not(:last-child) .mbl-select select {
+  border-radius: 0;
+}
+
+.mbl-field--flush {
+  margin-bottom: 0 !important;
+}
+
+.mbl-label {
+  color: var(--mbl-text);
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.5em;
+}
+
+.mbl-control {
+  box-sizing: border-box;
+  clear: both;
+  font-size: 1rem;
+  position: relative;
+  text-align: inherit;
+}
+
+.mbl-control--expanded {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.mbl-help {
+  display: block;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.mbl-help--danger {
+  color: var(--mbl-danger);
+}
+
+.mbl-input,
+.mbl-textarea {
+  appearance: none;
+  align-items: center;
+  background-color: var(--mbl-bg);
+  border: 1px solid var(--mbl-border);
+  border-radius: var(--mbl-radius);
+  box-shadow: var(--mbl-inset-well);
+  color: var(--mbl-text);
+  display: inline-flex;
+  font-size: 1rem;
+  justify-content: flex-start;
+  line-height: 1.5;
+  max-width: 100%;
+  padding: calc(0.5em - 1px) calc(0.75em - 1px);
+  position: relative;
+  vertical-align: top;
+  width: 100%;
+}
+
+.mbl-input:hover,
+.mbl-textarea:hover {
+  border-color: var(--mbl-border-strong);
+}
+
+.mbl-input:focus,
+.mbl-textarea:focus {
+  border-color: var(--primary-color);
+  box-shadow: var(--mbl-focus-ring);
+  outline: none;
+}
+
+.mbl-input[type="color"] {
+  box-sizing: border-box;
+  min-height: 2.5em;
+  padding: 0.35em 0.5em;
+}
+
+.mbl-input--danger,
+.mbl-textarea.mbl-input--danger {
+  border-color: var(--mbl-danger);
+}
+
+/* Shrink to content (e.g. type="time", short numeric fields); still caps at container on narrow viewports */
+.mbl-input.mbl-input--short {
+  max-width: 100%;
+  width: auto;
+}
+
+.mbl-textarea {
+  display: block;
+  max-height: 600px;
+  max-width: 100%;
+  min-height: 8em;
+  min-width: 100%;
+  padding: 0.625em;
+  resize: vertical;
+}
+
+.mbl-select {
+  display: inline-block;
+  max-width: 100%;
+  position: relative;
+  vertical-align: top;
+}
+
+.mbl-select select {
+  appearance: none;
+  background-color: var(--mbl-bg);
+  border: 1px solid var(--mbl-border);
+  border-radius: var(--mbl-radius);
+  color: var(--mbl-text);
+  cursor: pointer;
+  display: block;
+  font-size: 1em;
+  max-width: 100%;
+  outline: none;
+  padding: calc(0.5em - 1px) 2.5em calc(0.5em - 1px) calc(0.75em - 1px);
+}
+
+.mbl-select select:hover {
+  border-color: var(--mbl-border-strong);
+}
+
+.mbl-select::after {
+  border: 1px solid var(--mbl-link);
+  border-right: 0;
+  border-top: 0;
+  content: ' ';
+  display: block;
+  height: 0.625em;
+  margin-top: -0.4375em;
+  pointer-events: none;
+  position: absolute;
+  right: 1.125em;
+  top: 50%;
+  transform: rotate(-45deg);
+  transform-origin: center;
+  width: 0.625em;
+  z-index: 4;
+}
+
+/* Wrapper font-size: addon rows use 2.5em height from a variable; `em` in that
+   height resolves against this element, so it must match .mbl-button--sm (0.75rem)
+   or the select grows taller than adjacent small buttons. */
+.mbl-select--sm {
+  font-size: 0.75rem;
+}
+
+.mbl-select--sm select {
+  font-size: 1em;
+}
+
+.mbl-checkbox,
+.mbl-radio {
+  cursor: pointer;
+  display: inline-block;
+  line-height: 1.25;
+  position: relative;
+  font-size: 1rem;
+}
+
+.mbl-checkbox input,
+.mbl-radio input {
+  cursor: pointer;
+  margin-right: 0.5em;
+}
+
+.mbl-file-block {
+  display: flex;
+}
+
+/* File input */
+.mbl-file {
+  align-items: stretch;
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+}
+
+.mbl-file__input {
+  height: 0.01em;
+  left: 0;
+  outline: none;
+  position: absolute;
+  top: 0;
+  width: 0.01em;
+  z-index: -1;
+}
+
+.mbl-file__cta {
+  align-items: center;
+  background-color: var(--mbl-bg-muted);
+  border: 1px solid var(--mbl-border);
+  border-radius: var(--mbl-radius);
+  color: var(--mbl-text);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 1em;
+  height: 2.5em;
+  justify-content: center;
+  padding: 0 1em;
+  white-space: nowrap;
+}
+
+.mbl-file__cta:hover {
+  border-color: var(--mbl-border-strong);
+}
+
+.mbl-file__text {
+  font-size: 1em;
+}

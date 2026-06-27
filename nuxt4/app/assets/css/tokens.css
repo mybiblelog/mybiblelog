@@ -1,0 +1,377 @@
+/*
+ * Design tokens — nuxt/assets/css/tokens.css
+ *
+ * Layers:
+ * 1) Brand + neutral primitives (`--primary-color`, `--neutral-*`, etc.).
+ * 2) Semantic UI (`--mbl-*`): use these in components, mbl/*.css, and global element styles.
+ *
+ * Interactive accent for links and card focus rings is `--mbl-link` (maps to brand secondary).
+ */
+:root {
+  color-scheme: light;
+
+  /* Stacking */
+  --z-index-toast: 42;
+  --z-index-popup: 41;
+  --z-index-modal: 40;
+  --z-index-action-menu: 39;
+  --z-index-action-button: 38;
+  --z-index-busy-bar: 29;
+
+  --header-height: calc(1rem + 1.618rem + 3px);
+  --site-nav-height: 3.25rem;
+
+  /* Neutral ramp (used by semantic tokens) */
+  --neutral-0: #fff;
+  --neutral-50: #fafafa;
+  --neutral-100: #f5f5f5;
+  --neutral-150: #eee;
+  --neutral-200: #dbdbdb;
+  --neutral-300: #b5b5b5;
+  --neutral-600: #4a4a4a;
+  --neutral-700: #363636;
+  --neutral-800: #1f191a;
+  --neutral-850: #46403f;
+  --neutral-900: #191919;
+  --neutral-950: #101010;
+
+  --transition-fade: opacity 0.3s ease-out;
+  --transition-modal: transform 0.3s ease-out;
+  --modal-scale: scale(0.9);
+
+  --modal-card-border-radius: 6px;
+
+  /* Brand */
+  --primary-color: #00aaf9;
+  --primary-color-hover: #0096db;
+  --secondary-color: #0965f7;
+  --secondary-color-hover: #0546b5;
+  --tertiary-color: #00d1b2;
+
+  /*
+   * mbl theme — semantic UI
+   *
+   * Theme compatibility rule:
+   * - Do not use light-dark() anywhere in the codebase.
+   * - Keep light-mode semantic defaults in :root.
+   * - Apply dark-mode semantic overrides only in [data-theme="dark"] and
+   *   @media (prefers-color-scheme: dark) for :root:not([data-theme]).
+   * - Component styles should consume semantic tokens only (no theme logic).
+   */
+  --mbl-radius: 4px;
+  --mbl-radius-button: 4px;
+  --mbl-radius-card: var(--modal-card-border-radius);
+
+  --mbl-text: var(--neutral-700);
+  --mbl-text-85: rgba(54, 54, 54, 0.85);
+  --mbl-text-90: rgba(54, 54, 54, 0.9);
+  --mbl-text-body: var(--neutral-600);
+  --mbl-text-muted: #7a7a7a;
+  /* Secondary nav / menus / drawers (referenced across components) */
+  --mbl-text-subtle: var(--neutral-600);
+  --mbl-text-strong: var(--mbl-text);
+  --mbl-text-stronger: var(--neutral-800);
+  --mbl-border: var(--neutral-200);
+  --mbl-border-strong: var(--neutral-300);
+  --mbl-border-soft: var(--neutral-150);
+  /* Calendar date grid: gap “lines” vs outer frame */
+  --mbl-calendar-grid-inner: var(--neutral-200);
+  --mbl-calendar-grid-outer: var(--neutral-300);
+  /* Today’s date number circle in the month grid */
+  --mbl-calendar-today-date-bg: var(--neutral-200);
+  --mbl-calendar-today-date-color: var(--mbl-text-body);
+  /*
+   * Viewport / html-body canvas — behind cards and chrome.
+   * --mbl-bg is the primary *surface* (cards, nav); it may differ from the outer canvas (e.g. dark: #000 canvas vs #191919 surfaces).
+   */
+  --mbl-app-canvas-bg: var(--neutral-0);
+  --mbl-bg: var(--neutral-0);
+  /* List tiles / cards: same as primary surface in light mode */
+  --mbl-bg-elevated: var(--mbl-bg);
+  --mbl-bg-muted: var(--neutral-100);
+  --mbl-bg-subtle: var(--neutral-50);
+  --mbl-bg-hover-light: var(--neutral-150);
+  --mbl-bg-hover-strong: #efefef;
+  --mbl-bg-disabled: #999;
+  --mbl-progress-track-bg: #000;
+  --mbl-progress-fill-inactive: #999;
+  --mbl-tag-option-bg: var(--mbl-surface-frost);
+  --mbl-tag-option-border: var(--mbl-overlay-12);
+  --mbl-tag-option-selected-bg: var(--mbl-bg-hover-light);
+
+  --mbl-code-fg: #da1039;
+
+  --mbl-danger: #f14668;
+  --mbl-success: #48c774;
+  --mbl-warning: #ffdd57;
+  --mbl-warning-fg: #946c00;
+  --mbl-info: #3298dc;
+
+  --mbl-link: var(--secondary-color);
+  --mbl-link-bright: #09f;
+  --mbl-link-alt: #0077bb;
+  --mbl-link-muted: #007bcc;
+  --mbl-link-hover: #0546b5;
+  --mbl-tab-active: var(--neutral-800);
+
+  --mbl-on-accent: var(--neutral-0);
+
+  --mbl-shadow-ambient: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1);
+  --mbl-shadow-ring-subtle: 0 0 0 1px rgba(10, 10, 10, 0.02);
+  --mbl-shadow-light: var(--mbl-shadow-ambient), var(--mbl-shadow-ring-subtle);
+  --mbl-shadow-dark: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --mbl-shadow: var(--mbl-shadow-light);
+  --mbl-shadow-box-hover-light: var(--mbl-shadow-ambient), 0 0 0 1px var(--mbl-link);
+  --mbl-shadow-box-hover-dark: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.5), 0 0 0 1px var(--mbl-link);
+  --mbl-shadow-box-hover: var(--mbl-shadow-box-hover-light);
+  --mbl-shadow-box-active: inset 0 1px 2px rgba(10, 10, 10, 0.2), 0 0 0 1px var(--mbl-link);
+  --mbl-shadow-elev-1: 0 1px 7px rgba(0, 0, 0, 0.3);
+  --mbl-shadow-elev-2: 0 1px 9px rgba(0, 0, 0, 0.45);
+  --mbl-shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --mbl-shadow-overlay: 0 -2px 16px rgba(0, 0, 0, 0.3);
+  --mbl-card-shadow: 0 1px 7px #999;
+
+  --mbl-inset-well: inset 0 0.0625em 0.125em rgba(10, 10, 10, 0.05);
+  --mbl-focus-ring: 0 0 0 0.125em rgba(0, 170, 249, 0.25);
+
+  /* Site nav brand (text clipped to gradient) */
+  --mbl-site-title-gradient: linear-gradient(
+    20deg,
+    var(--primary-color) 0%,
+    var(--secondary-color) 50%,
+    var(--tertiary-color) 100%
+  );
+  /* BusyBar diagonal stripes */
+  --mbl-busy-bar-stripe: var(--neutral-150);
+
+  --mbl-scrim: rgba(10, 10, 10, 0.86);
+  --mbl-overlay-05: rgba(0, 0, 0, 0.05);
+  --mbl-overlay-04: rgba(0, 0, 0, 0.04);
+  --mbl-overlay-08: rgba(0, 0, 0, 0.08);
+  --mbl-overlay-10: rgba(0, 0, 0, 0.1);
+  --mbl-overlay-12: rgba(0, 0, 0, 0.12);
+  --mbl-overlay-15: rgba(0, 0, 0, 0.15);
+  --mbl-overlay-20: rgba(0, 0, 0, 0.2);
+  --mbl-overlay-25: rgba(0, 0, 0, 0.25);
+  --mbl-overlay-35: rgba(0, 0, 0, 0.35);
+  --mbl-overlay-50: rgba(0, 0, 0, 0.5);
+  --mbl-overlay-soft: rgba(10, 10, 10, 0.2);
+  --mbl-overlay-soft-strong: rgba(10, 10, 10, 0.3);
+  --mbl-surface-frost: rgba(255, 255, 255, 0.9);
+  --mbl-primary-soft: rgba(0, 170, 249, 0.05);
+  --mbl-primary-soft-border: rgba(0, 170, 249, 0.1);
+  --mbl-primary-glow: rgba(0, 170, 249, 0.3);
+  --mbl-primary-glow-strong: rgba(0, 170, 249, 0.4);
+  --mbl-secondary-soft: rgba(9, 101, 247, 0.05);
+  --mbl-secondary-soft-08: rgba(9, 101, 247, 0.08);
+  --mbl-secondary-soft-20: rgba(9, 101, 247, 0.2);
+  --mbl-tertiary-soft: rgba(0, 209, 178, 0.05);
+
+  /* Inline scripture passage text: words of Jesus */
+  --mbl-scripture-words-of-jesus: #8a2c1d;
+
+  --mbl-success-bright: #0c0;
+  --mbl-award: #ffd700;
+  --mbl-star-earned: var(--mbl-award);
+  --mbl-star-unearned: var(--neutral-150);
+
+  /* Message / notification intent surfaces */
+  --mbl-message-info-border: #b8d7f5;
+  --mbl-message-info-bg: #f5faff;
+  --mbl-message-info-fg: #1a5080;
+  --mbl-message-info-accent: #7ab8e8;
+
+  --mbl-message-success-border: #a3d9b1;
+  --mbl-message-success-bg: #f0fff4;
+  --mbl-message-success-fg: #1a6634;
+  --mbl-message-success-accent: #48c774;
+
+  --mbl-notification-info-bg: var(--mbl-info);
+  --mbl-notification-info-fg: var(--mbl-on-accent);
+
+  --mbl-notification-success-bg: var(--mbl-success);
+  --mbl-notification-success-fg: var(--mbl-on-accent);
+
+  --mbl-notification-warning-bg: var(--mbl-warning);
+  --mbl-notification-warning-fg: var(--neutral-800);
+
+  --mbl-notification-danger-bg: var(--mbl-danger);
+  --mbl-notification-danger-fg: var(--mbl-on-accent);
+
+  /* Insights activity heatmap: 0 (empty) → 4 (busiest) green intensity ramp */
+  --mbl-heat-0: var(--mbl-bg-muted);
+  --mbl-heat-1: #9be9a8;
+  --mbl-heat-2: #40c463;
+  --mbl-heat-3: #30a14e;
+  --mbl-heat-4: #216e39;
+  --mbl-heat-empty-border: var(--mbl-border-soft);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --mbl-text: var(--neutral-100);
+  --mbl-text-85: rgba(245, 245, 245, 0.85);
+  --mbl-text-90: rgba(245, 245, 245, 0.9);
+  --mbl-text-body: var(--neutral-200);
+  --mbl-text-muted: #a8a8a8;
+  --mbl-text-subtle: #c6c6c6;
+  --mbl-text-strong: var(--neutral-100);
+  --mbl-text-stronger: var(--neutral-0);
+  /* Default --secondary-color reads too dim on dark surfaces (notes, inline links) */
+  --mbl-link: #64a8ff;
+  --mbl-link-hover: #93c2ff;
+  --mbl-link-alt: #52abe8;
+  --mbl-link-muted: #7aaef0;
+  --mbl-border: #383838;
+  --mbl-border-strong: #4a4a4a;
+  --mbl-border-soft: #2a2a2a;
+  --mbl-calendar-grid-inner: var(--mbl-border);
+  --mbl-calendar-grid-outer: var(--mbl-border-strong);
+  --mbl-app-canvas-bg: #000;
+  --mbl-bg: var(--neutral-900);
+  --mbl-bg-muted: #242424;
+  /* Slightly above --mbl-bg so list cards read on #000 canvas */
+  --mbl-bg-elevated: var(--mbl-bg-muted);
+  --mbl-bg-subtle: #1f1f1f;
+  --mbl-bg-hover-light: #2d2d2d;
+  --mbl-bg-hover-strong: #353535;
+  --mbl-bg-disabled: #666;
+  --mbl-progress-track-bg: #666;
+  --mbl-progress-fill-inactive: #ccc;
+  --mbl-tag-option-bg: #1b1b1b;
+  --mbl-tag-option-border: #585858;
+  --mbl-tag-option-selected-bg: #2a2a2a;
+
+  --mbl-shadow-light: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --mbl-shadow-dark: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --mbl-shadow: var(--mbl-shadow-light);
+  --mbl-shadow-box-hover: var(--mbl-shadow-box-hover-dark);
+  --mbl-shadow-box-active: inset 0 1px 2px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--mbl-link);
+  --mbl-shadow-elev-1: 0 1px 7px rgba(0, 0, 0, 0.6);
+  --mbl-shadow-elev-2: 0 1px 9px rgba(0, 0, 0, 0.7);
+  --mbl-shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.45);
+  /* Compact menus: black overlay borders vanish on dark surfaces */
+  --mbl-menu-border: var(--mbl-border);
+  --mbl-shadow-overlay: 0 -2px 16px rgba(0, 0, 0, 0.7);
+  --mbl-card-shadow: 0 1px 7px rgba(0, 0, 0, 0.6);
+  --mbl-inset-well: inset 0 0.0625em 0.125em rgba(0, 0, 0, 0.5);
+
+  --mbl-scrim: rgba(0, 0, 0, 0.92);
+  --mbl-surface-frost: rgba(24, 24, 24, 0.9);
+
+  --mbl-message-info-border: #23425f;
+  --mbl-message-info-bg: #11202f;
+  --mbl-message-info-fg: #c5e3ff;
+  --mbl-message-info-accent: #5b8db8;
+
+  --mbl-message-success-border: #1e4d30;
+  --mbl-message-success-bg: #0d2118;
+  --mbl-message-success-fg: #b8f5cc;
+  --mbl-message-success-accent: #3a9e5c;
+  --mbl-scripture-words-of-jesus: #e08a73;
+  --mbl-star-earned: #d08a2f;
+  /* Visible on #191919 surfaces; was #2c2c2c (too low contrast) */
+  --mbl-star-unearned: #6e6e6e;
+  --mbl-tab-active: var(--mbl-link-bright);
+
+  --mbl-calendar-today-date-bg: var(--mbl-bg-hover-strong);
+  --mbl-calendar-today-date-color: var(--mbl-text-strong);
+
+  --mbl-site-title-gradient: linear-gradient(
+    20deg,
+    var(--tertiary-color),
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  --mbl-busy-bar-stripe: rgba(255, 255, 255, 0.1);
+
+  /* Insights activity heatmap (heat-0 follows --mbl-bg-muted automatically) */
+  --mbl-heat-1: #0e4429;
+  --mbl-heat-2: #006d32;
+  --mbl-heat-3: #26a641;
+  --mbl-heat-4: #39d353;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+
+    --mbl-text: var(--neutral-100);
+    --mbl-text-85: rgba(245, 245, 245, 0.85);
+    --mbl-text-90: rgba(245, 245, 245, 0.9);
+    --mbl-text-body: var(--neutral-200);
+    --mbl-text-muted: #a8a8a8;
+    --mbl-text-subtle: #c6c6c6;
+    --mbl-text-strong: var(--neutral-100);
+    --mbl-text-stronger: var(--neutral-0);
+    --mbl-link: #64a8ff;
+    --mbl-link-hover: #93c2ff;
+    --mbl-link-alt: #52abe8;
+    --mbl-link-muted: #7aaef0;
+    --mbl-border: #383838;
+    --mbl-border-strong: #4a4a4a;
+    --mbl-border-soft: #2a2a2a;
+    --mbl-calendar-grid-inner: var(--mbl-border);
+    --mbl-calendar-grid-outer: var(--mbl-border-strong);
+    --mbl-app-canvas-bg: #000;
+    --mbl-bg: var(--neutral-900);
+    --mbl-bg-muted: #242424;
+    --mbl-bg-elevated: var(--mbl-bg-muted);
+    --mbl-bg-subtle: #1f1f1f;
+    --mbl-bg-hover-light: #2d2d2d;
+    --mbl-bg-hover-strong: #353535;
+    --mbl-bg-disabled: #666;
+    --mbl-progress-track-bg: #666;
+    --mbl-progress-fill-inactive: #ccc;
+    --mbl-tag-option-bg: #1b1b1b;
+    --mbl-tag-option-border: #585858;
+    --mbl-tag-option-selected-bg: #2a2a2a;
+
+    --mbl-shadow-light: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    --mbl-shadow-dark: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+    --mbl-shadow: var(--mbl-shadow-light);
+    --mbl-shadow-box-hover: var(--mbl-shadow-box-hover-dark);
+    --mbl-shadow-box-active: inset 0 1px 2px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--mbl-link);
+    --mbl-shadow-elev-1: 0 1px 7px rgba(0, 0, 0, 0.6);
+    --mbl-shadow-elev-2: 0 1px 9px rgba(0, 0, 0, 0.7);
+    --mbl-shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.45);
+    --mbl-menu-border: var(--mbl-border);
+    --mbl-shadow-overlay: 0 -2px 16px rgba(0, 0, 0, 0.7);
+    --mbl-card-shadow: 0 1px 7px rgba(0, 0, 0, 0.6);
+    --mbl-inset-well: inset 0 0.0625em 0.125em rgba(0, 0, 0, 0.5);
+
+    --mbl-scrim: rgba(0, 0, 0, 0.92);
+    --mbl-surface-frost: rgba(24, 24, 24, 0.9);
+
+    --mbl-message-info-border: #23425f;
+    --mbl-message-info-bg: #11202f;
+    --mbl-message-info-fg: #c5e3ff;
+    --mbl-message-info-accent: #5b8db8;
+    --mbl-scripture-words-of-jesus: #e08a73;
+    --mbl-star-earned: #d08a2f;
+    --mbl-star-unearned: #6e6e6e;
+    --mbl-tab-active: var(--mbl-link-bright);
+
+    --mbl-calendar-today-date-bg: var(--mbl-bg-hover-strong);
+    --mbl-calendar-today-date-color: var(--mbl-text-strong);
+
+    --mbl-site-title-gradient: linear-gradient(
+      20deg,
+      var(--tertiary-color),
+      var(--primary-color),
+      var(--secondary-color)
+    );
+    --mbl-busy-bar-stripe: rgba(255, 255, 255, 0.1);
+
+    /* Insights activity heatmap (heat-0 follows --mbl-bg-muted automatically) */
+    --mbl-heat-1: #0e4429;
+    --mbl-heat-2: #006d32;
+    --mbl-heat-3: #26a641;
+    --mbl-heat-4: #39d353;
+  }
+}
