@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { PiniaVuePlugin, createPinia, setActivePinia } from 'pinia';
+import type { HttpClient, Translator } from '@mybiblelog/shared';
 
 import type { Pinia } from 'pinia';
 import type { Context, Plugin } from '@nuxt/types';
@@ -7,22 +8,7 @@ import type { Context, Plugin } from '@nuxt/types';
 Vue.use(PiniaVuePlugin);
 
 const plugin: Plugin = (context, inject) => {
-  type ApiResponse<T = unknown> = {
-    data: T;
-    meta?: unknown;
-  };
-
-  type HttpClient = {
-    get: <T = unknown>(path: string, options?: unknown) => Promise<ApiResponse<T>>;
-    post: <T = unknown>(path: string, body?: unknown) => Promise<ApiResponse<T>>;
-    put: <T = unknown>(path: string, body?: unknown) => Promise<ApiResponse<T>>;
-    delete: <T = unknown>(path: string) => Promise<ApiResponse<T>>;
-  };
-
-  type I18nLike = {
-    locale: string;
-    t: (key: string, params?: Record<string, unknown>) => string;
-  };
+  type I18nLike = Translator;
 
   type NuxtStateWithPinia = {
     pinia?: Record<string, unknown>;
