@@ -74,6 +74,24 @@ export default function AccountSettings() {
           </View>
         )}
       </View>
+
+      {authState.status === "authenticated" && (
+        <>
+          <Text style={[styles.sectionLabel, { color: colors.mutedText }]}>
+            {t("account_danger_zone_label")}
+          </Text>
+          <View style={[styles.card, { backgroundColor: colors.surfaceAlt }]}>
+            <Pressable
+              style={styles.dangerRow}
+              onPress={() => router.push("/settings/delete-account")}
+            >
+              <Text style={[styles.dangerText, { color: colors.destructive }]}>
+                {t("account_delete_button")}
+              </Text>
+            </Pressable>
+          </View>
+        </>
+      )}
     </ScrollView>
   );
 }
@@ -116,6 +134,14 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
   },
   infoText: {
+    fontSize: 14,
+    fontWeight: "800",
+  },
+  dangerRow: {
+    paddingHorizontal: 14,
+    paddingVertical: 14,
+  },
+  dangerText: {
     fontSize: 14,
     fontWeight: "800",
   },

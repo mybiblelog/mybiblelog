@@ -72,6 +72,13 @@ export default function SettingsIndex() {
         subtitle={t("settings_section_language_subtitle")}
         onPress={() => router.push("/settings/language")}
       />
+
+      <SectionRow
+        icon="information-circle-outline"
+        title={t("settings_section_about")}
+        subtitle={t("settings_section_about_subtitle")}
+        onPress={() => router.push("/settings/about")}
+      />
     </ScrollView>
   );
 }

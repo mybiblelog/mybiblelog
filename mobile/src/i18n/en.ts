@@ -154,6 +154,41 @@ export const en = {
   settings_section_appearance_subtitle: "Theme and display",
   settings_section_language: "Language",
   settings_section_language_subtitle: "Choose your language",
+  settings_section_about: "About",
+  settings_section_about_subtitle: "Version, privacy, and terms",
+
+  // About screen
+  about_app_label: "App",
+  about_version: "Version",
+  about_legal_label: "Legal",
+  about_privacy_policy: "Privacy Policy",
+  about_terms: "Terms and Conditions",
+  about_website: "Visit website",
+  about_open_link_failed: "Unable to open link.",
+
+  // Account deletion
+  account_danger_zone_label: "Danger Zone",
+  account_delete_button: "Delete account",
+  delete_account_title: "Delete Account",
+  delete_account_description:
+    "You are in control of your data. You can permanently delete your account and all data associated with it:",
+  delete_account_list_account:
+    "This permanently deletes your account and personal settings.",
+  delete_account_list_log_entries: "This permanently deletes your log entries.",
+  delete_account_list_notes: "This permanently deletes your notes and custom tags.",
+  delete_account_list_permanent: "This action cannot be reversed.",
+  delete_account_understand_log_entries:
+    "I understand that this will delete all of my log entry data.",
+  delete_account_understand_notes:
+    "I understand that this will delete all of my notes and tags.",
+  delete_account_understand_permanent:
+    "I understand that this action is permanent and cannot be reversed.",
+  delete_account_confirm_button: "Delete my account",
+  delete_account_confirm_title: "Delete account?",
+  delete_account_confirm_message:
+    "This permanently deletes your account and all data. This cannot be undone.",
+  delete_account_deleting: "Deleting account…",
+  delete_account_unable: "Unable to delete account. Please try again later.",
 
   settings_select_option: "Select an option",
   settings_reading_daily_goal_title: "Daily Verse Count Goal",

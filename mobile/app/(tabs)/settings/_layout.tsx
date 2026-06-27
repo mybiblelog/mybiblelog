@@ -17,6 +17,8 @@ export default function SettingsLayout() {
       <Stack.Screen name="reading" options={{ title: "Reading" }} />
       <Stack.Screen name="appearance" options={{ title: "Appearance" }} />
       <Stack.Screen name="language" options={{ title: "Language" }} />
+      <Stack.Screen name="about" options={{ title: "About" }} />
+      <Stack.Screen name="delete-account" options={{ title: "Delete Account" }} />
     </Stack>
   );
 }

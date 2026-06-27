@@ -7,11 +7,15 @@ import { UserSettingsProvider } from "@/src/settings/UserSettingsProvider";
 import { ToastProvider } from "@/src/toast/ToastProvider";
 import { UpgradeGate } from "@/src/upgrade/UpgradeGate";
 import { configureGoogleSignIn } from "@/src/auth/googleSignIn";
+import { Sentry, initCrashReporting } from "@/src/observability/sentry";
+
+// Initialize crash reporting as early as possible (no-op unless a DSN is set).
+initCrashReporting();
 
 // Configure native Google Sign-In once, before any login attempt.
 configureGoogleSignIn();
 
-export default function RootLayout() {
+function RootLayout() {
   return (
     <LocaleProvider>
       <ThemeProvider>
@@ -30,6 +34,10 @@ export default function RootLayout() {
     </LocaleProvider>
   );
 }
+
+// `Sentry.wrap` enables error-boundary capture and touch/navigation context.
+// It returns the component unchanged when Sentry isn't initialized.
+export default Sentry.wrap(RootLayout);
 
 function RootStack() {
   const t = useT();

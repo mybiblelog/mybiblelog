@@ -16,15 +16,18 @@ Items marked _(Console)_ live in the Google Play Console, not in this repo.
 
 ### Legal & policy compliance
 
-- [ ] **Privacy policy.** No privacy policy URL exists in the app or config. Play
-  **requires** a privacy policy for every app, and it is mandatory for apps using
-  Google Sign-In. Publish a policy and add the URL to the Play listing _(Console)_,
-  and ideally link it from the app (see Settings → About below).
-- [ ] **Account & data deletion.** `app/(tabs)/settings/account.tsx` only offers
-  logout. Play **requires** apps that let users create accounts to provide an
-  in-app way to request account/data deletion **and** a publicly reachable
-  deletion URL. Add an in-app "Delete account" flow (calling an API endpoint) and
-  declare the deletion URL in the Data Safety form.
+- [x] **Privacy policy (in-app link).** The app now links to the hosted privacy
+  policy and terms from **Settings → About** (`app/(tabs)/settings/about.tsx`,
+  URLs in `src/constants/links.ts` → `mybiblelog.com/policy/privacy` and
+  `/policy/terms`). _Still required:_ add the same privacy policy URL to the Play
+  listing _(Console)_.
+- [x] **Account & data deletion (in-app).** Added an in-app "Delete account" flow:
+  a destructive entry in `app/(tabs)/settings/account.tsx` → confirmation screen
+  `app/(tabs)/settings/delete-account.tsx`, which calls the existing
+  `PUT /settings/delete-account` API (via `deleteAccount()` in
+  `src/api/settingsApi.ts`) and clears the local session. _Still required:_
+  provide a publicly reachable deletion URL and declare it in the Data Safety
+  form _(Console)_.
 - [ ] **Data Safety form.** _(Console)_ Must be completed. The app collects an
   email address (email + Google auth) and user-generated Bible log entries, all
   sent to the backend API. Declare data types collected, purpose, encryption in
@@ -74,14 +77,18 @@ Items marked _(Console)_ live in the Google Play Console, not in this repo.
 
 ## 🟡 Recommended
 
-- [ ] **Settings → About screen.** No app version, build, or legal links are shown
-  anywhere in the UI. Add an About section showing the version
-  (`Constants.expoConfig.version`) plus links to the privacy policy, terms, and a
-  support contact. This aids support and review.
-- [ ] **Terms of Service.** Consider publishing and linking a ToS alongside the
-  privacy policy.
-- [ ] **Crash & error reporting.** No crash reporting (e.g. Sentry) is configured.
-  Add one so production crashes are visible after launch.
+- [x] **Settings → About screen.** Added `app/(tabs)/settings/about.tsx` showing
+  the app version + build number (via `expo-constants` / `expo-application`) and
+  links to the Privacy Policy, Terms, and website.
+- [x] **Terms of Service.** Terms are published on the web (`/policy/terms`) and
+  now linked from the in-app About screen.
+- [x] **Crash & error reporting.** Sentry is wired up (`@sentry/react-native` +
+  the `@sentry/react-native/expo` config plugin; init in
+  `src/observability/sentry.ts`, app wrapped via `Sentry.wrap` in
+  `app/_layout.tsx`). It is **opt-in by config**: inactive until
+  `EXPO_PUBLIC_SENTRY_DSN` is set. _Still required:_ run `npm install`, create a
+  Sentry project, and set the DSN (and optionally `SENTRY_ORG`/`SENTRY_PROJECT`
+  for source-map upload) as EAS secrets.
 - [ ] **Audit Android permissions.** No explicit `android.permissions` allow-list
   in `app.json`; Expo/plugins may inject permissions at prebuild. Run
   `expo prebuild` and review the generated `AndroidManifest.xml` — keep `INTERNET`,
@@ -106,9 +113,9 @@ Items marked _(Console)_ live in the Google Play Console, not in this repo.
 
 ## 🟢 Nice to have
 
-- [ ] **Remove leftover template assets.** `assets/images/react-logo.png`,
-  `react-logo@2x.png`, `react-logo@3x.png`, and `partial-react-logo.png` are
-  unused Expo starter assets — delete them to reduce bundle size and clutter.
+- [x] **Remove leftover template assets.** Deleted the unused Expo starter
+  assets (`react-logo.png`, `react-logo@2x.png`, `react-logo@3x.png`,
+  `partial-react-logo.png`).
 - [ ] **Automated tests.** No test runner is configured (no Jest, no `*.test.*`
   files). Add unit/component tests for auth, log-entry, and settings logic to
   guard regressions.
@@ -132,10 +139,11 @@ Items marked _(Console)_ live in the Google Play Console, not in this repo.
 | --- | --- |
 | App identity (name, package, icons, splash, adaptive icon) | ✅ In good shape |
 | Auth (Google + email), i18n (en/es), theming, force-upgrade gate | ✅ Implemented |
-| Privacy policy / terms | ❌ Missing |
-| In-app account/data deletion | ❌ Missing (logout only) |
+| Privacy policy / terms | ✅ Linked in-app; ⚠️ add URL to Play listing |
+| In-app account/data deletion | ✅ Implemented; ⚠️ declare deletion URL in Data Safety |
 | Production build secrets & OAuth prod SHA-1 | ⚠️ Not configured |
 | Play submission credentials (`eas submit`) | ⚠️ Empty in `eas.json` |
-| About/version/support surface in UI | ⚠️ Absent |
-| Crash reporting & tests | ⚠️ Absent |
-| Leftover template assets | ⚠️ Present |
+| About/version/support surface in UI | ✅ About screen added |
+| Crash reporting | ✅ Wired up (set `EXPO_PUBLIC_SENTRY_DSN` to enable) |
+| Automated tests | ⚠️ Absent |
+| Leftover template assets | ✅ Removed |
