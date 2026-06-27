@@ -12,14 +12,16 @@
           <path fill="none" d="M0 0h48v48H0z" />
         </svg>
       </div>
-      <span class="gsi-material-button-contents">{{ $t('sign_in_with_google') }}</span>
-      <span style="display: none;">{{ $t('sign_in_with_google') }}</span>
+      <span class="gsi-material-button-contents">{{ t('sign_in_with_google') }}</span>
+      <span style="display: none;">{{ t('sign_in_with_google') }}</span>
     </div>
   </a>
 </template>
 
 <script setup lang="ts">
 defineProps<{ googleOauth2Url: string }>();
+
+const { t } = useI18n();
 </script>
 
 <style scoped>
