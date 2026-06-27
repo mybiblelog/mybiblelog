@@ -1,4 +1,4 @@
-import config from '../../config';
+import { getConfig } from '../../config';
 import { NotFoundError } from '../errors/http-errors';
 import { toDailyReminderJSON } from '../../repositories/helpers/serializers';
 import { validate } from '../../validation/validate';
@@ -21,14 +21,14 @@ import { type RouteHandler } from '../types';
  * else falls back to `/start`.
  */
 const getSafeDailyReminderRedirectUrl = (to: unknown): string => {
-  const fallback = new URL('/start', config.siteUrl).toString();
+  const fallback = new URL('/start', getConfig().siteUrl).toString();
   if (typeof to !== 'string' || !to) {
     return fallback;
   }
 
   try {
-    const dest = to.startsWith('/') ? new URL(to, config.siteUrl) : new URL(to);
-    const allowedOrigin = new URL(config.siteUrl).origin;
+    const dest = to.startsWith('/') ? new URL(to, getConfig().siteUrl) : new URL(to);
+    const allowedOrigin = new URL(getConfig().siteUrl).origin;
     if (dest.origin !== allowedOrigin) {
       return fallback;
     }

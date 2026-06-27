@@ -10,10 +10,7 @@ import { brandLogoCid } from './email-templates/branded-wrapper';
 import { QueueEmailParams, SendEmailParams } from './email-types';
 import sendEmail from './email-senders/resend';
 import { createQueue } from './email-queue';
-import config from '../../config';
-
-const defaultFromEmailAddress = `My Bible Log <team@${config.emailSendingDomain}>`;
-const defaultReplyToEmailAddress = `My Bible Log <team@${config.emailSendingDomain}>`;
+import { getConfig } from '../../config';
 
 type Attachment = NonNullable<SendEmailParams['attachments']>[number];
 
@@ -28,6 +25,9 @@ export type EmailService = {
 };
 
 const init = async () => {
+  const { emailSendingDomain, nodeEnv } = getConfig();
+  const defaultFromEmailAddress = `My Bible Log <team@${emailSendingDomain}>`;
+  const defaultReplyToEmailAddress = `My Bible Log <team@${emailSendingDomain}>`;
   const { emails } = await useRepositories();
 
   let cachedBrandLogoAttachment: Attachment | null | undefined;
@@ -60,7 +60,7 @@ const init = async () => {
     let status: 'pending' | 'sent' | 'failed' | 'log_only' = 'pending';
 
     // only send email in production
-    if (config.nodeEnv === 'production') {
+    if (nodeEnv === 'production') {
       try {
         await sendEmail(params);
         status = 'sent';

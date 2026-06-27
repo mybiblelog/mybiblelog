@@ -1,4 +1,4 @@
-import config from '../../config';
+import { getConfig } from '../../config';
 
 /**
  * Minimal request shape this helper needs. Both Express's `req` and the
@@ -17,6 +17,7 @@ type BypassRequest = {
  * @returns {boolean}
  */
 const checkTestBypass = (req: BypassRequest): boolean => {
+  const config = getConfig();
   // Never honor the test bypass in production, even if a secret is configured.
   // The bypass can skip rate limiting and grant admin on registration, so it
   // must be impossible to trigger against a production deployment.

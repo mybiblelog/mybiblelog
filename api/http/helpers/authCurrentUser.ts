@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import config from '../../config';
+import { getConfig } from '../../config';
 import useRepositories from '../../repositories/useRepositories';
 import { parseCookieHeader } from './parseCookieHeader';
 import { AUTH_TOKEN_TTL_DAYS } from '../../repositories/helpers/user-auth';
@@ -20,9 +20,6 @@ export const AUTH_COOKIE_NAME = 'auth_token';
 // Keep the cookie lifetime in sync with the JWT it carries
 export const AUTH_COOKIE_MAX_AGE = 1000 * 60 * 60 * 24 * AUTH_TOKEN_TTL_DAYS;
 
-const { jwtSecret, siteUrl } = config;
-const jwtIssuer = new URL(siteUrl).origin;
-const jwtAudience = jwtIssuer;
 const jwtAlgorithms: jwt.Algorithm[] = ['HS256'];
 
 // NOTE: the auth-token cookie is set declaratively via `HttpResult.cookies`
@@ -62,6 +59,10 @@ async function authCurrentUser(
 ): Promise<UserRecord | null>;
 
 async function authCurrentUser(req: AuthRequest, { optional = false, adminOnly = false } = {}): Promise<UserRecord | null> {
+  const { jwtSecret, siteUrl } = getConfig();
+  const jwtIssuer = new URL(siteUrl).origin;
+  const jwtAudience = jwtIssuer;
+
   const { users } = await useRepositories();
 
   const token = getTokenFromHeader(req);

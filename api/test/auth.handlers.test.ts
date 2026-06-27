@@ -1,4 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { withEnvConfig, restoreEnvConfig } from './config-helpers';
 
 // The google-verify handler imports the OAuth helper directly; mock it so the
 // CSRF-state branch is testable without real Google config.
@@ -48,6 +49,14 @@ const verifiedUser = {
   emailVerificationCode: '', // '' => verified (see isEmailVerified)
 } as unknown as UserRecord;
 
+// Non-empty emailVerificationCode => unverified (see isEmailVerified). The
+// past `emailVerificationCodeLastSentAt` keeps the resend cooldown out of the way.
+const unverifiedUser = {
+  ...verifiedUser,
+  emailVerificationCode: 'abc123',
+  emailVerificationCodeLastSentAt: new Date(0),
+} as unknown as UserRecord;
+
 type UsersStub = Partial<RouteDependencies['repositories']['users']>;
 
 const makeDeps = (overrides: {
@@ -74,9 +83,13 @@ const makeRequest = (overrides: Partial<HttpRequest> = {}): HttpRequest => ({
 });
 
 describe('auth handlers (unit)', () => {
+  // Tests that call withEnvConfig rely on this to restore process.env + the
+  // config cache; harmless for tests that never touch config.
+  afterEach(restoreEnvConfig);
+
   describe('getUser', () => {
     it('returns null user when unauthenticated', async () => {
-      const deps = makeDeps({ authenticate: (async () => null) as RouteDependencies['authenticate'] });
+      const deps = makeDeps({ authenticate: (async () => null) as unknown as RouteDependencies['authenticate'] });
       const result = await getUser(makeRequest({ method: 'GET' }), deps);
       expect(result.status).toBe(200);
       expect(result.body).toEqual({ data: { user: null } });
@@ -85,7 +98,7 @@ describe('auth handlers (unit)', () => {
     it('returns the serialized user when authenticated', async () => {
       const deps = makeDeps();
       const result = await getUser(makeRequest({ method: 'GET' }), deps);
-      expect(result.body.data).toEqual({
+      expect(result.body?.data).toEqual({
         user: { hasLocalAccount: true, email: 'user@example.com', isAdmin: false },
       });
     });
@@ -119,7 +132,7 @@ describe('auth handlers (unit)', () => {
       const deps = makeDeps({ users: { findByEmail: async () => verifiedUser, verifyPassword: async () => true } });
       const result = await login(makeRequest({ body: { email: 'a@b.com', password: 'pw' } }), deps);
       expect(result.status).toBe(200);
-      expect(typeof (result.body.data as { token: string }).token).toBe('string');
+      expect(typeof (result.body?.data as { token: string }).token).toBe('string');
       const cookie = result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME);
       expect(cookie?.value).toEqual(expect.any(String));
       expect(cookie?.options?.httpOnly).toBe(true);
@@ -131,6 +144,30 @@ describe('auth handlers (unit)', () => {
       });
       await expect(login(makeRequest({ body: { email: 'a@b.com', password: 'pw' } }), deps))
         .rejects.toThrow('rate limited');
+    });
+
+    it('rejects an unverified user when REQUIRE_EMAIL_VERIFICATION is on', async () => {
+      withEnvConfig({ REQUIRE_EMAIL_VERIFICATION: 'true' });
+      const deps = makeDeps({ users: { findByEmail: async () => unverifiedUser, verifyPassword: async () => true } });
+
+      const error = await login(makeRequest({ body: { email: 'a@b.com', password: 'pw' } }), deps)
+        .catch((e: unknown) => e);
+
+      expect(error).toBeInstanceOf(UnauthorizedError);
+      expect((error as UnauthorizedError).details).toEqual([
+        { code: 'verify_email', field: null, properties: { email: 'user@example.com' } },
+      ]);
+    });
+
+    it('allows an unverified user to log in when REQUIRE_EMAIL_VERIFICATION is off', async () => {
+      withEnvConfig({ REQUIRE_EMAIL_VERIFICATION: 'false' });
+      const deps = makeDeps({ users: { findByEmail: async () => unverifiedUser, verifyPassword: async () => true } });
+
+      const result = await login(makeRequest({ body: { email: 'a@b.com', password: 'pw' } }), deps);
+
+      expect(result.status).toBe(200);
+      expect(typeof (result.body?.data as { token: string }).token).toBe('string');
+      expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
   });
 
@@ -171,6 +208,40 @@ describe('auth handlers (unit)', () => {
     });
   });
 
+  describe('resendEmailVerification', () => {
+    it('returns generic success without queueing when REQUIRE_EMAIL_VERIFICATION is off', async () => {
+      withEnvConfig({ REQUIRE_EMAIL_VERIFICATION: 'false' });
+      const queueUserEmailVerification = vi.fn();
+      const deps = makeDeps({
+        users: { findByEmail: async () => unverifiedUser },
+        emailService: { queueUserEmailVerification },
+      });
+
+      const result = await resendEmailVerification(makeRequest({ body: { email: 'user@example.com' } }), deps);
+
+      expect(result.body?.data).toMatchObject({ success: true });
+      expect(queueUserEmailVerification).not.toHaveBeenCalled();
+    });
+
+    it('queues a verification email for an unverified user when REQUIRE_EMAIL_VERIFICATION is on', async () => {
+      withEnvConfig({ REQUIRE_EMAIL_VERIFICATION: 'true' });
+      const refreshed = { ...unverifiedUser, emailVerificationCode: 'NEWCODE' } as UserRecord;
+      const queueUserEmailVerification = vi.fn();
+      const deps = makeDeps({
+        users: {
+          findByEmail: async () => unverifiedUser,
+          resendEmailVerification: async () => refreshed,
+        },
+        emailService: { queueUserEmailVerification },
+      });
+
+      const result = await resendEmailVerification(makeRequest({ body: { email: 'user@example.com' } }), deps);
+
+      expect(result.body?.data).toMatchObject({ success: true });
+      expect(queueUserEmailVerification).toHaveBeenCalledWith('user@example.com', 'NEWCODE', 'en');
+    });
+  });
+
   describe('verifyEmail', () => {
     it('throws NotFound when the code matches no user', async () => {
       const deps = makeDeps({ users: { findByEmailVerificationCode: async () => null } });
@@ -191,7 +262,7 @@ describe('auth handlers (unit)', () => {
         },
       });
       const result = await verifyEmail(makeRequest({ body: { code: 'GOOD' } }), deps);
-      expect(typeof (result.body.data as { token: string }).token).toBe('string');
+      expect(typeof (result.body?.data as { token: string }).token).toBe('string');
       expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
   });
@@ -247,7 +318,7 @@ describe('auth handlers (unit)', () => {
         deps,
       );
       expect(completePasswordResetFn).toHaveBeenCalledWith(USER_ID, 'password123');
-      expect(typeof (result.body.data as { token: string }).token).toBe('string');
+      expect(typeof (result.body?.data as { token: string }).token).toBe('string');
       expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
   });
@@ -301,7 +372,7 @@ describe('auth handlers (unit)', () => {
         },
       });
       const result = await completeEmailChange(makeRequest({ params: { newEmailVerificationCode: 'GOOD' } }), deps);
-      expect(typeof (result.body.data as { token: string }).token).toBe('string');
+      expect(typeof (result.body?.data as { token: string }).token).toBe('string');
       expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
   });
@@ -317,7 +388,7 @@ describe('auth handlers (unit)', () => {
         makeRequest({ body: { email: 'ghost@example.com', locale: 'en' } }),
         deps,
       );
-      expect((result.body.data as { success: boolean }).success).toBe(true);
+      expect((result.body?.data as { success: boolean }).success).toBe(true);
       expect(queueUserEmailVerification).not.toHaveBeenCalled();
     });
 

@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import xml from 'xml';
 import { locales } from '@mybiblelog/shared';
-import config from '../../config';
+import { getConfig } from '../../config';
 import { type RouteHandler } from '../types';
 
 /**
@@ -59,7 +59,7 @@ export const getSitemap: RouteHandler = async () => {
     '/downloads/인쇄용 성경 읽기 추적표.pdf',
   );
 
-  const urls = relativeUrls.map((url) => config.siteUrl + url);
+  const urls = relativeUrls.map((url) => getConfig().siteUrl + url);
 
   const sitemapItems = urls.map((url) => ({
     url: [

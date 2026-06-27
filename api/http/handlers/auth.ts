@@ -1,4 +1,4 @@
-import config from '../../config';
+import { getConfig } from '../../config';
 import { ApiErrorDetailCode } from '../errors/error-codes';
 import { ValidationError } from '../errors/validation-errors';
 import { InvalidRequestError, UnauthorizedError, NotFoundError } from '../errors/http-errors';
@@ -22,8 +22,6 @@ import { LocaleCode } from '@mybiblelog/shared';
 import { authCookie, clearAuthCookie } from '../helpers/auth-cookie';
 import { type RouteHandler } from '../types';
 
-const { requireEmailVerification } = config;
-
 /**
  * Framework-agnostic auth handlers.
  *
@@ -36,7 +34,7 @@ const { requireEmailVerification } = config;
  *
  * Rate limiting goes through `deps.rateLimiter`, which honors the test bypass
  * internally — so these handlers contain no bypass logic. Email-verification
- * enforcement is governed solely by `config.requireEmailVerification`.
+ * enforcement is governed solely by `getConfig().requireEmailVerification`.
  */
 
 /** Narrow an unknown JSON body to an indexable record for inline field guards. */
@@ -80,7 +78,7 @@ export const login: RouteHandler = async (req, deps) => {
     throw new UnauthorizedError([{ code: ApiErrorDetailCode.InvalidLogin, field: null }]);
   }
 
-  if (requireEmailVerification && !isEmailVerified(user)) {
+  if (getConfig().requireEmailVerification && !isEmailVerified(user)) {
     throw new UnauthorizedError([{ code: ApiErrorDetailCode.VerifyEmail, field: null, properties: { email: user.email } }]);
   }
 
@@ -218,7 +216,7 @@ export const resendEmailVerification: RouteHandler = async (req, deps) => {
   const user = await users.findByEmail(email);
 
   // Avoid email enumeration: unknown / already verified both return a generic success.
-  if (!user || user.emailVerificationCode === '' || !requireEmailVerification) {
+  if (!user || user.emailVerificationCode === '' || !getConfig().requireEmailVerification) {
     return { status: 200, body: { data: { success: true, secondsUntilCanRetry: defaultSecondsUntilCanRetry } } };
   }
 

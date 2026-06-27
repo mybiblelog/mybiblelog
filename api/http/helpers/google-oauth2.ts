@@ -1,11 +1,5 @@
 import crypto from 'node:crypto';
-import config from '../../config';
-
-const {
-  clientId,
-  clientSecret,
-  redirectUri,
-} = config.google;
+import { getConfig } from '../../config';
 
 // In-memory store for OAuth2 state parameters (in production, use Redis)
 const stateStore = new Map();
@@ -42,6 +36,7 @@ const verifyState = (state) => {
 };
 
 const getGoogleLoginUrl = () => {
+  const { clientId, redirectUri } = getConfig().google;
   const state = generateState();
   const stringifiedParams = new URLSearchParams({
     client_id: clientId,
@@ -63,6 +58,7 @@ const getGoogleLoginUrl = () => {
 };
 
 const getAccessTokenFromCode = async (code) => {
+  const { clientId, clientSecret, redirectUri } = getConfig().google;
   try {
     const response = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',

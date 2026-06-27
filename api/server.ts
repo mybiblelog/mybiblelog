@@ -3,7 +3,7 @@
 import http from 'node:http';
 import debug from 'debug';
 
-import config from './config';
+import { getConfig } from './config';
 import { ensureIndexes } from './mongo/useCollections';
 import useRepositories from './repositories/useRepositories';
 import initReminderService from './services/reminder.service';
@@ -22,33 +22,6 @@ const normalizePort = (val: string) => {
   return false;
 };
 
-// Event listener for HTTP server "error" event.
-const onError = (error: any) => {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
-
-  const bind =
-    typeof port === 'string' ?
-      'Pipe ' + port :
-      'Port ' + port;
-
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-  case 'EACCES':
-    console.error(bind + ' requires elevated privileges'); // eslint-disable-line no-console
-    process.exit(1);
-    break; // eslint rule
-  case 'EADDRINUSE':
-    console.error(bind + ' is already in use'); // eslint-disable-line no-console
-    process.exit(1);
-    break; // eslint rule
-  default:
-    throw error;
-  }
-};
-
-// Event listener for HTTP server "listening" event.
 const onListening = (server: http.Server) => () => {
   const addr = server.address()!;
   const bind =
@@ -58,10 +31,33 @@ const onListening = (server: http.Server) => () => {
   debug('Listening on ' + bind);
 };
 
-// Get port from environment and store in Express.
-const port = normalizePort(config.apiPort || '8080');
-
 const startServer = async () => {
+  const port = normalizePort(getConfig().apiPort || '8080');
+
+  const onError = (error: any) => {
+    if (error.syscall !== 'listen') {
+      throw error;
+    }
+
+    const bind =
+      typeof port === 'string' ?
+        'Pipe ' + port :
+        'Port ' + port;
+
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges'); // eslint-disable-line no-console
+      process.exit(1);
+      break; // eslint rule
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use'); // eslint-disable-line no-console
+      process.exit(1);
+      break; // eslint rule
+    default:
+      throw error;
+    }
+  };
   // make sure the database connection is established
   await useRepositories();
   // Build the unique/text indexes the data layer relies on. Mongoose used to

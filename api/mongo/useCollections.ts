@@ -1,5 +1,5 @@
 import { Collection, Db, MongoClient } from 'mongodb';
-import config from '../config';
+import { getConfig } from '../config';
 import {
   DailyReminderDocument,
   EmailDocument,
@@ -50,7 +50,7 @@ const connect = async (): Promise<Db> => {
   }
   if (!connecting) {
     connecting = (async () => {
-      const newClient = new MongoClient(config.mongo.uri);
+      const newClient = new MongoClient(getConfig().mongo.uri);
       await newClient.connect();
       client = newClient;
       // No explicit name: use the database from the connection string, falling
