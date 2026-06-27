@@ -84,7 +84,7 @@ export async function emailPasswordLogin(
     });
     body = await res.json().catch(() => undefined);
   } catch {
-    return { ok: false, error: { code: "unknown_error", errors: [] } };
+    return { ok: false, error: { code: "network_error", errors: [] } };
   }
 
   if (!res.ok) {

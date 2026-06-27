@@ -96,6 +96,7 @@ export const es = {
 
   // Mensajes de error de la API (refleja `api_error.*` de Nuxt; por código de error)
   api_error_unknown_error: "Ocurrió un error desconocido",
+  api_error_network_error: "No se puede llegar al servidor. Por favor verifica tu conexión e intenta de nuevo.",
   api_error_validation_error: "Hubo un error con su solicitud",
   api_error_required: "Se requiere un %{field}",
   api_error_is_invalid: "Por favor ingrese un %{field} válido",

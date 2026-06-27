@@ -8,6 +8,7 @@ import type { TranslationKey } from "@/src/i18n";
  */
 const API_ERROR_MESSAGE_KEYS = {
   unknown_error: "api_error_unknown_error",
+  network_error: "api_error_network_error",
   validation_error: "api_error_validation_error",
   required: "api_error_required",
   is_invalid: "api_error_is_invalid",

@@ -95,6 +95,7 @@ export const en = {
 
   // API error messages (mirrors Nuxt `api_error.*`; keyed by error code)
   api_error_unknown_error: "An unknown error occurred",
+  api_error_network_error: "Can't reach the server. Please check your connection and try again.",
   api_error_validation_error: "There was an error with your request",
   api_error_required: "A %{field} is required",
   api_error_is_invalid: "Please enter a valid %{field}",
