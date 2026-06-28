@@ -1,28 +1,28 @@
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import type { LogEntry } from "@/src/types/log-entry";
-import { ConfirmDialog } from "@/src/components/ConfirmDialog";
-import { EmptyState } from "@/src/components/EmptyState";
-import { LogEntryEditorModal } from "@/src/components/LogEntryEditorModal";
-import { LogEntryMenu } from "@/src/components/LogEntryMenu";
-import { LogEntryRow } from "@/src/components/LogEntryRow";
-import { Screen } from "@/src/components/Screen";
-import { radius, spacing, TOUCH_TARGET, typography } from "@/src/theme/tokens";
-import { useLogEntries } from "@/src/log-entries/LogEntriesProvider";
-import { useUserSettings } from "@/src/settings/UserSettingsProvider";
-import { useTheme } from "@/src/theme/ThemeProvider";
+import {
+  AnimatedList,
+  Button,
+  Card,
+  ConfirmDialog,
+  EmptyState,
+  LogEntryEditorModal,
+  LogEntryMenu,
+  LogEntryRow,
+  ProgressBar,
+  Screen,
+  Spinner,
+  Text,
+} from "@/src/components";
+import { spacing } from "@/src/design";
+import { useLogEntries } from "@/src/stores/logEntries";
+import { useUserSettings } from "@/src/stores/userSettings";
 import { openPassageInBible } from "@/src/bible/openInBible";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { useToast } from "@/src/toast/ToastProvider";
 import { Bible } from "@mybiblelog/shared";
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { StyleSheet, View } from "react-native";
 
 function formatLongDateLocale(date: string, locale: string): string {
   const parts = date.split("-").map((p) => Number(p));
@@ -42,7 +42,6 @@ function entryKey(e: LogEntry): string {
 }
 
 export default function Index() {
-  const { colors } = useTheme();
   const { state: logState, createEntry, updateEntry, deleteEntry } = useLogEntries();
   const { state: settingsState } = useUserSettings();
   const { showToast } = useToast();
@@ -130,36 +129,28 @@ export default function Index() {
 
   if (logState.status !== "ready" || settingsState.status !== "ready") {
     return (
-      <View style={[styles.loading, { backgroundColor: colors.background }]}>
-        <ActivityIndicator color={colors.primary} />
-      </View>
+      <Screen>
+        <Spinner center />
+      </Screen>
     );
   }
 
   return (
     <Screen padded>
       <View style={styles.header}>
-        <View style={{ flex: 1 }}>
-          <Text style={[styles.title, { color: colors.text }]}>{t("today_title")}</Text>
-          <Text style={[styles.subtitle, { color: colors.mutedText }]}>
+        <View style={styles.headerText}>
+          <Text variant="title">{t("today_title")}</Text>
+          <Text variant="subtitle" color="mutedText" style={styles.subtitle}>
             {todayDisplay}
           </Text>
         </View>
-        <Pressable
-          style={[styles.addButton, { backgroundColor: colors.primary }]}
-          onPress={() => setIsAddOpen(true)}
-          hitSlop={8}
-        >
-          <Text style={[styles.addButtonText, { color: colors.onPrimary }]}>{t("add")}</Text>
-        </Pressable>
+        <Button label={t("add")} leftIcon="add" onPress={() => setIsAddOpen(true)} />
       </View>
 
-      <View style={[styles.progressCard, { backgroundColor: colors.surfaceAlt }]}>
+      <Card style={styles.progressCard}>
         <View style={styles.progressTopRow}>
-          <Text style={[styles.progressLabel, { color: colors.text }]}>
-            {t("today_daily_goal")}
-          </Text>
-          <Text style={[styles.progressMeta, { color: colors.mutedText }]}>
+          <Text variant="label">{t("today_daily_goal")}</Text>
+          <Text variant="caption" color="mutedText">
             {goal > 0 ?
               t("today_progress_meta_with_goal", {
                 pct: progressPct,
@@ -173,17 +164,10 @@ export default function Index() {
               })}
           </Text>
         </View>
-        <View style={[styles.progressTrack, { backgroundColor: colors.border }]}>
-          <View
-            style={[
-              styles.progressFill,
-              { backgroundColor: colors.primary, width: `${progressPct}%` },
-            ]}
-          />
-        </View>
-      </View>
+        <ProgressBar progress={progress} />
+      </Card>
 
-      <FlatList
+      <AnimatedList
         data={todayEntries}
         contentContainerStyle={[
           styles.listContent,
@@ -207,6 +191,7 @@ export default function Index() {
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListEmptyComponent={
           <EmptyState
+            icon="book-outline"
             title={t("today_empty_title")}
             text={t("today_empty_text")}
             ctaLabel={t("add")}
@@ -286,73 +271,33 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-  title: {
-    ...typography.screenTitle,
-  },
-  subtitle: {
-    fontSize: 13,
-    fontWeight: "700",
-    marginTop: 2,
-  },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: 12,
-    marginBottom: 12,
+    gap: spacing.lg,
+    marginBottom: spacing.lg,
   },
-  addButton: {
-    paddingHorizontal: spacing.xl,
-    paddingVertical: spacing.md,
-    borderRadius: radius.md,
-    minHeight: TOUCH_TARGET,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  addButtonText: {
-    ...typography.buttonLabel,
-  },
+  headerText: { flex: 1 },
+  subtitle: { marginTop: 2 },
   progressCard: {
-    borderRadius: 16,
-    padding: 14,
-    marginBottom: 14,
+    marginBottom: spacing.xl,
   },
   progressTopRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline",
-    marginBottom: 10,
-  },
-  progressLabel: {
-    fontSize: 14,
-    fontWeight: "900",
-  },
-  progressMeta: {
-    fontSize: 13,
-    fontWeight: "700",
-  },
-  progressTrack: {
-    height: 10,
-    borderRadius: 999,
-    overflow: "hidden",
-  },
-  progressFill: {
-    height: "100%",
-    borderRadius: 999,
+    marginBottom: spacing.md,
+    gap: spacing.sm,
   },
   listContent: {
-    paddingBottom: 24,
+    paddingBottom: spacing.listBottom,
   },
   listContentEmpty: {
     flexGrow: 1,
   },
   separator: {
-    height: 10,
-  },
-  loading: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    height: spacing.md,
   },
 });
 

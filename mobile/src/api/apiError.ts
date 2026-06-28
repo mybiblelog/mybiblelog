@@ -22,6 +22,24 @@ export type ApiErrorPayload = {
 };
 
 /**
+ * Typed error thrown by the HTTP adapter on non-OK responses. Ported from the
+ * Nuxt web app's `helpers/api-error.ts` so stores can branch on
+ * `err instanceof ApiError` and surface the same field-level messages via
+ * `mapFormErrors`.
+ */
+export class ApiError extends Error {
+  readonly code: string;
+  readonly errors: ApiErrorDetail[];
+
+  constructor(payload: ApiErrorPayload) {
+    super(payload.code);
+    this.name = "ApiError";
+    this.code = payload.code;
+    this.errors = payload.errors ?? [];
+  }
+}
+
+/**
  * Extracts an `ApiErrorPayload` from a parsed response body. Falls back to a
  * generic `unknown_error` payload when the body doesn't match the expected shape.
  */

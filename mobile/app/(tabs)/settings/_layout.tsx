@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { useTheme } from "@/src/theme/ThemeProvider";
+import { stackTransition, useTheme } from "@/src/design";
 
 export default function SettingsLayout() {
   const { colors } = useTheme();
@@ -10,6 +10,7 @@ export default function SettingsLayout() {
         headerTintColor: colors.text,
         headerShadowVisible: false,
         contentStyle: { backgroundColor: colors.background },
+        ...stackTransition,
       }}
     >
       <Stack.Screen name="index" options={{ title: "Settings" }} />
@@ -17,6 +18,8 @@ export default function SettingsLayout() {
       <Stack.Screen name="reading" options={{ title: "Reading" }} />
       <Stack.Screen name="appearance" options={{ title: "Appearance" }} />
       <Stack.Screen name="language" options={{ title: "Language" }} />
+      <Stack.Screen name="about" options={{ title: "About" }} />
+      <Stack.Screen name="delete-account" options={{ title: "Delete Account" }} />
     </Stack>
   );
 }

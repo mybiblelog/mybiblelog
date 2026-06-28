@@ -65,3 +65,14 @@ export async function updateSettings(
   return parsed;
 }
 
+/**
+ * Permanently delete the authenticated user's account and all associated data
+ * (log entries, notes, tags, reminders). Mirrors the web app's
+ * `PUT /settings/delete-account` flow. The caller is responsible for clearing
+ * the local session afterward (the server also clears the auth cookie).
+ */
+export async function deleteAccount(token: string): Promise<void> {
+  const res = await apiFetch(token, "/settings/delete-account", { method: "PUT" });
+  if (!res.ok) throw new Error(`PUT /settings/delete-account failed: ${res.status}`);
+}
+

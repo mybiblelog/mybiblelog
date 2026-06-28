@@ -96,6 +96,7 @@ export const es = {
 
   // Mensajes de error de la API (refleja `api_error.*` de Nuxt; por código de error)
   api_error_unknown_error: "Ocurrió un error desconocido",
+  api_error_network_error: "No se puede llegar al servidor. Por favor verifica tu conexión e intenta de nuevo.",
   api_error_validation_error: "Hubo un error con su solicitud",
   api_error_required: "Se requiere un %{field}",
   api_error_is_invalid: "Por favor ingrese un %{field} válido",
@@ -156,6 +157,44 @@ export const es = {
   settings_section_appearance_subtitle: "Tema y visualización",
   settings_section_language: "Idioma",
   settings_section_language_subtitle: "Elige tu idioma",
+  settings_section_about: "Acerca de",
+  settings_section_about_subtitle: "Versión, privacidad y términos",
+
+  // About screen
+  about_app_label: "Aplicación",
+  about_version: "Versión",
+  about_legal_label: "Legal",
+  about_privacy_policy: "Política de privacidad",
+  about_terms: "Términos y condiciones",
+  about_website: "Visitar sitio web",
+  about_open_link_failed: "No se pudo abrir el enlace.",
+
+  // Account deletion
+  account_danger_zone_label: "Zona de peligro",
+  account_delete_button: "Eliminar cuenta",
+  delete_account_title: "Eliminar cuenta",
+  delete_account_description:
+    "Usted está en control de sus datos. Puede eliminar permanentemente su cuenta y todos los datos asociados con ella:",
+  delete_account_list_account:
+    "Esto eliminará permanentemente su cuenta y configuraciones personales.",
+  delete_account_list_log_entries:
+    "Esto eliminará permanentemente sus entradas de registro.",
+  delete_account_list_notes:
+    "Esto eliminará permanentemente sus notas y etiquetas personalizadas.",
+  delete_account_list_permanent: "Esta acción no se puede revertir.",
+  delete_account_understand_log_entries:
+    "Entiendo que esto eliminará todos los datos de mis entradas de registro.",
+  delete_account_understand_notes:
+    "Entiendo que esto eliminará todas mis notas y etiquetas.",
+  delete_account_understand_permanent:
+    "Entiendo que esta acción es permanente y no se puede revertir.",
+  delete_account_confirm_button: "Eliminar mi cuenta",
+  delete_account_confirm_title: "¿Eliminar cuenta?",
+  delete_account_confirm_message:
+    "Esto eliminará permanentemente su cuenta y todos los datos. Esta acción no se puede deshacer.",
+  delete_account_deleting: "Eliminando cuenta…",
+  delete_account_unable:
+    "No se puede eliminar la cuenta. Por favor, inténtelo de nuevo más tarde.",
 
   settings_select_option: "Seleccionar una opción",
   settings_reading_daily_goal_title: "Meta de Versículos Diarios",

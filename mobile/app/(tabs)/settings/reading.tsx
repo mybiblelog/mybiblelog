@@ -1,22 +1,20 @@
 import { useMemo, useState } from "react";
-import { Ionicons } from "@expo/vector-icons";
-import { useAuth } from "@/src/auth/AuthProvider";
-import { SelectSheet } from "@/src/components/SelectSheet";
-import { TOUCH_TARGET } from "@/src/theme/tokens";
+import { useAuth } from "@/src/stores/auth";
+import {
+  Card,
+  InputField,
+  Screen,
+  SelectRow,
+  SelectSheet,
+  Spinner,
+  Text,
+} from "@/src/components";
+import { spacing, useTheme } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
-import { useUserSettings } from "@/src/settings/UserSettingsProvider";
-import { useTheme } from "@/src/theme/ThemeProvider";
+import { useUserSettings } from "@/src/stores/userSettings";
 import { useToast } from "@/src/toast/ToastProvider";
 import { BibleApps, BibleVersions } from "@mybiblelog/shared";
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 export default function ReadingSettings() {
   const t = useT();
@@ -49,7 +47,6 @@ export default function ReadingSettings() {
       [BibleVersions.ARC]: "Almeida Revista e Corrigida (ARC)",
       [BibleVersions.LUT]: "Luther 1545 (LUT)",
     };
-
     return Object.keys(names).map((value) => ({ value, label: names[value] }));
   }, []);
 
@@ -66,9 +63,9 @@ export default function ReadingSettings() {
 
   if (settingsState.status !== "ready") {
     return (
-      <View style={[styles.loading, { backgroundColor: colors.background }]}>
-        <ActivityIndicator color={colors.primary} />
-      </View>
+      <Screen edges={[]}>
+        <Spinner center />
+      </Screen>
     );
   }
 
@@ -137,79 +134,59 @@ export default function ReadingSettings() {
   return (
     <>
       <ScrollView
-        style={{ flex: 1, backgroundColor: colors.background }}
+        style={[styles.flex, { backgroundColor: colors.background }]}
         contentContainerStyle={styles.content}
       >
-        <Text style={[styles.sectionLabel, { color: colors.mutedText }]}>
+        <Text variant="label" color="mutedText" style={styles.sectionLabel}>
           {t("settings_reading_daily_goal_title")}
         </Text>
-        <View style={[styles.rowCard, { backgroundColor: colors.surfaceAlt }]}>
-          <TextInput
-            value={String(settings.dailyVerseCountGoal ?? "")}
-            onChangeText={(text) => {
-              const n = Number(text);
-              if (!Number.isFinite(n)) {
-                void setLocalSettings({ dailyVerseCountGoal: 0 });
-                return;
-              }
-              void setLocalSettings({ dailyVerseCountGoal: Math.floor(n) });
-            }}
-            onEndEditing={() => void saveDailyGoal()}
-            returnKeyType="done"
-            keyboardType="number-pad"
-            placeholder="86"
-            placeholderTextColor={colors.placeholder}
-            style={[styles.input, { borderColor: colors.border, color: colors.text }]}
-          />
-        </View>
+        <InputField
+          value={String(settings.dailyVerseCountGoal ?? "")}
+          onChangeText={(text) => {
+            const n = Number(text);
+            if (!Number.isFinite(n)) {
+              void setLocalSettings({ dailyVerseCountGoal: 0 });
+              return;
+            }
+            void setLocalSettings({ dailyVerseCountGoal: Math.floor(n) });
+          }}
+          onEndEditing={() => void saveDailyGoal()}
+          returnKeyType="done"
+          keyboardType="number-pad"
+          placeholder="86"
+        />
 
-        <Text style={[styles.sectionLabel, { color: colors.mutedText }]}>
+        <Text variant="label" color="mutedText" style={styles.sectionLabel}>
           {t("settings_reading_look_back_date_title")}
         </Text>
-        <View style={[styles.rowCard, { backgroundColor: colors.surfaceAlt }]}>
-          <TextInput
-            value={settings.lookBackDate}
-            onChangeText={(text) => void setLocalSettings({ lookBackDate: text })}
-            onEndEditing={() => void saveLookBackDate()}
-            returnKeyType="done"
-            placeholder="YYYY-MM-DD"
-            placeholderTextColor={colors.placeholder}
-            style={[styles.input, { borderColor: colors.border, color: colors.text }]}
-          />
-        </View>
+        <InputField
+          value={settings.lookBackDate}
+          onChangeText={(text) => void setLocalSettings({ lookBackDate: text })}
+          onEndEditing={() => void saveLookBackDate()}
+          returnKeyType="done"
+          placeholder="YYYY-MM-DD"
+        />
 
-        <Text style={[styles.sectionLabel, { color: colors.mutedText }]}>
+        <Text variant="label" color="mutedText" style={styles.sectionLabel}>
           {t("settings_reading_preferred_bible_version_title")}
         </Text>
-        <View style={[styles.card, { backgroundColor: colors.surfaceAlt }]}>
-          <Pressable
-            style={styles.selectRow}
-            onPress={() => setBibleVersionOpen(true)}
-          >
-            <Text style={[styles.selectText, { color: colors.text }]} numberOfLines={1}>
-              {bibleVersionLabel || t("settings_select_option")}
-            </Text>
-            <Ionicons name="chevron-down" size={18} color={colors.mutedText} />
-          </Pressable>
-        </View>
+        <SelectRow
+          value={bibleVersionLabel}
+          placeholder={t("settings_select_option")}
+          onPress={() => setBibleVersionOpen(true)}
+        />
 
-        <Text style={[styles.sectionLabel, { color: colors.mutedText }]}>
+        <Text variant="label" color="mutedText" style={styles.sectionLabel}>
           {t("settings_reading_preferred_bible_app_title")}
         </Text>
-        <View style={[styles.card, { backgroundColor: colors.surfaceAlt }]}>
-          <Pressable
-            style={styles.selectRow}
-            onPress={() => setBibleAppOpen(true)}
-          >
-            <Text style={[styles.selectText, { color: colors.text }]} numberOfLines={1}>
-              {bibleAppLabel || t("settings_select_option")}
-            </Text>
-            <Ionicons name="chevron-down" size={18} color={colors.mutedText} />
-          </Pressable>
-        </View>
+        <SelectRow
+          value={bibleAppLabel}
+          placeholder={t("settings_select_option")}
+          onPress={() => setBibleAppOpen(true)}
+        />
 
         {authState.status !== "authenticated" && (
-          <Text style={[styles.help, { color: colors.mutedText }]}>
+          <Text variant="caption" color="mutedText" style={styles.help}>
             {t("settings_reading_local_only_notice")}
           </Text>
         )}
@@ -237,58 +214,8 @@ export default function ReadingSettings() {
 }
 
 const styles = StyleSheet.create({
-  loading: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  content: {
-    padding: 16,
-    paddingBottom: 24,
-  },
-  sectionLabel: {
-    fontSize: 13,
-    fontWeight: "800",
-    marginBottom: 8,
-    marginTop: 14,
-  },
-  rowCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    borderRadius: 16,
-    padding: 12,
-  },
-  input: {
-    flex: 1,
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  card: {
-    borderRadius: 16,
-    overflow: "hidden",
-  },
-  selectRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 10,
-    paddingHorizontal: 14,
-    paddingVertical: 14,
-    minHeight: TOUCH_TARGET,
-  },
-  selectText: {
-    flex: 1,
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  help: {
-    marginTop: 14,
-    fontSize: 13,
-  },
+  flex: { flex: 1 },
+  content: { padding: spacing.screenH, paddingBottom: spacing.listBottom },
+  sectionLabel: { marginTop: spacing.lg, marginBottom: spacing.sm },
+  help: { marginTop: spacing.lg },
 });
-

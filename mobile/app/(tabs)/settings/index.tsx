@@ -1,7 +1,7 @@
-import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { useTheme } from "@/src/theme/ThemeProvider";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { radius, spacing, useTheme } from "@/src/design";
+import { Icon, type IconName, ListItem } from "@/src/components";
 import { useT } from "@/src/i18n/LocaleProvider";
 
 function SectionRow({
@@ -10,30 +10,26 @@ function SectionRow({
   subtitle,
   onPress,
 }: {
-  icon: keyof typeof Ionicons.glyphMap;
+  icon: IconName;
   title: string;
   subtitle?: string;
   onPress: () => void;
 }) {
   const { colors } = useTheme();
   return (
-    <Pressable
-      style={[styles.sectionRow, { backgroundColor: colors.surfaceAlt }]}
+    <ListItem
+      title={title}
+      subtitle={subtitle}
+      chevron
       onPress={onPress}
-    >
-      <View style={[styles.sectionIcon, { backgroundColor: colors.border }]}>
-        <Ionicons name={icon} size={18} color={colors.text} />
-      </View>
-      <View style={styles.sectionMain}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>{title}</Text>
-        {!!subtitle && (
-          <Text style={[styles.sectionSubtitle, { color: colors.mutedText }]}>
-            {subtitle}
-          </Text>
-        )}
-      </View>
-      <Ionicons name="chevron-forward" size={18} color={colors.mutedText} />
-    </Pressable>
+      bordered={false}
+      style={{ backgroundColor: colors.surfaceAlt }}
+      leading={
+        <View style={[styles.badge, { backgroundColor: colors.border }]}>
+          <Icon name={icon} size={18} color="text" />
+        </View>
+      }
+    />
   );
 }
 
@@ -42,7 +38,7 @@ export default function SettingsIndex() {
   const { colors } = useTheme();
   return (
     <ScrollView
-      style={{ flex: 1, backgroundColor: colors.background }}
+      style={[styles.flex, { backgroundColor: colors.background }]}
       contentContainerStyle={styles.content}
     >
       <SectionRow
@@ -51,62 +47,46 @@ export default function SettingsIndex() {
         subtitle={t("settings_section_account_subtitle")}
         onPress={() => router.push("/settings/account")}
       />
-
       <SectionRow
         icon="bookmarks-outline"
         title={t("settings_section_reading")}
         subtitle={t("settings_section_reading_subtitle")}
         onPress={() => router.push("/settings/reading")}
       />
-
       <SectionRow
         icon="color-palette-outline"
         title={t("settings_section_appearance")}
         subtitle={t("settings_section_appearance_subtitle")}
         onPress={() => router.push("/settings/appearance")}
       />
-
       <SectionRow
         icon="language-outline"
         title={t("settings_section_language")}
         subtitle={t("settings_section_language_subtitle")}
         onPress={() => router.push("/settings/language")}
       />
+      <SectionRow
+        icon="information-circle-outline"
+        title={t("settings_section_about")}
+        subtitle={t("settings_section_about_subtitle")}
+        onPress={() => router.push("/settings/about")}
+      />
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  flex: { flex: 1 },
   content: {
-    padding: 16,
-    gap: 10,
-    paddingBottom: 24,
+    padding: spacing.screenH,
+    gap: spacing.md,
+    paddingBottom: spacing.listBottom,
   },
-  sectionRow: {
-    borderRadius: 16,
-    padding: 14,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-  sectionIcon: {
+  badge: {
     width: 36,
     height: 36,
-    borderRadius: 12,
+    borderRadius: radius.md,
     alignItems: "center",
     justifyContent: "center",
   },
-  sectionMain: {
-    flex: 1,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "800",
-    marginBottom: 2,
-  },
-  sectionSubtitle: {
-    fontSize: 13,
-    fontWeight: "600",
-  },
 });
-

@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { useTheme } from "@/src/theme/ThemeProvider";
+import { stackTransition, useTheme } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 
 export default function BibleLayout() {
@@ -12,6 +12,7 @@ export default function BibleLayout() {
         headerTintColor: colors.text,
         headerShadowVisible: false,
         contentStyle: { backgroundColor: colors.background },
+        ...stackTransition,
       }}
     >
       <Stack.Screen name="index" options={{ title: t("bible_books_title") }} />

@@ -139,28 +139,3 @@ NOTE: You will need to connect to Metro via local network, meaning you'll need t
 ipconfig getifaddr en0
 ```
 
----
-
-FIXME: editing below this line
-
-## Google Auth config example (native-safe)
-
-```ts
-Google.useAuthRequest({
-  androidClientId: "xxx.apps.googleusercontent.com",
-  iosClientId: "xxx.apps.googleusercontent.com",
-  webClientId: "xxx.apps.googleusercontent.com",
-})
-```
-
-❌ No `useProxy`
-❌ No localhost
-❌ No Expo Go
-
-
-## Common gotchas (worth checking)
-
-* ❗ SHA-1 mismatch = silent auth failure
-* ❗ Wrong package name = instant Google block
-* ❗ Using web client ID on Android = same error as before
-* ❗ Changing `android.package` requires **new OAuth client**
