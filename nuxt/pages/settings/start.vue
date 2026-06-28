@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="mbl-control">
-        <a class="mbl-button mbl-button--primary" :class="{ 'is-saving': saving }" data-testid="settings-start-page-save" @click="handleStartPageSubmit">{{ $t('save') }}</a>
+        <button type="button" class="mbl-button mbl-button--primary" :disabled="saving" data-testid="settings-start-page-save" @click="handleStartPageSubmit">{{ $t('save') }}</button>
       </div>
     </div>
     <div v-if="userSettingsErrors.startPage" class="mbl-help mbl-help--danger">
@@ -105,12 +105,6 @@ main p {
 select {
   /*  cap <select> width so it doesn't overflow mobile device */
   max-width: 65vw;
-}
-
-.mbl-button.is-saving {
-  pointer-events: none;
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 </style>
 
