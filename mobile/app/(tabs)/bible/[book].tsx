@@ -17,9 +17,9 @@ import {
   Text,
 } from "@/src/components";
 import { radius, spacing, useTheme } from "@/src/design";
-import { useLogEntries } from "@/src/log-entries/LogEntriesProvider";
+import { useLogEntries } from "@/src/stores/logEntries";
 import { useLocale } from "@/src/i18n/LocaleProvider";
-import { useUserSettings } from "@/src/settings/UserSettingsProvider";
+import { useUserSettings } from "@/src/stores/userSettings";
 import { openPassageInBible } from "@/src/bible/openInBible";
 import { useToast } from "@/src/toast/ToastProvider";
 

@@ -9,20 +9,24 @@ import {
   useMemo,
   useState,
 } from "react";
-import { type TranslationKey, i18n } from "@/src/i18n";
+import { type MobileLocale, type TranslationKey, fallbackLocale, i18n, mobileLocales } from "@/src/i18n";
 
-export type SupportedLocale = "en" | "es";
+/** Locales the app ships translations for (subset of shared product locales). */
+export type SupportedLocale = MobileLocale;
 
 const STORAGE_KEY = "locale.v1";
 
+function isSupportedLocale(value: unknown): value is SupportedLocale {
+  return typeof value === "string" && (mobileLocales as readonly string[]).includes(value);
+}
+
 function getDevicePreferredLocale(): SupportedLocale {
   const languageCode = Localization.getLocales()[0]?.languageCode;
-  return languageCode === "es" ? "es" : "en";
+  return isSupportedLocale(languageCode) ? languageCode : fallbackLocale;
 }
 
 function normalizeLocale(value: unknown): SupportedLocale | null {
-  if (value === "en" || value === "es") return value;
-  return null;
+  return isSupportedLocale(value) ? value : null;
 }
 
 type LocaleContextValue = {

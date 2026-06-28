@@ -3,9 +3,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { LocaleProvider, useT } from "@/src/i18n/LocaleProvider";
 import { ThemeProvider, useTheme } from "@/src/design";
 import { modalTransition, stackTransition } from "@/src/design";
-import { AuthProvider } from "@/src/auth/AuthProvider";
-import { LogEntriesProvider } from "@/src/log-entries/LogEntriesProvider";
-import { UserSettingsProvider } from "@/src/settings/UserSettingsProvider";
+import { initStores } from "@/src/stores/init";
 import { ToastProvider } from "@/src/toast/ToastProvider";
 import { UpgradeGate } from "@/src/upgrade/UpgradeGate";
 import { configureGoogleSignIn } from "@/src/auth/googleSignIn";
@@ -17,21 +15,19 @@ initCrashReporting();
 // Configure native Google Sign-In once, before any login attempt.
 configureGoogleSignIn();
 
+// Hydrate the Zustand domain stores (connectivity, auth, log entries, settings).
+// Replaces the former Auth/UserSettings/LogEntries provider nesting.
+initStores();
+
 function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <LocaleProvider>
         <ThemeProvider>
           <ToastProvider>
-            <AuthProvider>
-              <UserSettingsProvider>
-                <LogEntriesProvider>
-                  <UpgradeGate>
-                    <RootStack />
-                  </UpgradeGate>
-                </LogEntriesProvider>
-              </UserSettingsProvider>
-            </AuthProvider>
+            <UpgradeGate>
+              <RootStack />
+            </UpgradeGate>
           </ToastProvider>
         </ThemeProvider>
       </LocaleProvider>

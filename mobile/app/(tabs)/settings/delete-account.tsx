@@ -2,7 +2,7 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { deleteAccount } from "@/src/api/settingsApi";
-import { useAuth } from "@/src/auth/AuthProvider";
+import { useAuth } from "@/src/stores/auth";
 import { Button, Card, ConfirmDialog, Icon, Text } from "@/src/components";
 import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";

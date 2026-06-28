@@ -1,4 +1,4 @@
-import { useAuth } from "@/src/auth/AuthProvider";
+import { useAuth } from "@/src/stores/auth";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { spacing, useTheme } from "@/src/design";
 import { Button, Card, ListItem, Text } from "@/src/components";

@@ -12,3 +12,15 @@ export function getApiBaseUrl(): string {
   return base.endsWith("/api") ? base : `${base}/api`;
 }
 
+/**
+ * Origin without the `/api` suffix.
+ *
+ * The shared `HttpClient` consumers (e.g. `shared/log-entries-api`) pass paths
+ * that already include `/api` (e.g. `/api/log-entries`), so the HTTP adapter
+ * prepends this origin to keep those shared paths verbatim.
+ */
+export function getApiOrigin(): string {
+  const base = API_BASE_URL.replace(/\/+$/, "");
+  return base.endsWith("/api") ? base.slice(0, -"/api".length) : base;
+}
+

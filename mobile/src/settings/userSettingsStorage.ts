@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getDefaultBibleVersion } from "@mybiblelog/shared";
 
 export type LocalUserSettings = {
   lookBackDate: string; // YYYY-MM-DD
@@ -15,7 +16,10 @@ const STORAGE_KEY = "userSettings.v1";
 export const DEFAULT_LOCAL_USER_SETTINGS: LocalUserSettings = {
   lookBackDate: new Date().toISOString().slice(0, 10),
   dailyVerseCountGoal: 86,
-  preferredBibleVersion: "NASB2020",
+  // Source the default version from shared so web and mobile agree.
+  preferredBibleVersion: getDefaultBibleVersion(),
+  // Device-only; left empty so the UI can resolve a platform default lazily
+  // (avoid calling shared `getDefaultBibleApp()` here — it reads `navigator`).
   preferredBibleApp: "",
 };
 

@@ -1,5 +1,5 @@
 import { mapFormErrors } from "@/src/api/apiError";
-import { useAuth } from "@/src/auth/AuthProvider";
+import { useAuth } from "@/src/stores/auth";
 import { signInWithGoogle } from "@/src/auth/googleSignIn";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { translateApiError } from "@/src/i18n/translateApiError";

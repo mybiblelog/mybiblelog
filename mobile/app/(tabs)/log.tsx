@@ -15,10 +15,10 @@ import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { useToast } from "@/src/toast/ToastProvider";
 import { openPassageInBible } from "@/src/bible/openInBible";
-import { useUserSettings } from "@/src/settings/UserSettingsProvider";
+import { useUserSettings } from "@/src/stores/userSettings";
 import { useEffect, useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { useLogEntries } from "@/src/log-entries/LogEntriesProvider";
+import { useLogEntries } from "@/src/stores/logEntries";
 
 // const LOG_ENTRIES: LogEntry[] = [
 //   { startVerseId: 1001001, endVerseId: 1001005, date: "2026-01-10" },

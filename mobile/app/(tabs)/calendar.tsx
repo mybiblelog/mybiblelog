@@ -17,8 +17,9 @@ import {
 import { radius, spacing, useTheme } from "@/src/design";
 import { openPassageInBible } from "@/src/bible/openInBible";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
-import { useLogEntries } from "@/src/log-entries/LogEntriesProvider";
-import { useUserSettings } from "@/src/settings/UserSettingsProvider";
+import { useLogEntries } from "@/src/stores/logEntries";
+import { useUserSettings } from "@/src/stores/userSettings";
+import { useDateVerseCounts } from "@/src/stores/dateVerseCounts";
 import { useToast } from "@/src/toast/ToastProvider";
 
 // Brand gold for a fully-read day star — a decorative accent outside the
@@ -80,8 +81,6 @@ export default function Calendar() {
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
   const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
 
-  const lookBackDate =
-    settingsState.status === "ready" ? settingsState.settings.lookBackDate : "0000-00-00";
   const dailyGoal =
     settingsState.status === "ready" ? settingsState.settings.dailyVerseCountGoal : 0;
 
@@ -92,48 +91,12 @@ export default function Calendar() {
     return `${monthName} ${jsDate.getFullYear()}`;
   }, [locale, selectedMonth]);
 
-  // Build date verse counts for the currently displayed month (Nuxt-style).
-  const dateVerseCounts = useMemo(() => {
-    if (logState.status !== "ready") return new Map<string, { total: number; unique: number }>();
-    if (settingsState.status !== "ready") return new Map<string, { total: number; unique: number }>();
-
-    const firstDay = dayjs(selectedMonth).date(1).format("YYYY-MM-DD");
-    const lastDay = dayjs(selectedMonth).date(selectedMonth.daysInMonth()).format("YYYY-MM-DD");
-
-    const entriesFiltered = logState.entries.filter((e) => e.date >= lookBackDate);
-
-    const byDate = new Map<string, Array<{ startVerseId: number; endVerseId: number }>>();
-    for (const e of entriesFiltered) {
-      const arr = byDate.get(e.date) ?? [];
-      arr.push({ startVerseId: e.startVerseId, endVerseId: e.endVerseId });
-      byDate.set(e.date, arr);
-    }
-
-    const cumulative: Array<{ startVerseId: number; endVerseId: number }> = [];
-    const beforeMonth = entriesFiltered.filter((e) => e.date < firstDay);
-    for (const e of beforeMonth) {
-      cumulative.push({ startVerseId: e.startVerseId, endVerseId: e.endVerseId });
-    }
-    let totalVersesToDate = Bible.countUniqueRangeVerses(cumulative);
-
-    const map = new Map<string, { total: number; unique: number }>();
-    let cursor = dayjs(firstDay);
-    const end = dayjs(lastDay);
-    while (cursor.format("YYYY-MM-DD") <= end.format("YYYY-MM-DD")) {
-      const date = cursor.format("YYYY-MM-DD");
-      const dateRanges = byDate.get(date) ?? [];
-      const total = Bible.countUniqueRangeVerses(dateRanges);
-
-      cumulative.push(...dateRanges);
-      const totalVersesThroughDate = Bible.countUniqueRangeVerses(cumulative);
-      const unique = totalVersesThroughDate - totalVersesToDate;
-      totalVersesToDate = totalVersesThroughDate;
-
-      map.set(date, { total, unique });
-      cursor = cursor.add(1, "day");
-    }
-    return map;
-  }, [logState, lookBackDate, selectedMonth, settingsState.status]);
+  // Per-date verse counts come from the dateVerseCounts store, which computes
+  // the full map (earliest entry → today) via shared `computeDateVerseCounts`
+  // and recomputes when entries or the look-back date change. `total` is the
+  // day's unique verses; `unique` is the day's contribution to cumulative unique
+  // verses since the tracker start (lookBackDate).
+  const dateVerseCounts = useDateVerseCounts();
 
   type DayCell = {
     date: string;
@@ -164,7 +127,7 @@ export default function Calendar() {
       const isCurrentMonth =
         Number(dayjs(date).format("YYYY")) === year && Number(dayjs(date).format("M")) === month;
 
-      const counts = dateVerseCounts.get(date) ?? { total: 0, unique: 0 };
+      const counts = dateVerseCounts[date] ?? { total: 0, unique: 0 };
       const uniquePct = dailyGoal ? (counts.unique / dailyGoal) * 100 : 0;
       const totalPct = dailyGoal ? (counts.total / dailyGoal) * 100 : 0;
 

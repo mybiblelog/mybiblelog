@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Bible } from "@mybiblelog/shared";
 import { useLocale } from "@/src/i18n/LocaleProvider";
-import { useLogEntries } from "@/src/log-entries/LogEntriesProvider";
+import { useLogEntries } from "@/src/stores/logEntries";
 import {
   AnimatedList,
   Card,
@@ -15,7 +15,7 @@ import {
   Text,
 } from "@/src/components";
 import { radius, spacing, useTheme } from "@/src/design";
-import { useUserSettings } from "@/src/settings/UserSettingsProvider";
+import { useUserSettings } from "@/src/stores/userSettings";
 
 // Brand gold for a fully-read book star — intentionally outside the theme
 // palette (a single decorative accent).

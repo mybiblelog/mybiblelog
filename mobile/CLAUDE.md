@@ -8,7 +8,7 @@ Expo / React Native app. Key facts for agents:
 - **Auth**: Native Google Sign-In via `react-native-nitro-google-signin` — requires a native build; does not work in Expo Go or web mode
 - **Build system**: EAS Build; profiles in `eas.json` (`development`, `preview`, `production`)
 - **Env vars**: `EXPO_PUBLIC_*` prefix, declared in `.env` (copy from `.env.example`)
-- **State**: Provider pattern; no Redux/Zustand; stores in `src/*/provider.tsx`
+- **State**: Domain state lives in Zustand stores under `src/stores/` (`auth`, `logEntries`, `userSettings`, `dateVerseCounts`, `connectivity`), initialized once via `src/stores/init.ts` from `app/_layout.tsx`. Each store keeps a `useX()` hook returning `{ state, ...actions }`. Stores consume `@mybiblelog/shared` the way the Nuxt Pinia stores do: the HTTP adapter (`src/api/httpClient.ts`) implements shared's `HttpClient`, and `src/stores/logEntries.ts` uses `shared/log-entries-api`. The offline-first mutation queue (`src/storage/logEntries.ts` + `src/log-entries/sync.ts`) is mobile-only. Pure UI concerns stay as React providers: `ThemeProvider`, `LocaleProvider`, `ToastProvider`. The log-entry editor is local component state via `src/log-entry-editor/useLogEntryEditor.ts`, which delegates to shared `LogEntryEditorMachine`.
 - **Monorepo**: Uses `@mybiblelog/shared` from `../shared`
 
 See `README.md` for development phases (emulator → physical device → preview APK → production) and `docs/` for EAS build setup and Play Store checklist.

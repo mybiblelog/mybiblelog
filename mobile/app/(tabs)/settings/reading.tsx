@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useAuth } from "@/src/auth/AuthProvider";
+import { useAuth } from "@/src/stores/auth";
 import {
   Card,
   InputField,
@@ -11,7 +11,7 @@ import {
 } from "@/src/components";
 import { spacing, useTheme } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
-import { useUserSettings } from "@/src/settings/UserSettingsProvider";
+import { useUserSettings } from "@/src/stores/userSettings";
 import { useToast } from "@/src/toast/ToastProvider";
 import { BibleApps, BibleVersions } from "@mybiblelog/shared";
 import { ScrollView, StyleSheet, View } from "react-native";

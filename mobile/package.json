@@ -12,6 +12,7 @@
     "ios": "expo run:ios",
     "web": "EXPO_PUBLIC_API_BASE_URL=http://localhost:8080 expo start --web",
     "lint": "expo lint",
+    "test": "vitest run",
     "clean": "rm -rf node_modules .expo .expo-shared .turbo dist build coverage android ios"
   },
   "dependencies": {
@@ -50,7 +51,8 @@
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "4.25.2",
     "react-native-web": "~0.21.0",
-    "react-native-worklets": "0.8.3"
+    "react-native-worklets": "0.8.3",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@react-native-community/cli": "^20.2.0",

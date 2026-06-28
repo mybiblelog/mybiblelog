@@ -15,7 +15,7 @@ import {
 } from "@/src/components";
 import { fadeIn, radius, spacing, useTheme } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
-import { useLogEntries } from "@/src/log-entries/LogEntriesProvider";
+import { useLogEntries } from "@/src/stores/logEntries";
 import { useToast } from "@/src/toast/ToastProvider";
 
 const CHECKLIST_CACHE_KEY = "chapterChecklist.v1";
