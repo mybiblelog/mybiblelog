@@ -25,6 +25,7 @@ export type PassageNoteEditorState = {
   passageNote: PassageNoteModel;
   errors: PassageNoteEditorErrors;
   isValid: boolean;
+  submitting: boolean;
 };
 
 export type PassageNoteEditorOpenPayload =
@@ -51,6 +52,7 @@ export const usePassageNoteEditorStore = defineStore('passage-note-editor', {
     passageNote: clone(newPassageNote),
     errors: {},
     isValid: false,
+    submitting: false,
   }),
   actions: {
     openEditor(passageNote: PassageNoteEditorOpenPayload = null): void {
@@ -97,6 +99,10 @@ export const usePassageNoteEditorStore = defineStore('passage-note-editor', {
     },
 
     async savePassageNote(): Promise<unknown | null> {
+      if (this.submitting) {
+        return null;
+      }
+      this.submitting = true;
       try {
         const passageNotesStore = usePassageNotesStore();
 
@@ -126,6 +132,9 @@ export const usePassageNoteEditorStore = defineStore('passage-note-editor', {
           this.errors = mapFormErrors(new UnknownApiError()) || {};
         }
         return null;
+      }
+      finally {
+        this.submitting = false;
       }
     },
   },

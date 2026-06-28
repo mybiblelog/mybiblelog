@@ -36,7 +36,7 @@
       </div>
       <div class="mbl-field">
         <div class="mbl-control">
-          <button class="mbl-button mbl-button--primary" type="submit" data-testid="password-submit">
+          <button class="mbl-button mbl-button--primary" type="submit" data-testid="password-submit" :disabled="formBusy">
             {{ $t('change_password_button') }}
           </button>
         </div>
@@ -99,6 +99,9 @@ export default {
 
     // Submits 'Change Password' form data and handles response.
     async submitChangePassword() {
+      if (this.formBusy) {
+        return;
+      }
       // Disable form and remove previous errors
       this.formBusy = true;
       this.resetChangePasswordErrors();

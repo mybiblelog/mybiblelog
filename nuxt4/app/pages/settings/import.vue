@@ -21,7 +21,7 @@
         <p>{{ t('look_back_message_1') }}</p>
         <p>{{ t('look_back_message_2', { lookBackDate: earliestDate }) }}</p>
         <div class="mbl-button-group">
-          <button class="mbl-button mbl-button--primary" @click="updateLookBackDate">
+          <button class="mbl-button mbl-button--primary" :disabled="savingLookBackDate" @click="updateLookBackDate">
             {{ t('update_look_back_date') }}
           </button>
           <button class="mbl-button" @click="showLookBackReset = false">
@@ -88,6 +88,7 @@ type ImportRow = {
 const importRows = ref<ImportRow[]>([]);
 const earliestDate = ref<string | null>(null);
 const showLookBackReset = ref(false);
+const savingLookBackDate = ref(false);
 
 const mounted = ref(false);
 onMounted(async () => {
@@ -207,9 +208,16 @@ async function onFileChange(event: Event) {
 }
 
 async function updateLookBackDate() {
-  await userSettingsStore.updateSettings({ lookBackDate: earliestDate.value! });
-  toastStore.add({ type: 'success', text: t('look_back_updated') });
-  showLookBackReset.value = false;
+  if (savingLookBackDate.value) { return; }
+  savingLookBackDate.value = true;
+  try {
+    await userSettingsStore.updateSettings({ lookBackDate: earliestDate.value! });
+    toastStore.add({ type: 'success', text: t('look_back_updated') });
+    showLookBackReset.value = false;
+  }
+  finally {
+    savingLookBackDate.value = false;
+  }
 }
 </script>
 

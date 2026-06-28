@@ -47,7 +47,7 @@
         <button
           class="mbl-button mbl-button--primary"
           data-testid="tag-editor-submit"
-          :disabled="!tagEditorStore.passageNoteTag.label.trim()"
+          :disabled="!tagEditorStore.passageNoteTag.label.trim() || tagEditorStore.submitting"
           @click="handleEditorSave"
         >
           {{ t('save') }}

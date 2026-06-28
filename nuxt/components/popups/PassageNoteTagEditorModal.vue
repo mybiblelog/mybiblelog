@@ -4,7 +4,7 @@
       <passage-note-tag-editor-form />
     </template>
     <template slot="footer">
-      <button class="mbl-button mbl-button--primary" data-testid="tag-editor-submit" :disabled="!isValid" @click="handleSave">
+      <button class="mbl-button mbl-button--primary" data-testid="tag-editor-submit" :disabled="!isValid || submitting" @click="handleSave">
         {{ $t('tag_editor.save') }}
       </button>
       <button class="mbl-button mbl-button--light" data-testid="tag-editor-close" @click="handleClose">
@@ -34,6 +34,9 @@ export default {
     },
     isValid() {
       return this.passageNoteTagEditorStore.isValid;
+    },
+    submitting() {
+      return this.passageNoteTagEditorStore.submitting;
     },
     modalTitle() {
       // Check if we're editing an existing tag or creating a new one

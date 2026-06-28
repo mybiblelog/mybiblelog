@@ -18,7 +18,7 @@
         >
       </div>
       <div class="mbl-control">
-        <a class="mbl-button mbl-button--primary" data-testid="settings-daily-goal-save" @click="handleDailyVerseCountGoalSubmit">{{ $t('save') }}</a>
+        <button type="button" class="mbl-button mbl-button--primary" :disabled="saving" data-testid="settings-daily-goal-save" @click="handleDailyVerseCountGoalSubmit">{{ $t('save') }}</button>
       </div>
     </div>
     <div v-if="userSettingsErrors.dailyVerseCountGoal" class="mbl-help mbl-help--danger">
@@ -40,7 +40,7 @@
         <input v-model="userSettingsForm.lookBackDate" class="mbl-input" type="date" data-testid="settings-look-back-date-input">
       </div>
       <div class="mbl-control">
-        <a class="mbl-button mbl-button--primary" data-testid="settings-look-back-date-save" @click="handleLookBackDateSubmit">{{ $t('save') }}</a>
+        <button type="button" class="mbl-button mbl-button--primary" :disabled="saving" data-testid="settings-look-back-date-save" @click="handleLookBackDateSubmit">{{ $t('save') }}</button>
       </div>
     </div>
     <div v-if="userSettingsErrors.lookBackDate" class="mbl-help mbl-help--danger">
@@ -70,7 +70,7 @@
         </div>
       </div>
       <div class="mbl-control">
-        <a class="mbl-button mbl-button--primary" data-testid="settings-bible-version-save" @click="handlePreferredBibleVersionSubmit">{{ $t('save') }}</a>
+        <button type="button" class="mbl-button mbl-button--primary" :disabled="saving" data-testid="settings-bible-version-save" @click="handlePreferredBibleVersionSubmit">{{ $t('save') }}</button>
       </div>
     </div>
     <div v-if="userSettingsErrors.preferredBibleVersion" class="mbl-help mbl-help--danger">
@@ -95,7 +95,7 @@
         </div>
       </div>
       <div class="mbl-control">
-        <a class="mbl-button mbl-button--primary" data-testid="settings-bible-app-save" @click="handlePreferredBibleAppSubmit">{{ $t('save') }}</a>
+        <button type="button" class="mbl-button mbl-button--primary" :disabled="saving" data-testid="settings-bible-app-save" @click="handlePreferredBibleAppSubmit">{{ $t('save') }}</button>
       </div>
     </div>
     <div v-if="userSettingsErrors.preferredBibleApp" class="mbl-help mbl-help--danger">
@@ -135,6 +135,7 @@ export default {
         preferredBibleVersion: '',
         preferredBibleApp: '',
       },
+      saving: false,
     };
   },
   head() {
@@ -183,59 +184,87 @@ export default {
   methods: {
     displayDate,
     async handleDailyVerseCountGoalSubmit() {
-      const { dailyVerseCountGoal } = this.userSettingsForm;
-      const success = await useUserSettingsStore().updateSettings({ dailyVerseCountGoal });
-      if (success) {
-        const toastStore = useToastStore();
-        toastStore.add({
-          type: 'success',
-          text: this.$t('messaging.daily_verse_count_goal_saved_successfully'),
-        });
+      if (this.saving) { return; }
+      this.saving = true;
+      try {
+        const { dailyVerseCountGoal } = this.userSettingsForm;
+        const success = await useUserSettingsStore().updateSettings({ dailyVerseCountGoal });
+        if (success) {
+          const toastStore = useToastStore();
+          toastStore.add({
+            type: 'success',
+            text: this.$t('messaging.daily_verse_count_goal_saved_successfully'),
+          });
+        }
+        else {
+          this.userSettingsErrors.dailyVerseCountGoal = this.$t('messaging.unable_to_save_daily_verse_count_goal');
+        }
       }
-      else {
-        this.userSettingsErrors.dailyVerseCountGoal = this.$t('messaging.unable_to_save_daily_verse_count_goal');
+      finally {
+        this.saving = false;
       }
     },
     async handleLookBackDateSubmit() {
-      const { lookBackDate } = this.userSettingsForm;
-      const success = await useUserSettingsStore().updateSettings({ lookBackDate });
-      if (success) {
-        const toastStore = useToastStore();
-        toastStore.add({
-          type: 'success',
-          text: this.$t('messaging.look_back_date_saved_successfully'),
-        });
+      if (this.saving) { return; }
+      this.saving = true;
+      try {
+        const { lookBackDate } = this.userSettingsForm;
+        const success = await useUserSettingsStore().updateSettings({ lookBackDate });
+        if (success) {
+          const toastStore = useToastStore();
+          toastStore.add({
+            type: 'success',
+            text: this.$t('messaging.look_back_date_saved_successfully'),
+          });
+        }
+        else {
+          this.userSettingsErrors.lookBackDate = this.$t('messaging.unable_to_save_look_back_date');
+        }
       }
-      else {
-        this.userSettingsErrors.lookBackDate = this.$t('messaging.unable_to_save_look_back_date');
+      finally {
+        this.saving = false;
       }
     },
     async handlePreferredBibleVersionSubmit() {
-      const { preferredBibleVersion } = this.userSettingsForm;
-      const success = await useUserSettingsStore().updateSettings({ preferredBibleVersion });
-      if (success) {
-        const toastStore = useToastStore();
-        toastStore.add({
-          type: 'success',
-          text: this.$t('messaging.preferred_bible_version_saved_successfully'),
-        });
+      if (this.saving) { return; }
+      this.saving = true;
+      try {
+        const { preferredBibleVersion } = this.userSettingsForm;
+        const success = await useUserSettingsStore().updateSettings({ preferredBibleVersion });
+        if (success) {
+          const toastStore = useToastStore();
+          toastStore.add({
+            type: 'success',
+            text: this.$t('messaging.preferred_bible_version_saved_successfully'),
+          });
+        }
+        else {
+          this.userSettingsErrors.preferredBibleVersion = this.$t('messaging.unable_to_save_preferred_bible_version');
+        }
       }
-      else {
-        this.userSettingsErrors.preferredBibleVersion = this.$t('messaging.unable_to_save_preferred_bible_version');
+      finally {
+        this.saving = false;
       }
     },
     async handlePreferredBibleAppSubmit() {
-      const { preferredBibleApp } = this.userSettingsForm;
-      const success = await useUserSettingsStore().updateSettings({ preferredBibleApp });
-      if (success) {
-        const toastStore = useToastStore();
-        toastStore.add({
-          type: 'success',
-          text: this.$t('messaging.preferred_bible_app_saved_successfully'),
-        });
+      if (this.saving) { return; }
+      this.saving = true;
+      try {
+        const { preferredBibleApp } = this.userSettingsForm;
+        const success = await useUserSettingsStore().updateSettings({ preferredBibleApp });
+        if (success) {
+          const toastStore = useToastStore();
+          toastStore.add({
+            type: 'success',
+            text: this.$t('messaging.preferred_bible_app_saved_successfully'),
+          });
+        }
+        else {
+          this.userSettingsErrors.preferredBibleApp = this.$t('messaging.unable_to_save_preferred_bible_app');
+        }
       }
-      else {
-        this.userSettingsErrors.preferredBibleApp = this.$t('messaging.unable_to_save_preferred_bible_app');
+      finally {
+        this.saving = false;
       }
     },
   },

@@ -138,6 +138,9 @@ export default {
       this.$emit('previous');
     },
     async handleSubmit() {
+      if (this.isSaving) {
+        return;
+      }
       this.error = '';
 
       if (!this.preferredBibleVersion) {

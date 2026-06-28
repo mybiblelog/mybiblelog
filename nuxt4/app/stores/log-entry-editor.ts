@@ -22,6 +22,7 @@ export type LogEntryEditorState = {
   logEntry: LogEntryEditorModel;
   errors: LogEntryEditorErrors;
   isValid: boolean;
+  submitting: boolean;
 };
 
 function isEmptyOpenPayload(payload: LogEntryEditorOpenPayload): payload is { empty: true; date?: string | null } {
@@ -40,6 +41,7 @@ export const useLogEntryEditorStore = defineStore('log-entry-editor', {
     logEntry: LogEntryEditorMachine.emptyLogEntryEditorModel(),
     errors: {},
     isValid: false,
+    submitting: false,
   }),
   actions: {
     openEditor(payload: LogEntryEditorOpenPayload = null): void {
@@ -118,6 +120,10 @@ export const useLogEntryEditorStore = defineStore('log-entry-editor', {
     },
 
     async saveLogEntry(): Promise<unknown | null> {
+      if (this.submitting) {
+        return null;
+      }
+      this.submitting = true;
       try {
         let savedLogEntry: unknown;
         if (this.logEntry.id) {
@@ -152,6 +158,9 @@ export const useLogEntryEditorStore = defineStore('log-entry-editor', {
           this.errors = unknownError;
         }
         throw err;
+      }
+      finally {
+        this.submitting = false;
       }
     },
   },

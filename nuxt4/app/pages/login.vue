@@ -48,11 +48,11 @@
             </div>
           </div>
           <div class="mbl-button-group">
-            <button :disabled="!mounted" class="mbl-button mbl-button--primary">
+            <button :disabled="!mounted || submitting" class="mbl-button mbl-button--primary">
               {{ t('sign_in') }}
             </button>
             <button
-              :disabled="!mounted"
+              :disabled="!mounted || submitting"
               class="mbl-button"
               :class="{ 'mbl-button--text': !failedLoginAttempt, 'mbl-button--primary': failedLoginAttempt }"
               @click.prevent="sendPasswordReset"
@@ -116,6 +116,7 @@ const errors = ref<Record<string, unknown>>({});
 const failedLoginAttempt = ref(false);
 const passwordResetSubmitted = ref(false);
 const mounted = ref(false);
+const submitting = ref(false);
 onMounted(() => { mounted.value = true; });
 
 const showResendVerification = computed(() => (errors.value as any)?._form?.code === 'verify_email');
@@ -127,6 +128,8 @@ if (import.meta.client) {
 }
 
 const onSubmit = async () => {
+  if (submitting.value) { return; }
+  submitting.value = true;
   try {
     await authStore.login({ email: email.value, password: password.value });
   }
@@ -135,20 +138,28 @@ const onSubmit = async () => {
     failedLoginAttempt.value = true;
     return;
   }
+  finally {
+    submitting.value = false;
+  }
   await router.push(localePath('/start'));
 };
 
 const sendPasswordReset = async () => {
+  if (submitting.value) { return; }
   if (!email.value) {
     errors.value = { email: t('your_email_address_is_required') };
     return;
   }
+  submitting.value = true;
   try {
     await $http.post('/api/auth/reset-password', { email: email.value });
     passwordResetSubmitted.value = true;
   }
   catch (err) {
     errors.value = (err instanceof ApiError ? mapFormErrors(err) : null) ?? mapFormErrors(new UnknownApiError());
+  }
+  finally {
+    submitting.value = false;
   }
 };
 </script>

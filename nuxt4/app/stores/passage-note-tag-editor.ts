@@ -20,6 +20,7 @@ export type PassageNoteTagEditorState = {
   passageNoteTag: PassageNoteTagModel;
   errors: PassageNoteTagEditorErrors;
   isValid: boolean;
+  submitting: boolean;
 };
 
 export type PassageNoteTagEditorOpenPayload =
@@ -46,6 +47,7 @@ export const usePassageNoteTagEditorStore = defineStore('passage-note-tag-editor
     passageNoteTag: clone(newPassageNoteTag),
     errors: {},
     isValid: false,
+    submitting: false,
   }),
   actions: {
     openEditor(passageNoteTag: PassageNoteTagEditorOpenPayload = null): void {
@@ -80,6 +82,10 @@ export const usePassageNoteTagEditorStore = defineStore('passage-note-tag-editor
     },
 
     async savePassageNoteTag(): Promise<unknown | null> {
+      if (this.submitting) {
+        return null;
+      }
+      this.submitting = true;
       try {
         const passageNoteTagsStore = usePassageNoteTagsStore();
         let saved: unknown;
@@ -113,6 +119,9 @@ export const usePassageNoteTagEditorStore = defineStore('passage-note-tag-editor
           this.errors = mapFormErrors(new UnknownApiError()) || {};
         }
         return null;
+      }
+      finally {
+        this.submitting = false;
       }
     },
   },

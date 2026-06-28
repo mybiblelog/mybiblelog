@@ -37,7 +37,7 @@
             </label>
           </div>
         </form>
-        <button class="mbl-button mbl-button--primary" :disabled="!fullyUnderstands" @click="deleteAccount">
+        <button class="mbl-button mbl-button--primary" :disabled="!fullyUnderstands || formBusy" @click="deleteAccount">
           {{ $t('delete_my_account') }}
         </button>
       </div>
@@ -82,6 +82,8 @@ export default {
   },
   methods: {
     async deleteAccount() {
+      if (this.formBusy) { return; }
+      this.formBusy = true;
       const toastStore = useToastStore();
       try {
         await this.$http.put('/api/settings/delete-account');
@@ -92,6 +94,7 @@ export default {
           type: 'error',
           text: this.$t('unable_to_delete'),
         });
+        this.formBusy = false;
       }
     },
   },

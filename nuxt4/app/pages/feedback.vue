@@ -43,7 +43,7 @@
         </div>
         <div class="mbl-field">
           <div class="mbl-control">
-            <button class="mbl-button mbl-button--primary" type="submit" data-testid="feedback-submit">
+            <button class="mbl-button mbl-button--primary" type="submit" data-testid="feedback-submit" :disabled="submitting">
               {{ t('submit_feedback') }}
             </button>
           </div>
@@ -76,8 +76,11 @@ const initialForm = () => ({
 
 const form = ref(initialForm());
 const errors = ref<Record<string, string>>({});
+const submitting = ref(false);
 
 async function submitFeedback() {
+  if (submitting.value) { return; }
+  submitting.value = true;
   errors.value = {};
   try {
     await $fetch('/api/feedback', {
@@ -90,6 +93,9 @@ async function submitFeedback() {
   catch (err) {
     const mapped = err instanceof ApiError ? mapFormErrors(err) : null;
     errors.value = (mapped || { _form: t('unknown_error') }) as Record<string, string>;
+  }
+  finally {
+    submitting.value = false;
   }
 }
 </script>

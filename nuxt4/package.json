@@ -8,7 +8,11 @@
     "build": "nuxt build",
     "preview": "nuxt preview",
     "start": "nuxt preview --port 3001",
-    "clean": "rm -rf node_modules .nuxt .output"
+    "clean": "rm -rf node_modules .nuxt .output",
+    "pretest": "node test/ensure-nuxt-tsconfig.mjs",
+    "test": "vitest run",
+    "pretest:watch": "node test/ensure-nuxt-tsconfig.mjs",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@mybiblelog/shared": "*",
@@ -22,6 +26,11 @@
     "pinia": "^3.0.4"
   },
   "devDependencies": {
+    "@pinia/testing": "^1.0.2",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "@vue/server-renderer": "^3.5.38",
+    "@vue/test-utils": "^2.4.6",
+    "happy-dom": "^15.11.7",
     "typescript": "^5.9.3",
     "vitest": "^3.2.6",
     "vue-tsc": "^3.3.5"
