@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Bible } from "@mybiblelog/shared";
+import { Bible, type ChapterProgress } from "@mybiblelog/shared";
 import type { LogEntry } from "@/src/types/log-entry";
 import {
   AnimatedList,
@@ -12,12 +12,12 @@ import {
   LogEntryEditorModal,
   Screen,
   SegmentBar,
-  type SegmentBarSegment,
   Spinner,
   Text,
 } from "@/src/components";
 import { radius, spacing, useTheme } from "@/src/design";
 import { useLogEntries } from "@/src/stores/logEntries";
+import { useBookProgress } from "@/src/stores/bibleProgress";
 import { useLocale } from "@/src/i18n/LocaleProvider";
 import { useUserSettings } from "@/src/stores/userSettings";
 import { openPassageInBible } from "@/src/bible/openInBible";
@@ -27,12 +27,49 @@ import { useToast } from "@/src/toast/ToastProvider";
 // outside the theme palette.
 const GOLD_STAR = "#ffd700";
 
-export default function BibleBookScreen() {
+/** Memoized chapter tile. Its `chapter` snapshot is reference-stable from the
+ * precomputed store, so it only re-renders when its data or layout changes. */
+const ChapterTile = memo(function ChapterTile({
+  chapter,
+  width,
+  marginRight,
+  marginBottom,
+  onPress,
+}: {
+  chapter: ChapterProgress;
+  width: number;
+  marginRight: number;
+  marginBottom: number;
+  onPress: (chapterIndex: number) => void;
+}) {
   const { colors } = useTheme();
+  return (
+    <Pressable
+      style={({ pressed }) => [
+        styles.tile,
+        { backgroundColor: colors.surfaceAlt, width, marginRight, marginBottom },
+        pressed && styles.pressed,
+      ]}
+      onPress={() => onPress(chapter.chapterIndex)}
+    >
+      <Text variant="bodyStrong">{chapter.chapterIndex}</Text>
+
+      <View style={styles.tileCenter}>
+        <Ionicons name="star" size={22} color={chapter.complete ? GOLD_STAR : colors.border} />
+      </View>
+
+      <View style={styles.tileBar}>
+        <SegmentBar segments={chapter.segments} />
+      </View>
+    </Pressable>
+  );
+});
+
+export default function BibleBookScreen() {
   const { showToast } = useToast();
   const { locale } = useLocale();
   const { width: windowWidth } = useWindowDimensions();
-  const { state: logState, createEntry } = useLogEntries();
+  const { createEntry } = useLogEntries();
   const { state: settingsState } = useUserSettings();
   const params = useLocalSearchParams<{ book?: string }>();
 
@@ -41,6 +78,10 @@ export default function BibleBookScreen() {
     if (!Number.isFinite(bookIndex) || bookIndex < 1) return "Book";
     return Bible.getBookName(bookIndex, locale) || "Book";
   }, [bookIndex, locale]);
+
+  const book = useBookProgress(bookIndex);
+  // Stabilize the array reference so dependent memos/effects don't re-run every render.
+  const chapters = useMemo(() => book?.chapters ?? [], [book]);
 
   const tileMetrics = useMemo(() => {
     const columns = 3;
@@ -52,73 +93,17 @@ export default function BibleBookScreen() {
   }, [windowWidth]);
 
   const today = useMemo(() => dayjs().format("YYYY-MM-DD"), []);
-  const lookBackDate =
-    settingsState.status === "ready" ? settingsState.settings.lookBackDate : "0000-00-00";
-
-  const currentLogEntries = useMemo(() => {
-    if (logState.status !== "ready") return [];
-    return logState.entries.filter((e) => e.date >= lookBackDate);
-  }, [logState, lookBackDate]);
-
-  const bookSegments = useMemo<SegmentBarSegment[]>(() => {
-    if (!Number.isFinite(bookIndex) || bookIndex < 1) return [];
-    const raw = Bible.generateBookSegments(bookIndex, currentLogEntries);
-    return raw.map((s, idx) => ({
-      id: `${bookIndex}-${idx}-${s.startVerseId}-${s.endVerseId}`,
-      read: !!s.read,
-      verseCount: s.verseCount,
-    }));
-  }, [bookIndex, currentLogEntries]);
-
-  const bookPercent = useMemo(() => {
-    if (!Number.isFinite(bookIndex) || bookIndex < 1) return 0;
-    const total = Bible.getBookVerseCount(bookIndex);
-    const read = Bible.countUniqueBookRangeVerses(bookIndex, currentLogEntries);
-    return total ? Math.floor((read / total) * 100) : 0;
-  }, [bookIndex, currentLogEntries]);
-
-  type ChapterTile = {
-    chapterIndex: number;
-    complete: boolean;
-    percentage: number;
-    segments: SegmentBarSegment[];
-    startVerseId: number;
-    endVerseId: number;
-  };
-
-  const chapters = useMemo<ChapterTile[]>(() => {
-    if (!Number.isFinite(bookIndex) || bookIndex < 1) return [];
-    const chapterCount = Bible.getBookChapterCount(bookIndex);
-    const out: ChapterTile[] = [];
-    for (let c = 1; c <= chapterCount; c++) {
-      const total = Bible.getChapterVerseCount(bookIndex, c);
-      const read = Bible.countUniqueBookChapterRangeVerses(bookIndex, c, currentLogEntries);
-      const percentage = total ? Math.floor((read / total) * 100) : 0;
-      const complete = percentage === 100;
-
-      const startVerseId = Bible.makeVerseId(bookIndex, c, 1);
-      const endVerseId = Bible.makeVerseId(bookIndex, c, total || 1);
-
-      const raw = Bible.generateBookChapterSegments(bookIndex, c, currentLogEntries);
-      const segments: SegmentBarSegment[] = raw.map((s, idx) => ({
-        id: `${bookIndex}-${c}-${idx}-${s.startVerseId}-${s.endVerseId}`,
-        read: !!s.read,
-        verseCount: s.verseCount,
-      }));
-
-      out.push({ chapterIndex: c, complete, percentage, segments, startVerseId, endVerseId });
-    }
-    return out;
-  }, [bookIndex, currentLogEntries]);
 
   const [selectedChapterIndex, setSelectedChapterIndex] = useState<number | null>(null);
   const [editorChapterIndex, setEditorChapterIndex] = useState<number | null>(null);
   const selectedChapter = useMemo(
-    () => (selectedChapterIndex ? chapters.find((c) => c.chapterIndex === selectedChapterIndex) : undefined),
+    () =>
+      selectedChapterIndex ? chapters.find((c) => c.chapterIndex === selectedChapterIndex) : undefined,
     [chapters, selectedChapterIndex]
   );
   const editorChapter = useMemo(
-    () => (editorChapterIndex ? chapters.find((c) => c.chapterIndex === editorChapterIndex) : undefined),
+    () =>
+      editorChapterIndex ? chapters.find((c) => c.chapterIndex === editorChapterIndex) : undefined,
     [chapters, editorChapterIndex]
   );
 
@@ -139,7 +124,11 @@ export default function BibleBookScreen() {
     };
   }, [editorChapter, today]);
 
-  if (logState.status !== "ready" || settingsState.status !== "ready") {
+  const handleTilePress = useCallback((chapterIndex: number) => {
+    setSelectedChapterIndex(chapterIndex);
+  }, []);
+
+  if (!book || settingsState.status !== "ready") {
     return (
       <Screen edges={[]}>
         <Spinner center />
@@ -153,9 +142,9 @@ export default function BibleBookScreen() {
 
       <Card style={styles.plaque}>
         <Text variant="label" style={styles.plaquePercent}>
-          {bookPercent}%
+          {book.percentage}%
         </Text>
-        <SegmentBar segments={bookSegments} thick />
+        <SegmentBar segments={book.segments} thick />
       </Card>
 
       <AnimatedList
@@ -164,33 +153,15 @@ export default function BibleBookScreen() {
         numColumns={3}
         contentContainerStyle={styles.gridContent}
         renderItem={({ item, index }) => (
-          <Pressable
-            style={({ pressed }) => [
-              styles.tile,
-              {
-                backgroundColor: colors.surfaceAlt,
-                width: tileMetrics.tileWidth,
-                marginRight: index % tileMetrics.columns === tileMetrics.columns - 1 ? 0 : tileMetrics.gap,
-                marginBottom: tileMetrics.gap,
-              },
-              pressed && styles.pressed,
-            ]}
-            onPress={() => setSelectedChapterIndex(item.chapterIndex)}
-          >
-            <Text variant="bodyStrong">{item.chapterIndex}</Text>
-
-            <View style={styles.tileCenter}>
-              <Ionicons
-                name="star"
-                size={22}
-                color={item.complete ? GOLD_STAR : colors.border}
-              />
-            </View>
-
-            <View style={styles.tileBar}>
-              <SegmentBar segments={item.segments} />
-            </View>
-          </Pressable>
+          <ChapterTile
+            chapter={item}
+            width={tileMetrics.tileWidth}
+            marginRight={
+              index % tileMetrics.columns === tileMetrics.columns - 1 ? 0 : tileMetrics.gap
+            }
+            marginBottom={tileMetrics.gap}
+            onPress={handleTilePress}
+          />
         )}
       />
 
@@ -260,4 +231,3 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
   },
 });
-

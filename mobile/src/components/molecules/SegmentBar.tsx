@@ -1,19 +1,24 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { radius, useTheme } from "@/src/design";
 
+/**
+ * Structural shape of a progress segment — assignable from the shared
+ * `Segment` type produced by `computeBibleProgress`. Keyed by `startVerseId`,
+ * which is unique within a single bar.
+ */
 export type SegmentBarSegment = {
-  id: string;
+  startVerseId: number;
   read: boolean;
   verseCount: number;
 };
 
 /** Proportional read/unread progress bar split into weighted segments. */
-export function SegmentBar({
+function SegmentBarComponent({
   segments,
   thick,
 }: {
-  segments: SegmentBarSegment[];
+  segments: readonly SegmentBarSegment[];
   thick?: boolean;
 }) {
   const { colors } = useTheme();
@@ -31,7 +36,7 @@ export function SegmentBar({
     >
       {data.map((seg) => (
         <View
-          key={seg.id}
+          key={seg.startVerseId}
           style={[
             styles.segment,
             {
@@ -44,6 +49,10 @@ export function SegmentBar({
     </View>
   );
 }
+
+// Segment arrays come reference-stable from the precomputed store, so memoizing
+// avoids re-rendering every bar when a parent list re-renders.
+export const SegmentBar = memo(SegmentBarComponent);
 
 const styles = StyleSheet.create({
   bar: {

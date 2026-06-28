@@ -1,90 +1,73 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useMemo } from "react";
+import { memo, useCallback } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import { Bible } from "@mybiblelog/shared";
+import { Bible, type BookProgress } from "@mybiblelog/shared";
 import { useLocale } from "@/src/i18n/LocaleProvider";
-import { useLogEntries } from "@/src/stores/logEntries";
 import {
   AnimatedList,
   Card,
   Screen,
   SegmentBar,
-  type SegmentBarSegment,
   Spinner,
   Text,
 } from "@/src/components";
 import { radius, spacing, useTheme } from "@/src/design";
-import { useUserSettings } from "@/src/stores/userSettings";
+import { useBibleProgress } from "@/src/stores/bibleProgress";
 
 // Brand gold for a fully-read book star — intentionally outside the theme
 // palette (a single decorative accent).
 const GOLD_STAR = "#ffd700";
 
-type BookRow = {
-  bookIndex: number;
+/** Memoized book row. Its `book` snapshot is reference-stable from the
+ * precomputed store, so it only re-renders when its data or the theme changes. */
+const BookRow = memo(function BookRow({
+  book,
+  bookName,
+  onPress,
+}: {
+  book: BookProgress;
   bookName: string;
-  percentage: number;
-  complete: boolean;
-  segments: SegmentBarSegment[];
-};
-
-function calcPercent(numerator: number, denominator: number): number {
-  if (!denominator) return 0;
-  return Math.floor((numerator / denominator) * 100);
-}
+  onPress: (bookIndex: number) => void;
+}) {
+  const { colors } = useTheme();
+  return (
+    <Pressable
+      style={({ pressed }) => [
+        styles.card,
+        { backgroundColor: colors.surfaceAlt },
+        pressed && styles.pressed,
+      ]}
+      onPress={() => onPress(book.bookIndex)}
+    >
+      <View style={styles.cardTopRow}>
+        <Ionicons
+          name="star"
+          size={18}
+          color={book.complete ? GOLD_STAR : colors.border}
+          style={styles.star}
+        />
+        <Text variant="bodyStrong" style={styles.bookName} numberOfLines={1}>
+          {bookName}
+        </Text>
+        <Text variant="caption" color="mutedText" style={styles.percent}>
+          {book.percentage}%
+        </Text>
+      </View>
+      <SegmentBar segments={book.segments} />
+    </Pressable>
+  );
+});
 
 export default function BibleIndex() {
-  const { colors } = useTheme();
   const { locale } = useLocale();
-  const { state: logState } = useLogEntries();
-  const { state: settingsState } = useUserSettings();
+  const progress = useBibleProgress();
 
-  const lookBackDate =
-    settingsState.status === "ready" ? settingsState.settings.lookBackDate : "0000-00-00";
+  const handlePress = useCallback((bookIndex: number) => {
+    router.push(`/bible/${bookIndex}`);
+  }, []);
 
-  const currentLogEntries = useMemo(() => {
-    if (logState.status !== "ready") return [];
-    return logState.entries.filter((e) => e.date >= lookBackDate);
-  }, [logState, lookBackDate]);
-
-  const biblePlaque = useMemo(() => {
-    const totalBibleVerses = Bible.getTotalVerseCount();
-    const totalRead = Bible.countUniqueRangeVerses(currentLogEntries);
-    const percentage = calcPercent(totalRead, totalBibleVerses);
-
-    const segmentsRaw = Bible.generateBibleSegments(currentLogEntries);
-    const segments: SegmentBarSegment[] = segmentsRaw.map((s, idx) => ({
-      id: `${idx}-${s.startVerseId}-${s.endVerseId}`,
-      read: !!s.read,
-      verseCount: s.verseCount,
-    }));
-
-    return { percentage, segments };
-  }, [currentLogEntries]);
-
-  const books = useMemo<BookRow[]>(() => {
-    const rows: BookRow[] = [];
-    for (let bookIndex = 1, l = Bible.getBookCount(); bookIndex <= l; bookIndex++) {
-      const bookName = Bible.getBookName(bookIndex, locale);
-      const totalVerses = Bible.getBookVerseCount(bookIndex);
-      const versesRead = Bible.countUniqueBookRangeVerses(bookIndex, currentLogEntries);
-      const percentage = calcPercent(versesRead, totalVerses);
-      const complete = percentage === 100;
-
-      const segmentsRaw = Bible.generateBookSegments(bookIndex, currentLogEntries);
-      const segments: SegmentBarSegment[] = segmentsRaw.map((s, idx) => ({
-        id: `${bookIndex}-${idx}-${s.startVerseId}-${s.endVerseId}`,
-        read: !!s.read,
-        verseCount: s.verseCount,
-      }));
-
-      rows.push({ bookIndex, bookName, percentage, complete, segments });
-    }
-    return rows;
-  }, [currentLogEntries, locale]);
-
-  if (logState.status !== "ready" || settingsState.status !== "ready") {
+  if (!progress) {
     return (
       <Screen edges={[]}>
         <Spinner center />
@@ -96,41 +79,22 @@ export default function BibleIndex() {
     <Screen edges={[]}>
       <Card style={styles.plaque}>
         <Text variant="label" style={styles.plaquePercent}>
-          {biblePlaque.percentage}%
+          {progress.percentage}%
         </Text>
-        <SegmentBar segments={biblePlaque.segments} thick />
+        <SegmentBar segments={progress.segments} thick />
       </Card>
 
       <AnimatedList
-        data={books}
+        data={progress.books}
         keyExtractor={(item) => String(item.bookIndex)}
         contentContainerStyle={styles.listContent}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         renderItem={({ item }) => (
-          <Pressable
-            style={({ pressed }) => [
-              styles.card,
-              { backgroundColor: colors.surfaceAlt },
-              pressed && styles.pressed,
-            ]}
-            onPress={() => router.push(`/bible/${item.bookIndex}`)}
-          >
-            <View style={styles.cardTopRow}>
-              <Ionicons
-                name="star"
-                size={18}
-                color={item.complete ? GOLD_STAR : colors.border}
-                style={styles.star}
-              />
-              <Text variant="bodyStrong" style={styles.bookName} numberOfLines={1}>
-                {item.bookName}
-              </Text>
-              <Text variant="caption" color="mutedText" style={styles.percent}>
-                {item.percentage}%
-              </Text>
-            </View>
-            <SegmentBar segments={item.segments} />
-          </Pressable>
+          <BookRow
+            book={item}
+            bookName={Bible.getBookName(item.bookIndex, locale)}
+            onPress={handlePress}
+          />
         )}
       />
     </Screen>

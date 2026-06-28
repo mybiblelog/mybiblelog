@@ -63,6 +63,12 @@ export {
   type AchievementEvent,
 } from './log-entry-rules';
 export {
+  computeBibleProgress,
+  type BibleProgress,
+  type BookProgress,
+  type ChapterProgress,
+} from './bible-progress';
+export {
   fetchLogEntries,
   postLogEntry,
   putLogEntry,
