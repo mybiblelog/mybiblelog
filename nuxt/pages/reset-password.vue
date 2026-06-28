@@ -30,7 +30,7 @@
               {{ $terr(changePasswordErrors.confirmNewPassword) }}
             </div>
           </div>
-          <button class="mbl-button mbl-button--primary">
+          <button class="mbl-button mbl-button--primary" :disabled="formBusy">
             {{ $t('submit') }}
           </button>
         </form>
@@ -107,6 +107,9 @@ export default {
       });
     },
     async submitChangePassword() {
+      if (this.formBusy) {
+        return;
+      }
       // Disable form and remove previous errors
       this.formBusy = true;
       this.resetChangePasswordErrors();

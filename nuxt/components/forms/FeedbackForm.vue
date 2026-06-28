@@ -53,7 +53,7 @@
     </div>
     <div class="mbl-field">
       <div class="mbl-control">
-        <button class="mbl-button mbl-button--primary" data-testid="feedback-submit">
+        <button class="mbl-button mbl-button--primary" data-testid="feedback-submit" :disabled="submitting">
           {{ $t('submit_feedback') }}
         </button>
       </div>
@@ -80,6 +80,7 @@ export default {
       form: { ...initialForm },
       initialForm,
       errors: {},
+      submitting: false,
     };
   },
   computed: {
@@ -102,6 +103,10 @@ export default {
   },
   methods: {
     async submitFeedback() {
+      if (this.submitting) {
+        return;
+      }
+      this.submitting = true;
       this.errors = {};
       try {
         await this.$http.post('/api/feedback', {
@@ -121,6 +126,9 @@ export default {
       }
       catch (err) {
         this.errors = (err instanceof ApiError ? mapFormErrors(err) : null) || mapFormErrors(new UnknownApiError());
+      }
+      finally {
+        this.submitting = false;
       }
     },
   },

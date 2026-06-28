@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="mbl-control">
-        <a class="mbl-button mbl-button--primary" data-testid="settings-start-page-save" @click="handleStartPageSubmit">{{ $t('save') }}</a>
+        <a class="mbl-button mbl-button--primary" :class="{ 'is-saving': saving }" data-testid="settings-start-page-save" @click="handleStartPageSubmit">{{ $t('save') }}</a>
       </div>
     </div>
     <div v-if="userSettingsErrors.startPage" class="mbl-help mbl-help--danger">
@@ -42,6 +42,7 @@ export default {
       userSettingsErrors: {
         startPage: '',
       },
+      saving: false,
     };
   },
   head() {
@@ -72,17 +73,24 @@ export default {
   },
   methods: {
     async handleStartPageSubmit() {
-      const { startPage } = this.userSettingsForm;
-      const success = await useUserSettingsStore().updateSettings({ startPage });
-      if (success) {
-        const toastStore = useToastStore();
-        toastStore.add({
-          type: 'success',
-          text: this.$t('messaging.preferred_start_page_saved_successfully'),
-        });
+      if (this.saving) { return; }
+      this.saving = true;
+      try {
+        const { startPage } = this.userSettingsForm;
+        const success = await useUserSettingsStore().updateSettings({ startPage });
+        if (success) {
+          const toastStore = useToastStore();
+          toastStore.add({
+            type: 'success',
+            text: this.$t('messaging.preferred_start_page_saved_successfully'),
+          });
+        }
+        else {
+          this.userSettingsErrors.startPage = this.$t('messaging.unable_to_save_preferred_start_page');
+        }
       }
-      else {
-        this.userSettingsErrors.startPage = this.$t('messaging.unable_to_save_preferred_start_page');
+      finally {
+        this.saving = false;
       }
     },
   },
@@ -97,6 +105,12 @@ main p {
 select {
   /*  cap <select> width so it doesn't overflow mobile device */
   max-width: 65vw;
+}
+
+.mbl-button.is-saving {
+  pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>
 

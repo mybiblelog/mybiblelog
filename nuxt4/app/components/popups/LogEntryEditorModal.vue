@@ -6,7 +6,7 @@
     <template #footer>
       <button
         class="mbl-button mbl-button--primary"
-        :disabled="!logEntryEditorStore.isValid"
+        :disabled="!logEntryEditorStore.isValid || logEntryEditorStore.submitting"
         data-testid="log-entry-editor-submit"
         @click="handleSave"
       >

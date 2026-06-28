@@ -17,7 +17,7 @@
           </div>
         </div>
         <div class="mbl-control">
-          <button class="mbl-button mbl-button--primary" data-testid="settings-start-page-save" :disabled="!mounted" @click="saveStartPage">
+          <button class="mbl-button mbl-button--primary" data-testid="settings-start-page-save" :disabled="!mounted || saving" @click="saveStartPage">
             {{ t('save') }}
           </button>
         </div>
@@ -36,6 +36,7 @@ definePageMeta({ middleware: ['auth'] });
 useHead({ meta: [{ name: 'robots', content: 'noindex' }] });
 
 const mounted = ref(false);
+const saving = ref(false);
 onMounted(() => { mounted.value = true; });
 
 const { t } = useI18n();
@@ -59,13 +60,20 @@ const startPageOptions = computed(() => [
 ]);
 
 async function saveStartPage() {
+  if (saving.value) { return; }
+  saving.value = true;
   errors.startPage = '';
-  const success = await userSettingsStore.updateSettings({ startPage: form.startPage });
-  if (success) {
-    toastStore.add({ type: 'success', text: t('start_page_saved') });
+  try {
+    const success = await userSettingsStore.updateSettings({ startPage: form.startPage });
+    if (success) {
+      toastStore.add({ type: 'success', text: t('start_page_saved') });
+    }
+    else {
+      errors.startPage = t('unable_to_save_start_page');
+    }
   }
-  else {
-    errors.startPage = t('unable_to_save_start_page');
+  finally {
+    saving.value = false;
   }
 }
 </script>

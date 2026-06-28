@@ -58,7 +58,7 @@
             </div>
             <div class="mbl-field">
               <div class="mbl-control">
-                <button class="mbl-button mbl-button--primary" type="submit" data-testid="feedback-submit">
+                <button class="mbl-button mbl-button--primary" type="submit" data-testid="feedback-submit" :disabled="submitting">
                   {{ t('submit_feedback') }}
                 </button>
               </div>
@@ -95,6 +95,7 @@ const initialForm = () => ({
 
 const form = ref(initialForm());
 const errors = ref<Record<string, unknown>>({});
+const submitting = ref(false);
 
 const isDirty = computed(() =>
   form.value.message !== '' || form.value.kind !== 'bug',
@@ -117,6 +118,8 @@ async function close() {
 }
 
 async function submitFeedback() {
+  if (submitting.value) { return; }
+  submitting.value = true;
   errors.value = {};
   try {
     await $fetch('/api/feedback', {
@@ -129,6 +132,9 @@ async function submitFeedback() {
   }
   catch (err) {
     errors.value = (err instanceof ApiError ? mapFormErrors(err) : null) || mapFormErrors(new UnknownApiError()) || {};
+  }
+  finally {
+    submitting.value = false;
   }
 }
 </script>

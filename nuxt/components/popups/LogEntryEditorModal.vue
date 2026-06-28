@@ -4,7 +4,7 @@
       <log-entry-editor-form />
     </template>
     <template slot="footer">
-      <button class="mbl-button mbl-button--primary" :disabled="!isValid" data-testid="log-entry-editor-submit" @click="handleSave">
+      <button class="mbl-button mbl-button--primary" :disabled="!isValid || submitting" data-testid="log-entry-editor-submit" @click="handleSave">
         {{ logEntry.id ? $t('save') : $t('add') }}
       </button>
       <button class="mbl-button mbl-button--light" data-testid="log-entry-editor-close" @click="handleClose">
@@ -42,6 +42,9 @@ export default {
     },
     isValid() {
       return this.logEntryEditorStore.isValid;
+    },
+    submitting() {
+      return this.logEntryEditorStore.submitting;
     },
     logEntry() {
       return this.logEntryEditorStore.logEntry;

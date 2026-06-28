@@ -327,6 +327,9 @@ export default {
       this.$emit('previous');
     },
     async handleSubmit() {
+      if (this.isSaving) {
+        return;
+      }
       this.error = '';
 
       if (!this.dailyVerseCountGoal || this.dailyVerseCountGoal < 1 || this.dailyVerseCountGoal > 1111) {

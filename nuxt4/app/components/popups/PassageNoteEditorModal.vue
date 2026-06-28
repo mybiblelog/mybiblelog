@@ -30,7 +30,7 @@
       <button
         class="mbl-button mbl-button--primary"
         data-testid="note-editor-submit"
-        :disabled="!store.passageNote.content.trim()"
+        :disabled="!store.passageNote.content.trim() || store.submitting"
         @click="handleSave"
       >
         {{ store.passageNote.id ? t('save') : t('add') }}

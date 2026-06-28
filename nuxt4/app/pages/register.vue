@@ -38,7 +38,7 @@
               </p>
             </div>
           </div>
-          <button :disabled="!mounted" class="mbl-button mbl-button--primary">
+          <button :disabled="!mounted || submitting" class="mbl-button mbl-button--primary">
             {{ t('sign_up') }}
           </button>
         </form>
@@ -91,9 +91,12 @@ const password = ref(preFillPassword);
 const errors = ref<Record<string, unknown>>({});
 const formSubmitted = ref(false);
 const mounted = ref(false);
+const submitting = ref(false);
 onMounted(() => { mounted.value = true; });
 
 const onSubmit = async () => {
+  if (submitting.value) { return; }
+  submitting.value = true;
   email.value = email.value.trim();
   try {
     await $http.post('/api/auth/register', { email: email.value, password: password.value, locale: locale.value });
@@ -101,6 +104,9 @@ const onSubmit = async () => {
   catch (err) {
     errors.value = (err instanceof ApiError ? mapFormErrors(err) : null) ?? mapFormErrors(new UnknownApiError());
     return;
+  }
+  finally {
+    submitting.value = false;
   }
 
   formSubmitted.value = true;

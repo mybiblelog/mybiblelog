@@ -50,10 +50,10 @@
             </div>
           </div>
           <div class="mbl-button-group">
-            <button class="mbl-button mbl-button--primary">
+            <button class="mbl-button mbl-button--primary" :disabled="submitting">
               {{ $t('sign_in') }}
             </button>
-            <button class="mbl-button" :class="{ 'mbl-button--text': !failedLoginAttempt, 'mbl-button--primary': failedLoginAttempt }" @click.prevent="sendPasswordReset">
+            <button class="mbl-button" :class="{ 'mbl-button--text': !failedLoginAttempt, 'mbl-button--primary': failedLoginAttempt }" :disabled="submitting" @click.prevent="sendPasswordReset">
               {{ $t('forgot_your_password') }}
             </button>
           </div>
@@ -106,6 +106,7 @@ export default {
       },
       failedLoginAttempt: false,
       passwordResetSubmitted: false,
+      submitting: false,
 
       googleOauth2Url: null,
     };
@@ -139,6 +140,10 @@ export default {
   },
   methods: {
     async onSubmit() {
+      if (this.submitting) {
+        return;
+      }
+      this.submitting = true;
       const authStore = useAuthStore();
       try {
         await authStore.login({ email: this.email, password: this.password });
@@ -153,20 +158,30 @@ export default {
         this.failedLoginAttempt = true;
         return;
       }
+      finally {
+        this.submitting = false;
+      }
 
       this.$router.push(this.localePath('/start', this.$i18n.locale));
     },
     async sendPasswordReset() {
+      if (this.submitting) {
+        return;
+      }
       if (!this.email) {
         this.errors.email = this.$t('your_email_address_is_required');
         return;
       }
+      this.submitting = true;
       try {
         await this.$http.post('/api/auth/reset-password', { email: this.email });
         this.passwordResetSubmitted = true;
       }
       catch (err) {
         this.errors = (err instanceof ApiError ? mapFormErrors(err) : null) || mapFormErrors(new UnknownApiError());
+      }
+      finally {
+        this.submitting = false;
       }
     },
   },

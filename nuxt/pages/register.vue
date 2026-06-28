@@ -39,7 +39,7 @@
               </p>
             </div>
           </div>
-          <button class="mbl-button mbl-button--primary">
+          <button class="mbl-button mbl-button--primary" :disabled="submitting">
             {{ $t('sign_up') }}
           </button>
         </form>
@@ -81,6 +81,7 @@ export default {
       password: '',
       errors: {},
       formSubmitted: false,
+      submitting: false,
       requireEmailVerification: true,
     };
   },
@@ -94,6 +95,10 @@ export default {
   },
   methods: {
     async onSubmit() {
+      if (this.submitting) {
+        return;
+      }
+      this.submitting = true;
       this.email = this.email.trim(); // trim accidental spaces
       const { email, password } = this;
       const locale = this.$i18n.locale;
@@ -104,6 +109,9 @@ export default {
       catch (err) {
         this.errors = (err instanceof ApiError ? mapFormErrors(err) : null) || mapFormErrors(new UnknownApiError());
         return;
+      }
+      finally {
+        this.submitting = false;
       }
 
       this.formSubmitted = true;

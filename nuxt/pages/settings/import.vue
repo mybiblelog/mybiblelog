@@ -18,7 +18,7 @@
         <p>{{ $t('messaging.look_back_date_reset_message.1') }}</p>
         <p>{{ $t('messaging.look_back_date_reset_message.2', { lookBackDate: displayDate(userSettings.lookBackDate, $i18n.locale) }) }}</p>
         <div class="mbl-button-group">
-          <button class="mbl-button mbl-button--primary" @click="updateLookBackDate">
+          <button class="mbl-button mbl-button--primary" :disabled="savingLookBackDate" @click="updateLookBackDate">
             {{ $t('messaging.update_look_back_date_yes') }}
           </button>
           <button class="mbl-button" @click="() => showLookBackDateResetMessage = false">
@@ -84,6 +84,7 @@ export default {
 
       earliestLogEntryDate: null,
       showLookBackDateResetMessage: false,
+      savingLookBackDate: false,
     };
   },
   async fetch() {
@@ -273,13 +274,20 @@ export default {
         });
     },
     async updateLookBackDate() {
-      const toastStore = useToastStore();
-      await useUserSettingsStore().updateSettings({ lookBackDate: this.earliestLogEntryDate });
-      toastStore.add({
-        type: 'success',
-        text: this.$t('messaging.look_back_date_updated_successfully'),
-      });
-      this.showLookBackDateResetMessage = false;
+      if (this.savingLookBackDate) { return; }
+      this.savingLookBackDate = true;
+      try {
+        const toastStore = useToastStore();
+        await useUserSettingsStore().updateSettings({ lookBackDate: this.earliestLogEntryDate });
+        toastStore.add({
+          type: 'success',
+          text: this.$t('messaging.look_back_date_updated_successfully'),
+        });
+        this.showLookBackDateResetMessage = false;
+      }
+      finally {
+        this.savingLookBackDate = false;
+      }
     },
   },
 };

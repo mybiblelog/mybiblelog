@@ -22,7 +22,7 @@
         </p>
         <p>{{ $t('current_request.check_your_new_email') }}</p>
         <p>{{ $t('current_request.you_can_cancel') }}</p>
-        <button class="mbl-button mbl-button--danger" @click="cancelChangeEmailRequest">
+        <button class="mbl-button mbl-button--danger" :disabled="formBusy" @click="cancelChangeEmailRequest">
           {{ $t('current_request.cancel_request') }}
         </button>
       </div>
@@ -56,7 +56,7 @@
         </div>
         <div class="mbl-field">
           <div class="mbl-control">
-            <button class="mbl-button mbl-button--primary" type="submit">
+            <button class="mbl-button mbl-button--primary" type="submit" :disabled="formBusy">
               {{ $t('set_password.form.set_password') }}
             </button>
           </div>
@@ -92,7 +92,7 @@
         </div>
         <div class="mbl-field">
           <div class="mbl-control">
-            <button class="mbl-button mbl-button--primary" type="submit">
+            <button class="mbl-button mbl-button--primary" type="submit" :disabled="formBusy">
               {{ $t('form.change_email') }}
             </button>
           </div>
@@ -208,6 +208,9 @@ export default {
 
     // Submits 'Change Email' form data and handles response.
     async submitChangeEmail() {
+      if (this.formBusy) {
+        return;
+      }
       // Disable form and remove previous errors
       this.formBusy = true;
       this.resetChangeEmailErrors();
@@ -248,6 +251,9 @@ export default {
     },
 
     async submitSetPassword() {
+      if (this.formBusy) {
+        return;
+      }
       this.formBusy = true;
       this.resetSetPasswordErrors();
 
@@ -284,6 +290,9 @@ export default {
     },
 
     async cancelChangeEmailRequest() {
+      if (this.formBusy) {
+        return;
+      }
       const dialogStore = useDialogStore();
       const toastStore = useToastStore();
       this.formBusy = true;

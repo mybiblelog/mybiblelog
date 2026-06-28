@@ -19,7 +19,7 @@
           >
         </div>
         <div class="mbl-control">
-          <button class="mbl-button mbl-button--primary" data-testid="settings-daily-goal-save" :disabled="!mounted" @click="saveDailyVerseCountGoal">
+          <button class="mbl-button mbl-button--primary" data-testid="settings-daily-goal-save" :disabled="!mounted || saving" @click="saveDailyVerseCountGoal">
             {{ t('save') }}
           </button>
         </div>
@@ -42,7 +42,7 @@
           >
         </div>
         <div class="mbl-control">
-          <button class="mbl-button mbl-button--primary" data-testid="settings-look-back-date-save" :disabled="!mounted" @click="saveLookBackDate">
+          <button class="mbl-button mbl-button--primary" data-testid="settings-look-back-date-save" :disabled="!mounted || saving" @click="saveLookBackDate">
             {{ t('save') }}
           </button>
         </div>
@@ -68,7 +68,7 @@
           </div>
         </div>
         <div class="mbl-control">
-          <button class="mbl-button mbl-button--primary" data-testid="settings-bible-version-save" :disabled="!mounted" @click="savePreferredBibleVersion">
+          <button class="mbl-button mbl-button--primary" data-testid="settings-bible-version-save" :disabled="!mounted || saving" @click="savePreferredBibleVersion">
             {{ t('save') }}
           </button>
         </div>
@@ -94,7 +94,7 @@
           </div>
         </div>
         <div class="mbl-control">
-          <button class="mbl-button mbl-button--primary" data-testid="settings-bible-app-save" :disabled="!mounted" @click="savePreferredBibleApp">
+          <button class="mbl-button mbl-button--primary" data-testid="settings-bible-app-save" :disabled="!mounted || saving" @click="savePreferredBibleApp">
             {{ t('save') }}
           </button>
         </div>
@@ -114,6 +114,7 @@ definePageMeta({ middleware: ['auth'] });
 useHead({ meta: [{ name: 'robots', content: 'noindex' }] });
 
 const mounted = ref(false);
+const saving = ref(false);
 onMounted(() => { mounted.value = true; });
 
 const { t, locale } = useI18n();
@@ -154,48 +155,76 @@ const sortedBibleVersionOptions = computed(() => {
 });
 
 async function saveDailyVerseCountGoal() {
+  if (saving.value) { return; }
+  saving.value = true;
   errors.dailyVerseCountGoal = '';
-  const success = await userSettingsStore.updateSettings({ dailyVerseCountGoal: form.dailyVerseCountGoal });
-  if (success) {
-    toastStore.add({ type: 'success', text: t('daily_verse_count_goal_saved') });
+  try {
+    const success = await userSettingsStore.updateSettings({ dailyVerseCountGoal: form.dailyVerseCountGoal });
+    if (success) {
+      toastStore.add({ type: 'success', text: t('daily_verse_count_goal_saved') });
+    }
+    else {
+      errors.dailyVerseCountGoal = t('unable_to_save_daily_verse_count_goal');
+    }
   }
-  else {
-    errors.dailyVerseCountGoal = t('unable_to_save_daily_verse_count_goal');
+  finally {
+    saving.value = false;
   }
 }
 
 async function saveLookBackDate() {
+  if (saving.value) { return; }
+  saving.value = true;
   errors.lookBackDate = '';
-  const success = await userSettingsStore.updateSettings({ lookBackDate: form.lookBackDate });
-  if (success) {
-    toastStore.add({ type: 'success', text: t('look_back_date_saved') });
+  try {
+    const success = await userSettingsStore.updateSettings({ lookBackDate: form.lookBackDate });
+    if (success) {
+      toastStore.add({ type: 'success', text: t('look_back_date_saved') });
+    }
+    else {
+      errors.lookBackDate = t('unable_to_save_look_back_date');
+    }
   }
-  else {
-    errors.lookBackDate = t('unable_to_save_look_back_date');
+  finally {
+    saving.value = false;
   }
 }
 
 async function savePreferredBibleVersion() {
+  if (saving.value) { return; }
+  saving.value = true;
   errors.preferredBibleVersion = '';
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const success = await userSettingsStore.updateSettings({ preferredBibleVersion: form.preferredBibleVersion as any });
-  if (success) {
-    toastStore.add({ type: 'success', text: t('preferred_bible_version_saved') });
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const success = await userSettingsStore.updateSettings({ preferredBibleVersion: form.preferredBibleVersion as any });
+    if (success) {
+      toastStore.add({ type: 'success', text: t('preferred_bible_version_saved') });
+    }
+    else {
+      errors.preferredBibleVersion = t('unable_to_save_preferred_bible_version');
+    }
   }
-  else {
-    errors.preferredBibleVersion = t('unable_to_save_preferred_bible_version');
+  finally {
+    saving.value = false;
   }
 }
 
 async function savePreferredBibleApp() {
+  if (saving.value) { return; }
+  saving.value = true;
   errors.preferredBibleApp = '';
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const success = await userSettingsStore.updateSettings({ preferredBibleApp: form.preferredBibleApp as any });
-  if (success) {
-    toastStore.add({ type: 'success', text: t('preferred_bible_app_saved') });
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const success = await userSettingsStore.updateSettings({ preferredBibleApp: form.preferredBibleApp as any });
+    if (success) {
+      toastStore.add({ type: 'success', text: t('preferred_bible_app_saved') });
+    }
+    else {
+      errors.preferredBibleApp = t('unable_to_save_preferred_bible_app');
+    }
   }
-  else {
-    errors.preferredBibleApp = t('unable_to_save_preferred_bible_app');
+  finally {
+    saving.value = false;
   }
 }
 </script>
