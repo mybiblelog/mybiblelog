@@ -103,7 +103,7 @@ Items marked _(Console)_ live in the Google Play Console, not in this repo.
   _(Console)_ to validate Google Sign-In, email login, deep-link OAuth return
   (`scheme: "biblelog"`), offline behavior, and dark/light themes on physical
   devices before production rollout.
-- [ ] **Predictive back gesture.** `predictiveBackGestureEnabled: false` opts out
+- [x] **Predictive back gesture.** `predictiveBackGestureEnabled: false` opts out
   of the Android 14+ predictive back animation. Re-enable and verify navigation if
   targeting a polished modern UX.
 - [ ] **Localized store listing.** The app ships `en` and `es`; provide localized
@@ -116,7 +116,7 @@ Items marked _(Console)_ live in the Google Play Console, not in this repo.
 - [x] **Remove leftover template assets.** Deleted the unused Expo starter
   assets (`react-logo.png`, `react-logo@2x.png`, `react-logo@3x.png`,
   `partial-react-logo.png`).
-- [ ] **Automated tests.** No test runner is configured (no Jest, no `*.test.*`
+- [x] **Automated tests.** No test runner is configured (no Jest, no `*.test.*`
   files). Add unit/component tests for auth, log-entry, and settings logic to
   guard regressions.
 - [ ] **Resolve config FIXMEs.** `app.config.ts` has a FIXME suggesting env

@@ -16,5 +16,15 @@ config.resolver.nodeModulesPaths = [
   path.resolve(workspaceRoot, "node_modules"),
 ];
 
+// Keep co-located test files out of the app bundle. Without this, expo-router's
+// require.context picks up `app/**/*.test.tsx`, which pulls in test-only deps
+// (e.g. @testing-library/react-native -> Node's "console") that don't exist in RN.
+config.resolver.blockList = [
+  ...(Array.isArray(config.resolver.blockList)
+    ? config.resolver.blockList
+    : [config.resolver.blockList].filter(Boolean)),
+  /.*\.test\.[jt]sx?$/,
+  /.*\.spec\.[jt]sx?$/,
+];
 
 module.exports = config;

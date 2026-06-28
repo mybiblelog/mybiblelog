@@ -1,4 +1,3 @@
-import { describe, expect, it } from "vitest";
 import type { PendingLogEntryMutation } from "@/src/storage/logEntries";
 import {
   coalesceCreate,

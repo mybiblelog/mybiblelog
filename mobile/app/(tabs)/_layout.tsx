@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Tabs, router } from "expo-router";
+import { Tabs } from "expo-router";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { useTheme } from "@/src/design";
 
@@ -10,6 +10,9 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        // Reset each tab's nested stack to its root when the tab loses focus,
+        // so re-selecting a tab never restores a previously viewed sub-screen.
+        popToTopOnBlur: true,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.mutedText,
         tabBarStyle: {
@@ -34,14 +37,6 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="book-outline" color={color} size={size} />
           ),
-        }}
-        listeners={{
-          tabPress: (e) => {
-            // Always route to the top-level Bible Books page for this tab.
-            // (By default, the tab preserves the last nested stack screen.)
-            e.preventDefault();
-            router.navigate("/bible");
-          },
         }}
       />
       <Tabs.Screen

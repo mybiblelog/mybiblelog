@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { Bible, LogEntryEditorMachine, type LogEntryEditorModel } from "@mybiblelog/shared";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { LogEntry } from "@/src/types/log-entry";
 
 /**
@@ -61,7 +61,10 @@ function modelToValue(model: LogEntryEditorModel): LogEntryEditorValue {
 
 export function useLogEntryEditor(init?: Init) {
   const [model, setModel] = useState<LogEntryEditorModel>(() => buildInitialModel(init));
-  const cleanJsonRef = useRef<string>(JSON.stringify(model));
+  // The baseline the dirty check compares against. Kept in state (not a ref) so
+  // markClean()/reset() trigger a re-render and `derived.isDirty` reflects the
+  // change immediately rather than staying stale until the next edit.
+  const [cleanJson, setCleanJson] = useState<string>(() => JSON.stringify(model));
 
   const value = useMemo<LogEntryEditorValue>(() => modelToValue(model), [model]);
 
@@ -76,9 +79,9 @@ export function useLogEntryEditor(init?: Init) {
       startVerseId: startVerseId ?? null,
       endVerseId: endVerseId ?? null,
       isValid: dateValid && rangeValid,
-      isDirty: JSON.stringify(model) !== cleanJsonRef.current,
+      isDirty: JSON.stringify(model) !== cleanJson,
     };
-  }, [model, value.date]);
+  }, [model, value.date, cleanJson]);
 
   const books = useMemo(() => Bible.getBooks(), []);
 
@@ -134,13 +137,13 @@ export function useLogEntryEditor(init?: Init) {
   }, []);
 
   const markClean = useCallback(() => {
-    cleanJsonRef.current = JSON.stringify(model);
+    setCleanJson(JSON.stringify(model));
   }, [model]);
 
   const reset = useCallback((nextInit?: Init) => {
     const next = buildInitialModel(nextInit);
     setModel(next);
-    cleanJsonRef.current = JSON.stringify(next);
+    setCleanJson(JSON.stringify(next));
   }, []);
 
   const toLogEntry = useCallback((): LogEntry | null => {

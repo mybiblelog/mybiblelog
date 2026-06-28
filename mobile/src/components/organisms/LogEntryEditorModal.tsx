@@ -39,7 +39,7 @@ export function LogEntryEditorModal({
   const { colors } = useTheme();
 
   const editor = useLogEntryEditor(initialEntry ?? undefined);
-  const { reset, markClean } = editor;
+  const { reset } = editor;
   const wasVisible = useRef(false);
 
   const [bookOpen, setBookOpen] = useState(false);
@@ -80,8 +80,8 @@ export function LogEntryEditorModal({
   useEffect(() => {
     if (visible && !wasVisible.current) {
       const init = initialEntry ?? (presetDate ? ({ date: presetDate } as any) : undefined);
+      // reset() establishes the clean baseline; no separate markClean() needed.
       reset(init);
-      markClean();
     }
     if (!visible && wasVisible.current) {
       setBookOpen(false);
@@ -92,7 +92,7 @@ export function LogEntryEditorModal({
       setDiscardOpen(false);
     }
     wasVisible.current = visible;
-  }, [visible, initialEntry, presetDate, reset, markClean]);
+  }, [visible, initialEntry, presetDate, reset]);
 
   function handleSubmit() {
     const entry = editor.toLogEntry();
