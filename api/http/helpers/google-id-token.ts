@@ -1,5 +1,5 @@
 import { OAuth2Client } from 'google-auth-library';
-import config from '../../config';
+import { getConfig } from '../../config';
 
 /**
  * Verifies a Google `id_token` obtained from a native/mobile Google sign-in
@@ -32,7 +32,7 @@ async function verifyGoogleIdToken(idToken: string): Promise<VerifiedGoogleIdTok
   // Throws on a bad signature, disallowed audience, wrong issuer, or expiry.
   const ticket = await client.verifyIdToken({
     idToken,
-    audience: config.google.allowedClientIds,
+    audience: getConfig().google.allowedClientIds,
   });
 
   const payload = ticket.getPayload();
