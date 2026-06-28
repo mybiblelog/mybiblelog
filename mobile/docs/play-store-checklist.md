@@ -39,8 +39,9 @@ Items marked _(Console)_ live in the Google Play Console, not in this repo.
 
 ### Build & signing configuration
 
-- [ ] **Production environment secrets.** `app.config.ts` throws if
-  `EXPO_PUBLIC_API_BASE_URL` and `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` are missing.
+- [ ] **Production environment secrets.** The app throws at runtime (see
+  `src/config.ts`) if `EXPO_PUBLIC_API_BASE_URL` and
+  `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` are missing from the build.
   Only `localhost`/example defaults exist in `.env.example`. Set production values
   as EAS secrets (pointing `EXPO_PUBLIC_API_BASE_URL` at the **production** API,
   not staging/localhost) before a production build.
@@ -119,8 +120,9 @@ Items marked _(Console)_ live in the Google Play Console, not in this repo.
 - [x] **Automated tests.** No test runner is configured (no Jest, no `*.test.*`
   files). Add unit/component tests for auth, log-entry, and settings logic to
   guard regressions.
-- [ ] **Resolve config FIXMEs.** `app.config.ts` has a FIXME suggesting env
-  validation move to `config.ts`; `docs/android-dev-build.md` has an unfinished
+- [ ] **Resolve config FIXMEs.** ~~`app.config.ts` has a FIXME suggesting env
+  validation move to `config.ts`~~ (done — validation now lives in `src/config.ts`
+  and runs at app startup); `docs/android-dev-build.md` has an unfinished
   "editing below this line" section. Tidy before release docs are shared.
 - [ ] **Tablet / large-screen support.** `ios.supportsTablet` is true; consider
   verifying and declaring Android large-screen/foldable support for better store

@@ -1,40 +1,17 @@
 import type { ExpoConfig } from "expo/config";
-import dotenv from 'dotenv';
 
-dotenv.config({
-  path: '.env',
-});
-
-// Expo/Metro automatically loads .env from the project root (same directory as this file).
-// Place your .env file at: mobile/.env
-
-// FIXME: this validation should probably live in config.ts instead:
-// - this file is loaded by `expo config` before uploading files to EAS
-// - env vars aren't loaded from .env automatically for that command
-// - this file requires those env vars to be set or it will error
-// - using dotenv to load .env is a workaround, and those loaded env vars aren't even used in the build
-// - so actually, we should move validation to config.ts so we don't need a .env locally to perform a build that doesn't use it
-
-const requiredEnvVars = [
-  "EXPO_PUBLIC_API_BASE_URL",
-  // Google OAuth web client ID — the audience of the id_token the app sends to
-  // the API (`POST /auth/oauth2/google/id-token`). The API must list this ID in
-  // GOOGLE_ALLOWED_CLIENT_IDS.
-  "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID",
-] as const;
-
-const missing = requiredEnvVars.filter(
-  (key) => !process.env[key]?.trim()
-);
-
-if (missing.length > 0) {
-  throw new Error(
-    `Missing required env vars at build time: ${missing.join(", ")}. Set them in your .env file or EAS secrets.`
-  );
-}
-
-const apiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL!;
-const googleWebClientId = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID!;
+// This file is evaluated by `expo config` (run by EAS before uploading, and
+// locally) where `.env` is NOT auto-loaded. So we don't validate or require env
+// vars here — we just pass through whatever is set into `extra`. Validation of
+// the required values lives in `src/config.ts`, which only runs in the actual
+// app, the only place the values are needed. (Expo/Metro does load `.env` for
+// `expo start` / builds, so `EXPO_PUBLIC_*` are populated there.)
+//
+// Google OAuth web client ID — the audience of the id_token the app sends to the
+// API (`POST /auth/oauth2/google/id-token`). The API must list this ID in
+// GOOGLE_ALLOWED_CLIENT_IDS.
+const apiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL;
+const googleWebClientId = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID;
 // Optional: only needed for native iOS sign-in. Used to derive the reversed-client-ID
 // URL scheme the native Google SDK redirects back to.
 const googleIosClientId = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID?.trim() || undefined;
