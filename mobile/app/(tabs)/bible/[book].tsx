@@ -1,27 +1,31 @@
 import dayjs from "dayjs";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from "react-native";
+import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Bible } from "@mybiblelog/shared";
 import type { LogEntry } from "@/src/types/log-entry";
-import { SegmentBar, type SegmentBarSegment } from "@/src/components/SegmentBar";
-import { ChapterMenu } from "@/src/components/ChapterMenu";
-import { LogEntryEditorModal } from "@/src/components/LogEntryEditorModal";
+import {
+  AnimatedList,
+  Card,
+  ChapterMenu,
+  LogEntryEditorModal,
+  Screen,
+  SegmentBar,
+  type SegmentBarSegment,
+  Spinner,
+  Text,
+} from "@/src/components";
+import { radius, spacing, useTheme } from "@/src/design";
 import { useLogEntries } from "@/src/log-entries/LogEntriesProvider";
 import { useLocale } from "@/src/i18n/LocaleProvider";
 import { useUserSettings } from "@/src/settings/UserSettingsProvider";
-import { useTheme } from "@/src/theme/ThemeProvider";
 import { openPassageInBible } from "@/src/bible/openInBible";
 import { useToast } from "@/src/toast/ToastProvider";
+
+// Brand gold for a fully-read chapter star — a single decorative accent
+// outside the theme palette.
+const GOLD_STAR = "#ffd700";
 
 export default function BibleBookScreen() {
   const { colors } = useTheme();
@@ -137,29 +141,31 @@ export default function BibleBookScreen() {
 
   if (logState.status !== "ready" || settingsState.status !== "ready") {
     return (
-      <View style={[styles.loading, { backgroundColor: colors.background }]}>
-        <ActivityIndicator color={colors.primary} />
-      </View>
+      <Screen edges={[]}>
+        <Spinner center />
+      </Screen>
     );
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <Screen edges={[]}>
       <Stack.Screen options={{ title: bookName }} />
 
-      <View style={[styles.plaque, { backgroundColor: colors.surfaceAlt }]}>
-        <Text style={[styles.plaquePercent, { color: colors.text }]}>{bookPercent}%</Text>
+      <Card style={styles.plaque}>
+        <Text variant="label" style={styles.plaquePercent}>
+          {bookPercent}%
+        </Text>
         <SegmentBar segments={bookSegments} thick />
-      </View>
+      </Card>
 
-      <FlatList
+      <AnimatedList
         data={chapters}
         keyExtractor={(item) => String(item.chapterIndex)}
         numColumns={3}
         contentContainerStyle={styles.gridContent}
         renderItem={({ item, index }) => (
           <Pressable
-            style={[
+            style={({ pressed }) => [
               styles.tile,
               {
                 backgroundColor: colors.surfaceAlt,
@@ -167,18 +173,17 @@ export default function BibleBookScreen() {
                 marginRight: index % tileMetrics.columns === tileMetrics.columns - 1 ? 0 : tileMetrics.gap,
                 marginBottom: tileMetrics.gap,
               },
+              pressed && styles.pressed,
             ]}
             onPress={() => setSelectedChapterIndex(item.chapterIndex)}
           >
-            <Text style={[styles.tileChapter, { color: colors.text }]}>
-              {item.chapterIndex}
-            </Text>
+            <Text variant="bodyStrong">{item.chapterIndex}</Text>
 
             <View style={styles.tileCenter}>
               <Ionicons
                 name="star"
                 size={22}
-                color={item.complete ? "#ffd700" : colors.border}
+                color={item.complete ? GOLD_STAR : colors.border}
               />
             </View>
 
@@ -221,45 +226,30 @@ export default function BibleBookScreen() {
           void createEntry(entry);
         }}
       />
-    </View>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  loading: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   plaque: {
-    marginHorizontal: 16,
-    marginTop: 12,
-    marginBottom: 16,
-    padding: 14,
-    borderRadius: 16,
+    marginHorizontal: spacing.screenH,
+    marginTop: spacing.md,
+    marginBottom: spacing.xxl,
   },
   plaquePercent: {
     textAlign: "right",
-    fontSize: 14,
-    fontWeight: "900",
-    marginBottom: 10,
+    marginBottom: spacing.md,
   },
   gridContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 24,
+    paddingHorizontal: spacing.screenH,
+    paddingBottom: spacing.listBottom,
   },
+  pressed: { opacity: 0.7 },
   tile: {
-    borderRadius: 14,
-    padding: 10,
+    borderRadius: radius.lg,
+    padding: spacing.md,
     minHeight: 92,
     justifyContent: "space-between",
-  },
-  tileChapter: {
-    fontSize: 14,
-    fontWeight: "900",
   },
   tileCenter: {
     alignItems: "center",
@@ -267,7 +257,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tileBar: {
-    marginTop: 10,
+    marginTop: spacing.md,
   },
 });
 

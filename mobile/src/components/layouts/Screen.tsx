@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useTheme } from "@/src/theme/ThemeProvider";
-import { spacing } from "@/src/theme/tokens";
+import { spacing, useTheme } from "@/src/design";
 
 type Edge = "top" | "bottom";
 

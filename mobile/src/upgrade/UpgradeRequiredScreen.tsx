@@ -1,8 +1,9 @@
 import { useT } from "@/src/i18n/LocaleProvider";
-import { useTheme } from "@/src/theme/ThemeProvider";
+import { spacing, useTheme } from "@/src/design";
+import { Button, Card, Screen, Text } from "@/src/components";
 import type { AppSupportStatus } from "@/src/api/appSupportApi";
 import { useMemo } from "react";
-import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
+import { Linking, StyleSheet } from "react-native";
 
 export default function UpgradeRequiredScreen({
   status,
@@ -15,7 +16,8 @@ export default function UpgradeRequiredScreen({
   const t = useT();
   const { colors } = useTheme();
 
-  const storeUrl = typeof status.storeUrl === "string" && status.storeUrl.trim() ? status.storeUrl : null;
+  const storeUrl =
+    typeof status.storeUrl === "string" && status.storeUrl.trim() ? status.storeUrl : null;
   // Always use client-localized copy. The API may include `message`, but it is not localized.
   const message = t("upgrade_required_message");
 
@@ -35,82 +37,40 @@ export default function UpgradeRequiredScreen({
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View
-        style={[
-          styles.card,
-          { backgroundColor: colors.surface, borderColor: colors.border },
-        ]}
-      >
-        <Text style={[styles.title, { color: colors.text }]}>
+    <Screen padded style={styles.screen}>
+      <Card variant="surface" elevated style={[styles.card, { borderColor: colors.border }]}>
+        <Text variant="title" style={styles.title}>
           {t("upgrade_required_title")}
         </Text>
-        <Text style={[styles.message, { color: colors.mutedText }]}>{message}</Text>
-        <Text style={[styles.details, { color: colors.placeholder }]}>{details}</Text>
+        <Text variant="body" color="mutedText" style={styles.message}>
+          {message}
+        </Text>
+        <Text variant="caption" color="placeholder" style={styles.details}>
+          {details}
+        </Text>
 
-        <Pressable
-          style={[
-            styles.button,
-            { backgroundColor: colors.primary },
-            !storeUrl && { opacity: 0.5 },
-          ]}
+        <Button
+          label={t("upgrade_required_button")}
+          fullWidth
           disabled={!storeUrl}
           onPress={onPressUpdate}
-        >
-          <Text style={[styles.buttonText, { color: colors.onPrimary }]}>
-            {t("upgrade_required_button")}
-          </Text>
-        </Pressable>
+        />
 
         {!storeUrl && (
-          <Text style={[styles.fallback, { color: colors.mutedText }]}>
+          <Text variant="caption" color="mutedText" style={styles.fallback}>
             {t("upgrade_required_no_store_url")}
           </Text>
         )}
-      </View>
-    </View>
+      </Card>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    justifyContent: "center",
-  },
-  card: {
-    borderRadius: 16,
-    padding: 18,
-    borderWidth: 1,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: "900",
-    marginBottom: 8,
-  },
-  message: {
-    fontSize: 15,
-    lineHeight: 20,
-    marginBottom: 10,
-  },
-  details: {
-    fontSize: 13,
-    lineHeight: 18,
-    marginBottom: 14,
-  },
-  button: {
-    paddingVertical: 12,
-    borderRadius: 12,
-    alignItems: "center",
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: "800",
-  },
-  fallback: {
-    marginTop: 10,
-    fontSize: 13,
-    opacity: 0.9,
-  },
+  screen: { justifyContent: "center" },
+  card: { borderWidth: 1 },
+  title: { marginBottom: spacing.sm },
+  message: { marginBottom: spacing.md },
+  details: { marginBottom: spacing.lg },
+  fallback: { marginTop: spacing.md },
 });
-

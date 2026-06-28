@@ -1,27 +1,29 @@
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from "react-native";
+import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Bible } from "@mybiblelog/shared";
-import type { LogEntry } from "@/src/types/log-entry";
-import { ConfirmDialog } from "@/src/components/ConfirmDialog";
-import { LogEntryEditorModal } from "@/src/components/LogEntryEditorModal";
-import { LogEntryMenu } from "@/src/components/LogEntryMenu";
-import { LogEntryRow } from "@/src/components/LogEntryRow";
-import { Screen } from "@/src/components/Screen";
+import {
+  AnimatedList,
+  Button,
+  ConfirmDialog,
+  IconButton,
+  LogEntryEditorModal,
+  LogEntryMenu,
+  LogEntryRow,
+  Screen,
+  Text,
+} from "@/src/components";
+import { radius, spacing, useTheme } from "@/src/design";
 import { openPassageInBible } from "@/src/bible/openInBible";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { useLogEntries } from "@/src/log-entries/LogEntriesProvider";
 import { useUserSettings } from "@/src/settings/UserSettingsProvider";
-import { useTheme } from "@/src/theme/ThemeProvider";
 import { useToast } from "@/src/toast/ToastProvider";
+
+// Brand gold for a fully-read day star — a decorative accent outside the
+// theme palette.
+const GOLD_STAR = "#ffd700";
 
 function parseYmdToDate(ymd: string): Date | null {
   const parts = ymd.split("-").map((p) => Number(p));
@@ -216,7 +218,7 @@ export default function Calendar() {
 
   return (
     <Screen>
-      <FlatList
+      <AnimatedList
         data={entriesForSelectedDay}
         keyExtractor={(item) =>
           item.clientId ??
@@ -224,59 +226,54 @@ export default function Calendar() {
           `${item.date}-${item.startVerseId}-${item.endVerseId}`
         }
         contentContainerStyle={styles.pageContent}
-        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        ItemSeparatorComponent={() => <View style={styles.entrySeparator} />}
         renderItem={({ item, index }) => (
           <LogEntryRow entry={item} onPressMenu={() => setMenuIndex(index)} />
         )}
         ListHeaderComponent={
           <>
             <View style={styles.monthHeader}>
-              <Text style={[styles.monthTitle, { color: colors.text }]}>{monthLabel}</Text>
+              <Text variant="heading">{monthLabel}</Text>
               <View style={styles.monthNav}>
-                <Pressable
-                  style={styles.navButton}
-                  hitSlop={10}
+                <IconButton
+                  name="chevron-back"
+                  accessibilityLabel={t("calendar_today")}
                   onPress={() => {
                     const next = dayjs(selectedMonth).subtract(1, "month");
                     setSelectedMonth(next);
                     setSelectedDay(next.date(1).format("YYYY-MM-DD"));
                   }}
-                >
-                  <Ionicons name="chevron-back" size={18} color={colors.mutedText} />
-                </Pressable>
+                />
 
-                <Pressable
-                  style={styles.todayButton}
-                  hitSlop={10}
+                <Button
+                  label={t("calendar_today")}
+                  variant="ghost"
+                  size="sm"
                   onPress={() => {
                     const now = dayjs();
                     setSelectedMonth(now);
                     setSelectedDay(today);
                   }}
-                >
-                  <Text style={[styles.todayText, { color: colors.mutedText }]}>
-                    {t("calendar_today")}
-                  </Text>
-                </Pressable>
+                />
 
-                <Pressable
-                  style={styles.navButton}
-                  hitSlop={10}
+                <IconButton
+                  name="chevron-forward"
+                  accessibilityLabel={t("calendar_today")}
                   onPress={() => {
                     const next = dayjs(selectedMonth).add(1, "month");
                     setSelectedMonth(next);
                     setSelectedDay(next.date(1).format("YYYY-MM-DD"));
                   }}
-                >
-                  <Ionicons name="chevron-forward" size={18} color={colors.mutedText} />
-                </Pressable>
+                />
               </View>
             </View>
 
             <View style={styles.weekdaysRow}>
               {weekdayLabels.map((w) => (
                 <View key={w} style={[styles.weekdayCell, { width: dayCellMetrics.cellWidth }]}>
-                  <Text style={[styles.weekdayText, { color: colors.mutedText }]}>{w}</Text>
+                  <Text variant="caption" color="mutedText">
+                    {w}
+                  </Text>
                 </View>
               ))}
             </View>
@@ -321,11 +318,14 @@ export default function Calendar() {
                       ]}
                     >
                       <Text
-                        style={[
-                          styles.dayNumber,
-                          { color: d.isCurrentMonth ? colors.text : colors.mutedText },
-                          isSelected && { color: colors.onPrimary },
-                        ]}
+                        variant="label"
+                        color={
+                          isSelected
+                            ? "onPrimary"
+                            : d.isCurrentMonth
+                              ? "text"
+                              : "mutedText"
+                        }
                       >
                         {dayNum}
                       </Text>
@@ -335,7 +335,7 @@ export default function Calendar() {
                       <Ionicons
                         name="star"
                         size={16}
-                        color={showGoldStar ? "#ffd700" : colors.secondary}
+                        color={showGoldStar ? GOLD_STAR : colors.secondary}
                         style={styles.dayStar}
                       />
                     )}
@@ -365,25 +365,25 @@ export default function Calendar() {
             </View>
 
             <View style={[styles.entryHeader, { borderBottomColor: colors.primary }]}>
-              <View style={{ flex: 1 }}>
-                <Text style={[styles.entryDateText, { color: colors.text }]}>{selectedDayDisplay}</Text>
-                <Text style={[styles.entryVerseCount, { color: colors.mutedText }]}>
+              <View style={styles.entryHeaderText}>
+                <Text variant="bodyStrong">{selectedDayDisplay}</Text>
+                <Text variant="caption" color="mutedText" style={styles.entryVerseCount}>
                   {verseCountForSelectedDay} {t("calendar_verses")}
                 </Text>
               </View>
-              <Pressable
+              <IconButton
+                name="add"
+                accessibilityLabel={t("add_log_entry_title")}
+                color="onPrimary"
                 style={[styles.addButton, { backgroundColor: colors.primary }]}
-                hitSlop={6}
                 onPress={() => setIsAddOpen(true)}
-              >
-                <Text style={[styles.addButtonText, { color: colors.onPrimary }]}>+</Text>
-              </Pressable>
+              />
             </View>
           </>
         }
         ListEmptyComponent={
-          <View style={{ paddingVertical: 18 }}>
-            <Text style={[styles.noEntries, { color: colors.mutedText }]}>
+          <View style={styles.emptyWrap}>
+            <Text variant="body" color="mutedText" style={styles.noEntries}>
               {t("calendar_no_entries")}
             </Text>
           </View>
@@ -463,61 +463,40 @@ export default function Calendar() {
 
 const styles = StyleSheet.create({
   pageContent: {
-    paddingBottom: 24,
+    paddingBottom: spacing.listBottom,
   },
+  entrySeparator: { height: spacing.md },
   monthHeader: {
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 10,
+    paddingHorizontal: spacing.screenH,
+    paddingTop: spacing.screenH,
+    paddingBottom: spacing.md,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
-  monthTitle: {
-    fontSize: 18,
-    fontWeight: "900",
-  },
   monthNav: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
-  },
-  navButton: {
-    paddingHorizontal: 8,
-    paddingVertical: 6,
-    borderRadius: 10,
-  },
-  todayButton: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 10,
-  },
-  todayText: {
-    fontSize: 13,
-    fontWeight: "800",
+    gap: spacing.xs,
   },
   weekdaysRow: {
     flexDirection: "row",
-    paddingHorizontal: 16,
-    paddingBottom: 6,
+    paddingHorizontal: spacing.screenH,
+    paddingBottom: spacing.xs,
   },
   weekdayCell: {
     alignItems: "center",
     justifyContent: "center",
   },
-  weekdayText: {
-    fontSize: 12,
-    fontWeight: "800",
-  },
   daysGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    paddingBottom: 10,
+    paddingBottom: spacing.md,
   },
   dayCell: {
     position: "relative",
     borderWidth: StyleSheet.hairlineWidth,
-    padding: 5,
+    padding: spacing.xs,
   },
   dayNumberCircle: {
     width: 28,
@@ -525,10 +504,6 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
-  },
-  dayNumber: {
-    fontSize: 14,
-    fontWeight: "900",
   },
   dayStar: {
     position: "absolute",
@@ -550,43 +525,27 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
   },
-  dayProgressFillSecondary: {
-  },
+  dayProgressFillSecondary: {},
   entryHeader: {
     borderBottomWidth: 2,
-    marginHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 10,
+    marginHorizontal: spacing.screenH,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.md,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: 12,
+    gap: spacing.lg,
   },
-  entryDateText: {
-    fontSize: 16,
-    fontWeight: "900",
-  },
+  entryHeaderText: { flex: 1 },
   entryVerseCount: {
     marginTop: 2,
-    fontSize: 13,
-    fontWeight: "700",
   },
   addButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
+    borderRadius: radius.md,
   },
-  addButtonText: {
-    fontSize: 18,
-    fontWeight: "900",
-    lineHeight: 18,
-  },
+  emptyWrap: { paddingVertical: spacing.xl },
   noEntries: {
     textAlign: "center",
-    fontSize: 14,
-    fontWeight: "700",
   },
 });
 

@@ -1,41 +1,12 @@
-import { Ionicons } from "@expo/vector-icons";
 import * as Application from "expo-application";
 import Constants from "expo-constants";
-import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Fragment } from "react";
+import { Linking, ScrollView, StyleSheet, View } from "react-native";
+import { spacing, useTheme } from "@/src/design";
+import { Card, Icon, type IconName, ListItem, Text } from "@/src/components";
 import { useT } from "@/src/i18n/LocaleProvider";
-import { useTheme } from "@/src/theme/ThemeProvider";
 import { useToast } from "@/src/toast/ToastProvider";
 import { PRIVACY_POLICY_URL, TERMS_URL, WEBSITE_BASE_URL } from "@/src/constants/links";
-
-function LinkRow({
-  icon,
-  label,
-  url,
-  onError,
-}: {
-  icon: keyof typeof Ionicons.glyphMap;
-  label: string;
-  url: string;
-  onError: () => void;
-}) {
-  const { colors } = useTheme();
-  return (
-    <Pressable
-      style={styles.linkRow}
-      onPress={async () => {
-        try {
-          await Linking.openURL(url);
-        } catch {
-          onError();
-        }
-      }}
-    >
-      <Ionicons name={icon} size={18} color={colors.text} />
-      <Text style={[styles.linkText, { color: colors.text }]}>{label}</Text>
-      <Ionicons name="open-outline" size={16} color={colors.mutedText} />
-    </Pressable>
-  );
-}
 
 export default function AboutSettings() {
   const t = useT();
@@ -51,98 +22,73 @@ export default function AboutSettings() {
   const onLinkError = () =>
     showToast({ type: "error", message: t("about_open_link_failed") });
 
+  async function openUrl(url: string) {
+    try {
+      await Linking.openURL(url);
+    } catch {
+      onLinkError();
+    }
+  }
+
+  const links: { icon: IconName; label: string; url: string }[] = [
+    { icon: "shield-checkmark-outline", label: t("about_privacy_policy"), url: PRIVACY_POLICY_URL },
+    { icon: "document-text-outline", label: t("about_terms"), url: TERMS_URL },
+    { icon: "globe-outline", label: t("about_website"), url: WEBSITE_BASE_URL },
+  ];
+
   return (
     <ScrollView
-      style={{ flex: 1, backgroundColor: colors.background }}
+      style={[styles.flex, { backgroundColor: colors.background }]}
       contentContainerStyle={styles.content}
     >
-      <Text style={[styles.sectionLabel, { color: colors.mutedText }]}>
+      <Text variant="label" color="mutedText" style={styles.sectionLabel}>
         {t("about_app_label")}
       </Text>
-      <View style={[styles.card, { backgroundColor: colors.surfaceAlt }]}>
+      <Card>
         <View style={styles.infoRow}>
-          <Text style={[styles.infoLabel, { color: colors.mutedText }]}>
+          <Text variant="bodyStrong" color="mutedText">
             {t("about_version")}
           </Text>
-          <Text style={[styles.infoValue, { color: colors.text }]}>
+          <Text variant="bodyStrong">
             {buildNumber ? `${version} (${buildNumber})` : version}
           </Text>
         </View>
-      </View>
+      </Card>
 
-      <Text style={[styles.sectionLabel, { color: colors.mutedText }]}>
+      <Text variant="label" color="mutedText" style={styles.sectionLabel}>
         {t("about_legal_label")}
       </Text>
-      <View style={[styles.card, { backgroundColor: colors.surfaceAlt }]}>
-        <LinkRow
-          icon="shield-checkmark-outline"
-          label={t("about_privacy_policy")}
-          url={PRIVACY_POLICY_URL}
-          onError={onLinkError}
-        />
-        <View style={[styles.divider, { backgroundColor: colors.border }]} />
-        <LinkRow
-          icon="document-text-outline"
-          label={t("about_terms")}
-          url={TERMS_URL}
-          onError={onLinkError}
-        />
-        <View style={[styles.divider, { backgroundColor: colors.border }]} />
-        <LinkRow
-          icon="globe-outline"
-          label={t("about_website")}
-          url={WEBSITE_BASE_URL}
-          onError={onLinkError}
-        />
-      </View>
+      <Card padded={false} style={styles.card}>
+        {links.map((link, i) => (
+          <Fragment key={link.url}>
+            {i > 0 ? (
+              <View style={[styles.divider, { backgroundColor: colors.border }]} />
+            ) : null}
+            <ListItem
+              title={link.label}
+              leadingIcon={link.icon}
+              trailing={<Icon name="open-outline" size={16} color="mutedText" />}
+              bordered={false}
+              style={styles.row}
+              onPress={() => void openUrl(link.url)}
+            />
+          </Fragment>
+        ))}
+      </Card>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  content: {
-    padding: 16,
-    paddingBottom: 24,
-  },
-  sectionLabel: {
-    fontSize: 13,
-    fontWeight: "800",
-    marginBottom: 8,
-    marginTop: 14,
-  },
-  card: {
-    borderRadius: 16,
-    overflow: "hidden",
-  },
+  flex: { flex: 1 },
+  content: { padding: spacing.screenH, paddingBottom: spacing.listBottom },
+  sectionLabel: { marginTop: spacing.lg, marginBottom: spacing.sm },
+  card: { overflow: "hidden" },
+  row: { backgroundColor: "transparent" },
   infoRow: {
-    paddingHorizontal: 14,
-    paddingVertical: 14,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
-  infoLabel: {
-    fontSize: 14,
-    fontWeight: "700",
-  },
-  infoValue: {
-    fontSize: 14,
-    fontWeight: "800",
-  },
-  linkRow: {
-    paddingHorizontal: 14,
-    paddingVertical: 14,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-  linkText: {
-    flex: 1,
-    fontSize: 15,
-    fontWeight: "700",
-  },
-  divider: {
-    height: StyleSheet.hairlineWidth,
-    marginLeft: 44,
-  },
+  divider: { height: StyleSheet.hairlineWidth, marginLeft: spacing.xxxl + spacing.xl },
 });

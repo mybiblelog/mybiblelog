@@ -3,18 +3,15 @@ import { useAuth } from "@/src/auth/AuthProvider";
 import { signInWithGoogle } from "@/src/auth/googleSignIn";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { translateApiError } from "@/src/i18n/translateApiError";
-import { useTheme } from "@/src/theme/ThemeProvider";
+import { spacing, useTheme } from "@/src/design";
+import { Button, InputField, Text } from "@/src/components";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
-  Text,
-  TextInput,
   View,
 } from "react-native";
 
@@ -114,181 +111,100 @@ export default function Login() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, backgroundColor: colors.background }}
+      style={[styles.flex, { backgroundColor: colors.background }]}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <ScrollView
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
       >
-        <Text style={[styles.title, { color: colors.text }]}>{t("login_title")}</Text>
-        {lastEmail ? (
-          <Text style={[styles.subtitle, { color: colors.mutedText }]}>
-            {t("login_sign_in_again_as", { email: lastEmail })}
-          </Text>
-        ) : (
-          <Text style={[styles.subtitle, { color: colors.mutedText }]}>
-            {t("auth_login_hint")}
-          </Text>
-        )}
+        <Text variant="title" style={styles.title}>
+          {t("login_title")}
+        </Text>
+        <Text variant="body" color="mutedText" style={styles.subtitle}>
+          {lastEmail
+            ? t("login_sign_in_again_as", { email: lastEmail })
+            : t("auth_login_hint")}
+        </Text>
 
         {!!error && (
-          <Text style={[styles.error, { color: colors.destructive }]}>{error}</Text>
+          <Text variant="bodyStrong" color="destructive" style={styles.error}>
+            {error}
+          </Text>
         )}
 
-        <Text style={[styles.label, { color: colors.text }]}>{t("auth_email")}</Text>
-        <TextInput
-          value={email}
-          onChangeText={setEmail}
-          autoCapitalize="none"
-          autoComplete="email"
-          autoCorrect={false}
-          keyboardType="email-address"
-          textContentType="emailAddress"
-          editable={!isSubmitting}
-          placeholderTextColor={colors.placeholder}
-          style={[
-            styles.input,
-            { borderColor: emailError ? colors.destructive : colors.border, color: colors.text },
-          ]}
-        />
-        {!!emailError && (
-          <Text style={[styles.fieldError, { color: colors.destructive }]}>{emailError}</Text>
-        )}
+        <View style={styles.form}>
+          <InputField
+            label={t("auth_email")}
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            autoComplete="email"
+            autoCorrect={false}
+            keyboardType="email-address"
+            textContentType="emailAddress"
+            editable={!isSubmitting}
+            error={emailError ?? undefined}
+          />
+          <InputField
+            label={t("auth_password")}
+            value={password}
+            onChangeText={setPassword}
+            autoCapitalize="none"
+            autoComplete="password"
+            autoCorrect={false}
+            secureTextEntry
+            textContentType="password"
+            editable={!isSubmitting}
+            onSubmitEditing={onEmailLogin}
+            returnKeyType="go"
+            error={passwordError ?? undefined}
+          />
+        </View>
 
-        <Text style={[styles.label, { color: colors.text }]}>{t("auth_password")}</Text>
-        <TextInput
-          value={password}
-          onChangeText={setPassword}
-          autoCapitalize="none"
-          autoComplete="password"
-          autoCorrect={false}
-          secureTextEntry
-          textContentType="password"
-          editable={!isSubmitting}
-          onSubmitEditing={onEmailLogin}
-          returnKeyType="go"
-          placeholderTextColor={colors.placeholder}
-          style={[
-            styles.input,
-            { borderColor: passwordError ? colors.destructive : colors.border, color: colors.text },
-          ]}
-        />
-        {!!passwordError && (
-          <Text style={[styles.fieldError, { color: colors.destructive }]}>{passwordError}</Text>
-        )}
-
-        <Pressable
-          style={[
-            styles.button,
-            { backgroundColor: colors.primary },
-            isSubmitting && { opacity: 0.65 },
-          ]}
-          disabled={isSubmitting}
+        <Button
+          label={t("login_with_email")}
           onPress={onEmailLogin}
-        >
-          {isSubmitting ? (
-            <ActivityIndicator color={colors.onPrimary} />
-          ) : (
-            <Text style={[styles.buttonText, { color: colors.onPrimary }]}>
-              {t("login_with_email")}
-            </Text>
-          )}
-        </Pressable>
+          loading={isSubmitting}
+          fullWidth
+        />
 
         <View style={styles.divider}>
           <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
-          <Text style={[styles.dividerText, { color: colors.mutedText }]}>
+          <Text variant="caption" color="mutedText" style={styles.dividerText}>
             {t("login_divider_or")}
           </Text>
           <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
         </View>
 
-        <Pressable
-          style={[
-            styles.button,
-            styles.googleButton,
-            { borderColor: colors.border },
-            isSubmitting && { opacity: 0.65 },
-          ]}
-          disabled={isSubmitting}
+        <Button
+          label={t("login_with_google")}
+          variant="secondary"
           onPress={onGoogleLogin}
-        >
-          <Text style={[styles.buttonText, { color: colors.text }]}>
-            {t("login_with_google")}
-          </Text>
-        </Pressable>
+          disabled={isSubmitting}
+          fullWidth
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  flex: { flex: 1 },
   container: {
     flexGrow: 1,
-    paddingHorizontal: 16,
+    paddingHorizontal: spacing.screenH,
     justifyContent: "center",
   },
-  title: {
-    fontSize: 28,
-    fontWeight: "800",
-    marginBottom: 14,
-  },
-  subtitle: {
-    fontSize: 15,
-    marginBottom: 14,
-  },
-  error: {
-    marginTop: 2,
-    marginBottom: 10,
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: "600",
-    marginTop: 10,
-    marginBottom: 6,
-  },
-  input: {
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
-    fontSize: 16,
-    marginBottom: 4,
-  },
-  fieldError: {
-    marginBottom: 8,
-    fontSize: 13,
-    fontWeight: "600",
-  },
-  button: {
-    paddingVertical: 12,
-    borderRadius: 12,
-    alignItems: "center",
-    marginTop: 12,
-  },
-  googleButton: {
-    borderWidth: 1,
-    backgroundColor: "transparent",
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: "800",
-  },
+  title: { marginBottom: spacing.sm },
+  subtitle: { marginBottom: spacing.lg },
+  error: { marginBottom: spacing.md },
+  form: { gap: spacing.lg, marginBottom: spacing.lg },
   divider: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 16,
+    marginVertical: spacing.xl,
   },
-  dividerLine: {
-    flex: 1,
-    height: StyleSheet.hairlineWidth,
-  },
-  dividerText: {
-    marginHorizontal: 12,
-    fontSize: 13,
-    fontWeight: "600",
-  },
+  dividerLine: { flex: 1, height: StyleSheet.hairlineWidth },
+  dividerText: { marginHorizontal: spacing.lg },
 });

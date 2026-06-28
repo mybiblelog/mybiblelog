@@ -1,21 +1,21 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import dayjs from "dayjs";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Pressable, StyleSheet, View } from "react-native";
+import Animated from "react-native-reanimated";
 import { Bible } from "@mybiblelog/shared";
-import { Screen } from "@/src/components/Screen";
-import { typography } from "@/src/theme/tokens";
+import {
+  AnimatedList,
+  Card,
+  Icon,
+  ProgressBar,
+  Screen,
+  Spinner,
+  Text,
+} from "@/src/components";
+import { fadeIn, radius, spacing, useTheme } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { useLogEntries } from "@/src/log-entries/LogEntriesProvider";
-import { useTheme } from "@/src/theme/ThemeProvider";
 import { useToast } from "@/src/toast/ToastProvider";
 
 const CHECKLIST_CACHE_KEY = "chapterChecklist.v1";
@@ -251,75 +251,65 @@ export default function Checklist() {
     }
   }
 
-  const completeColor = colors.success;
-
   return (
     <Screen padded>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.text }]}>{t("chapter_checklist")}</Text>
-        {busy && <ActivityIndicator color={colors.primary} />}
+        <Text variant="title">{t("chapter_checklist")}</Text>
+        {busy && <Spinner />}
       </View>
 
       {bookReports.length === 0 ? (
-        <View style={[styles.loadingCard, { backgroundColor: colors.surface }]}>
-          <Text style={[styles.loadingText, { color: colors.mutedText }]}>
+        <Card>
+          <Text variant="bodyStrong" color="mutedText">
             {t("loading")}
           </Text>
-        </View>
+        </Card>
       ) : (
-        <FlatList
+        <AnimatedList
           data={bookReports}
           keyExtractor={(b) => String(b.bookIndex)}
           contentContainerStyle={styles.listContent}
           renderItem={({ item }) => {
             const isExpanded = expandedBooks[String(item.bookIndex)] === true;
             return (
-              <View
-                style={[
-                  styles.bookCard,
-                  { backgroundColor: colors.surface, borderColor: colors.border },
-                ]}
-              >
+              <Card padded style={styles.bookCard}>
                 <Pressable
                   onPress={() => toggleBook(item.bookIndex)}
-                  style={styles.bookHeader}
+                  style={({ pressed }) => [styles.bookHeader, pressed && styles.pressed]}
                 >
                   <View style={styles.bookHeaderLeft}>
-                    <Ionicons
+                    <Icon
                       name={item.complete ? "checkmark-circle" : "ellipse-outline"}
                       size={18}
-                      color={item.complete ? completeColor : colors.border}
-                      style={{ marginRight: 10 }}
+                      color={item.complete ? "success" : "border"}
                     />
-                    <Text style={[styles.bookName, { color: colors.text }]}>
+                    <Text variant="bodyStrong" style={styles.bookName}>
                       {item.bookName}
                     </Text>
                   </View>
 
                   <View style={styles.bookHeaderRight}>
-                    <Text style={[styles.bookFraction, { color: colors.mutedText }]}>
+                    <Text variant="caption" color="mutedText">
                       {item.chaptersRead} / {item.totalChapters}
                     </Text>
-                    <Ionicons
-                      name="chevron-down"
-                      size={18}
-                      color={colors.mutedText}
-                      style={isExpanded && { transform: [{ rotate: "180deg" }] }}
-                    />
+                    <View
+                      style={isExpanded ? styles.chevronUp : undefined}
+                    >
+                      <Icon name="chevron-down" size={18} color="mutedText" />
+                    </View>
                   </View>
                 </Pressable>
 
-                <View style={[styles.progressTrack, { backgroundColor: colors.surfaceAlt }]}>
-                  <View
-                    style={[
-                      styles.progressFill,
-                      { width: `${item.percentage}%`, backgroundColor: completeColor },
-                    ]}
-                  />
-                </View>
+                <ProgressBar
+                  progress={item.percentage / 100}
+                  height={8}
+                  color="success"
+                  trackColor="surfaceAlt"
+                  style={styles.progress}
+                />
 
                 {isExpanded && (
-                  <View style={styles.chaptersWrap}>
+                  <Animated.View entering={fadeIn()} style={styles.chaptersWrap}>
                     {item.chapterReports.map((c) => {
                       const chapterKey = `${c.bookIndex}.${c.chapterIndex}`;
                       const isBusy = busyChapter === chapterKey;
@@ -328,37 +318,38 @@ export default function Checklist() {
                         <Pressable
                           key={chapterKey}
                           onPress={() => void toggleChapter(c.bookIndex, c.chapterIndex)}
-                          style={[
+                          style={({ pressed }) => [
                             styles.chapterCard,
                             { backgroundColor: colors.surface, borderColor: colors.border },
+                            pressed && styles.pressed,
                           ]}
                         >
-                          <Text style={[styles.chapterNumber, { color: colors.text }]}>
+                          <Text variant="bodyStrong" style={styles.chapterNumber}>
                             {c.chapterIndex}
                           </Text>
                           <View style={styles.chapterIndicator}>
                             {isBusy ? (
-                              <ActivityIndicator
+                              <Spinner
                                 size="small"
-                                color={isCompleteChapter ? colors.mutedText : completeColor}
+                                color={isCompleteChapter ? "mutedText" : "success"}
                               />
                             ) : (
-                              <Ionicons
+                              <Icon
                                 name={isCompleteChapter ? "checkmark-circle" : "ellipse-outline"}
                                 size={18}
-                                color={isCompleteChapter ? completeColor : colors.border}
+                                color={isCompleteChapter ? "success" : "border"}
                               />
                             )}
                           </View>
                         </Pressable>
                       );
                     })}
-                  </View>
+                  </Animated.View>
                 )}
-              </View>
+              </Card>
             );
           }}
-          ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
       )}
     </Screen>
@@ -370,84 +361,57 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 12,
-  },
-  title: {
-    ...typography.screenTitle,
+    marginBottom: spacing.lg,
   },
   listContent: {
-    paddingBottom: 24,
+    paddingBottom: spacing.listBottom,
   },
-  loadingCard: {
-    paddingVertical: 18,
-    paddingHorizontal: 16,
-    borderRadius: 14,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "rgba(0,0,0,0.10)",
-  },
-  loadingText: {
-    fontSize: 14,
-    fontWeight: "800",
-  },
+  separator: { height: spacing.lg },
+  pressed: { opacity: 0.7 },
   bookCard: {
-    borderRadius: 14,
-    padding: 12,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: radius.lg,
   },
   bookHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingBottom: 10,
+    paddingBottom: spacing.md,
   },
   bookHeaderLeft: {
     flexDirection: "row",
     alignItems: "center",
     flexShrink: 1,
-    paddingRight: 10,
+    paddingRight: spacing.md,
+    gap: spacing.md,
   },
   bookHeaderRight: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: spacing.sm,
   },
   bookName: {
-    fontSize: 15,
-    fontWeight: "900",
     flexShrink: 1,
   },
-  bookFraction: {
-    fontSize: 13,
-    fontWeight: "800",
+  chevronUp: {
+    transform: [{ rotate: "180deg" }],
   },
-  progressTrack: {
-    height: 8,
-    borderRadius: 6,
-    overflow: "hidden",
-    marginTop: 10,
-  },
-  progressFill: {
-    height: "100%",
-    borderRadius: 6,
-  },
+  progress: { marginTop: spacing.sm },
   chaptersWrap: {
-    marginTop: 12,
+    marginTop: spacing.lg,
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 10,
+    gap: spacing.md,
   },
   chapterCard: {
     width: 54,
-    paddingVertical: 10,
-    borderRadius: 12,
+    paddingVertical: spacing.md,
+    borderRadius: radius.md,
     borderWidth: StyleSheet.hairlineWidth,
     alignItems: "center",
     justifyContent: "center",
   },
   chapterNumber: {
-    fontSize: 14,
-    fontWeight: "900",
-    marginBottom: 6,
+    marginBottom: spacing.xs,
   },
   chapterIndicator: {
     height: 18,

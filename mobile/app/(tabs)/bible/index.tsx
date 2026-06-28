@@ -1,13 +1,25 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useMemo } from "react";
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { Bible } from "@mybiblelog/shared";
 import { useLocale } from "@/src/i18n/LocaleProvider";
 import { useLogEntries } from "@/src/log-entries/LogEntriesProvider";
-import { SegmentBar, type SegmentBarSegment } from "@/src/components/SegmentBar";
+import {
+  AnimatedList,
+  Card,
+  Screen,
+  SegmentBar,
+  type SegmentBarSegment,
+  Spinner,
+  Text,
+} from "@/src/components";
+import { radius, spacing, useTheme } from "@/src/design";
 import { useUserSettings } from "@/src/settings/UserSettingsProvider";
-import { useTheme } from "@/src/theme/ThemeProvider";
+
+// Brand gold for a fully-read book star — intentionally outside the theme
+// palette (a single decorative accent).
+const GOLD_STAR = "#ffd700";
 
 type BookRow = {
   bookIndex: number;
@@ -74,42 +86,46 @@ export default function BibleIndex() {
 
   if (logState.status !== "ready" || settingsState.status !== "ready") {
     return (
-      <View style={[styles.loading, { backgroundColor: colors.background }]}>
-        <ActivityIndicator color={colors.primary} />
-      </View>
+      <Screen edges={[]}>
+        <Spinner center />
+      </Screen>
     );
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={[styles.plaque, { backgroundColor: colors.surfaceAlt }]}>
-        <Text style={[styles.plaquePercent, { color: colors.text }]}>
+    <Screen edges={[]}>
+      <Card style={styles.plaque}>
+        <Text variant="label" style={styles.plaquePercent}>
           {biblePlaque.percentage}%
         </Text>
         <SegmentBar segments={biblePlaque.segments} thick />
-      </View>
+      </Card>
 
-      <FlatList
+      <AnimatedList
         data={books}
         keyExtractor={(item) => String(item.bookIndex)}
         contentContainerStyle={styles.listContent}
-        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
         renderItem={({ item }) => (
           <Pressable
-            style={[styles.card, { backgroundColor: colors.surfaceAlt }]}
+            style={({ pressed }) => [
+              styles.card,
+              { backgroundColor: colors.surfaceAlt },
+              pressed && styles.pressed,
+            ]}
             onPress={() => router.push(`/bible/${item.bookIndex}`)}
           >
             <View style={styles.cardTopRow}>
               <Ionicons
                 name="star"
                 size={18}
-                color={item.complete ? "#ffd700" : colors.border}
+                color={item.complete ? GOLD_STAR : colors.border}
                 style={styles.star}
               />
-              <Text style={[styles.bookName, { color: colors.text }]} numberOfLines={1}>
+              <Text variant="bodyStrong" style={styles.bookName} numberOfLines={1}>
                 {item.bookName}
               </Text>
-              <Text style={[styles.percent, { color: colors.mutedText }]}>
+              <Text variant="caption" color="mutedText" style={styles.percent}>
                 {item.percentage}%
               </Text>
             </View>
@@ -117,57 +133,42 @@ export default function BibleIndex() {
           </Pressable>
         )}
       />
-    </View>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  loading: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   plaque: {
-    margin: 16,
-    padding: 14,
-    borderRadius: 16,
+    margin: spacing.screenH,
   },
   plaquePercent: {
     textAlign: "right",
-    fontSize: 14,
-    fontWeight: "900",
-    marginBottom: 10,
+    marginBottom: spacing.md,
   },
   listContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 24,
+    paddingHorizontal: spacing.screenH,
+    paddingBottom: spacing.listBottom,
   },
+  separator: { height: spacing.md },
+  pressed: { opacity: 0.7 },
   card: {
-    borderRadius: 12,
-    padding: 12,
+    borderRadius: radius.md,
+    padding: spacing.lg,
   },
   cardTopRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 10,
-    marginBottom: 8,
+    gap: spacing.md,
+    marginBottom: spacing.sm,
   },
   star: {
     width: 20,
   },
   bookName: {
     flex: 1,
-    fontSize: 14,
-    fontWeight: "800",
   },
   percent: {
     width: 48,
     textAlign: "right",
-    fontSize: 13,
-    fontWeight: "800",
   },
 });
-

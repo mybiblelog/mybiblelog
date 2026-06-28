@@ -1,19 +1,11 @@
-import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { deleteAccount } from "@/src/api/settingsApi";
 import { useAuth } from "@/src/auth/AuthProvider";
-import { ConfirmDialog } from "@/src/components/ConfirmDialog";
+import { Button, Card, ConfirmDialog, Icon, Text } from "@/src/components";
+import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
-import { useTheme } from "@/src/theme/ThemeProvider";
 import { useToast } from "@/src/toast/ToastProvider";
 
 type Acknowledgements = {
@@ -31,22 +23,27 @@ function Checkbox({
   label: string;
   onToggle: () => void;
 }) {
-  const { colors } = useTheme();
   return (
-    <Pressable style={styles.checkRow} onPress={onToggle}>
-      <Ionicons
+    <Pressable
+      style={styles.checkRow}
+      onPress={onToggle}
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked }}
+    >
+      <Icon
         name={checked ? "checkbox" : "square-outline"}
         size={22}
-        color={checked ? colors.primary : colors.mutedText}
+        color={checked ? "primary" : "mutedText"}
       />
-      <Text style={[styles.checkLabel, { color: colors.text }]}>{label}</Text>
+      <Text variant="body" style={styles.checkLabel}>
+        {label}
+      </Text>
     </Pressable>
   );
 }
 
 export default function DeleteAccountScreen() {
   const t = useT();
-  const { colors } = useTheme();
   const { showToast } = useToast();
   const { state: authState, logout } = useAuth();
 
@@ -85,24 +82,25 @@ export default function DeleteAccountScreen() {
   ];
 
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={styles.content}
-    >
-      <Text style={[styles.description, { color: colors.text }]}>
+    <ScrollView contentContainerStyle={styles.content}>
+      <Text variant="bodyStrong" style={styles.description}>
         {t("delete_account_description")}
       </Text>
 
       <View style={styles.bullets}>
         {bullets.map((line, i) => (
           <View key={i} style={styles.bulletRow}>
-            <Text style={[styles.bulletDot, { color: colors.mutedText }]}>•</Text>
-            <Text style={[styles.bulletText, { color: colors.mutedText }]}>{line}</Text>
+            <Text variant="body" color="mutedText">
+              •
+            </Text>
+            <Text variant="body" color="mutedText" style={styles.bulletText}>
+              {line}
+            </Text>
           </View>
         ))}
       </View>
 
-      <View style={[styles.card, { backgroundColor: colors.surfaceAlt }]}>
+      <Card style={styles.card}>
         <Checkbox
           checked={ack.logEntries}
           label={t("delete_account_understand_log_entries")}
@@ -118,25 +116,16 @@ export default function DeleteAccountScreen() {
           label={t("delete_account_understand_permanent")}
           onToggle={() => setAck((a) => ({ ...a, permanent: !a.permanent }))}
         />
-      </View>
+      </Card>
 
-      <Pressable
-        style={[
-          styles.deleteButton,
-          { backgroundColor: colors.destructive },
-          (!fullyUnderstands || isDeleting) && { opacity: 0.5 },
-        ]}
+      <Button
+        label={t("delete_account_confirm_button")}
+        variant="destructive"
+        fullWidth
+        loading={isDeleting}
         disabled={!fullyUnderstands || isDeleting}
         onPress={() => setConfirmVisible(true)}
-      >
-        {isDeleting ? (
-          <ActivityIndicator color={colors.onDestructive} />
-        ) : (
-          <Text style={[styles.deleteButtonText, { color: colors.onDestructive }]}>
-            {t("delete_account_confirm_button")}
-          </Text>
-        )}
-      </Pressable>
+      />
 
       <ConfirmDialog
         visible={confirmVisible}
@@ -153,56 +142,19 @@ export default function DeleteAccountScreen() {
 
 const styles = StyleSheet.create({
   content: {
-    padding: 16,
-    paddingBottom: 24,
+    padding: spacing.screenH,
+    paddingBottom: spacing.listBottom,
   },
-  description: {
-    fontSize: 15,
-    fontWeight: "600",
-    marginBottom: 12,
-  },
-  bullets: {
-    marginBottom: 18,
-    gap: 6,
-  },
-  bulletRow: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  bulletDot: {
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  bulletText: {
-    flex: 1,
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  card: {
-    borderRadius: 16,
-    padding: 6,
-    marginBottom: 18,
-  },
+  description: { marginBottom: spacing.lg },
+  bullets: { marginBottom: spacing.xl, gap: spacing.sm },
+  bulletRow: { flexDirection: "row", gap: spacing.sm },
+  bulletText: { flex: 1 },
+  card: { gap: spacing.xs, marginBottom: spacing.xl },
   checkRow: {
     flexDirection: "row",
     alignItems: "flex-start",
-    gap: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 12,
+    gap: spacing.md,
+    paddingVertical: spacing.sm,
   },
-  checkLabel: {
-    flex: 1,
-    fontSize: 14,
-    fontWeight: "600",
-    lineHeight: 20,
-  },
-  deleteButton: {
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: "center",
-  },
-  deleteButtonText: {
-    fontSize: 16,
-    fontWeight: "800",
-  },
+  checkLabel: { flex: 1 },
 });

@@ -1,4 +1,18 @@
-import { brand } from "./brand";
+/**
+ * Color tokens.
+ *
+ * `brand` holds the raw, scheme-independent brand hues. `colorsByScheme`
+ * maps semantic roles (background, surface, text, primary, …) to concrete
+ * values per light/dark scheme. Always reference semantic roles via
+ * `useTheme().colors` — never import raw `brand` values into a screen.
+ */
+
+export const brand = {
+  primary: "#00aaf9",
+  secondary: "#0965f7",
+  tertiary: "#00d1b2",
+  success: "#00cc00",
+} as const;
 
 export type ColorSchemeName = "light" | "dark";
 
@@ -18,6 +32,8 @@ export type ThemeColors = {
   onDestructive: string;
   backdrop: string;
   placeholder: string;
+  /** Subtle highlight tint used by skeletons / shimmer. */
+  skeleton: string;
 };
 
 export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
@@ -37,6 +53,7 @@ export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
     onDestructive: "#ffffff",
     backdrop: "rgba(0,0,0,0.35)",
     placeholder: "rgba(0,0,0,0.45)",
+    skeleton: "rgba(0,0,0,0.08)",
   },
   dark: {
     background: "#0b0b0f",
@@ -54,6 +71,6 @@ export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
     onDestructive: "#0b0b0f",
     backdrop: "rgba(0,0,0,0.55)",
     placeholder: "rgba(245,245,247,0.45)",
+    skeleton: "rgba(245,245,247,0.10)",
   },
 };
-

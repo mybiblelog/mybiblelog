@@ -8,7 +8,7 @@ import {
   useState,
 } from "react";
 import { useColorScheme } from "react-native";
-import { type ColorSchemeName, colorsByScheme } from "./colors";
+import { type ColorSchemeName, colorsByScheme } from "./tokens/colors";
 
 export type ThemeMode = "system" | "light" | "dark";
 
@@ -79,4 +79,3 @@ export function useTheme() {
   if (!ctx) throw new Error("useTheme must be used within ThemeProvider");
   return ctx;
 }
-

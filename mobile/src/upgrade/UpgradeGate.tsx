@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchAppSupportStatus, type AppSupportStatus } from "@/src/api/appSupportApi";
 import UpgradeRequiredScreen from "@/src/upgrade/UpgradeRequiredScreen";
-import { useTheme } from "@/src/theme/ThemeProvider";
+import { useTheme } from "@/src/design";
 import { type ReactNode, useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 

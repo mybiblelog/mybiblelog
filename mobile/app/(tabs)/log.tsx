@@ -1,25 +1,23 @@
 import type { LogEntry } from "@/src/types/log-entry";
-import { ConfirmDialog } from "@/src/components/ConfirmDialog";
-import { EmptyState } from "@/src/components/EmptyState";
-import { LogEntryEditorModal } from "@/src/components/LogEntryEditorModal";
-import { LogEntryMenu } from "@/src/components/LogEntryMenu";
-import { LogEntryRow } from "@/src/components/LogEntryRow";
-import { Screen } from "@/src/components/Screen";
-import { radius, spacing, TOUCH_TARGET, typography } from "@/src/theme/tokens";
+import {
+  AnimatedList,
+  Button,
+  ConfirmDialog,
+  EmptyState,
+  LogEntryEditorModal,
+  LogEntryMenu,
+  LogEntryRow,
+  Screen,
+  Spinner,
+  Text,
+} from "@/src/components";
+import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
-import { useTheme } from "@/src/theme/ThemeProvider";
 import { useToast } from "@/src/toast/ToastProvider";
 import { openPassageInBible } from "@/src/bible/openInBible";
 import { useUserSettings } from "@/src/settings/UserSettingsProvider";
 import { useEffect, useMemo, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useLogEntries } from "@/src/log-entries/LogEntriesProvider";
 
 // const LOG_ENTRIES: LogEntry[] = [
@@ -30,7 +28,6 @@ import { useLogEntries } from "@/src/log-entries/LogEntriesProvider";
 
 export default function Log() {
   const t = useT();
-  const { colors } = useTheme();
   const { showToast } = useToast();
   const { state: settingsState } = useUserSettings();
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -57,12 +54,14 @@ export default function Log() {
 
   if (logState.status !== "ready") {
     return (
-      <View style={[styles.loadingContainer, { backgroundColor: colors.background }]}>
-        <ActivityIndicator color={colors.primary} />
-        <Text style={[styles.loadingText, { color: colors.mutedText }]}>
-          {t("loading_log_entries")}
-        </Text>
-      </View>
+      <Screen>
+        <View style={styles.loadingContainer}>
+          <Spinner />
+          <Text variant="body" color="mutedText">
+            {t("loading_log_entries")}
+          </Text>
+        </View>
+      </Screen>
     );
   }
 
@@ -91,19 +90,11 @@ export default function Log() {
   return (
     <Screen padded>
       <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.text }]}>{t("log_title")}</Text>
-        <Pressable
-          style={[styles.addButton, { backgroundColor: colors.primary }]}
-          onPress={openAdd}
-          hitSlop={8}
-        >
-          <Text style={[styles.addButtonText, { color: colors.onPrimary }]}>
-            {t("add")}
-          </Text>
-        </Pressable>
+        <Text variant="title">{t("log_title")}</Text>
+        <Button label={t("add")} leftIcon="add" onPress={openAdd} />
       </View>
 
-      <FlatList
+      <AnimatedList
         data={entries}
         contentContainerStyle={[
           styles.listContent,
@@ -116,6 +107,7 @@ export default function Log() {
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListEmptyComponent={
           <EmptyState
+            icon="list-outline"
             title={t("empty_title")}
             text={t("empty_text")}
             ctaLabel={t("empty_cta")}
@@ -203,40 +195,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 12,
-  },
-  title: {
-    ...typography.screenTitle,
-  },
-  addButton: {
-    paddingHorizontal: spacing.xl,
-    paddingVertical: spacing.md,
-    borderRadius: radius.md,
-    minHeight: TOUCH_TARGET,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  addButtonText: {
-    ...typography.buttonLabel,
+    marginBottom: spacing.lg,
   },
   listContent: {
-    paddingBottom: 24,
+    paddingBottom: spacing.listBottom,
   },
   listContentEmpty: {
     flexGrow: 1,
   },
   separator: {
-    height: 10,
+    height: spacing.md,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    gap: 10,
-    paddingHorizontal: 16,
-  },
-  loadingText: {
-    fontSize: 14,
+    gap: spacing.md,
+    paddingHorizontal: spacing.screenH,
   },
 });
 

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
-import { useTheme } from "@/src/theme/ThemeProvider";
+import { radius, useTheme } from "@/src/design";
 
 export type SegmentBarSegment = {
   id: string;
@@ -8,6 +8,7 @@ export type SegmentBarSegment = {
   verseCount: number;
 };
 
+/** Proportional read/unread progress bar split into weighted segments. */
 export function SegmentBar({
   segments,
   thick,
@@ -46,7 +47,7 @@ export function SegmentBar({
 
 const styles = StyleSheet.create({
   bar: {
-    borderRadius: 999,
+    borderRadius: radius.pill,
     overflow: "hidden",
     flexDirection: "row",
   },
@@ -54,4 +55,3 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 });
-

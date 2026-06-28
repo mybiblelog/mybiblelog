@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { createContext, useContext, useMemo, useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
-import { useTheme } from "@/src/theme/ThemeProvider";
+import { useTheme } from "@/src/design";
 
 export type ToastType = "success" | "error" | "info";
 
