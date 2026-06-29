@@ -54,7 +54,7 @@
 import { useThemeStore } from '~/stores/theme';
 import type { ThemeMode } from '~/stores/theme';
 
-const props = withDefaults(defineProps<{ variant?: 'toolbar' | 'drawer' }>(), {
+withDefaults(defineProps<{ variant?: 'toolbar' | 'drawer' }>(), {
   variant: 'toolbar',
 });
 

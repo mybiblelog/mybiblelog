@@ -95,5 +95,18 @@ module.exports = {
       },
     ],
     '@typescript-eslint/no-unused-vars': 'warn',
+    // The base rule misreports inline generic type params
+    // (`<T>(p: string) => Promise<T>`) as use-before-define, treating the type
+    // parameter `T` as a variable. TypeScript already catches genuine
+    // use-before-define for values, so disable this lint rule.
+    'no-use-before-define': 'off',
+    // These components target Vue 3, which supports fragments (multiple root
+    // nodes) and `:key` on `<template v-for>`. The base config ships the Vue 2
+    // variants of these rules, which are invalid for Vue 3.
+    'vue/no-multiple-template-root': 'off',
+    'vue/no-v-for-template-key': 'off',
+    // Permit `void expr;` as a statement to mark intentionally-unawaited
+    // promises (used in store tests to fire-and-forget a save).
+    'no-void': ['error', { allowAsStatement: true }],
   },
 };

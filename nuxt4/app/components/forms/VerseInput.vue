@@ -376,8 +376,8 @@ function onPassageSelectorChange({ startVerseId, endVerseId }: { startVerseId: n
   },
   "fr": {
     "example_prefix": "p. ex.",
-    "invalid_single": "Saisissez un seul verset, par exemple « {example} ».",
-    "invalid_multi": "Référence invalide. Essayez « {example1} » ou « {example2} ».",
+    "invalid_single": "Saisissez un seul verset, par exemple «\u00a0{example}\u00a0».",
+    "invalid_multi": "Référence invalide. Essayez «\u00a0{example1}\u00a0» ou «\u00a0{example2}\u00a0».",
     "select_book": "Sélectionner le livre",
     "select_chapter": "Sélectionner le chapitre",
     "select_verse": "Sélectionner le verset",

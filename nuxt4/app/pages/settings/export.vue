@@ -92,7 +92,7 @@ function csvRow(values: string[]): string {
   return values.map(v => (/[,"\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v)).join(',');
 }
 
-async function downloadLogEntriesCSV() {
+function downloadLogEntriesCSV() {
   if (!logCsvCache) {
     const rows = logEntriesStore.logEntries.map((entry: Record<string, unknown>) => [
       String(entry.date),

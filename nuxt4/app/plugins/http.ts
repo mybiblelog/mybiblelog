@@ -46,7 +46,7 @@ export default defineNuxtPlugin({
         const payload = (error.data as ApiErrorEnvelope | undefined)?.error;
         if (payload) { throwApiError(payload, path); }
       }
-      throw error as Error;
+      throw error instanceof Error ? error : new Error(String(error));
     };
 
     const http = {

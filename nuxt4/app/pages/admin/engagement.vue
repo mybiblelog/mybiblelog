@@ -39,6 +39,7 @@
 
 <script setup lang="ts">
 import { displayDate } from '@mybiblelog/shared';
+import { useDialogStore } from '~/stores/dialog';
 
 definePageMeta({ middleware: ['auth'], auth: 'admin' });
 useHead({ meta: [{ name: 'robots', content: 'noindex' }] });

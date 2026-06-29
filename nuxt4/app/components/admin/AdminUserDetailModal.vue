@@ -84,6 +84,8 @@
 <script setup lang="ts">
 import { displayTimeSince } from '@mybiblelog/shared';
 import AppModal from '~/components/popups/AppModal.vue';
+import { useDialogStore } from '~/stores/dialog';
+import { useAuthStore } from '~/stores/auth';
 
 interface AdminUser {
   email: string;
