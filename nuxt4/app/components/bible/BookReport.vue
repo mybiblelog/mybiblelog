@@ -197,6 +197,14 @@ function viewReadingLogForChapter(bookIndex: number, chapterIndex: number) {
   }
 }
 
+.plaque {
+  margin-bottom: 2rem;
+}
+
+.plaque p {
+  text-align: right;
+}
+
 .chapter-report-grid {
   display: flex;
   flex-wrap: wrap;

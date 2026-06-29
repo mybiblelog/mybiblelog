@@ -148,24 +148,15 @@
 
     <app-modal :open="showTagFilterModal" :title="t('tag_select.choose')" @close="closeTagFilterModal">
       <template #content>
-        <div class="tag-picker">
-          <label
-            v-for="tag in allTags"
-            :key="tag.id"
-            class="tag-picker-item"
-            :class="{ selected: draftTagIds.includes(String(tag.id)) }"
-            @click="toggleDraftTag(String(tag.id))"
-          >
-            <span class="tag-pill" :style="{ backgroundColor: tag.color }">{{ tag.label }}</span>
-          </label>
-        </div>
+        <passage-note-tag-selector
+          :passage-note-tags="allTags"
+          :selected-tag-ids="draft.filterTags"
+          @change="onTagIdsChange"
+        />
       </template>
       <template #footer>
-        <button class="mbl-button mbl-button--primary" @click="applyTagFilterModal">
+        <button class="mbl-button mbl-button--primary" @click="closeTagFilterModal">
           {{ t('done') }}
-        </button>
-        <button class="mbl-button mbl-button--light" @click="closeTagFilterModal">
-          {{ t('cancel') }}
         </button>
       </template>
     </app-modal>
@@ -174,6 +165,7 @@
 
 <script setup lang="ts">
 import AppModal from '~/components/popups/AppModal.vue';
+import PassageNoteTagSelector from '~/components/forms/PassageNoteTagSelector.vue';
 import VerseInput from '~/components/forms/VerseInput.vue';
 import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
 import type { PassageNotesQuery } from '~/helpers/passage-notes-route-query';
@@ -238,7 +230,6 @@ const baseline = ref<ManagedQuery>(pickManagedQuery(props.appliedQuery));
 const draft = ref<ManagedQuery>(pickManagedQuery(props.appliedQuery));
 
 const showTagFilterModal = ref(false);
-const draftTagIds = ref<string[]>([]);
 
 const isDirty = computed(() => !deepEqualManaged(draft.value, baseline.value));
 const hasSelectedTags = computed(() => Array.isArray(draft.value.filterTags) && draft.value.filterTags.length > 0);
@@ -314,26 +305,11 @@ function setDraft(update: Partial<ManagedQuery>) {
 }
 
 function openTagFilterModal() {
-  draftTagIds.value = (draft.value.filterTags ?? []).map(String);
   showTagFilterModal.value = true;
 }
 
 function closeTagFilterModal() {
   showTagFilterModal.value = false;
-}
-
-function toggleDraftTag(id: string) {
-  if (draftTagIds.value.includes(id)) {
-    draftTagIds.value = draftTagIds.value.filter(tagId => tagId !== id);
-  }
-  else {
-    draftTagIds.value = [...draftTagIds.value, id];
-  }
-}
-
-function applyTagFilterModal() {
-  onTagIdsChange(draftTagIds.value);
-  closeTagFilterModal();
 }
 
 function clearTagSelection() {
@@ -442,19 +418,6 @@ function cancelDraft() {
   font-size: 0.9em;
   color: var(--mbl-text-85);
 }
-
-.tag-picker { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0.5rem; }
-.tag-picker-item { cursor: pointer; }
-.tag-pill {
-  display: inline-block;
-  font-size: 0.85em;
-  color: var(--mbl-on-accent);
-  text-shadow: 0 0 2px var(--mbl-text-stronger);
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  border: 2px solid transparent;
-}
-.tag-picker-item.selected .tag-pill { border-color: var(--mbl-text-stronger); }
 </style>
 
 <i18n lang="json">

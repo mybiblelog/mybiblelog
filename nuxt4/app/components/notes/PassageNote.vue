@@ -96,7 +96,8 @@ const resolvedTags = computed(() => {
   grid-template-rows: repeat(4, auto);
 }
 .passage-note--passages { grid-area: 1 / 1 / 2 / 3; }
-.passage-note--created-date { grid-area: 1 / 2 / 2 / 3; text-align: right; }
+.passage-note--created-date { grid-area: 1 / 2 / 2 / 3; text-align: right; cursor: default; }
+.passage-note--created-date > span { border-bottom: 1px dotted var(--mbl-border-strong); }
 .passage-note--content {
   overflow-wrap: break-word;
   white-space: pre-line;

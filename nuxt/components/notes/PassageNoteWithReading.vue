@@ -1,5 +1,5 @@
 <template>
-  <div class="passage-note" data-testid="passage-note" :class="{ 'empty': empty }">
+  <div class="passage-note" data-testid="passage-note">
     <div class="passage-note--passages" data-testid="passage-note-passages">
       <ul class="passage-note__passage-list">
         <li
@@ -78,11 +78,6 @@ export default {
       type: Array,
       default: () => [],
     },
-    empty: {
-      // allows the passage note to be displayed without border or shadow
-      type: Boolean,
-      default: () => false,
-    },
   },
   data() {
     return {
@@ -142,12 +137,6 @@ export default {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(4, auto);
-}
-
-.passage-note.empty {
-  box-shadow: none;
-  padding-top: 0;
-  padding-bottom: 0;
 }
 
 .passage-note--passages {
