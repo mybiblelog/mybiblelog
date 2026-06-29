@@ -29,7 +29,7 @@
 
       <div class="mbl-field">
         <label class="mbl-label">{{ t('passage') }}</label>
-        <VerseInput v-model="passageRangeModel" :multi-verse="true" />
+        <verse-input v-model="passageRangeModel" :multi-verse="true" />
       </div>
 
       <hr class="log-entries-query-manager__divider">
@@ -57,9 +57,15 @@
         <div class="mbl-control">
           <div class="mbl-select">
             <select :value="draft.limit" @change="draft.limit = Number(($event.target as HTMLSelectElement).value)">
-              <option :value="10">{{ t('page_size_option', { n: 10 }) }}</option>
-              <option :value="20">{{ t('page_size_option', { n: 20 }) }}</option>
-              <option :value="50">{{ t('page_size_option', { n: 50 }) }}</option>
+              <option :value="10">
+                {{ t('page_size_option', { n: 10 }) }}
+              </option>
+              <option :value="20">
+                {{ t('page_size_option', { n: 20 }) }}
+              </option>
+              <option :value="50">
+                {{ t('page_size_option', { n: 50 }) }}
+              </option>
             </select>
           </div>
         </div>

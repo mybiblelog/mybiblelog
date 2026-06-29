@@ -1,7 +1,7 @@
 <template>
   <main role="main">
     <ContentRenderer v-if="page" :value="page" />
-    <ContentPageFooter />
+    <content-page-footer />
   </main>
 </template>
 
@@ -35,31 +35,33 @@ useContentSeo({
   seoDescription: page.value?.seo?.description,
   ogTitle: page.value?.og?.title || page.value?.seo?.title,
   ogDescription: page.value?.og?.description || page.value?.seo?.description,
-  structuredData: ldJson ? {
-    '@context': 'https://schema.org',
-    '@type': 'WebApplication',
-    name: ldJson.name,
-    description: ldJson.description,
-    applicationCategory: 'EducationalApplication',
-    operatingSystem: 'Any',
-    browserRequirements: 'Any modern web browser',
-    softwareVersion: '1.0',
-    url: siteUrl,
-    screenshot: [
-      `${siteUrl}/screenshots/sc7-bible-progress.webp`,
-      `${siteUrl}/screenshots/sc12-checklist.webp`,
-      `${siteUrl}/screenshots/sc10-notes.webp`,
-      `${siteUrl}/screenshots/sc9-calendar.webp`,
-      `${siteUrl}/screenshots/sc4-daily-goal.webp`,
-    ],
-    offers: {
-      '@type': 'Offer',
-      price: 'Free',
-      priceCurrency: 'USD',
-      availability: 'https://schema.org/InStock',
+  structuredData: ldJson
+    ? {
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: ldJson.name,
+      description: ldJson.description,
+      applicationCategory: 'EducationalApplication',
+      operatingSystem: 'Any',
+      browserRequirements: 'Any modern web browser',
+      softwareVersion: '1.0',
       url: siteUrl,
-    },
-  } : null,
+      screenshot: [
+        `${siteUrl}/screenshots/sc7-bible-progress.webp`,
+        `${siteUrl}/screenshots/sc12-checklist.webp`,
+        `${siteUrl}/screenshots/sc10-notes.webp`,
+        `${siteUrl}/screenshots/sc9-calendar.webp`,
+        `${siteUrl}/screenshots/sc4-daily-goal.webp`,
+      ],
+      offers: {
+        '@type': 'Offer',
+        price: 'Free',
+        priceCurrency: 'USD',
+        availability: 'https://schema.org/InStock',
+        url: siteUrl,
+      },
+    }
+    : null,
 });
 </script>
 

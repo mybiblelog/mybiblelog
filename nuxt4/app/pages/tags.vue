@@ -1,12 +1,14 @@
 <template>
   <div class="content-column">
-    <AppModal
+    <app-modal
       :open="tagEditorStore.open"
       :title="tagEditorStore.passageNoteTag.id ? t('edit_tag') : t('add_tag')"
       @close="handleEditorClose"
     >
       <template #content>
-        <div v-if="editorError" class="mbl-help mbl-help--danger">{{ editorError }}</div>
+        <div v-if="editorError" class="mbl-help mbl-help--danger">
+          {{ editorError }}
+        </div>
         <div class="mbl-field">
           <label class="mbl-label">{{ t('label') }}</label>
           <div class="mbl-control">
@@ -52,15 +54,23 @@
         >
           {{ t('save') }}
         </button>
-        <button class="mbl-button mbl-button--light" @click="handleEditorClose">{{ t('close') }}</button>
+        <button class="mbl-button mbl-button--light" @click="handleEditorClose">
+          {{ t('close') }}
+        </button>
       </template>
-    </AppModal>
+    </app-modal>
 
     <header class="page-header">
-      <h2 class="mbl-title">{{ t('note_tags') }}</h2>
+      <h2 class="mbl-title">
+        {{ t('note_tags') }}
+      </h2>
       <div class="mbl-button-group mbl-button-group--start">
-        <NuxtLink class="mbl-button" to="/notes">{{ t('notes') }}</NuxtLink>
-        <button class="mbl-button mbl-button--primary" :disabled="!hydrated" data-testid="tag-new" @click="openNewTagEditor">{{ t('new') }}</button>
+        <NuxtLink class="mbl-button" to="/notes">
+          {{ t('notes') }}
+        </NuxtLink>
+        <button class="mbl-button mbl-button--primary" :disabled="!hydrated" data-testid="tag-new" @click="openNewTagEditor">
+          {{ t('new') }}
+        </button>
       </div>
     </header>
 
@@ -72,12 +82,24 @@
         <div class="mbl-control">
           <div class="mbl-select">
             <select :value="passageNoteTagsStore.sortOrder" data-testid="tag-sort-order" @change="onSortOrderChange">
-              <option value="label:ascending">{{ t('sort_az') }}</option>
-              <option value="createdAt:descending">{{ t('sort_newest_first') }}</option>
-              <option value="createdAt:ascending">{{ t('sort_oldest_first') }}</option>
-              <option value="noteCount:descending">{{ t('sort_most_notes') }}</option>
-              <option value="noteCount:ascending">{{ t('sort_fewest_notes') }}</option>
-              <option value="color:hue">{{ t('sort_color') }}</option>
+              <option value="label:ascending">
+                {{ t('sort_az') }}
+              </option>
+              <option value="createdAt:descending">
+                {{ t('sort_newest_first') }}
+              </option>
+              <option value="createdAt:ascending">
+                {{ t('sort_oldest_first') }}
+              </option>
+              <option value="noteCount:descending">
+                {{ t('sort_most_notes') }}
+              </option>
+              <option value="noteCount:ascending">
+                {{ t('sort_fewest_notes') }}
+              </option>
+              <option value="color:hue">
+                {{ t('sort_color') }}
+              </option>
             </select>
           </div>
         </div>
@@ -95,7 +117,9 @@
           <div class="passage-note-tag" data-testid="tag-label" :style="{ backgroundColor: tag.color }">
             {{ tag.label }}
           </div>
-          <div v-if="tag.description" class="tag-description">{{ tag.description }}</div>
+          <div v-if="tag.description" class="tag-description">
+            {{ tag.description }}
+          </div>
         </div>
         <div class="tag-footer">
           <div class="mbl-button-group mbl-button-group--end tag-footer--buttons">
@@ -117,7 +141,9 @@
         </div>
       </div>
       <div v-if="!passageNoteTagsStore.passageNoteTags.length" class="tag-line">
-        <div class="mbl-text-center">{{ t('no_tags') }}</div>
+        <div class="mbl-text-center">
+          {{ t('no_tags') }}
+        </div>
       </div>
     </div>
   </div>

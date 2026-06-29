@@ -2,7 +2,9 @@
   <main>
     <section class="mbl-section">
       <div class="mbl-container">
-        <h1 class="mbl-title">Past Week Engagement</h1>
+        <h1 class="mbl-title">
+          Past Week Engagement
+        </h1>
         <div class="mbl-content">
           <template v-if="loading">
             <p>Loading...</p>

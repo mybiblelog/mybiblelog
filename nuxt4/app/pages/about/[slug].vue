@@ -9,7 +9,7 @@
         </NuxtLink>
       </template>
     </article>
-    <ContentPageFooter />
+    <content-page-footer />
   </main>
 </template>
 

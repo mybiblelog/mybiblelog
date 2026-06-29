@@ -9,7 +9,7 @@
     <p v-if="loading" class="insights-loading">
       {{ $t('loading') }}
     </p>
-    <ContributionHeatmap v-else :entries="entries" />
+    <contribution-heatmap v-else :entries="entries" />
   </div>
 </template>
 

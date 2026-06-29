@@ -236,7 +236,6 @@ async function savePreferredBibleVersion() {
   saving.value = true;
   errors.preferredBibleVersion = '';
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const success = await userSettingsStore.updateSettings({ preferredBibleVersion: form.preferredBibleVersion as any });
     if (success) {
       toastStore.add({ type: 'success', text: t('messaging.preferred_bible_version_saved_successfully') });
@@ -255,7 +254,6 @@ async function savePreferredBibleApp() {
   saving.value = true;
   errors.preferredBibleApp = '';
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const success = await userSettingsStore.updateSettings({ preferredBibleApp: form.preferredBibleApp as any });
     if (success) {
       toastStore.add({ type: 'success', text: t('messaging.preferred_bible_app_saved_successfully') });

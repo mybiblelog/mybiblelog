@@ -1,7 +1,7 @@
 <template>
-  <AppModal :open="logEntryEditorStore.open" :title="modalTitle" @close="handleClose">
+  <app-modal :open="logEntryEditorStore.open" :title="modalTitle" @close="handleClose">
     <template #content>
-      <LogEntryEditorForm />
+      <log-entry-editor-form />
     </template>
     <template #footer>
       <button
@@ -16,7 +16,7 @@
         {{ t('close') }}
       </button>
     </template>
-  </AppModal>
+  </app-modal>
 </template>
 
 <script setup lang="ts">

@@ -1,8 +1,10 @@
 <template>
-  <AppModal :open="store.open" :title="store.passageNote.id ? t('edit_note') : t('new_note')" @close="handleClose">
+  <app-modal :open="store.open" :title="store.passageNote.id ? t('edit_note') : t('new_note')" @close="handleClose">
     <template #content>
       <form data-testid="note-editor" @submit.prevent="handleSave">
-        <div v-if="formError" class="mbl-help mbl-help--danger">{{ formError }}</div>
+        <div v-if="formError" class="mbl-help mbl-help--danger">
+          {{ formError }}
+        </div>
         <div class="mbl-field">
           <label class="mbl-label">{{ t('content') }}</label>
           <div class="mbl-control">
@@ -19,10 +21,12 @@
         <div class="mbl-field">
           <label class="mbl-label">{{ t('tags') }}</label>
           <div class="note-editor-tags">
-            <PassageNoteTagPill v-for="tag in selectedTags" :key="tag.id" :tag="tag" />
+            <passage-note-tag-pill v-for="tag in selectedTags" :key="tag.id" :tag="tag" />
             <em v-if="!selectedTags.length">{{ t('no_tags_selected') }}</em>
           </div>
-          <button class="mbl-button mbl-button--sm" type="button" @click="openTagPicker">{{ t('manage_tags') }}</button>
+          <button class="mbl-button mbl-button--sm" type="button" @click="openTagPicker">
+            {{ t('manage_tags') }}
+          </button>
         </div>
       </form>
     </template>
@@ -35,11 +39,13 @@
       >
         {{ store.passageNote.id ? t('save') : t('add') }}
       </button>
-      <button class="mbl-button mbl-button--light" @click="handleClose">{{ t('close') }}</button>
+      <button class="mbl-button mbl-button--light" @click="handleClose">
+        {{ t('close') }}
+      </button>
     </template>
-  </AppModal>
+  </app-modal>
 
-  <AppModal :open="tagPickerOpen" :title="t('choose_tags')" @close="closeTagPicker">
+  <app-modal :open="tagPickerOpen" :title="t('choose_tags')" @close="closeTagPicker">
     <template #content>
       <div class="tag-picker">
         <label
@@ -54,10 +60,14 @@
       </div>
     </template>
     <template #footer>
-      <button class="mbl-button mbl-button--primary" @click="applyTagPicker">{{ t('done') }}</button>
-      <button class="mbl-button mbl-button--light" @click="closeTagPicker">{{ t('cancel') }}</button>
+      <button class="mbl-button mbl-button--primary" @click="applyTagPicker">
+        {{ t('done') }}
+      </button>
+      <button class="mbl-button mbl-button--light" @click="closeTagPicker">
+        {{ t('cancel') }}
+      </button>
     </template>
-  </AppModal>
+  </app-modal>
 </template>
 
 <script setup lang="ts">

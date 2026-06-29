@@ -1,7 +1,9 @@
 <template>
   <main>
     <div class="content-column">
-      <h1 class="mbl-title">Admin Feedback Review</h1>
+      <h1 class="mbl-title">
+        Admin Feedback Review
+      </h1>
 
       <div v-if="!feedbacks.length && !loading">
         <p>There are no feedbacks.</p>
@@ -9,7 +11,9 @@
 
       <template v-else>
         <div class="feedback-page__results-bar">
-          <div class="mbl-text-small mbl-text-muted">{{ resultsSummary }}</div>
+          <div class="mbl-text-small mbl-text-muted">
+            {{ resultsSummary }}
+          </div>
           <div v-if="totalPages > 1" class="feedback-page__pager">
             <div class="mbl-field mbl-field--addons mbl-field--flush" role="group" aria-label="Pagination">
               <p class="mbl-control">
@@ -20,13 +24,15 @@
                   aria-label="Previous page"
                   @click="onPageChanged(page - 1)"
                 >
-                  <CaretLeftIcon width="10px" height="18px" fill="currentColor" />
+                  <caret-left-icon width="10px" height="18px" fill="currentColor" />
                 </button>
               </p>
               <div class="mbl-control">
                 <div class="mbl-select mbl-select--sm">
                   <select :value="page" aria-label="Page" @change="onPageChanged(Number(($event.target as HTMLSelectElement).value))">
-                    <option v-for="p in totalPages" :key="p" :value="p">Page {{ p }}</option>
+                    <option v-for="p in totalPages" :key="p" :value="p">
+                      Page {{ p }}
+                    </option>
                   </select>
                 </div>
               </div>
@@ -38,7 +44,7 @@
                   aria-label="Next page"
                   @click="onPageChanged(page + 1)"
                 >
-                  <CaretRightIcon width="10px" height="18px" fill="currentColor" />
+                  <caret-right-icon width="10px" height="18px" fill="currentColor" />
                 </button>
               </p>
             </div>
@@ -53,14 +59,18 @@
             <div class="feedback-card__kind mbl-text-small" :class="feedbackKindClass(feedback.kind)">
               {{ feedback.kind }}
             </div>
-            <div class="feedback-card__message">{{ feedback.message }}</div>
+            <div class="feedback-card__message">
+              {{ feedback.message }}
+            </div>
             <div class="feedback-card__email mbl-text-small">
               <span class="feedback-card__email-text">{{ feedback.email }}</span>
               <span class="feedback-badge" :class="feedback.owner ? 'feedback-badge--user' : 'feedback-badge--guest'">
                 {{ feedback.owner ? 'user' : 'guest' }}
               </span>
             </div>
-            <div class="feedback-card__ip mbl-text-small mbl-text-muted">{{ feedback.ip }}</div>
+            <div class="feedback-card__ip mbl-text-small mbl-text-muted">
+              {{ feedback.ip }}
+            </div>
           </div>
         </div>
       </template>
@@ -113,8 +123,11 @@ const resultsSummary = computed(() => {
 
 function formatDateTime(dateStr: string) {
   return new Date(dateStr).toLocaleString('en', {
-    year: 'numeric', month: '2-digit', day: '2-digit',
-    hour: '2-digit', minute: '2-digit',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
   });
 }
 

@@ -1,10 +1,10 @@
 <template>
   <div class="content-column">
     <ClientOnly>
-      <BusyBar :busy="dateVerseCountsStore.busy" />
-      <ReadingTrackerResetCard />
+      <busy-bar :busy="dateVerseCountsStore.busy" />
+      <reading-tracker-reset-card />
       <div id="calendar-page">
-        <CalendarMonth
+        <calendar-month
           :get-date-verse-counts="dateVerseCountsStore.getDateVerseCounts"
           :daily-verse-count-goal="userSettings.dailyVerseCountGoal"
           :tracker-start-date="userSettings.lookBackDate"
@@ -14,12 +14,16 @@
           v-if="currentDate && currentDate === userSettings.lookBackDate"
           class="mbl-message mbl-message--info calendar-page__tracker-start-alert"
         >
-          <div class="mbl-message__body">{{ t('tracker_start_date_message') }}</div>
+          <div class="mbl-message__body">
+            {{ t('tracker_start_date_message') }}
+          </div>
         </div>
         <div v-if="currentDate" class="entry-container" data-testid="calendar-day-entries" :data-date="entryDate.date">
           <div class="entry-date">
             <div>
-              <div class="date" data-testid="calendar-selected-date">{{ displayDateFormatted }}</div>
+              <div class="date" data-testid="calendar-selected-date">
+                {{ displayDateFormatted }}
+              </div>
               <div class="verse-count" data-testid="calendar-selected-verse-count" :data-verse-count="entryDate.verses">
                 {{ entryDate.verses }} {{ t('verse', entryDate.verses) }}
               </div>
@@ -28,8 +32,10 @@
               +
             </button>
           </div>
-          <LogEntry v-for="entry of entryDate.entries" :key="entry.id" :passage="entry" :actions="actionsForLogEntry(entry)" />
-          <div v-if="!entryDate.entries.length" class="calendar-page__no-entries">{{ t('no_entries') }}</div>
+          <log-entry v-for="entry of entryDate.entries" :key="entry.id" :passage="entry" :actions="actionsForLogEntry(entry)" />
+          <div v-if="!entryDate.entries.length" class="calendar-page__no-entries">
+            {{ t('no_entries') }}
+          </div>
         </div>
       </div>
     </ClientOnly>

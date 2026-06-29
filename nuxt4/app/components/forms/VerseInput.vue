@@ -39,7 +39,7 @@
     </p>
 
     <!-- Single-verse picker flow -->
-    <AppModal :open="!!singleSelectionTarget" :title="singleModalTitle" @close="closeSinglePicker">
+    <app-modal :open="!!singleSelectionTarget" :title="singleModalTitle" @close="closeSinglePicker">
       <template #content>
         <template v-if="singleSelectionTarget === SINGLE_SELECTION.BOOK">
           <div class="book-selector-controls">
@@ -80,10 +80,10 @@
               </button>
             </div>
           </div>
-          <GridSelector :options="filteredBookOptions" :columns="2" @selection="selectSingleBook" />
+          <grid-selector :options="filteredBookOptions" :columns="2" @selection="selectSingleBook" />
         </template>
 
-        <TapRangeSelector
+        <tap-range-selector
           v-if="singleSelectionTarget === SINGLE_SELECTION.CHAPTER"
           :min="1"
           :max="singleChapterMax"
@@ -92,7 +92,7 @@
           @selection="selectSingleChapter"
         />
 
-        <TapRangeSelector
+        <tap-range-selector
           v-if="singleSelectionTarget === SINGLE_SELECTION.VERSE"
           :min="1"
           :max="singleVerseMax"
@@ -101,10 +101,10 @@
           @selection="selectSingleVerse"
         />
       </template>
-    </AppModal>
+    </app-modal>
 
     <!-- Multi-verse picker (PassageSelector) -->
-    <PassageSelector
+    <passage-selector
       v-if="multiVerse"
       ref="passageSelectorRef"
       class="verse-input__hidden-passage-selector"
@@ -161,7 +161,7 @@ const singleSelectionTarget = ref<SingleSelection>(null);
 const singleSelected = ref(PassageSelection.emptySingleVerseSelection());
 const passageSelectorKey = ref(0);
 const passageSelectorPopulateWith = ref<Record<string, unknown>>({ empty: true });
-const passageSelectorRef = ref<{ openSelectBook: () => void } | null>(null);
+const passageSelectorRef = ref<{ openSelectBook:() => void } | null>(null);
 
 const valueRange = computed(() => coerceVerseRange(props.modelValue));
 
@@ -202,17 +202,17 @@ const placeholder = computed(() => {
 const invalidHelpText = computed(() =>
   props.multiVerse
     ? t('invalid_multi', { example1: exampleMultiPrimary.value, example2: exampleMultiSecondary.value })
-    : t('invalid_single', { example: exampleSingle.value })
+    : t('invalid_single', { example: exampleSingle.value }),
 );
 
 const inputStyle = computed(() => hasText.value ? { paddingRight: '2.25rem' } : {});
 
 const singleModalTitle = computed(() => {
   switch (singleSelectionTarget.value) {
-    case SINGLE_SELECTION.BOOK: return t('select_book');
-    case SINGLE_SELECTION.CHAPTER: return t('select_chapter');
-    case SINGLE_SELECTION.VERSE: return t('select_verse');
-    default: return '';
+  case SINGLE_SELECTION.BOOK: return t('select_book');
+  case SINGLE_SELECTION.CHAPTER: return t('select_chapter');
+  case SINGLE_SELECTION.VERSE: return t('select_verse');
+  default: return '';
   }
 });
 

@@ -1,9 +1,9 @@
 <template>
   <div class="content-column">
     <ClientOnly>
-      <ReadingTrackerResetCard />
+      <reading-tracker-reset-card />
     </ClientOnly>
-    <BibleReport :log-entries="logEntries" @view-book-report="viewBookReport" />
+    <bible-report :log-entries="logEntries" @view-book-report="viewBookReport" />
   </div>
 </template>
 

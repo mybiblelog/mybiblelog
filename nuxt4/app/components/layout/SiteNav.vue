@@ -293,7 +293,7 @@ watch(() => route.fullPath, () => {
 });
 
 watch(navOpen, (open) => {
-  if (typeof document === 'undefined') return;
+  if (typeof document === 'undefined') { return; }
   document.body.classList.toggle('site-nav-drawer-open', open);
 });
 
@@ -301,7 +301,7 @@ let onAdminOutsideClick: ((e: MouseEvent) => void) | null = null;
 let adminOutsideListenTimer: ReturnType<typeof setTimeout> | null = null;
 
 watch(adminDropdownOpen, (open) => {
-  if (typeof document === 'undefined') return;
+  if (typeof document === 'undefined') { return; }
   if (onAdminOutsideClick) {
     document.removeEventListener('click', onAdminOutsideClick, true);
   }
@@ -313,7 +313,7 @@ watch(adminDropdownOpen, (open) => {
     adminOutsideListenTimer = setTimeout(() => {
       adminOutsideListenTimer = null;
       onAdminOutsideClick = (e: MouseEvent) => {
-        if (!adminDropdownOpen.value) return;
+        if (!adminDropdownOpen.value) { return; }
         const root = adminNavRef.value;
         if (root && !root.contains(e.target as Node)) {
           adminDropdownOpen.value = false;
@@ -328,7 +328,7 @@ let onAccountOutsideClick: ((e: MouseEvent) => void) | null = null;
 let accountOutsideListenTimer: ReturnType<typeof setTimeout> | null = null;
 
 watch(accountDropdownOpen, (open) => {
-  if (typeof document === 'undefined') return;
+  if (typeof document === 'undefined') { return; }
   if (onAccountOutsideClick) {
     document.removeEventListener('click', onAccountOutsideClick, true);
   }
@@ -340,7 +340,7 @@ watch(accountDropdownOpen, (open) => {
     accountOutsideListenTimer = setTimeout(() => {
       accountOutsideListenTimer = null;
       onAccountOutsideClick = (e: MouseEvent) => {
-        if (!accountDropdownOpen.value) return;
+        if (!accountDropdownOpen.value) { return; }
         const root = accountNavRef.value;
         if (root && !root.contains(e.target as Node)) {
           accountDropdownOpen.value = false;
@@ -357,17 +357,17 @@ let onDesktopMq: (() => void) | null = null;
 
 onMounted(() => {
   onEscape = (e: KeyboardEvent) => {
-    if (e.key !== 'Escape') return;
-    if (adminDropdownOpen.value) adminDropdownOpen.value = false;
-    if (accountDropdownOpen.value) accountDropdownOpen.value = false;
-    if (navOpen.value) closeNav();
+    if (e.key !== 'Escape') { return; }
+    if (adminDropdownOpen.value) { adminDropdownOpen.value = false; }
+    if (accountDropdownOpen.value) { accountDropdownOpen.value = false; }
+    if (navOpen.value) { closeNav(); }
   };
   document.addEventListener('keydown', onEscape);
 
   if (window.matchMedia) {
     desktopMq = window.matchMedia('(min-width: 1024px)');
     onDesktopMq = () => {
-      if (desktopMq?.matches) navOpen.value = false;
+      if (desktopMq?.matches) { navOpen.value = false; }
     };
     if (desktopMq.addEventListener) {
       desktopMq.addEventListener('change', onDesktopMq);
@@ -379,11 +379,11 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  if (onEscape) document.removeEventListener('keydown', onEscape);
-  if (onAdminOutsideClick) document.removeEventListener('click', onAdminOutsideClick, true);
-  if (onAccountOutsideClick) document.removeEventListener('click', onAccountOutsideClick, true);
-  if (adminOutsideListenTimer !== null) clearTimeout(adminOutsideListenTimer);
-  if (accountOutsideListenTimer !== null) clearTimeout(accountOutsideListenTimer);
+  if (onEscape) { document.removeEventListener('keydown', onEscape); }
+  if (onAdminOutsideClick) { document.removeEventListener('click', onAdminOutsideClick, true); }
+  if (onAccountOutsideClick) { document.removeEventListener('click', onAccountOutsideClick, true); }
+  if (adminOutsideListenTimer !== null) { clearTimeout(adminOutsideListenTimer); }
+  if (accountOutsideListenTimer !== null) { clearTimeout(accountOutsideListenTimer); }
   if (desktopMq && onDesktopMq) {
     if (desktopMq.removeEventListener) {
       desktopMq.removeEventListener('change', onDesktopMq);
@@ -401,11 +401,11 @@ const toggleNav = () => { navOpen.value = !navOpen.value; };
 const closeNav = () => { navOpen.value = false; };
 const toggleAdminDropdown = () => {
   adminDropdownOpen.value = !adminDropdownOpen.value;
-  if (adminDropdownOpen.value) accountDropdownOpen.value = false;
+  if (adminDropdownOpen.value) { accountDropdownOpen.value = false; }
 };
 const toggleAccountDropdown = () => {
   accountDropdownOpen.value = !accountDropdownOpen.value;
-  if (accountDropdownOpen.value) adminDropdownOpen.value = false;
+  if (accountDropdownOpen.value) { adminDropdownOpen.value = false; }
 };
 
 const logout = async () => {
@@ -437,7 +437,7 @@ const onDrawerEnter = (el: Element, done: () => void) => {
       drawer.style.transform = 'translateX(0)';
       backdrop.style.opacity = '1';
       const finish = (e: TransitionEvent) => {
-        if (!e || e.target !== drawer || e.propertyName !== 'transform') return;
+        if (!e || e.target !== drawer || e.propertyName !== 'transform') { return; }
         drawer.removeEventListener('transitionend', finish);
         clearTimeout(fallback);
         done();
@@ -463,7 +463,7 @@ const onDrawerLeave = (el: Element, done: () => void) => {
     drawer.style.transform = 'translateX(100%)';
     backdrop.style.opacity = '0';
     const finish = (e: TransitionEvent) => {
-      if (!e || e.target !== drawer || e.propertyName !== 'transform') return;
+      if (!e || e.target !== drawer || e.propertyName !== 'transform') { return; }
       drawer.removeEventListener('transitionend', finish);
       clearTimeout(fallback);
       done();

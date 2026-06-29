@@ -1,13 +1,15 @@
 <template>
   <div class="notes-page">
-    <AppModal
+    <app-modal
       :open="passageNoteEditorStore.open"
       :title="passageNoteEditorStore.passageNote.id ? t('edit_note') : t('new_note')"
       @close="handleEditorClose"
     >
       <template #content>
         <form data-testid="note-editor" @submit.prevent="handleEditorSave">
-          <div v-if="editorFormError" class="mbl-help mbl-help--danger">{{ editorFormError }}</div>
+          <div v-if="editorFormError" class="mbl-help mbl-help--danger">
+            {{ editorFormError }}
+          </div>
           <div class="mbl-field">
             <label class="mbl-label">{{ t('content_label') }}</label>
             <div class="mbl-control">
@@ -31,7 +33,9 @@
                 :style="{ backgroundColor: tag.color }"
               >{{ tag.label }}</span>
             </div>
-            <button class="mbl-button mbl-button--sm" type="button" @click.prevent="openTagPickerModal">{{ t('manage_tags') }}</button>
+            <button class="mbl-button mbl-button--sm" type="button" @click.prevent="openTagPickerModal">
+              {{ t('manage_tags') }}
+            </button>
           </div>
         </form>
       </template>
@@ -44,11 +48,13 @@
         >
           {{ passageNoteEditorStore.passageNote.id ? t('save') : t('save') }}
         </button>
-        <button class="mbl-button mbl-button--light" @click="handleEditorClose">{{ t('close') }}</button>
+        <button class="mbl-button mbl-button--light" @click="handleEditorClose">
+          {{ t('close') }}
+        </button>
       </template>
-    </AppModal>
+    </app-modal>
 
-    <AppModal :open="tagPickerOpen" :title="t('choose_tags')" @close="closeTagPickerModal">
+    <app-modal :open="tagPickerOpen" :title="t('choose_tags')" @close="closeTagPickerModal">
       <template #content>
         <div class="tag-picker">
           <div
@@ -63,16 +69,26 @@
         </div>
       </template>
       <template #footer>
-        <button class="mbl-button mbl-button--primary" @click="applyTagPickerModal">{{ t('done') }}</button>
-        <button class="mbl-button mbl-button--light" @click="closeTagPickerModal">{{ t('cancel') }}</button>
+        <button class="mbl-button mbl-button--primary" @click="applyTagPickerModal">
+          {{ t('done') }}
+        </button>
+        <button class="mbl-button mbl-button--light" @click="closeTagPickerModal">
+          {{ t('cancel') }}
+        </button>
       </template>
-    </AppModal>
+    </app-modal>
 
     <header class="page-header">
-      <h2 class="mbl-title">{{ t('notes') }}</h2>
+      <h2 class="mbl-title">
+        {{ t('notes') }}
+      </h2>
       <div class="mbl-button-group mbl-button-group--start">
-        <NuxtLink class="mbl-button" to="/tags">{{ t('tags') }}</NuxtLink>
-        <button class="mbl-button mbl-button--primary" :disabled="!hydrated" @click="openNewNoteEditor">{{ t('new') }}</button>
+        <NuxtLink class="mbl-button" to="/tags">
+          {{ t('tags') }}
+        </NuxtLink>
+        <button class="mbl-button mbl-button--primary" :disabled="!hydrated" @click="openNewNoteEditor">
+          {{ t('new') }}
+        </button>
       </div>
     </header>
 
@@ -94,7 +110,7 @@
               {{ t('query_manager.reset') }}
             </button>
           </div>
-          <PassageNotesQueryManager
+          <passage-notes-query-manager
             :applied-query="passageNotesStore.query"
             :passage-note-tags="passageNoteTagsStore.passageNoteTags"
             @apply="applyQueryManager"
@@ -105,12 +121,16 @@
       <section class="notes-page__content">
         <template v-if="passageNotesStore.loading">
           <div class="passage-note">
-            <div class="mbl-text-center">{{ t('loading') }}</div>
+            <div class="mbl-text-center">
+              {{ t('loading') }}
+            </div>
           </div>
         </template>
         <template v-else-if="!passageNotesStore.passageNotes.length">
           <div class="mbl-empty-state">
-            <div class="mbl-text-center">{{ t('no_results') }}</div>
+            <div class="mbl-text-center">
+              {{ t('no_results') }}
+            </div>
           </div>
         </template>
         <template v-else>
@@ -134,7 +154,7 @@
             </button>
           </div>
 
-          <PassageNote
+          <passage-note
             v-for="note in passageNotesStore.passageNotes"
             :key="note.id"
             :note="note"
@@ -165,16 +185,16 @@
       </section>
     </div>
 
-    <AppModal :open="showQueryManagerModal" :title="t('query_manager.title')" @close="closeQueryManagerModal">
+    <app-modal :open="showQueryManagerModal" :title="t('query_manager.title')" @close="closeQueryManagerModal">
       <template #content>
-        <PassageNotesQueryManager
+        <passage-notes-query-manager
           :applied-query="passageNotesStore.query"
           :passage-note-tags="passageNoteTagsStore.passageNoteTags"
           @apply="applyQueryManager"
           @cancel="closeQueryManagerModal"
         />
       </template>
-    </AppModal>
+    </app-modal>
   </div>
 </template>
 

@@ -1,31 +1,31 @@
 <template>
   <div>
-      <h2 class="mbl-title mbl-title--4">
-        {{ t('start_page') }}
-      </h2>
-      <div class="mbl-field mbl-field--addons">
-        <div class="mbl-control">
-          <div class="mbl-select">
-            <select v-model="form.startPage" data-testid="settings-start-page-select" :disabled="!mounted">
-              <option value="" disabled>
-                {{ t('select_an_option') }}
-              </option>
-              <option v-for="option in startPageOptions" :key="option.value" :value="option.value">
-                {{ option.text }}
-              </option>
-            </select>
-          </div>
-        </div>
-        <div class="mbl-control">
-          <button class="mbl-button mbl-button--primary" data-testid="settings-start-page-save" :disabled="!mounted || saving" @click="saveStartPage">
-            {{ t('save') }}
-          </button>
+    <h2 class="mbl-title mbl-title--4">
+      {{ t('start_page') }}
+    </h2>
+    <div class="mbl-field mbl-field--addons">
+      <div class="mbl-control">
+        <div class="mbl-select">
+          <select v-model="form.startPage" data-testid="settings-start-page-select" :disabled="!mounted">
+            <option value="" disabled>
+              {{ t('select_an_option') }}
+            </option>
+            <option v-for="option in startPageOptions" :key="option.value" :value="option.value">
+              {{ option.text }}
+            </option>
+          </select>
         </div>
       </div>
-      <div v-if="errors.startPage" class="mbl-help mbl-help--danger">
-        {{ errors.startPage }}
+      <div class="mbl-control">
+        <button class="mbl-button mbl-button--primary" data-testid="settings-start-page-save" :disabled="!mounted || saving" @click="saveStartPage">
+          {{ t('save') }}
+        </button>
       </div>
-      <p>{{ t('start_page_info') }}</p>
+    </div>
+    <div v-if="errors.startPage" class="mbl-help mbl-help--danger">
+      {{ errors.startPage }}
+    </div>
+    <p>{{ t('start_page_info') }}</p>
   </div>
 </template>
 

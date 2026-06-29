@@ -9,7 +9,7 @@
     <p v-if="loading" class="insights-loading">
       {{ $t('loading') }}
     </p>
-    <BookRecencyList v-else :entries="entries" />
+    <book-recency-list v-else :entries="entries" />
   </div>
 </template>
 

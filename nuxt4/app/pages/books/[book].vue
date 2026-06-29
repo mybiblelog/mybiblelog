@@ -1,6 +1,6 @@
 <template>
   <div class="content-column">
-    <BookReport
+    <book-report
       :log-entries="logEntries"
       :book-index="bookIndex"
       @exit-book-report="handleExitBookReport"

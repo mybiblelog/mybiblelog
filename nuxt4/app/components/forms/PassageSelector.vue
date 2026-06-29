@@ -2,40 +2,62 @@
   <div>
     <div class="passage-selector">
       <div class="part" @click="openSelectBook">
-        <template v-if="!selected.book">{{ t('select_book') }}</template>
-        <template v-if="selected.book">{{ bookName }}</template>
+        <template v-if="!selected.book">
+          {{ t('select_book') }}
+        </template>
+        <template v-if="selected.book">
+          {{ bookName }}
+        </template>
       </div>
       <template v-if="selected.book">
         <div class="part" @click="openSelectChapters">
-          <template v-if="!selected.startChapter">*</template>
-          <template v-if="selected.startChapter">{{ selected.startChapter }}</template>
+          <template v-if="!selected.startChapter">
+            *
+          </template>
+          <template v-if="selected.startChapter">
+            {{ selected.startChapter }}
+          </template>
         </div>
         <template v-if="selected.startChapter">
           :
           <div class="part" @click="selected.endChapter === selected.startChapter ? openSelectVerses() : openSelectStartVerse()">
-            <template v-if="!selected.startVerse">*</template>
-            <template v-if="selected.startVerse">{{ selected.startVerse }}</template>
+            <template v-if="!selected.startVerse">
+              *
+            </template>
+            <template v-if="selected.startVerse">
+              {{ selected.startVerse }}
+            </template>
           </div>
           <template v-if="selected.endChapter === selected.startChapter && selected.startVerse && selected.endVerse !== selected.startVerse">
             -
             <div class="part" @click="openSelectEndVerse">
-              <template v-if="!selected.endVerse">*</template>
-              <template v-if="selected.endVerse">{{ selected.endVerse }}</template>
+              <template v-if="!selected.endVerse">
+                *
+              </template>
+              <template v-if="selected.endVerse">
+                {{ selected.endVerse }}
+              </template>
             </div>
           </template>
         </template>
         <template v-if="selected.endChapter && selected.endChapter !== selected.startChapter">
           -
-          <div class="part" @click="openSelectEndChapter">{{ selected.endChapter }}</div>:
+          <div class="part" @click="openSelectEndChapter">
+            {{ selected.endChapter }}
+          </div>:
           <div class="part" @click="openSelectEndVerse">
-            <template v-if="!selected.endVerse">*</template>
-            <template v-if="selected.endVerse">{{ selected.endVerse }}</template>
+            <template v-if="!selected.endVerse">
+              *
+            </template>
+            <template v-if="selected.endVerse">
+              {{ selected.endVerse }}
+            </template>
           </div>
         </template>
       </template>
     </div>
 
-    <AppModal :open="!!selectionTarget" :title="modalTitle" @close="endSelection">
+    <app-modal :open="!!selectionTarget" :title="modalTitle" @close="endSelection">
       <template #content>
         <template v-if="selectionTarget === SELECTION.BOOK">
           <div class="book-selector-controls">
@@ -76,15 +98,17 @@
               </button>
             </div>
           </div>
-          <GridSelector :options="filteredBookOptions" :columns="2" @selection="selectBook" />
+          <grid-selector :options="filteredBookOptions" :columns="2" @selection="selectBook" />
         </template>
 
         <template v-if="selectionTarget === SELECTION.CHAPTERS">
-          <div class="selector-note">{{ t('select_chapters_note') }}</div>
-          <TapRangeSelector :min="startChapters[0]" :max="startChapters[startChapters.length - 1]" :columns="8" @selection="selectChapters" />
+          <div class="selector-note">
+            {{ t('select_chapters_note') }}
+          </div>
+          <tap-range-selector :min="startChapters[0]" :max="startChapters[startChapters.length - 1]" :columns="8" @selection="selectChapters" />
         </template>
 
-        <TapRangeSelector
+        <tap-range-selector
           v-if="selectionTarget === SELECTION.END_CHAPTER"
           :min="endChapters[0]"
           :max="endChapters[endChapters.length - 1]"
@@ -94,11 +118,13 @@
         />
 
         <template v-if="selectionTarget === SELECTION.VERSES">
-          <div class="selector-note">{{ t('select_verses_note') }}</div>
-          <TapRangeSelector :min="startVerses[0]" :max="startVerses[startVerses.length - 1]" :columns="8" @selection="selectVerses" />
+          <div class="selector-note">
+            {{ t('select_verses_note') }}
+          </div>
+          <tap-range-selector :min="startVerses[0]" :max="startVerses[startVerses.length - 1]" :columns="8" @selection="selectVerses" />
         </template>
 
-        <TapRangeSelector
+        <tap-range-selector
           v-if="selectionTarget === SELECTION.START_VERSE"
           :min="startVerses[0]"
           :max="startVerses[startVerses.length - 1]"
@@ -107,7 +133,7 @@
           @selection="selectStartVerse"
         />
 
-        <TapRangeSelector
+        <tap-range-selector
           v-if="selectionTarget === SELECTION.END_VERSE"
           :min="endVerses[0]"
           :max="endVerses[endVerses.length - 1]"
@@ -116,7 +142,7 @@
           @selection="selectEndVerse"
         />
       </template>
-    </AppModal>
+    </app-modal>
   </div>
 </template>
 
@@ -170,13 +196,13 @@ const bookName = computed(() => Bible.getBookName(selected.value.book, locale.va
 
 const modalTitle = computed(() => {
   switch (selectionTarget.value) {
-    case SELECTION.BOOK: return t('select_book');
-    case SELECTION.CHAPTERS: return t('select_chapters');
-    case SELECTION.END_CHAPTER: return t('select_end_chapter');
-    case SELECTION.VERSES: return t('select_verses');
-    case SELECTION.START_VERSE: return t('select_start_verse');
-    case SELECTION.END_VERSE: return t('select_end_verse');
-    default: return '';
+  case SELECTION.BOOK: return t('select_book');
+  case SELECTION.CHAPTERS: return t('select_chapters');
+  case SELECTION.END_CHAPTER: return t('select_end_chapter');
+  case SELECTION.VERSES: return t('select_verses');
+  case SELECTION.START_VERSE: return t('select_start_verse');
+  case SELECTION.END_VERSE: return t('select_end_verse');
+  default: return '';
   }
 });
 

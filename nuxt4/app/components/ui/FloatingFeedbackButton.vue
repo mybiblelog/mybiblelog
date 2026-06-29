@@ -8,14 +8,16 @@
       :disabled="!mounted"
       @click="openModal"
     >
-      <FeedbackIcon fill="var(--mbl-on-accent)" width="28px" height="28px" />
+      <feedback-icon fill="var(--mbl-on-accent)" width="28px" height="28px" />
     </button>
 
     <div v-if="feedbackModalStore.open" class="mbl-modal mbl-modal--active" role="dialog" data-testid="modal">
       <div class="mbl-modal__backdrop" @click="close" />
       <div class="mbl-modal__card">
         <header class="mbl-modal__head">
-          <p class="mbl-modal__title">{{ t('feedback_form') }}</p>
+          <p class="mbl-modal__title">
+            {{ t('feedback_form') }}
+          </p>
           <button class="mbl-delete" type="button" aria-label="close" data-testid="modal-close" @click.prevent="close" />
         </header>
         <section class="mbl-modal__body">
@@ -24,7 +26,9 @@
             <p>{{ t('intro_p2') }}</p>
           </div>
           <form data-testid="feedback-form" @submit.prevent="submitFeedback">
-            <div v-if="errors._form" class="mbl-help mbl-help--danger">{{ $terr(errors._form) }}</div>
+            <div v-if="errors._form" class="mbl-help mbl-help--danger">
+              {{ $terr(errors._form) }}
+            </div>
             <div class="mbl-field">
               <label class="mbl-label">{{ t('your_email') }}</label>
               <div class="mbl-control">
@@ -43,9 +47,15 @@
               <div class="mbl-control">
                 <div class="mbl-select">
                   <select v-model="form.kind" data-testid="feedback-kind">
-                    <option value="bug">{{ t('bug_report') }}</option>
-                    <option value="feature">{{ t('feature_request') }}</option>
-                    <option value="comment">{{ t('general_comment') }}</option>
+                    <option value="bug">
+                      {{ t('bug_report') }}
+                    </option>
+                    <option value="feature">
+                      {{ t('feature_request') }}
+                    </option>
+                    <option value="comment">
+                      {{ t('general_comment') }}
+                    </option>
                   </select>
                 </div>
               </div>
@@ -69,7 +79,6 @@
     </div>
   </div>
 </template>
-
 
 <script setup lang="ts">
 import FeedbackIcon from '~/components/svg/FeedbackIcon.vue';

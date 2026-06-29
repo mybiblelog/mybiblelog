@@ -5,7 +5,7 @@
         <div class="mbl-level-left">
           <h1 class="mbl-title">
             {{ t('sign_in') }}
-            <InfoLink :to="localePath('/about/page-features--login')" />
+            <info-link :to="localePath('/about/page-features--login')" />
           </h1>
         </div>
         <div v-if="!passwordResetSubmitted" class="mbl-level-right">
@@ -24,7 +24,7 @@
         <div v-if="errors._form" class="mbl-help mbl-help--danger">
           {{ $terr(errors._form) }}
         </div>
-        <ResendVerificationEmail
+        <resend-verification-email
           v-if="showResendVerification"
           :email="email || ''"
         />
@@ -62,7 +62,7 @@
           </div>
         </form>
         <div class="mbl-flex google-login-button-container">
-          <GoogleLoginButton v-if="googleOauth2Url" :google-oauth2-url="googleOauth2Url" />
+          <google-login-button v-if="googleOauth2Url" :google-oauth2-url="googleOauth2Url" />
         </div>
       </template>
     </div>

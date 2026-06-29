@@ -1,6 +1,6 @@
 <template>
   <div class="content-column">
-    <BusyBar :busy="loadingReadingSuggestions && !readingSuggestions.length" />
+    <busy-bar :busy="loadingReadingSuggestions && !readingSuggestions.length" />
     <header class="page-header">
       <h1 class="mbl-title">
         {{ t('today') }}
@@ -11,7 +11,7 @@
     </header>
     <br>
     <div class="today-page__progress-bar-container" data-screenshot="daily-goal">
-      <DoubleProgressBar :primary-percentage="dailyGoalPercentCompleteNew" :secondary-percentage="dailyGoalPercentComplete" />
+      <double-progress-bar :primary-percentage="dailyGoalPercentCompleteNew" :secondary-percentage="dailyGoalPercentComplete" />
       <div class="mbl-level mbl-level--mobile">
         <div class="mbl-level-left">
           <div class="mbl-level-item">
@@ -33,17 +33,17 @@
         </div>
       </div>
     </div>
-    <ReadingTrackerResetCard />
+    <reading-tracker-reset-card />
     <div class="entry-container" role="list" data-testid="log-entries">
       <ClientOnly>
-        <LogEntry
+        <log-entry
           v-for="entry of logEntriesForToday"
           :key="entry.id"
           role="listitem"
           :passage="entry"
           :actions="actionsForTodayLogEntry(entry)"
         />
-        <LogEntry
+        <log-entry
           v-if="!logEntriesForToday.length"
           key="no-entries"
           role="listitem"
@@ -58,7 +58,7 @@
       </h3>
       <div class="entry-container" role="list" data-testid="reading-suggestions">
         <ClientOnly>
-          <LogEntry
+          <log-entry
             v-for="(passage, index) of readingSuggestions"
             :key="`${index}-${passage.startVerseId}-${passage.endVerseId}`"
             role="listitem"
@@ -66,13 +66,13 @@
             :passage="passage"
             :actions="actionsForReadingSuggestionPassage(passage)"
           />
-          <LogEntry
+          <log-entry
             v-if="loadingReadingSuggestions && !readingSuggestions.length"
             key="loading"
             role="listitem"
             :message="t('loading')"
           />
-          <LogEntry
+          <log-entry
             v-if="!loadingReadingSuggestions && !readingSuggestions.length"
             key="no-suggestions"
             role="listitem"
@@ -106,10 +106,12 @@
     <div class="today-page__recent-notes-container" role="list" data-testid="recent-notes">
       <ClientOnly>
         <div v-if="passageNotesStore.loading && !recentNotes.length" class="passage-note">
-          <div class="passage-note--content mbl-text-center">{{ t('loading') }}</div>
+          <div class="passage-note--content mbl-text-center">
+            {{ t('loading') }}
+          </div>
         </div>
         <template v-else-if="!recentNotes.length">
-          <LogEntry :message="t('no_recent_notes')" role="listitem" />
+          <log-entry :message="t('no_recent_notes')" role="listitem" />
         </template>
         <template v-else>
           <div
@@ -119,7 +121,9 @@
             role="listitem"
             data-testid="recent-note"
           >
-            <div class="passage-note--content">{{ note.content }}</div>
+            <div class="passage-note--content">
+              {{ note.content }}
+            </div>
           </div>
           <div class="mbl-text-center" style="margin-top: 1rem;">
             <NuxtLink class="mbl-button mbl-button--light" :to="localePath('/notes')">

@@ -12,9 +12,11 @@
     <div class="passage-note--created-date">
       <span class="mbl-text-muted mbl-text-small" :title="noteCreatedAtDisplayTime">{{ timeSince(note.createdAt) }}</span>
     </div>
-    <div class="passage-note--content" data-testid="passage-note-content">{{ note.content }}</div>
+    <div class="passage-note--content" data-testid="passage-note-content">
+      {{ note.content }}
+    </div>
     <div class="passage-note--tags" data-testid="passage-note-tags">
-      <PassageNoteTagPill v-for="tag in resolvedTags" :key="tag.id" :tag="tag" />
+      <passage-note-tag-pill v-for="tag in resolvedTags" :key="tag.id" :tag="tag" />
     </div>
     <div class="passage-note--controls">
       <div class="mbl-button-group mbl-button-group--end">
@@ -44,7 +46,7 @@ const props = defineProps<{
     content?: string;
     createdAt?: string;
   };
-  actions?: Array<{ label: string; callback: () => void }>;
+  actions?: Array<{ label: string; callback:() => void }>;
   getReadingUrl?: (bookIndex: number, chapterIndex: number) => string;
 }>();
 

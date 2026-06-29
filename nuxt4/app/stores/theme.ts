@@ -12,12 +12,12 @@ const parseCookieHeader = (cookieHeader: string): Record<string, string> => {
   const out: Record<string, string> = {};
   for (const part of cookieHeader.split(';')) {
     const trimmed = part.trim();
-    if (!trimmed) continue;
+    if (!trimmed) { continue; }
     const eqIdx = trimmed.indexOf('=');
-    if (eqIdx <= 0) continue;
+    if (eqIdx <= 0) { continue; }
     const name = trimmed.slice(0, eqIdx).trim();
     const rawValue = trimmed.slice(eqIdx + 1);
-    if (!name) continue;
+    if (!name) { continue; }
     try {
       out[name] = decodeURIComponent(rawValue);
     }
@@ -79,7 +79,7 @@ export const useThemeStore = defineStore('theme', {
     destroyClient(): void {
       const mediaQuery = this._colorSchemeMediaQuery;
       const listener = this._onColorSchemeChange;
-      if (!mediaQuery || !listener) return;
+      if (!mediaQuery || !listener) { return; }
       if (mediaQuery.removeEventListener) {
         mediaQuery.removeEventListener('change', listener);
       }
@@ -97,14 +97,14 @@ export const useThemeStore = defineStore('theme', {
     },
 
     persistMode(): void {
-      if (!import.meta.client || typeof document === 'undefined') return;
+      if (!import.meta.client || typeof document === 'undefined') { return; }
       const encoded = encodeURIComponent(this.mode);
       const secure = window.location.protocol === 'https:' ? '; Secure' : '';
       document.cookie = `${THEME_COOKIE_NAME}=${encoded}; Path=/; Max-Age=${THEME_COOKIE_MAX_AGE_SECONDS}; SameSite=Lax${secure}`;
     },
 
     applyThemeAttrs(): void {
-      if (!import.meta.client || typeof document === 'undefined') return;
+      if (!import.meta.client || typeof document === 'undefined') { return; }
       const root = document.documentElement;
       if (this.mode === 'system') {
         root.removeAttribute('data-theme');

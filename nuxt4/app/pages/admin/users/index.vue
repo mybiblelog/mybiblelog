@@ -3,7 +3,9 @@
     <div class="content-column">
       <div class="mbl-level">
         <div class="mbl-level-left">
-          <h1 class="mbl-title">Users Admin</h1>
+          <h1 class="mbl-title">
+            Users Admin
+          </h1>
         </div>
         <div class="mbl-level-right">
           <input v-model="searchText" class="mbl-input" type="text" placeholder="Search by email">
@@ -21,8 +23,8 @@
           >
             User
             <template v-if="sortOn === 'email'">
-              <CaretDownIcon v-if="sortDirection === 1" />
-              <CaretDownIcon v-if="sortDirection === -1" class="flipped" />
+              <caret-down-icon v-if="sortDirection === 1" />
+              <caret-down-icon v-if="sortDirection === -1" class="flipped" />
             </template>
           </button>
           <button
@@ -33,8 +35,8 @@
           >
             Join Date
             <template v-if="sortOn === 'createdAt'">
-              <CaretDownIcon v-if="sortDirection === 1" />
-              <CaretDownIcon v-if="sortDirection === -1" class="flipped" />
+              <caret-down-icon v-if="sortDirection === 1" />
+              <caret-down-icon v-if="sortDirection === -1" class="flipped" />
             </template>
           </button>
         </div>
@@ -42,7 +44,9 @@
           <span class="mbl-text-small mbl-text-muted">Per page:</span>
           <div class="mbl-select mbl-select--sm">
             <select v-model="limit">
-              <option v-for="size in [10, 25, 50, 100]" :key="size" :value="size">{{ size }}</option>
+              <option v-for="size in [10, 25, 50, 100]" :key="size" :value="size">
+                {{ size }}
+              </option>
             </select>
           </div>
         </div>
@@ -57,7 +61,9 @@
         </div>
         <template v-else>
           <div class="users-page__results-bar">
-            <div class="mbl-text-small mbl-text-muted">{{ resultsSummary }}</div>
+            <div class="mbl-text-small mbl-text-muted">
+              {{ resultsSummary }}
+            </div>
             <div v-if="totalPages > 1" class="users-page__pager">
               <div class="mbl-field mbl-field--addons mbl-field--flush" role="group" aria-label="Pagination">
                 <p class="mbl-control">
@@ -68,13 +74,15 @@
                     aria-label="Previous page"
                     @click="onPageChanged(page - 1)"
                   >
-                    <CaretLeftIcon width="10px" height="18px" fill="currentColor" />
+                    <caret-left-icon width="10px" height="18px" fill="currentColor" />
                   </button>
                 </p>
                 <div class="mbl-control">
                   <div class="mbl-select mbl-select--sm">
                     <select :value="page" aria-label="Page" @change="onPageChanged(Number(($event.target as HTMLSelectElement).value))">
-                      <option v-for="p in totalPages" :key="p" :value="p">Page {{ p }}</option>
+                      <option v-for="p in totalPages" :key="p" :value="p">
+                        Page {{ p }}
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -86,7 +94,7 @@
                     aria-label="Next page"
                     @click="onPageChanged(page + 1)"
                   >
-                    <CaretRightIcon width="10px" height="18px" fill="currentColor" />
+                    <caret-right-icon width="10px" height="18px" fill="currentColor" />
                   </button>
                 </p>
               </div>
@@ -99,7 +107,9 @@
                 <span class="user-card__number mbl-text-small mbl-text-muted">#{{ offset + index + 1 }}</span>
                 {{ user.email }}
               </div>
-              <div class="user-card__date mbl-text-small mbl-text-muted">{{ user.createdAt.split('T')[0] }}</div>
+              <div class="user-card__date mbl-text-small mbl-text-muted">
+                {{ user.createdAt.split('T')[0] }}
+              </div>
               <div class="user-card__actions">
                 <button class="mbl-button mbl-button--light mbl-button--primary mbl-button--sm" @click="openUserDetails(user)">
                   Details
@@ -111,7 +121,7 @@
       </div>
     </div>
 
-    <AdminUserDetailModal
+    <admin-user-detail-modal
       :user="selectedUser"
       :open="!!selectedUser"
       @close="closeUserDetails"

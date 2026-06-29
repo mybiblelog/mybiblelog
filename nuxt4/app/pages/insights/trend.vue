@@ -9,7 +9,7 @@
     <p v-if="loading" class="insights-loading">
       {{ $t('loading') }}
     </p>
-    <DailyVersesChart v-else :entries="entries" />
+    <daily-verses-chart v-else :entries="entries" />
   </div>
 </template>
 

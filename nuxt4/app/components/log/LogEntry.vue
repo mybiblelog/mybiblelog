@@ -22,7 +22,7 @@
         </template>
       </div>
       <div class="button-controls">
-        <ActionMenu :actions="actions" />
+        <action-menu :actions="actions" />
       </div>
     </div>
   </div>

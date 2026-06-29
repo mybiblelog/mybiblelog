@@ -13,11 +13,11 @@
       :data-require-email-verification="String(config.public.requireEmailVerification)"
       style="display:none"
     />
-    <FloatingFeedbackButton />
-    <AppToaster />
-    <AppDialog />
-    <LogEntryEditorModal />
-    <ActionSheetModal />
+    <floating-feedback-button />
+    <app-toaster />
+    <app-dialog />
+    <log-entry-editor-modal />
+    <action-sheet-modal />
   </div>
 </template>
 

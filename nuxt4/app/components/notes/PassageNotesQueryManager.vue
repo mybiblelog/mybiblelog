@@ -77,7 +77,7 @@
 
     <div class="mbl-field">
       <label class="mbl-label">{{ t('passage') }}</label>
-      <VerseInput v-model="passageRangeModel" :multi-verse="true" input-test-id="notes-query-passage" />
+      <verse-input v-model="passageRangeModel" :multi-verse="true" input-test-id="notes-query-passage" />
     </div>
 
     <div v-if="hasSelectedPassage" class="mbl-field">
@@ -123,9 +123,15 @@
       <div class="mbl-control">
         <div class="mbl-select">
           <select :value="draft.limit" data-testid="notes-query-page-size" @change="setDraft({ limit: Number(($event.target as HTMLSelectElement).value) })">
-            <option :value="10">10</option>
-            <option :value="20">20</option>
-            <option :value="50">50</option>
+            <option :value="10">
+              10
+            </option>
+            <option :value="20">
+              20
+            </option>
+            <option :value="50">
+              50
+            </option>
           </select>
         </div>
       </div>
@@ -140,7 +146,7 @@
       </button>
     </div>
 
-    <AppModal :open="showTagFilterModal" :title="t('tag_select.choose')" @close="closeTagFilterModal">
+    <app-modal :open="showTagFilterModal" :title="t('tag_select.choose')" @close="closeTagFilterModal">
       <template #content>
         <div class="tag-picker">
           <label
@@ -155,10 +161,14 @@
         </div>
       </template>
       <template #footer>
-        <button class="mbl-button mbl-button--primary" @click="applyTagFilterModal">{{ t('done') }}</button>
-        <button class="mbl-button mbl-button--light" @click="closeTagFilterModal">{{ t('cancel') }}</button>
+        <button class="mbl-button mbl-button--primary" @click="applyTagFilterModal">
+          {{ t('done') }}
+        </button>
+        <button class="mbl-button mbl-button--light" @click="closeTagFilterModal">
+          {{ t('cancel') }}
+        </button>
       </template>
-    </AppModal>
+    </app-modal>
   </div>
 </template>
 

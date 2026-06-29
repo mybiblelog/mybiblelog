@@ -9,7 +9,7 @@
     <p v-if="loading" class="insights-loading">
       {{ $t('loading') }}
     </p>
-    <BookFrequencyChart v-else :entries="entries" />
+    <book-frequency-chart v-else :entries="entries" />
   </div>
 </template>
 

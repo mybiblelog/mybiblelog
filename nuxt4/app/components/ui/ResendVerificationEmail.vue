@@ -54,7 +54,7 @@ function clearTimer() {
 function startCountdown(seconds: number) {
   clearTimer();
   secondsRemaining.value = Math.max(0, Number(seconds) || 0);
-  if (secondsRemaining.value <= 0) return;
+  if (secondsRemaining.value <= 0) { return; }
   timerId = setInterval(() => {
     if (secondsRemaining.value <= 1) {
       secondsRemaining.value = 0;
@@ -76,7 +76,7 @@ onMounted(() => {
 onBeforeUnmount(() => clearTimer());
 
 async function onResend() {
-  if (!canResend.value) return;
+  if (!canResend.value) { return; }
   loading.value = true;
   lastResult.value = null;
   try {
