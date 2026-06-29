@@ -99,6 +99,14 @@ export default defineNuxtConfig({
     },
   },
 
+  vite: {
+    build: {
+      // modulepreload is supported by 96%+ of browsers; polyfill not worth the
+      // sourcemap warning it generates in Vite 7
+      modulePreload: { polyfill: false },
+    },
+  },
+
   // Disable telemetry
   telemetry: false,
 
