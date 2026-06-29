@@ -1,11 +1,11 @@
 <template>
   <div class="trend">
     <div class="trend__controls">
-      <label class="mbl-label" for="trend-window">{{ $t('window') }}</label>
+      <label class="mbl-label" for="trend-window">{{ t('window') }}</label>
       <div class="mbl-select mbl-select--sm">
         <select id="trend-window" v-model.number="days">
           <option v-for="opt in windowOptions" :key="opt" :value="opt">
-            {{ $t('last_n_days', { count: opt }) }}
+            {{ t('last_n_days', { count: opt }) }}
           </option>
         </select>
       </div>
@@ -15,7 +15,7 @@
       class="trend__svg"
       :viewBox="`0 0 ${width} ${height}`"
       role="img"
-      :aria-label="$t('chart_label')"
+      :aria-label="t('chart_label')"
     >
       <!-- horizontal gridlines -->
       <line

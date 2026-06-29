@@ -1,20 +1,20 @@
 <template>
   <div class="recency">
     <div class="recency__controls">
-      <label class="mbl-label" for="recency-sort">{{ $t('sort_by') }}</label>
+      <label class="mbl-label" for="recency-sort">{{ t('sort_by') }}</label>
       <div class="mbl-select mbl-select--sm">
         <select id="recency-sort" v-model="sortDir">
           <option value="bible">
-            {{ $t('bible_order') }}
+            {{ t('bible_order') }}
           </option>
           <option value="alpha">
-            {{ $t('alphabetical') }}
+            {{ t('alphabetical') }}
           </option>
           <option value="recent">
-            {{ $t('most_recent') }}
+            {{ t('most_recent') }}
           </option>
           <option value="oldest">
-            {{ $t('least_recent') }}
+            {{ t('least_recent') }}
           </option>
         </select>
       </div>
@@ -23,8 +23,8 @@
     <table class="mbl-table recency__table">
       <thead>
         <tr>
-          <th>{{ $t('book') }}</th>
-          <th>{{ $t('last_read') }}</th>
+          <th>{{ t('book') }}</th>
+          <th>{{ t('last_read') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -35,7 +35,7 @@
               <span class="recency__relative">{{ row.relative }}</span>
               <span class="recency__absolute">{{ row.absolute }}</span>
             </template>
-            <span v-else class="recency__never">{{ $t('never') }}</span>
+            <span v-else class="recency__never">{{ t('never') }}</span>
           </td>
         </tr>
       </tbody>
@@ -59,7 +59,7 @@ const props = defineProps({
   },
 });
 
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 
 const sortDir = ref<'bible' | 'alpha' | 'recent' | 'oldest'>('recent');
 

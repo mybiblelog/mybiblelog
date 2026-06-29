@@ -9,7 +9,7 @@
       </p>
     </div>
     <div class="mbl-field">
-      <div class="mbl-control buttons">
+      <div class="mbl-control mbl-button-group">
         <button class="mbl-button mbl-button--primary mbl-button--lg" data-testid="get-started-go" @click="handleGetStarted">
           {{ t('start_page.get_started.button') }}
         </button>

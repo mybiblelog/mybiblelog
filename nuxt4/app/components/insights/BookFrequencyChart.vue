@@ -2,45 +2,45 @@
   <div class="frequency">
     <div class="frequency__controls">
       <div class="frequency__control">
-        <label class="mbl-label" for="freq-timeframe">{{ $t('timeframe') }}</label>
+        <label class="mbl-label" for="freq-timeframe">{{ t('timeframe') }}</label>
         <div class="mbl-select mbl-select--sm">
           <select id="freq-timeframe" v-model.number="days">
             <option v-for="opt in timeframeOptions" :key="opt" :value="opt">
-              {{ $t('last_n_days', { count: opt }) }}
+              {{ t('last_n_days', { count: opt }) }}
             </option>
           </select>
         </div>
       </div>
 
       <div class="frequency__control">
-        <label class="mbl-label" for="freq-metric">{{ $t('metric') }}</label>
+        <label class="mbl-label" for="freq-metric">{{ t('metric') }}</label>
         <div class="mbl-select mbl-select--sm">
           <select id="freq-metric" v-model="metric">
             <option value="raw">
-              {{ $t('raw_counts') }}
+              {{ t('raw_counts') }}
             </option>
             <option value="proportional">
-              {{ $t('proportional') }}
+              {{ t('proportional') }}
             </option>
           </select>
         </div>
       </div>
 
       <div class="frequency__control">
-        <label class="mbl-label" for="freq-sort">{{ $t('sort_by') }}</label>
+        <label class="mbl-label" for="freq-sort">{{ t('sort_by') }}</label>
         <div class="mbl-select mbl-select--sm">
           <select id="freq-sort" v-model="sort">
             <option value="bible">
-              {{ $t('bible_order') }}
+              {{ t('bible_order') }}
             </option>
             <option value="alpha">
-              {{ $t('alphabetical') }}
+              {{ t('alphabetical') }}
             </option>
             <option value="most">
-              {{ $t('most_read') }}
+              {{ t('most_read') }}
             </option>
             <option value="least">
-              {{ $t('least_read') }}
+              {{ t('least_read') }}
             </option>
           </select>
         </div>
@@ -74,7 +74,7 @@ const props = defineProps({
   },
 });
 
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 
 const timeframeOptions = [30, 60, 90, 180, 365];
 const days = ref(30);

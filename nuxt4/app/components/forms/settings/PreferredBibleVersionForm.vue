@@ -51,7 +51,7 @@
     </div>
 
     <div class="mbl-field">
-      <div class="mbl-control buttons">
+      <div class="mbl-control mbl-button-group">
         <button class="mbl-button" :disabled="isSaving" @click="handlePrevious">
           {{ previousButtonText }}
         </button>
