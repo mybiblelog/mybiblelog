@@ -25,7 +25,15 @@ export default defineNuxtPlugin({
 
     const triggerLogout = (reason: string): void => {
       import('~/stores/auth')
-        .then(({ useAuthStore }) => useAuthStore().logout(reason as 'session_expired'))
+        .then(({ useAuthStore }) => {
+          const authStore = useAuthStore();
+          // Only treat an `unauthenticated` response as an expired session when
+          // the user actually had one. Anonymous visitors can hit authed
+          // endpoints (e.g. a layout-mounted store eagerly loading data); those
+          // must not bounce them to /login?reason=session_expired.
+          if (!authStore.loggedIn) { return; }
+          return authStore.logout(reason as 'session_expired');
+        })
         .catch(() => {});
     };
 

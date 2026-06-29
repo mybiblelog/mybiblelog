@@ -5,7 +5,7 @@
       <template v-if="slug !== 'overview'">
         <br>
         <NuxtLink :to="localePath('/about/overview')">
-          {{ $t('back') }}
+          {{ t('back') }}
         </NuxtLink>
       </template>
     </article>
@@ -17,13 +17,21 @@
 import ContentPageFooter from '~/components/content/PageFooter.vue';
 
 const route = useRoute();
-const { locale } = useI18n();
+const { t, locale } = useI18n();
 const localePath = useLocalePath();
 
 const slug = route.params.slug as string;
 
+// @nuxt/content v3 collapses repeated dashes when generating a document's
+// `path` (e.g. `page-features--today.md` → `/en/about/page-features-today`),
+// but the public URLs and sitemap keep the original `--`. Normalize the slug
+// for the lookup so these pages resolve instead of 404-redirecting to overview.
+// The canonical/SEO path below intentionally keeps the original `--` slug so it
+// matches the URL the visitor (and crawler) actually requested.
+const contentSlug = slug.replace(/-{2,}/g, '-');
+
 const { data: page, error } = await useAsyncData(`about-${slug}`, () =>
-  queryCollection('content').path(`/${locale.value}/about/${slug}`).first(),
+  queryCollection('content').path(`/${locale.value}/about/${contentSlug}`).first(),
 );
 
 // Redirect to overview if page not found

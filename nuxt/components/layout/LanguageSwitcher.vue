@@ -4,6 +4,7 @@
       v-if="variant === 'toolbar'"
       type="button"
       class="language-switcher__toolbar-btn"
+      data-testid="language-switcher-toolbar-btn"
       :aria-label="$t('choose_language')"
       @click="modalOpen = true"
     >
@@ -13,6 +14,7 @@
       v-else
       type="button"
       class="language-switcher__drawer-btn"
+      data-testid="language-switcher-drawer-btn"
       @click="modalOpen = true"
     >
       <translator-icon class="language-switcher__drawer-icon" width="20" height="20" />

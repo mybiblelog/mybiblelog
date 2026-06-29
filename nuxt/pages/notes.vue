@@ -17,11 +17,11 @@
         </div>
       </header>
       <div class="notes-page__mobile-query-button">
-        <button class="mbl-button mbl-button--light mbl-button--sm notes-page__query-button" type="button" @click="openQueryManagerModal">
+        <button class="mbl-button mbl-button--light mbl-button--sm notes-page__query-button" type="button" data-testid="notes-mobile-query-open" @click="openQueryManagerModal">
           {{ $t('query_manager.open') }}
           <span v-if="hasAppliedViewOptions" class="notes-page__query-badge" aria-hidden="true" />
         </button>
-        <button v-if="hasAppliedViewOptions" class="mbl-button mbl-button--light mbl-button--sm" type="button" @click="resetViewOptions">
+        <button v-if="hasAppliedViewOptions" class="mbl-button mbl-button--light mbl-button--sm" type="button" data-testid="notes-query-reset" @click="resetViewOptions">
           {{ $t('query_manager.reset_button') }}
         </button>
       </div>
@@ -30,7 +30,7 @@
         <aside class="notes-page__sidebar">
           <div class="mbl-box notes-page__query-manager-box">
             <div class="notes-page__query-manager-actions">
-              <button v-if="hasAppliedViewOptions" class="mbl-button mbl-button--light mbl-button--sm" type="button" @click="resetViewOptions">
+              <button v-if="hasAppliedViewOptions" class="mbl-button mbl-button--light mbl-button--sm" type="button" data-testid="notes-query-reset-sidebar" @click="resetViewOptions">
                 {{ $t('query_manager.reset') }}
               </button>
             </div>
@@ -300,9 +300,8 @@ export default {
     },
     resetViewOptions() {
       if (!this.hasAppliedViewOptions) { return; }
-      const mgr = this.$refs.sidebarQueryManager;
-      if (!mgr || typeof mgr.confirmAndReset !== 'function') { return; }
-      mgr.confirmAndReset();
+      this.closeQueryManagerModal();
+      this.pushNotesQuery({});
     },
     async applyQueryManager(update) {
       await this.pushNotesQuery({ ...this.query, ...update, offset: 0 });

@@ -4,6 +4,7 @@
       v-if="variant === 'toolbar'"
       type="button"
       class="theme-switcher__toolbar-btn"
+      data-testid="theme-switcher-toolbar-btn"
       :aria-label="toolbarAriaLabel"
       @click="modalOpen = true"
     >
@@ -17,6 +18,7 @@
       v-else
       type="button"
       class="theme-switcher__drawer-btn"
+      data-testid="theme-switcher-drawer-btn"
       @click="modalOpen = true"
     >
       <span class="theme-switcher__drawer-leading">

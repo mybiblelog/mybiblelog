@@ -3,7 +3,7 @@
     <template v-if="lastResult === 'sent'">
       <article class="mbl-message mbl-message--success">
         <div class="mbl-message__body">
-          {{ $t('verification_email_sent') }}
+          {{ t('verification_email_sent') }}
         </div>
       </article>
     </template>
@@ -15,11 +15,11 @@
           :disabled="!canResend"
           @click.prevent="onResend"
         >
-          {{ $t('resend_verification_email') }}
+          {{ t('resend_verification_email') }}
         </button>
       </div>
       <p v-if="lastResult === 'error'" class="mbl-help mbl-help--danger">
-        {{ $t('verification_email_failed') }}
+        {{ t('verification_email_failed') }}
       </p>
     </template>
   </div>
@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<{
 }>(), { initialSecondsUntilCanRetry: 0 });
 
 const { $http } = useNuxtApp();
-const { locale: i18nLocale } = useI18n();
+const { t, locale: i18nLocale } = useI18n();
 
 const secondsRemaining = ref(0);
 const loading = ref(false);

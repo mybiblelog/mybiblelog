@@ -194,6 +194,9 @@ test.describe('Notes page', () => {
     });
 
     await page.goto('/notes');
+    // Wait for hydration (both seeded notes rendered) before interacting,
+    // otherwise the fill lands pre-hydration and the query draft stays clean.
+    await expect(page.getByTestId('passage-note')).toHaveCount(2);
     const sidebar = page.locator('.notes-page__sidebar');
     const passageInput = sidebar.getByTestId('notes-query-passage');
     await passageInput.fill('Genesis 1:1-31');
@@ -245,6 +248,9 @@ test.describe('Notes page', () => {
     await seedNote(api, { content: 'Beta note about exodus', passages: [] });
 
     await page.goto('/notes');
+    // Wait for hydration (both seeded notes rendered) before interacting,
+    // otherwise the fill lands pre-hydration and the query draft stays clean.
+    await expect(page.getByTestId('passage-note')).toHaveCount(2);
     const sidebar = page.locator('.notes-page__sidebar');
     await sidebar.getByTestId('notes-query-search').fill('exodus');
     await sidebar.getByTestId('notes-query-apply').click();

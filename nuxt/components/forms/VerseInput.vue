@@ -7,6 +7,7 @@
           class="mbl-input verse-input__input"
           type="text"
           :placeholder="placeholder"
+          :data-testid="inputTestId || undefined"
           :class="{ 'mbl-input--danger': showInvalid }"
           :style="inputStyle"
           @input="onTextInput"
@@ -156,6 +157,7 @@ export default {
     // v-model value: { startVerseId, endVerseId } | null
     value: { type: Object, default: null },
     multiVerse: { type: Boolean, default: false },
+    inputTestId: { type: String, default: undefined },
   },
   data() {
     return {

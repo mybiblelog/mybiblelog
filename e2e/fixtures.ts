@@ -37,6 +37,10 @@ export const test = base.extend<Fixtures>({
       { name: 'auth_token', value: testUser.token, url: env.siteUrl, httpOnly: true, sameSite: 'Lax' },
       { name: 'i18n_redirected', value: 'en', url: env.siteUrl },
     ]);
+    // Inject the bypass header into all browser requests so rate-limited UI
+    // actions (e.g. the change-password form) don't trip per-IP limits across
+    // repeated runs. The API only honors it in non-production. Mirrors auth.spec.
+    await context.setExtraHTTPHeaders({ 'x-test-bypass-secret': env.bypassSecret });
     await use(context);
   },
 });

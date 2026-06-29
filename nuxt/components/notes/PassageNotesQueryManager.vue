@@ -46,7 +46,7 @@
       <div v-if="!hasSelectedTags" class="mbl-field">
         <div class="mbl-control">
           <label class="mbl-checkbox">
-            <input v-model="onlyUntaggedNotes" type="checkbox">
+            <input v-model="onlyUntaggedNotes" type="checkbox" data-testid="notes-query-only-untagged">
             {{ $t('tag_only_untagged') }}
           </label>
         </div>
@@ -56,19 +56,19 @@
         <label class="mbl-label">{{ $t('tag_match') }}</label>
         <div class="mbl-control">
           <label class="mbl-radio">
-            <input v-model="draft.filterTagMatching" type="radio" value="any">
+            <input v-model="draft.filterTagMatching" type="radio" value="any" data-testid="notes-query-tag-match-any">
             {{ $t('tag_match_any') }}
           </label>
         </div>
         <div class="mbl-control">
           <label class="mbl-radio">
-            <input v-model="draft.filterTagMatching" type="radio" value="all">
+            <input v-model="draft.filterTagMatching" type="radio" value="all" data-testid="notes-query-tag-match-all">
             {{ $t('tag_match_all') }}
           </label>
         </div>
         <div class="mbl-control">
           <label class="mbl-radio">
-            <input v-model="draft.filterTagMatching" type="radio" value="exact">
+            <input v-model="draft.filterTagMatching" type="radio" value="exact" data-testid="notes-query-tag-match-exact">
             {{ $t('tag_match_exact') }}
           </label>
         </div>
@@ -78,21 +78,21 @@
 
       <div class="mbl-field">
         <label class="mbl-label">{{ $t('passage') }}</label>
-        <verse-input v-model="passageRangeModel" :multi-verse="true" />
+        <verse-input v-model="passageRangeModel" :multi-verse="true" input-test-id="notes-query-passage" />
       </div>
 
       <div v-if="hasSelectedPassage" class="mbl-field">
         <label class="mbl-label">{{ $t('passage_match') }}</label>
         <div class="mbl-control">
           <label class="mbl-radio passage-notes-query-manager__radio-option">
-            <input v-model="draft.filterPassageMatching" type="radio" value="inclusive">
+            <input v-model="draft.filterPassageMatching" type="radio" value="inclusive" data-testid="notes-query-passage-match-inclusive">
             <span class="passage-notes-query-manager__radio-title">{{ $t('passage_match_inclusive') }}</span>
             <span class="passage-notes-query-manager__radio-help" v-html="$t('passage_match_inclusive_description')" />
           </label>
         </div>
         <div class="mbl-control">
           <label class="mbl-radio passage-notes-query-manager__radio-option">
-            <input v-model="draft.filterPassageMatching" type="radio" value="exclusive">
+            <input v-model="draft.filterPassageMatching" type="radio" value="exclusive" data-testid="notes-query-passage-match-exclusive">
             <span class="passage-notes-query-manager__radio-title">{{ $t('passage_match_exclusive') }}</span>
             <span class="passage-notes-query-manager__radio-help" v-html="$t('passage_match_exclusive_description')" />
           </label>
@@ -105,13 +105,13 @@
         <label class="mbl-label">{{ $t('sort') }}</label>
         <div class="mbl-control">
           <label class="mbl-radio">
-            <input v-model="draftSort" type="radio" value="createdAt:descending">
+            <input v-model="draftSort" type="radio" value="createdAt:descending" data-testid="notes-query-sort-newest">
             {{ $t('sort_newest_first') }}
           </label>
         </div>
         <div class="mbl-control">
           <label class="mbl-radio">
-            <input v-model="draftSort" type="radio" value="createdAt:ascending">
+            <input v-model="draftSort" type="radio" value="createdAt:ascending" data-testid="notes-query-sort-oldest">
             {{ $t('sort_oldest_first') }}
           </label>
         </div>
@@ -123,7 +123,7 @@
         <label class="mbl-label">{{ $t('page_size') }}</label>
         <div class="mbl-control">
           <div class="mbl-select">
-            <select :value="draft.limit" @change="setDraft({ limit: Number($event.target.value) })">
+            <select :value="draft.limit" data-testid="notes-query-page-size" @change="setDraft({ limit: Number($event.target.value) })">
               <option :value="10">
                 10
               </option>
