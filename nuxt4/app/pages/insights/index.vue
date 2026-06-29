@@ -1,13 +1,13 @@
 <template>
   <div>
     <h2 class="mbl-title mbl-title--4">
-      {{ $t('activity') }}
+      {{ t('activity') }}
     </h2>
     <p class="insights-intro">
-      {{ $t('description') }}
+      {{ t('description') }}
     </p>
     <p v-if="loading" class="insights-loading">
-      {{ $t('loading') }}
+      {{ t('loading') }}
     </p>
     <contribution-heatmap v-else :entries="entries" />
   </div>
@@ -17,6 +17,7 @@
 import ContributionHeatmap from '~/components/insights/ContributionHeatmap.vue';
 import { useLogEntriesStore } from '~/stores/log-entries';
 
+const { t } = useI18n();
 const store = useLogEntriesStore();
 const entries = computed(() => store.logEntries);
 const loading = ref(false);

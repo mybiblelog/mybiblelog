@@ -17,6 +17,8 @@
     <app-toaster />
     <app-dialog />
     <log-entry-editor-modal />
+    <passage-note-editor-modal />
+    <passage-note-tag-editor-modal />
     <action-sheet-modal />
   </div>
 </template>
@@ -27,6 +29,8 @@ import FloatingFeedbackButton from '~/components/ui/FloatingFeedbackButton.vue';
 import AppToaster from '~/components/ui/AppToaster.vue';
 import AppDialog from '~/components/popups/AppDialog.vue';
 import LogEntryEditorModal from '~/components/popups/LogEntryEditorModal.vue';
+import PassageNoteEditorModal from '~/components/popups/PassageNoteEditorModal.vue';
+import PassageNoteTagEditorModal from '~/components/popups/PassageNoteTagEditorModal.vue';
 import ActionSheetModal from '~/components/popups/ActionSheetModal.vue';
 import { useThemeStore } from '~/stores/theme';
 

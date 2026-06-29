@@ -1,65 +1,5 @@
 <template>
   <div class="content-column">
-    <app-modal
-      :open="tagEditorStore.open"
-      :title="tagEditorStore.passageNoteTag.id ? t('edit_tag') : t('add_tag')"
-      @close="handleEditorClose"
-    >
-      <template #content>
-        <div v-if="editorError" class="mbl-help mbl-help--danger">
-          {{ editorError }}
-        </div>
-        <div class="mbl-field">
-          <label class="mbl-label">{{ t('label') }}</label>
-          <div class="mbl-control">
-            <input
-              class="mbl-input"
-              data-testid="tag-editor-label"
-              type="text"
-              :value="tagEditorStore.passageNoteTag.label"
-              @input="onLabelInput"
-            >
-          </div>
-        </div>
-        <div class="mbl-field">
-          <label class="mbl-label">{{ t('color') }}</label>
-          <div class="mbl-control">
-            <input
-              class="mbl-input"
-              data-testid="tag-editor-color"
-              type="color"
-              :value="tagEditorStore.passageNoteTag.color"
-              @input="onColorInput"
-            >
-          </div>
-        </div>
-        <div class="mbl-field">
-          <label class="mbl-label">{{ t('description') }}</label>
-          <div class="mbl-control">
-            <textarea
-              class="mbl-textarea"
-              data-testid="tag-editor-description"
-              :value="tagEditorStore.passageNoteTag.description"
-              @input="onDescriptionInput"
-            />
-          </div>
-        </div>
-      </template>
-      <template #footer>
-        <button
-          class="mbl-button mbl-button--primary"
-          data-testid="tag-editor-submit"
-          :disabled="!tagEditorStore.passageNoteTag.label.trim() || tagEditorStore.submitting"
-          @click="handleEditorSave"
-        >
-          {{ t('save') }}
-        </button>
-        <button class="mbl-button mbl-button--light" @click="handleEditorClose">
-          {{ t('close') }}
-        </button>
-      </template>
-    </app-modal>
-
     <header class="page-header">
       <h2 class="mbl-title">
         {{ t('note_tags') }}
@@ -150,7 +90,6 @@
 </template>
 
 <script setup lang="ts">
-import AppModal from '~/components/popups/AppModal.vue';
 import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
 import { usePassageNoteTagEditorStore } from '~/stores/passage-note-tag-editor';
 import { useDialogStore } from '~/stores/dialog';
@@ -166,7 +105,6 @@ const passageNoteTagsStore = usePassageNoteTagsStore();
 const tagEditorStore = usePassageNoteTagEditorStore();
 
 const hydrated = ref(false);
-const editorError = ref('');
 
 onMounted(() => {
   hydrated.value = true;
@@ -179,40 +117,11 @@ function onSortOrderChange(e: Event) {
 }
 
 function openNewTagEditor() {
-  editorError.value = '';
   tagEditorStore.openEditor(null);
 }
 
 function openEditTagEditor(tag: { id: string | number; label?: string; color?: string; description?: string }) {
-  editorError.value = '';
   tagEditorStore.openEditor(tag as Parameters<typeof tagEditorStore.openEditor>[0]);
-}
-
-function onLabelInput(e: Event) {
-  const target = e.target as HTMLInputElement;
-  tagEditorStore.updatePassageNoteTag({ ...tagEditorStore.passageNoteTag, label: target.value });
-}
-
-function onColorInput(e: Event) {
-  const target = e.target as HTMLInputElement;
-  tagEditorStore.updatePassageNoteTag({ ...tagEditorStore.passageNoteTag, color: target.value });
-}
-
-function onDescriptionInput(e: Event) {
-  const target = e.target as HTMLTextAreaElement;
-  tagEditorStore.updatePassageNoteTag({ ...tagEditorStore.passageNoteTag, description: target.value });
-}
-
-async function handleEditorSave() {
-  editorError.value = '';
-  const result = await tagEditorStore.savePassageNoteTag();
-  if (!result) {
-    editorError.value = String((tagEditorStore.errors as Record<string, unknown>)?._form ?? t('unknown_error'));
-  }
-}
-
-async function handleEditorClose() {
-  await tagEditorStore.closeEditor();
 }
 
 function viewTagNotes(tag: { id: string | number }) {
@@ -292,24 +201,124 @@ async function deleteTag(id: string | number) {
     "sort_most_notes": "Most Notes",
     "sort_fewest_notes": "Fewest Notes",
     "sort_color": "Color",
-    "label": "Label",
-    "color": "Color",
-    "description": "Description",
-    "save": "Save",
-    "close": "Close",
     "notes_count": "Notes: {count}",
-    "edit_tag": "Edit Tag",
-    "add_tag": "Add Tag",
     "confirm_delete_tag": "Are you sure you want to delete this tag?",
     "cannot_delete_tag_in_use": "Cannot delete a tag that is still being used by notes.",
-    "tag_not_deleted": "The tag could not be deleted.",
-    "unknown_error": "An unknown error occurred."
+    "tag_not_deleted": "The tag could not be deleted."
   },
-  "de": { "note_tags": "Notiz-Tags", "notes": "Notizen", "new": "Neu", "edit": "Bearbeiten", "delete": "Löschen", "no_tags": "Keine Tags", "sort_by": "Sortieren", "sort_az": "A-Z", "sort_newest_first": "Neueste zuerst", "sort_oldest_first": "Älteste zuerst", "sort_most_notes": "Meiste Notizen", "sort_fewest_notes": "Wenigste Notizen", "sort_color": "Farbe", "label": "Label", "color": "Farbe", "description": "Beschreibung", "save": "Speichern", "close": "Schließen", "notes_count": "Notizen: {count}", "edit_tag": "Tag bearbeiten", "add_tag": "Tag hinzufügen", "confirm_delete_tag": "Sicher löschen?", "cannot_delete_tag_in_use": "Tag wird noch verwendet.", "tag_not_deleted": "Tag konnte nicht gelöscht werden.", "unknown_error": "Unbekannter Fehler." },
-  "es": { "note_tags": "Etiquetas", "notes": "Notas", "new": "Nuevo", "edit": "Editar", "delete": "Eliminar", "no_tags": "Sin etiquetas", "sort_by": "Ordenar", "sort_az": "A-Z", "sort_newest_first": "Más nuevas", "sort_oldest_first": "Más antiguas", "sort_most_notes": "Más notas", "sort_fewest_notes": "Menos notas", "sort_color": "Color", "label": "Etiqueta", "color": "Color", "description": "Descripción", "save": "Guardar", "close": "Cerrar", "notes_count": "Notas: {count}", "edit_tag": "Editar etiqueta", "add_tag": "Nueva etiqueta", "confirm_delete_tag": "¿Eliminar?", "cannot_delete_tag_in_use": "Etiqueta en uso.", "tag_not_deleted": "No se pudo eliminar.", "unknown_error": "Error desconocido." },
-  "fr": { "note_tags": "Étiquettes", "notes": "Notes", "new": "Nouveau", "edit": "Éditer", "delete": "Supprimer", "no_tags": "Pas d'étiquettes", "sort_by": "Trier", "sort_az": "A-Z", "sort_newest_first": "Plus récentes", "sort_oldest_first": "Plus anciennes", "sort_most_notes": "Plus de notes", "sort_fewest_notes": "Moins de notes", "sort_color": "Couleur", "label": "Étiquette", "color": "Couleur", "description": "Description", "save": "Enregistrer", "close": "Fermer", "notes_count": "Notes: {count}", "edit_tag": "Éditer", "add_tag": "Ajouter", "confirm_delete_tag": "Confirmer?", "cannot_delete_tag_in_use": "Tag utilisé.", "tag_not_deleted": "Impossible.", "unknown_error": "Erreur inconnue." },
-  "ko": { "note_tags": "노트 태그", "notes": "노트", "new": "추가", "edit": "편집", "delete": "삭제", "no_tags": "태그 없음", "sort_by": "정렬", "sort_az": "가나다순", "sort_newest_first": "최신순", "sort_oldest_first": "오래된순", "sort_most_notes": "노트 많은 순", "sort_fewest_notes": "노트 적은 순", "sort_color": "색상", "label": "태그 이름", "color": "색상", "description": "설명", "save": "저장", "close": "닫기", "notes_count": "노트: {count}", "edit_tag": "편집", "add_tag": "추가", "confirm_delete_tag": "삭제?", "cannot_delete_tag_in_use": "사용 중입니다.", "tag_not_deleted": "삭제 불가.", "unknown_error": "오류." },
-  "pt": { "note_tags": "Marcadores", "notes": "Notas", "new": "Novo", "edit": "Editar", "delete": "Apagar", "no_tags": "Sem marcadores", "sort_by": "Ordenar", "sort_az": "A-Z", "sort_newest_first": "Mais recentes", "sort_oldest_first": "Mais antigas", "sort_most_notes": "Mais notas", "sort_fewest_notes": "Menos notas", "sort_color": "Cor", "label": "Nome", "color": "Cor", "description": "Descrição", "save": "Salvar", "close": "Fechar", "notes_count": "Notas: {count}", "edit_tag": "Editar", "add_tag": "Adicionar", "confirm_delete_tag": "Confirmar?", "cannot_delete_tag_in_use": "Tag em uso.", "tag_not_deleted": "Não excluído.", "unknown_error": "Erro desconhecido." },
-  "uk": { "note_tags": "Теги", "notes": "Нотатки", "new": "Новий", "edit": "Редагувати", "delete": "Видалити", "no_tags": "Немає тегів", "sort_by": "Сортувати", "sort_az": "A-Z", "sort_newest_first": "Найновіші", "sort_oldest_first": "Найстаріші", "sort_most_notes": "Найбільше нотаток", "sort_fewest_notes": "Найменше нотаток", "sort_color": "Колір", "label": "Мітка", "color": "Колір", "description": "Опис", "save": "Зберегти", "close": "Закрити", "notes_count": "Нотатки: {count}", "edit_tag": "Редагувати", "add_tag": "Додати", "confirm_delete_tag": "Видалити?", "cannot_delete_tag_in_use": "Тег використовується.", "tag_not_deleted": "Не видалено.", "unknown_error": "Помилка." }
+  "de": {
+    "note_tags": "Notiz-Tags",
+    "notes": "Notizen",
+    "new": "Neu",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "no_tags": "Keine Tags",
+    "sort_by": "Sortieren",
+    "sort_az": "A-Z",
+    "sort_newest_first": "Neueste zuerst",
+    "sort_oldest_first": "Älteste zuerst",
+    "sort_most_notes": "Meiste Notizen",
+    "sort_fewest_notes": "Wenigste Notizen",
+    "sort_color": "Farbe",
+    "notes_count": "Notizen: {count}",
+    "confirm_delete_tag": "Sicher löschen?",
+    "cannot_delete_tag_in_use": "Tag wird noch verwendet.",
+    "tag_not_deleted": "Tag konnte nicht gelöscht werden."
+  },
+  "es": {
+    "note_tags": "Etiquetas",
+    "notes": "Notas",
+    "new": "Nuevo",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "no_tags": "Sin etiquetas",
+    "sort_by": "Ordenar",
+    "sort_az": "A-Z",
+    "sort_newest_first": "Más nuevas",
+    "sort_oldest_first": "Más antiguas",
+    "sort_most_notes": "Más notas",
+    "sort_fewest_notes": "Menos notas",
+    "sort_color": "Color",
+    "notes_count": "Notas: {count}",
+    "confirm_delete_tag": "¿Eliminar?",
+    "cannot_delete_tag_in_use": "Etiqueta en uso.",
+    "tag_not_deleted": "No se pudo eliminar."
+  },
+  "fr": {
+    "note_tags": "Étiquettes",
+    "notes": "Notes",
+    "new": "Nouveau",
+    "edit": "Éditer",
+    "delete": "Supprimer",
+    "no_tags": "Pas d'étiquettes",
+    "sort_by": "Trier",
+    "sort_az": "A-Z",
+    "sort_newest_first": "Plus récentes",
+    "sort_oldest_first": "Plus anciennes",
+    "sort_most_notes": "Plus de notes",
+    "sort_fewest_notes": "Moins de notes",
+    "sort_color": "Couleur",
+    "notes_count": "Notes: {count}",
+    "confirm_delete_tag": "Confirmer?",
+    "cannot_delete_tag_in_use": "Tag utilisé.",
+    "tag_not_deleted": "Impossible."
+  },
+  "ko": {
+    "note_tags": "노트 태그",
+    "notes": "노트",
+    "new": "추가",
+    "edit": "편집",
+    "delete": "삭제",
+    "no_tags": "태그 없음",
+    "sort_by": "정렬",
+    "sort_az": "가나다순",
+    "sort_newest_first": "최신순",
+    "sort_oldest_first": "오래된순",
+    "sort_most_notes": "노트 많은 순",
+    "sort_fewest_notes": "노트 적은 순",
+    "sort_color": "색상",
+    "notes_count": "노트: {count}",
+    "confirm_delete_tag": "삭제?",
+    "cannot_delete_tag_in_use": "사용 중입니다.",
+    "tag_not_deleted": "삭제 불가."
+  },
+  "pt": {
+    "note_tags": "Marcadores",
+    "notes": "Notas",
+    "new": "Novo",
+    "edit": "Editar",
+    "delete": "Apagar",
+    "no_tags": "Sem marcadores",
+    "sort_by": "Ordenar",
+    "sort_az": "A-Z",
+    "sort_newest_first": "Mais recentes",
+    "sort_oldest_first": "Mais antigas",
+    "sort_most_notes": "Mais notas",
+    "sort_fewest_notes": "Menos notas",
+    "sort_color": "Cor",
+    "notes_count": "Notas: {count}",
+    "confirm_delete_tag": "Confirmar?",
+    "cannot_delete_tag_in_use": "Tag em uso.",
+    "tag_not_deleted": "Não excluído."
+  },
+  "uk": {
+    "note_tags": "Теги",
+    "notes": "Нотатки",
+    "new": "Новий",
+    "edit": "Редагувати",
+    "delete": "Видалити",
+    "no_tags": "Немає тегів",
+    "sort_by": "Сортувати",
+    "sort_az": "A-Z",
+    "sort_newest_first": "Найновіші",
+    "sort_oldest_first": "Найстаріші",
+    "sort_most_notes": "Найбільше нотаток",
+    "sort_fewest_notes": "Найменше нотаток",
+    "sort_color": "Колір",
+    "notes_count": "Нотатки: {count}",
+    "confirm_delete_tag": "Видалити?",
+    "cannot_delete_tag_in_use": "Тег використовується.",
+    "tag_not_deleted": "Не видалено."
+  }
 }
 </i18n>
