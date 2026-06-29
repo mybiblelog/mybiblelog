@@ -76,9 +76,24 @@
       </div>
     </header>
 
+    <div class="notes-page__mobile-query-button">
+      <button class="mbl-button mbl-button--light mbl-button--sm notes-page__query-button" type="button" data-testid="notes-mobile-query-open" @click="openQueryManagerModal">
+        {{ t('query_manager.open') }}
+        <span v-if="hasAppliedViewOptions" class="notes-page__query-badge" aria-hidden="true" />
+      </button>
+      <button v-if="hasAppliedViewOptions" class="mbl-button mbl-button--light mbl-button--sm" type="button" data-testid="notes-query-reset" @click="resetViewOptions">
+        {{ t('query_manager.reset_button') }}
+      </button>
+    </div>
+
     <div class="notes-page__layout">
       <aside class="notes-page__sidebar">
         <div class="mbl-box notes-page__query-manager-box">
+          <div v-if="hasAppliedViewOptions" class="notes-page__query-manager-actions">
+            <button class="mbl-button mbl-button--light mbl-button--sm" type="button" data-testid="notes-query-reset-sidebar" @click="resetViewOptions">
+              {{ t('query_manager.reset') }}
+            </button>
+          </div>
           <PassageNotesQueryManager
             :applied-query="passageNotesStore.query"
             :passage-note-tags="passageNoteTagsStore.passageNoteTags"
@@ -149,6 +164,17 @@
         </template>
       </section>
     </div>
+
+    <AppModal :open="showQueryManagerModal" :title="t('query_manager.title')" @close="closeQueryManagerModal">
+      <template #content>
+        <PassageNotesQueryManager
+          :applied-query="passageNotesStore.query"
+          :passage-note-tags="passageNoteTagsStore.passageNoteTags"
+          @apply="applyQueryManager"
+          @cancel="closeQueryManagerModal"
+        />
+      </template>
+    </AppModal>
   </div>
 </template>
 
@@ -181,6 +207,32 @@ const passageNoteEditorStore = usePassageNoteEditorStore();
 
 const pagerPage = computed(() => Number(passageNotesStore.pagination?.page || 1));
 const pagerTotalPages = computed(() => Math.max(1, Number(passageNotesStore.pagination?.totalPages || 1)));
+
+const showQueryManagerModal = ref(false);
+
+const hasAppliedViewOptions = computed(() => {
+  const q = passageNotesStore.query || {};
+  const hasSearchText = Boolean(q.searchText && String(q.searchText).trim().length);
+  const hasTagFilters = Array.isArray(q.filterTags) && q.filterTags.length > 0;
+  const hasTagMatchingOverride = Boolean(q.filterTagMatching && q.filterTagMatching !== 'any');
+  const hasPassageFilter = Boolean(q.filterPassageStartVerseId && q.filterPassageEndVerseId);
+  const hasSortOverride = (q.sortOn && q.sortOn !== 'createdAt') || (q.sortDirection && q.sortDirection !== 'descending');
+  const hasPageSizeOverride = Number(q.limit || 10) !== 10;
+  return hasSearchText || hasTagFilters || hasTagMatchingOverride || hasPassageFilter || hasSortOverride || hasPageSizeOverride;
+});
+
+function openQueryManagerModal() {
+  showQueryManagerModal.value = true;
+}
+
+function closeQueryManagerModal() {
+  showQueryManagerModal.value = false;
+}
+
+async function resetViewOptions() {
+  closeQueryManagerModal();
+  await router.push({ path: '/notes', query: {} });
+}
 
 function getReadingUrl(bookIndex: number, chapterIndex: number) {
   return useUserSettingsStore().getReadingUrl(bookIndex, chapterIndex);
@@ -277,6 +329,7 @@ function pushNotesQuery(nextQuery: Record<string, unknown>, { replace = false } 
 }
 
 async function applyQueryManager(update: Record<string, unknown>) {
+  closeQueryManagerModal();
   await pushNotesQuery({ ...passageNotesStore.query, ...update, offset: 0 });
 }
 
@@ -318,6 +371,29 @@ onMounted(() => {
   padding: 0;
 }
 .notes-page__layout { display: flex; flex-wrap: wrap; gap: 1rem; }
+.notes-page__mobile-query-button {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.notes-page__query-button { position: relative; }
+.notes-page__query-badge {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-left: 0.35rem;
+  border-radius: 999px;
+  background: var(--mbl-success-bright);
+  vertical-align: middle;
+}
+.notes-page__query-manager-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+@media (min-width: 800px) {
+  .notes-page__mobile-query-button { display: none; }
+}
 .notes-page__sidebar {
   display: none;
   width: 280px;
@@ -381,13 +457,14 @@ onMounted(() => {
     "cancel": "Cancel",
     "save": "Save",
     "close": "Close",
-    "could_not_save_note": "The note could not be saved."
+    "could_not_save_note": "The note could not be saved.",
+    "query_manager": { "title": "View Options", "open": "Search · Filter · Sort", "reset": "Reset", "reset_button": "Reset" }
   },
-  "de": { "notes": "Notizen", "tags": "Tags", "new": "Neu", "loading": "Laden...", "no_results": "Keine Ergebnisse", "edit": "Bearbeiten", "delete": "Löschen", "prev": "Zurück", "next": "Weiter", "page": "Seite", "are_you_sure_delete": "Möchten Sie diese Notiz wirklich löschen?", "could_not_delete": "Die Notiz konnte nicht gelöscht werden." },
-  "es": { "notes": "Notas", "tags": "Etiquetas", "new": "Nuevo", "loading": "Cargando...", "no_results": "Sin resultados", "edit": "Editar", "delete": "Eliminar", "prev": "Anterior", "next": "Siguiente", "page": "Página", "are_you_sure_delete": "¿Estás seguro de que quieres eliminar esta nota?", "could_not_delete": "La nota no se pudo eliminar." },
-  "fr": { "notes": "Notes", "tags": "Tags", "new": "Nouveau", "loading": "Chargement...", "no_results": "Aucun résultat", "edit": "Éditer", "delete": "Supprimer", "prev": "Précédent", "next": "Suivant", "page": "Page", "are_you_sure_delete": "Êtes-vous sûr de vouloir supprimer cette note ?", "could_not_delete": "La note n'a pas pu être supprimée." },
-  "ko": { "notes": "노트", "tags": "태그", "new": "새 노트", "loading": "불러오는 중…", "no_results": "결과 없음", "edit": "편집", "delete": "삭제", "prev": "이전", "next": "다음", "page": "페이지", "are_you_sure_delete": "이 노트를 삭제할까요?", "could_not_delete": "노트를 삭제할 수 없습니다." },
-  "pt": { "notes": "Notas", "tags": "Tags", "new": "Novo", "loading": "Carregando...", "no_results": "Sem resultados", "edit": "Editar", "delete": "Apagar", "prev": "Anterior", "next": "Próximo", "page": "Página", "are_you_sure_delete": "Tem certeza de que deseja excluir esta nota?", "could_not_delete": "A nota não pôde ser excluída." },
-  "uk": { "notes": "Нотатки", "tags": "Теги", "new": "Нове", "loading": "Завантаження...", "no_results": "Немає результатів", "edit": "Редагувати", "delete": "Видалити", "prev": "Попередня", "next": "Наступна", "page": "Сторінка", "are_you_sure_delete": "Ви впевнені, що хочете видалити цю нотатку?", "could_not_delete": "Не вдалося видалити нотатку." }
+  "de": { "notes": "Notizen", "tags": "Tags", "new": "Neu", "loading": "Laden...", "no_results": "Keine Ergebnisse", "edit": "Bearbeiten", "delete": "Löschen", "prev": "Zurück", "next": "Weiter", "page": "Seite", "are_you_sure_delete": "Möchten Sie diese Notiz wirklich löschen?", "could_not_delete": "Die Notiz konnte nicht gelöscht werden.", "query_manager": { "title": "Ansichtsoptionen", "open": "Suche · Filter · Sortieren", "reset": "Zurücksetzen", "reset_button": "Zurücksetzen" } },
+  "es": { "notes": "Notas", "tags": "Etiquetas", "new": "Nuevo", "loading": "Cargando...", "no_results": "Sin resultados", "edit": "Editar", "delete": "Eliminar", "prev": "Anterior", "next": "Siguiente", "page": "Página", "are_you_sure_delete": "¿Estás seguro de que quieres eliminar esta nota?", "could_not_delete": "La nota no se pudo eliminar.", "query_manager": { "title": "Opciones de vista", "open": "Buscar · Filtrar · Ordenar", "reset": "Restablecer", "reset_button": "Restablecer" } },
+  "fr": { "notes": "Notes", "tags": "Tags", "new": "Nouveau", "loading": "Chargement...", "no_results": "Aucun résultat", "edit": "Éditer", "delete": "Supprimer", "prev": "Précédent", "next": "Suivant", "page": "Page", "are_you_sure_delete": "Êtes-vous sûr de vouloir supprimer cette note ?", "could_not_delete": "La note n'a pas pu être supprimée.", "query_manager": { "title": "Options d’affichage", "open": "Rechercher · Filtrer · Trier", "reset": "Réinitialiser", "reset_button": "Réinitialiser" } },
+  "ko": { "notes": "노트", "tags": "태그", "new": "새 노트", "loading": "불러오는 중…", "no_results": "결과 없음", "edit": "편집", "delete": "삭제", "prev": "이전", "next": "다음", "page": "페이지", "are_you_sure_delete": "이 노트를 삭제할까요?", "could_not_delete": "노트를 삭제할 수 없습니다.", "query_manager": { "title": "보기 옵션", "open": "검색 · 필터 · 정렬", "reset": "초기화", "reset_button": "초기화" } },
+  "pt": { "notes": "Notas", "tags": "Tags", "new": "Novo", "loading": "Carregando...", "no_results": "Sem resultados", "edit": "Editar", "delete": "Apagar", "prev": "Anterior", "next": "Próximo", "page": "Página", "are_you_sure_delete": "Tem certeza de que deseja excluir esta nota?", "could_not_delete": "A nota não pôde ser excluída.", "query_manager": { "title": "Opções de visualização", "open": "Buscar · Filtrar · Ordenar", "reset": "Reiniciar", "reset_button": "Reiniciar" } },
+  "uk": { "notes": "Нотатки", "tags": "Теги", "new": "Нове", "loading": "Завантаження...", "no_results": "Немає результатів", "edit": "Редагувати", "delete": "Видалити", "prev": "Попередня", "next": "Наступна", "page": "Сторінка", "are_you_sure_delete": "Ви впевнені, що хочете видалити цю нотатку?", "could_not_delete": "Не вдалося видалити нотатку.", "query_manager": { "title": "Параметри перегляду", "open": "Пошук · Фільтр · Сортування", "reset": "Скинути", "reset_button": "Скинути" } }
 }
 </i18n>

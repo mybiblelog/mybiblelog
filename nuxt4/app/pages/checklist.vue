@@ -52,7 +52,14 @@
           >
             <div class="chapter-card--chapter-number">{{ chapterReport.chapterIndex }}</div>
             <div class="chapter-card--completion-indicator">
-              <svg v-if="busyChapter === `${bookReport.bookIndex}.${chapterReport.chapterIndex}`" viewBox="0 0 24 24" width="100%" height="100%"><circle cx="12" cy="12" r="10" stroke="var(--mbl-success-bright)" stroke-width="2" fill="none" /></svg>
+              <svg v-if="busyChapter === `${bookReport.bookIndex}.${chapterReport.chapterIndex}`" viewBox="0 0 80 80" width="100%" height="100%">
+                <path
+                  :fill="chapterReport.complete ? 'var(--neutral-150)' : 'var(--mbl-success-bright)'"
+                  d="M40,72C22.4,72,8,57.6,8,40C8,22.4,22.4,8,40,8c17.6,0,32,14.4,32,32c0,1.1-0.9,2-2,2s-2-0.9-2-2c0-15.4-12.6-28-28-28S12,24.6,12,40s12.6,28,28,28c1.1,0,2,0.9,2,2S41.1,72,40,72z"
+                >
+                  <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 40 40" to="360 40 40" dur="0.6s" repeatCount="indefinite" />
+                </path>
+              </svg>
               <svg v-else viewBox="0 0 24 24" width="100%" height="100%"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" :fill="chapterReport.complete ? 'var(--mbl-success-bright)' : 'transparent'" /></svg>
             </div>
           </div>

@@ -7,6 +7,7 @@
           class="mbl-input verse-input__input"
           type="text"
           :placeholder="placeholder"
+          :data-testid="inputTestId || undefined"
           :class="{ 'mbl-input--danger': showInvalid }"
           :style="inputStyle"
           @input="onTextInput"
@@ -131,9 +132,11 @@ import PassageSelector from '~/components/forms/PassageSelector.vue';
 const props = withDefaults(defineProps<{
   modelValue?: { startVerseId: number; endVerseId: number } | null;
   multiVerse?: boolean;
+  inputTestId?: string;
 }>(), {
   modelValue: null,
   multiVerse: false,
+  inputTestId: '',
 });
 
 const emit = defineEmits<{ 'update:modelValue': [value: { startVerseId: number; endVerseId: number } | null] }>();
