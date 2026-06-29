@@ -61,9 +61,10 @@ import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
 import CaretLeftIcon from '~/components/svg/CaretLeftIcon.vue';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
+import type { LogEntry, Segment } from '@mybiblelog/shared';
 
 const props = withDefaults(defineProps<{
-  logEntries?: Array<Record<string, unknown>>;
+  logEntries?: Array<LogEntry>;
   bookIndex?: number;
 }>(), {
   logEntries: () => [],
@@ -95,12 +96,12 @@ const percentageRead = computed(() =>
 const allChapterReports = computed(() => {
   const reports = [];
   for (let i = 1, l = Bible.getBookChapterCount(props.bookIndex); i <= l; i++) {
-    reports.push(chapterReport(i));
+    reports.push(buildChapterReport(i));
   }
   return reports;
 });
 
-function chapterReport(chapterIndex: number) {
+function buildChapterReport(chapterIndex: number) {
   const totalVerses = Bible.getChapterVerseCount(props.bookIndex, chapterIndex);
   const versesRead = Bible.countUniqueBookChapterRangeVerses(props.bookIndex, chapterIndex, props.logEntries);
   const percentage = Math.floor(versesRead / totalVerses * 100);
@@ -108,22 +109,25 @@ function chapterReport(chapterIndex: number) {
   return { totalVerses, versesRead, percentage, bookIndex: props.bookIndex, chapterIndex, segments };
 }
 
+type SegmentWithPercentage = Segment & { percentage: number };
+
+function withPercentages(segments: Segment[], totalVerses: number): SegmentWithPercentage[] {
+  return segments.map(segment => ({
+    ...segment,
+    percentage: segment.verseCount * 100 / totalVerses,
+  }));
+}
+
 function bookReadingSegments(bookIndex: number) {
   const totalVerses = Bible.getBookVerseCount(bookIndex);
   const segments = Bible.generateBookSegments(bookIndex, props.logEntries);
-  segments.forEach((segment) => {
-    segment.percentage = (segment.verseCount as number) * 100 / totalVerses;
-  });
-  return segments;
+  return withPercentages(segments, totalVerses);
 }
 
 function chapterReadingSegments(bookIndex: number, chapterIndex: number) {
   const totalVerses = Bible.getChapterVerseCount(bookIndex, chapterIndex);
   const segments = Bible.generateBookChapterSegments(bookIndex, chapterIndex, props.logEntries);
-  segments.forEach((segment) => {
-    segment.percentage = (segment.verseCount as number) * 100 / totalVerses;
-  });
-  return segments;
+  return withPercentages(segments, totalVerses);
 }
 
 function openAddEntryForm(bookIndex: number, chapterIndex: number) {
