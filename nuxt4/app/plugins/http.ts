@@ -11,7 +11,7 @@ export default defineNuxtPlugin({
     const requestCookies = useRequestHeaders(['cookie']);
 
     const getAuthToken = (): string | undefined => {
-      if (!import.meta.server || !requestCookies.cookie) return undefined;
+      if (!import.meta.server || !requestCookies.cookie) { return undefined; }
       const match = requestCookies.cookie.match(/(?:^|;\s*)auth_token=([^;]*)/);
       return match ? decodeURIComponent(match[1] ?? '') : undefined;
     };
@@ -19,13 +19,21 @@ export default defineNuxtPlugin({
     const buildHeaders = (): Record<string, string> => {
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       const token = getAuthToken();
-      if (token) headers.Authorization = `Bearer ${token}`;
+      if (token) { headers.Authorization = `Bearer ${token}`; }
       return headers;
     };
 
     const triggerLogout = (reason: string): void => {
       import('~/stores/auth')
-        .then(({ useAuthStore }) => useAuthStore().logout(reason as 'session_expired'))
+        .then(({ useAuthStore }) => {
+          const authStore = useAuthStore();
+          // Only treat an `unauthenticated` response as an expired session when
+          // the user actually had one. Anonymous visitors can hit authed
+          // endpoints (e.g. a layout-mounted store eagerly loading data); those
+          // must not bounce them to /login?reason=session_expired.
+          if (!authStore.loggedIn) { return; }
+          return authStore.logout(reason as 'session_expired');
+        })
         .catch(() => {});
     };
 
@@ -38,15 +46,15 @@ export default defineNuxtPlugin({
 
     const checkBody = (json: unknown, path: string): void => {
       const payload = (json as ApiErrorEnvelope | undefined)?.error;
-      if (payload) throwApiError(payload, path);
+      if (payload) { throwApiError(payload, path); }
     };
 
     const handleFetchError = (error: unknown, path: string): never => {
       if (error instanceof FetchError) {
         const payload = (error.data as ApiErrorEnvelope | undefined)?.error;
-        if (payload) throwApiError(payload, path);
+        if (payload) { throwApiError(payload, path); }
       }
-      throw error as Error;
+      throw error instanceof Error ? error : new Error(String(error));
     };
 
     const http = {
@@ -57,7 +65,7 @@ export default defineNuxtPlugin({
           return json;
         }
         catch (e) {
-          if (e instanceof ApiError) throw e;
+          if (e instanceof ApiError) { throw e; }
           return handleFetchError(e, path);
         }
       },
@@ -74,7 +82,7 @@ export default defineNuxtPlugin({
           return json;
         }
         catch (e) {
-          if (e instanceof ApiError) throw e;
+          if (e instanceof ApiError) { throw e; }
           return handleFetchError(e, path);
         }
       },
@@ -91,7 +99,7 @@ export default defineNuxtPlugin({
           return json;
         }
         catch (e) {
-          if (e instanceof ApiError) throw e;
+          if (e instanceof ApiError) { throw e; }
           return handleFetchError(e, path);
         }
       },
@@ -103,7 +111,7 @@ export default defineNuxtPlugin({
           return json;
         }
         catch (e) {
-          if (e instanceof ApiError) throw e;
+          if (e instanceof ApiError) { throw e; }
           return handleFetchError(e, path);
         }
       },

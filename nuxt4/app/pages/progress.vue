@@ -3,14 +3,13 @@
     <header class="page-header">
       <h1 class="mbl-title">
         {{ t('progress') }}
-        <InfoLink :to="localePath('/about/page-features--progress')" />
       </h1>
       <NuxtLink class="mbl-button" :to="localePath('/books')">
         {{ t('bible_books') }}
-        <CaretRightIcon style="margin-left: 0.2rem;" />
+        <caret-right-icon style="margin-left: 0.2rem;" />
       </NuxtLink>
     </header>
-    <BusyBar :busy="dateVerseCountsBusy" />
+    <busy-bar :busy="dateVerseCountsBusy" />
     <article class="mbl-message">
       <div class="mbl-message__body">
         <div class="mbl-content">
@@ -74,14 +73,18 @@
             {{ t('your_outlook.historical.title') }}
           </h2>
           <i18n-t keypath="your_outlook.historical.description" tag="p">
-            <template #lookBackDate><strong>{{ t('your_reading_settings.look_back_date') }}</strong></template>
+            <template #lookBackDate>
+              <strong>{{ t('your_reading_settings.look_back_date') }}</strong>
+            </template>
           </i18n-t>
           <table class="mbl-table">
             <tbody>
               <tr>
                 <td>
                   <i18n-t keypath="your_outlook.days_since_look_back_date">
-                    <template #lookBackDate><strong>{{ t('your_reading_settings.look_back_date') }}</strong></template>
+                    <template #lookBackDate>
+                      <strong>{{ t('your_reading_settings.look_back_date') }}</strong>
+                    </template>
                   </i18n-t>
                 </td>
                 <td>{{ n(daysSinceLookBackDate, 'grouped') }}</td>
@@ -222,7 +225,6 @@
 import dayjs from 'dayjs';
 import { Bible } from '@mybiblelog/shared';
 import BusyBar from '~/components/ui/BusyBar.vue';
-import InfoLink from '~/components/ui/InfoLink.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useDateVerseCountsStore } from '~/stores/date-verse-counts';

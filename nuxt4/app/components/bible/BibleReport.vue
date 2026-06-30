@@ -3,11 +3,10 @@
     <header class="page-header">
       <h2 class="mbl-title">
         {{ t('bible_books') }}
-        <InfoLink :to="localePath('/about/page-features--bible-books')" />
       </h2>
       <NuxtLink class="mbl-button" :to="localePath('/progress')">
         {{ t('progress') }}
-        <CaretRightIcon style="margin-left: 0.2rem;" />
+        <caret-right-icon style="margin-left: 0.2rem;" />
       </NuxtLink>
     </header>
     <div class="testament-toggle">
@@ -44,7 +43,7 @@
     </div>
     <div class="plaque" data-testid="bible-report-progress" :data-percentage="percentageRead">
       <p><span>{{ n(percentageRead / 100, 'percent') }}</span></p>
-      <SegmentBar :thick="true" :segments="bibleReadingSegments" />
+      <segment-bar :thick="true" :segments="bibleReadingSegments" />
     </div>
     <div class="progress-list">
       <button
@@ -59,7 +58,7 @@
         @click="navigateToBook(report.bookIndex)"
       >
         <span class="progress-card-icon">
-          <StarIcon :fill="report.percentage === 100 ? 'var(--mbl-star-earned)' : 'var(--mbl-star-unearned)'" />
+          <star-icon :fill="report.percentage === 100 ? 'var(--mbl-star-earned)' : 'var(--mbl-star-unearned)'" />
         </span>
         <span class="progress-card-book">{{ report.bookName }}</span>
         <span v-if="anyBooksHaveNotes" class="progress-card-note-count-badge" @click.stop="viewBookNotes(report.bookIndex)">
@@ -67,7 +66,7 @@
         </span>
         <span class="progress-card-percentage">{{ n(report.percentage / 100, 'percent') }}</span>
         <div class="progress-card-progress">
-          <SegmentBar :segments="bookReadingSegments(report.bookIndex)" />
+          <segment-bar :segments="bookReadingSegments(report.bookIndex)" />
         </div>
       </button>
     </div>
@@ -79,7 +78,6 @@ import { Bible } from '@mybiblelog/shared';
 import { encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
 import SegmentBar from '~/components/bible/SegmentBar.vue';
 import StarIcon from '~/components/svg/StarIcon.vue';
-import InfoLink from '~/components/ui/InfoLink.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
 
 const props = withDefaults(defineProps<{

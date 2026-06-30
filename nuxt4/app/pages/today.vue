@@ -1,6 +1,6 @@
 <template>
   <div class="content-column">
-    <BusyBar :busy="loadingReadingSuggestions && !readingSuggestions.length" />
+    <busy-bar :busy="loadingReadingSuggestions && !readingSuggestions.length" />
     <header class="page-header">
       <h1 class="mbl-title">
         {{ t('today') }}
@@ -11,7 +11,7 @@
     </header>
     <br>
     <div class="today-page__progress-bar-container" data-screenshot="daily-goal">
-      <DoubleProgressBar :primary-percentage="dailyGoalPercentCompleteNew" :secondary-percentage="dailyGoalPercentComplete" />
+      <double-progress-bar :primary-percentage="dailyGoalPercentCompleteNew" :secondary-percentage="dailyGoalPercentComplete" />
       <div class="mbl-level mbl-level--mobile">
         <div class="mbl-level-left">
           <div class="mbl-level-item">
@@ -33,17 +33,17 @@
         </div>
       </div>
     </div>
-    <ReadingTrackerResetCard />
+    <reading-tracker-reset-card />
     <div class="entry-container" role="list" data-testid="log-entries">
       <ClientOnly>
-        <LogEntry
+        <log-entry
           v-for="entry of logEntriesForToday"
           :key="entry.id"
           role="listitem"
           :passage="entry"
           :actions="actionsForTodayLogEntry(entry)"
         />
-        <LogEntry
+        <log-entry
           v-if="!logEntriesForToday.length"
           key="no-entries"
           role="listitem"
@@ -58,7 +58,7 @@
       </h3>
       <div class="entry-container" role="list" data-testid="reading-suggestions">
         <ClientOnly>
-          <LogEntry
+          <log-entry
             v-for="(passage, index) of readingSuggestions"
             :key="`${index}-${passage.startVerseId}-${passage.endVerseId}`"
             role="listitem"
@@ -66,13 +66,13 @@
             :passage="passage"
             :actions="actionsForReadingSuggestionPassage(passage)"
           />
-          <LogEntry
+          <log-entry
             v-if="loadingReadingSuggestions && !readingSuggestions.length"
             key="loading"
             role="listitem"
             :message="t('loading')"
           />
-          <LogEntry
+          <log-entry
             v-if="!loadingReadingSuggestions && !readingSuggestions.length"
             key="no-suggestions"
             role="listitem"
@@ -106,21 +106,23 @@
     <div class="today-page__recent-notes-container" role="list" data-testid="recent-notes">
       <ClientOnly>
         <div v-if="passageNotesStore.loading && !recentNotes.length" class="passage-note">
-          <div class="passage-note--content mbl-text-center">{{ t('loading') }}</div>
+          <div class="passage-note--content mbl-text-center">
+            {{ t('loading') }}
+          </div>
         </div>
         <template v-else-if="!recentNotes.length">
-          <LogEntry :message="t('no_recent_notes')" role="listitem" />
+          <log-entry :message="t('no_recent_notes')" role="listitem" />
         </template>
         <template v-else>
-          <div
+          <passage-note
             v-for="note in recentNotes"
             :key="note.id"
-            class="passage-note"
+            :note="note"
+            :actions="actionsForRecentNote(note)"
+            :get-reading-url="userSettingsStore.getReadingUrl"
             role="listitem"
             data-testid="recent-note"
-          >
-            <div class="passage-note--content">{{ note.content }}</div>
-          </div>
+          />
           <div class="mbl-text-center" style="margin-top: 1rem;">
             <NuxtLink class="mbl-button mbl-button--light" :to="localePath('/notes')">
               {{ t('view_all_notes') }}
@@ -139,11 +141,13 @@ import BusyBar from '~/components/ui/BusyBar.vue';
 import DoubleProgressBar from '~/components/ui/DoubleProgressBar.vue';
 import ReadingTrackerResetCard from '~/components/ui/ReadingTrackerResetCard.vue';
 import LogEntry from '~/components/log/LogEntry.vue';
+import PassageNote from '~/components/notes/PassageNote.vue';
 import { useAppInitStore } from '~/stores/app-init';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 import { useReadingSuggestionsStore } from '~/stores/reading-suggestions';
-import { usePassageNotesStore } from '~/stores/passage-notes';
+import { usePassageNotesStore, type PassageNoteListItem } from '~/stores/passage-notes';
+import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
 import { useUserSettingsStore } from '~/stores/user-settings';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
@@ -159,6 +163,7 @@ const logEntriesStore = useLogEntriesStore();
 const logEntryEditorStore = useLogEntryEditorStore();
 const readingSuggestionsStore = useReadingSuggestionsStore();
 const passageNotesStore = usePassageNotesStore();
+const passageNoteEditorStore = usePassageNoteEditorStore();
 const userSettingsStore = useUserSettingsStore();
 const dialogStore = useDialogStore();
 const toastStore = useToastStore();
@@ -280,7 +285,24 @@ const viewNotesForPassage = (_passage: Passage) => {
 };
 
 const openNewNoteEditor = () => {
-  // Phase 8: passage note editor
+  passageNoteEditorStore.openEditor();
+};
+
+const actionsForRecentNote = (note: PassageNoteListItem) => [
+  { label: t('edit'), callback: () => passageNoteEditorStore.openEditor(note as Parameters<typeof passageNoteEditorStore.openEditor>[0]) },
+  { label: t('delete'), callback: () => deletePassageNote(note.id) },
+];
+
+const deletePassageNote = async (id: number | string) => {
+  const confirmed = await dialogStore.confirm({
+    message: t('are_you_sure_you_want_to_delete_this_note'),
+    confirmButtonType: 'danger',
+  });
+  if (!confirmed) { return; }
+  const success = await passageNotesStore.deletePassageNote(id);
+  if (!success) {
+    toastStore.add({ type: 'error', text: t('the_note_could_not_be_deleted') });
+  }
 };
 
 onMounted(async () => {
@@ -306,16 +328,6 @@ onMounted(async () => {
 .today-page__recent-notes-container {
   margin-top: 1rem;
 }
-
-.passage-note {
-  display: flex;
-  flex-direction: column;
-  padding: 1em 0.5em;
-  border-radius: 0.25rem;
-  background: var(--mbl-bg-elevated);
-  box-shadow: var(--mbl-card-shadow);
-  margin: 0.5rem 0;
-}
 </style>
 
 <i18n lang="json">
@@ -337,6 +349,8 @@ onMounted(async () => {
     "no_suggestions": "No Suggestions",
     "are_you_sure_you_want_to_delete_this_entry": "Are you sure you want to delete this entry?",
     "the_log_entry_could_not_be_deleted": "The log entry could not be deleted.",
+    "are_you_sure_you_want_to_delete_this_note": "Are you sure you want to delete this note?",
+    "the_note_could_not_be_deleted": "The note could not be deleted.",
     "recent_notes": "Recent Notes",
     "no_recent_notes": "No Notes",
     "new_note": "New Note",
@@ -359,6 +373,8 @@ onMounted(async () => {
     "no_suggestions": "Keine Vorschläge",
     "are_you_sure_you_want_to_delete_this_entry": "Sind Sie sicher, dass Sie diesen Eintrag löschen möchten?",
     "the_log_entry_could_not_be_deleted": "Der Eintrag konnte nicht gelöscht werden.",
+    "are_you_sure_you_want_to_delete_this_note": "Sind Sie sicher, dass Sie diese Notiz löschen möchten?",
+    "the_note_could_not_be_deleted": "Die Notiz konnte nicht gelöscht werden.",
     "recent_notes": "Letzte Notizen",
     "no_recent_notes": "Keine Notizen",
     "new_note": "Neue Notiz",
@@ -381,6 +397,8 @@ onMounted(async () => {
     "no_suggestions": "No hay sugerencias",
     "are_you_sure_you_want_to_delete_this_entry": "¿Estás seguro de que quieres borrar esta entrada?",
     "the_log_entry_could_not_be_deleted": "No se pudo borrar la entrada del registro.",
+    "are_you_sure_you_want_to_delete_this_note": "¿Estás seguro de que quieres borrar esta nota?",
+    "the_note_could_not_be_deleted": "No se pudo borrar la nota.",
     "recent_notes": "Notas Recientes",
     "no_recent_notes": "Sin Notas",
     "new_note": "Nueva Nota",
@@ -403,6 +421,8 @@ onMounted(async () => {
     "no_suggestions": "Aucune suggestion",
     "are_you_sure_you_want_to_delete_this_entry": "Êtes-vous sûr de vouloir supprimer cette entrée?",
     "the_log_entry_could_not_be_deleted": "L'entrée du journal n'a pas pu être supprimée.",
+    "are_you_sure_you_want_to_delete_this_note": "Êtes-vous sûr de vouloir supprimer cette note?",
+    "the_note_could_not_be_deleted": "La note n'a pas pu être supprimée.",
     "recent_notes": "Notes Récentes",
     "no_recent_notes": "Aucune Note",
     "new_note": "Nouvelle Note",
@@ -425,6 +445,8 @@ onMounted(async () => {
     "no_suggestions": "제안 없음",
     "are_you_sure_you_want_to_delete_this_entry": "해당 항목을 삭제할까요?",
     "the_log_entry_could_not_be_deleted": "읽기 기록을 삭제할 수 없습니다.",
+    "are_you_sure_you_want_to_delete_this_note": "이 노트를 삭제할까요?",
+    "the_note_could_not_be_deleted": "노트를 삭제할 수 없습니다.",
     "recent_notes": "최근 노트",
     "no_recent_notes": "노트 없음",
     "new_note": "노트 작성",
@@ -447,6 +469,8 @@ onMounted(async () => {
     "no_suggestions": "Sem sugestões",
     "are_you_sure_you_want_to_delete_this_entry": "Tem certeza de que deseja excluir esta entrada?",
     "the_log_entry_could_not_be_deleted": "A entrada do registro não pôde ser excluída.",
+    "are_you_sure_you_want_to_delete_this_note": "Tem certeza de que deseja excluir esta nota?",
+    "the_note_could_not_be_deleted": "A nota não pôde ser excluída.",
     "recent_notes": "Notas Recentes",
     "no_recent_notes": "Sem Notas",
     "new_note": "Nova Nota",
@@ -469,6 +493,8 @@ onMounted(async () => {
     "no_suggestions": "Немає рекомендацій",
     "are_you_sure_you_want_to_delete_this_entry": "Ви впевнені, що хочете видалити цей запис?",
     "the_log_entry_could_not_be_deleted": "Не вдалося видалити запис.",
+    "are_you_sure_you_want_to_delete_this_note": "Ви впевнені, що хочете видалити цю нотатку?",
+    "the_note_could_not_be_deleted": "Не вдалося видалити нотатку.",
     "recent_notes": "Останні Нотатки",
     "no_recent_notes": "Немає Нотаток",
     "new_note": "Нова Нотатка",

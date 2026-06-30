@@ -31,7 +31,7 @@ const { t } = useI18n();
 
 type Action = { label: string; callback?: () => void };
 
-const props = withDefaults(defineProps<{ actions?: Action[] }>(), { actions: () => [] });
+withDefaults(defineProps<{ actions?: Action[] }>(), { actions: () => [] });
 const isOpen = ref(false);
 
 const toggle = () => { isOpen.value = !isOpen.value; };

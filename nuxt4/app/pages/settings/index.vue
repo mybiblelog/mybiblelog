@@ -1,42 +1,42 @@
 <template>
   <div>
-      <h1 class="mbl-title mbl-title--4">
-        {{ t('account') }}
-      </h1>
-      <div class="mbl-content">
-        <p>
-          <em>{{ authStore.user?.email }}</em>
-        </p>
-        <p>
-          <NuxtLink class="mbl-button mbl-button--primary" :to="localePath('/settings/email')">
-            {{ t('change_email') }}
-          </NuxtLink>
-        </p>
-      </div>
-      <template v-if="authStore.user?.hasLocalAccount">
-        <h2 class="mbl-title mbl-title--4">
-          {{ t('password') }}
-        </h2>
-        <div class="mbl-content">
-          <p>{{ t('you_can_change_your_password_below') }}</p>
-          <p>
-            <NuxtLink class="mbl-button mbl-button--primary" :to="localePath('/settings/password')">
-              {{ t('change_password') }}
-            </NuxtLink>
-          </p>
-        </div>
-      </template>
+    <h1 class="mbl-title mbl-title--4">
+      {{ t('account') }}
+    </h1>
+    <div class="mbl-content">
+      <p>
+        <em>{{ authStore.user?.email }}</em>
+      </p>
+      <p>
+        <NuxtLink class="mbl-button mbl-button--primary" :to="localePath('/settings/email')">
+          {{ t('change_email') }}
+        </NuxtLink>
+      </p>
+    </div>
+    <template v-if="authStore.user?.hasLocalAccount">
       <h2 class="mbl-title mbl-title--4">
-        {{ t('delete_account') }}
+        {{ t('password') }}
       </h2>
       <div class="mbl-content">
-        <p>{{ t('you_are_in_control') }}</p>
+        <p>{{ t('you_can_change_your_password_below') }}</p>
         <p>
-          <NuxtLink :to="localePath('/settings/delete-account')">
-            {{ t('learn_more') }}
+          <NuxtLink class="mbl-button mbl-button--primary" :to="localePath('/settings/password')">
+            {{ t('change_password') }}
           </NuxtLink>
         </p>
       </div>
+    </template>
+    <h2 class="mbl-title mbl-title--4">
+      {{ t('delete_account') }}
+    </h2>
+    <div class="mbl-content">
+      <p>{{ t('you_are_in_control') }}</p>
+      <p>
+        <NuxtLink :to="localePath('/settings/delete-account')">
+          {{ t('learn_more') }}
+        </NuxtLink>
+      </p>
+    </div>
   </div>
 </template>
 

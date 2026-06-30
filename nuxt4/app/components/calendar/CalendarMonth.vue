@@ -1,17 +1,17 @@
 <template>
   <div class="calendar-month">
     <div class="calendar-month-header">
-      <CalendarDateIndicator :selected-date="selectedDate" class="calendar-month-header-selected-month" />
-      <CalendarDateSelector
+      <calendar-date-indicator :selected-date="selectedDate" class="calendar-month-header-selected-month" />
+      <calendar-date-selector
         :current-date="todayStr"
         :selected-date="selectedDate"
         @date-selected="selectDate"
         @day-selected="selectDay"
       />
     </div>
-    <CalendarWeekdays />
+    <calendar-weekdays />
     <ol class="days-grid">
-      <CalendarMonthDayItem
+      <calendar-month-day-item
         v-for="day in days"
         :key="selectedDate + ':' + day.date"
         :day="day"
@@ -35,7 +35,7 @@ import CalendarWeekdays from '~/components/calendar/CalendarWeekdays.vue';
 import type { DateVerseCounts } from '~/stores/date-verse-counts';
 
 const props = defineProps<{
-  getDateVerseCounts: (date: string) => DateVerseCounts;
+  getDateVerseCounts:(date: string) => DateVerseCounts;
   dailyVerseCountGoal: number;
   trackerStartDate?: string;
 }>();
@@ -88,7 +88,6 @@ function selectDay(date: string | null) {
   padding-top: 10px;
 }
 .day-of-week, .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
-.day-of-week > * { text-align: right; padding-right: 5px; }
 .days-grid {
   height: 100%;
   position: relative;

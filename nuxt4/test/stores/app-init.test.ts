@@ -11,12 +11,13 @@ describe('app-init store', () => {
     const order: string[] = [];
     const logEntries = useLogEntriesStore();
     const userSettings = useUserSettingsStore();
-    vi.spyOn(logEntries, 'loadLogEntries').mockImplementation(async () => {
+    vi.spyOn(logEntries, 'loadLogEntries').mockImplementation(() => {
       order.push('logEntries');
-      return [];
+      return Promise.resolve([]);
     });
-    vi.spyOn(userSettings, 'loadSettings').mockImplementation(async () => {
+    vi.spyOn(userSettings, 'loadSettings').mockImplementation(() => {
       order.push('settings');
+      return Promise.resolve();
     });
 
     await useAppInitStore().loadUserData();

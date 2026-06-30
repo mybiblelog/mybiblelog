@@ -1,10 +1,10 @@
 ---
 seo:
-  titel: 7 Möglichkeiten, um Ihr persönliches Bibelstudium zu organisieren
-  beschreibung: Nutzen Sie die leistungsstarken Notiz- und Tag-Funktionen von My Bible Log optimal, um das Beste aus Ihrer persönlichen Bibelstudienzeit herauszuholen.
+  title: 7 Möglichkeiten, um Ihr persönliches Bibelstudium zu organisieren
+  description: Nutzen Sie die leistungsstarken Notiz- und Tag-Funktionen von My Bible Log optimal, um das Beste aus Ihrer persönlichen Bibelstudienzeit herauszuholen.
 og:
-  titel: 7 Möglichkeiten, um Ihr persönliches Bibelstudium zu organisieren
-  beschreibung: Nutzen Sie die leistungsstarken Notiz- und Tag-Funktionen von My Bible Log optimal, um das Beste aus Ihrer persönlichen Bibelstudienzeit herauszuholen.
+  title: 7 Möglichkeiten, um Ihr persönliches Bibelstudium zu organisieren
+  description: Nutzen Sie die leistungsstarken Notiz- und Tag-Funktionen von My Bible Log optimal, um das Beste aus Ihrer persönlichen Bibelstudienzeit herauszuholen.
 ---
 
 ![](/share.jpg)

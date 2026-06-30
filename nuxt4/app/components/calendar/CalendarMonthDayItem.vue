@@ -10,9 +10,11 @@
     :class="calendarDayClass"
     @click="onClick"
   >
-    <div class="date">{{ label }}</div>
-    <StarIcon v-if="primaryPercentage >= 100" class="star" width="35%" height="35%" fill="var(--mbl-star-earned)" />
-    <StarIcon v-else-if="secondaryPercentage >= 100" class="star" width="35%" height="35%" fill="var(--mbl-star-unearned)" />
+    <div class="date">
+      {{ label }}
+    </div>
+    <star-icon v-if="primaryPercentage >= 100" class="star" width="35%" height="35%" fill="var(--mbl-star-earned)" />
+    <star-icon v-else-if="secondaryPercentage >= 100" class="star" width="35%" height="35%" fill="var(--mbl-star-unearned)" />
     <div v-if="day.isCurrentMonth" class="progress-bar">
       <div class="progress-bar-fill secondary" :style="{ width: secondaryPercentage + '%' }" />
       <div class="progress-bar-fill" :style="{ width: primaryPercentage + '%' }" />

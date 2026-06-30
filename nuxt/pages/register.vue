@@ -5,7 +5,6 @@
         <div class="mbl-level-left">
           <h1 class="mbl-title">
             {{ $t('sign_up') }}
-            <info-link :to="localePath('/about/page-features--login')" />
           </h1>
         </div>
         <div class="mbl-level-right">
@@ -59,16 +58,12 @@
 </template>
 
 <script>
-import InfoLink from '@/components/ui/InfoLink';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useAuthStore } from '~/stores/auth';
 
 export default {
   name: 'RegisterPage',
-  components: {
-    InfoLink,
-  },
   middleware: ['auth'],
   asyncData({ $config }) {
     return {

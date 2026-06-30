@@ -3,7 +3,7 @@
     <article class="content-column mbl-content">
       <ContentRenderer v-if="page" :value="page" />
     </article>
-    <ContentPageFooter />
+    <content-page-footer />
   </main>
 </template>
 

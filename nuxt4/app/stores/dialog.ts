@@ -73,15 +73,15 @@ export const useDialogStore = defineStore('dialog', {
       });
     },
     closeAlert(): void {
-      if (this.resolvePromise) this.resolvePromise();
+      if (this.resolvePromise) { this.resolvePromise(); }
       this.$reset();
     },
     acceptConfirm(): void {
-      if (this.resolvePromise) this.resolvePromise(true);
+      if (this.resolvePromise) { this.resolvePromise(true); }
       this.$reset();
     },
     cancelConfirm(): void {
-      if (this.resolvePromise) this.resolvePromise(false);
+      if (this.resolvePromise) { this.resolvePromise(false); }
       this.$reset();
     },
   },

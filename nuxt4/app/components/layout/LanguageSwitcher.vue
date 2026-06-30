@@ -46,7 +46,7 @@
 import { useAuthStore } from '~/stores/auth';
 import { useUserSettingsStore } from '~/stores/user-settings';
 
-const props = withDefaults(defineProps<{ variant?: 'toolbar' | 'drawer' }>(), {
+withDefaults(defineProps<{ variant?: 'toolbar' | 'drawer' }>(), {
   variant: 'toolbar',
 });
 

@@ -58,9 +58,9 @@
 
     <!-- Legend -->
     <div class="heatmap__legend">
-      <span>{{ $t('less') }}</span>
+      <span>{{ t('less') }}</span>
       <div v-for="level in [0, 1, 2, 3, 4]" :key="`l-${level}`" class="heatmap__cell" :class="`heatmap__cell--level-${level}`" />
-      <span>{{ $t('more') }}</span>
+      <span>{{ t('more') }}</span>
     </div>
   </div>
 </template>

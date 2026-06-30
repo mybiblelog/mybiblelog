@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h1 class="mbl-title">{{ $t('settings') }} — Email</h1>
+    <h1 class="mbl-title">
+      {{ $t('settings') }} — Email
+    </h1>
   </div>
 </template>
 

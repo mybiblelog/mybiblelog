@@ -1,47 +1,47 @@
 <template>
   <div>
-      <h2 class="mbl-title mbl-title--4">
-        {{ t('change_password') }}
-      </h2>
-      <form @submit.prevent="submitChangePassword">
-        <div v-if="errors._form" class="mbl-help mbl-help--danger">
-          {{ $terr(errors._form) }}
+    <h2 class="mbl-title mbl-title--4">
+      {{ t('change_password') }}
+    </h2>
+    <form @submit.prevent="submitChangePassword">
+      <div v-if="errors._form" class="mbl-help mbl-help--danger">
+        {{ $terr(errors._form) }}
+      </div>
+      <div class="mbl-field">
+        <label class="mbl-label">{{ t('current_password') }}</label>
+        <div class="mbl-control">
+          <input v-model="model.currentPassword" class="mbl-input" type="password" data-testid="password-current" :disabled="!mounted">
         </div>
-        <div class="mbl-field">
-          <label class="mbl-label">{{ t('current_password') }}</label>
-          <div class="mbl-control">
-            <input v-model="model.currentPassword" class="mbl-input" type="password" data-testid="password-current" :disabled="!mounted">
-          </div>
-          <div v-if="errors.currentPassword" class="mbl-help mbl-help--danger">
-            {{ $terr(errors.currentPassword) }}
-          </div>
+        <div v-if="errors.currentPassword" class="mbl-help mbl-help--danger">
+          {{ $terr(errors.currentPassword) }}
         </div>
-        <div class="mbl-field">
-          <label class="mbl-label">{{ t('new_password') }}</label>
-          <div class="mbl-control">
-            <input v-model="model.newPassword" class="mbl-input" type="password" data-testid="password-new" :disabled="!mounted">
-          </div>
-          <div v-if="errors.newPassword" class="mbl-help mbl-help--danger">
-            {{ $terr(errors.newPassword) }}
-          </div>
+      </div>
+      <div class="mbl-field">
+        <label class="mbl-label">{{ t('new_password') }}</label>
+        <div class="mbl-control">
+          <input v-model="model.newPassword" class="mbl-input" type="password" data-testid="password-new" :disabled="!mounted">
         </div>
-        <div class="mbl-field">
-          <label class="mbl-label">{{ t('confirm_new_password') }}</label>
-          <div class="mbl-control">
-            <input v-model="model.confirmNewPassword" class="mbl-input" type="password" data-testid="password-confirm" :disabled="!mounted">
-          </div>
-          <div v-if="errors.confirmNewPassword" class="mbl-help mbl-help--danger">
-            {{ errors.confirmNewPassword }}
-          </div>
+        <div v-if="errors.newPassword" class="mbl-help mbl-help--danger">
+          {{ $terr(errors.newPassword) }}
         </div>
-        <div class="mbl-field">
-          <div class="mbl-control">
-            <button class="mbl-button mbl-button--primary" type="submit" :disabled="!mounted || busy" data-testid="password-submit">
-              {{ t('change_password_button') }}
-            </button>
-          </div>
+      </div>
+      <div class="mbl-field">
+        <label class="mbl-label">{{ t('confirm_new_password') }}</label>
+        <div class="mbl-control">
+          <input v-model="model.confirmNewPassword" class="mbl-input" type="password" data-testid="password-confirm" :disabled="!mounted">
         </div>
-      </form>
+        <div v-if="errors.confirmNewPassword" class="mbl-help mbl-help--danger">
+          {{ errors.confirmNewPassword }}
+        </div>
+      </div>
+      <div class="mbl-field">
+        <div class="mbl-control">
+          <button class="mbl-button mbl-button--primary" type="submit" :disabled="!mounted || busy" data-testid="password-submit">
+            {{ t('change_password_button') }}
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
 </template>
 

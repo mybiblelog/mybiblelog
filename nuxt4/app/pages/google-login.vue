@@ -1,7 +1,9 @@
 <template>
   <main>
     <div class="content-column">
-      <h1 class="mbl-title">Signing in with Google…</h1>
+      <h1 class="mbl-title">
+        Signing in with Google…
+      </h1>
     </div>
   </main>
 </template>

@@ -13,20 +13,44 @@
           </div>
           <div class="mbl-dropdown__menu" role="menu" @click="toggleMenu">
             <div class="mbl-dropdown__content">
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('/insights')">{{ t('activity') }}</NuxtLink>
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('/insights/books')">{{ t('books') }}</NuxtLink>
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('/insights/frequency')">{{ t('frequency') }}</NuxtLink>
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('/insights/trend')">{{ t('trend') }}</NuxtLink>
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('/insights')">
+                {{ t('activity') }}
+              </NuxtLink>
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('/insights/books')">
+                {{ t('books') }}
+              </NuxtLink>
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('/insights/frequency')">
+                {{ t('frequency') }}
+              </NuxtLink>
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('/insights/trend')">
+                {{ t('trend') }}
+              </NuxtLink>
             </div>
           </div>
         </div>
       </header>
       <div class="mbl-tabs wide-screen">
         <ul>
-          <li><NuxtLink :to="localePath('/insights')">{{ t('activity') }}</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/insights/books')">{{ t('books') }}</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/insights/frequency')">{{ t('frequency') }}</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/insights/trend')">{{ t('trend') }}</NuxtLink></li>
+          <li>
+            <NuxtLink :to="localePath('/insights')">
+              {{ t('activity') }}
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink :to="localePath('/insights/books')">
+              {{ t('books') }}
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink :to="localePath('/insights/frequency')">
+              {{ t('frequency') }}
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink :to="localePath('/insights/trend')">
+              {{ t('trend') }}
+            </NuxtLink>
+          </li>
         </ul>
       </div>
       <NuxtPage />

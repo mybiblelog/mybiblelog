@@ -12,9 +12,11 @@
     <div class="passage-note--created-date">
       <span class="mbl-text-muted mbl-text-small" :title="noteCreatedAtDisplayTime">{{ timeSince(note.createdAt) }}</span>
     </div>
-    <div class="passage-note--content" data-testid="passage-note-content">{{ note.content }}</div>
+    <div class="passage-note--content" data-testid="passage-note-content">
+      {{ note.content }}
+    </div>
     <div class="passage-note--tags" data-testid="passage-note-tags">
-      <PassageNoteTagPill v-for="tag in resolvedTags" :key="tag.id" :tag="tag" />
+      <passage-note-tag-pill v-for="tag in resolvedTags" :key="tag.id" :tag="tag" />
     </div>
     <div class="passage-note--controls">
       <div class="mbl-button-group mbl-button-group--end">
@@ -44,7 +46,7 @@ const props = defineProps<{
     content?: string;
     createdAt?: string;
   };
-  actions?: Array<{ label: string; callback: () => void }>;
+  actions?: Array<{ label: string; callback:() => void }>;
   getReadingUrl?: (bookIndex: number, chapterIndex: number) => string;
 }>();
 
@@ -94,7 +96,8 @@ const resolvedTags = computed(() => {
   grid-template-rows: repeat(4, auto);
 }
 .passage-note--passages { grid-area: 1 / 1 / 2 / 3; }
-.passage-note--created-date { grid-area: 1 / 2 / 2 / 3; text-align: right; }
+.passage-note--created-date { grid-area: 1 / 2 / 2 / 3; text-align: right; cursor: default; }
+.passage-note--created-date > span { border-bottom: 1px dotted var(--mbl-border-strong); }
 .passage-note--content {
   overflow-wrap: break-word;
   white-space: pre-line;

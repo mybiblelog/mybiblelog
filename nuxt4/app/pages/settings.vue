@@ -4,7 +4,6 @@
       <header class="page-header">
         <h1 class="mbl-title mbl-title--3">
           {{ t('settings') }}
-          <InfoLink :to="localePath('/about/page-features--settings')" />
         </h1>
         <div class="mbl-dropdown narrow-screen" :class="menuOpen ? 'mbl-dropdown--active' : ''">
           <div class="mbl-dropdown__trigger" @click="toggleMenu">
@@ -14,24 +13,60 @@
           </div>
           <div class="mbl-dropdown__menu" role="menu" @click="toggleMenu">
             <div class="mbl-dropdown__content">
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings')">{{ t('account') }}</NuxtLink>
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/start')">{{ t('start_page') }}</NuxtLink>
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/reading')">{{ t('reading') }}</NuxtLink>
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/reminder')">{{ t('reminder') }}</NuxtLink>
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/export')">{{ t('export') }}</NuxtLink>
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/import')">{{ t('import') }}</NuxtLink>
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings')">
+                {{ t('account') }}
+              </NuxtLink>
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/start')">
+                {{ t('start_page') }}
+              </NuxtLink>
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/reading')">
+                {{ t('reading') }}
+              </NuxtLink>
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/reminder')">
+                {{ t('reminder') }}
+              </NuxtLink>
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/export')">
+                {{ t('export') }}
+              </NuxtLink>
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/import')">
+                {{ t('import') }}
+              </NuxtLink>
             </div>
           </div>
         </div>
       </header>
       <div class="mbl-tabs wide-screen">
         <ul>
-          <li><NuxtLink :to="localePath('/settings')">{{ t('account') }}</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/settings/start')">{{ t('start_page') }}</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/settings/reading')">{{ t('reading') }}</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/settings/reminder')">{{ t('reminder') }}</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/settings/export')">{{ t('export') }}</NuxtLink></li>
-          <li><NuxtLink :to="localePath('/settings/import')">{{ t('import') }}</NuxtLink></li>
+          <li>
+            <NuxtLink :to="localePath('/settings')">
+              {{ t('account') }}
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink :to="localePath('/settings/start')">
+              {{ t('start_page') }}
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink :to="localePath('/settings/reading')">
+              {{ t('reading') }}
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink :to="localePath('/settings/reminder')">
+              {{ t('reminder') }}
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink :to="localePath('/settings/export')">
+              {{ t('export') }}
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink :to="localePath('/settings/import')">
+              {{ t('import') }}
+            </NuxtLink>
+          </li>
         </ul>
       </div>
       <NuxtPage />
@@ -40,7 +75,6 @@
 </template>
 
 <script setup lang="ts">
-import InfoLink from '~/components/ui/InfoLink.vue';
 
 definePageMeta({ middleware: ['auth'] });
 useHead({ meta: [{ name: 'robots', content: 'noindex' }] });

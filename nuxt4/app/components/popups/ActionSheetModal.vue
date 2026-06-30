@@ -5,7 +5,9 @@
     </Transition>
     <Transition name="slide-up">
       <div v-if="store.open" class="action-sheet" @click.stop>
-        <div v-if="store.title" class="action-sheet-title">{{ store.title }}</div>
+        <div v-if="store.title" class="action-sheet-title">
+          {{ store.title }}
+        </div>
         <div
           v-for="action in store.actions"
           :key="action.label"

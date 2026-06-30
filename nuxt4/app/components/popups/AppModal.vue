@@ -10,7 +10,9 @@
         <div class="mbl-modal__backdrop" @click="emit('close')" />
         <div class="mbl-modal__card">
           <header class="mbl-modal__head">
-            <p class="mbl-modal__title">{{ title }}</p>
+            <p class="mbl-modal__title">
+              {{ title }}
+            </p>
             <button class="mbl-delete" type="button" aria-label="close" data-testid="modal-close" @click.prevent="emit('close')" />
           </header>
           <section class="mbl-modal__body">

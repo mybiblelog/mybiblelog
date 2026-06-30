@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h2 class="mbl-title mbl-title--4">{{ t('import') }}</h2>
+    <h2 class="mbl-title mbl-title--4">
+      {{ t('import') }}
+    </h2>
     <p>{{ t('you_can_import') }}</p>
     <div class="mbl-file-block">
       <label v-if="mounted" class="mbl-file">
@@ -30,7 +32,9 @@
         </div>
       </div>
     </div>
-    <h3 class="mbl-title mbl-title--5">{{ t('import_progress') }}</h3>
+    <h3 class="mbl-title mbl-title--5">
+      {{ t('import_progress') }}
+    </h3>
     <table class="mbl-table mbl-table--full">
       <thead>
         <tr>
@@ -41,7 +45,9 @@
       </thead>
       <tbody>
         <tr v-if="!importRows.length">
-          <td colspan="3">{{ t('no_entries') }}</td>
+          <td colspan="3">
+            {{ t('no_entries') }}
+          </td>
         </tr>
         <tr v-for="(row, i) in importRows" :key="i" data-testid="import-row">
           <td>{{ row.date }}</td>
@@ -51,7 +57,9 @@
             </span>
             <span v-else>{{ row.verseRange }}</span>
           </td>
-          <td data-testid="import-row-status">{{ row.status }}</td>
+          <td data-testid="import-row-status">
+            {{ row.status }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -220,6 +228,10 @@ async function updateLookBackDate() {
   }
 }
 </script>
+
+<style scoped>
+p { margin-bottom: 1rem; }
+</style>
 
 <i18n lang="json">
 {

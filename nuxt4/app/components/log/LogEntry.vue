@@ -22,7 +22,7 @@
         </template>
       </div>
       <div class="button-controls">
-        <ActionMenu :actions="actions" />
+        <action-menu :actions="actions" />
       </div>
     </div>
   </div>
@@ -35,7 +35,7 @@ import ActionMenu from '~/components/ui/ActionMenu.vue';
 type Action = { label: string; callback?: () => void };
 type Passage = { startVerseId: number; endVerseId: number; newVerseCount?: number };
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   message?: string;
   passage?: Passage | null;
   actions?: Action[];

@@ -2,7 +2,9 @@
   <main>
     <div class="log-page" :style="pageCssVars">
       <header class="page-header">
-        <h2 class="mbl-title">{{ t('log') }}</h2>
+        <h2 class="mbl-title">
+          {{ t('log') }}
+        </h2>
         <div class="mbl-button-group mbl-button-group--start">
           <button class="mbl-button mbl-button--primary" type="button" @click="openAddEntryForm">
             {{ t('add_entry') }}
@@ -28,7 +30,7 @@
                 {{ t('query_manager.reset') }}
               </button>
             </div>
-            <LogEntriesQueryManager
+            <log-entries-query-manager
               ref="sidebarQueryManagerRef"
               :applied-query="query"
               @apply="applyQueryManager"
@@ -39,16 +41,20 @@
         <section class="log-page__content">
           <div>
             <template v-if="loading">
-              <LogEntry key="loading" :message="t('results.loading')" empty />
+              <log-entry key="loading" :message="t('results.loading')" empty />
             </template>
             <template v-else-if="!pagedLogEntries.length">
               <div class="mbl-empty-state">
-                <div class="mbl-text-center">{{ t('results.no_results') }}</div>
+                <div class="mbl-text-center">
+                  {{ t('results.no_results') }}
+                </div>
               </div>
             </template>
             <template v-else>
               <div ref="resultsBarRef" class="log-page__results-bar">
-                <div class="log-page__results-summary">{{ querySummary }}</div>
+                <div class="log-page__results-summary">
+                  {{ querySummary }}
+                </div>
 
                 <div v-if="pagerTotalPages > 1" class="log-page__results-pager">
                   <div class="mbl-field mbl-field--addons mbl-field--flush" role="group" :aria-label="t('pagination.label')">
@@ -60,7 +66,7 @@
                         :aria-label="t('pagination.prev')"
                         @click="onPageChanged(pagerPage - 1)"
                       >
-                        <CaretLeftIcon width="10px" height="18px" fill="currentColor" />
+                        <caret-left-icon width="10px" height="18px" fill="currentColor" />
                       </button>
                     </p>
                     <div class="mbl-control">
@@ -84,7 +90,7 @@
                         :aria-label="t('pagination.next')"
                         @click="onPageChanged(pagerPage + 1)"
                       >
-                        <CaretRightIcon width="10px" height="18px" fill="currentColor" />
+                        <caret-right-icon width="10px" height="18px" fill="currentColor" />
                       </button>
                     </p>
                   </div>
@@ -102,7 +108,7 @@
                     <div class="log-page__date-heading" role="heading" aria-level="3" data-testid="log-date-heading">
                       {{ formatDisplayDate(group.date) }}
                     </div>
-                    <LogEntry
+                    <log-entry
                       v-for="entry of group.entries"
                       :key="entry.id"
                       role="listitem"
@@ -117,15 +123,15 @@
         </section>
       </div>
 
-      <AppModal :open="showQueryManagerModal" :title="t('query_manager.title')" @close="closeQueryManagerModal">
+      <app-modal :open="showQueryManagerModal" :title="t('query_manager.title')" @close="closeQueryManagerModal">
         <template #content>
-          <LogEntriesQueryManager
+          <log-entries-query-manager
             :applied-query="query"
             @apply="applyQueryManager"
             @cancel="closeQueryManagerModal"
           />
         </template>
-      </AppModal>
+      </app-modal>
     </div>
   </main>
 </template>
@@ -169,7 +175,7 @@ const lastAppliedLogRouteQueryKey = ref<string | null>(null);
 const query = ref<LogEntriesQuery>(defaultLogEntriesQuery());
 const resultsBarHeightPx = ref(0);
 const resultsBarRef = ref<HTMLElement | null>(null);
-const sidebarQueryManagerRef = ref<{ confirmAndReset: () => Promise<void> } | null>(null);
+const sidebarQueryManagerRef = ref<{ confirmAndReset:() => Promise<void> } | null>(null);
 
 let resultsBarObserver: ResizeObserver | null = null;
 
@@ -440,7 +446,8 @@ async function deleteEntry(id: number | string) {
 
 function detachResultsBarObserver() {
   if (resultsBarObserver) {
-    try { resultsBarObserver.disconnect(); } catch { /* ignore */ }
+    try { resultsBarObserver.disconnect(); }
+    catch { /* ignore */ }
   }
   resultsBarObserver = null;
   resultsBarHeightPx.value = 0;

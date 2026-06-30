@@ -1,10 +1,14 @@
 <template>
   <div>
-    <h2 class="mbl-title mbl-title--4">{{ t('export') }}</h2>
+    <h2 class="mbl-title mbl-title--4">
+      {{ t('export') }}
+    </h2>
     <p>{{ t('you_can_download') }}</p>
     <br>
 
-    <h2 class="mbl-title mbl-title--5">{{ t('reading_log_title') }}</h2>
+    <h2 class="mbl-title mbl-title--5">
+      {{ t('reading_log_title') }}
+    </h2>
     <p>{{ t('reading_log_info_1') }}</p>
     <p>{{ t('reading_log_info_2') }}</p>
     <button class="mbl-button mbl-button--primary" data-testid="export-log-csv-button" :disabled="!mounted" @click="downloadLogEntriesCSV">
@@ -12,12 +16,18 @@
     </button>
     <hr>
 
-    <h2 class="mbl-title mbl-title--5">{{ t('notes_title') }}</h2>
+    <h2 class="mbl-title mbl-title--5">
+      {{ t('notes_title') }}
+    </h2>
     <div class="mbl-message">
-      <div class="mbl-message__body">{{ t('notes_info') }}</div>
+      <div class="mbl-message__body">
+        {{ t('notes_info') }}
+      </div>
     </div>
 
-    <h2 class="mbl-title mbl-title--6">{{ t('notes_text_title') }}</h2>
+    <h2 class="mbl-title mbl-title--6">
+      {{ t('notes_text_title') }}
+    </h2>
     <p>{{ t('notes_text_info') }}</p>
     <p>
       <button class="mbl-button mbl-button--primary" data-testid="export-notes-text-button" :disabled="!mounted" @click="downloadNotesTextFile">
@@ -25,7 +35,9 @@
       </button>
     </p>
 
-    <h2 class="mbl-title mbl-title--6">{{ t('notes_json_title') }}</h2>
+    <h2 class="mbl-title mbl-title--6">
+      {{ t('notes_json_title') }}
+    </h2>
     <p>{{ t('notes_json_info') }}</p>
     <p>
       <button class="mbl-button mbl-button--primary" data-testid="export-notes-json-button" :disabled="!mounted" @click="downloadNotesJsonFile">
@@ -80,7 +92,7 @@ function csvRow(values: string[]): string {
   return values.map(v => (/[,"\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v)).join(',');
 }
 
-async function downloadLogEntriesCSV() {
+function downloadLogEntriesCSV() {
   if (!logCsvCache) {
     const rows = logEntriesStore.logEntries.map((entry: Record<string, unknown>) => [
       String(entry.date),
@@ -162,7 +174,7 @@ function generateNoteText(note: Record<string, unknown>, tags: Array<Record<stri
   }
   if ((note.tags as unknown[]).length) {
     const tagLabels = (note.tags as Array<string | number>)
-      .map(tagId => {
+      .map((tagId) => {
         const tag = tags.find(t => t.id === tagId || t._id === tagId);
         return tag ? tag.label : null;
       })
@@ -184,6 +196,10 @@ function generateTagText(tag: Record<string, unknown>) {
   return result;
 }
 </script>
+
+<style scoped>
+p { margin-bottom: 1rem; }
+</style>
 
 <i18n lang="json">
 {

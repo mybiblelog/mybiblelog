@@ -10,12 +10,16 @@
   >
     <div class="chapter-report--indicator">
       <div class="chapter-report--indicator--icon">
-        <StarIcon width="100%" height="100%" :fill="report.percentage === 100 ? 'var(--mbl-star-earned)' : 'var(--mbl-star-unearned)'" />
+        <star-icon width="100%" height="100%" :fill="report.percentage === 100 ? 'var(--mbl-star-earned)' : 'var(--mbl-star-unearned)'" />
       </div>
-      <div class="chapter-report--index">{{ report.chapterIndex }}</div>
-      <div class="chapter-report--fraction">{{ report.versesRead }} / {{ report.totalVerses }}</div>
+      <div class="chapter-report--index">
+        {{ report.chapterIndex }}
+      </div>
+      <div class="chapter-report--fraction">
+        {{ report.versesRead }} / {{ report.totalVerses }}
+      </div>
     </div>
-    <SegmentBar class="chapter-report--completion" :segments="report.segments" />
+    <segment-bar class="chapter-report--completion" :segments="report.segments" />
   </button>
 </template>
 

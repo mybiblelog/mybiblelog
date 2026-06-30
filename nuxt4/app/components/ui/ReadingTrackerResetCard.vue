@@ -37,11 +37,11 @@ onMounted(() => { mounted.value = true; });
 const saving = ref(false);
 
 const showCard = computed(() =>
-  logEntriesStore.isLoaded
-  && userSettingsStore.isLoaded
-  && logEntriesStore.isBibleComplete
-  && !logEntriesStore.hasLogEntriesForToday
-  && !userSettingsStore.readingTrackerResetDelayed,
+  logEntriesStore.isLoaded &&
+  userSettingsStore.isLoaded &&
+  logEntriesStore.isBibleComplete &&
+  !logEntriesStore.hasLogEntriesForToday &&
+  !userSettingsStore.readingTrackerResetDelayed,
 );
 
 async function startFresh() {

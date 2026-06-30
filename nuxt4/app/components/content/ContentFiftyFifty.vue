@@ -64,13 +64,14 @@ const props = withDefaults(defineProps<{
 // @nuxt/content v3 MDC passes array props as single-quoted JS array strings
 // FIXME: tech debt from Nuxt migration
 const resolvedList = computed((): string[] => {
-  if (!props.list) return [];
-  if (Array.isArray(props.list)) return props.list;
+  if (!props.list) { return []; }
+  if (Array.isArray(props.list)) { return props.list; }
   const str = (props.list as string).trim();
-  if (!str.startsWith('[')) return [];
+  if (!str.startsWith('[')) { return []; }
   try {
     return JSON.parse(str);
-  } catch {
+  }
+  catch {
     // Convert single-quoted JS array to JSON; protect escaped apostrophes first
     const APOS = '\x00';
     const jsonStr = str
@@ -79,7 +80,8 @@ const resolvedList = computed((): string[] => {
       .replace(new RegExp(APOS, 'g'), "'");
     try {
       return JSON.parse(jsonStr);
-    } catch {
+    }
+    catch {
       return [];
     }
   }

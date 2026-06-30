@@ -1,14 +1,18 @@
 <template>
   <main>
     <div class="content-column">
-      <h1 class="mbl-title">{{ t('feedback_form') }}</h1>
+      <h1 class="mbl-title">
+        {{ t('feedback_form') }}
+      </h1>
       <div class="mbl-content">
         <p>{{ t('intro_p1') }}</p>
         <p>{{ t('intro_p2') }}</p>
       </div>
 
       <form data-testid="feedback-form" @submit.prevent="submitFeedback">
-        <div v-if="errors._form" class="mbl-help mbl-help--danger">{{ errors._form }}</div>
+        <div v-if="errors._form" class="mbl-help mbl-help--danger">
+          {{ errors._form }}
+        </div>
         <div class="mbl-field">
           <label class="mbl-label">{{ t('your_email') }}</label>
           <div class="mbl-control">
@@ -20,7 +24,9 @@
               :placeholder="t('your_email')"
               :disabled="authStore.loggedIn"
             >
-            <div v-if="errors.email" class="mbl-help mbl-help--danger">{{ errors.email }}</div>
+            <div v-if="errors.email" class="mbl-help mbl-help--danger">
+              {{ errors.email }}
+            </div>
           </div>
         </div>
         <div class="mbl-field">
@@ -28,9 +34,15 @@
           <div class="mbl-control">
             <div class="mbl-select">
               <select v-model="form.kind" data-testid="feedback-kind">
-                <option value="bug">{{ t('bug_report') }}</option>
-                <option value="feature">{{ t('feature_request') }}</option>
-                <option value="comment">{{ t('general_comment') }}</option>
+                <option value="bug">
+                  {{ t('bug_report') }}
+                </option>
+                <option value="feature">
+                  {{ t('feature_request') }}
+                </option>
+                <option value="comment">
+                  {{ t('general_comment') }}
+                </option>
               </select>
             </div>
           </div>
@@ -49,9 +61,8 @@
           </div>
         </div>
       </form>
-
     </div>
-    <ContentPageFooter />
+    <content-page-footer />
   </main>
 </template>
 

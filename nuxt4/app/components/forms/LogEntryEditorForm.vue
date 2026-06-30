@@ -1,28 +1,30 @@
 <template>
   <form data-testid="log-entry-editor">
     <div class="passage-preview" data-testid="log-entry-editor-preview">
-      {{ displayEditorVerseRange || $t('preview_passage') }}
+      {{ displayEditorVerseRange || t('preview_passage') }}
     </div>
     <div>
-      <label for="model-date">{{ $t('date') }}</label>
+      <label for="model-date">{{ t('date') }}</label>
       <input id="model-date" data-testid="log-entry-editor-date" :value="logEntry.date" type="date" @change="updateDate">
     </div>
     <div>
-      <label for="model-book">{{ $t('book') }}</label>
+      <label for="model-book">{{ t('book') }}</label>
       <select
         id="model-book"
         :key="`book-${formBook}`"
         :value="formBook"
         @change="onSelectBook"
       >
-        <option disabled value="0" selected>{{ $t('choose_book') }}</option>
+        <option disabled value="0" selected>
+          {{ t('choose_book') }}
+        </option>
         <option v-for="book in books" :key="book.bibleOrder" :value="book.bibleOrder">
           {{ displayBookName(book.bibleOrder) }}
         </option>
       </select>
     </div>
     <div>
-      <label for="model-startChapter">{{ $t('start_chapter') }}</label>
+      <label for="model-startChapter">{{ t('start_chapter') }}</label>
       <select
         id="model-startChapter"
         ref="startChapterRef"
@@ -31,12 +33,16 @@
         :disabled="formBook === 0"
         @change="onSelectStartChapter"
       >
-        <option disabled value="0" selected>{{ $t('choose_start_chapter') }}</option>
-        <option v-for="chapter in startChapters" :key="chapter" :value="chapter">{{ chapter }}</option>
+        <option disabled value="0" selected>
+          {{ t('choose_start_chapter') }}
+        </option>
+        <option v-for="chapter in startChapters" :key="chapter" :value="chapter">
+          {{ chapter }}
+        </option>
       </select>
     </div>
     <div>
-      <label for="model-startVerse">{{ $t('start_verse') }}</label>
+      <label for="model-startVerse">{{ t('start_verse') }}</label>
       <select
         id="model-startVerse"
         :key="`start-verse-${formStartChapter}-${formStartVerse}`"
@@ -44,12 +50,16 @@
         :disabled="formStartChapter === 0"
         @change="onSelectStartVerse"
       >
-        <option disabled value="0" selected>{{ $t('choose_start_verse') }}</option>
-        <option v-for="verse in startVerses" :key="verse" :value="verse">{{ verse }}</option>
+        <option disabled value="0" selected>
+          {{ t('choose_start_verse') }}
+        </option>
+        <option v-for="verse in startVerses" :key="verse" :value="verse">
+          {{ verse }}
+        </option>
       </select>
     </div>
     <div>
-      <label for="model-endChapter">{{ $t('end_chapter') }}</label>
+      <label for="model-endChapter">{{ t('end_chapter') }}</label>
       <select
         id="model-endChapter"
         ref="endChapterRef"
@@ -58,12 +68,16 @@
         :disabled="formStartVerse === 0"
         @change="onSelectEndChapter"
       >
-        <option disabled value="0" selected>{{ $t('choose_end_chapter') }}</option>
-        <option v-for="chapter in endChapters" :key="chapter" :value="chapter">{{ chapter }}</option>
+        <option disabled value="0" selected>
+          {{ t('choose_end_chapter') }}
+        </option>
+        <option v-for="chapter in endChapters" :key="chapter" :value="chapter">
+          {{ chapter }}
+        </option>
       </select>
     </div>
     <div>
-      <label for="model-endVerse">{{ $t('end_verse') }}</label>
+      <label for="model-endVerse">{{ t('end_verse') }}</label>
       <select
         id="model-endVerse"
         ref="endVerseRef"
@@ -72,12 +86,16 @@
         :disabled="formEndChapter === 0"
         @change="onSelectEndVerse"
       >
-        <option disabled value="0" selected>{{ $t('choose_end_verse') }}</option>
-        <option v-for="verse in endVerses" :key="verse" :value="verse">{{ verse }}</option>
+        <option disabled value="0" selected>
+          {{ t('choose_end_verse') }}
+        </option>
+        <option v-for="verse in endVerses" :key="verse" :value="verse">
+          {{ verse }}
+        </option>
       </select>
     </div>
     <div v-if="errors._form" class="form-error">
-      {{ $t(`api_error.${errors._form?.code ?? 'unknown_error'}`) }}
+      {{ t(`api_error.${errors._form?.code ?? 'unknown_error'}`) }}
     </div>
   </form>
 </template>
@@ -86,7 +104,7 @@
 import { Bible } from '@mybiblelog/shared';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 
-const { locale } = useI18n();
+const { t, locale } = useI18n();
 const logEntryEditorStore = useLogEntryEditorStore();
 const logEntry = computed(() => logEntryEditorStore.logEntry);
 const errors = computed(() => logEntryEditorStore.errors);

@@ -2,7 +2,9 @@
   <main>
     <section class="mbl-section">
       <div class="mbl-container">
-        <h1 class="mbl-title">Past Week Engagement</h1>
+        <h1 class="mbl-title">
+          Past Week Engagement
+        </h1>
         <div class="mbl-content">
           <template v-if="loading">
             <p>Loading...</p>
@@ -37,6 +39,7 @@
 
 <script setup lang="ts">
 import { displayDate } from '@mybiblelog/shared';
+import { useDialogStore } from '~/stores/dialog';
 
 definePageMeta({ middleware: ['auth'], auth: 'admin' });
 useHead({ meta: [{ name: 'robots', content: 'noindex' }] });

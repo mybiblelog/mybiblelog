@@ -3,3 +3,19 @@
     <NuxtPage />
   </NuxtLayout>
 </template>
+
+<script setup lang="ts">
+// Mirror the Nuxt 2 head.titleTemplate: append the site brand to each page
+// title unless the title already is (or contains) it. Without this, content
+// pages whose `seo.title` omits the brand (e.g. the /about/* pages) render a
+// title with no "My Bible Log" suffix, hurting SEO.
+const siteTitle = 'My Bible Log';
+useHead({
+  titleTemplate: (titleChunk?: string) => {
+    if (titleChunk && titleChunk !== siteTitle) {
+      return titleChunk.includes(siteTitle) ? titleChunk : `${titleChunk} | ${siteTitle}`;
+    }
+    return siteTitle;
+  },
+});
+</script>

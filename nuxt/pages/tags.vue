@@ -4,7 +4,6 @@
       <header class="page-header">
         <h2 class="mbl-title">
           {{ $t('note_tags') }}
-          <info-link :to="localePath('/about/page-features--notes')" />
         </h2>
         <div class="mbl-button-group mbl-button-group--start">
           <nuxt-link class="mbl-button" :to="localePath('/notes')">
@@ -88,7 +87,6 @@
 import { displayDateTime, displayTimeSince } from '@mybiblelog/shared';
 import { encodePassageNotesQueryToRoute } from '@/helpers/passage-notes-route-query';
 import HyperlinkedText from '@/components/ui/HyperlinkedText';
-import InfoLink from '@/components/ui/InfoLink';
 import CaretRightIcon from '@/components/svg/CaretRightIcon';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
@@ -99,7 +97,6 @@ export default {
   name: 'NoteTagsListPage',
   components: {
     HyperlinkedText,
-    InfoLink,
     CaretRightIcon,
   },
   middleware: ['auth'],

@@ -1,13 +1,17 @@
 <template>
-  <AppModal :open="open" title="User Details" @close="emit('close')">
+  <app-modal :open="open" title="User Details" @close="emit('close')">
     <template #content>
       <div>
-        <p class="mbl-text-small mbl-text-muted">Email</p>
+        <p class="mbl-text-small mbl-text-muted">
+          Email
+        </p>
         <p>{{ user?.email || '—' }}</p>
       </div>
       <br>
       <div>
-        <p class="mbl-text-small mbl-text-muted">Login Methods</p>
+        <p class="mbl-text-small mbl-text-muted">
+          Login Methods
+        </p>
         <div class="admin-user-detail__login-methods">
           <span v-if="user?.googleId" class="admin-user-detail__login-badge">Google</span>
           <span v-if="user?.hasLocalAccount" class="admin-user-detail__login-badge">Password</span>
@@ -23,27 +27,39 @@
       </div>
       <dl v-else-if="stats" class="admin-user-detail__stats">
         <div class="admin-user-detail__stat">
-          <dt class="mbl-text-small mbl-text-muted">Join Date</dt>
+          <dt class="mbl-text-small mbl-text-muted">
+            Join Date
+          </dt>
           <dd>{{ stats.joinDate ? stats.joinDate.split('T')[0] : '—' }}<span v-if="stats.joinDate" class="admin-user-detail__days-ago"> ({{ daysAgo(stats.joinDate) }})</span></dd>
         </div>
         <div class="admin-user-detail__stat">
-          <dt class="mbl-text-small mbl-text-muted">Feedbacks</dt>
+          <dt class="mbl-text-small mbl-text-muted">
+            Feedbacks
+          </dt>
           <dd>{{ stats.feedbackCount }}</dd>
         </div>
         <div class="admin-user-detail__stat">
-          <dt class="mbl-text-small mbl-text-muted">Last Log Entry</dt>
+          <dt class="mbl-text-small mbl-text-muted">
+            Last Log Entry
+          </dt>
           <dd>{{ stats.lastLogEntryDate || '—' }}<span v-if="stats.lastLogEntryDate" class="admin-user-detail__days-ago"> ({{ daysAgo(stats.lastLogEntryDate) }})</span></dd>
         </div>
         <div class="admin-user-detail__stat">
-          <dt class="mbl-text-small mbl-text-muted">Log Entries</dt>
+          <dt class="mbl-text-small mbl-text-muted">
+            Log Entries
+          </dt>
           <dd>{{ stats.logEntryCount }}</dd>
         </div>
         <div class="admin-user-detail__stat">
-          <dt class="mbl-text-small mbl-text-muted">Last Note</dt>
+          <dt class="mbl-text-small mbl-text-muted">
+            Last Note
+          </dt>
           <dd>{{ stats.lastNoteDate ? stats.lastNoteDate.split('T')[0] : '—' }}<span v-if="stats.lastNoteDate" class="admin-user-detail__days-ago"> ({{ daysAgo(stats.lastNoteDate) }})</span></dd>
         </div>
         <div class="admin-user-detail__stat">
-          <dt class="mbl-text-small mbl-text-muted">Notes</dt>
+          <dt class="mbl-text-small mbl-text-muted">
+            Notes
+          </dt>
           <dd>{{ stats.noteCount }}</dd>
         </div>
       </dl>
@@ -62,12 +78,14 @@
         Close
       </button>
     </template>
-  </AppModal>
+  </app-modal>
 </template>
 
 <script setup lang="ts">
 import { displayTimeSince } from '@mybiblelog/shared';
 import AppModal from '~/components/popups/AppModal.vue';
+import { useDialogStore } from '~/stores/dialog';
+import { useAuthStore } from '~/stores/auth';
 
 interface AdminUser {
   email: string;

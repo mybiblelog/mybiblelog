@@ -8,7 +8,7 @@
 const gridContainer = ref<HTMLElement | null>(null);
 
 onMounted(() => {
-  if (!gridContainer.value) return;
+  if (!gridContainer.value) { return; }
   const hasExplicitTiles = gridContainer.value.querySelectorAll('.h3-grid-item').length > 0;
   if (!hasExplicitTiles) {
     processAutomatic(gridContainer.value);
@@ -17,7 +17,7 @@ onMounted(() => {
 
 function processAutomatic(container: HTMLElement) {
   const h3Elements = Array.from(container.querySelectorAll('h3'));
-  if (h3Elements.length === 0) return;
+  if (h3Elements.length === 0) { return; }
 
   const h3Sections: { h3: HTMLElement; content: Node[] }[] = [];
   let currentSection: { h3: HTMLElement; content: Node[] } | null = null;
@@ -27,7 +27,7 @@ function processAutomatic(container: HTMLElement) {
     if (node.nodeType === Node.ELEMENT_NODE) {
       const el = node as HTMLElement;
       if (el.tagName === 'H3') {
-        if (currentSection) h3Sections.push(currentSection);
+        if (currentSection) { h3Sections.push(currentSection); }
         currentSection = { h3: el, content: [] };
       }
       else if (currentSection) {
@@ -39,10 +39,10 @@ function processAutomatic(container: HTMLElement) {
     }
   });
 
-  if (currentSection) h3Sections.push(currentSection);
-  if (h3Sections.length === 0) return;
+  if (currentSection) { h3Sections.push(currentSection); }
+  if (h3Sections.length === 0) { return; }
 
-  introElements.forEach((node) => node.parentNode?.removeChild(node));
+  introElements.forEach(node => node.parentNode?.removeChild(node));
 
   h3Sections.forEach((section) => {
     const gridItem = document.createElement('div');

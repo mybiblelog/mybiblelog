@@ -1,6 +1,7 @@
 import { test, expect } from '../../fixtures';
 import { login, createTestUser, deleteTestUser } from '../../helpers/api-client';
 import { env } from '../../helpers/env';
+import { waitForHydration } from '../../helpers/hydration';
 
 test.describe('Settings', () => {
   test('settings pages are marked noindex', async ({ page }) => {
@@ -51,6 +52,10 @@ test.describe('Settings', () => {
     const newPassword = `${testUser.password}-changed`;
 
     await page.goto('/settings/password');
+    // Wait for hydration before filling: the first fill can otherwise land before
+    // the input's v-model listener is wired, dropping the current-password value
+    // so the form short-circuits on its "required" check and never submits.
+    await waitForHydration(page);
     await page.getByTestId('password-current').fill(testUser.password);
     await page.getByTestId('password-new').fill(newPassword);
     await page.getByTestId('password-confirm').fill(newPassword);

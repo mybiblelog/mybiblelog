@@ -4,7 +4,6 @@
       <header class="page-header">
         <h2 class="mbl-title">
           {{ $t('notes') }}
-          <info-link :to="localePath('/about/page-features--notes')" />
         </h2>
         <div class="mbl-button-group mbl-button-group--start">
           <nuxt-link class="mbl-button" :to="localePath('/tags')">
@@ -17,11 +16,11 @@
         </div>
       </header>
       <div class="notes-page__mobile-query-button">
-        <button class="mbl-button mbl-button--light mbl-button--sm notes-page__query-button" type="button" @click="openQueryManagerModal">
+        <button class="mbl-button mbl-button--light mbl-button--sm notes-page__query-button" type="button" data-testid="notes-mobile-query-open" @click="openQueryManagerModal">
           {{ $t('query_manager.open') }}
           <span v-if="hasAppliedViewOptions" class="notes-page__query-badge" aria-hidden="true" />
         </button>
-        <button v-if="hasAppliedViewOptions" class="mbl-button mbl-button--light mbl-button--sm" type="button" @click="resetViewOptions">
+        <button v-if="hasAppliedViewOptions" class="mbl-button mbl-button--light mbl-button--sm" type="button" data-testid="notes-query-reset" @click="resetViewOptions">
           {{ $t('query_manager.reset_button') }}
         </button>
       </div>
@@ -30,7 +29,7 @@
         <aside class="notes-page__sidebar">
           <div class="mbl-box notes-page__query-manager-box">
             <div class="notes-page__query-manager-actions">
-              <button v-if="hasAppliedViewOptions" class="mbl-button mbl-button--light mbl-button--sm" type="button" @click="resetViewOptions">
+              <button v-if="hasAppliedViewOptions" class="mbl-button mbl-button--light mbl-button--sm" type="button" data-testid="notes-query-reset-sidebar" @click="resetViewOptions">
                 {{ $t('query_manager.reset') }}
               </button>
             </div>
@@ -143,7 +142,6 @@ import { decodePassageNotesRouteQuery, encodePassageNotesQueryToRoute } from '@/
 import PassageNote from '@/components/notes/PassageNote';
 import PassageNotesQueryManager from '@/components/notes/PassageNotesQueryManager';
 import AppModal from '@/components/popups/AppModal';
-import InfoLink from '@/components/ui/InfoLink';
 import CaretLeftIcon from '@/components/svg/CaretLeftIcon';
 import CaretRightIcon from '@/components/svg/CaretRightIcon';
 import { useDialogStore } from '~/stores/dialog';
@@ -159,7 +157,6 @@ export default {
     PassageNote,
     PassageNotesQueryManager,
     AppModal,
-    InfoLink,
     CaretLeftIcon,
     CaretRightIcon,
   },
@@ -300,9 +297,8 @@ export default {
     },
     resetViewOptions() {
       if (!this.hasAppliedViewOptions) { return; }
-      const mgr = this.$refs.sidebarQueryManager;
-      if (!mgr || typeof mgr.confirmAndReset !== 'function') { return; }
-      mgr.confirmAndReset();
+      this.closeQueryManagerModal();
+      this.pushNotesQuery({});
     },
     async applyQueryManager(update) {
       await this.pushNotesQuery({ ...this.query, ...update, offset: 0 });

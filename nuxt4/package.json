@@ -12,7 +12,9 @@
     "pretest": "node test/ensure-nuxt-tsconfig.mjs",
     "test": "vitest run",
     "pretest:watch": "node test/ensure-nuxt-tsconfig.mjs",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lint": "eslint --ext .ts,.js,.vue .",
+    "lint:fix": "eslint --ext .ts,.js,.vue . --fix"
   },
   "dependencies": {
     "@mybiblelog/shared": "*",
