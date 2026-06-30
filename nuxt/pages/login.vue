@@ -5,7 +5,6 @@
         <div class="mbl-level-left">
           <h1 class="mbl-title">
             {{ $t('sign_in') }}
-            <info-link :to="localePath('/about/page-features--login')" />
           </h1>
         </div>
         <div v-if="!passwordResetSubmitted" class="mbl-level-right">
@@ -68,7 +67,6 @@
 
 <script>
 import GoogleLoginButton from '@/components/forms/GoogleLoginButton.vue';
-import InfoLink from '@/components/ui/InfoLink';
 import ResendVerificationEmail from '@/components/ui/ResendVerificationEmail.vue';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
@@ -78,7 +76,6 @@ export default {
   name: 'LoginPage',
   components: {
     GoogleLoginButton,
-    InfoLink,
     ResendVerificationEmail,
   },
   middleware: ['auth'],

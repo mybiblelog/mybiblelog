@@ -7,7 +7,6 @@
     <header class="page-header">
       <h2 class="mbl-title">
         {{ $t('chapter_checklist') }}
-        <info-link :to="localePath('/about/page-features--chapter-checklist')" />
       </h2>
     </header>
     <br>
@@ -72,7 +71,6 @@ import CompletionBar from '@/components/ui/CompletionBar';
 import CheckMarkIcon from '@/components/svg/CheckMarkIcon';
 import CaretDownIcon from '@/components/svg/CaretDownIcon';
 import SpinnerIcon from '@/components/svg/SpinnerIcon';
-import InfoLink from '@/components/ui/InfoLink';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import ReadingTrackerResetCard from '@/components/ui/ReadingTrackerResetCard';
@@ -90,7 +88,6 @@ export default {
     CheckMarkIcon,
     CaretDownIcon,
     SpinnerIcon,
-    InfoLink,
     ReadingTrackerResetCard,
   },
   middleware: ['auth'],

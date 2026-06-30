@@ -7,6 +7,7 @@
       <div class="mbl-button-group mbl-button-group--start">
         <NuxtLink class="mbl-button" to="/tags">
           {{ t('tags') }}
+          <caret-right-icon style="margin-left: 0.2rem;" />
         </NuxtLink>
         <button class="mbl-button mbl-button--primary" :disabled="!hydrated" @click="openNewNoteEditor">
           {{ t('new') }}

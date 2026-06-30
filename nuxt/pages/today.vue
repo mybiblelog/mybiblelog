@@ -7,7 +7,6 @@
     <header class="page-header">
       <h1 class="mbl-title">
         {{ $t('today') }}
-        <info-link :to="localePath('/about/page-features--today')" />
       </h1>
       <button class="mbl-button mbl-button--primary" @click="openAddEntryForm">
         {{ $t('add_entry') }}
@@ -144,7 +143,6 @@ import { encodePassageNotesQueryToRoute } from '@/helpers/passage-notes-route-qu
 import BusyBar from '@/components/ui/BusyBar';
 import DoubleProgressBar from '@/components/ui/DoubleProgressBar';
 import LogEntry from '@/components/log/LogEntry';
-import InfoLink from '@/components/ui/InfoLink';
 import PassageNote from '@/components/notes/PassageNote';
 import ReadingTrackerResetCard from '@/components/ui/ReadingTrackerResetCard';
 import { useDialogStore } from '~/stores/dialog';
@@ -164,7 +162,6 @@ export default {
     BusyBar,
     DoubleProgressBar,
     LogEntry,
-    InfoLink,
     PassageNote,
     ReadingTrackerResetCard,
   },

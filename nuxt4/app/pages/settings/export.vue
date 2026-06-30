@@ -197,6 +197,10 @@ function generateTagText(tag: Record<string, unknown>) {
 }
 </script>
 
+<style scoped>
+p { margin-bottom: 1rem; }
+</style>
+
 <i18n lang="json">
 {
   "en": {

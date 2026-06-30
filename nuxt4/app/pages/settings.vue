@@ -4,7 +4,6 @@
       <header class="page-header">
         <h1 class="mbl-title mbl-title--3">
           {{ t('settings') }}
-          <info-link :to="localePath('/about/page-features--settings')" />
         </h1>
         <div class="mbl-dropdown narrow-screen" :class="menuOpen ? 'mbl-dropdown--active' : ''">
           <div class="mbl-dropdown__trigger" @click="toggleMenu">
@@ -76,7 +75,6 @@
 </template>
 
 <script setup lang="ts">
-import InfoLink from '~/components/ui/InfoLink.vue';
 
 definePageMeta({ middleware: ['auth'] });
 useHead({ meta: [{ name: 'robots', content: 'noindex' }] });

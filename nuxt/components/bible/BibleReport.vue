@@ -3,7 +3,6 @@
     <header class="page-header">
       <h2 class="mbl-title">
         {{ $t('bible_books') }}
-        <info-link :to="localePath('/about/page-features--bible-books')" />
       </h2>
       <nuxt-link class="mbl-button" :to="localePath('/progress')">
         {{ $t('progress') }}
@@ -76,7 +75,6 @@ import { Bible } from '@mybiblelog/shared';
 import { encodePassageNotesQueryToRoute } from '@/helpers/passage-notes-route-query';
 import SegmentBar from '@/components/bible/SegmentBar';
 import StarIcon from '@/components/svg/StarIcon';
-import InfoLink from '@/components/ui/InfoLink';
 import CaretRightIcon from '@/components/svg/CaretRightIcon';
 const calcPercent = (numerator, denominator) => {
   return Math.floor(numerator / denominator * 100);
@@ -87,7 +85,6 @@ export default {
   components: {
     SegmentBar,
     StarIcon,
-    InfoLink,
     CaretRightIcon,
   },
   props: {

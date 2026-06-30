@@ -3,7 +3,6 @@
     <header class="page-header">
       <h1 class="mbl-title">
         {{ t('progress') }}
-        <info-link :to="localePath('/about/page-features--progress')" />
       </h1>
       <NuxtLink class="mbl-button" :to="localePath('/books')">
         {{ t('bible_books') }}
@@ -226,7 +225,6 @@
 import dayjs from 'dayjs';
 import { Bible } from '@mybiblelog/shared';
 import BusyBar from '~/components/ui/BusyBar.vue';
-import InfoLink from '~/components/ui/InfoLink.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useDateVerseCountsStore } from '~/stores/date-verse-counts';

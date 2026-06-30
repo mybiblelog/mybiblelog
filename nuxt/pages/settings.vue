@@ -4,7 +4,6 @@
       <header class="page-header">
         <h1 class="mbl-title mbl-title--3">
           {{ $t('settings') }}
-          <info-link :to="localePath('/about/page-features--settings')" />
         </h1>
         <div class="mbl-dropdown narrow-screen mbl-dropdown--right" :class="menuOpen ? 'mbl-dropdown--active' : ''">
           <div class="mbl-dropdown__trigger" @click="toggleMenu">
@@ -76,13 +75,8 @@
 </template>
 
 <script>
-import InfoLink from '@/components/ui/InfoLink';
-
 export default {
   name: 'SettingsPage',
-  components: {
-    InfoLink,
-  },
   middleware: ['auth'],
   data() {
     return {

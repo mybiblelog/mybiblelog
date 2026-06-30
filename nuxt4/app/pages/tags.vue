@@ -7,6 +7,7 @@
       <div class="mbl-button-group mbl-button-group--start">
         <NuxtLink class="mbl-button" to="/notes">
           {{ t('notes') }}
+          <caret-right-icon style="margin-left: 0.2rem;" />
         </NuxtLink>
         <button class="mbl-button mbl-button--primary" :disabled="!hydrated" data-testid="tag-new" @click="openNewTagEditor">
           {{ t('new') }}
@@ -90,6 +91,7 @@
 </template>
 
 <script setup lang="ts">
+import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
 import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
 import { usePassageNoteTagEditorStore } from '~/stores/passage-note-tag-editor';
 import { useDialogStore } from '~/stores/dialog';

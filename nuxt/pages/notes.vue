@@ -4,7 +4,6 @@
       <header class="page-header">
         <h2 class="mbl-title">
           {{ $t('notes') }}
-          <info-link :to="localePath('/about/page-features--notes')" />
         </h2>
         <div class="mbl-button-group mbl-button-group--start">
           <nuxt-link class="mbl-button" :to="localePath('/tags')">
@@ -143,7 +142,6 @@ import { decodePassageNotesRouteQuery, encodePassageNotesQueryToRoute } from '@/
 import PassageNote from '@/components/notes/PassageNote';
 import PassageNotesQueryManager from '@/components/notes/PassageNotesQueryManager';
 import AppModal from '@/components/popups/AppModal';
-import InfoLink from '@/components/ui/InfoLink';
 import CaretLeftIcon from '@/components/svg/CaretLeftIcon';
 import CaretRightIcon from '@/components/svg/CaretRightIcon';
 import { useDialogStore } from '~/stores/dialog';
@@ -159,7 +157,6 @@ export default {
     PassageNote,
     PassageNotesQueryManager,
     AppModal,
-    InfoLink,
     CaretLeftIcon,
     CaretRightIcon,
   },
