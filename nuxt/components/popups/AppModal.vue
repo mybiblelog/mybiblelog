@@ -47,12 +47,17 @@ export default {
       if (newValue) {
         document.body.style.overflow = 'hidden';
         this.teleportIn();
+        document.addEventListener('keydown', this.handleKeydown);
       }
       else {
         document.body.style.overflow = '';
         setTimeout(() => this.teleportOut(), MODAL_EXIT_DELAY);
+        document.removeEventListener('keydown', this.handleKeydown);
       }
     },
+  },
+  beforeDestroy() {
+    document.removeEventListener('keydown', this.handleKeydown);
   },
   methods: {
     /**
@@ -79,6 +84,9 @@ export default {
       if (this.$el && this.$el.parentNode === document.body) {
         document.body.removeChild(this.$el);
       }
+    },
+    handleKeydown(e) {
+      if (e.key === 'Escape') { this.close(); }
     },
     close() {
       this.$emit('close');

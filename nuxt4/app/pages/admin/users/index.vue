@@ -257,11 +257,18 @@ onMounted(() => { loadUsers(); });
 }
 
 .users-page__results-bar {
+  position: sticky;
+  top: calc(var(--header-height) + 0.5rem - 1px);
+  z-index: 10;
+  background: var(--mbl-app-canvas-bg);
+  padding: 0.5rem 1rem;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+  border-bottom: 1px solid var(--mbl-border-soft);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1rem;
 }
 
 .users-page__pager {
