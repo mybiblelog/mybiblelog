@@ -9,7 +9,9 @@
       <div class="mbl-content">
         <template v-if="complete">
           <i18n-t keypath="success" tag="p">
-            <template #email><strong>{{ email }}</strong></template>
+            <template #email>
+              <strong>{{ email }}</strong>
+            </template>
           </i18n-t>
           <p>
             <NuxtLink class="mbl-button mbl-button--primary" :to="localePath('/settings/reminder')">
