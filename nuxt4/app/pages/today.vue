@@ -59,7 +59,7 @@
       <div class="entry-container" role="list" data-testid="reading-suggestions">
         <ClientOnly>
           <log-entry
-            v-for="(passage, index) of readingSuggestions"
+            v-for="(passage, index) of readingSuggestionsWithNewVerseCounts"
             :key="`${index}-${passage.startVerseId}-${passage.endVerseId}`"
             role="listitem"
             :message="passage.suggestionContext"
@@ -173,7 +173,19 @@ const loadingReadingSuggestions = ref(true);
 
 const userSettings = computed(() => userSettingsStore.settings);
 const logEntries = computed(() => logEntriesStore.currentLogEntries);
+const addNewVerseCountToReadingSuggestion = (passage: Passage) => {
+  const today = dayjs().format('YYYY-MM-DD');
+  const throughToday = logEntries.value.filter(e => e.date <= today);
+  const uniqueToday = Bible.countUniqueRangeVerses(throughToday);
+  throughToday.push(passage);
+  const newVerseCount = Bible.countUniqueRangeVerses(throughToday) - uniqueToday;
+  return { ...passage, newVerseCount };
+};
+
 const readingSuggestions = computed(() => readingSuggestionsStore.passages);
+const readingSuggestionsWithNewVerseCounts = computed(() =>
+  readingSuggestionsStore.passages.map(addNewVerseCountToReadingSuggestion),
+);
 const recentNotes = computed(() => passageNotesStore.passageNotes.slice(0, 3));
 
 const logEntriesForToday = computed(() => {
@@ -215,7 +227,7 @@ const addNewVerseCountToLogEntry = (logEntry: LogEntryLike) => {
   return { ...logEntry, newVerseCount };
 };
 
-type Passage = { startVerseId: number; endVerseId: number; [key: string]: unknown };
+type Passage = LogEntry & { suggestionContext?: string };
 
 const actionsForTodayLogEntry = (entry: LogEntryLike) => [
   { label: t('open_bible'), callback: () => openPassageInBible(entry, false) },

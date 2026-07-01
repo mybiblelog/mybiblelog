@@ -35,9 +35,25 @@ const props = withDefaults(defineProps<{ title?: string; open?: boolean }>(), {
 
 const emit = defineEmits<{ close: [] }>();
 
+function handleKeydown(e: KeyboardEvent) {
+  if (e.key === 'Escape') { emit('close'); }
+}
+
 watch(() => props.open, (newValue) => {
   if (import.meta.client) {
     document.body.style.overflow = newValue ? 'hidden' : '';
+    if (newValue) {
+      document.addEventListener('keydown', handleKeydown);
+    }
+    else {
+      document.removeEventListener('keydown', handleKeydown);
+    }
+  }
+});
+
+onUnmounted(() => {
+  if (import.meta.client) {
+    document.removeEventListener('keydown', handleKeydown);
   }
 });
 </script>

@@ -23,7 +23,7 @@
         Loading...
       </div>
       <div v-else-if="statsError" class="admin-user-detail__error mbl-text-small">
-        Unable to load user details.
+        Unable to load user details. This account was likely deleted.
       </div>
       <dl v-else-if="stats" class="admin-user-detail__stats">
         <div class="admin-user-detail__stat">
@@ -65,10 +65,10 @@
       </dl>
 
       <div v-if="user" class="admin-user-detail__actions mbl-button-group">
-        <button class="mbl-button mbl-button--primary" type="button" @click="signInAsUser">
+        <button class="mbl-button mbl-button--primary" type="button" :disabled="statsError" @click="signInAsUser">
           Sign In As User
         </button>
-        <button class="mbl-button mbl-button--danger" type="button" @click="deleteUser">
+        <button v-if="allowDelete" class="mbl-button mbl-button--danger" type="button" @click="deleteUser">
           Delete User
         </button>
       </div>
@@ -105,9 +105,11 @@ interface UserStats {
 const props = withDefaults(defineProps<{
   user: AdminUser | null;
   open: boolean;
+  allowDelete?: boolean;
 }>(), {
   user: null,
   open: false,
+  allowDelete: true,
 });
 
 const emit = defineEmits<{
