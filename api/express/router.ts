@@ -12,6 +12,7 @@ import { adminRoutes } from '../http/routes/admin';
 import { scriptureRoutes } from '../http/routes/scripture';
 import { sitemapRoutes } from '../http/routes/sitemap';
 import { mobileAppRoutes } from '../http/routes/mobile-app';
+import { testEmailRoutes } from '../http/routes/test-emails';
 
 /**
  * Express wiring for the API. The handlers are framework-agnostic
@@ -34,6 +35,8 @@ registerRoutes(apiRouter, [
   ...scriptureRoutes,
   ...sitemapRoutes,
   ...mobileAppRoutes,
+  // Test-only seam; the handler returns 404 in production / without the bypass header.
+  ...testEmailRoutes,
 ]);
 
 export default apiRouter;
