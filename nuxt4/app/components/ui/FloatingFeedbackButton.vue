@@ -168,6 +168,7 @@ async function submitFeedback() {
   border: none;
   cursor: pointer;
 }
+
 .floating-action-button:hover {
   background-color: var(--secondary-color-hover);
   box-shadow: 0 6px 16px var(--mbl-overlay-20);

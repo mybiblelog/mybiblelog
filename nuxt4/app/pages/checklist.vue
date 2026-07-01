@@ -249,6 +249,7 @@ onMounted(async () => {
   margin: 0.5rem 0;
 }
 .book-card { user-select: none; }
+
 .book-card--header {
   display: grid;
   grid-template-columns: 2rem 1fr 1fr 2rem;
@@ -267,15 +268,21 @@ onMounted(async () => {
 .book-card--completion-bar { grid-area: 2 / 2 / 3 / 4; }
 .book-card--chapter-toggle { grid-area: 1 / 4 / 3 / 5; display: flex; cursor: pointer; }
 .book-card--chapter-toggle.flipped { transform: rotate(180deg); }
+
 .book-card--chapters {
   display: grid;
   gap: 0.5rem;
   grid-template-columns: repeat(5, 1fr);
 }
+
 @media screen and (min-width: 769px) { .book-card--chapters { grid-template-columns: repeat(6, 1fr); } }
+
 @media screen and (min-width: 1024px) { .book-card--chapters { grid-template-columns: repeat(8, 1fr); } }
+
 @media screen and (min-width: 1216px) { .book-card--chapters { grid-template-columns: repeat(10, 1fr); } }
+
 @media screen and (min-width: 1408px) { .book-card--chapters { grid-template-columns: repeat(12, 1fr); } }
+
 .chapter-card {
   padding: 0.5rem;
   background: var(--mbl-bg);

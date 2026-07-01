@@ -179,8 +179,7 @@ function viewReadingLogForChapter(bookIndex: number, chapterIndex: number) {
   grid-template-columns: auto 1fr auto auto;
   grid-template-areas: "back title notes reading";
   align-items: center;
-  column-gap: 0.75rem;
-  row-gap: 0.5rem;
+  gap: 0.5rem 0.75rem;
   margin-bottom: 1rem;
 }
 

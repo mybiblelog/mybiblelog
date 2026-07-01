@@ -62,14 +62,17 @@ function onClick() {
   user-select: none;
   transition: 0.2s ease-out;
 }
+
 @media screen and (max-width: 768px) {
   .calendar-day { min-height: calc(100vw / 7); }
 }
 .calendar-day:hover { background-color: var(--mbl-bg-hover-light); }
 .calendar-day .star { position: absolute; top: 10%; right: 10%; }
+
 @media screen and (max-width: 768px) {
   .calendar-day .star { top: 5%; right: 5%; }
 }
+
 .calendar-day .date {
   position: absolute;
   left: 5%;
@@ -82,6 +85,7 @@ function onClick() {
   align-items: center;
   transition: 0.2s;
 }
+
 @media screen and (max-width: 768px) {
   .calendar-day .date { top: 5%; left: 5%; width: 1.5rem; height: 1.5rem; }
 }
@@ -89,6 +93,7 @@ function onClick() {
 .calendar-day--not-current, .calendar-day--not-current:hover { background-color: var(--mbl-bg-muted); }
 .calendar-day--today .date { background-color: var(--mbl-calendar-today-date-bg); color: var(--mbl-calendar-today-date-color); }
 .calendar-day--selected .date { color: var(--mbl-on-accent); background-color: var(--mbl-link-bright); }
+
 .calendar-day .progress-bar {
   position: absolute;
   bottom: 2px;
@@ -99,6 +104,7 @@ function onClick() {
   border-radius: 3px;
   overflow: hidden;
 }
+
 .calendar-day .progress-bar .progress-bar-fill {
   position: absolute;
   left: 0;
@@ -107,8 +113,10 @@ function onClick() {
   background: var(--mbl-link-bright);
 }
 .calendar-day .progress-bar .progress-bar-fill.secondary { background: var(--mbl-link-alt); }
+
 .calendar-day--before-tracker-start .progress-bar .progress-bar-fill,
 .calendar-day--before-tracker-start .progress-bar .progress-bar-fill.secondary { background: var(--mbl-progress-fill-inactive); }
+
 .calendar-day--tracker-start::before {
   content: '';
   position: absolute;

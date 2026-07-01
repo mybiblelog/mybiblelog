@@ -872,9 +872,7 @@ onBeforeUnmount(() => {
 
 .log-page__layout > * {
   display: block;
-  flex-basis: 0;
-  flex-grow: 1;
-  flex-shrink: 1;
+  flex: 1 1 0;
 }
 
 .log-page__layout > *:first-child {
@@ -883,7 +881,7 @@ onBeforeUnmount(() => {
 }
 
 @media (min-width: 769px) {
-  .log-page__layout > *:first-child { width: 33.333333%; }
+  .log-page__layout > *:first-child { width: 33.3333%; }
 }
 
 .log-page__sidebar { display: none; }
@@ -960,7 +958,7 @@ onBeforeUnmount(() => {
   z-index: 9;
   background: var(--mbl-app-canvas-bg);
   border-bottom: 1px solid var(--mbl-border-soft);
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem;
   margin: 0.75rem -0.5rem 0.25rem;
   font-size: 0.9rem;
   font-weight: 700;

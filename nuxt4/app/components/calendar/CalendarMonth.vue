@@ -72,15 +72,18 @@ function selectDay(date: string | null) {
 <style scoped>
 .calendar-month { position: relative; color: var(--mbl-text); }
 .calendar-month ol, .calendar-month li { padding: 0; margin: 0; list-style: none; }
+
 .calendar-month-header {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   padding-bottom: 10px;
 }
+
 @media screen and (max-width: 380px) {
   .calendar-month-header { flex-direction: column; text-align: center; }
 }
+
 .day-of-week {
   color: var(--mbl-text-body);
   font-size: 18px;
@@ -88,12 +91,12 @@ function selectDay(date: string | null) {
   padding-top: 10px;
 }
 .day-of-week, .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+
 .days-grid {
   height: 100%;
   position: relative;
   background-color: var(--mbl-calendar-grid-inner);
-  grid-column-gap: 1px;
-  grid-row-gap: 1px;
+  gap: 1px;
   border: solid 1px var(--mbl-calendar-grid-outer);
 }
 </style>

@@ -315,6 +315,7 @@ async function handleSubmit() {
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
+
 .option-card {
   display: flex;
   align-items: flex-start;
@@ -324,54 +325,66 @@ async function handleSubmit() {
   cursor: pointer;
   transition: border-color 0.2s, background-color 0.2s;
 }
+
 .option-card:hover {
   border-color: var(--mbl-secondary);
   background-color: var(--mbl-bg-muted);
 }
+
 .option-card.is-selected {
   border-color: var(--mbl-secondary);
   background-color: var(--mbl-message-info-bg);
 }
+
 .option-card-radio {
   margin-right: 1rem;
   margin-top: 0.25rem;
   flex-shrink: 0;
 }
+
 .option-card-radio input[type="radio"] {
   cursor: pointer;
 }
+
 .option-mbl-card__content {
   flex: 1;
   min-width: 0;
 }
+
 .option-card-title {
   font-weight: 600;
   margin-bottom: 0.75rem;
   font-size: 1rem;
 }
+
 .option-card-details {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
+
 .detail-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
 }
+
 .detail-label {
   font-weight: 500;
   min-width: fit-content;
 }
+
 .detail-value {
   color: var(--secondary-color);
   font-weight: 600;
 }
+
 .detail-input {
   max-width: 200px;
   flex: 0 0 auto;
 }
+
 .detail-input:disabled {
   opacity: 0.5;
   cursor: not-allowed;

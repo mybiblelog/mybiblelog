@@ -155,10 +155,12 @@ async function handleSubmit() {
 .field-box {
   margin-bottom: 1.5rem;
 }
+
 .field-box .label {
   font-weight: normal;
   margin-bottom: 0.75rem;
 }
+
 select {
   max-width: 65vw;
 }

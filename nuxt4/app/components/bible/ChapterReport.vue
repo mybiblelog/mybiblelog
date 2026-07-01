@@ -128,10 +128,7 @@ function openActionSheet() {
 
 .chapter-report--indicator--icon {
   position: absolute;
-  left: 20%;
-  top: 20%;
-  bottom: 20%;
-  right: 20%;
+  inset: 20%;
 }
 
 .chapter-report--index {

@@ -156,6 +156,7 @@ async function deleteTag(id: string | number) {
 
 <style scoped>
 .tag-sort-row { margin: 0.25rem 0 1rem; }
+
 .tag-line {
   display: flex;
   flex-direction: column;
@@ -166,11 +167,13 @@ async function deleteTag(id: string | number) {
   border-radius: 0.25rem;
   box-shadow: var(--mbl-card-shadow);
 }
+
 .tag-footer {
   margin-top: 0.25rem;
   display: flex;
   justify-content: flex-end;
 }
+
 .passage-note-tag {
   color: var(--mbl-on-accent);
   text-shadow: 0 0 2px var(--mbl-text-stronger);
@@ -180,6 +183,7 @@ async function deleteTag(id: string | number) {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
 .tag-description {
   white-space: pre-wrap;
   margin: 0.5rem 0;

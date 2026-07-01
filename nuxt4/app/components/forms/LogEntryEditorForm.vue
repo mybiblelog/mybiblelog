@@ -233,13 +233,13 @@ form {
   max-width: 200px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-column-gap: 1rem;
+  column-gap: 1rem;
 }
 
 @media screen and (min-width: 550px) {
   form {
     max-width: 400px;
-    grid-row-gap: 1rem;
+    row-gap: 1rem;
   }
 }
 
@@ -335,6 +335,7 @@ form select:not(:disabled) {
     display: flex;
     flex-direction: column;
   }
+
   form > div:not(:last-child) {
     margin-bottom: 0.5rem;
   }

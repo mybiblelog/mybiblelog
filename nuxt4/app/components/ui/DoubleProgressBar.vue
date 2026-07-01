@@ -55,7 +55,7 @@ const secondaryBarStyle = computed(() => ({
   overflow: hidden;
 }
 
-@keyframes moveGradient {
+@keyframes move-gradient {
   0% { background-position: 0% 0%; }
   100% { background-position: -200% 0%; }
 }
@@ -66,7 +66,7 @@ const secondaryBarStyle = computed(() => ({
   width: 100%;
   background: linear-gradient(90deg, red 0%, yellow 15%, yellow 20%, lime 30%, cyan 40%, cyan 50%, blue 65%, magenta 80%, red 100%);
   background-size: 200%;
-  animation: moveGradient 2s linear infinite;
+  animation: move-gradient 2s linear infinite;
 }
 
 .bar-progress--complete.is-complete {

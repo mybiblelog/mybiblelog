@@ -396,8 +396,7 @@ function cancelDraft() {
   display: grid;
   grid-template-columns: 1.25rem 1fr;
   grid-template-rows: auto auto;
-  column-gap: 0.35rem;
-  row-gap: 0.1rem;
+  gap: 0.1rem 0.35rem;
   align-items: start;
 }
 

@@ -752,7 +752,7 @@ const onDrawerAfterLeave = (el: Element) => { clearDrawerTransitionInlineStyles(
 .site-nav__menu-icon span {
   display: block;
   height: 2px;
-  background: currentColor;
+  background: currentcolor;
   border-radius: 1px;
 }
 

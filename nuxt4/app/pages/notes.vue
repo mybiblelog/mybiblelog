@@ -289,6 +289,7 @@ onMounted(() => {
   margin: 0 auto;
   padding: 3rem 1rem 5rem;
 }
+
 .notes-page header.page-header {
   display: flex;
   justify-content: space-between;
@@ -297,12 +298,14 @@ onMounted(() => {
   padding: 0;
 }
 .notes-page__layout { display: flex; flex-wrap: wrap; gap: 1rem; }
+
 .notes-page__mobile-query-button {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1rem;
 }
 .notes-page__query-button { position: relative; }
+
 .notes-page__query-badge {
   display: inline-block;
   width: 0.5rem;
@@ -312,19 +315,23 @@ onMounted(() => {
   background: var(--mbl-success-bright);
   vertical-align: middle;
 }
+
 .notes-page__query-manager-actions {
   display: flex;
   justify-content: flex-end;
   margin-bottom: 0.5rem;
 }
+
 @media (min-width: 800px) {
   .notes-page__mobile-query-button { display: none; }
 }
+
 .notes-page__sidebar {
   display: none;
   width: 280px;
   flex-shrink: 0;
 }
+
 @media (min-width: 800px) {
   .notes-page__sidebar {
     display: block;
@@ -335,22 +342,22 @@ onMounted(() => {
 }
 .notes-page__content { flex: 1; min-width: 0; }
 .notes-page__query-manager-box { padding: 1rem; }
+
 .notes-page__results-bar {
   position: sticky;
   top: calc(var(--header-height) + 0.5rem - 1px);
   z-index: 10;
-
   background: var(--mbl-app-canvas-bg);
   padding: 0.5rem 1rem;
   margin-left: -0.5rem;
   margin-right: -0.5rem;
   border-bottom: 1px solid var(--mbl-border-soft);
-
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 0.25rem;
 }
+
 @media (min-width: 600px) {
   .notes-page__results-bar {
     flex-direction: row;
@@ -359,16 +366,19 @@ onMounted(() => {
     gap: 0.75rem;
   }
 }
+
 .notes-page__results-summary {
   font-size: 0.95rem;
   color: var(--mbl-text-85);
   white-space: normal;
   word-break: break-word;
 }
+
 .notes-page__results-pager {
   display: flex;
   justify-content: flex-start;
 }
+
 @media (min-width: 600px) {
   .notes-page__results-pager {
     justify-content: flex-end;

@@ -50,10 +50,7 @@ const gridSelectorStyle = computed(() => ({
 .grid-selector--option::before {
   content: '';
   position: absolute;
-  top: 2px;
-  left: 2px;
-  right: 2px;
-  bottom: 2px;
+  inset: 2px;
   border: 2px solid var(--mbl-border-strong);
   border-radius: 5px;
   transition: 0.2s;

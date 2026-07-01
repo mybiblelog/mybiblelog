@@ -14,7 +14,11 @@
     "pretest:watch": "node test/ensure-nuxt-tsconfig.mjs",
     "test:watch": "vitest",
     "lint": "eslint --ext .ts,.js,.vue .",
-    "lint:fix": "eslint --ext .ts,.js,.vue . --fix"
+    "lint:fix": "eslint --ext .ts,.js,.vue . --fix",
+    "lint:css": "stylelint \"**/*.{css,vue}\"",
+    "lint:css:fix": "stylelint \"**/*.{css,vue}\" --fix",
+    "type-check": "nuxt prepare && vue-tsc --noEmit",
+    "check": "npm run lint && npm run lint:css && npm run type-check && npm run test"
   },
   "dependencies": {
     "@mybiblelog/shared": "*",
@@ -34,6 +38,8 @@
     "@vue/test-utils": "^2.4.6",
     "happy-dom": "^15.11.7",
     "postcss-mixins": "^12.1.2",
+    "stylelint": "^17.14.0",
+    "stylelint-config-standard-vue": "^1.0.0",
     "typescript": "^5.9.3",
     "vitest": "^3.2.6",
     "vue-tsc": "^3.3.5"
