@@ -102,19 +102,16 @@ onBeforeUnmount(() => {
   height: 3px;
   color: var(--mbl-text-subtle);
   user-select: none;
-  background-color: currentColor;
+  background-color: currentcolor;
   border-radius: 50%;
   box-shadow:
-    0 -6px 0 0 currentColor,
-    0 6px 0 0 currentColor;
+    0 -6px 0 0 currentcolor,
+    0 6px 0 0 currentcolor;
 }
 
 .action-menu-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   z-index: var(--z-index-action-menu);
   background: transparent;
 }

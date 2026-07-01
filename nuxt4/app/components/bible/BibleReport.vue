@@ -252,11 +252,10 @@ onMounted(async () => {
   border-radius: 0.25rem;
   box-shadow: var(--mbl-shadow-elev-1);
   display: grid;
-  grid-template-columns: auto auto 1fr 3rem;
-  grid-template-rows: auto auto;
-  grid-template-areas:
-    "icon title notes percentage"
-    "icon bar   bar   bar";
+  grid-template:
+    "icon title notes percentage" auto
+    "icon bar   bar   bar" auto
+    / auto auto 1fr 3rem;
   cursor: pointer;
   transition: 0.1s;
 }
@@ -284,8 +283,7 @@ onMounted(async () => {
 
 .progress-list .progress-card-note-count-badge {
   grid-area: notes;
-  justify-self: end;
-  align-self: baseline;
+  place-self: baseline end;
   width: fit-content;
   margin-right: 1rem;
   font-size: 0.8em;

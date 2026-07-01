@@ -114,6 +114,7 @@ function cancel() {
 .manage-tags__new-row {
   margin-top: 0.75rem;
 }
+
 .manage-tags__disabled {
   pointer-events: none;
   opacity: 0.6;

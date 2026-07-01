@@ -319,9 +319,11 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
 }
+
 .passage-list {
   margin-bottom: 0.5rem;
 }
+
 .passage-line {
   display: flex;
   justify-content: space-between;
@@ -331,31 +333,38 @@ onMounted(() => {
   border: 0 solid var(--mbl-border-strong);
   border-top-width: 1px;
 }
+
 .passage-line:first-child {
   border-top-style: solid;
 }
+
 .passage-line:last-child {
   border-bottom-width: 1px;
   border-bottom-style: solid;
 }
+
 .passage-line .passage {
   margin: 0.25rem 0;
 }
+
 .passage-note-editor-tags {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 0.75rem;
 }
+
 .passage-note-editor-tags__selected {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   flex: 1;
 }
+
 .passage-note-editor-tags__actions {
   flex-shrink: 0;
 }
+
 .passage-note-editor-tags__none {
   opacity: 0.8;
 }

@@ -48,10 +48,7 @@ const confirmButtonClass = computed(() => buttonTypeToClass(dialog.confirmButton
 .popup-modal {
   background-color: var(--mbl-overlay-50);
   position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  inset: 0;
   padding: 0.5rem;
   display: flex;
   align-items: center;

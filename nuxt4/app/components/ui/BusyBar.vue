@@ -7,7 +7,7 @@ defineProps<{ busy: boolean }>();
 </script>
 
 <style>
-@keyframes busyAnimation {
+@keyframes busy-animation {
   100% {
     background-position: 100% 100%;
   }
@@ -37,7 +37,7 @@ defineProps<{ busy: boolean }>();
       var(--mbl-busy-bar-stripe) 2rem
     );
   background-size: 200% 200%;
-  animation: busyAnimation 10s linear infinite;
+  animation: busy-animation 10s linear infinite;
   transform: translateY(0);
 }
 </style>

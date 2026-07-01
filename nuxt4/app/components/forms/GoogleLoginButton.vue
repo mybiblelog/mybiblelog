@@ -30,7 +30,7 @@ const { t } = useI18n();
   user-select: none;
   -webkit-appearance: none;
   appearance: none;
-  background-color: WHITE;
+  background-color: white;
   background-image: none;
   border: 1px solid #747775;
   -webkit-border-radius: 4px;
@@ -39,7 +39,7 @@ const { t } = useI18n();
   box-sizing: border-box;
   color: #1f1f1f;
   cursor: pointer;
-  font-family: 'Roboto', arial, sans-serif;
+  font-family: Roboto, arial, sans-serif;
   font-size: 14px;
   height: 40px;
   letter-spacing: 0.25px;
@@ -68,10 +68,8 @@ const { t } = useI18n();
   -webkit-align-items: center;
   align-items: center;
   display: flex;
-  -webkit-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-wrap: nowrap;
-  flex-wrap: nowrap;
+  -webkit-flex-flow: row nowrap;
+  flex-flow: row nowrap;
   height: 100%;
   justify-content: space-between;
   position: relative;
@@ -81,7 +79,7 @@ const { t } = useI18n();
 .gsi-material-button .gsi-material-button-contents {
   -webkit-flex-grow: 1;
   flex-grow: 1;
-  font-family: 'Roboto', arial, sans-serif;
+  font-family: Roboto, arial, sans-serif;
   font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -91,12 +89,9 @@ const { t } = useI18n();
 .gsi-material-button .gsi-material-button-state {
   -webkit-transition: opacity .218s;
   transition: opacity .218s;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   opacity: 0;
   position: absolute;
-  right: 0;
-  top: 0;
 }
 
 .gsi-material-button:disabled {
@@ -106,27 +101,27 @@ const { t } = useI18n();
 }
 
 .gsi-material-button:disabled .gsi-material-button-contents {
-  opacity: 38%;
+  opacity: 0.38;
 }
 
 .gsi-material-button:disabled .gsi-material-button-icon {
-  opacity: 38%;
+  opacity: 0.38;
 }
 
 .gsi-material-button:not(:disabled):active .gsi-material-button-state,
 .gsi-material-button:not(:disabled):focus .gsi-material-button-state {
   background-color: #303030;
-  opacity: 12%;
+  opacity: 0.12;
 }
 
 .gsi-material-button:not(:disabled):hover {
-  -webkit-box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
-  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+  -webkit-box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%);
+  box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%);
 }
 
 .gsi-material-button:not(:disabled):hover .gsi-material-button-state {
   background-color: #303030;
-  opacity: 8%;
+  opacity: 0.08;
 }
 </style>
 

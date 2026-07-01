@@ -148,6 +148,7 @@ function hideTooltip(): void {
 .heatmap {
   --heat-cell-size: 12px;
   --heat-cell-gap: 3px;
+
   position: relative;
 }
 

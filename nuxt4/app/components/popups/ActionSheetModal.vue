@@ -55,10 +55,7 @@ onUnmounted(() => {
 <style scoped>
 .action-sheet-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   z-index: var(--z-index-action-menu);
   background: var(--mbl-overlay-50);
 }
@@ -80,11 +77,8 @@ onUnmounted(() => {
 
 @media (min-width: 800px) {
   .action-sheet {
-    bottom: auto;
-    top: 50%;
-    left: 50%;
+    inset: 50% auto auto 50%;
     transform: translate(-50%, -50%);
-    right: auto;
     width: auto;
     min-width: 300px;
     max-width: 500px;
@@ -129,11 +123,13 @@ onUnmounted(() => {
 
 .fade-enter-active,
 .fade-leave-active { transition: opacity 0.3s ease; }
+
 .fade-enter-from,
 .fade-leave-to { opacity: 0; }
 
 .slide-up-enter-active,
 .slide-up-leave-active { transition: transform 0.3s ease, opacity 0.3s ease; }
+
 .slide-up-enter-from,
 .slide-up-leave-to { transform: translateY(100%); opacity: 0; }
 

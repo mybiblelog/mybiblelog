@@ -113,10 +113,10 @@ function handleClick(value: number) {
 }
 
 .tap-range-selector--option.waiting {
-  animation: pulseBorder 1.5s ease-in-out infinite;
+  animation: pulse-border 1.5s ease-in-out infinite;
 }
 
-@keyframes pulseBorder {
+@keyframes pulse-border {
   0%, 100% { border-color: var(--mbl-link-bright); }
   50% { border-color: var(--primary-color); }
 }

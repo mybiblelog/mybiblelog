@@ -99,13 +99,11 @@ function toggle(tagId: string | number) {
   min-width: 0;
   overflow: hidden;
   box-sizing: border-box;
-
   color: var(--mbl-text);
   background: var(--mbl-tag-option-bg);
   border: 1px solid var(--mbl-tag-option-border);
   padding: 0.25rem 0.6rem 0.25rem 0.5rem;
   border-radius: 0.25rem;
-
   -webkit-user-select: none;
   user-select: none;
 }
