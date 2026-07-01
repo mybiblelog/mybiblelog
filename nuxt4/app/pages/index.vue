@@ -18,8 +18,10 @@ if (authStore.loggedIn) {
   await navigateTo(localePath('/start'));
 }
 
-const { data: page } = await useAsyncData('home', () =>
-  queryCollection('content').path(`/${locale.value}`).first(),
+const { data: page } = await useAsyncData(
+  () => `home-${locale.value}`,
+  () => queryCollection('content').path(`/${locale.value}`).first(),
+  { watch: [locale] },
 );
 
 if (!page.value) {

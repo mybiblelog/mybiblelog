@@ -30,8 +30,10 @@ const slug = route.params.slug as string;
 // matches the URL the visitor (and crawler) actually requested.
 const contentSlug = slug.replace(/-{2,}/g, '-');
 
-const { data: page, error } = await useAsyncData(`about-${slug}`, () =>
-  queryCollection('content').path(`/${locale.value}/about/${contentSlug}`).first(),
+const { data: page, error } = await useAsyncData(
+  () => `about-${slug}-${locale.value}`,
+  () => queryCollection('content').path(`/${locale.value}/about/${contentSlug}`).first(),
+  { watch: [locale] },
 );
 
 // Redirect to overview if page not found
