@@ -39,7 +39,7 @@ export const adminRoutes: RouteDefinition[] = [
     path: '/admin/feedback',
     handler: listFeedback,
     docs: {
-      summary: 'Get feedback submissions (the inbox by default, or the archive)',
+      summary: 'Get feedback submissions by status (open by default)',
       tags,
       request: { query: adminFeedbackListQuerySchema },
       response: { description: 'List of feedback submissions', schema: z.array(feedbackSchema) },
@@ -51,7 +51,7 @@ export const adminRoutes: RouteDefinition[] = [
     path: '/admin/feedback/:id',
     handler: updateFeedback,
     docs: {
-      summary: 'Resolve and/or archive a feedback submission',
+      summary: 'Update a feedback submission\'s status',
       tags,
       request: { params: adminFeedbackIdParam, body: adminFeedbackPatchSchema },
       response: { description: 'The updated feedback record', schema: feedbackSchema },

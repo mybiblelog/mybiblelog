@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import type { Collections } from '../mongo/useCollections';
 import type { FeedbackDocument } from '../mongo/documents';
 import { NotFoundError } from '../http/errors/http-errors';
-import { FeedbackCreateInput, FeedbackPatch, FeedbackRecord } from './helpers/types';
+import { FeedbackCreateInput, FeedbackPatch, FeedbackRecord, FeedbackStatus } from './helpers/types';
 
 const FEEDBACK_KINDS = ['bug', 'feature', 'comment'];
 const MESSAGE_MAX_LENGTH = 1500; // an average double-spaced page
@@ -25,11 +25,9 @@ const toFeedbackRecord = (doc: FeedbackDocument): FeedbackRecord => {
     email: doc.email,
     kind: doc.kind,
     message: doc.message,
-    resolved: doc.resolved,
-    archived: doc.archived,
+    status: doc.status as FeedbackStatus,
     createdAt: doc.createdAt,
     updatedAt: doc.updatedAt,
-    __v: doc.__v,
   };
 };
 
@@ -45,18 +43,16 @@ export const createFeedbackRepository = ({ feedback }: Collections) => {
         email: input.email,
         kind: input.kind,
         message: input.message,
-        resolved: false,
-        archived: false,
+        status: 'open',
         createdAt: now,
         updatedAt: now,
-        __v: 0,
       };
       await feedback.insertOne(doc);
       return toFeedbackRecord(doc);
     },
 
-    async listPaginated({ offset, limit, archived }: { offset: number; limit: number; archived: boolean }): Promise<{ results: FeedbackRecord[]; total: number }> {
-      const filterQuery = { archived };
+    async listPaginated({ offset, limit, status }: { offset: number; limit: number; status?: FeedbackStatus }): Promise<{ results: FeedbackRecord[]; total: number }> {
+      const filterQuery = status !== undefined ? { status } : {};
       const [total, docs] = await Promise.all([
         feedback.countDocuments(filterQuery),
         feedback.find(filterQuery).sort({ createdAt: -1 }).skip(offset).limit(limit).toArray(),
@@ -75,17 +71,9 @@ export const createFeedbackRepository = ({ feedback }: Collections) => {
     },
 
     async update(id: string, patch: FeedbackPatch): Promise<FeedbackRecord> {
-      const set: Partial<FeedbackDocument> = { updatedAt: new Date() };
-      if (typeof patch.resolved !== 'undefined') {
-        set.resolved = patch.resolved;
-      }
-      if (typeof patch.archived !== 'undefined') {
-        set.archived = patch.archived;
-      }
-
       const updated = await feedback.findOneAndUpdate(
         { _id: new ObjectId(id) },
-        { $set: set },
+        { $set: { status: patch.status, updatedAt: new Date() } },
         { returnDocument: 'after' },
       );
       if (!updated) {

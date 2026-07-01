@@ -5,27 +5,40 @@
         Admin Feedback Review
       </h1>
 
-      <div class="feedback-page__view-toggle">
-        <button
-          class="mbl-button mbl-button--sm mbl-button--light"
-          :class="{ 'mbl-button--primary': view === 'inbox' }"
-          type="button"
-          @click="setView('inbox')"
-        >
-          Inbox
-        </button>
-        <button
-          class="mbl-button mbl-button--sm mbl-button--light"
-          :class="{ 'mbl-button--primary': view === 'archive' }"
-          type="button"
-          @click="setView('archive')"
-        >
-          Archive
-        </button>
+      <div class="mbl-tabs">
+        <ul>
+          <li>
+            <a
+              href="#"
+              :class="{ 'router-link-exact-active': view === 'open' }"
+              @click.prevent="setView('open')"
+            >
+              Open
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              :class="{ 'router-link-exact-active': view === 'resolved' }"
+              @click.prevent="setView('resolved')"
+            >
+              Resolved
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              :class="{ 'router-link-exact-active': view === 'archived' }"
+              @click.prevent="setView('archived')"
+            >
+              Archived
+            </a>
+          </li>
+        </ul>
       </div>
 
       <div v-if="!feedbacks.length && !loading">
-        <p>{{ view === 'archive' ? 'There is no archived feedback.' : 'There is no feedback in the inbox.' }}</p>
+        <p>{{ emptyMessage }}</p>
       </div>
 
       <template v-else>
@@ -84,7 +97,6 @@
             </div>
             <div class="feedback-card__kind mbl-text-small" :class="feedbackKindClass(feedback.kind)">
               {{ feedback.kind }}
-              <span v-if="feedback.resolved" class="feedback-badge feedback-badge--resolved">resolved</span>
             </div>
             <div class="feedback-card__message">
               {{ feedback.message }}
@@ -102,18 +114,27 @@
               {{ feedback.ip }}
             </div>
             <div class="feedback-card__actions">
-              <template v-if="!feedback.archived">
+              <template v-if="feedback.status === 'open'">
                 <button
                   class="mbl-button mbl-button--sm mbl-button--light"
                   type="button"
-                  @click="toggleResolved(feedback)"
+                  @click="setStatus(feedback, 'resolved')"
                 >
-                  {{ feedback.resolved ? 'Mark Unresolved' : 'Mark Resolved' }}
+                  Resolve
+                </button>
+              </template>
+              <template v-else-if="feedback.status === 'resolved'">
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  @click="setStatus(feedback, 'open')"
+                >
+                  Reopen
                 </button>
                 <button
                   class="mbl-button mbl-button--sm mbl-button--light"
                   type="button"
-                  @click="setArchived(feedback, true)"
+                  @click="setStatus(feedback, 'archived')"
                 >
                   Archive
                 </button>
@@ -122,7 +143,14 @@
                 <button
                   class="mbl-button mbl-button--sm mbl-button--light"
                   type="button"
-                  @click="setArchived(feedback, false)"
+                  @click="setStatus(feedback, 'open')"
+                >
+                  Reopen
+                </button>
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  @click="setStatus(feedback, 'resolved')"
                 >
                   Unarchive
                 </button>
@@ -171,7 +199,7 @@ export default {
   },
   data() {
     return {
-      view: 'inbox',
+      view: 'open',
       feedbacks: [],
       loading: false,
       pagination: { page: 1, limit: PAGE_LIMIT, size: 0, totalPages: 1 },
@@ -193,6 +221,11 @@ export default {
       const last = Math.min(first + this.feedbacks.length - 1, size);
       return `Showing ${first}–${last} of ${size}`;
     },
+    emptyMessage() {
+      if (this.view === 'resolved') { return 'There is no resolved feedback.'; }
+      if (this.view === 'archived') { return 'There is no archived feedback.'; }
+      return 'There is no open feedback.';
+    },
   },
   mounted() {
     this.loadFeedbacks();
@@ -203,8 +236,8 @@ export default {
       this.loading = true;
       try {
         const offset = (this.pagerPage - 1) * PAGE_LIMIT;
-        const archived = this.view === 'archive';
-        const { data: feedbacks, meta } = await this.$http.get(`/api/admin/feedback?offset=${offset}&limit=${PAGE_LIMIT}&archived=${archived}`);
+        const url = `/api/admin/feedback?offset=${offset}&limit=${PAGE_LIMIT}&status=${this.view}`;
+        const { data: feedbacks, meta } = await this.$http.get(url);
         this.feedbacks = feedbacks;
         const p = (meta && meta.pagination) || {};
         const limit = Number(p.limit || PAGE_LIMIT);
@@ -250,24 +283,14 @@ export default {
       this.loadFeedbacks();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     },
-    async toggleResolved(feedback) {
+    async setStatus(feedback, status) {
       const dialogStore = useDialogStore();
       try {
-        await this.$http.put(`/api/admin/feedback/${feedback._id}`, { resolved: !feedback.resolved });
-        feedback.resolved = !feedback.resolved;
-      }
-      catch {
-        await dialogStore.alert({ message: 'Unable to update feedback.' });
-      }
-    },
-    async setArchived(feedback, archived) {
-      const dialogStore = useDialogStore();
-      try {
-        await this.$http.put(`/api/admin/feedback/${feedback._id}`, { archived });
+        await this.$http.put(`/api/admin/feedback/${feedback._id}`, { status });
         await this.loadFeedbacks();
       }
       catch {
-        await dialogStore.alert({ message: `Unable to ${archived ? 'archive' : 'unarchive'} feedback.` });
+        await dialogStore.alert({ message: 'Unable to update feedback.' });
       }
     },
     async deleteFeedback(feedback) {
@@ -290,12 +313,6 @@ export default {
 </script>
 
 <style scoped>
-.feedback-page__view-toggle {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
 .feedback-page__results-bar {
   position: sticky;
   top: calc(var(--header-height) + 0.5rem - 1px);
@@ -305,6 +322,7 @@ export default {
   margin-left: -0.5rem;
   margin-right: -0.5rem;
   border-bottom: 1px solid var(--mbl-border-soft);
+  margin-bottom: 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -335,10 +353,6 @@ export default {
   align-self: center;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.4rem;
 }
 
 .feedback-card__message {
@@ -409,11 +423,6 @@ export default {
 
 .feedback-badge--guest {
   background-color: var(--mbl-text-muted);
-  color: var(--neutral-0);
-}
-
-.feedback-badge--resolved {
-  background-color: var(--mbl-success);
   color: var(--neutral-0);
 }
 </style>

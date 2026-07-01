@@ -32,7 +32,7 @@ describe('admin.test.js', () => {
   });
 
   describe('GET /api/admin/feedback', () => {
-    it('admin can list inbox feedback (default, excludes archived)', async () => {
+    it('admin can list open feedback (default)', async () => {
       const admin = await createTestAdmin();
       try {
         const submitResponse = await requestApi
@@ -46,15 +46,14 @@ describe('admin.test.js', () => {
           .set('Authorization', `Bearer ${admin.token}`);
         expect(response.status).toBe(200);
         expect(response.body.data.some((f) => f._id === feedbackId)).toBe(true);
-        expect(response.body.data[0]).toHaveProperty('resolved');
-        expect(response.body.data[0]).toHaveProperty('archived');
+        expect(response.body.data[0]).toHaveProperty('status');
       }
       finally {
         await deleteTestUser(admin);
       }
     });
 
-    it('archived feedback is excluded from the inbox and included in the archive', async () => {
+    it('archived feedback is excluded from open/resolved and included when filtering by archived', async () => {
       const admin = await createTestAdmin();
       try {
         const submitResponse = await requestApi
@@ -66,17 +65,46 @@ describe('admin.test.js', () => {
         await requestApi
           .put(`/api/admin/feedback/${feedbackId}`)
           .set('Authorization', `Bearer ${admin.token}`)
-          .send({ archived: true });
+          .send({ status: 'archived' });
 
-        const inboxResponse = await requestApi
+        const openResponse = await requestApi
           .get('/api/admin/feedback')
           .set('Authorization', `Bearer ${admin.token}`);
-        expect(inboxResponse.body.data.some((f) => f._id === feedbackId)).toBe(false);
+        expect(openResponse.body.data.some((f) => f._id === feedbackId)).toBe(false);
 
         const archiveResponse = await requestApi
-          .get('/api/admin/feedback?archived=true')
+          .get('/api/admin/feedback?status=archived')
           .set('Authorization', `Bearer ${admin.token}`);
         expect(archiveResponse.body.data.some((f) => f._id === feedbackId)).toBe(true);
+      }
+      finally {
+        await deleteTestUser(admin);
+      }
+    });
+
+    it('filters by the status query param', async () => {
+      const admin = await createTestAdmin();
+      try {
+        const submitResponse = await requestApi
+          .post('/api/feedback')
+          .set('x-test-bypass-secret', testBypassSecret!)
+          .send({ email: 'resolved-test@example.com', kind: 'bug', message: 'Resolved filter test feedback' });
+        const feedbackId = submitResponse.body.data._id;
+
+        await requestApi
+          .put(`/api/admin/feedback/${feedbackId}`)
+          .set('Authorization', `Bearer ${admin.token}`)
+          .send({ status: 'resolved' });
+
+        const openResponse = await requestApi
+          .get('/api/admin/feedback?status=open')
+          .set('Authorization', `Bearer ${admin.token}`);
+        expect(openResponse.body.data.some((f) => f._id === feedbackId)).toBe(false);
+
+        const resolvedResponse = await requestApi
+          .get('/api/admin/feedback?status=resolved')
+          .set('Authorization', `Bearer ${admin.token}`);
+        expect(resolvedResponse.body.data.some((f) => f._id === feedbackId)).toBe(true);
       }
       finally {
         await deleteTestUser(admin);
@@ -88,7 +116,7 @@ describe('admin.test.js', () => {
     it('unauthenticated users get 401', async () => {
       const response = await requestApi
         .put('/api/admin/feedback/507f1f77bcf86cd799439011')
-        .send({ resolved: true });
+        .send({ status: 'resolved' });
       expect(response.status).toBe(401);
     });
 
@@ -98,7 +126,7 @@ describe('admin.test.js', () => {
         const response = await requestApi
           .put('/api/admin/feedback/507f1f77bcf86cd799439011')
           .set('Authorization', `Bearer ${testUser.token}`)
-          .send({ resolved: true });
+          .send({ status: 'resolved' });
         expect(response.status).toBe(403);
       }
       finally {
@@ -112,7 +140,7 @@ describe('admin.test.js', () => {
         const response = await requestApi
           .put('/api/admin/feedback/507f1f77bcf86cd799439011')
           .set('Authorization', `Bearer ${admin.token}`)
-          .send({ resolved: true });
+          .send({ status: 'resolved' });
         expect(response.status).toBe(404);
       }
       finally {
@@ -132,10 +160,9 @@ describe('admin.test.js', () => {
         const response = await requestApi
           .put(`/api/admin/feedback/${feedbackId}`)
           .set('Authorization', `Bearer ${admin.token}`)
-          .send({ resolved: true });
+          .send({ status: 'resolved' });
         expect(response.status).toBe(200);
-        expect(response.body.data.resolved).toBe(true);
-        expect(response.body.data.archived).toBe(false);
+        expect(response.body.data.status).toBe('resolved');
       }
       finally {
         await deleteTestUser(admin);

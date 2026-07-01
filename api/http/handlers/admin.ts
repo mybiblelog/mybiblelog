@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { generateUserJWT } from '../../repositories/helpers/user-auth';
 import { type Repositories } from '../../repositories/useRepositories';
-import { type AdminUserListQuery } from '../../repositories/helpers/types';
+import { type AdminUserListQuery, type FeedbackStatus } from '../../repositories/helpers/types';
 import deleteAccount from '../helpers/deleteAccount';
 import { InvalidRequestError, NotFoundError } from '../errors/http-errors';
 import { ApiErrorDetailCode } from '../errors/error-codes';
@@ -121,22 +121,24 @@ const parseUserListQuery = (query: Record<string, string | undefined>): AdminUse
   return validated;
 };
 
-// GET /admin/feedback - List feedback submissions (paginated); the inbox by default, or the archive
+const FEEDBACK_STATUSES: FeedbackStatus[] = ['open', 'resolved', 'archived'];
+
+// GET /admin/feedback - List feedback submissions (paginated) by status; open by default
 export const listFeedback: RouteHandler = async (req, deps) => {
   await deps.authenticate(req, { adminOnly: true });
 
   const offset = Math.max(0, parseInt(req.query.offset ?? '') || 0);
   const limit = Math.min(100, Math.max(1, parseInt(req.query.limit ?? '') || 10));
-  const archived = req.query.archived === 'true';
+  const status = FEEDBACK_STATUSES.includes(req.query.status as FeedbackStatus) ? (req.query.status as FeedbackStatus) : 'open';
 
-  const { results, total } = await deps.repositories.feedback.listPaginated({ offset, limit, archived });
+  const { results, total } = await deps.repositories.feedback.listPaginated({ offset, limit, status });
   return {
     status: 200,
     body: { data: results, meta: { pagination: { offset, limit, size: total } } },
   };
 };
 
-// PUT /admin/feedback/:id - Resolve and/or archive a feedback submission
+// PUT /admin/feedback/:id - Update a feedback submission's status
 export const updateFeedback: RouteHandler = async (req, deps) => {
   await deps.authenticate(req, { adminOnly: true });
 
