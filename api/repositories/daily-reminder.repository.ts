@@ -39,7 +39,7 @@ const toDailyReminderRecord = (reminder: DailyReminderDocument): DailyReminderRe
     timezoneOffset: reminder.timezoneOffset,
     active: reminder.active,
     publicToken: reminder.publicToken,
-    lastEmailEngagementAt: reminder.lastEmailEngagementAt ?? null,
+    emailsSentSinceLastEngagement: reminder.emailsSentSinceLastEngagement,
     nextOccurrence: reminder.nextOccurrence,
   };
 };
@@ -58,7 +58,7 @@ export const createDailyReminderRepository = ({ dailyReminders }: Collections) =
           timezoneOffset: reminder.timezoneOffset,
           active: reminder.active,
           publicToken: reminder.publicToken,
-          lastEmailEngagementAt: reminder.lastEmailEngagementAt,
+          emailsSentSinceLastEngagement: reminder.emailsSentSinceLastEngagement,
           nextOccurrence: reminder.nextOccurrence,
           updatedAt: reminder.updatedAt,
         },
@@ -87,7 +87,7 @@ export const createDailyReminderRepository = ({ dailyReminders }: Collections) =
       timezoneOffset: 0,
       active: false,
       publicToken: crypto.randomBytes(16).toString('base64url'),
-      lastEmailEngagementAt: null,
+      emailsSentSinceLastEngagement: 0,
       nextOccurrence: now.getTime(),
       createdAt: now,
       updatedAt: now,
@@ -112,10 +112,10 @@ export const createDailyReminderRepository = ({ dailyReminders }: Collections) =
       if (typeof patch.active !== 'undefined') { reminder.active = patch.active; }
 
       // If the daily reminder was just activated, rotate the public token
-      // (email links, tracking, unsubscribe) and seed engagement tracking.
+      // (email links, tracking, unsubscribe) and reset engagement tracking.
       if (!wasActive && reminder.active) {
         reminder.publicToken = crypto.randomBytes(16).toString('base64url');
-        reminder.lastEmailEngagementAt = new Date();
+        reminder.emailsSentSinceLastEngagement = 0;
       }
 
       assertValidSchedule(reminder);
@@ -124,11 +124,11 @@ export const createDailyReminderRepository = ({ dailyReminders }: Collections) =
       return toDailyReminderRecord(reminder);
     },
 
-    /** Updates lastEmailEngagementAt for the reminder with the given public token, if any. */
+    /** Resets emailsSentSinceLastEngagement for the reminder with the given public token, if any. */
     async recordEngagement(publicToken: string): Promise<void> {
       const reminder = await dailyReminders.findOne({ publicToken });
       if (reminder) {
-        reminder.lastEmailEngagementAt = new Date();
+        reminder.emailsSentSinceLastEngagement = 0;
         recomputeNextOccurrence(reminder);
         await persist(reminder);
       }
@@ -169,18 +169,15 @@ export const createDailyReminderRepository = ({ dailyReminders }: Collections) =
     },
 
     /**
-     * Advances a reminder's schedule by recomputing nextOccurrence and saving.
-     * Reminders created before engagement tracking have no lastEmailEngagementAt;
-     * this seeds it so they are not deactivated on the next cycle.
+     * Advances a reminder's schedule ahead of sending an email: increments
+     * emailsSentSinceLastEngagement and recomputes nextOccurrence, then saves.
      */
     async advanceSchedule(id: string): Promise<void> {
       const reminder = await dailyReminders.findOne({ _id: new ObjectId(id) });
       if (!reminder) {
         return;
       }
-      if (!reminder.lastEmailEngagementAt) {
-        reminder.lastEmailEngagementAt = new Date();
-      }
+      reminder.emailsSentSinceLastEngagement += 1;
       recomputeNextOccurrence(reminder);
       await persist(reminder);
     },

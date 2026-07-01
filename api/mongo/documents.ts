@@ -84,7 +84,7 @@ export interface DailyReminderDocument {
   timezoneOffset: number;
   active: boolean;
   publicToken: string;
-  lastEmailEngagementAt: Date | null;
+  emailsSentSinceLastEngagement: number;
   nextOccurrence: number;
   createdAt: Date;
   updatedAt: Date;

@@ -5,8 +5,7 @@ import { DailyReminderRecord, LogEntryRecord, UserRecord } from '../repositories
 import renderDailyReminderEmail from './email/email-templates/daily-reminder';
 import { EmailService } from './email/email-service';
 
-const DAY_MS = 24 * 60 * 60 * 1000;
-const TIME_BEFORE_DISABLING_DAILY_REMINDER_EMAIL_MS = 3 * DAY_MS;
+const MAX_EMAILS_SINCE_LAST_ENGAGEMENT = 3;
 
 const init = async ({ emailService }: { emailService: EmailService }) => {
   const { siteUrl, emailUnsubscribeAddress, emailSendingDomain } = getConfig();
@@ -132,11 +131,9 @@ const init = async ({ emailService }: { emailService: EmailService }) => {
   };
 
   const sendReminder = async (reminder: DailyReminderRecord) => {
-    const engagementCutoffMs = Date.now() - TIME_BEFORE_DISABLING_DAILY_REMINDER_EMAIL_MS;
-
-    // Reminders created before engagement tracking have no lastEmailEngagementAt;
-    // treat them as engaged (advanceSchedule seeds the field when it saves).
-    if (reminder.lastEmailEngagementAt && reminder.lastEmailEngagementAt.getTime() < engagementCutoffMs) {
+    // If the user hasn't engaged with the last MAX_EMAILS_SINCE_LAST_ENGAGEMENT
+    // reminder emails, disable the reminder instead of sending another one.
+    if (reminder.emailsSentSinceLastEngagement >= MAX_EMAILS_SINCE_LAST_ENGAGEMENT) {
       await dailyReminders.deactivate(reminder.id);
       return;
     }
@@ -148,8 +145,8 @@ const init = async ({ emailService }: { emailService: EmailService }) => {
     const recentLogEntries = await getRecentLogEntries(user);
     const email = buildEmail(user, reminder, recentLogEntries);
 
-    // Update nextOccurrence before sending email to avoid duplicate emails
-    // (the repository saves the document, triggering the pre-save hook).
+    // Update nextOccurrence and increment emailsSentSinceLastEngagement before
+    // sending email to avoid duplicate emails (the repository saves the document).
     await dailyReminders.advanceSchedule(reminder.id);
 
     // Send email after database is updated

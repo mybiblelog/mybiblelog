@@ -166,7 +166,7 @@ export interface DailyReminderRecord {
   timezoneOffset: number;
   active: boolean;
   publicToken: string;
-  lastEmailEngagementAt: Date | null;
+  emailsSentSinceLastEngagement: number;
   nextOccurrence: number;
 }
 
