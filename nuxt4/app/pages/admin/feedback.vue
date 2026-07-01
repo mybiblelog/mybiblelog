@@ -63,7 +63,8 @@
               {{ feedback.message }}
             </div>
             <div class="feedback-card__email mbl-text-small">
-              <span class="feedback-card__email-text">{{ feedback.email }}</span>
+              <button v-if="feedback.owner" class="feedback-card__email-button" type="button" @click="openUserFromFeedback(feedback)">{{ feedback.email }}</button>
+              <span v-else class="feedback-card__email-text">{{ feedback.email }}</span>
               <span class="feedback-badge" :class="feedback.owner ? 'feedback-badge--user' : 'feedback-badge--guest'">
                 {{ feedback.owner ? 'user' : 'guest' }}
               </span>
@@ -75,10 +76,18 @@
         </div>
       </template>
     </div>
+
+    <AdminUserDetailModal
+      :user="selectedUser"
+      :open="!!selectedUser"
+      :allow-delete="false"
+      @close="closeUserDetails"
+    />
   </main>
 </template>
 
 <script setup lang="ts">
+import AdminUserDetailModal from '~/components/admin/AdminUserDetailModal.vue';
 import CaretLeftIcon from '~/components/svg/CaretLeftIcon.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
 
@@ -109,6 +118,7 @@ const { $http } = useNuxtApp();
 const feedbacks = ref<Feedback[]>([]);
 const loading = ref(false);
 const pagination = ref<Pagination>({ page: 1, limit: PAGE_LIMIT, size: 0, totalPages: 1 });
+const selectedUser = ref<{ email: string } | null>(null);
 
 const page = computed(() => pagination.value.page);
 const totalPages = computed(() => Math.max(1, pagination.value.totalPages));
@@ -164,6 +174,14 @@ async function loadFeedbacks() {
   }
 }
 
+function openUserFromFeedback(feedback: Feedback) {
+  selectedUser.value = { email: feedback.email };
+}
+
+function closeUserDetails() {
+  selectedUser.value = null;
+}
+
 function onPageChanged(newPage: number) {
   const clamped = Math.min(Math.max(newPage, 1), totalPages.value);
   if (clamped === page.value) { return; }
@@ -177,11 +195,18 @@ onMounted(() => { loadFeedbacks(); });
 
 <style scoped>
 .feedback-page__results-bar {
+  position: sticky;
+  top: calc(var(--header-height) + 0.5rem - 1px);
+  z-index: 10;
+  background: var(--mbl-app-canvas-bg);
+  padding: 0.5rem 1rem;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+  border-bottom: 1px solid var(--mbl-border-soft);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1rem;
 }
 
 .feedback-cards {
@@ -229,6 +254,21 @@ onMounted(() => { loadFeedbacks(); });
   text-overflow: ellipsis;
   white-space: nowrap;
   min-width: 0;
+}
+
+.feedback-card__email-button {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--mbl-link);
+  cursor: pointer;
+  text-align: left;
+  text-decoration: underline;
 }
 
 .feedback-card__ip {

@@ -70,7 +70,8 @@
               {{ feedback.message }}
             </div>
             <div class="feedback-card__email mbl-text-small">
-              <span class="feedback-card__email-text">{{ feedback.email }}</span>
+              <button v-if="feedback.owner" class="feedback-card__email-button" type="button" @click="openUserFromFeedback(feedback)">{{ feedback.email }}</button>
+              <span v-else class="feedback-card__email-text">{{ feedback.email }}</span>
               <span class="feedback-badge" :class="feedback.owner ? 'feedback-badge--user' : 'feedback-badge--guest'">
                 {{ feedback.owner ? 'user' : 'guest' }}
               </span>
@@ -82,11 +83,19 @@
         </div>
       </template>
     </div>
+
+    <admin-user-detail-modal
+      :user="selectedUser"
+      :open="!!selectedUser"
+      :allow-delete="false"
+      @close="closeUserDetails"
+    />
   </main>
 </template>
 
 <script>
 import dayjs from 'dayjs';
+import AdminUserDetailModal from '@/components/admin/AdminUserDetailModal';
 import CaretLeftIcon from '@/components/svg/CaretLeftIcon';
 import CaretRightIcon from '@/components/svg/CaretRightIcon';
 
@@ -95,6 +104,7 @@ const PAGE_LIMIT = 10;
 export default {
   name: 'AdminFeedbackReviewPage',
   components: {
+    AdminUserDetailModal,
     CaretLeftIcon,
     CaretRightIcon,
   },
@@ -107,6 +117,7 @@ export default {
       feedbacks: [],
       loading: false,
       pagination: { page: 1, limit: PAGE_LIMIT, size: 0, totalPages: 1 },
+      selectedUser: null,
     };
   },
   computed: {
@@ -161,6 +172,12 @@ export default {
         'mbl-text-danger': kind === 'bug',
       };
     },
+    openUserFromFeedback(feedback) {
+      this.selectedUser = { email: feedback.email };
+    },
+    closeUserDetails() {
+      this.selectedUser = null;
+    },
     onPageChanged(newPage) {
       const clamped = Math.min(Math.max(Number(newPage || 1), 1), this.pagerTotalPages);
       if (clamped === this.pagerPage) { return; }
@@ -174,11 +191,18 @@ export default {
 
 <style scoped>
 .feedback-page__results-bar {
+  position: sticky;
+  top: calc(var(--header-height) + 0.5rem - 1px);
+  z-index: 10;
+  background: var(--mbl-app-canvas-bg);
+  padding: 0.5rem 1rem;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+  border-bottom: 1px solid var(--mbl-border-soft);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1rem;
 }
 
 .feedback-cards {
@@ -226,6 +250,21 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
   min-width: 0;
+}
+
+.feedback-card__email-button {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--mbl-link);
+  cursor: pointer;
+  text-align: left;
+  text-decoration: underline;
 }
 
 .feedback-card__ip {
