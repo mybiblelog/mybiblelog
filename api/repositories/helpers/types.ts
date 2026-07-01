@@ -189,6 +189,8 @@ export interface FeedbackRecord {
   email: string;
   kind: string;
   message: string;
+  resolved: boolean;
+  archived: boolean;
   createdAt: Date;
   updatedAt: Date;
   __v?: number;
@@ -200,6 +202,11 @@ export interface FeedbackCreateInput {
   email: string;
   kind: string;
   message: string;
+}
+
+export interface FeedbackPatch {
+  resolved?: boolean;
+  archived?: boolean;
 }
 
 export type EmailStatus = 'pending' | 'sent' | 'failed' | 'log_only';

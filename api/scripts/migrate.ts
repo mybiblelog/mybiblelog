@@ -13,6 +13,7 @@ const main = async (): Promise<void> => {
   // the untyped collection shape rather than the current document interfaces.
   const users = collections.users as unknown as Collection<Document>;
   const dailyReminders = collections.dailyReminders as unknown as Collection<Document>;
+  const feedback = collections.feedback as unknown as Collection<Document>;
 
   // users without a locale need 'en' locale (original default)
   const usersWithoutLocale = await users.find({ 'settings.locale': { $exists: false } }).toArray();
@@ -95,6 +96,18 @@ const main = async (): Promise<void> => {
       { $rename: { unsubscribeCode: 'publicToken' } },
     );
     console.log(`DailyReminder rename complete (matched ${result.matchedCount}, modified ${result.modifiedCount}).`);
+  }
+
+  // Feedback: submissions without resolved/archived need both set to false (original default)
+  const feedbackWithoutResolvedOrArchived = await feedback.find({
+    $or: [{ resolved: { $exists: false } }, { archived: { $exists: false } }],
+  }).toArray();
+  for (const item of feedbackWithoutResolvedOrArchived) {
+    console.log(`Migrating feedback ${item._id} to resolved: false, archived: false...`);
+    const set: Record<string, boolean> = {};
+    if (item.resolved === undefined) { set.resolved = false; }
+    if (item.archived === undefined) { set.archived = false; }
+    await feedback.updateOne({ _id: item._id }, { $set: set });
   }
 
   // close connection

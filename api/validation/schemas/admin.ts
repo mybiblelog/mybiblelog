@@ -26,6 +26,16 @@ export const adminUserListQuerySchema = z.object({
 export const adminFeedbackListQuerySchema = z.object({
   offset: z.coerce.number().int().optional().describe('Feedback items to skip (default 0)'),
   limit: z.coerce.number().int().optional().describe('Max items to return (1–100, default 10)'),
+  archived: z.coerce.boolean().optional().describe('List archived feedback instead of the inbox (default false)'),
+});
+
+/** `:id` path parameter for the single-feedback admin routes. */
+export const adminFeedbackIdParam = z.object({ id: z.string() });
+
+/** Body accepted by `PUT /admin/feedback/:id`. */
+export const adminFeedbackPatchSchema = z.object({
+  resolved: z.boolean().optional(),
+  archived: z.boolean().optional(),
 });
 
 /** A user as returned by the admin user list. */

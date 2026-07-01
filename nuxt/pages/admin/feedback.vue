@@ -5,8 +5,27 @@
         Admin Feedback Review
       </h1>
 
+      <div class="feedback-page__view-toggle">
+        <button
+          class="mbl-button mbl-button--sm mbl-button--light"
+          :class="{ 'mbl-button--primary': view === 'inbox' }"
+          type="button"
+          @click="setView('inbox')"
+        >
+          Inbox
+        </button>
+        <button
+          class="mbl-button mbl-button--sm mbl-button--light"
+          :class="{ 'mbl-button--primary': view === 'archive' }"
+          type="button"
+          @click="setView('archive')"
+        >
+          Archive
+        </button>
+      </div>
+
       <div v-if="!feedbacks.length && !loading">
-        <p>There are no feedbacks.</p>
+        <p>{{ view === 'archive' ? 'There is no archived feedback.' : 'There is no feedback in the inbox.' }}</p>
       </div>
 
       <template v-else>
@@ -65,12 +84,15 @@
             </div>
             <div class="feedback-card__kind mbl-text-small" :class="feedbackKindClass(feedback.kind)">
               {{ feedback.kind }}
+              <span v-if="feedback.resolved" class="feedback-badge feedback-badge--resolved">resolved</span>
             </div>
             <div class="feedback-card__message">
               {{ feedback.message }}
             </div>
             <div class="feedback-card__email mbl-text-small">
-              <button v-if="feedback.owner" class="feedback-card__email-button" type="button" @click="openUserFromFeedback(feedback)">{{ feedback.email }}</button>
+              <button v-if="feedback.owner" class="feedback-card__email-button" type="button" @click="openUserFromFeedback(feedback)">
+                {{ feedback.email }}
+              </button>
               <span v-else class="feedback-card__email-text">{{ feedback.email }}</span>
               <span class="feedback-badge" :class="feedback.owner ? 'feedback-badge--user' : 'feedback-badge--guest'">
                 {{ feedback.owner ? 'user' : 'guest' }}
@@ -78,6 +100,40 @@
             </div>
             <div class="feedback-card__ip mbl-text-small mbl-text-muted">
               {{ feedback.ip }}
+            </div>
+            <div class="feedback-card__actions">
+              <template v-if="!feedback.archived">
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  @click="toggleResolved(feedback)"
+                >
+                  {{ feedback.resolved ? 'Mark Unresolved' : 'Mark Resolved' }}
+                </button>
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  @click="setArchived(feedback, true)"
+                >
+                  Archive
+                </button>
+              </template>
+              <template v-else>
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  @click="setArchived(feedback, false)"
+                >
+                  Unarchive
+                </button>
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--danger"
+                  type="button"
+                  @click="deleteFeedback(feedback)"
+                >
+                  Delete
+                </button>
+              </template>
             </div>
           </div>
         </div>
@@ -98,6 +154,7 @@ import dayjs from 'dayjs';
 import AdminUserDetailModal from '@/components/admin/AdminUserDetailModal';
 import CaretLeftIcon from '@/components/svg/CaretLeftIcon';
 import CaretRightIcon from '@/components/svg/CaretRightIcon';
+import { useDialogStore } from '~/stores/dialog';
 
 const PAGE_LIMIT = 10;
 
@@ -114,6 +171,7 @@ export default {
   },
   data() {
     return {
+      view: 'inbox',
       feedbacks: [],
       loading: false,
       pagination: { page: 1, limit: PAGE_LIMIT, size: 0, totalPages: 1 },
@@ -145,7 +203,8 @@ export default {
       this.loading = true;
       try {
         const offset = (this.pagerPage - 1) * PAGE_LIMIT;
-        const { data: feedbacks, meta } = await this.$http.get(`/api/admin/feedback?offset=${offset}&limit=${PAGE_LIMIT}`);
+        const archived = this.view === 'archive';
+        const { data: feedbacks, meta } = await this.$http.get(`/api/admin/feedback?offset=${offset}&limit=${PAGE_LIMIT}&archived=${archived}`);
         this.feedbacks = feedbacks;
         const p = (meta && meta.pagination) || {};
         const limit = Number(p.limit || PAGE_LIMIT);
@@ -178,6 +237,12 @@ export default {
     closeUserDetails() {
       this.selectedUser = null;
     },
+    setView(newView) {
+      if (this.view === newView) { return; }
+      this.view = newView;
+      this.pagination = { ...this.pagination, page: 1 };
+      this.loadFeedbacks();
+    },
     onPageChanged(newPage) {
       const clamped = Math.min(Math.max(Number(newPage || 1), 1), this.pagerTotalPages);
       if (clamped === this.pagerPage) { return; }
@@ -185,11 +250,52 @@ export default {
       this.loadFeedbacks();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     },
+    async toggleResolved(feedback) {
+      const dialogStore = useDialogStore();
+      try {
+        await this.$http.put(`/api/admin/feedback/${feedback._id}`, { resolved: !feedback.resolved });
+        feedback.resolved = !feedback.resolved;
+      }
+      catch {
+        await dialogStore.alert({ message: 'Unable to update feedback.' });
+      }
+    },
+    async setArchived(feedback, archived) {
+      const dialogStore = useDialogStore();
+      try {
+        await this.$http.put(`/api/admin/feedback/${feedback._id}`, { archived });
+        await this.loadFeedbacks();
+      }
+      catch {
+        await dialogStore.alert({ message: `Unable to ${archived ? 'archive' : 'unarchive'} feedback.` });
+      }
+    },
+    async deleteFeedback(feedback) {
+      const dialogStore = useDialogStore();
+      const confirmed = await dialogStore.confirm({
+        message: 'Are you sure you want to permanently delete this feedback? This action cannot be undone.',
+        confirmButtonType: 'danger',
+      });
+      if (!confirmed) { return; }
+      try {
+        await this.$http.delete(`/api/admin/feedback/${feedback._id}`);
+        await this.loadFeedbacks();
+      }
+      catch {
+        await dialogStore.alert({ message: 'Unable to delete feedback.' });
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
+.feedback-page__view-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
 .feedback-page__results-bar {
   position: sticky;
   top: calc(var(--header-height) + 0.5rem - 1px);
@@ -229,6 +335,10 @@ export default {
   align-self: center;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
 }
 
 .feedback-card__message {
@@ -272,6 +382,14 @@ export default {
   align-self: center;
 }
 
+.feedback-card__actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
 .feedback-badge {
   display: inline-block;
   font-size: 0.7rem;
@@ -291,6 +409,11 @@ export default {
 
 .feedback-badge--guest {
   background-color: var(--mbl-text-muted);
+  color: var(--neutral-0);
+}
+
+.feedback-badge--resolved {
+  background-color: var(--mbl-success);
   color: var(--neutral-0);
 }
 </style>

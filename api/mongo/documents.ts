@@ -97,6 +97,8 @@ export interface FeedbackDocument {
   email: string;
   kind: string;
   message: string;
+  resolved: boolean;
+  archived: boolean;
   createdAt: Date;
   updatedAt: Date;
   // Mongoose stamped every feedback document with a version key; the feedback

@@ -5,6 +5,7 @@ import { LocaleCode } from '@mybiblelog/shared';
 import renderEmailVerification from './email-templates/email-verification';
 import renderPasswordResetLink from './email-templates/password-reset-link';
 import renderEmailUpdate from './email-templates/email-update';
+import renderNewFeedbackNotification from './email-templates/new-feedback-notification';
 import { brandLogoCid } from './email-templates/branded-wrapper';
 
 import { QueueEmailParams, SendEmailParams } from './email-types';
@@ -22,10 +23,11 @@ export type EmailService = {
   queueUserEmailVerification: (email: string, emailVerificationCode: string, locale: LocaleCode) => void;
   queuePasswordResetLink: (email: string, passwordResetLink: string, locale: LocaleCode) => void;
   queueEmailUpdateLink: (currentEmail: string, newEmail: string, newEmailVerificationCode: string, locale: LocaleCode) => void;
+  queueNewFeedbackNotification: (adminEmail: string, feedback: { kind: string; email: string; message: string }) => void;
 };
 
 const init = async () => {
-  const { emailSendingDomain, nodeEnv } = getConfig();
+  const { emailSendingDomain, siteUrl, nodeEnv } = getConfig();
   const defaultFromEmailAddress = `My Bible Log <team@${emailSendingDomain}>`;
   const defaultReplyToEmailAddress = `My Bible Log <team@${emailSendingDomain}>`;
   const { emails } = await useRepositories();
@@ -137,11 +139,24 @@ const init = async () => {
     });
   };
 
+  const queueNewFeedbackNotification = (adminEmail: string, feedback: { kind: string; email: string; message: string }): void => {
+    const adminFeedbackUrl = new URL('/admin/feedback', siteUrl).toString();
+    const { subject, html } = renderNewFeedbackNotification({ adminFeedbackUrl, ...feedback });
+
+    queueEmail({
+      from: defaultFromEmailAddress,
+      to: adminEmail,
+      subject,
+      html,
+    });
+  };
+
   return {
     send: queueEmail,
     queueUserEmailVerification,
     queuePasswordResetLink,
     queueEmailUpdateLink,
+    queueNewFeedbackNotification,
   };
 };
 

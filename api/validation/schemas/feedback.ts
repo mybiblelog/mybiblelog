@@ -20,6 +20,8 @@ export const feedbackSchema = z.object({
   email: z.string(),
   kind: z.string(),
   message: z.string(),
+  resolved: z.boolean(),
+  archived: z.boolean(),
   createdAt: z.string().describe('ISO 8601 timestamp'),
   updatedAt: z.string().describe('ISO 8601 timestamp'),
 });
