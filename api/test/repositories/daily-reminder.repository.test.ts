@@ -24,7 +24,7 @@ describe('daily-reminder.repository', () => {
       expect(reminder.active).toBe(false);
       expect(reminder.publicToken).toMatch(/^[A-Za-z0-9_-]+$/); // base64url
       expect(typeof reminder.nextOccurrence).toBe('number');
-      expect(reminder.lastEmailEngagementAt).toBeNull();
+      expect(reminder.emailsSentSinceLastEngagement).toBe(0);
     });
 
     it('is idempotent (returns the same reminder, never a second document)', async () => {
@@ -61,15 +61,16 @@ describe('daily-reminder.repository', () => {
       expect(updated.nextOccurrence).toBeGreaterThan(Date.now());
     });
 
-    it('rotates the public token and seeds lastEmailEngagementAt on activation', async () => {
+    it('rotates the public token and resets emailsSentSinceLastEngagement on activation', async () => {
       const { dailyReminders } = await getRepos();
       const created = await dailyReminders.getOrCreateForOwner(ownerId);
+      await dailyReminders.advanceSchedule(created.id);
 
       const activated = await dailyReminders.updateForOwner(ownerId, { active: true });
 
       expect(activated.active).toBe(true);
       expect(activated.publicToken).not.toBe(created.publicToken);
-      expect(activated.lastEmailEngagementAt).toBeInstanceOf(Date);
+      expect(activated.emailsSentSinceLastEngagement).toBe(0);
     });
 
     it('rejects out-of-range hour, minute, and timezone offset', async () => {
@@ -83,14 +84,15 @@ describe('daily-reminder.repository', () => {
   });
 
   describe('engagement and deactivation', () => {
-    it('recordEngagement stamps lastEmailEngagementAt by public token', async () => {
+    it('recordEngagement resets emailsSentSinceLastEngagement by public token', async () => {
       const { dailyReminders } = await getRepos();
       const created = await dailyReminders.getOrCreateForOwner(ownerId);
+      await dailyReminders.advanceSchedule(created.id);
 
       await dailyReminders.recordEngagement(created.publicToken);
 
       const after = await dailyReminders.getOrCreateForOwner(ownerId);
-      expect(after.lastEmailEngagementAt).toBeInstanceOf(Date);
+      expect(after.emailsSentSinceLastEngagement).toBe(0);
     });
 
     it('deactivateByPublicToken deactivates a reminder or returns null for an unknown token', async () => {
@@ -112,15 +114,15 @@ describe('daily-reminder.repository', () => {
       expect(after.active).toBe(false);
     });
 
-    it('advanceSchedule seeds lastEmailEngagementAt and recomputes nextOccurrence', async () => {
+    it('advanceSchedule increments emailsSentSinceLastEngagement and recomputes nextOccurrence', async () => {
       const { dailyReminders } = await getRepos();
       const created = await dailyReminders.getOrCreateForOwner(ownerId);
-      expect(created.lastEmailEngagementAt).toBeNull();
+      expect(created.emailsSentSinceLastEngagement).toBe(0);
 
       await dailyReminders.advanceSchedule(created.id);
 
       const after = await dailyReminders.getOrCreateForOwner(ownerId);
-      expect(after.lastEmailEngagementAt).toBeInstanceOf(Date);
+      expect(after.emailsSentSinceLastEngagement).toBe(1);
       expect(after.nextOccurrence).toBeGreaterThan(Date.now());
     });
   });

@@ -120,6 +120,20 @@ const main = async (): Promise<void> => {
     console.log(`Feedback __v removal complete (matched ${result.matchedCount}, modified ${result.modifiedCount}).`);
   }
 
+  // DailyReminder: replace legacy lastEmailEngagementAt timestamp with emailsSentSinceLastEngagement counter
+  const remindersWithLegacyEngagementField = await dailyReminders.countDocuments({ lastEmailEngagementAt: { $exists: true } });
+  if (remindersWithLegacyEngagementField === 0) {
+    console.log('DailyReminder lastEmailEngagementAt -> emailsSentSinceLastEngagement: already migrated (no legacy field).');
+  }
+  else {
+    console.log(`DailyReminder: migrating lastEmailEngagementAt to emailsSentSinceLastEngagement on ${remindersWithLegacyEngagementField} document(s)...`);
+    const result = await dailyReminders.updateMany(
+      {},
+      { $set: { emailsSentSinceLastEngagement: 0 }, $unset: { lastEmailEngagementAt: '' } },
+    );
+    console.log(`DailyReminder engagement migration complete (matched ${result.matchedCount}, modified ${result.modifiedCount}).`);
+  }
+
   // close connection
   await closeConnection();
 };
