@@ -10,6 +10,12 @@ export default defineNuxtConfig({
   // Global CSS
   css: ['~/assets/css/main.css'],
 
+  postcss: {
+    plugins: {
+      'postcss-mixins': {},
+    },
+  },
+
   // Page transitions matching the original app
   app: {
     pageTransition: { name: 'page', mode: 'out-in', duration: 100 },
