@@ -50,6 +50,7 @@
     "css-loader": "^5.2.7",
     "happy-dom": "^15.11.7",
     "postcss": "^8.5.10",
+    "postcss-mixins": "^12.1.2",
     "tsx": "^4.22.3",
     "typescript": "^5.9.3",
     "vitest": "^3.2.6"

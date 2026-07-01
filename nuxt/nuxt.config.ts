@@ -140,6 +140,13 @@ const config: NuxtConfig = {
         ];
       },
     },
+    postcss: {
+      postcssOptions: {
+        plugins: {
+          'postcss-mixins': {},
+        },
+      },
+    },
     /*
     ** You can extend webpack config here
     */

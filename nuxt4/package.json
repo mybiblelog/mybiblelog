@@ -33,6 +33,7 @@
     "@vue/server-renderer": "^3.5.38",
     "@vue/test-utils": "^2.4.6",
     "happy-dom": "^15.11.7",
+    "postcss-mixins": "^12.1.2",
     "typescript": "^5.9.3",
     "vitest": "^3.2.6",
     "vue-tsc": "^3.3.5"

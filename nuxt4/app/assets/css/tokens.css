@@ -211,9 +211,7 @@
   color-scheme: light;
 }
 
-[data-theme="dark"] {
-  color-scheme: dark;
-
+@define-mixin mbl-dark-theme-vars {
   --mbl-text: var(--neutral-100);
   --mbl-text-85: rgba(245, 245, 245, 0.85);
   --mbl-text-90: rgba(245, 245, 245, 0.9);
@@ -297,81 +295,16 @@
   --mbl-heat-4: #39d353;
 }
 
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  @mixin mbl-dark-theme-vars;
+}
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
     color-scheme: dark;
 
-    --mbl-text: var(--neutral-100);
-    --mbl-text-85: rgba(245, 245, 245, 0.85);
-    --mbl-text-90: rgba(245, 245, 245, 0.9);
-    --mbl-text-body: var(--neutral-200);
-    --mbl-text-muted: #a8a8a8;
-    --mbl-text-subtle: #c6c6c6;
-    --mbl-text-strong: var(--neutral-100);
-    --mbl-text-stronger: var(--neutral-0);
-    --mbl-link: #64a8ff;
-    --mbl-link-hover: #93c2ff;
-    --mbl-link-alt: #52abe8;
-    --mbl-link-muted: #7aaef0;
-    --mbl-border: #383838;
-    --mbl-border-strong: #4a4a4a;
-    --mbl-border-soft: #2a2a2a;
-    --mbl-calendar-grid-inner: var(--mbl-border);
-    --mbl-calendar-grid-outer: var(--mbl-border-strong);
-    --mbl-app-canvas-bg: #000;
-    --mbl-bg: var(--neutral-900);
-    --mbl-bg-muted: #242424;
-    --mbl-bg-elevated: var(--mbl-bg-muted);
-    --mbl-bg-subtle: #1f1f1f;
-    --mbl-bg-hover-light: #2d2d2d;
-    --mbl-bg-hover-strong: #353535;
-    --mbl-bg-disabled: #666;
-    --mbl-progress-track-bg: #666;
-    --mbl-progress-fill-inactive: #ccc;
-    --mbl-tag-option-bg: #1b1b1b;
-    --mbl-tag-option-border: #585858;
-    --mbl-tag-option-selected-bg: #2a2a2a;
-
-    --mbl-shadow-light: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
-    --mbl-shadow-dark: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
-    --mbl-shadow: var(--mbl-shadow-light);
-    --mbl-shadow-box-hover: var(--mbl-shadow-box-hover-dark);
-    --mbl-shadow-box-active: inset 0 1px 2px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--mbl-link);
-    --mbl-shadow-elev-1: 0 1px 7px rgba(0, 0, 0, 0.6);
-    --mbl-shadow-elev-2: 0 1px 9px rgba(0, 0, 0, 0.7);
-    --mbl-shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.45);
-    --mbl-menu-border: var(--mbl-border);
-    --mbl-shadow-overlay: 0 -2px 16px rgba(0, 0, 0, 0.7);
-    --mbl-card-shadow: 0 1px 7px rgba(0, 0, 0, 0.6);
-    --mbl-inset-well: inset 0 0.0625em 0.125em rgba(0, 0, 0, 0.5);
-
-    --mbl-scrim: rgba(0, 0, 0, 0.92);
-    --mbl-surface-frost: rgba(24, 24, 24, 0.9);
-
-    --mbl-message-info-border: #23425f;
-    --mbl-message-info-bg: #11202f;
-    --mbl-message-info-fg: #c5e3ff;
-    --mbl-message-info-accent: #5b8db8;
-    --mbl-scripture-words-of-jesus: #e08a73;
-    --mbl-star-earned: #d08a2f;
-    --mbl-star-unearned: #6e6e6e;
-    --mbl-tab-active: var(--mbl-link-bright);
-
-    --mbl-calendar-today-date-bg: var(--mbl-bg-hover-strong);
-    --mbl-calendar-today-date-color: var(--mbl-text-strong);
-
-    --mbl-site-title-gradient: linear-gradient(
-      20deg,
-      var(--tertiary-color),
-      var(--primary-color),
-      var(--secondary-color)
-    );
-    --mbl-busy-bar-stripe: rgba(255, 255, 255, 0.1);
-
-    /* Insights activity heatmap (heat-0 follows --mbl-bg-muted automatically) */
-    --mbl-heat-1: #0e4429;
-    --mbl-heat-2: #006d32;
-    --mbl-heat-3: #26a641;
-    --mbl-heat-4: #39d353;
+    @mixin mbl-dark-theme-vars;
   }
 }
