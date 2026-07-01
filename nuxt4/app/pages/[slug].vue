@@ -15,8 +15,10 @@ const { locale } = useI18n();
 
 const slug = route.params.slug as string;
 
-const { data: page } = await useAsyncData(`content-${slug}`, () =>
-  queryCollection('content').path(`/${locale.value}/${slug}`).first(),
+const { data: page } = await useAsyncData(
+  () => `content-${slug}-${locale.value}`,
+  () => queryCollection('content').path(`/${locale.value}/${slug}`).first(),
+  { watch: [locale] },
 );
 
 if (!page.value) {
