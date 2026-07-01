@@ -2,11 +2,13 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { generateUserJWT } from '../../repositories/helpers/user-auth';
 import { type Repositories } from '../../repositories/useRepositories';
-import { type AdminUserListQuery } from '../../repositories/helpers/types';
+import { type AdminUserListQuery, type FeedbackStatus } from '../../repositories/helpers/types';
 import deleteAccount from '../helpers/deleteAccount';
 import { InvalidRequestError, NotFoundError } from '../errors/http-errors';
 import { ApiErrorDetailCode } from '../errors/error-codes';
 import { authCookie } from '../helpers/auth-cookie';
+import { validate } from '../../validation/validate';
+import { adminFeedbackIdParam, adminFeedbackPatchSchema } from '../../validation/schemas/admin';
 import { type RouteHandler } from '../types';
 
 dayjs.extend(utc);
@@ -119,18 +121,42 @@ const parseUserListQuery = (query: Record<string, string | undefined>): AdminUse
   return validated;
 };
 
-// GET /admin/feedback - List all feedback submissions (paginated)
+const FEEDBACK_STATUSES: FeedbackStatus[] = ['open', 'resolved', 'archived'];
+
+// GET /admin/feedback - List feedback submissions (paginated) by status; open by default
 export const listFeedback: RouteHandler = async (req, deps) => {
   await deps.authenticate(req, { adminOnly: true });
 
   const offset = Math.max(0, parseInt(req.query.offset ?? '') || 0);
   const limit = Math.min(100, Math.max(1, parseInt(req.query.limit ?? '') || 10));
+  const status = FEEDBACK_STATUSES.includes(req.query.status as FeedbackStatus) ? (req.query.status as FeedbackStatus) : 'open';
 
-  const { results, total } = await deps.repositories.feedback.listPaginated({ offset, limit });
+  const { results, total } = await deps.repositories.feedback.listPaginated({ offset, limit, status });
   return {
     status: 200,
     body: { data: results, meta: { pagination: { offset, limit, size: total } } },
   };
+};
+
+// PUT /admin/feedback/:id - Update a feedback submission's status
+export const updateFeedback: RouteHandler = async (req, deps) => {
+  await deps.authenticate(req, { adminOnly: true });
+
+  const { params, body } = validate(req, { params: adminFeedbackIdParam, body: adminFeedbackPatchSchema });
+  const feedback = await deps.repositories.feedback.update(params.id, body);
+  return { status: 200, body: { data: feedback } };
+};
+
+// DELETE /admin/feedback/:id - Delete a feedback submission
+export const deleteFeedback: RouteHandler = async (req, deps) => {
+  await deps.authenticate(req, { adminOnly: true });
+
+  const { params } = validate(req, { params: adminFeedbackIdParam });
+  const success = await deps.repositories.feedback.deleteById(params.id);
+  if (!success) {
+    throw new NotFoundError();
+  }
+  return { status: 200, body: { data: 1 } };
 };
 
 // GET /admin/reports/user-engagement/past-week - New users / active users per day

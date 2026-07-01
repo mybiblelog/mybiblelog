@@ -392,6 +392,12 @@ export const createUserRepository = ({ users }: Collections) => {
       };
     },
 
+    /** Returns the email addresses of every admin account. */
+    async listAdminEmails(): Promise<string[]> {
+      const admins = await users.find({ isAdmin: true }, { projection: { email: 1 } }).toArray();
+      return admins.map((admin) => admin.email);
+    },
+
     /**
      * Returns the minimal `{ _id, email }` shape the admin user detail
      * endpoint has always responded with.

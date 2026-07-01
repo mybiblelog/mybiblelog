@@ -5,6 +5,10 @@ import { requestApi, createTestUser, createTestAdmin, deleteTestUser } from './h
 
 dayjs.extend(utc);
 
+// Bypasses the per-IP rate limit on POST /api/feedback so these tests don't
+// flake against the limit shared with feedback.test.ts.
+const testBypassSecret = process.env.TEST_BYPASS_SECRET;
+
 describe('admin.test.js', () => {
   describe('GET /api/admin/feedback is protected', () => {
     it('unauthenticated users get 401', async () => {
@@ -23,6 +27,204 @@ describe('admin.test.js', () => {
       }
       finally {
         await deleteTestUser(testUser);
+      }
+    });
+  });
+
+  describe('GET /api/admin/feedback', () => {
+    it('admin can list open feedback (default)', async () => {
+      const admin = await createTestAdmin();
+      try {
+        const submitResponse = await requestApi
+          .post('/api/feedback')
+          .set('x-test-bypass-secret', testBypassSecret!)
+          .send({ email: 'inbox-test@example.com', kind: 'bug', message: 'Inbox test feedback' });
+        const feedbackId = submitResponse.body.data._id;
+
+        const response = await requestApi
+          .get('/api/admin/feedback')
+          .set('Authorization', `Bearer ${admin.token}`);
+        expect(response.status).toBe(200);
+        expect(response.body.data.some((f) => f._id === feedbackId)).toBe(true);
+        expect(response.body.data[0]).toHaveProperty('status');
+      }
+      finally {
+        await deleteTestUser(admin);
+      }
+    });
+
+    it('archived feedback is excluded from open/resolved and included when filtering by archived', async () => {
+      const admin = await createTestAdmin();
+      try {
+        const submitResponse = await requestApi
+          .post('/api/feedback')
+          .set('x-test-bypass-secret', testBypassSecret!)
+          .send({ email: 'archive-test@example.com', kind: 'bug', message: 'Archive test feedback' });
+        const feedbackId = submitResponse.body.data._id;
+
+        await requestApi
+          .put(`/api/admin/feedback/${feedbackId}`)
+          .set('Authorization', `Bearer ${admin.token}`)
+          .send({ status: 'archived' });
+
+        const openResponse = await requestApi
+          .get('/api/admin/feedback')
+          .set('Authorization', `Bearer ${admin.token}`);
+        expect(openResponse.body.data.some((f) => f._id === feedbackId)).toBe(false);
+
+        const archiveResponse = await requestApi
+          .get('/api/admin/feedback?status=archived')
+          .set('Authorization', `Bearer ${admin.token}`);
+        expect(archiveResponse.body.data.some((f) => f._id === feedbackId)).toBe(true);
+      }
+      finally {
+        await deleteTestUser(admin);
+      }
+    });
+
+    it('filters by the status query param', async () => {
+      const admin = await createTestAdmin();
+      try {
+        const submitResponse = await requestApi
+          .post('/api/feedback')
+          .set('x-test-bypass-secret', testBypassSecret!)
+          .send({ email: 'resolved-test@example.com', kind: 'bug', message: 'Resolved filter test feedback' });
+        const feedbackId = submitResponse.body.data._id;
+
+        await requestApi
+          .put(`/api/admin/feedback/${feedbackId}`)
+          .set('Authorization', `Bearer ${admin.token}`)
+          .send({ status: 'resolved' });
+
+        const openResponse = await requestApi
+          .get('/api/admin/feedback?status=open')
+          .set('Authorization', `Bearer ${admin.token}`);
+        expect(openResponse.body.data.some((f) => f._id === feedbackId)).toBe(false);
+
+        const resolvedResponse = await requestApi
+          .get('/api/admin/feedback?status=resolved')
+          .set('Authorization', `Bearer ${admin.token}`);
+        expect(resolvedResponse.body.data.some((f) => f._id === feedbackId)).toBe(true);
+      }
+      finally {
+        await deleteTestUser(admin);
+      }
+    });
+  });
+
+  describe('PUT /api/admin/feedback/:id', () => {
+    it('unauthenticated users get 401', async () => {
+      const response = await requestApi
+        .put('/api/admin/feedback/507f1f77bcf86cd799439011')
+        .send({ status: 'resolved' });
+      expect(response.status).toBe(401);
+    });
+
+    it('authenticated non-admin users get 403', async () => {
+      const testUser = await createTestUser();
+      try {
+        const response = await requestApi
+          .put('/api/admin/feedback/507f1f77bcf86cd799439011')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send({ status: 'resolved' });
+        expect(response.status).toBe(403);
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
+    it('returns 404 for a non-existent feedback id', async () => {
+      const admin = await createTestAdmin();
+      try {
+        const response = await requestApi
+          .put('/api/admin/feedback/507f1f77bcf86cd799439011')
+          .set('Authorization', `Bearer ${admin.token}`)
+          .send({ status: 'resolved' });
+        expect(response.status).toBe(404);
+      }
+      finally {
+        await deleteTestUser(admin);
+      }
+    });
+
+    it('admin can resolve feedback', async () => {
+      const admin = await createTestAdmin();
+      try {
+        const submitResponse = await requestApi
+          .post('/api/feedback')
+          .set('x-test-bypass-secret', testBypassSecret!)
+          .send({ email: 'resolve-test@example.com', kind: 'bug', message: 'Resolve test feedback' });
+        const feedbackId = submitResponse.body.data._id;
+
+        const response = await requestApi
+          .put(`/api/admin/feedback/${feedbackId}`)
+          .set('Authorization', `Bearer ${admin.token}`)
+          .send({ status: 'resolved' });
+        expect(response.status).toBe(200);
+        expect(response.body.data.status).toBe('resolved');
+      }
+      finally {
+        await deleteTestUser(admin);
+      }
+    });
+  });
+
+  describe('DELETE /api/admin/feedback/:id', () => {
+    it('unauthenticated users get 401', async () => {
+      const response = await requestApi
+        .delete('/api/admin/feedback/507f1f77bcf86cd799439011');
+      expect(response.status).toBe(401);
+    });
+
+    it('authenticated non-admin users get 403', async () => {
+      const testUser = await createTestUser();
+      try {
+        const response = await requestApi
+          .delete('/api/admin/feedback/507f1f77bcf86cd799439011')
+          .set('Authorization', `Bearer ${testUser.token}`);
+        expect(response.status).toBe(403);
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
+    it('returns 404 for a non-existent feedback id', async () => {
+      const admin = await createTestAdmin();
+      try {
+        const response = await requestApi
+          .delete('/api/admin/feedback/507f1f77bcf86cd799439011')
+          .set('Authorization', `Bearer ${admin.token}`);
+        expect(response.status).toBe(404);
+      }
+      finally {
+        await deleteTestUser(admin);
+      }
+    });
+
+    it('admin can delete feedback', async () => {
+      const admin = await createTestAdmin();
+      try {
+        const submitResponse = await requestApi
+          .post('/api/feedback')
+          .set('x-test-bypass-secret', testBypassSecret!)
+          .send({ email: 'delete-test@example.com', kind: 'bug', message: 'Delete test feedback' });
+        const feedbackId = submitResponse.body.data._id;
+
+        const deleteResponse = await requestApi
+          .delete(`/api/admin/feedback/${feedbackId}`)
+          .set('Authorization', `Bearer ${admin.token}`);
+        expect(deleteResponse.status).toBe(200);
+        expect(deleteResponse.body.data).toBe(1);
+
+        const secondDeleteResponse = await requestApi
+          .delete(`/api/admin/feedback/${feedbackId}`)
+          .set('Authorization', `Bearer ${admin.token}`);
+        expect(secondDeleteResponse.status).toBe(404);
+      }
+      finally {
+        await deleteTestUser(admin);
       }
     });
   });

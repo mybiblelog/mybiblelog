@@ -5,8 +5,40 @@
         Admin Feedback Review
       </h1>
 
+      <div class="mbl-tabs">
+        <ul>
+          <li>
+            <a
+              href="#"
+              :class="{ 'router-link-exact-active': view === 'open' }"
+              @click.prevent="setView('open')"
+            >
+              Open
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              :class="{ 'router-link-exact-active': view === 'resolved' }"
+              @click.prevent="setView('resolved')"
+            >
+              Resolved
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              :class="{ 'router-link-exact-active': view === 'archived' }"
+              @click.prevent="setView('archived')"
+            >
+              Archived
+            </a>
+          </li>
+        </ul>
+      </div>
+
       <div v-if="!feedbacks.length && !loading">
-        <p>There are no feedbacks.</p>
+        <p>{{ emptyMessage }}</p>
       </div>
 
       <template v-else>
@@ -63,7 +95,9 @@
               {{ feedback.message }}
             </div>
             <div class="feedback-card__email mbl-text-small">
-              <button v-if="feedback.owner" class="feedback-card__email-button" type="button" @click="openUserFromFeedback(feedback)">{{ feedback.email }}</button>
+              <button v-if="feedback.owner" class="feedback-card__email-button" type="button" @click="openUserFromFeedback(feedback)">
+                {{ feedback.email }}
+              </button>
               <span v-else class="feedback-card__email-text">{{ feedback.email }}</span>
               <span class="feedback-badge" :class="feedback.owner ? 'feedback-badge--user' : 'feedback-badge--guest'">
                 {{ feedback.owner ? 'user' : 'guest' }}
@@ -72,12 +106,62 @@
             <div class="feedback-card__ip mbl-text-small mbl-text-muted">
               {{ feedback.ip }}
             </div>
+            <div class="feedback-card__actions">
+              <template v-if="feedback.status === 'open'">
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  @click="setStatus(feedback, 'resolved')"
+                >
+                  Resolve
+                </button>
+              </template>
+              <template v-else-if="feedback.status === 'resolved'">
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  @click="setStatus(feedback, 'open')"
+                >
+                  Reopen
+                </button>
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  @click="setStatus(feedback, 'archived')"
+                >
+                  Archive
+                </button>
+              </template>
+              <template v-else>
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  @click="setStatus(feedback, 'open')"
+                >
+                  Reopen
+                </button>
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  @click="setStatus(feedback, 'resolved')"
+                >
+                  Unarchive
+                </button>
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--danger"
+                  type="button"
+                  @click="deleteFeedback(feedback)"
+                >
+                  Delete
+                </button>
+              </template>
+            </div>
           </div>
         </div>
       </template>
     </div>
 
-    <AdminUserDetailModal
+    <admin-user-detail-modal
       :user="selectedUser"
       :open="!!selectedUser"
       :allow-delete="false"
@@ -87,14 +171,18 @@
 </template>
 
 <script setup lang="ts">
+import dayjs from 'dayjs';
 import AdminUserDetailModal from '~/components/admin/AdminUserDetailModal.vue';
 import CaretLeftIcon from '~/components/svg/CaretLeftIcon.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
+import { useDialogStore } from '~/stores/dialog';
 
 definePageMeta({ middleware: ['auth'], auth: 'admin' });
 useHead({ meta: [{ name: 'robots', content: 'noindex' }] });
 
 const PAGE_LIMIT = 10;
+
+type FeedbackStatus = 'open' | 'resolved' | 'archived';
 
 interface Feedback {
   _id: string;
@@ -104,6 +192,7 @@ interface Feedback {
   email: string;
   owner?: string;
   ip?: string;
+  status: FeedbackStatus;
 }
 
 interface Pagination {
@@ -114,7 +203,9 @@ interface Pagination {
 }
 
 const { $http } = useNuxtApp();
+const dialogStore = useDialogStore();
 
+const view = ref<FeedbackStatus>('open');
 const feedbacks = ref<Feedback[]>([]);
 const loading = ref(false);
 const pagination = ref<Pagination>({ page: 1, limit: PAGE_LIMIT, size: 0, totalPages: 1 });
@@ -130,15 +221,14 @@ const resultsSummary = computed(() => {
   const last = Math.min(first + feedbacks.value.length - 1, size);
   return `Showing ${first}–${last} of ${size}`;
 });
+const emptyMessage = computed(() => {
+  if (view.value === 'resolved') { return 'There is no resolved feedback.'; }
+  if (view.value === 'archived') { return 'There is no archived feedback.'; }
+  return 'There is no open feedback.';
+});
 
 function formatDateTime(dateStr: string) {
-  return new Date(dateStr).toLocaleString('en', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  return dayjs(dateStr).format('YYYY-MM-DD hh:mm a');
 }
 
 function feedbackKindClass(kind: string) {
@@ -153,7 +243,17 @@ async function loadFeedbacks() {
   loading.value = true;
   try {
     const offset = (page.value - 1) * PAGE_LIMIT;
-    const { data, meta } = await $http.get(`/api/admin/feedback?offset=${offset}&limit=${PAGE_LIMIT}`);
+    const url = `/api/admin/feedback?offset=${offset}&limit=${PAGE_LIMIT}&status=${view.value}`;
+    const { data, meta } = await $http.get<{
+      data: Feedback[];
+      meta: {
+        pagination: {
+          offset: number;
+          limit: number;
+          size: number;
+        }
+      }
+    }>(url);
     feedbacks.value = data;
     const p = (meta && meta.pagination) || {};
     const limit = Number(p.limit || PAGE_LIMIT);
@@ -182,12 +282,44 @@ function closeUserDetails() {
   selectedUser.value = null;
 }
 
+function setView(newView: FeedbackStatus) {
+  if (view.value === newView) { return; }
+  view.value = newView;
+  pagination.value = { ...pagination.value, page: 1 };
+  loadFeedbacks();
+}
+
 function onPageChanged(newPage: number) {
   const clamped = Math.min(Math.max(newPage, 1), totalPages.value);
   if (clamped === page.value) { return; }
   pagination.value = { ...pagination.value, page: clamped };
   loadFeedbacks();
   window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function setStatus(feedback: Feedback, status: FeedbackStatus) {
+  try {
+    await $http.put(`/api/admin/feedback/${feedback._id}`, { status });
+    await loadFeedbacks();
+  }
+  catch {
+    await dialogStore.alert({ message: 'Unable to update feedback.' });
+  }
+}
+
+async function deleteFeedback(feedback: Feedback) {
+  const confirmed = await dialogStore.confirm({
+    message: 'Are you sure you want to permanently delete this feedback? This action cannot be undone.',
+    confirmButtonType: 'danger',
+  });
+  if (!confirmed) { return; }
+  try {
+    await $http.delete(`/api/admin/feedback/${feedback._id}`);
+    await loadFeedbacks();
+  }
+  catch {
+    await dialogStore.alert({ message: 'Unable to delete feedback.' });
+  }
 }
 
 onMounted(() => { loadFeedbacks(); });
@@ -203,6 +335,7 @@ onMounted(() => { loadFeedbacks(); });
   margin-left: -0.5rem;
   margin-right: -0.5rem;
   border-bottom: 1px solid var(--mbl-border-soft);
+  margin-bottom: 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -274,6 +407,14 @@ onMounted(() => { loadFeedbacks(); });
 .feedback-card__ip {
   text-align: right;
   align-self: center;
+}
+
+.feedback-card__actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
 }
 
 .feedback-badge {

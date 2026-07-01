@@ -323,6 +323,7 @@ export default {
   padding: 0.5rem 1rem;
   margin-left: -0.5rem;
   margin-right: -0.5rem;
+  margin-bottom: 1rem;
   border-bottom: 1px solid var(--mbl-border-soft);
   display: flex;
   align-items: center;

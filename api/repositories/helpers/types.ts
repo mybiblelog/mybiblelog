@@ -177,11 +177,8 @@ export interface DailyReminderPatch {
   active?: boolean;
 }
 
-/**
- * Matches the default Mongoose toJSON shape (`_id`, `owner`, `__v`, timestamps)
- * because the feedback endpoints have always returned documents serialized
- * that way and tests pin the shape.
- */
+export type FeedbackStatus = 'open' | 'resolved' | 'archived';
+
 export interface FeedbackRecord {
   _id: string;
   ip: string;
@@ -189,9 +186,9 @@ export interface FeedbackRecord {
   email: string;
   kind: string;
   message: string;
+  status: FeedbackStatus;
   createdAt: Date;
   updatedAt: Date;
-  __v?: number;
 }
 
 export interface FeedbackCreateInput {
@@ -200,6 +197,10 @@ export interface FeedbackCreateInput {
   email: string;
   kind: string;
   message: string;
+}
+
+export interface FeedbackPatch {
+  status: FeedbackStatus;
 }
 
 export type EmailStatus = 'pending' | 'sent' | 'failed' | 'log_only';

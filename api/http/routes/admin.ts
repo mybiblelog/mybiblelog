@@ -4,6 +4,8 @@ import {
   adminEmailParam,
   adminUserListQuerySchema,
   adminFeedbackListQuerySchema,
+  adminFeedbackIdParam,
+  adminFeedbackPatchSchema,
   adminUserSchema,
   adminUserSummarySchema,
   adminUserStatsSchema,
@@ -12,6 +14,8 @@ import {
 import { feedbackSchema } from '../../validation/schemas/feedback';
 import {
   listFeedback,
+  updateFeedback,
+  deleteFeedback,
   getUserEngagementPastWeek,
   listUsers,
   getUser,
@@ -35,11 +39,35 @@ export const adminRoutes: RouteDefinition[] = [
     path: '/admin/feedback',
     handler: listFeedback,
     docs: {
-      summary: 'Get all feedback submissions',
+      summary: 'Get feedback submissions by status (open by default)',
       tags,
       request: { query: adminFeedbackListQuerySchema },
       response: { description: 'List of feedback submissions', schema: z.array(feedbackSchema) },
       errors: [401, 403],
+    },
+  },
+  {
+    method: 'PUT',
+    path: '/admin/feedback/:id',
+    handler: updateFeedback,
+    docs: {
+      summary: 'Update a feedback submission\'s status',
+      tags,
+      request: { params: adminFeedbackIdParam, body: adminFeedbackPatchSchema },
+      response: { description: 'The updated feedback record', schema: feedbackSchema },
+      errors: [400, 401, 403, 404],
+    },
+  },
+  {
+    method: 'DELETE',
+    path: '/admin/feedback/:id',
+    handler: deleteFeedback,
+    docs: {
+      summary: 'Delete a feedback submission',
+      tags,
+      request: { params: adminFeedbackIdParam },
+      response: { description: 'Number of deleted feedback submissions (1)', schema: z.number() },
+      errors: [401, 403, 404],
     },
   },
   {

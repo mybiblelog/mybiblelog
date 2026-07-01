@@ -5,8 +5,40 @@
         Admin Feedback Review
       </h1>
 
+      <div class="mbl-tabs">
+        <ul>
+          <li>
+            <a
+              href="#"
+              :class="{ 'router-link-exact-active': view === 'open' }"
+              @click.prevent="setView('open')"
+            >
+              Open
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              :class="{ 'router-link-exact-active': view === 'resolved' }"
+              @click.prevent="setView('resolved')"
+            >
+              Resolved
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              :class="{ 'router-link-exact-active': view === 'archived' }"
+              @click.prevent="setView('archived')"
+            >
+              Archived
+            </a>
+          </li>
+        </ul>
+      </div>
+
       <div v-if="!feedbacks.length && !loading">
-        <p>There are no feedbacks.</p>
+        <p>{{ emptyMessage }}</p>
       </div>
 
       <template v-else>
@@ -70,7 +102,9 @@
               {{ feedback.message }}
             </div>
             <div class="feedback-card__email mbl-text-small">
-              <button v-if="feedback.owner" class="feedback-card__email-button" type="button" @click="openUserFromFeedback(feedback)">{{ feedback.email }}</button>
+              <button v-if="feedback.owner" class="feedback-card__email-button" type="button" @click="openUserFromFeedback(feedback)">
+                {{ feedback.email }}
+              </button>
               <span v-else class="feedback-card__email-text">{{ feedback.email }}</span>
               <span class="feedback-badge" :class="feedback.owner ? 'feedback-badge--user' : 'feedback-badge--guest'">
                 {{ feedback.owner ? 'user' : 'guest' }}
@@ -78,6 +112,56 @@
             </div>
             <div class="feedback-card__ip mbl-text-small mbl-text-muted">
               {{ feedback.ip }}
+            </div>
+            <div class="feedback-card__actions">
+              <template v-if="feedback.status === 'open'">
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  @click="setStatus(feedback, 'resolved')"
+                >
+                  Resolve
+                </button>
+              </template>
+              <template v-else-if="feedback.status === 'resolved'">
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  @click="setStatus(feedback, 'open')"
+                >
+                  Reopen
+                </button>
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  @click="setStatus(feedback, 'archived')"
+                >
+                  Archive
+                </button>
+              </template>
+              <template v-else>
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  @click="setStatus(feedback, 'open')"
+                >
+                  Reopen
+                </button>
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--light"
+                  type="button"
+                  @click="setStatus(feedback, 'resolved')"
+                >
+                  Unarchive
+                </button>
+                <button
+                  class="mbl-button mbl-button--sm mbl-button--danger"
+                  type="button"
+                  @click="deleteFeedback(feedback)"
+                >
+                  Delete
+                </button>
+              </template>
             </div>
           </div>
         </div>
@@ -98,6 +182,7 @@ import dayjs from 'dayjs';
 import AdminUserDetailModal from '@/components/admin/AdminUserDetailModal';
 import CaretLeftIcon from '@/components/svg/CaretLeftIcon';
 import CaretRightIcon from '@/components/svg/CaretRightIcon';
+import { useDialogStore } from '~/stores/dialog';
 
 const PAGE_LIMIT = 10;
 
@@ -114,6 +199,7 @@ export default {
   },
   data() {
     return {
+      view: 'open',
       feedbacks: [],
       loading: false,
       pagination: { page: 1, limit: PAGE_LIMIT, size: 0, totalPages: 1 },
@@ -135,6 +221,11 @@ export default {
       const last = Math.min(first + this.feedbacks.length - 1, size);
       return `Showing ${first}–${last} of ${size}`;
     },
+    emptyMessage() {
+      if (this.view === 'resolved') { return 'There is no resolved feedback.'; }
+      if (this.view === 'archived') { return 'There is no archived feedback.'; }
+      return 'There is no open feedback.';
+    },
   },
   mounted() {
     this.loadFeedbacks();
@@ -145,7 +236,8 @@ export default {
       this.loading = true;
       try {
         const offset = (this.pagerPage - 1) * PAGE_LIMIT;
-        const { data: feedbacks, meta } = await this.$http.get(`/api/admin/feedback?offset=${offset}&limit=${PAGE_LIMIT}`);
+        const url = `/api/admin/feedback?offset=${offset}&limit=${PAGE_LIMIT}&status=${this.view}`;
+        const { data: feedbacks, meta } = await this.$http.get(url);
         this.feedbacks = feedbacks;
         const p = (meta && meta.pagination) || {};
         const limit = Number(p.limit || PAGE_LIMIT);
@@ -178,12 +270,43 @@ export default {
     closeUserDetails() {
       this.selectedUser = null;
     },
+    setView(newView) {
+      if (this.view === newView) { return; }
+      this.view = newView;
+      this.pagination = { ...this.pagination, page: 1 };
+      this.loadFeedbacks();
+    },
     onPageChanged(newPage) {
       const clamped = Math.min(Math.max(Number(newPage || 1), 1), this.pagerTotalPages);
       if (clamped === this.pagerPage) { return; }
       this.pagination = { ...this.pagination, page: clamped };
       this.loadFeedbacks();
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    async setStatus(feedback, status) {
+      const dialogStore = useDialogStore();
+      try {
+        await this.$http.put(`/api/admin/feedback/${feedback._id}`, { status });
+        await this.loadFeedbacks();
+      }
+      catch {
+        await dialogStore.alert({ message: 'Unable to update feedback.' });
+      }
+    },
+    async deleteFeedback(feedback) {
+      const dialogStore = useDialogStore();
+      const confirmed = await dialogStore.confirm({
+        message: 'Are you sure you want to permanently delete this feedback? This action cannot be undone.',
+        confirmButtonType: 'danger',
+      });
+      if (!confirmed) { return; }
+      try {
+        await this.$http.delete(`/api/admin/feedback/${feedback._id}`);
+        await this.loadFeedbacks();
+      }
+      catch {
+        await dialogStore.alert({ message: 'Unable to delete feedback.' });
+      }
     },
   },
 };
@@ -199,6 +322,7 @@ export default {
   margin-left: -0.5rem;
   margin-right: -0.5rem;
   border-bottom: 1px solid var(--mbl-border-soft);
+  margin-bottom: 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -270,6 +394,14 @@ export default {
 .feedback-card__ip {
   text-align: right;
   align-self: center;
+}
+
+.feedback-card__actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
 }
 
 .feedback-badge {

@@ -1,5 +1,6 @@
 import { validate } from '../../validation/validate';
 import { feedbackBodySchema } from '../../validation/schemas/feedback';
+import { shouldNotifyAdminsOfFeedback } from '../helpers/shouldNotifyAdminsOfFeedback';
 import { type RouteHandler } from '../types';
 
 /**
@@ -24,6 +25,8 @@ export const submitFeedback: RouteHandler = async (req, deps) => {
 
   const { body } = validate(req, { body: feedbackBodySchema });
 
+  const previousMostRecentCreatedAt = await deps.repositories.feedback.findMostRecentCreatedAt();
+
   const feedback = await deps.repositories.feedback.create({
     ip,
     ownerId,
@@ -31,6 +34,17 @@ export const submitFeedback: RouteHandler = async (req, deps) => {
     kind: body.kind,
     message: body.message,
   });
+
+  if (shouldNotifyAdminsOfFeedback(previousMostRecentCreatedAt, new Date())) {
+    const adminEmails = await deps.repositories.users.listAdminEmails();
+    for (const adminEmail of adminEmails) {
+      deps.emailService.queueNewFeedbackNotification(adminEmail, {
+        kind: feedback.kind,
+        email: feedback.email,
+        message: feedback.message,
+      });
+    }
+  }
 
   return { status: 201, body: { data: feedback } };
 };

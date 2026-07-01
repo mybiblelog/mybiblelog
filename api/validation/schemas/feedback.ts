@@ -20,6 +20,7 @@ export const feedbackSchema = z.object({
   email: z.string(),
   kind: z.string(),
   message: z.string(),
+  status: z.enum(['open', 'resolved', 'archived']),
   createdAt: z.string().describe('ISO 8601 timestamp'),
   updatedAt: z.string().describe('ISO 8601 timestamp'),
 });

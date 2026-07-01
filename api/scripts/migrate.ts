@@ -13,6 +13,7 @@ const main = async (): Promise<void> => {
   // the untyped collection shape rather than the current document interfaces.
   const users = collections.users as unknown as Collection<Document>;
   const dailyReminders = collections.dailyReminders as unknown as Collection<Document>;
+  const feedback = collections.feedback as unknown as Collection<Document>;
 
   // users without a locale need 'en' locale (original default)
   const usersWithoutLocale = await users.find({ 'settings.locale': { $exists: false } }).toArray();
@@ -95,6 +96,28 @@ const main = async (): Promise<void> => {
       { $rename: { unsubscribeCode: 'publicToken' } },
     );
     console.log(`DailyReminder rename complete (matched ${result.matchedCount}, modified ${result.modifiedCount}).`);
+  }
+
+  // Feedback: resolved/archived booleans replaced by a single `status` enum ('open' | 'resolved' | 'archived')
+  const feedbackNeedingStatus = await feedback.find({ status: { $exists: false } }).toArray();
+  for (const item of feedbackNeedingStatus) {
+    const status = item.archived ? 'archived' : item.resolved ? 'resolved' : 'open';
+    console.log(`Migrating feedback ${item._id} to status: '${status}'...`);
+    await feedback.updateOne(
+      { _id: item._id },
+      { $set: { status }, $unset: { resolved: '', archived: '' } },
+    );
+  }
+
+  // Feedback: __v (Mongoose version key) is no longer written or returned; strip it from existing documents
+  const feedbackWithVersionKey = await feedback.countDocuments({ __v: { $exists: true } });
+  if (feedbackWithVersionKey === 0) {
+    console.log('Feedback __v removal: already migrated (no documents with __v).');
+  }
+  else {
+    console.log(`Feedback: removing __v from ${feedbackWithVersionKey} document(s)...`);
+    const result = await feedback.updateMany({}, { $unset: { __v: '' } });
+    console.log(`Feedback __v removal complete (matched ${result.matchedCount}, modified ${result.modifiedCount}).`);
   }
 
   // close connection
