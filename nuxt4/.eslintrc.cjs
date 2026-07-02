@@ -109,4 +109,14 @@ module.exports = {
     // promises (used in store tests to fire-and-forget a save).
     'no-void': ['error', { allowAsStatement: true }],
   },
+  overrides: [
+    {
+      // Build/CLI tooling (i18n import/export/verify): console is the output
+      // mechanism, so scope the rule off rather than suppressing every line.
+      files: ['scripts/**'],
+      rules: {
+        'no-console': 'off',
+      },
+    },
+  ],
 };

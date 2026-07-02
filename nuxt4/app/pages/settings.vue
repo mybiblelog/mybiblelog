@@ -88,13 +88,76 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
 
 <i18n lang="json">
 {
-  "en": { "settings": "Settings", "menu": "Menu", "account": "Account", "start_page": "Start Page", "reading": "Reading", "reminder": "Reminder", "export": "Export", "import": "Import" },
-  "de": { "settings": "Einstellungen", "menu": "Menü", "account": "Konto", "start_page": "Startseite", "reading": "Lesen", "reminder": "Erinnerung", "export": "Exportieren", "import": "Importieren" },
-  "es": { "settings": "Configuración", "menu": "Menú", "account": "Cuenta", "start_page": "Página de inicio", "reading": "Lectura", "reminder": "Recordatorio", "export": "Exportar", "import": "Importar" },
-  "fr": { "settings": "Paramètres", "menu": "Menu", "account": "Compte", "start_page": "Page de démarrage", "reading": "Lecture", "reminder": "Rappel", "export": "Exporter", "import": "Importer" },
-  "ko": { "settings": "설정", "menu": "메뉴", "account": "계정", "start_page": "시작 페이지", "reading": "읽기", "reminder": "알림", "export": "내보내기", "import": "불러오기" },
-  "pt": { "settings": "Configurações", "menu": "Menu", "account": "Conta", "start_page": "Página de início", "reading": "Leitura", "reminder": "Lembrete", "export": "Exportar", "import": "Importar" },
-  "uk": { "settings": "Налаштування", "menu": "Меню", "account": "Обліковий запис", "start_page": "Стартова сторінка", "reading": "Читання", "reminder": "Нагадування", "export": "Експорт", "import": "Імпорт" }
+  "en": {
+    "settings": "Settings",
+    "menu": "Menu",
+    "account": "Account",
+    "start_page": "Start Page",
+    "reading": "Reading",
+    "reminder": "Reminder",
+    "export": "Export",
+    "import": "Import"
+  },
+  "de": {
+    "settings": "Einstellungen",
+    "menu": "Menü",
+    "account": "Konto",
+    "start_page": "Startseite",
+    "reading": "Lesen",
+    "reminder": "Erinnerung",
+    "export": "Exportieren",
+    "import": "Importieren"
+  },
+  "es": {
+    "settings": "Configuración",
+    "menu": "Menú",
+    "account": "Cuenta",
+    "start_page": "Página de inicio",
+    "reading": "Lectura",
+    "reminder": "Recordatorio",
+    "export": "Exportar",
+    "import": "Importar"
+  },
+  "fr": {
+    "settings": "Paramètres",
+    "menu": "Menu",
+    "account": "Compte",
+    "start_page": "Page de démarrage",
+    "reading": "Lecture",
+    "reminder": "Rappel",
+    "export": "Exporter",
+    "import": "Importer"
+  },
+  "ko": {
+    "settings": "설정",
+    "menu": "메뉴",
+    "account": "계정",
+    "start_page": "시작 페이지",
+    "reading": "읽기",
+    "reminder": "알림",
+    "export": "내보내기",
+    "import": "불러오기"
+  },
+  "pt": {
+    "settings": "Configurações",
+    "menu": "Menu",
+    "account": "Conta",
+    "start_page": "Página de início",
+    "reading": "Leitura",
+    "reminder": "Lembrete",
+    "export": "Exportar",
+    "import": "Importar"
+  },
+  "uk": {
+    "settings": "Налаштування",
+    "menu": "Меню",
+    "account": "Обліковий запис",
+    "start_page": "Стартова сторінка",
+    "reading": "Читання",
+    "reminder": "Нагадування",
+    "export": "Експорт",
+    "import": "Імпорт"
+  }
 }
 </i18n>
 

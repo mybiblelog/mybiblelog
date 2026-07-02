@@ -95,12 +95,82 @@ function closeGetStartedModal() {
 
 <i18n lang="json">
 {
-  "en": { "start_page": { "save_and_continue": "Save and Continue", "save_and_finish": "Save and Finish", "back": "Back", "welcome": { "title": "Welcome to your new My Bible Log account!", "button": "Personalize My Settings" } } },
-  "de": { "start_page": { "save_and_continue": "Speichern und Fortfahren", "save_and_finish": "Speichern und Fertigstellen", "back": "Zurück", "welcome": { "title": "Willkommen in Ihrem neuen My Bible Log-Konto!", "button": "Meine Einstellungen personalisieren" } } },
-  "es": { "start_page": { "save_and_continue": "Guardar y Continuar", "save_and_finish": "Guardar y Finalizar", "back": "Atrás", "welcome": { "title": "¡Bienvenido a tu nueva cuenta de My Bible Log!", "button": "Personalizar Mi Configuración" } } },
-  "fr": { "start_page": { "save_and_continue": "Enregistrer et Continuer", "save_and_finish": "Enregistrer et Finir", "back": "Retour", "welcome": { "title": "Bienvenue dans votre nouveau compte My Bible Log !", "button": "Personnaliser Mes Paramètres" } } },
-  "ko": { "start_page": { "save_and_continue": "저장 및 계속", "save_and_finish": "저장 및 완료", "back": "뒤로", "welcome": { "title": "My Bible Log 계정에 오신 것을 환영합니다!", "button": "내 설정 개인화" } } },
-  "pt": { "start_page": { "save_and_continue": "Salvar e Continuar", "save_and_finish": "Salvar e Finalizar", "back": "Voltar", "welcome": { "title": "Bem-vindo à sua nova conta My Bible Log!", "button": "Personalizar Minhas Configurações" } } },
-  "uk": { "start_page": { "save_and_continue": "Зберегти та Продовжити", "save_and_finish": "Зберегти та Завершити", "back": "Назад", "welcome": { "title": "Ласкаво просимо до вашого нового облікового запису My Bible Log!", "button": "Персоналізувати Мої Налаштування" } } }
+  "en": {
+    "start_page": {
+      "save_and_continue": "Save and Continue",
+      "save_and_finish": "Save and Finish",
+      "back": "Back",
+      "welcome": {
+        "title": "Welcome to your new My Bible Log account!",
+        "button": "Personalize My Settings"
+      }
+    }
+  },
+  "de": {
+    "start_page": {
+      "save_and_continue": "Speichern und Fortfahren",
+      "save_and_finish": "Speichern und Fertigstellen",
+      "back": "Zurück",
+      "welcome": {
+        "title": "Willkommen in Ihrem neuen My Bible Log-Konto!",
+        "button": "Meine Einstellungen personalisieren"
+      }
+    }
+  },
+  "es": {
+    "start_page": {
+      "save_and_continue": "Guardar y Continuar",
+      "save_and_finish": "Guardar y Finalizar",
+      "back": "Atrás",
+      "welcome": {
+        "title": "¡Bienvenido a tu nueva cuenta de My Bible Log!",
+        "button": "Personalizar Mi Configuración"
+      }
+    }
+  },
+  "fr": {
+    "start_page": {
+      "save_and_continue": "Enregistrer et Continuer",
+      "save_and_finish": "Enregistrer et Finir",
+      "back": "Retour",
+      "welcome": {
+        "title": "Bienvenue dans votre nouveau compte My Bible Log !",
+        "button": "Personnaliser Mes Paramètres"
+      }
+    }
+  },
+  "ko": {
+    "start_page": {
+      "save_and_continue": "저장 및 계속",
+      "save_and_finish": "저장 및 완료",
+      "back": "뒤로",
+      "welcome": {
+        "title": "My Bible Log 계정에 오신 것을 환영합니다!",
+        "button": "내 설정 개인화"
+      }
+    }
+  },
+  "pt": {
+    "start_page": {
+      "save_and_continue": "Salvar e Continuar",
+      "save_and_finish": "Salvar e Finalizar",
+      "back": "Voltar",
+      "welcome": {
+        "title": "Bem-vindo à sua nova conta My Bible Log!",
+        "button": "Personalizar Minhas Configurações"
+      }
+    }
+  },
+  "uk": {
+    "start_page": {
+      "save_and_continue": "Зберегти та Продовжити",
+      "save_and_finish": "Зберегти та Завершити",
+      "back": "Назад",
+      "welcome": {
+        "title": "Ласкаво просимо до вашого нового облікового запису My Bible Log!",
+        "button": "Персоналізувати Мої Налаштування"
+      }
+    }
+  }
 }
 </i18n>

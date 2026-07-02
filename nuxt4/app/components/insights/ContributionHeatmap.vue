@@ -260,12 +260,40 @@ function hideTooltip(): void {
 
 <i18n lang="json">
 {
-  "en": { "less": "Less", "more": "More", "verses_read": "{count} verse read | {count} verses read" },
-  "de": { "less": "Weniger", "more": "Mehr", "verses_read": "{count} Vers gelesen | {count} Verse gelesen" },
-  "es": { "less": "Menos", "more": "Más", "verses_read": "{count} versículo leído | {count} versículos leídos" },
-  "fr": { "less": "Moins", "more": "Plus", "verses_read": "{count} verset lu | {count} versets lus" },
-  "ko": { "less": "적음", "more": "많음", "verses_read": "{count}개 구절 읽음" },
-  "pt": { "less": "Menos", "more": "Mais", "verses_read": "{count} versículo lido | {count} versículos lidos" },
-  "uk": { "less": "Менше", "more": "Більше", "verses_read": "{count} вірш прочитано | {count} віршів прочитано" }
+  "en": {
+    "less": "Less",
+    "more": "More",
+    "verses_read": "{count} verse read | {count} verses read"
+  },
+  "de": {
+    "less": "Weniger",
+    "more": "Mehr",
+    "verses_read": "{count} Vers gelesen | {count} Verse gelesen"
+  },
+  "es": {
+    "less": "Menos",
+    "more": "Más",
+    "verses_read": "{count} versículo leído | {count} versículos leídos"
+  },
+  "fr": {
+    "less": "Moins",
+    "more": "Plus",
+    "verses_read": "{count} verset lu | {count} versets lus"
+  },
+  "ko": {
+    "less": "적음",
+    "more": "많음",
+    "verses_read": "{count}개 구절 읽음"
+  },
+  "pt": {
+    "less": "Menos",
+    "more": "Mais",
+    "verses_read": "{count} versículo lido | {count} versículos lidos"
+  },
+  "uk": {
+    "less": "Менше",
+    "more": "Більше",
+    "verses_read": "{count} вірш прочитано | {count} віршів прочитано"
+  }
 }
 </i18n>

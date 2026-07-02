@@ -107,12 +107,40 @@ const displayVerseCountMessage = (passage: Passage) => {
 
 <i18n lang="json">
 {
-  "en": { "verse": "verse | verses", "all": "all | all", "new": "new | new" },
-  "de": { "verse": "Vers | Verse", "all": "alle | alle", "new": "neu | neu" },
-  "es": { "verse": "versículo | versículos", "all": "todo | todos", "new": "nuevo | nuevos" },
-  "fr": { "verse": "verset | versets", "all": "tout | tout", "new": "nouveau | nouveau" },
-  "ko": { "verse": "절 | 절", "all": "전부 | 전부", "new": "새 분량 | 새 분량" },
-  "pt": { "verse": "versículo | versículos", "all": "todas | todas", "new": "novos | novos" },
-  "uk": { "verse": "верс | віршів", "all": "всі | всі", "new": "новий | нові" }
+  "en": {
+    "verse": "verse | verses",
+    "all": "all | all",
+    "new": "new | new"
+  },
+  "de": {
+    "verse": "Vers | Verse",
+    "all": "alle | alle",
+    "new": "neu | neu"
+  },
+  "es": {
+    "verse": "versículo | versículos",
+    "all": "todo | todos",
+    "new": "nuevo | nuevos"
+  },
+  "fr": {
+    "verse": "verset | versets",
+    "all": "tout | tout",
+    "new": "nouveau | nouveau"
+  },
+  "ko": {
+    "verse": "절 | 절",
+    "all": "전부 | 전부",
+    "new": "새 분량 | 새 분량"
+  },
+  "pt": {
+    "verse": "versículo | versículos",
+    "all": "todas | todas",
+    "new": "novos | novos"
+  },
+  "uk": {
+    "verse": "верс | віршів",
+    "all": "всі | всі",
+    "new": "новий | нові"
+  }
 }
 </i18n>

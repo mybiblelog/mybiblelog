@@ -44,12 +44,26 @@ function selectNext() {
 
 <i18n lang="json">
 {
-  "en": { "today": "Today" },
-  "de": { "today": "Heute" },
-  "es": { "today": "Hoy" },
-  "fr": { "today": "Aujourd'hui" },
-  "ko": { "today": "오늘" },
-  "pt": { "today": "Hoje" },
-  "uk": { "today": "Сьогодні" }
+  "en": {
+    "today": "Today"
+  },
+  "de": {
+    "today": "Heute"
+  },
+  "es": {
+    "today": "Hoy"
+  },
+  "fr": {
+    "today": "Aujourd'hui"
+  },
+  "ko": {
+    "today": "오늘"
+  },
+  "pt": {
+    "today": "Hoje"
+  },
+  "uk": {
+    "today": "Сьогодні"
+  }
 }
 </i18n>
