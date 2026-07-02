@@ -85,10 +85,18 @@ test.describe('Password reset', () => {
   test('user can reset their password via the emailed link', async ({ page }) => {
     const requestedAt = new Date();
 
-    // Request the reset from the login page UI.
+    // Request the reset from the login page UI. Interacting before hydration
+    // silently loses the fill (the reactive model stays empty and the API
+    // reports success for unknown emails), so gate on hydration first and
+    // assert the request actually carried the address.
     await page.goto('/login');
+    await waitForHydration(page);
     await page.getByRole('textbox', { name: 'Email' }).fill(user.email);
+    const resetRequestPromise = page.waitForRequest(
+      (request) => request.method() === 'POST' && request.url().includes('/api/auth/reset-password'),
+    );
     await page.getByRole('button', { name: 'Forgot your password? Reset it via email.' }).click();
+    expect((await resetRequestPromise).postDataJSON()).toMatchObject({ email: user.email });
     await expect(page.getByText('A password reset link has been sent to your email address.')).toBeVisible();
 
     // Recover the code from the emailed link and set a new password.
@@ -97,6 +105,7 @@ test.describe('Password reset', () => {
     const newPassword = generateRandomString(10);
 
     await page.goto(`/reset-password?code=${code}`);
+    await waitForHydration(page);
     await page.locator('input[name="newPassword"]').fill(newPassword);
     await page.locator('input[name="confirmNewPassword"]').fill(newPassword);
     await page.getByRole('button', { name: 'Submit' }).click();
