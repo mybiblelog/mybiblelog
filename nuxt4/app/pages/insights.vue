@@ -85,12 +85,61 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
 
 <i18n lang="json">
 {
-  "en": { "insights": "Insights", "menu": "Menu", "activity": "Activity", "books": "Books", "frequency": "Frequency", "trend": "Trend" },
-  "de": { "insights": "Einblicke", "menu": "Menü", "activity": "Aktivität", "books": "Bücher", "frequency": "Häufigkeit", "trend": "Verlauf" },
-  "es": { "insights": "Estadísticas", "menu": "Menú", "activity": "Actividad", "books": "Libros", "frequency": "Frecuencia", "trend": "Tendencia" },
-  "fr": { "insights": "Analyses", "menu": "Menu", "activity": "Activité", "books": "Livres", "frequency": "Fréquence", "trend": "Tendance" },
-  "ko": { "insights": "통계", "menu": "메뉴", "activity": "활동", "books": "책", "frequency": "빈도", "trend": "추세" },
-  "pt": { "insights": "Estatísticas", "menu": "Menu", "activity": "Atividade", "books": "Livros", "frequency": "Frequência", "trend": "Tendência" },
-  "uk": { "insights": "Аналітика", "menu": "Меню", "activity": "Активність", "books": "Книги", "frequency": "Частота", "trend": "Тренд" }
+  "en": {
+    "insights": "Insights",
+    "menu": "Menu",
+    "activity": "Activity",
+    "books": "Books",
+    "frequency": "Frequency",
+    "trend": "Trend"
+  },
+  "de": {
+    "insights": "Einblicke",
+    "menu": "Menü",
+    "activity": "Aktivität",
+    "books": "Bücher",
+    "frequency": "Häufigkeit",
+    "trend": "Verlauf"
+  },
+  "es": {
+    "insights": "Estadísticas",
+    "menu": "Menú",
+    "activity": "Actividad",
+    "books": "Libros",
+    "frequency": "Frecuencia",
+    "trend": "Tendencia"
+  },
+  "fr": {
+    "insights": "Analyses",
+    "menu": "Menu",
+    "activity": "Activité",
+    "books": "Livres",
+    "frequency": "Fréquence",
+    "trend": "Tendance"
+  },
+  "ko": {
+    "insights": "통계",
+    "menu": "메뉴",
+    "activity": "활동",
+    "books": "책",
+    "frequency": "빈도",
+    "trend": "추세"
+  },
+  "pt": {
+    "insights": "Estatísticas",
+    "menu": "Menu",
+    "activity": "Atividade",
+    "books": "Livros",
+    "frequency": "Frequência",
+    "trend": "Tendência"
+  },
+  "uk": {
+    "insights": "Аналітика",
+    "menu": "Меню",
+    "activity": "Активність",
+    "books": "Книги",
+    "frequency": "Частота",
+    "trend": "Тренд"
+  }
 }
 </i18n>

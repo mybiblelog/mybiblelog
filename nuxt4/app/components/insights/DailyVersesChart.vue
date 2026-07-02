@@ -167,12 +167,47 @@ const lastLabel = computed(() => {
 
 <i18n lang="json">
 {
-  "en": { "window": "Time window", "last_n_days": "Last {count} days", "chart_label": "Verses read per day", "verses_read": "{count} verse read | {count} verses read" },
-  "de": { "window": "Zeitfenster", "last_n_days": "Letzte {count} Tage", "chart_label": "Verse pro Tag gelesen", "verses_read": "{count} Vers gelesen | {count} Verse gelesen" },
-  "es": { "window": "Ventana de tiempo", "last_n_days": "Últimos {count} días", "chart_label": "Versículos leídos por día", "verses_read": "{count} versículo leído | {count} versículos leídos" },
-  "fr": { "window": "Fenêtre de temps", "last_n_days": "{count} derniers jours", "chart_label": "Versets lus par jour", "verses_read": "{count} verset lu | {count} versets lus" },
-  "ko": { "window": "기간", "last_n_days": "최근 {count}일", "chart_label": "하루에 읽은 구절", "verses_read": "{count}개 구절 읽음" },
-  "pt": { "window": "Janela de tempo", "last_n_days": "Últimos {count} dias", "chart_label": "Versículos lidos por dia", "verses_read": "{count} versículo lido | {count} versículos lidos" },
-  "uk": { "window": "Часовий проміжок", "last_n_days": "Останні {count} днів", "chart_label": "Віршів прочитано за день", "verses_read": "{count} вірш прочитано | {count} віршів прочитано" }
+  "en": {
+    "window": "Time window",
+    "last_n_days": "Last {count} days",
+    "chart_label": "Verses read per day",
+    "verses_read": "{count} verse read | {count} verses read"
+  },
+  "de": {
+    "window": "Zeitfenster",
+    "last_n_days": "Letzte {count} Tage",
+    "chart_label": "Verse pro Tag gelesen",
+    "verses_read": "{count} Vers gelesen | {count} Verse gelesen"
+  },
+  "es": {
+    "window": "Ventana de tiempo",
+    "last_n_days": "Últimos {count} días",
+    "chart_label": "Versículos leídos por día",
+    "verses_read": "{count} versículo leído | {count} versículos leídos"
+  },
+  "fr": {
+    "window": "Fenêtre de temps",
+    "last_n_days": "{count} derniers jours",
+    "chart_label": "Versets lus par jour",
+    "verses_read": "{count} verset lu | {count} versets lus"
+  },
+  "ko": {
+    "window": "기간",
+    "last_n_days": "최근 {count}일",
+    "chart_label": "하루에 읽은 구절",
+    "verses_read": "{count}개 구절 읽음"
+  },
+  "pt": {
+    "window": "Janela de tempo",
+    "last_n_days": "Últimos {count} dias",
+    "chart_label": "Versículos lidos por dia",
+    "verses_read": "{count} versículo lido | {count} versículos lidos"
+  },
+  "uk": {
+    "window": "Часовий проміжок",
+    "last_n_days": "Останні {count} днів",
+    "chart_label": "Віршів прочитано за день",
+    "verses_read": "{count} вірш прочитано | {count} віршів прочитано"
+  }
 }
 </i18n>

@@ -118,12 +118,75 @@ const rows = computed(() => {
 
 <i18n lang="json">
 {
-  "en": { "sort_by": "Sort by", "bible_order": "Bible order", "alphabetical": "Alphabetical", "most_recent": "Most recent", "least_recent": "Least recent", "book": "Book", "last_read": "Last read", "never": "Never read" },
-  "de": { "sort_by": "Sortieren nach", "bible_order": "Bibelreihenfolge", "alphabetical": "Alphabetisch", "most_recent": "Zuletzt gelesen", "least_recent": "Am längsten her", "book": "Buch", "last_read": "Zuletzt gelesen", "never": "Nie gelesen" },
-  "es": { "sort_by": "Ordenar por", "bible_order": "Orden bíblico", "alphabetical": "Alfabético", "most_recent": "Más reciente", "least_recent": "Menos reciente", "book": "Libro", "last_read": "Última lectura", "never": "Nunca leído" },
-  "fr": { "sort_by": "Trier par", "bible_order": "Ordre biblique", "alphabetical": "Alphabétique", "most_recent": "Plus récent", "least_recent": "Moins récent", "book": "Livre", "last_read": "Dernière lecture", "never": "Jamais lu" },
-  "ko": { "sort_by": "정렬 기준", "bible_order": "성경 순서", "alphabetical": "알파벳순", "most_recent": "최근 읽음", "least_recent": "오래전 읽음", "book": "책", "last_read": "마지막으로 읽음", "never": "읽지 않음" },
-  "pt": { "sort_by": "Ordenar por", "bible_order": "Ordem bíblica", "alphabetical": "Alfabético", "most_recent": "Mais recente", "least_recent": "Menos recente", "book": "Livro", "last_read": "Última leitura", "never": "Nunca lido" },
-  "uk": { "sort_by": "Сортувати за", "bible_order": "Біблійний порядок", "alphabetical": "За алфавітом", "most_recent": "Найновіші", "least_recent": "Найдавніші", "book": "Книга", "last_read": "Востаннє читали", "never": "Не читали" }
+  "en": {
+    "sort_by": "Sort by",
+    "bible_order": "Bible order",
+    "alphabetical": "Alphabetical",
+    "most_recent": "Most recent",
+    "least_recent": "Least recent",
+    "book": "Book",
+    "last_read": "Last read",
+    "never": "Never read"
+  },
+  "de": {
+    "sort_by": "Sortieren nach",
+    "bible_order": "Bibelreihenfolge",
+    "alphabetical": "Alphabetisch",
+    "most_recent": "Zuletzt gelesen",
+    "least_recent": "Am längsten her",
+    "book": "Buch",
+    "last_read": "Zuletzt gelesen",
+    "never": "Nie gelesen"
+  },
+  "es": {
+    "sort_by": "Ordenar por",
+    "bible_order": "Orden bíblico",
+    "alphabetical": "Alfabético",
+    "most_recent": "Más reciente",
+    "least_recent": "Menos reciente",
+    "book": "Libro",
+    "last_read": "Última lectura",
+    "never": "Nunca leído"
+  },
+  "fr": {
+    "sort_by": "Trier par",
+    "bible_order": "Ordre biblique",
+    "alphabetical": "Alphabétique",
+    "most_recent": "Plus récent",
+    "least_recent": "Moins récent",
+    "book": "Livre",
+    "last_read": "Dernière lecture",
+    "never": "Jamais lu"
+  },
+  "ko": {
+    "sort_by": "정렬 기준",
+    "bible_order": "성경 순서",
+    "alphabetical": "알파벳순",
+    "most_recent": "최근 읽음",
+    "least_recent": "오래전 읽음",
+    "book": "책",
+    "last_read": "마지막으로 읽음",
+    "never": "읽지 않음"
+  },
+  "pt": {
+    "sort_by": "Ordenar por",
+    "bible_order": "Ordem bíblica",
+    "alphabetical": "Alfabético",
+    "most_recent": "Mais recente",
+    "least_recent": "Menos recente",
+    "book": "Livro",
+    "last_read": "Última leitura",
+    "never": "Nunca lido"
+  },
+  "uk": {
+    "sort_by": "Сортувати за",
+    "bible_order": "Біблійний порядок",
+    "alphabetical": "За алфавітом",
+    "most_recent": "Найновіші",
+    "least_recent": "Найдавніші",
+    "book": "Книга",
+    "last_read": "Востаннє читали",
+    "never": "Не читали"
+  }
 }
 </i18n>

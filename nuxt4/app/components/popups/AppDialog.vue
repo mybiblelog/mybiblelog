@@ -95,12 +95,40 @@ const confirmButtonClass = computed(() => buttonTypeToClass(dialog.confirmButton
 
 <i18n lang="json">
 {
-  "en": { "ok": "OK", "confirm": "Confirm", "cancel": "Cancel" },
-  "de": { "ok": "OK", "confirm": "Bestätigen", "cancel": "Abbrechen" },
-  "es": { "ok": "OK", "confirm": "Confirmar", "cancel": "Cancelar" },
-  "fr": { "ok": "D'accord", "confirm": "Confirmer", "cancel": "Annuler" },
-  "ko": { "ok": "확인", "confirm": "확인", "cancel": "취소" },
-  "pt": { "ok": "OK", "confirm": "Confirmar", "cancel": "Cancelar" },
-  "uk": { "ok": "OK", "confirm": "Підтвердить", "cancel": "Скасувати" }
+  "en": {
+    "ok": "OK",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "de": {
+    "ok": "OK",
+    "confirm": "Bestätigen",
+    "cancel": "Abbrechen"
+  },
+  "es": {
+    "ok": "OK",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar"
+  },
+  "fr": {
+    "ok": "D'accord",
+    "confirm": "Confirmer",
+    "cancel": "Annuler"
+  },
+  "ko": {
+    "ok": "확인",
+    "confirm": "확인",
+    "cancel": "취소"
+  },
+  "pt": {
+    "ok": "OK",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar"
+  },
+  "uk": {
+    "ok": "OK",
+    "confirm": "Підтвердить",
+    "cancel": "Скасувати"
+  }
 }
 </i18n>

@@ -127,12 +127,26 @@ const { t } = useI18n();
 
 <i18n lang="json">
 {
-  "en": { "sign_in_with_google": "Sign in with Google" },
-  "de": { "sign_in_with_google": "Mit Google anmelden" },
-  "es": { "sign_in_with_google": "Iniciar sesión con Google" },
-  "fr": { "sign_in_with_google": "Connexion avec Google" },
-  "ko": { "sign_in_with_google": "Google 계정으로 로그인" },
-  "pt": { "sign_in_with_google": "Entrar com o Google" },
-  "uk": { "sign_in_with_google": "Увійти за допомогою Google" }
+  "en": {
+    "sign_in_with_google": "Sign in with Google"
+  },
+  "de": {
+    "sign_in_with_google": "Mit Google anmelden"
+  },
+  "es": {
+    "sign_in_with_google": "Iniciar sesión con Google"
+  },
+  "fr": {
+    "sign_in_with_google": "Connexion avec Google"
+  },
+  "ko": {
+    "sign_in_with_google": "Google 계정으로 로그인"
+  },
+  "pt": {
+    "sign_in_with_google": "Entrar com o Google"
+  },
+  "uk": {
+    "sign_in_with_google": "Увійти за допомогою Google"
+  }
 }
 </i18n>

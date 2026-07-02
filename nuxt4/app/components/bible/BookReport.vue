@@ -213,12 +213,33 @@ function viewReadingLogForChapter(bookIndex: number, chapterIndex: number) {
 
 <i18n lang="json">
 {
-  "en": { "book_notes": "Book Notes", "book_reading": "Book Reading" },
-  "de": { "book_notes": "Buch Notizen", "book_reading": "Buch Lesen" },
-  "es": { "book_notes": "Notas del libro", "book_reading": "Lectura del libro" },
-  "fr": { "book_notes": "Notes du livre", "book_reading": "Lecture du livre" },
-  "ko": { "book_notes": "권별 노트", "book_reading": "권별 기록" },
-  "pt": { "book_notes": "Notas do livro", "book_reading": "Leitura do livro" },
-  "uk": { "book_notes": "Нотатки книги", "book_reading": "Читання книги" }
+  "en": {
+    "book_notes": "Book Notes",
+    "book_reading": "Book Reading"
+  },
+  "de": {
+    "book_notes": "Buch Notizen",
+    "book_reading": "Buch Lesen"
+  },
+  "es": {
+    "book_notes": "Notas del libro",
+    "book_reading": "Lectura del libro"
+  },
+  "fr": {
+    "book_notes": "Notes du livre",
+    "book_reading": "Lecture du livre"
+  },
+  "ko": {
+    "book_notes": "권별 노트",
+    "book_reading": "권별 기록"
+  },
+  "pt": {
+    "book_notes": "Notas do livro",
+    "book_reading": "Leitura do livro"
+  },
+  "uk": {
+    "book_notes": "Нотатки книги",
+    "book_reading": "Читання книги"
+  }
 }
 </i18n>

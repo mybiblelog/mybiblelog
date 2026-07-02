@@ -103,12 +103,75 @@ async function handleEditorClose() {
 
 <i18n lang="json">
 {
-  "en": { "label": "Label", "color": "Color", "description": "Description", "save": "Save", "close": "Close", "edit_tag": "Edit Tag", "add_tag": "Add Tag", "unknown_error": "An unknown error occurred." },
-  "de": { "label": "Label", "color": "Farbe", "description": "Beschreibung", "save": "Speichern", "close": "Schließen", "edit_tag": "Tag bearbeiten", "add_tag": "Tag hinzufügen", "unknown_error": "Unbekannter Fehler." },
-  "es": { "label": "Etiqueta", "color": "Color", "description": "Descripción", "save": "Guardar", "close": "Cerrar", "edit_tag": "Editar etiqueta", "add_tag": "Nueva etiqueta", "unknown_error": "Error desconocido." },
-  "fr": { "label": "Étiquette", "color": "Couleur", "description": "Description", "save": "Enregistrer", "close": "Fermer", "edit_tag": "Éditer", "add_tag": "Ajouter", "unknown_error": "Erreur inconnue." },
-  "ko": { "label": "태그 이름", "color": "색상", "description": "설명", "save": "저장", "close": "닫기", "edit_tag": "편집", "add_tag": "추가", "unknown_error": "오류." },
-  "pt": { "label": "Nome", "color": "Cor", "description": "Descrição", "save": "Salvar", "close": "Fechar", "edit_tag": "Editar", "add_tag": "Adicionar", "unknown_error": "Erro desconhecido." },
-  "uk": { "label": "Мітка", "color": "Колір", "description": "Опис", "save": "Зберегти", "close": "Закрити", "edit_tag": "Редагувати", "add_tag": "Додати", "unknown_error": "Помилка." }
+  "en": {
+    "label": "Label",
+    "color": "Color",
+    "description": "Description",
+    "save": "Save",
+    "close": "Close",
+    "edit_tag": "Edit Tag",
+    "add_tag": "Add Tag",
+    "unknown_error": "An unknown error occurred."
+  },
+  "de": {
+    "label": "Label",
+    "color": "Farbe",
+    "description": "Beschreibung",
+    "save": "Speichern",
+    "close": "Schließen",
+    "edit_tag": "Tag bearbeiten",
+    "add_tag": "Tag hinzufügen",
+    "unknown_error": "Unbekannter Fehler."
+  },
+  "es": {
+    "label": "Etiqueta",
+    "color": "Color",
+    "description": "Descripción",
+    "save": "Guardar",
+    "close": "Cerrar",
+    "edit_tag": "Editar etiqueta",
+    "add_tag": "Nueva etiqueta",
+    "unknown_error": "Error desconocido."
+  },
+  "fr": {
+    "label": "Étiquette",
+    "color": "Couleur",
+    "description": "Description",
+    "save": "Enregistrer",
+    "close": "Fermer",
+    "edit_tag": "Éditer",
+    "add_tag": "Ajouter",
+    "unknown_error": "Erreur inconnue."
+  },
+  "ko": {
+    "label": "태그 이름",
+    "color": "색상",
+    "description": "설명",
+    "save": "저장",
+    "close": "닫기",
+    "edit_tag": "편집",
+    "add_tag": "추가",
+    "unknown_error": "오류."
+  },
+  "pt": {
+    "label": "Nome",
+    "color": "Cor",
+    "description": "Descrição",
+    "save": "Salvar",
+    "close": "Fechar",
+    "edit_tag": "Editar",
+    "add_tag": "Adicionar",
+    "unknown_error": "Erro desconhecido."
+  },
+  "uk": {
+    "label": "Мітка",
+    "color": "Колір",
+    "description": "Опис",
+    "save": "Зберегти",
+    "close": "Закрити",
+    "edit_tag": "Редагувати",
+    "add_tag": "Додати",
+    "unknown_error": "Помилка."
+  }
 }
 </i18n>

@@ -178,12 +178,89 @@ const rows = computed(() => {
 
 <i18n lang="json">
 {
-  "en": { "timeframe": "Timeframe", "metric": "Metric", "sort_by": "Sort by", "last_n_days": "Last {count} days", "raw_counts": "Verse counts", "proportional": "Proportional", "bible_order": "Bible order", "alphabetical": "Alphabetical", "most_read": "Most read", "least_read": "Least read" },
-  "de": { "timeframe": "Zeitraum", "metric": "Messwert", "sort_by": "Sortieren nach", "last_n_days": "Letzte {count} Tage", "raw_counts": "Verszahlen", "proportional": "Anteilig", "bible_order": "Bibelreihenfolge", "alphabetical": "Alphabetisch", "most_read": "Meist gelesen", "least_read": "Am wenigsten gelesen" },
-  "es": { "timeframe": "Período", "metric": "Métrica", "sort_by": "Ordenar por", "last_n_days": "Últimos {count} días", "raw_counts": "Recuento de versículos", "proportional": "Proporcional", "bible_order": "Orden bíblico", "alphabetical": "Alfabético", "most_read": "Más leídos", "least_read": "Menos leídos" },
-  "fr": { "timeframe": "Période", "metric": "Mesure", "sort_by": "Trier par", "last_n_days": "{count} derniers jours", "raw_counts": "Nombre de versets", "proportional": "Proportionnel", "bible_order": "Ordre biblique", "alphabetical": "Alphabétique", "most_read": "Plus lus", "least_read": "Moins lus" },
-  "ko": { "timeframe": "기간", "metric": "지표", "sort_by": "정렬 기준", "last_n_days": "최근 {count}일", "raw_counts": "구절 수", "proportional": "비율", "bible_order": "성경 순서", "alphabetical": "알파벳순", "most_read": "많이 읽음", "least_read": "적게 읽음" },
-  "pt": { "timeframe": "Período", "metric": "Métrica", "sort_by": "Ordenar por", "last_n_days": "Últimos {count} dias", "raw_counts": "Contagem de versículos", "proportional": "Proporcional", "bible_order": "Ordem bíblica", "alphabetical": "Alfabético", "most_read": "Mais lidos", "least_read": "Menos lidos" },
-  "uk": { "timeframe": "Період", "metric": "Показник", "sort_by": "Сортувати за", "last_n_days": "Останні {count} днів", "raw_counts": "Кількість віршів", "proportional": "Пропорційно", "bible_order": "Біблійний порядок", "alphabetical": "За алфавітом", "most_read": "Найбільше читали", "least_read": "Найменше читали" }
+  "en": {
+    "timeframe": "Timeframe",
+    "metric": "Metric",
+    "sort_by": "Sort by",
+    "last_n_days": "Last {count} days",
+    "raw_counts": "Verse counts",
+    "proportional": "Proportional",
+    "bible_order": "Bible order",
+    "alphabetical": "Alphabetical",
+    "most_read": "Most read",
+    "least_read": "Least read"
+  },
+  "de": {
+    "timeframe": "Zeitraum",
+    "metric": "Messwert",
+    "sort_by": "Sortieren nach",
+    "last_n_days": "Letzte {count} Tage",
+    "raw_counts": "Verszahlen",
+    "proportional": "Anteilig",
+    "bible_order": "Bibelreihenfolge",
+    "alphabetical": "Alphabetisch",
+    "most_read": "Meist gelesen",
+    "least_read": "Am wenigsten gelesen"
+  },
+  "es": {
+    "timeframe": "Período",
+    "metric": "Métrica",
+    "sort_by": "Ordenar por",
+    "last_n_days": "Últimos {count} días",
+    "raw_counts": "Recuento de versículos",
+    "proportional": "Proporcional",
+    "bible_order": "Orden bíblico",
+    "alphabetical": "Alfabético",
+    "most_read": "Más leídos",
+    "least_read": "Menos leídos"
+  },
+  "fr": {
+    "timeframe": "Période",
+    "metric": "Mesure",
+    "sort_by": "Trier par",
+    "last_n_days": "{count} derniers jours",
+    "raw_counts": "Nombre de versets",
+    "proportional": "Proportionnel",
+    "bible_order": "Ordre biblique",
+    "alphabetical": "Alphabétique",
+    "most_read": "Plus lus",
+    "least_read": "Moins lus"
+  },
+  "ko": {
+    "timeframe": "기간",
+    "metric": "지표",
+    "sort_by": "정렬 기준",
+    "last_n_days": "최근 {count}일",
+    "raw_counts": "구절 수",
+    "proportional": "비율",
+    "bible_order": "성경 순서",
+    "alphabetical": "알파벳순",
+    "most_read": "많이 읽음",
+    "least_read": "적게 읽음"
+  },
+  "pt": {
+    "timeframe": "Período",
+    "metric": "Métrica",
+    "sort_by": "Ordenar por",
+    "last_n_days": "Últimos {count} dias",
+    "raw_counts": "Contagem de versículos",
+    "proportional": "Proporcional",
+    "bible_order": "Ordem bíblica",
+    "alphabetical": "Alfabético",
+    "most_read": "Mais lidos",
+    "least_read": "Menos lidos"
+  },
+  "uk": {
+    "timeframe": "Період",
+    "metric": "Показник",
+    "sort_by": "Сортувати за",
+    "last_n_days": "Останні {count} днів",
+    "raw_counts": "Кількість віршів",
+    "proportional": "Пропорційно",
+    "bible_order": "Біблійний порядок",
+    "alphabetical": "За алфавітом",
+    "most_read": "Найбільше читали",
+    "least_read": "Найменше читали"
+  }
 }
 </i18n>

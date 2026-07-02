@@ -427,7 +427,10 @@ function cancelDraft() {
     "search_text": "Search Text",
     "search_placeholder": "Enter text…",
     "tag_filters": "Filter by Tags",
-    "tag_select": { "choose": "Choose tags…", "clear": "Clear tags" },
+    "tag_select": {
+      "choose": "Choose tags…",
+      "clear": "Clear tags"
+    },
     "tag_only_untagged": "Only untagged notes",
     "tag_match": "Match",
     "tag_match_any": "Any",
@@ -451,7 +454,10 @@ function cancelDraft() {
     "search_text": "Suchtext",
     "search_placeholder": "Text eingeben…",
     "tag_filters": "Nach Tags filtern",
-    "tag_select": { "choose": "Tags auswählen…", "clear": "Tags löschen" },
+    "tag_select": {
+      "choose": "Tags auswählen…",
+      "clear": "Tags löschen"
+    },
     "tag_only_untagged": "Nur ungetaggte Notizen",
     "tag_match": "Übereinstimmung",
     "tag_match_any": "Beliebig",
@@ -475,7 +481,10 @@ function cancelDraft() {
     "search_text": "Texto de búsqueda",
     "search_placeholder": "Ingrese texto…",
     "tag_filters": "Filtrar por etiquetas",
-    "tag_select": { "choose": "Elegir etiquetas…", "clear": "Limpiar etiquetas" },
+    "tag_select": {
+      "choose": "Elegir etiquetas…",
+      "clear": "Limpiar etiquetas"
+    },
     "tag_only_untagged": "Solo notas sin etiquetas",
     "tag_match": "Coincidencia",
     "tag_match_any": "Cualquiera",
@@ -499,7 +508,10 @@ function cancelDraft() {
     "search_text": "Rechercher un texte",
     "search_placeholder": "Entrez le texte…",
     "tag_filters": "Filtrer par tags",
-    "tag_select": { "choose": "Choisir des étiquettes…", "clear": "Effacer les étiquettes" },
+    "tag_select": {
+      "choose": "Choisir des étiquettes…",
+      "clear": "Effacer les étiquettes"
+    },
     "tag_only_untagged": "Uniquement les notes sans tags",
     "tag_match": "Correspondance",
     "tag_match_any": "Tous",
@@ -523,7 +535,10 @@ function cancelDraft() {
     "search_text": "검색어",
     "search_placeholder": "텍스트 입력…",
     "tag_filters": "태그 필터",
-    "tag_select": { "choose": "태그 선택…", "clear": "태그 지우기" },
+    "tag_select": {
+      "choose": "태그 선택…",
+      "clear": "태그 지우기"
+    },
     "tag_only_untagged": "태그 없는 노트만",
     "tag_match": "일치 옵션",
     "tag_match_any": "하나라도 일치",
@@ -547,7 +562,10 @@ function cancelDraft() {
     "search_text": "Pesquisar Texto",
     "search_placeholder": "Digite o texto…",
     "tag_filters": "Filtrar por tags",
-    "tag_select": { "choose": "Escolher tags…", "clear": "Limpar tags" },
+    "tag_select": {
+      "choose": "Escolher tags…",
+      "clear": "Limpar tags"
+    },
     "tag_only_untagged": "Apenas notas sem tags",
     "tag_match": "Corresponder",
     "tag_match_any": "Qualquer",
@@ -571,7 +589,10 @@ function cancelDraft() {
     "search_text": "Текст для пошуку",
     "search_placeholder": "Введіть текст…",
     "tag_filters": "Фільтрувати за тегами",
-    "tag_select": { "choose": "Вибрати теги…", "clear": "Очистити теги" },
+    "tag_select": {
+      "choose": "Вибрати теги…",
+      "clear": "Очистити теги"
+    },
     "tag_only_untagged": "Лише нотатки без тегів",
     "tag_match": "Співпадіння",
     "tag_match_any": "Будь-який",

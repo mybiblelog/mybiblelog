@@ -222,12 +222,54 @@ const setMode = (mode: ThemeMode) => {
 
 <i18n lang="json">
 {
-  "en": { "theme": "Theme", "choose_theme": "Choose Theme", "light": "Light", "dark": "Dark", "system": "System" },
-  "de": { "theme": "Design", "choose_theme": "Design wählen", "light": "Hell", "dark": "Dunkel", "system": "System" },
-  "es": { "theme": "Tema", "choose_theme": "Elegir tema", "light": "Claro", "dark": "Oscuro", "system": "Sistema" },
-  "fr": { "theme": "Thème", "choose_theme": "Choisir le thème", "light": "Clair", "dark": "Sombre", "system": "Système" },
-  "ko": { "theme": "테마", "choose_theme": "테마 선택", "light": "라이트", "dark": "다크", "system": "시스템" },
-  "pt": { "theme": "Tema", "choose_theme": "Escolher tema", "light": "Claro", "dark": "Escuro", "system": "Sistema" },
-  "uk": { "theme": "Тема", "choose_theme": "Вибрати тему", "light": "Світла", "dark": "Темна", "system": "Системна" }
+  "en": {
+    "theme": "Theme",
+    "choose_theme": "Choose Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "de": {
+    "theme": "Design",
+    "choose_theme": "Design wählen",
+    "light": "Hell",
+    "dark": "Dunkel",
+    "system": "System"
+  },
+  "es": {
+    "theme": "Tema",
+    "choose_theme": "Elegir tema",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema"
+  },
+  "fr": {
+    "theme": "Thème",
+    "choose_theme": "Choisir le thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système"
+  },
+  "ko": {
+    "theme": "테마",
+    "choose_theme": "테마 선택",
+    "light": "라이트",
+    "dark": "다크",
+    "system": "시스템"
+  },
+  "pt": {
+    "theme": "Tema",
+    "choose_theme": "Escolher tema",
+    "light": "Claro",
+    "dark": "Escuro",
+    "system": "Sistema"
+  },
+  "uk": {
+    "theme": "Тема",
+    "choose_theme": "Вибрати тему",
+    "light": "Світла",
+    "dark": "Темна",
+    "system": "Системна"
+  }
 }
 </i18n>

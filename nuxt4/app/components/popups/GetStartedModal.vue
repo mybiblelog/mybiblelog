@@ -57,12 +57,40 @@ function close() {
 
 <i18n lang="json">
 {
-  "en": { "start_page": { "back": "Back" } },
-  "de": { "start_page": { "back": "Zurück" } },
-  "es": { "start_page": { "back": "Atrás" } },
-  "fr": { "start_page": { "back": "Retour" } },
-  "ko": { "start_page": { "back": "뒤로" } },
-  "pt": { "start_page": { "back": "Voltar" } },
-  "uk": { "start_page": { "back": "Назад" } }
+  "en": {
+    "start_page": {
+      "back": "Back"
+    }
+  },
+  "de": {
+    "start_page": {
+      "back": "Zurück"
+    }
+  },
+  "es": {
+    "start_page": {
+      "back": "Atrás"
+    }
+  },
+  "fr": {
+    "start_page": {
+      "back": "Retour"
+    }
+  },
+  "ko": {
+    "start_page": {
+      "back": "뒤로"
+    }
+  },
+  "pt": {
+    "start_page": {
+      "back": "Voltar"
+    }
+  },
+  "uk": {
+    "start_page": {
+      "back": "Назад"
+    }
+  }
 }
 </i18n>

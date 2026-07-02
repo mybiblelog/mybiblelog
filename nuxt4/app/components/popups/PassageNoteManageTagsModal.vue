@@ -123,12 +123,47 @@ function cancel() {
 
 <i18n lang="json">
 {
-  "en": { "manage_tags": "Choose Tags", "new": "Create Tag", "done": "Done", "close": "Close" },
-  "de": { "manage_tags": "Tags auswählen", "new": "Tag erstellen", "done": "Fertig", "close": "Schließen" },
-  "es": { "manage_tags": "Elegir etiquetas", "new": "Crear etiqueta", "done": "Hecho", "close": "Cerrar" },
-  "fr": { "manage_tags": "Choisir des étiquettes", "new": "Créer une étiquette", "done": "Terminé", "close": "Fermer" },
-  "ko": { "manage_tags": "태그 선택", "new": "태그 생성", "done": "완료", "close": "닫기" },
-  "pt": { "manage_tags": "Escolher Tags", "new": "Criar tag", "done": "Concluído", "close": "Fechar" },
-  "uk": { "manage_tags": "Вибрати теги", "new": "Створити тег", "done": "Готово", "close": "Закрити" }
+  "en": {
+    "manage_tags": "Choose Tags",
+    "new": "Create Tag",
+    "done": "Done",
+    "close": "Close"
+  },
+  "de": {
+    "manage_tags": "Tags auswählen",
+    "new": "Tag erstellen",
+    "done": "Fertig",
+    "close": "Schließen"
+  },
+  "es": {
+    "manage_tags": "Elegir etiquetas",
+    "new": "Crear etiqueta",
+    "done": "Hecho",
+    "close": "Cerrar"
+  },
+  "fr": {
+    "manage_tags": "Choisir des étiquettes",
+    "new": "Créer une étiquette",
+    "done": "Terminé",
+    "close": "Fermer"
+  },
+  "ko": {
+    "manage_tags": "태그 선택",
+    "new": "태그 생성",
+    "done": "완료",
+    "close": "닫기"
+  },
+  "pt": {
+    "manage_tags": "Escolher Tags",
+    "new": "Criar tag",
+    "done": "Concluído",
+    "close": "Fechar"
+  },
+  "uk": {
+    "manage_tags": "Вибрати теги",
+    "new": "Створити тег",
+    "done": "Готово",
+    "close": "Закрити"
+  }
 }
 </i18n>
