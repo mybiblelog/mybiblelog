@@ -8,6 +8,8 @@
       </header>
       <div class="mbl-content">
         <template v-if="complete">
+          <!-- i18n string with markup; `email` is the server-stored address, not URL input. -->
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <p v-html="$t('success', { email })" />
           <p>
             <nuxt-link class="mbl-button mbl-button--primary" :to="localePath('/settings/reminder')">

@@ -81,8 +81,8 @@ export const buildLineChartGeometry = (
   let areaPath = '';
   if (points.length > 0) {
     const baseY = height - padBottom;
-    const first = points[0];
-    const last = points[points.length - 1];
+    const first = points[0]!;
+    const last = points[points.length - 1]!;
     const segments = points.map(p => `L ${p.x} ${p.y}`).join(' ');
     areaPath = `M ${first.x} ${baseY} ${segments} L ${last.x} ${baseY} Z`;
   }

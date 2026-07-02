@@ -68,7 +68,7 @@ describe('log-entries.test.js', () => {
       const testUser = await createTestUser();
       try {
         // Create test entries
-        const entry1 = await requestApi
+        await requestApi
           .post('/api/log-entries')
           .set('Authorization', `Bearer ${testUser.token}`)
           .send(logEntry1);
@@ -102,7 +102,7 @@ describe('log-entries.test.js', () => {
           .set('Authorization', `Bearer ${testUser.token}`)
           .send(logEntry1);
 
-        const entry2 = await requestApi
+        await requestApi
           .post('/api/log-entries')
           .set('Authorization', `Bearer ${testUser.token}`)
           .send(logEntry2);
@@ -126,12 +126,12 @@ describe('log-entries.test.js', () => {
       const testUser = await createTestUser();
       try {
         // Create test entries
-        const entry1 = await requestApi
+        await requestApi
           .post('/api/log-entries')
           .set('Authorization', `Bearer ${testUser.token}`)
           .send(logEntry1);
 
-        const entry2 = await requestApi
+        await requestApi
           .post('/api/log-entries')
           .set('Authorization', `Bearer ${testUser.token}`)
           .send(logEntry2);
@@ -155,12 +155,12 @@ describe('log-entries.test.js', () => {
     const testUser = await createTestUser();
     try {
       // Create test entries
-      const entry1 = await requestApi
+      await requestApi
         .post('/api/log-entries')
         .set('Authorization', `Bearer ${testUser.token}`)
         .send(logEntry1);
 
-      const entry2 = await requestApi
+      await requestApi
         .post('/api/log-entries')
         .set('Authorization', `Bearer ${testUser.token}`)
         .send(logEntry2);

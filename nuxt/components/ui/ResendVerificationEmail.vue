@@ -112,6 +112,7 @@ export default {
       }
       catch (err) {
         const error = (err instanceof ApiError ? err : new UnknownApiError());
+        // eslint-disable-next-line no-console
         console.error('Failed to resend verification email', error);
         this.lastResult = 'error';
       }

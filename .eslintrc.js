@@ -97,25 +97,34 @@ module.exports = {
         mode: 'strict',
       },
     ],
+    // Errors, not warnings: an unblocked warning never gets fixed and only
+    // trains people to ignore lint output. Console is scoped off for backend
+    // and scripts (see overrides below and in api/, nuxt/ configs), so this
+    // only fires in client code, where a stray console shouldn't ship.
     'no-console': [
-      'warn',
+      'error',
     ],
     'no-var': [
-      'warn',
+      'error',
     ],
     'no-unused-vars': [
-      'warn',
+      'error',
       {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
       },
     ],
-    strict: [
-      'warn',
-      'global',
-    ],
   },
   overrides: [
+    {
+      // mobile/ has its own ESLint setup (`expo lint` + eslint.config.js), which
+      // governs its console policy; disabling here avoids the two configs
+      // demanding contradictory eslint-disable comments.
+      files: ['mobile/**'],
+      rules: {
+        'no-console': 'off',
+      },
+    },
     {
       files: ['**/*.ts'],
       parser: '@typescript-eslint/parser',
@@ -125,7 +134,7 @@ module.exports = {
         // TypeScript handles unused vars, so disable the base rule
         'no-unused-vars': 'off',
         '@typescript-eslint/no-unused-vars': [
-          'warn',
+          'error',
           {
             argsIgnorePattern: '^_',
             varsIgnorePattern: '^_',

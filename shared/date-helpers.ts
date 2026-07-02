@@ -122,7 +122,7 @@ export const displayTimeSince = (dateTimeString: string, locale = 'en') => {
  * @param {string} locale 'en', 'es', etc.
  * @returns {string}
  */
-export const displayDaysSince = (dateString, locale = 'en') => {
+export const displayDaysSince = (dateString: string, locale = 'en') => {
   const difference = dayjs(dateString).diff(dayjs(), 'day');
   return dayjs.duration(difference, 'day').locale(locale).humanize(true);
 };

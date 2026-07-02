@@ -146,6 +146,7 @@ import { useAppInitStore } from '~/stores/app-init';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 import { useReadingSuggestionsStore } from '~/stores/reading-suggestions';
+import type { ReadingSuggestionPassage } from '~/stores/reading-suggestions';
 import { usePassageNotesStore, type PassageNoteListItem } from '~/stores/passage-notes';
 import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
 import { useUserSettingsStore } from '~/stores/user-settings';
@@ -177,8 +178,7 @@ const addNewVerseCountToReadingSuggestion = (passage: Passage) => {
   const today = dayjs().format('YYYY-MM-DD');
   const throughToday = logEntries.value.filter(e => e.date <= today);
   const uniqueToday = Bible.countUniqueRangeVerses(throughToday);
-  throughToday.push(passage);
-  const newVerseCount = Bible.countUniqueRangeVerses(throughToday) - uniqueToday;
+  const newVerseCount = Bible.countUniqueRangeVerses([...throughToday, passage]) - uniqueToday;
   return { ...passage, newVerseCount };
 };
 
@@ -227,7 +227,7 @@ const addNewVerseCountToLogEntry = (logEntry: LogEntryLike) => {
   return { ...logEntry, newVerseCount };
 };
 
-type Passage = LogEntry & { suggestionContext?: string };
+type Passage = ReadingSuggestionPassage & { newVerseCount?: number };
 
 const actionsForTodayLogEntry = (entry: LogEntryLike) => [
   { label: t('open_bible'), callback: () => openPassageInBible(entry, false) },

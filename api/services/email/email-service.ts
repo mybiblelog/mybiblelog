@@ -79,7 +79,7 @@ const init = async () => {
     }
 
     // record email, but do not block with `await`
-    const { attachments, ...forRecord } = params;
+    const { attachments: _attachments, ...forRecord } = params;
     emails.create({ ...forRecord, status });
   };
 

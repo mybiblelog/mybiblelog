@@ -43,6 +43,16 @@ module.exports = {
         registeredComponentsOnly: true,
       },
     ],
-    '@typescript-eslint/no-unused-vars': 'warn',
+    '@typescript-eslint/no-unused-vars': 'error',
   },
+  overrides: [
+    {
+      // Build/CLI tooling (i18n import/export/verify): console is the output
+      // mechanism, so scope the rule off rather than suppressing every line.
+      files: ['scripts/**'],
+      rules: {
+        'no-console': 'off',
+      },
+    },
+  ],
 };

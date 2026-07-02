@@ -4,7 +4,7 @@
  *
  *   import { spacing, radius, useTheme, useScalePress } from "@/src/design";
  */
-export * from "./tokens";
-export { ThemeProvider, useTheme } from "./ThemeProvider";
-export type { ThemeMode } from "./ThemeProvider";
-export * from "./animations";
+export * from './tokens';
+export { ThemeProvider, useTheme } from './ThemeProvider';
+export type { ThemeMode } from './ThemeProvider';
+export * from './animations';

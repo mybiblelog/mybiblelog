@@ -7,6 +7,8 @@
       <p class="hero-subtitle">
         <em>{{ subtitle }}</em>
       </p>
+      <!-- Repo-authored marketing copy (may contain markup), not user input. -->
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <p class="hero-description" v-html="description" />
       <div class="hero-cta">
         <nuxt-link :to="localePath('/register')" class="mbl-button mbl-button--primary mbl-button--lg">

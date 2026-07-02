@@ -1,4 +1,4 @@
-import { Easing } from "react-native-reanimated";
+import { Easing } from 'react-native-reanimated';
 
 /**
  * Motion tokens. Every animation in the app pulls its duration and easing

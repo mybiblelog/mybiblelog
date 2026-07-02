@@ -139,7 +139,7 @@ export const computeBookLastRead = (
 
   const result: BookLastRead[] = [];
   for (let book = 1; book <= bookCount; book++) {
-    result.push({ bookIndex: book, lastReadDate: lastRead[book] });
+    result.push({ bookIndex: book, lastReadDate: lastRead[book] ?? null });
   }
   return result;
 };

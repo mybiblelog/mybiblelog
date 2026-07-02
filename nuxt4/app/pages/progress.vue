@@ -168,6 +168,7 @@
           <table class="mbl-table">
             <tbody>
               <tr>
+                <!-- eslint-disable-next-line vue/no-v-html -->
                 <td v-html="t('your_outlook.verses_read')" />
                 <td>{{ n(newVersesReadToday, 'grouped') }}</td>
               </tr>

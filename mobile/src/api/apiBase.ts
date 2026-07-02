@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../config";
+import { API_BASE_URL } from '../config';
 
 /**
  * Backend is mounted at `/api` (see `api/app.ts`).
@@ -8,8 +8,8 @@ import { API_BASE_URL } from "../config";
  *   and Nuxt proxies `/api` to the backend.
  */
 export function getApiBaseUrl(): string {
-  const base = API_BASE_URL.replace(/\/+$/, "");
-  return base.endsWith("/api") ? base : `${base}/api`;
+  const base = API_BASE_URL.replace(/\/+$/, '');
+  return base.endsWith('/api') ? base : `${base}/api`;
 }
 
 /**
@@ -20,7 +20,7 @@ export function getApiBaseUrl(): string {
  * prepends this origin to keep those shared paths verbatim.
  */
 export function getApiOrigin(): string {
-  const base = API_BASE_URL.replace(/\/+$/, "");
-  return base.endsWith("/api") ? base.slice(0, -"/api".length) : base;
+  const base = API_BASE_URL.replace(/\/+$/, '');
+  return base.endsWith('/api') ? base.slice(0, -'/api'.length) : base;
 }
 

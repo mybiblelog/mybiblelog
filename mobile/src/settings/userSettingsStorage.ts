@@ -1,5 +1,5 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getDefaultBibleVersion } from "@mybiblelog/shared";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getDefaultBibleVersion } from '@mybiblelog/shared';
 
 export type LocalUserSettings = {
   lookBackDate: string; // YYYY-MM-DD
@@ -11,7 +11,7 @@ export type LocalUserSettings = {
   preferredBibleApp: string;
 };
 
-const STORAGE_KEY = "userSettings.v1";
+const STORAGE_KEY = 'userSettings.v1';
 
 export const DEFAULT_LOCAL_USER_SETTINGS: LocalUserSettings = {
   lookBackDate: new Date().toISOString().slice(0, 10),
@@ -20,18 +20,18 @@ export const DEFAULT_LOCAL_USER_SETTINGS: LocalUserSettings = {
   preferredBibleVersion: getDefaultBibleVersion(),
   // Device-only; left empty so the UI can resolve a platform default lazily
   // (avoid calling shared `getDefaultBibleApp()` here — it reads `navigator`).
-  preferredBibleApp: "",
+  preferredBibleApp: '',
 };
 
 function isLocalUserSettings(value: unknown): value is LocalUserSettings {
-  if (!value || typeof value !== "object") return false;
-  const v = value as any;
+  if (!value || typeof value !== 'object') return false;
+  const v = value as Record<string, unknown>;
   return (
-    typeof v.lookBackDate === "string" &&
-    typeof v.dailyVerseCountGoal === "number" &&
+    typeof v.lookBackDate === 'string' &&
+    typeof v.dailyVerseCountGoal === 'number' &&
     Number.isFinite(v.dailyVerseCountGoal) &&
-    typeof v.preferredBibleVersion === "string" &&
-    typeof v.preferredBibleApp === "string"
+    typeof v.preferredBibleVersion === 'string' &&
+    typeof v.preferredBibleApp === 'string'
   );
 }
 
@@ -42,7 +42,8 @@ export async function loadLocalUserSettings(): Promise<LocalUserSettings> {
     const parsed: unknown = JSON.parse(raw);
     if (!isLocalUserSettings(parsed)) return DEFAULT_LOCAL_USER_SETTINGS;
     return parsed;
-  } catch {
+  }
+  catch {
     return DEFAULT_LOCAL_USER_SETTINGS;
   }
 }
@@ -50,7 +51,8 @@ export async function loadLocalUserSettings(): Promise<LocalUserSettings> {
 export async function saveLocalUserSettings(settings: LocalUserSettings): Promise<void> {
   try {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-  } catch {
+  }
+  catch {
     // ignore
   }
 }

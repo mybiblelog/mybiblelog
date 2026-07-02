@@ -136,7 +136,7 @@ async function loadStats() {
   statsError.value = false;
   statsLoading.value = true;
   try {
-    const { data } = await $http.get(`/api/admin/users/${props.user!.email}/stats`);
+    const { data } = await $http.get<{ data: UserStats }>(`/api/admin/users/${props.user!.email}/stats`);
     stats.value = data;
   }
   catch {

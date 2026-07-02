@@ -1,5 +1,5 @@
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" :width="width" :height="height" viewBox="0 0 15 15">
+  <svg xmlns="http://www.w3.org/2000/svg" :width.attr="width" :height.attr="height" viewBox="0 0 15 15">
     <path
       fill-rule="evenodd"
       clip-rule="evenodd"

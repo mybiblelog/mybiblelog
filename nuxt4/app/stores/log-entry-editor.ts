@@ -4,6 +4,7 @@ import { LogEntryEditorMachine, type LogEntryEditorModel } from '@mybiblelog/sha
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useDialogStore } from '~/stores/dialog';
 import { ApiError } from '~/helpers/api-error';
+import type { ApiErrorDetail } from '~/helpers/api-error';
 import { useLogEntriesStore } from '~/stores/log-entries';
 
 export type { LogEntryEditorModel };
@@ -14,7 +15,7 @@ export type LogEntryEditorOpenPayload =
   | null
   | undefined;
 
-export type LogEntryEditorErrors = Record<string, unknown>;
+export type LogEntryEditorErrors = Record<string, ApiErrorDetail>;
 
 export type LogEntryEditorState = {
   open: boolean;
@@ -150,7 +151,7 @@ export const useLogEntryEditorStore = defineStore('log-entry-editor', {
         return null;
       }
       catch (err: unknown) {
-        const unknownError = { _form: 'An unknown error occurred' };
+        const unknownError: LogEntryEditorErrors = { _form: { field: null, code: 'unknown_error' } };
         if (err instanceof ApiError) {
           this.errors = mapFormErrors(err) || unknownError;
         }

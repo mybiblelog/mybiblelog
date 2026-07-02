@@ -35,7 +35,7 @@
     </h3>
     <div v-if="showEarlyEntriesAlert" class="mbl-message mbl-message--info">
       <div class="mbl-message__body">
-        {{ t('look_back_date.early_entries_alert', { date: displayDate(earliestLogEntryDate, locale) }) }}
+        {{ t('look_back_date.early_entries_alert', { date: displayDate(earliestLogEntryDate ?? '', locale) }) }}
       </div>
     </div>
     <div class="mbl-field mbl-field--addons">

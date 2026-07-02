@@ -18,7 +18,9 @@
         >
       </div>
       <div class="mbl-control">
-        <button type="button" class="mbl-button mbl-button--primary" :disabled="saving" data-testid="settings-daily-goal-save" @click="handleDailyVerseCountGoalSubmit">{{ $t('save') }}</button>
+        <button type="button" class="mbl-button mbl-button--primary" :disabled="saving" data-testid="settings-daily-goal-save" @click="handleDailyVerseCountGoalSubmit">
+          {{ $t('save') }}
+        </button>
       </div>
     </div>
     <div v-if="userSettingsErrors.dailyVerseCountGoal" class="mbl-help mbl-help--danger">
@@ -40,7 +42,9 @@
         <input v-model="userSettingsForm.lookBackDate" class="mbl-input" type="date" data-testid="settings-look-back-date-input">
       </div>
       <div class="mbl-control">
-        <button type="button" class="mbl-button mbl-button--primary" :disabled="saving" data-testid="settings-look-back-date-save" @click="handleLookBackDateSubmit">{{ $t('save') }}</button>
+        <button type="button" class="mbl-button mbl-button--primary" :disabled="saving" data-testid="settings-look-back-date-save" @click="handleLookBackDateSubmit">
+          {{ $t('save') }}
+        </button>
       </div>
     </div>
     <div v-if="userSettingsErrors.lookBackDate" class="mbl-help mbl-help--danger">
@@ -70,7 +74,9 @@
         </div>
       </div>
       <div class="mbl-control">
-        <button type="button" class="mbl-button mbl-button--primary" :disabled="saving" data-testid="settings-bible-version-save" @click="handlePreferredBibleVersionSubmit">{{ $t('save') }}</button>
+        <button type="button" class="mbl-button mbl-button--primary" :disabled="saving" data-testid="settings-bible-version-save" @click="handlePreferredBibleVersionSubmit">
+          {{ $t('save') }}
+        </button>
       </div>
     </div>
     <div v-if="userSettingsErrors.preferredBibleVersion" class="mbl-help mbl-help--danger">
@@ -95,7 +101,9 @@
         </div>
       </div>
       <div class="mbl-control">
-        <button type="button" class="mbl-button mbl-button--primary" :disabled="saving" data-testid="settings-bible-app-save" @click="handlePreferredBibleAppSubmit">{{ $t('save') }}</button>
+        <button type="button" class="mbl-button mbl-button--primary" :disabled="saving" data-testid="settings-bible-app-save" @click="handlePreferredBibleAppSubmit">
+          {{ $t('save') }}
+        </button>
       </div>
     </div>
     <div v-if="userSettingsErrors.preferredBibleApp" class="mbl-help mbl-help--danger">

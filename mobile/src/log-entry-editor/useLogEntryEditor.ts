@@ -1,7 +1,7 @@
-import dayjs from "dayjs";
-import { Bible, LogEntryEditorMachine, type LogEntryEditorModel } from "@mybiblelog/shared";
-import { useCallback, useMemo, useState } from "react";
-import type { LogEntry } from "@/src/types/log-entry";
+import dayjs from 'dayjs';
+import { Bible, LogEntryEditorMachine, type LogEntryEditorModel } from '@mybiblelog/shared';
+import { useCallback, useMemo, useState } from 'react';
+import type { LogEntry } from '@/src/types/log-entry';
 
 /**
  * Thin React hook around the shared `LogEntryEditorMachine`.
@@ -39,10 +39,10 @@ type Init = Partial<LogEntry> & { book?: number };
 function buildInitialModel(init?: Init): LogEntryEditorModel {
   return LogEntryEditorMachine.initLogEntryEditorModel({
     id: init?.id ?? null,
-    date: init?.date ?? dayjs().format("YYYY-MM-DD"),
+    date: init?.date ?? dayjs().format('YYYY-MM-DD'),
     book: init?.book ?? null,
-    startVerseId: typeof init?.startVerseId === "number" ? init.startVerseId : null,
-    endVerseId: typeof init?.endVerseId === "number" ? init.endVerseId : null,
+    startVerseId: typeof init?.startVerseId === 'number' ? init.startVerseId : null,
+    endVerseId: typeof init?.endVerseId === 'number' ? init.endVerseId : null,
   });
 }
 
@@ -50,7 +50,7 @@ function modelToValue(model: LogEntryEditorModel): LogEntryEditorValue {
   const start = model.startVerseId ? Bible.parseVerseId(model.startVerseId) : null;
   const end = model.endVerseId ? Bible.parseVerseId(model.endVerseId) : null;
   return {
-    date: model.date ?? "",
+    date: model.date ?? '',
     book: model.book ?? 0,
     startChapter: start?.chapter ?? 0,
     startVerse: start?.verse ?? 0,
@@ -70,10 +70,10 @@ export function useLogEntryEditor(init?: Init) {
 
   const derived = useMemo<LogEntryEditorDerived>(() => {
     const { startVerseId, endVerseId } = model;
-    const dateValid = dayjs(value.date, "YYYY-MM-DD", true).isValid();
+    const dateValid = dayjs(value.date, 'YYYY-MM-DD', true).isValid();
     const rangeValid =
-      typeof startVerseId === "number" &&
-      typeof endVerseId === "number" &&
+      typeof startVerseId === 'number' &&
+      typeof endVerseId === 'number' &&
       Bible.validateRange(startVerseId, endVerseId);
     return {
       startVerseId: startVerseId ?? null,

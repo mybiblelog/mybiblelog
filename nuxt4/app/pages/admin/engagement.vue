@@ -64,7 +64,7 @@ function formatDate(date: string) {
 
 onMounted(async () => {
   try {
-    const { data } = await $http.get('/api/admin/reports/user-engagement/past-week');
+    const { data } = await $http.get<{ data: EngagementRow[] }>('/api/admin/reports/user-engagement/past-week');
     engagementData.value = data;
   }
   catch {

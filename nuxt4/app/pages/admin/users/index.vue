@@ -182,7 +182,7 @@ function buildUrl() {
 async function loadUsers() {
   loadError.value = false;
   try {
-    const { data, meta } = await $http.get(buildUrl());
+    const { data, meta } = await $http.get<{ data: AdminUser[]; meta: { pagination: { size: number } } }>(buildUrl());
     users.value = data;
     totalUsers.value = meta.pagination.size;
   }

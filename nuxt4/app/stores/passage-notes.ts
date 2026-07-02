@@ -1,4 +1,7 @@
 import { defineStore } from 'pinia';
+import type { PassageNotesQuery } from '~/helpers/passage-notes-route-query';
+
+export type { PassageNotesQuery };
 
 export type PassageNoteListItem = {
   id: number | string;
@@ -8,19 +11,6 @@ export type PassageNoteListItem = {
   tags?: Array<number | string>;
   content?: string;
   [key: string]: unknown;
-};
-
-export type PassageNotesQuery = {
-  limit: number;
-  offset: number;
-  sortOn: string;
-  sortDirection: string;
-  filterTags: Array<number | string>;
-  filterTagMatching: 'any' | 'all' | 'exact';
-  searchText: string;
-  filterPassageStartVerseId: number;
-  filterPassageEndVerseId: number;
-  filterPassageMatching: 'inclusive' | 'exclusive';
 };
 
 export type PassageNotesPagination = {

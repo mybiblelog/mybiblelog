@@ -86,6 +86,7 @@ export default {
       googleOauth2Url = data.url;
     }
     catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Failed to get Google OAuth2 URL:', error);
     }
     return {
@@ -128,7 +129,7 @@ export default {
   // Instead, we store the user's locale in localStorage and use it to re-set the locale
   // when the user comes back to the app at the end of the OAuth2 flow.
   watch: {
-    '$i18n.locale'(newVal, oldVal) {
+    '$i18n.locale'(newVal) {
       localStorage.setItem('login_language', newVal);
     },
   },

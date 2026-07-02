@@ -86,8 +86,8 @@ const buildNextMonthDays = (year: number, month: number, lastDate: string): Mont
  */
 export const buildMonthGrid = (input: BuildMonthGridInput): MonthGridDay[] => {
   const currentMonthDays = buildCurrentMonthDays(input);
-  const firstDate = currentMonthDays[0].date;
-  const lastDate = currentMonthDays[currentMonthDays.length - 1].date;
+  const firstDate = currentMonthDays[0]!.date;
+  const lastDate = currentMonthDays[currentMonthDays.length - 1]!.date;
   return [
     ...buildPreviousMonthDays(input.year, input.month, firstDate),
     ...currentMonthDays,

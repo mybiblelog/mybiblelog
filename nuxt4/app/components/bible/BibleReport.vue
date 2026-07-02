@@ -75,13 +75,14 @@
 
 <script setup lang="ts">
 import { Bible } from '@mybiblelog/shared';
+import type { LogEntry, Segment } from '@mybiblelog/shared';
 import { encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
 import SegmentBar from '~/components/bible/SegmentBar.vue';
 import StarIcon from '~/components/svg/StarIcon.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
 
 const props = withDefaults(defineProps<{
-  logEntries?: Array<Record<string, unknown>>;
+  logEntries?: Array<LogEntry>;
 }>(), {
   logEntries: () => [],
 });
@@ -134,15 +135,21 @@ const allBookReports = computed(() =>
   visibleBookIndices.value.map(bookIndex => bookReport(bookIndex)),
 );
 
+type SegmentWithPercentage = Segment & { percentage: number };
+
+function withPercentages(segments: Segment[], totalVerses: number): SegmentWithPercentage[] {
+  return segments.map(segment => ({
+    ...segment,
+    percentage: segment.verseCount * 100 / totalVerses,
+  }));
+}
+
 const bibleReadingSegments = computed(() => {
-  const segments: Array<Record<string, unknown>> = [];
+  const segments: Segment[] = [];
   for (const bookIndex of visibleBookIndices.value) {
     segments.push(...Bible.generateBookSegments(bookIndex, props.logEntries));
   }
-  segments.forEach((segment) => {
-    segment.percentage = (segment.verseCount as number) * 100 / totalVisibleVerses.value;
-  });
-  return segments;
+  return withPercentages(segments, totalVisibleVerses.value);
 });
 
 function bookReport(bookIndex: number) {
@@ -157,10 +164,7 @@ function bookReport(bookIndex: number) {
 function bookReadingSegments(bookIndex: number) {
   const totalBookVerses = Bible.getBookVerseCount(bookIndex);
   const segments = Bible.generateBookSegments(bookIndex, props.logEntries);
-  segments.forEach((segment) => {
-    segment.percentage = (segment.verseCount as number) * 100 / totalBookVerses;
-  });
-  return segments;
+  return withPercentages(segments, totalBookVerses);
 }
 
 function viewBookNotes(bookIndex: number) {
@@ -180,7 +184,7 @@ onMounted(async () => {
     const data = await $fetch<Record<number, number>>('/api/passage-notes/count/books');
     bookNotesCounts.value = data;
     for (let i = 1, l = Bible.getBookCount(); i <= l; i++) {
-      if (bookNotesCounts.value[i] > 0) {
+      if ((bookNotesCounts.value[i] ?? 0) > 0) {
         anyBooksHaveNotes.value = true;
         break;
       }

@@ -95,9 +95,9 @@ export const computeBibleProgress = (ranges: ReadonlyArray<Readonly<VerseRange>>
     const bookRanges: VerseRange[] = [];
     while (
       rangeIndex < consolidatedRanges.length &&
-      parseVerseId(consolidatedRanges[rangeIndex].startVerseId).book === bookIndex
+      parseVerseId(consolidatedRanges[rangeIndex]!.startVerseId).book === bookIndex
     ) {
-      bookRanges.push(consolidatedRanges[rangeIndex]);
+      bookRanges.push(consolidatedRanges[rangeIndex]!);
       rangeIndex++;
     }
 

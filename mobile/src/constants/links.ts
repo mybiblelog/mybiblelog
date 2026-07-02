@@ -7,7 +7,7 @@
  * as constants here rather than deriving them from the API base URL (which may
  * point at a separate API host or a localhost dev server).
  */
-export const WEBSITE_BASE_URL = "https://www.mybiblelog.com";
+export const WEBSITE_BASE_URL = 'https://www.mybiblelog.com';
 
 export const PRIVACY_POLICY_URL = `${WEBSITE_BASE_URL}/policy/privacy`;
 export const TERMS_URL = `${WEBSITE_BASE_URL}/policy/terms`;

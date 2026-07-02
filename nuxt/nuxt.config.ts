@@ -150,7 +150,7 @@ const config: NuxtConfig = {
     /*
     ** You can extend webpack config here
     */
-    extend(config, ctx) {
+    extend(config, _ctx) {
       // Ensure Pinia's ESM dependency (`vue-demi`) resolves correctly in Nuxt 2's
       // server build, which can otherwise prefer CJS entrypoints.
       if (config.resolve?.alias) {

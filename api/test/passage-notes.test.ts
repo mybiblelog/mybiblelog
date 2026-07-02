@@ -1,4 +1,4 @@
-import { describe, it, test, expect } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { requestApi, createTestUser, deleteTestUser } from './helpers';
 
 // Test data

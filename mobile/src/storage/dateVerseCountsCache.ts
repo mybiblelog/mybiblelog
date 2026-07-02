@@ -1,4 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /**
  * AsyncStorage-backed TTL cache.
@@ -11,7 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type CacheEnvelope<T> = { value: T; expiresAt: number };
 
-const PREFIX = "cache.";
+const PREFIX = 'cache.';
 
 export async function setCache<T>(key: string, value: T, expirationInMinutes: number): Promise<void> {
   try {
@@ -20,7 +20,8 @@ export async function setCache<T>(key: string, value: T, expirationInMinutes: nu
       expiresAt: Date.now() + expirationInMinutes * 60 * 1000,
     };
     await AsyncStorage.setItem(`${PREFIX}${key}`, JSON.stringify(envelope));
-  } catch {
+  }
+  catch {
     // ignore cache write failures
   }
 }
@@ -30,13 +31,14 @@ export async function getCache<T>(key: string): Promise<T | null> {
     const raw = await AsyncStorage.getItem(`${PREFIX}${key}`);
     if (!raw) return null;
     const envelope = JSON.parse(raw) as CacheEnvelope<T> | null;
-    if (!envelope || typeof envelope.expiresAt !== "number") return null;
+    if (!envelope || typeof envelope.expiresAt !== 'number') return null;
     if (Date.now() > envelope.expiresAt) {
       await AsyncStorage.removeItem(`${PREFIX}${key}`);
       return null;
     }
     return envelope.value;
-  } catch {
+  }
+  catch {
     return null;
   }
 }
@@ -44,7 +46,8 @@ export async function getCache<T>(key: string): Promise<T | null> {
 export async function deleteCache(key: string): Promise<void> {
   try {
     await AsyncStorage.removeItem(`${PREFIX}${key}`);
-  } catch {
+  }
+  catch {
     // ignore
   }
 }

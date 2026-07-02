@@ -1,5 +1,5 @@
-import NetInfo, { type NetInfoState } from "@react-native-community/netinfo";
-import { create } from "zustand";
+import NetInfo, { type NetInfoState } from '@react-native-community/netinfo';
+import { create } from 'zustand';
 
 /**
  * Connectivity store.
@@ -19,7 +19,7 @@ export const useConnectivityStore = create<ConnectivityState>(() => ({
   isOnline: null,
 }));
 
-function computeIsOnline(s: Pick<NetInfoState, "isConnected" | "isInternetReachable">): boolean | null {
+function computeIsOnline(s: Pick<NetInfoState, 'isConnected' | 'isInternetReachable'>): boolean | null {
   return s.isInternetReachable === null ? s.isConnected : s.isInternetReachable;
 }
 

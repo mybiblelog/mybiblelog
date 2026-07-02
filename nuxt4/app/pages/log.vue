@@ -203,7 +203,7 @@ const hasAppliedFilters = computed(() => {
   return !!(q.startDate || q.endDate || (q.filterPassageStartVerseId && q.filterPassageEndVerseId));
 });
 
-function stableCompare(a: unknown, b: unknown): number {
+function stableCompare(a: string | number, b: string | number): number {
   if (a === b) { return 0; }
   return a < b ? -1 : 1;
 }
@@ -256,9 +256,9 @@ const pageStartOffsets = computed(() => {
   const dayGroups: Array<{ start: number; count: number }> = [];
   let i = 0;
   while (i < entries.length) {
-    const date = entries[i].date;
+    const date = entries[i]!.date;
     let j = i + 1;
-    while (j < entries.length && entries[j].date === date) { j += 1; }
+    while (j < entries.length && entries[j]!.date === date) { j += 1; }
     dayGroups.push({ start: i, count: j - i });
     i = j;
   }
@@ -268,11 +268,11 @@ const pageStartOffsets = computed(() => {
   while (g < dayGroups.length) {
     let pageCount = 0;
     while (g < dayGroups.length && pageCount < limit) {
-      pageCount += dayGroups[g].count;
+      pageCount += dayGroups[g]!.count;
       g += 1;
     }
     if (g < dayGroups.length) {
-      starts.push(dayGroups[g].start);
+      starts.push(dayGroups[g]!.start);
     }
   }
 
@@ -284,7 +284,7 @@ const pagerPageIndex = computed(() => {
   const requested = Math.max(0, Number((query.value && query.value.offset) || 0));
   let idx = 0;
   for (let i = 0; i < starts.length; i++) {
-    if (starts[i] <= requested) { idx = i; }
+    if (starts[i]! <= requested) { idx = i; }
     else { break; }
   }
   return Math.max(0, Math.min(idx, starts.length - 1));

@@ -1,9 +1,8 @@
-/* eslint-disable no-console */
-
 import useCollections, { closeConnection } from '../mongo/useCollections';
 import deleteAccount from '../http/helpers/deleteAccount';
 
-// Main
+// Main — intentionally left uninvoked; uncomment the `main()` call at the bottom to run.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const main = async (): Promise<void> => {
   const { users } = await useCollections();
 

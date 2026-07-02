@@ -1,12 +1,11 @@
-/* eslint-disable no-console */
-
 // This is an evergreen migration script, meant to update MongoDB data to the latest schema.
 
 import dayjs from 'dayjs';
 import { Collection, Document } from 'mongodb';
 import useCollections, { closeConnection } from '../mongo/useCollections';
 
-// Main
+// Main — intentionally left uninvoked; uncomment the `main()` call at the bottom to run.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const main = async (): Promise<void> => {
   const collections = await useCollections();
   // The migration touches legacy/non-conforming documents, so it works against

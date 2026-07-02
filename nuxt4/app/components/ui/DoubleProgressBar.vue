@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<{
 });
 
 const backgroundStyle = computed(() => ({
-  position: 'relative',
+  position: 'relative' as const,
   height: '1rem',
   background: props.backgroundColor,
   borderRadius: '5px',

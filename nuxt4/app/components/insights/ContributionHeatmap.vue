@@ -87,7 +87,7 @@ const calendar = computed(() => buildContributionCalendar(props.entries as Insig
 const monthLabels = computed(() => {
   let lastMonth = -1;
   return calendar.value.weeks.map((week) => {
-    const firstCell = week[0];
+    const firstCell = week[0]!;
     const d = dayjs(firstCell.date).locale(locale.value);
     const month = d.month();
     if (month !== lastMonth) {

@@ -26,13 +26,16 @@
 import dayjs from 'dayjs';
 import StarIcon from '~/components/svg/StarIcon.vue';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   day: { date: string; isCurrentMonth: boolean; isBeforeTrackerStartDate?: boolean; isTrackerStartDate?: boolean };
   isToday?: boolean;
   isSelected?: boolean;
   primaryPercentage?: number;
   secondaryPercentage?: number;
-}>();
+}>(), {
+  primaryPercentage: 0,
+  secondaryPercentage: 0,
+});
 
 const emit = defineEmits<{ daySelected: [date: string] }>();
 

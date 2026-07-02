@@ -72,10 +72,12 @@
           <h2 class="mbl-title mbl-title--5">
             {{ $t('your_outlook.historical.title') }}
           </h2>
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <p v-html="$t('your_outlook.historical.description')" />
           <table class="mbl-table">
             <tbody>
               <tr>
+                <!-- eslint-disable-next-line vue/no-v-html -->
                 <td v-html="$t('your_outlook.days_since_look_back_date')" />
                 <td>{{ $n(daysSinceLookBackDate, 'grouped') }}</td>
               </tr>
@@ -158,6 +160,7 @@
           <table class="mbl-table">
             <tbody>
               <tr>
+                <!-- eslint-disable-next-line vue/no-v-html -->
                 <td v-html="$t('your_outlook.verses_read')" />
                 <td>{{ $n(newVersesReadToday, 'grouped') }}</td>
               </tr>

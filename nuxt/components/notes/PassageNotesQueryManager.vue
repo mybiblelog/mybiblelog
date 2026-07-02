@@ -87,6 +87,7 @@
           <label class="mbl-radio passage-notes-query-manager__radio-option">
             <input v-model="draft.filterPassageMatching" type="radio" value="inclusive" data-testid="notes-query-passage-match-inclusive">
             <span class="passage-notes-query-manager__radio-title">{{ $t('passage_match_inclusive') }}</span>
+            <!-- eslint-disable-next-line vue/no-v-html -->
             <span class="passage-notes-query-manager__radio-help" v-html="$t('passage_match_inclusive_description')" />
           </label>
         </div>
@@ -94,6 +95,7 @@
           <label class="mbl-radio passage-notes-query-manager__radio-option">
             <input v-model="draft.filterPassageMatching" type="radio" value="exclusive" data-testid="notes-query-passage-match-exclusive">
             <span class="passage-notes-query-manager__radio-title">{{ $t('passage_match_exclusive') }}</span>
+            <!-- eslint-disable-next-line vue/no-v-html -->
             <span class="passage-notes-query-manager__radio-help" v-html="$t('passage_match_exclusive_description')" />
           </label>
         </div>

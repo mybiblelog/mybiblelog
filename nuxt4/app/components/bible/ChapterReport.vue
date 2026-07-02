@@ -25,10 +25,13 @@
 
 <script setup lang="ts">
 import { Bible } from '@mybiblelog/shared';
+import type { Segment } from '@mybiblelog/shared';
 import SegmentBar from '~/components/bible/SegmentBar.vue';
 import StarIcon from '~/components/svg/StarIcon.vue';
 import { useActionSheetStore } from '~/stores/action-sheet';
 import { useUserSettingsStore } from '~/stores/user-settings';
+
+type SegmentWithPercentage = Segment & { percentage: number };
 
 const hydrated = ref(false);
 onMounted(() => { hydrated.value = true; });
@@ -40,7 +43,7 @@ const props = defineProps<{
     totalVerses: number;
     versesRead: number;
     percentage: number;
-    segments: Array<Record<string, unknown>>;
+    segments: Array<SegmentWithPercentage>;
   };
 }>();
 

@@ -1,13 +1,13 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 import {
   DEFAULT_LOCAL_USER_SETTINGS,
   type LocalUserSettings,
   loadLocalUserSettings,
   saveLocalUserSettings,
-} from "@/src/settings/userSettingsStorage";
-import { type ServerUserSettings, getSettings, updateSettings } from "@/src/api/settingsApi";
-import { getAuthToken, useAuthStore } from "@/src/stores/auth";
-import { getIsOnline, useConnectivityStore } from "@/src/stores/connectivity";
+} from '@/src/settings/userSettingsStorage';
+import { type ServerUserSettings, getSettings, updateSettings } from '@/src/api/settingsApi';
+import { getAuthToken, useAuthStore } from '@/src/stores/auth';
+import { getIsOnline, useConnectivityStore } from '@/src/stores/connectivity';
 
 /**
  * User-settings store (Zustand).
@@ -20,8 +20,8 @@ import { getIsOnline, useConnectivityStore } from "@/src/stores/connectivity";
  */
 
 export type UserSettingsState =
-  | { status: "loading" }
-  | { status: "ready"; settings: LocalUserSettings; isRefreshingFromServer: boolean };
+  | { status: 'loading' }
+  | { status: 'ready'; settings: LocalUserSettings; isRefreshingFromServer: boolean };
 
 type UserSettingsStore = {
   state: UserSettingsState;
@@ -50,17 +50,17 @@ function shallowEqualReadingSettings(a: LocalUserSettings, b: LocalUserSettings)
 }
 
 function isAuthenticated(): boolean {
-  return useAuthStore.getState().state.status === "authenticated";
+  return useAuthStore.getState().state.status === 'authenticated';
 }
 
 let refreshInFlight: Promise<void> | null = null;
 
 export const useUserSettingsStore = create<UserSettingsStore>((set, get) => ({
-  state: { status: "loading" },
+  state: { status: 'loading' },
 
   async setLocalSettings(partial) {
     const current = get().state;
-    if (current.status !== "ready") return;
+    if (current.status !== 'ready') return;
     const next = { ...current.settings, ...partial };
     set({ state: { ...current, settings: next } });
     await saveLocalUserSettings(next);
@@ -69,28 +69,30 @@ export const useUserSettingsStore = create<UserSettingsStore>((set, get) => ({
   async refreshFromServer() {
     if (refreshInFlight) return refreshInFlight;
     if (!isAuthenticated() || getIsOnline() !== true) return;
-    if (get().state.status !== "ready") return;
+    if (get().state.status !== 'ready') return;
     const token = getAuthToken();
     if (!token) return;
 
     refreshInFlight = (async () => {
       const ready = get().state;
-      if (ready.status === "ready") set({ state: { ...ready, isRefreshingFromServer: true } });
+      if (ready.status === 'ready') set({ state: { ...ready, isRefreshingFromServer: true } });
       try {
         const server = await getSettings(token);
         const before = get().state;
-        if (before.status === "ready") {
+        if (before.status === 'ready') {
           const next = applyServerTruth(before.settings, server);
           if (!shallowEqualReadingSettings(next, before.settings)) {
             set({ state: { ...before, settings: next } });
             await saveLocalUserSettings(next);
           }
         }
-      } catch {
+      }
+      catch {
         // Network or API error: keep local settings, fail gracefully
-      } finally {
+      }
+      finally {
         const after = get().state;
-        if (after.status === "ready") set({ state: { ...after, isRefreshingFromServer: false } });
+        if (after.status === 'ready') set({ state: { ...after, isRefreshingFromServer: false } });
         refreshInFlight = null;
       }
     })();
@@ -101,16 +103,17 @@ export const useUserSettingsStore = create<UserSettingsStore>((set, get) => ({
   async updateServerSettings(partial) {
     if (!isAuthenticated() || getIsOnline() !== true) return false;
     const current = get().state;
-    if (current.status !== "ready") return false;
+    if (current.status !== 'ready') return false;
     const token = getAuthToken();
     if (!token) return false;
     try {
       const updated = await updateSettings(token, partial);
       const next = applyServerTruth(current.settings, updated);
-      set({ state: { status: "ready", settings: next, isRefreshingFromServer: false } });
+      set({ state: { status: 'ready', settings: next, isRefreshingFromServer: false } });
       await saveLocalUserSettings(next);
       return true;
-    } catch {
+    }
+    catch {
       return false;
     }
   },
@@ -126,7 +129,7 @@ export function initUserSettings(): void {
   void (async () => {
     const local = await loadLocalUserSettings();
     useUserSettingsStore.setState({
-      state: { status: "ready", settings: local, isRefreshingFromServer: false },
+      state: { status: 'ready', settings: local, isRefreshingFromServer: false },
     });
     void useUserSettingsStore.getState().refreshFromServer();
   })();

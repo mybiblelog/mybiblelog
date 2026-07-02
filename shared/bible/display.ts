@@ -84,7 +84,7 @@ export const parseVerseRange = (verseRangeString: string, lang: string = 'en'): 
   } else if (match = RegEx.BookChapterToChapter.exec(verseRangeString), match) {
     [, start.book, start.chapter, end.chapter] = match
     start.verse = 1
-    end.verse = getChapterVerseCount(getBookIndex(String(start.book), lang), +end.chapter)
+    end.verse = getChapterVerseCount(getBookIndex(String(start.book), lang), +end.chapter!)
   } else if (match = RegEx.BookChapterVerse.exec(verseRangeString), match) {
     [, start.book, start.chapter, start.verse] = match
     end.chapter = start.chapter
@@ -93,7 +93,7 @@ export const parseVerseRange = (verseRangeString: string, lang: string = 'en'): 
     [, start.book, start.chapter] = match
     start.verse = 1
     end.chapter = start.chapter
-    end.verse = getChapterVerseCount(getBookIndex(String(start.book), lang), +start.chapter)
+    end.verse = getChapterVerseCount(getBookIndex(String(start.book), lang), +start.chapter!)
   } else if (match = RegEx.Book.exec(verseRangeString), match) {
     [, start.book] = match
     start.chapter = 1
@@ -110,8 +110,8 @@ export const parseVerseRange = (verseRangeString: string, lang: string = 'en'): 
   if (start.book === -1) { throw new Error('Invalid book name'); }
   end.book = start.book;
 
-  const startVerseId = makeVerseId(start.book, +start.chapter, +start.verse);
-  const endVerseId = makeVerseId(end.book, +end.chapter, +end.verse);
+  const startVerseId = makeVerseId(start.book, +start.chapter!, +start.verse!);
+  const endVerseId = makeVerseId(end.book, +end.chapter!, +end.verse!);
 
   if (!validateRange(startVerseId, endVerseId)) {
     throw new Error('Invalid verse range');

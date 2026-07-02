@@ -1,5 +1,5 @@
-import { SlideInDown, SlideOutDown } from "react-native-reanimated";
-import { durations, easings } from "../tokens/motion";
+import { SlideInDown, SlideOutDown } from 'react-native-reanimated';
+import { durations, easings } from '../tokens/motion';
 
 /**
  * Sheet / modal motion: slide up from the bottom on enter, back down on exit.
