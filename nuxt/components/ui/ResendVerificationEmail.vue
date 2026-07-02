@@ -156,6 +156,12 @@ export default {
     "verification_email_sent": "E-mail de vérification envoyé.",
     "verification_email_failed": "Impossible de renvoyer l'e-mail de vérification. Veuillez réessayer plus tard."
   },
+  "ko": {
+    "resend_verification_email": "인증 이메일 다시 보내기",
+    "resend_available_in": "{time} 후에 다시 보낼 수 있습니다",
+    "verification_email_sent": "인증 이메일을 보냈습니다.",
+    "verification_email_failed": "인증 이메일을 다시 보낼 수 없습니다. 나중에 다시 시도해 주세요."
+  },
   "pt": {
     "resend_verification_email": "Reenviar e-mail de verificação",
     "resend_available_in": "Reenvio disponível em {time}",
