@@ -1,10 +1,14 @@
+// Default pacing between sends, sized for the provider's rate limit.
 const SEND_INTERVAL_MS = 1100;
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function createQueue<T>(sendFn: (job: T) => Promise<void>): { enqueue: (job: T) => void } {
+export function createQueue<T>(
+  sendFn: (job: T) => Promise<void>,
+  sendIntervalMs: number = SEND_INTERVAL_MS,
+): { enqueue: (job: T) => void } {
   const queue: T[] = [];
   let sending = false;
 
@@ -31,7 +35,9 @@ export function createQueue<T>(sendFn: (job: T) => Promise<void>): { enqueue: (j
         }
       }
 
-      await sleep(SEND_INTERVAL_MS);
+      if (sendIntervalMs > 0) {
+        await sleep(sendIntervalMs);
+      }
     }
 
     sending = false;
