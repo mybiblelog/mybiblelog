@@ -138,7 +138,7 @@ function parseCsvToRows(csvText: string): ImportRow[] {
   catch {
     return [];
   }
-  return rows.map(([inputDate, verseRange]) => {
+  return rows.map(([inputDate = '', verseRange = '']) => {
     const isValidDate = dayjs(inputDate, 'YYYY-MM-DD', true).isValid();
     const date = isValidDate ? inputDate : null;
     let startVerseId: number | null = null;
@@ -146,6 +146,7 @@ function parseCsvToRows(csvText: string): ImportRow[] {
     let status: string;
     try {
       const parsed = Bible.parseVerseRange(verseRange, locale.value);
+      if (!parsed) { throw new Error('Invalid verse range'); }
       startVerseId = parsed.startVerseId;
       endVerseId = parsed.endVerseId;
       status = t('status_todo');

@@ -175,7 +175,7 @@ async function getBookReports() {
 
   const cached = BrowserCache.get(CACHE_KEY);
   if (cached) {
-    bookReports.value = cached as BookReport[];
+    bookReports.value = JSON.parse(cached) as BookReport[];
   }
 
   await getReadChapters();
@@ -185,7 +185,7 @@ async function getBookReports() {
     await new Promise(resolve => setTimeout(resolve, 0));
   }
 
-  BrowserCache.set(CACHE_KEY, reports, CACHE_MINUTES);
+  BrowserCache.set(CACHE_KEY, JSON.stringify(reports), CACHE_MINUTES);
   bookReports.value = reports;
   computeBusy.value = false;
 }

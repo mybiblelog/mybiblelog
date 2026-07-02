@@ -105,13 +105,13 @@
           <div class="selector-note">
             {{ t('select_chapters_note') }}
           </div>
-          <tap-range-selector :min="startChapters[0]" :max="startChapters[startChapters.length - 1]" :columns="8" @selection="selectChapters" />
+          <tap-range-selector :min="startChapters[0]!" :max="startChapters[startChapters.length - 1]!" :columns="8" @selection="selectChapters" />
         </template>
 
         <tap-range-selector
           v-if="selectionTarget === SELECTION.END_CHAPTER"
-          :min="endChapters[0]"
-          :max="endChapters[endChapters.length - 1]"
+          :min="endChapters[0]!"
+          :max="endChapters[endChapters.length - 1]!"
           :multi="false"
           :columns="8"
           @selection="selectEndChapter"
@@ -121,13 +121,13 @@
           <div class="selector-note">
             {{ t('select_verses_note') }}
           </div>
-          <tap-range-selector :min="startVerses[0]" :max="startVerses[startVerses.length - 1]" :columns="8" @selection="selectVerses" />
+          <tap-range-selector :min="startVerses[0]!" :max="startVerses[startVerses.length - 1]!" :columns="8" @selection="selectVerses" />
         </template>
 
         <tap-range-selector
           v-if="selectionTarget === SELECTION.START_VERSE"
-          :min="startVerses[0]"
-          :max="startVerses[startVerses.length - 1]"
+          :min="startVerses[0]!"
+          :max="startVerses[startVerses.length - 1]!"
           :multi="false"
           :columns="8"
           @selection="selectStartVerse"
@@ -135,8 +135,8 @@
 
         <tap-range-selector
           v-if="selectionTarget === SELECTION.END_VERSE"
-          :min="endVerses[0]"
-          :max="endVerses[endVerses.length - 1]"
+          :min="endVerses[0]!"
+          :max="endVerses[endVerses.length - 1]!"
           :multi="false"
           :columns="8"
           @selection="selectEndVerse"

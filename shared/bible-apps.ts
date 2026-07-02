@@ -1,5 +1,5 @@
 import Bible from './bible';
-import { LocaleCode } from './i18n';
+import type { LocaleCode } from './i18n';
 import { getMobileOperatingSystem, isMobileOperatingSystem } from './device';
 
 /**

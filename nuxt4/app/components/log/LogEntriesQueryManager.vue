@@ -87,10 +87,11 @@
 import dayjs from 'dayjs';
 import VerseInput from '~/components/forms/VerseInput.vue';
 import { useDialogStore } from '~/stores/dialog';
+import type { LogEntriesSortDirection } from '~/helpers/log-entries-route-query';
 
 type ManagedDraft = {
   limit: number;
-  sortDirection: string;
+  sortDirection: LogEntriesSortDirection;
   startDate: string;
   endDate: string;
   filterPassageStartVerseId: number;

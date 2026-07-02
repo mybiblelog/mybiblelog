@@ -106,7 +106,7 @@ export const getReadingPathSuggestions = (
   for (const bookIndex of bookIndices) {
     const bookSuggestions = getBookSuggestions(bookIndex, ranges);
     if (bookSuggestions.length) {
-      suggestions.push(bookSuggestions[0]);
+      suggestions.push(bookSuggestions[0]!);
     }
   }
   return suggestions;

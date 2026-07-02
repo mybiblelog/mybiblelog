@@ -53,7 +53,7 @@ export const generateSegments = (firstVerseId: VerseId, finalVerseId: VerseId, r
 
   let lastReadVerseId;
   for (let rangeIndex = 0, rangeCount = consolidatedRanges.length; rangeIndex < rangeCount; rangeIndex++) {
-    const range = consolidatedRanges[rangeIndex];
+    const range = consolidatedRanges[rangeIndex]!;
 
     // Create initial UNREAD segment before first range if needed
     if (rangeIndex === 0) {
@@ -130,8 +130,8 @@ export const generateBibleSegments = (ranges: ReadonlyArray<Readonly<VerseRange>
     const firstVerseId = makeVerseId(bookIndex, 1, 1);
     const finalVerseId = makeVerseId(bookIndex, lastChapterIndex, lastChapterVerseCount);
     const bookRanges: VerseRange[] = [];
-    while (rangeIndex < consolidatedRanges.length && parseVerseId(consolidatedRanges[rangeIndex].startVerseId).book === bookIndex) {
-      bookRanges.push(consolidatedRanges[rangeIndex]);
+    while (rangeIndex < consolidatedRanges.length && parseVerseId(consolidatedRanges[rangeIndex]!.startVerseId).book === bookIndex) {
+      bookRanges.push(consolidatedRanges[rangeIndex]!);
       rangeIndex++;
     }
     segments.push(...generateSegments(firstVerseId, finalVerseId, bookRanges));

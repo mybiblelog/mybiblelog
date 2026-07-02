@@ -43,6 +43,7 @@
 </template>
 
 <script setup lang="ts">
+import type { LocaleCode } from '@mybiblelog/shared';
 import { useAuthStore } from '~/stores/auth';
 import { useUserSettingsStore } from '~/stores/user-settings';
 
@@ -56,10 +57,10 @@ const userSettingsStore = useUserSettingsStore();
 const modalOpen = ref(false);
 
 const availableLocales = computed(() =>
-  (locales.value as Array<{ code: string; name: string }>),
+  (locales.value as Array<{ code: LocaleCode; name: string }>),
 );
 
-const selectLocale = async (code: string) => {
+const selectLocale = async (code: LocaleCode) => {
   modalOpen.value = false;
   await setLocale(code);
   if (authStore.loggedIn) {

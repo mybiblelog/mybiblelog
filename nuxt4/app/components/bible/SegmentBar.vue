@@ -2,7 +2,7 @@
   <div class="segment-bar" :style="barStyle">
     <div
       v-for="segment in segments"
-      :key="segment.id"
+      :key="segment.startVerseId"
       class="segment"
       :title="displayVerseRange(segment.startVerseId, segment.endVerseId)"
       :class="{ 'is-read': segment.read }"
@@ -13,9 +13,12 @@
 
 <script setup lang="ts">
 import { Bible } from '@mybiblelog/shared';
+import type { Segment } from '@mybiblelog/shared';
+
+type SegmentWithPercentage = Segment & { percentage: number };
 
 const props = withDefaults(defineProps<{
-  segments?: Array<Record<string, unknown>>;
+  segments?: Array<SegmentWithPercentage>;
   backgroundColor?: string;
   foregroundColor?: string;
   hoverColor?: string;

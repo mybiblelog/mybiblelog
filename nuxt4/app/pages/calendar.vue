@@ -53,6 +53,7 @@ import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 import { useLogEntriesStore } from '~/stores/log-entries';
+import type { LogEntry as LogEntryModel } from '~/stores/log-entries';
 import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
 import { useDateVerseCountsStore } from '~/stores/date-verse-counts';
 import { useUserSettingsStore } from '~/stores/user-settings';
@@ -83,7 +84,7 @@ const entryDate = computed(() => {
 
 const displayDateFormatted = computed(() => displayDate(currentDate.value ?? '', locale.value));
 
-function actionsForLogEntry(entry: { id: string; startVerseId: string; endVerseId: string; date: string }) {
+function actionsForLogEntry(entry: LogEntryModel) {
   return [
     { label: t('open_bible'), callback: () => openPassageInBible(entry) },
     { label: t('take_note'), callback: () => takeNoteOnPassage(entry) },
@@ -92,7 +93,7 @@ function actionsForLogEntry(entry: { id: string; startVerseId: string; endVerseI
   ];
 }
 
-async function deleteEntry(id: string) {
+async function deleteEntry(id: number | string) {
   const confirmed = await useDialogStore().confirm({
     message: t('are_you_sure'),
     confirmButtonType: 'danger',
@@ -108,20 +109,20 @@ function openAddEntryFormForDate(date: string | null) {
   useLogEntryEditorStore().openEditor({ empty: true, date: date ?? '' });
 }
 
-function openEditEntryForm(id: string) {
+function openEditEntryForm(id: number | string) {
   const targetEntry = logEntriesStore.logEntries.find(e => e.id === id);
   if (!targetEntry) { return; }
   const { date, startVerseId, endVerseId } = targetEntry;
   useLogEntryEditorStore().openEditor({ id, date, startVerseId, endVerseId });
 }
 
-function openPassageInBible(passage: { startVerseId: string }) {
+function openPassageInBible(passage: { startVerseId: number }) {
   const start = Bible.parseVerseId(passage.startVerseId);
   const url = userSettingsStore.getReadingUrl(start.book, start.chapter);
   window.open(url, '_blank');
 }
 
-function takeNoteOnPassage(passage: { startVerseId: string; endVerseId: string }) {
+function takeNoteOnPassage(passage: { startVerseId: number; endVerseId: number }) {
   usePassageNoteEditorStore().openEditor({
     passages: [{ startVerseId: passage.startVerseId, endVerseId: passage.endVerseId }],
     content: '',

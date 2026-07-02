@@ -86,6 +86,7 @@ import { useAuthStore } from '~/stores/auth';
 import { useDialogStore } from '~/stores/dialog';
 import { useFeedbackModalStore } from '~/stores/feedback-modal';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
+import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 
 const { t } = useI18n();
@@ -103,7 +104,7 @@ const initialForm = () => ({
 });
 
 const form = ref(initialForm());
-const errors = ref<Record<string, unknown>>({});
+const errors = ref<Record<string, ApiErrorDetail>>({});
 const submitting = ref(false);
 
 const isDirty = computed(() =>

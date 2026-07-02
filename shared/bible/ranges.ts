@@ -9,7 +9,7 @@ import { getFirstBookVerseId, getLastBookVerseId, getNextVerseId, getPreviousVer
  */
 function createSortedIndices<T>(array: ReadonlyArray<Readonly<T>>, compareFn: (a: T, b: T) => number): number[] {
   return Array.from(array.keys()).sort((a, b) =>
-    compareFn(array[a], array[b]),
+    compareFn(array[a]!, array[b]!),
   );
 }
 
@@ -32,7 +32,7 @@ export const compareRanges = (range1: VerseRange, range2: VerseRange): number =>
 
 export const checkRangeOverlap = (range1: VerseRange, range2: VerseRange): boolean => {
   // Sort ranges according to Bible order
-  const [firstRange, secondRange] = [range1, range2].sort(compareRanges);
+  const [firstRange, secondRange] = compareRanges(range1, range2) <= 0 ? [range1, range2] : [range2, range1];
   return firstRange.endVerseId >= secondRange.startVerseId;
 };
 
@@ -96,13 +96,13 @@ export const countUniqueRangeVerses = (ranges: ReadonlyArray<Readonly<VerseRange
   let totalVerses = 0;
   let lastRange: Readonly<VerseRange> | null = null;
   for (const index of sortedIndices) {
-    const range = ranges[index];
+    const range = ranges[index]!;
     if (!lastRange) {
       lastRange = range;
     }
     else if (range.startVerseId <= lastRange.endVerseId) {
       if (range.endVerseId > lastRange.endVerseId) {
-        lastRange = { ...lastRange, endVerseId: range.endVerseId };
+        lastRange = { startVerseId: lastRange.startVerseId, endVerseId: range.endVerseId };
       }
     }
     else {
@@ -197,12 +197,12 @@ export const consolidateRanges = (ranges: ReadonlyArray<Readonly<VerseRange>>): 
     allBookRanges[i] = [];
   }
   for (const index of sortedIndices) {
-    const range = ranges[index];
+    const range = ranges[index]!;
     const { book } = parseVerseId(range.startVerseId);
-    allBookRanges[book].push({ ...range });
+    allBookRanges[book]!.push({ ...range });
   }
   for (let bookIndex = 1, l = getBookCount(); bookIndex <= l; bookIndex++) {
-    const bookRanges = allBookRanges[bookIndex];
+    const bookRanges = allBookRanges[bookIndex]!;
     const consolidatedBookRanges: VerseRange[] = [];
     let holdingRange: VerseRange | null = null;
     for (const range of bookRanges) {

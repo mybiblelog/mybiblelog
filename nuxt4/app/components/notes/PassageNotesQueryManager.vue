@@ -168,7 +168,7 @@ import AppModal from '~/components/popups/AppModal.vue';
 import PassageNoteTagSelector from '~/components/forms/PassageNoteTagSelector.vue';
 import VerseInput from '~/components/forms/VerseInput.vue';
 import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
-import type { PassageNotesQuery } from '~/helpers/passage-notes-route-query';
+import type { PassageNotesQuery, PassageNotesSortDirection } from '~/helpers/passage-notes-route-query';
 
 type ManagedQuery = Pick<
   PassageNotesQuery,
@@ -290,7 +290,9 @@ const draftSort = computed({
   },
   set(value: string) {
     const [sortOn, sortDirection] = (value || '').split(':');
-    setDraft({ sortOn: sortOn || DEFAULT_DRAFT.sortOn, sortDirection: sortDirection || DEFAULT_DRAFT.sortDirection });
+    const validSortDirection: PassageNotesSortDirection =
+      sortDirection === 'ascending' || sortDirection === 'descending' ? sortDirection : DEFAULT_DRAFT.sortDirection;
+    setDraft({ sortOn: sortOn || DEFAULT_DRAFT.sortOn, sortDirection: validSortDirection });
   },
 });
 
@@ -317,7 +319,7 @@ function clearTagSelection() {
 }
 
 function onTagIdsChange(tagIds: Array<string | number>) {
-  const nextTagIds = Array.isArray(tagIds) ? tagIds : [];
+  const nextTagIds = (Array.isArray(tagIds) ? tagIds : []).map(String);
   const hadNoTags = !Array.isArray(draft.value.filterTags) || draft.value.filterTags.length === 0;
   if (nextTagIds.length && draft.value.filterTagMatching === 'exact' && hadNoTags) {
     setDraft({ filterTags: nextTagIds, filterTagMatching: 'any' });

@@ -63,7 +63,7 @@ export const useDateVerseCountsStore = defineStore('date-verse-counts', {
           trackerStartDate,
         );
         Object.keys(dateVerseCounts).forEach((date) => {
-          this.dateVerseCounts[date] = dateVerseCounts[date];
+          this.dateVerseCounts[date] = dateVerseCounts[date]!;
         });
 
         try {

@@ -47,7 +47,7 @@ export const useReadingSuggestionsStore = defineStore('reading-suggestions', {
       recentReadingLogEntries.sort((a, b) => b.date.localeCompare(a.date));
       const datesRead: string[] = [];
       for (let i = 0; i < recentReadingLogEntries.length; i++) {
-        const entryDate = recentReadingLogEntries[i].date;
+        const entryDate = recentReadingLogEntries[i]!.date;
         if (!datesRead.includes(entryDate)) {
           if (datesRead.length === readingDaysToLookBack) {
             recentReadingLogEntries = recentReadingLogEntries.slice(0, i);
@@ -62,7 +62,7 @@ export const useReadingSuggestionsStore = defineStore('reading-suggestions', {
       const allRecentReadingSuggestions: RecentReadingSuggestion[] = [];
       for (const bookIndexStr of Object.keys(lastLogEntryPerBook)) {
         const bookIndex = Number(bookIndexStr);
-        const lastBookLogEntry = lastLogEntryPerBook[bookIndex];
+        const lastBookLogEntry = lastLogEntryPerBook[bookIndex]!;
         const nextVerseId = Bible.getNextVerseId(lastBookLogEntry.endVerseId);
         if (nextVerseId) {
           const nextVerseChapter = Bible.parseVerseId(nextVerseId).chapter;
@@ -124,7 +124,7 @@ export const useReadingSuggestionsStore = defineStore('reading-suggestions', {
       while (suggestions.length < suggestionCount) {
         if (!sources.length) { break; }
 
-        const nextSuggestion = sources[sourceIndex].shift();
+        const nextSuggestion = sources[sourceIndex]!.shift();
         if (!nextSuggestion) {
           sources.splice(sourceIndex, 1);
           sourceIndex = Math.min(sourceIndex, sources.length - 1);
@@ -136,7 +136,7 @@ export const useReadingSuggestionsStore = defineStore('reading-suggestions', {
           suggestions.push(nextSuggestion);
         }
 
-        if (!sources[sourceIndex].length) {
+        if (!sources[sourceIndex]!.length) {
           sources.splice(sourceIndex, 1);
         }
         else {
