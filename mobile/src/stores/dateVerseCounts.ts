@@ -1,13 +1,13 @@
-import dayjs from "dayjs";
-import { create } from "zustand";
+import dayjs from 'dayjs';
+import { create } from 'zustand';
 import {
   type DateVerseCounts,
   type DateVerseCountsMap,
   computeDateVerseCounts,
-} from "@mybiblelog/shared";
-import { getCache, setCache } from "@/src/storage/dateVerseCountsCache";
-import { useLogEntriesStore } from "@/src/stores/logEntries";
-import { useUserSettingsStore } from "@/src/stores/userSettings";
+} from '@mybiblelog/shared';
+import { getCache, setCache } from '@/src/storage/dateVerseCountsCache';
+import { useLogEntriesStore } from '@/src/stores/logEntries';
+import { useUserSettingsStore } from '@/src/stores/userSettings';
 
 /**
  * Date-verse-counts store (Zustand).
@@ -20,7 +20,7 @@ import { useUserSettingsStore } from "@/src/stores/userSettings";
  * `lookBackDate` change.
  */
 
-const DATE_VERSE_COUNTS_CACHE_KEY = "dateVerseCounts";
+const DATE_VERSE_COUNTS_CACHE_KEY = 'dateVerseCounts';
 const DATE_VERSE_COUNTS_CACHE_MINUTES = 60 * 24;
 
 const emptyCounts: DateVerseCounts = { total: 0, unique: 0 };
@@ -45,7 +45,7 @@ export const useDateVerseCountsStore = create<DateVerseCountsStore>((set, get) =
       }
 
       const logState = useLogEntriesStore.getState().state;
-      const logEntries = logState.status === "ready" ? logState.entries : [];
+      const logEntries = logState.status === 'ready' ? logState.entries : [];
 
       let startDate: string | undefined;
       for (const entry of logEntries) {
@@ -57,18 +57,19 @@ export const useDateVerseCountsStore = create<DateVerseCountsStore>((set, get) =
 
       const settingsState = useUserSettingsStore.getState().state;
       const trackerStartDate =
-        settingsState.status === "ready" ? settingsState.settings.lookBackDate : undefined;
+        settingsState.status === 'ready' ? settingsState.settings.lookBackDate : undefined;
 
       const computed = computeDateVerseCounts(
         logEntries,
         startDate,
-        dayjs().format("YYYY-MM-DD"),
+        dayjs().format('YYYY-MM-DD'),
         trackerStartDate,
       );
 
       set({ dateVerseCounts: { ...get().dateVerseCounts, ...computed } });
       await setCache(DATE_VERSE_COUNTS_CACHE_KEY, get().dateVerseCounts, DATE_VERSE_COUNTS_CACHE_MINUTES);
-    } finally {
+    }
+    finally {
       set({ jobs: get().jobs - 1 });
     }
   },
@@ -97,7 +98,7 @@ export function initDateVerseCounts(): void {
   let prevEntries: unknown = null;
   let prevReady = false;
   useLogEntriesStore.subscribe((store) => {
-    const entries = store.state.status === "ready" ? store.state.entries : null;
+    const entries = store.state.status === 'ready' ? store.state.entries : null;
     const ready = entries !== null;
     if (ready && (entries !== prevEntries || !prevReady)) {
       prevEntries = entries;
@@ -109,7 +110,7 @@ export function initDateVerseCounts(): void {
   // Recompute when the look-back date changes.
   let prevLookBack: string | null = null;
   useUserSettingsStore.subscribe((store) => {
-    const lookBack = store.state.status === "ready" ? store.state.settings.lookBackDate : null;
+    const lookBack = store.state.status === 'ready' ? store.state.settings.lookBackDate : null;
     if (lookBack && lookBack !== prevLookBack) {
       prevLookBack = lookBack;
       recompute();

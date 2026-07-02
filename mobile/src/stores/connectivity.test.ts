@@ -1,9 +1,9 @@
-import NetInfo from "@react-native-community/netinfo";
+import NetInfo from '@react-native-community/netinfo';
 import {
   getIsOnline,
   initConnectivity,
   useConnectivityStore,
-} from "./connectivity";
+} from './connectivity';
 
 type Listener = (s: {
   isConnected: boolean | null;
@@ -22,12 +22,12 @@ beforeEach(() => {
   useConnectivityStore.setState({ isOnline: null });
 });
 
-describe("connectivity store", () => {
-  it("starts as null until the first NetInfo event", () => {
+describe('connectivity store', () => {
+  it('starts as null until the first NetInfo event', () => {
     expect(getIsOnline()).toBeNull();
   });
 
-  it("prefers isInternetReachable when it is known", () => {
+  it('prefers isInternetReachable when it is known', () => {
     listener({ isConnected: true, isInternetReachable: true });
     expect(getIsOnline()).toBe(true);
 
@@ -35,7 +35,7 @@ describe("connectivity store", () => {
     expect(getIsOnline()).toBe(false);
   });
 
-  it("falls back to isConnected when reachability is unknown (null)", () => {
+  it('falls back to isConnected when reachability is unknown (null)', () => {
     listener({ isConnected: true, isInternetReachable: null });
     expect(getIsOnline()).toBe(true);
 

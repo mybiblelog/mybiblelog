@@ -1,4 +1,4 @@
-import type { GoogleSignInResult } from "./googleSignIn";
+import type { GoogleSignInResult } from './googleSignIn';
 
 /**
  * Web stub for the native Google Sign-In wrapper.
@@ -14,7 +14,7 @@ import type { GoogleSignInResult } from "./googleSignIn";
  * Identity Services.
  */
 
-export type { GoogleSignInResult } from "./googleSignIn";
+export type { GoogleSignInResult } from './googleSignIn';
 
 /** No-op on web — there is no native SDK to configure. */
 export function configureGoogleSignIn(): void {}

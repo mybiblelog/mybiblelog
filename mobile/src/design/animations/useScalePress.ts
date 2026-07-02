@@ -1,11 +1,11 @@
-import { useCallback } from "react";
+import { useCallback } from 'react';
 import {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
-} from "react-native-reanimated";
-import { durations, springs } from "../tokens/motion";
+} from 'react-native-reanimated';
+import { durations, springs } from '../tokens/motion';
 
 type Options = {
   /** Scale applied while pressed. Default 0.96. */

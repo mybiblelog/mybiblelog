@@ -1,4 +1,4 @@
-import type { ExpoConfig } from "expo/config";
+import type { ExpoConfig } from 'expo/config';
 
 // This file is evaluated by `expo config` (run by EAS before uploading, and
 // locally) where `.env` is NOT auto-loaded. So we don't validate or require env
@@ -20,7 +20,7 @@ const googleIosClientId = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID?.trim() |
 // suffix reversed into `com.googleusercontent.apps.<id>`.
 function toIosUrlScheme(iosClientId: string | undefined): string | undefined {
   if (!iosClientId) return undefined;
-  const id = iosClientId.replace(/\.apps\.googleusercontent\.com$/, "");
+  const id = iosClientId.replace(/\.apps\.googleusercontent\.com$/, '');
   return `com.googleusercontent.apps.${id}`;
 }
 
@@ -38,7 +38,7 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
     // EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID; Android uses the package name + SHA-1
     // registered in Google Cloud.
     ...(iosUrlScheme
-      ? [["react-native-nitro-google-signin", { iosUrlScheme }] as [string, any]]
+      ? [['react-native-nitro-google-signin', { iosUrlScheme }] as [string, any]]
       : []),
   ],
   extra: {

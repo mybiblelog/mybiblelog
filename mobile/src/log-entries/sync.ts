@@ -1,5 +1,5 @@
-import type { LogEntry } from "@/src/types/log-entry";
-import type { PendingLogEntryMutation, StoredLogEntry } from "@/src/storage/logEntries";
+import type { LogEntry } from '@/src/types/log-entry';
+import type { PendingLogEntryMutation, StoredLogEntry } from '@/src/storage/logEntries';
 
 /**
  * Pure offline-first helpers for the log-entries store.
@@ -11,7 +11,7 @@ import type { PendingLogEntryMutation, StoredLogEntry } from "@/src/storage/logE
  * only manages local state + the pending-mutation queue.
  */
 
-export type LogEntryInput = Pick<LogEntry, "date" | "startVerseId" | "endVerseId">;
+export type LogEntryInput = Pick<LogEntry, 'date' | 'startVerseId' | 'endVerseId'>;
 
 export function now(): number {
   return Date.now();
@@ -59,12 +59,12 @@ export function coalesceCreate(
   entry: LogEntryInput,
 ): PendingLogEntryMutation[] {
   // If there's a delete for this entry, keep delete (user wants it gone).
-  const hasDelete = mutations.some((m) => m.clientId === clientId && m.type === "delete");
+  const hasDelete = mutations.some((m) => m.clientId === clientId && m.type === 'delete');
   if (hasDelete) return mutations;
 
   // Replace any existing create/update with the new create payload.
-  const filtered = mutations.filter((m) => m.clientId !== clientId || m.type === "delete");
-  return normalizeMutationQueue([...filtered, { type: "create", clientId, entry, ts: now() }]);
+  const filtered = mutations.filter((m) => m.clientId !== clientId || m.type === 'delete');
+  return normalizeMutationQueue([...filtered, { type: 'create', clientId, entry, ts: now() }]);
 }
 
 export function coalesceUpdate(
@@ -74,17 +74,17 @@ export function coalesceUpdate(
   entry: LogEntryInput,
 ): PendingLogEntryMutation[] {
   // If there's a delete, ignore further updates.
-  const hasDelete = mutations.some((m) => m.clientId === clientId && m.type === "delete");
+  const hasDelete = mutations.some((m) => m.clientId === clientId && m.type === 'delete');
   if (hasDelete) return mutations;
 
   // If there's a create, fold the update into the create payload.
-  const existingCreate = mutations.find((m) => m.clientId === clientId && m.type === "create");
-  if (existingCreate && existingCreate.type === "create") {
+  const existingCreate = mutations.find((m) => m.clientId === clientId && m.type === 'create');
+  if (existingCreate && existingCreate.type === 'create') {
     return coalesceCreate(mutations, clientId, entry);
   }
 
-  const filtered = mutations.filter((m) => !(m.clientId === clientId && m.type === "update"));
-  return normalizeMutationQueue([...filtered, { type: "update", clientId, id, entry, ts: now() }]);
+  const filtered = mutations.filter((m) => !(m.clientId === clientId && m.type === 'update'));
+  return normalizeMutationQueue([...filtered, { type: 'update', clientId, id, entry, ts: now() }]);
 }
 
 export function coalesceDelete(
@@ -93,13 +93,13 @@ export function coalesceDelete(
   id: string | undefined,
 ): PendingLogEntryMutation[] {
   // If it was created offline and never synced, drop the create (and any update) and don't enqueue delete.
-  const hasCreate = mutations.some((m) => m.clientId === clientId && m.type === "create");
+  const hasCreate = mutations.some((m) => m.clientId === clientId && m.type === 'create');
   if (hasCreate) {
     return mutations.filter((m) => m.clientId !== clientId);
   }
 
-  const filtered = mutations.filter((m) => !(m.clientId === clientId && m.type === "update"));
+  const filtered = mutations.filter((m) => !(m.clientId === clientId && m.type === 'update'));
   // Replace existing delete (keep latest timestamp)
-  const withoutDelete = filtered.filter((m) => !(m.clientId === clientId && m.type === "delete"));
-  return normalizeMutationQueue([...withoutDelete, { type: "delete", clientId, id, ts: now() }]);
+  const withoutDelete = filtered.filter((m) => !(m.clientId === clientId && m.type === 'delete'));
+  return normalizeMutationQueue([...withoutDelete, { type: 'delete', clientId, id, ts: now() }]);
 }

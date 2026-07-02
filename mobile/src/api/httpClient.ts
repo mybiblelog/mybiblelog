@@ -1,7 +1,7 @@
-import type { ApiResponse, HttpClient } from "@mybiblelog/shared";
-import { getApiOrigin } from "@/src/api/apiBase";
-import { ApiError, parseApiErrorBody } from "@/src/api/apiError";
-import { getAuthToken } from "@/src/stores/auth";
+import type { ApiResponse, HttpClient } from '@mybiblelog/shared';
+import { getApiOrigin } from '@/src/api/apiBase';
+import { ApiError, parseApiErrorBody } from '@/src/api/apiError';
+import { getAuthToken } from '@/src/stores/auth';
 
 /**
  * Mobile implementation of the shared `HttpClient` port (see
@@ -13,13 +13,13 @@ import { getAuthToken } from "@/src/stores/auth";
  * non-OK responses are parsed into a typed `ApiError`.
  */
 
-type Method = "GET" | "POST" | "PUT" | "DELETE";
+type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 async function request<T>(method: Method, path: string, body?: unknown): Promise<ApiResponse<T>> {
-  const headers: Record<string, string> = { Accept: "application/json" };
+  const headers: Record<string, string> = { Accept: 'application/json' };
   const token = getAuthToken();
   if (token) headers.Authorization = `Bearer ${token}`;
-  if (body !== undefined) headers["Content-Type"] = "application/json";
+  if (body !== undefined) headers['Content-Type'] = 'application/json';
 
   const res = await fetch(`${getApiOrigin()}${path}`, {
     method,
@@ -39,8 +39,8 @@ async function request<T>(method: Method, path: string, body?: unknown): Promise
 }
 
 export const httpClient: HttpClient = {
-  get: <T = unknown>(path: string) => request<T>("GET", path),
-  post: <T = unknown>(path: string, body?: unknown) => request<T>("POST", path, body),
-  put: <T = unknown>(path: string, body?: unknown) => request<T>("PUT", path, body),
-  delete: <T = unknown>(path: string) => request<T>("DELETE", path),
+  get: <T = unknown>(path: string) => request<T>('GET', path),
+  post: <T = unknown>(path: string, body?: unknown) => request<T>('POST', path, body),
+  put: <T = unknown>(path: string, body?: unknown) => request<T>('PUT', path, body),
+  delete: <T = unknown>(path: string) => request<T>('DELETE', path),
 };

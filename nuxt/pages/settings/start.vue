@@ -17,7 +17,9 @@
         </div>
       </div>
       <div class="mbl-control">
-        <button type="button" class="mbl-button mbl-button--primary" :disabled="saving" data-testid="settings-start-page-save" @click="handleStartPageSubmit">{{ $t('save') }}</button>
+        <button type="button" class="mbl-button mbl-button--primary" :disabled="saving" data-testid="settings-start-page-save" @click="handleStartPageSubmit">
+          {{ $t('save') }}
+        </button>
       </div>
     </div>
     <div v-if="userSettingsErrors.startPage" class="mbl-help mbl-help--danger">
