@@ -15,6 +15,7 @@
     />
     <floating-feedback-button />
     <app-toaster />
+    <pwa-prompt />
     <app-dialog />
     <log-entry-editor-modal />
     <passage-note-editor-modal />
@@ -27,6 +28,7 @@
 import SiteNav from '~/components/layout/SiteNav.vue';
 import FloatingFeedbackButton from '~/components/ui/FloatingFeedbackButton.vue';
 import AppToaster from '~/components/ui/AppToaster.vue';
+import PwaPrompt from '~/components/ui/PwaPrompt.vue';
 import AppDialog from '~/components/popups/AppDialog.vue';
 import LogEntryEditorModal from '~/components/popups/LogEntryEditorModal.vue';
 import PassageNoteEditorModal from '~/components/popups/PassageNoteEditorModal.vue';

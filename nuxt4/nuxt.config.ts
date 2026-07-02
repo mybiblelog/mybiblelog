@@ -86,12 +86,35 @@ export default defineNuxtConfig({
   },
 
   pwa: {
+    // 'prompt' keeps needRefresh pending until the user clicks Reload in the
+    // PwaPrompt component, rather than silently reloading on every SW update.
+    registerType: 'prompt',
+    // Generate the icon set (192/512/maskable/apple-touch) from public/icon.png
+    // via pwa-assets.config.ts, and auto-inject manifest icons + apple head links.
+    pwaAssets: {
+      config: true,
+    },
     manifest: {
       name: 'My Bible Log',
       short_name: 'My Bible Log',
       lang: 'en',
       display: 'standalone',
+      start_url: '/?standalone=true',
+      background_color: '#ffffff',
       theme_color: '#0099FF',
+    },
+    // Enables $pwa.showInstallPrompt / $pwa.install() for the install button.
+    client: {
+      installPrompt: true,
+    },
+    // Serve the manifest + a (minimal) service worker in `nuxt dev` so the PWA
+    // is testable without a production build. The production workbox
+    // runtimeCaching below does not apply to the dev SW.
+    devOptions: {
+      enabled: true,
+      suppressWarnings: true,
+      navigateFallback: '/',
+      type: 'module',
     },
     workbox: {
       navigateFallback: null,
