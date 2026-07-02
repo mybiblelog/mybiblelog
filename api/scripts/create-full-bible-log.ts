@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import useRepositories from '../repositories/useRepositories';
 import { closeConnection } from '../mongo/useCollections';
 import dayjs from 'dayjs';

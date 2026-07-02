@@ -25,13 +25,13 @@ import {
   postLogEntry,
 } from '@mybiblelog/shared';
 import { getIsOnline } from '@/src/stores/connectivity';
-import { loadPendingLogEntryMutations } from '@/src/storage/logEntries';
+import { loadPendingLogEntryMutations, type StoredLogEntry } from '@/src/storage/logEntries';
 import { useLogEntriesStore } from './logEntries';
 
 const actions = () => useLogEntriesStore.getState();
 const entry = { date: '2026-06-27', startVerseId: 43003016, endVerseId: 43003018 };
 
-function setReady(entries: any[] = []) {
+function setReady(entries: StoredLogEntry[] = []) {
   useLogEntriesStore.setState({ state: { status: 'ready', entries, isSyncing: false } });
 }
 

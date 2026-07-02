@@ -90,6 +90,7 @@ async function onResend() {
   }
   catch (err) {
     const error = err instanceof ApiError ? err : new UnknownApiError();
+    // eslint-disable-next-line no-console
     console.error('Failed to resend verification email', error);
     lastResult.value = 'error';
   }

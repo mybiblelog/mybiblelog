@@ -13,10 +13,15 @@
         </div>
       </div>
       <div class="fifty-fifty-content">
+        <!-- Props are repo-authored marketing copy (may contain markup), not user input. -->
+        <!-- eslint-disable-next-line vue/no-v-html -->
         <h2 class="fifty-fifty-title" v-html="title" />
+        <!-- eslint-disable-next-line vue/no-v-html -->
         <p class="fifty-fifty-subtitle" v-html="subtitle" />
+        <!-- eslint-disable-next-line vue/no-v-html -->
         <p class="fifty-fifty-description" v-html="description" />
         <ul v-if="list && list.length > 0" class="fifty-fifty-list">
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <li v-for="(item, index) in list" :key="index" v-html="item" />
         </ul>
         <div v-if="buttonText && buttonDestination" class="fifty-fifty-cta">
@@ -24,6 +29,7 @@
             {{ buttonText }}
           </nuxt-link>
         </div>
+        <!-- eslint-disable-next-line vue/no-v-html -->
         <p v-if="note" class="fifty-fifty-note" v-html="note" />
       </div>
     </div>

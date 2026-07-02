@@ -9,11 +9,12 @@ jest.mock('@/src/storage/dateVerseCountsCache', () => ({
 }));
 
 import { getCache, setCache } from '@/src/storage/dateVerseCountsCache';
+import type { StoredLogEntry } from '@/src/storage/logEntries';
 import { useLogEntriesStore } from './logEntries';
 import { useUserSettingsStore } from './userSettings';
 import { useDateVerseCountsStore } from './dateVerseCounts';
 
-function setEntries(entries: any[]) {
+function setEntries(entries: StoredLogEntry[]) {
   useLogEntriesStore.setState({ state: { status: 'ready', entries, isSyncing: false } });
 }
 function setLookBack(lookBackDate: string) {

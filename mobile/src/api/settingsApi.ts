@@ -21,7 +21,7 @@ async function apiFetch(token: string, path: string, init?: RequestInit): Promis
   });
 }
 
-function toNumber(v: any): number | undefined {
+function toNumber(v: unknown): number | undefined {
   if (typeof v === 'number' && Number.isFinite(v)) return v;
   if (typeof v === 'string' && v.trim() !== '' && Number.isFinite(Number(v))) return Number(v);
   return undefined;
@@ -29,7 +29,7 @@ function toNumber(v: any): number | undefined {
 
 export function parseServerUserSettings(value: unknown): ServerUserSettings | null {
   if (!value || typeof value !== 'object') return null;
-  const v = value as any;
+  const v = value as Record<string, unknown>;
   return {
     dailyVerseCountGoal: toNumber(v.dailyVerseCountGoal),
     lookBackDate: typeof v.lookBackDate === 'string' ? v.lookBackDate : undefined,

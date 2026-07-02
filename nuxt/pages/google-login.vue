@@ -55,6 +55,7 @@ export default {
         await this.$router.push(redirectUrl);
       }
       catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Google OAuth verification failed:', error);
         // Redirect to login page with error
         await this.$router.push(this.localePath('/login?error=oauth_failed'));

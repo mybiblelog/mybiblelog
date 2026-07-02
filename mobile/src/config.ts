@@ -17,7 +17,7 @@ const REQUIRED_KEYS: Record<'apiBaseUrl' | 'googleWebClientId', string> = {
 
 function getConfig(): EnvConfig {
   const expoExtra = (Constants.expoConfig?.extra ?? {}) as Partial<EnvConfig>;
-  const manifest2Extra = ((Constants as any).manifest2?.extra ?? {}) as Partial<EnvConfig>;
+  const manifest2Extra = ((Constants as unknown as { manifest2?: { extra?: unknown } }).manifest2?.extra ?? {}) as Partial<EnvConfig>;
   const merged = { ...manifest2Extra, ...expoExtra } as Partial<EnvConfig>;
 
   const missing = (Object.keys(REQUIRED_KEYS) as (keyof typeof REQUIRED_KEYS)[])

@@ -1,5 +1,5 @@
 import { Linking, Platform } from 'react-native';
-import { Bible, BibleApps, type BibleApps as BibleAppsType, getAppReadingUrl, getDefaultBibleVersion } from '@mybiblelog/shared';
+import { Bible, BibleApps, type BibleApps as BibleAppsType, type BibleVersions, getAppReadingUrl, getDefaultBibleVersion, isBibleVersionKey } from '@mybiblelog/shared';
 
 export type OpenInBiblePrefs = {
   preferredBibleApp?: string;
@@ -12,16 +12,19 @@ function defaultBibleAppForDevice(): keyof typeof BibleAppsType {
   return BibleApps.BIBLEGATEWAY;
 }
 
+function isBibleAppKey(s: string): s is keyof typeof BibleAppsType {
+  return Object.prototype.hasOwnProperty.call(BibleApps, s);
+}
+
 function normalizeBibleApp(app?: string): keyof typeof BibleAppsType {
-  if (!app) return defaultBibleAppForDevice();
-  const values = Object.values(BibleApps);
-  if (values.includes(app as any)) return app as any;
+  if (app && isBibleAppKey(app)) return app;
   return defaultBibleAppForDevice();
 }
 
-function normalizeBibleVersion(version?: string): any {
+function normalizeBibleVersion(version?: string): keyof typeof BibleVersions {
   // util expects one of the BibleVersions enum keys/values; fall back to default.
-  return (version as any) || getDefaultBibleVersion();
+  if (version && isBibleVersionKey(version)) return version;
+  return getDefaultBibleVersion();
 }
 
 export async function openPassageInBible(

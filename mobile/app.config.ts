@@ -38,7 +38,7 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
     // EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID; Android uses the package name + SHA-1
     // registered in Google Cloud.
     ...(iosUrlScheme
-      ? [['react-native-nitro-google-signin', { iosUrlScheme }] as [string, any]]
+      ? [['react-native-nitro-google-signin', { iosUrlScheme }] as [string, { iosUrlScheme: string }]]
       : []),
   ],
   extra: {

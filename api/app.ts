@@ -147,7 +147,8 @@ const buildApp = (): express.Application => {
   });
 
   // Handle any other errors
-  const apiRouterErrorHandler = (err, req, res, next) => {
+  // Express identifies error handlers by their 4-argument arity, so `_next` must stay.
+  const apiRouterErrorHandler = (err, req, res, _next) => {
     const error =
       err instanceof AppError ?
         err :

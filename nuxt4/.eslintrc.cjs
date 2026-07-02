@@ -94,7 +94,7 @@ module.exports = {
         registeredComponentsOnly: true,
       },
     ],
-    '@typescript-eslint/no-unused-vars': 'warn',
+    '@typescript-eslint/no-unused-vars': 'error',
     // The base rule misreports inline generic type params
     // (`<T>(p: string) => Promise<T>`) as use-before-define, treating the type
     // parameter `T` as a variable. TypeScript already catches genuine

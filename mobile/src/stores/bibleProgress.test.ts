@@ -8,14 +8,16 @@ jest.mock('@/src/storage/dateVerseCountsCache', () => ({
   setCache: jest.fn(async () => {}),
 }));
 
+import type { BibleProgress } from '@mybiblelog/shared';
 import { getCache, setCache } from '@/src/storage/dateVerseCountsCache';
+import type { StoredLogEntry } from '@/src/storage/logEntries';
 import { useLogEntriesStore } from './logEntries';
 import { useUserSettingsStore } from './userSettings';
 import { useBibleProgressStore } from './bibleProgress';
 
-const SENTINEL = { overall: { percent: 0.5 }, books: [] } as any;
+const SENTINEL = { overall: { percent: 0.5 }, books: [] } as unknown as BibleProgress;
 
-function setEntries(entries: any[]) {
+function setEntries(entries: StoredLogEntry[]) {
   useLogEntriesStore.setState({ state: { status: 'ready', entries, isSyncing: false } });
 }
 function setLookBack(lookBackDate: string) {
@@ -47,7 +49,7 @@ describe('cacheBibleProgress', () => {
     await useBibleProgressStore.getState().cacheBibleProgress();
 
     const ranges = mockComputeBibleProgress.mock.calls[0][0];
-    expect(ranges.map((e: any) => e.clientId)).toEqual(['new']); // "old" excluded
+    expect(ranges.map((e: StoredLogEntry) => e.clientId)).toEqual(['new']); // "old" excluded
     expect(useBibleProgressStore.getState().progress).toBe(SENTINEL);
     expect(setCache).toHaveBeenCalled();
   });

@@ -15,10 +15,12 @@
         <div class="mbl-content">
           <p>{{ $t('content.this_is') }}</p>
           <p>{{ $t('content.printer_friendly') }}</p>
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <p v-html="$t('content.download_directly')" />
           <h2>{{ $t('content.chapters_in_the_bible') }}</h2>
           <p>{{ $t('content.there_are_66_books') }}</p>
           <h2>{{ $t('content.track_your_progress_online') }}</h2>
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <p v-html="$t('content.if_you_would_like')" />
         </div>
       </section>

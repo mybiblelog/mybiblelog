@@ -44,7 +44,7 @@ export async function loadLogEntries(): Promise<StoredLogEntry[] | null> {
     const withClientIds = ensureClientIds(entries);
 
     // If we had to migrate any entries, persist immediately.
-    const changed = withClientIds.some((e, i) => e.clientId !== (entries[i] as any)?.clientId);
+    const changed = withClientIds.some((e, i) => e.clientId !== entries[i]?.clientId);
     if (changed) {
       void saveLogEntries(withClientIds);
     }
@@ -77,9 +77,9 @@ function isPendingMutation(value: unknown): value is PendingLogEntryMutation {
   if (typeof v.clientId !== 'string') return false;
   if (typeof v.ts !== 'number') return false;
   if (v.type === 'delete') return true;
-  const entry = v.entry as any;
+  if (!v.entry || typeof v.entry !== 'object') return false;
+  const entry = v.entry as Record<string, unknown>;
   return (
-    entry &&
     typeof entry.date === 'string' &&
     typeof entry.startVerseId === 'number' &&
     typeof entry.endVerseId === 'number'

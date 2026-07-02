@@ -5,7 +5,7 @@ import { translateApiError } from './translateApiError';
 const t = jest.fn(
   (key: string, options?: Record<string, unknown>) =>
     `${key}${options ? `:${JSON.stringify(options)}` : ''}`,
-) as any;
+);
 
 beforeEach(() => t.mockClear());
 

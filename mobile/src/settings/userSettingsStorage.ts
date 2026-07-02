@@ -25,7 +25,7 @@ export const DEFAULT_LOCAL_USER_SETTINGS: LocalUserSettings = {
 
 function isLocalUserSettings(value: unknown): value is LocalUserSettings {
   if (!value || typeof value !== 'object') return false;
-  const v = value as any;
+  const v = value as Record<string, unknown>;
   return (
     typeof v.lookBackDate === 'string' &&
     typeof v.dailyVerseCountGoal === 'number' &&
