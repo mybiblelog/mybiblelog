@@ -264,6 +264,7 @@ export default {
     pagination() {
       // AFTER new page data loads, causing a pagination update, smooth scroll to top
       // Avoids a jarring page length change from doing this too soon
+      if (!process.client) { return; }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     },
   },

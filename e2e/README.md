@@ -69,7 +69,8 @@ e2e/
   fixtures.ts          # authenticated test fixtures (testUser, api, cookie-injected context)
   helpers/
     env.ts             # TEST_* env loading
-    api-client.ts      # user create/login/delete via the HTTP contract (standalone)
+    api-client.ts      # user create/login/delete/getCurrentUser via the HTTP contract (standalone)
+    emails.ts          # reads the test-only email seam to recover one-time codes
     seed.ts            # API seeding: log entries, notes, tags, settings
     passages.ts        # verse ID helpers (wraps @mybiblelog/shared as a single seam)
     dates.ts           # local-time date strings
@@ -98,6 +99,8 @@ The suite (and its helpers) assume the following app behavior. A migrated app mu
   - `POST/GET /api/log-entries` `{ date, startVerseId, endVerseId }`
   - `POST /api/passage-notes` `{ content, passages, tags }`
   - `POST /api/passage-note-tags` `{ label, color, description }`
+  - `GET /api/auth/user` (Bearer) → `data.user` (used to assert account state, e.g. a changed email)
+  - `GET /api/test/emails?to=&subject=&limit=` (test-bypass header) → recent emails for a recipient, newest first
   - `GET /api/sitemap.xml`
 - **Locale cookie**: `i18n_redirected` pins the locale; English routes are unprefixed, other locales use a path prefix.
 - **`data-testid` attributes**: kebab-case, with state exposed via data attributes (`data-percentage`, `data-date`, `data-complete`, …) rather than CSS. Grep the app for `data-testid` for the full list; the major ones:
@@ -117,9 +120,26 @@ The suite (and its helpers) assume the following app behavior. A migrated app mu
 
 Concurrent SSR requests used to corrupt each other's state — settings hydrating as defaults, spurious "unauthenticated" error pages — because `setActivePinia` is a module-level global on the server and bare `useXStore()` calls *after an `await`* in server-run actions could resolve another request's stores. Fixed by resolving stores before the first `await` in `nuxt/stores/app-init.ts` (`serverInit`, `loadUserData`) and snapshotting `getActivePinia()` in `nuxt/stores/user-settings.ts` (`loadServerSettings`). **Rule for new server-executed store actions: never call a bare `useXStore()` after an `await` — capture store references (or the pinia instance) at action entry.** The parallel e2e suite is the regression test: before the fix, direct `/calendar` loads failed ~1 in 3 with parallel workers.
 
+## Email-based flows
+
+`email-flows.spec.ts` covers the full emailed-code redemption flows — verify-email,
+reset-password, and change-email — end to end. The one-time codes are normally
+delivered only by email, so the tests recover them through a **test-only API seam**:
+
+- `GET /api/test/emails?to=<addr>&subject=<substr>&limit=<n>` returns the most
+  recently recorded emails for a recipient, newest first. Every outgoing email is
+  persisted (in non-production with status `log_only`), so the seam reads the
+  recorded copy.
+- The endpoint is gated by the `x-test-bypass-secret` header and the handler
+  (`api/http/handlers/test-emails.ts`) returns **404 in production** or without a
+  valid header — it never exposes email contents in a real deployment.
+- `helpers/emails.ts` wraps it: `waitForEmail({ to, subject, since })` polls until
+  the email appears (recording is async off the send queue), and `extractCode`
+  pulls the `?code=…` value out of the body. The spec then drives the browser
+  redemption (`/verify-email`, `/reset-password`, `/change-email`).
+
 ## Not covered (by design)
 
 - Google OAuth login (third-party flow)
-- Emailed-code redemption: password reset completion, email change completion (tested up to "request submitted")
 - Admin pages (`/admin/*`)
 - Non-Chromium browsers

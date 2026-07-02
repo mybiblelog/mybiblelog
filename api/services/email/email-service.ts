@@ -83,7 +83,10 @@ const init = async () => {
     emails.create({ ...forRecord, status });
   };
 
-  const { enqueue } = createQueue<SendEmailParams>(sendFn);
+  // Outside production nothing is actually sent (emails are recorded as
+  // `log_only`), so skip the provider-rate-limit pacing — a backlog would
+  // delay recording and starve the test email seam (`GET /api/test/emails`).
+  const { enqueue } = createQueue<SendEmailParams>(sendFn, nodeEnv === 'production' ? undefined : 0);
 
   const queueEmail = (params: QueueEmailParams): void => {
     const from = params.from || defaultFromEmailAddress;

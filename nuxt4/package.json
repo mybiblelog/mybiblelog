@@ -28,6 +28,7 @@
     "@vite-pwa/nuxt": "^1.1.1",
     "better-sqlite3": "^12.11.1",
     "dayjs": "^1.11.13",
+    "dotenv": "^17.4.2",
     "nuxt": "^4.4.8",
     "pinia": "^3.0.4"
   },

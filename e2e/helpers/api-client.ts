@@ -81,6 +81,27 @@ export async function createTestUser({ locale = 'en', isAdmin = false }: CreateT
 }
 
 /**
+ * Returns the currently authenticated user for a token (GET /api/auth/user).
+ * Used to assert account state after a flow (e.g. the email actually changed).
+ */
+export async function getCurrentUser(token: string): Promise<{ email: string; isAdmin: boolean } | null> {
+  const ctx = await request.newContext({ baseURL: env.apiUrl });
+  try {
+    const response = await ctx.get('/api/auth/user', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!response.ok()) {
+      throw new Error(`Failed to fetch current user: ${response.status()} ${await response.text()}`);
+    }
+    const body = await response.json();
+    return body.data.user;
+  }
+  finally {
+    await ctx.dispose();
+  }
+}
+
+/**
  * Deletes a test user account and all associated data.
  */
 export async function deleteTestUser(user: Pick<TestUser, 'token'>): Promise<void> {
