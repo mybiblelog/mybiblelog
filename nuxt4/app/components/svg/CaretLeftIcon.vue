@@ -1,5 +1,5 @@
 <template>
-  <svg :width="width" :height="height" viewBox="8 8 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg :width.attr="width" :height.attr="height" viewBox="8 8 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M14 9L11 12L14 15" :stroke="fill" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
 </template>

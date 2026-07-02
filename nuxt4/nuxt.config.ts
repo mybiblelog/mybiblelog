@@ -112,6 +112,22 @@ export default defineNuxtConfig({
   },
 
   vite: {
+    // Pre-bundle CJS deps discovered at runtime to avoid dev-server page reloads
+    optimizeDeps: {
+      include: [
+        '@vue/devtools-kit',
+        'dayjs',
+        'dayjs/locale/de',
+        'dayjs/locale/es',
+        'dayjs/locale/fr',
+        'dayjs/locale/ko',
+        'dayjs/locale/pt',
+        'dayjs/locale/uk',
+        'dayjs/plugin/duration',
+        'dayjs/plugin/relativeTime',
+        'dayjs/plugin/weekday',
+      ],
+    },
     build: {
       // modulepreload is supported by 96%+ of browsers; polyfill not worth the
       // sourcemap warning it generates in Vite 7

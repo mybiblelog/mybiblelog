@@ -15,7 +15,7 @@
               class="site-nav__brand-text"
               :to="localePath(authStore.loggedIn ? '/start' : '/')"
             >
-              {{ t('my_bible_log') }}
+              {{ $t('my_bible_log') }}
             </NuxtLink>
           </div>
           <button
@@ -48,7 +48,7 @@
               class="site-nav__brand-text"
               :to="localePath('/')"
             >
-              {{ t('my_bible_log') }}
+              {{ $t('my_bible_log') }}
             </NuxtLink>
           </div>
 
