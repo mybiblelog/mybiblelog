@@ -16,6 +16,8 @@ export { NoteEditorModal } from "./NoteEditorModal";
 export { useNoteOverlays } from "./NoteOverlays";
 export { NotesQuerySheet } from "./NotesQuerySheet";
 export { PassageRangeSheet } from "./PassageRangeSheet";
+export { ReadingSuggestionsSection } from "./ReadingSuggestionsSection";
+export { RecentNotesSection } from "./RecentNotesSection";
 export { TagEditorSheet } from "./TagEditorSheet";
 export { TagSelectorSheet } from "./TagSelectorSheet";
 export { SelectSheet } from "./SelectSheet";

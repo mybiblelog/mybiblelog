@@ -26,6 +26,18 @@ export const es = {
   today_empty_text: "Agrega lo que leíste hoy para seguir tu progreso.",
   today_entry_meta: "%{new} nuevos • %{total} versículos en total",
 
+  today_reading_suggestions: "Sugerencias de Lectura",
+  today_no_suggestions: "No hay sugerencias",
+  today_suggestion_meta: "%{count} versículos nuevos",
+  reading_suggestion_new_testament: "Lee algo nuevo en el Nuevo Testamento",
+  reading_suggestion_old_testament: "Lee algo nuevo en el Antiguo Testamento",
+  reading_suggestion_wisdom: "Lee algo nuevo en los libros de Sabiduría",
+  reading_suggestion_date_you_read_passage: "%{display_date} leíste %{passage}",
+
+  today_recent_notes: "Notas Recientes",
+  today_no_recent_notes: "Sin Notas",
+  notes_view_all: "Ver Todas las Notas",
+
   bible_books_title: "Libros de la Biblia",
   bible_book_title: "Libro",
   whole_bible: "Biblia",

@@ -69,6 +69,25 @@ export {
   type ChapterProgress,
 } from './bible-progress';
 export {
+  getRecentDates,
+  getLastLogEntryPerBook,
+  filterSuggestionsOverlappingPassages,
+  filterRangesByPassage,
+  cropRangesByPassage,
+  passageIsRead,
+  getBookChapterRanges,
+  getBookSuggestions,
+  getReadingPathSuggestions,
+  getReadingSuggestions,
+  readingPathNT,
+  readingPathOT,
+  readingPathWisdom,
+  type ReadingSuggestionPassage,
+  type ReadingSuggestionLogEntry,
+  type ReadingSuggestionContext,
+  type ReadingSuggestion,
+} from './reading-suggestions';
+export {
   fetchLogEntries,
   postLogEntry,
   putLogEntry,

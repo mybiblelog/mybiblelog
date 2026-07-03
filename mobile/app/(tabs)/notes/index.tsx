@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { RefreshControl, StyleSheet, View } from "react-native";
 import type { PassageNote } from "@/src/api/notesApi";
@@ -17,6 +17,7 @@ import { spacing, useTheme } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import {
   notesActions,
+  selectHasAppliedViewOptions,
   useNotesHasAppliedOptions,
   useNotesState,
   useNotesStore,
@@ -39,6 +40,19 @@ export default function Notes() {
     }
     void tagActions.loadTags();
   }, []);
+
+  // Tab screens stay mounted, so clear any applied view options when the user
+  // leaves the tab. Deep links (openNotesForRange) set their filter after this
+  // blur cleanup has already run, so they are unaffected.
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        if (selectHasAppliedViewOptions(useNotesStore.getState().query)) {
+          void notesActions.resetQuery();
+        }
+      };
+    }, [])
+  );
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);

@@ -8,6 +8,8 @@ import {
   EmptyState,
   LogEntryRow,
   ProgressBar,
+  ReadingSuggestionsSection,
+  RecentNotesSection,
   Screen,
   Spinner,
   Text,
@@ -18,6 +20,7 @@ import { spacing } from "@/src/design";
 import { formatLongDate } from "@/src/i18n/date";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { computeEntryVerseStatsForDate } from "@/src/log-entries/entryStats";
+import { useReadingSuggestions } from "@/src/reading-suggestions/useReadingSuggestions";
 import type { StoredLogEntry } from "@/src/storage/logEntries";
 import { useLogEntryList } from "@/src/stores/logEntries";
 import { useSettingsValue } from "@/src/stores/userSettings";
@@ -64,6 +67,14 @@ export default function Index() {
 
   const progress = goal > 0 ? Math.min(1, versesReadToday / goal) : 0;
   const progressPct = Math.round(progress * 100);
+
+  // Suggestions derive from entries inside the look-back window (web
+  // `currentLogEntries` parity).
+  const currentEntries = useMemo(
+    () => (entries ?? []).filter((e) => e.date >= lookBackDate),
+    [entries, lookBackDate]
+  );
+  const readingSuggestions = useReadingSuggestions(currentEntries, today);
 
   if (entries === null || settings === null) {
     return (
@@ -114,10 +125,7 @@ export default function Index() {
       <AnimatedList
         data={todayEntries}
         refreshControl={refreshControl}
-        contentContainerStyle={[
-          styles.listContent,
-          todayEntries.length === 0 && styles.listContentEmpty,
-        ]}
+        contentContainerStyle={styles.listContent}
         keyExtractor={(item: StoredLogEntry) => item.clientId}
         renderItem={({ item }) => {
           const stats = entryStats.get(item.clientId);
@@ -142,6 +150,12 @@ export default function Index() {
             ctaLabel={t("add")}
             onPressCta={openAdd}
           />
+        }
+        ListFooterComponent={
+          <>
+            <ReadingSuggestionsSection suggestions={readingSuggestions} today={today} />
+            <RecentNotesSection />
+          </>
         }
       />
 
@@ -172,9 +186,6 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: spacing.listBottom,
-  },
-  listContentEmpty: {
-    flexGrow: 1,
   },
   separator: {
     height: spacing.md,

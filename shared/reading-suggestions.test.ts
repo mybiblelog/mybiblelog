@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import dayjs from 'dayjs';
-import { Bible } from '@mybiblelog/shared';
+import Bible from './bible';
 import {
   getRecentDates,
   getLastLogEntryPerBook,
@@ -10,8 +10,10 @@ import {
   passageIsRead,
   getBookChapterRanges,
   getReadingPathSuggestions,
+  getReadingSuggestions,
+  type ReadingSuggestionLogEntry,
   type ReadingSuggestionPassage,
-} from '~/helpers/reading-suggestions';
+} from './reading-suggestions';
 
 // Genesis ch1 v1 → 101001001, Exodus ch1 v1 → 102001001
 const gen1v1 = Bible.makeVerseId(1, 1, 1);
@@ -47,6 +49,10 @@ describe('getRecentDates', () => {
       const diff = dayjs(dates[i]).diff(dayjs(dates[i + 1]), 'day');
       expect(diff).toBe(1);
     }
+  });
+
+  it('counts back from the given date when provided', () => {
+    expect(getRecentDates(3, '2026-06-15')).toEqual(['2026-06-14', '2026-06-13', '2026-06-12']);
   });
 });
 
@@ -131,15 +137,15 @@ describe('cropRangesByPassage', () => {
   it('crops start of range to passage start', () => {
     const ranges = [{ startVerseId: gen1v1, endVerseId: gen50v26 }];
     const result = cropRangesByPassage(ranges, passage);
-    expect(result[0].startVerseId).toBe(gen2v1);
-    expect(result[0].endVerseId).toBe(gen50v26);
+    expect(result[0]!.startVerseId).toBe(gen2v1);
+    expect(result[0]!.endVerseId).toBe(gen50v26);
   });
 
   it('crops end of range to passage end', () => {
     const ranges = [{ startVerseId: gen2v1, endVerseId: exo1v22 }];
     const result = cropRangesByPassage(ranges, passage);
-    expect(result[0].startVerseId).toBe(gen2v1);
-    expect(result[0].endVerseId).toBe(gen50v26);
+    expect(result[0]!.startVerseId).toBe(gen2v1);
+    expect(result[0]!.endVerseId).toBe(gen50v26);
   });
 
   it('does not mutate input ranges', () => {
@@ -183,7 +189,7 @@ describe('getBookChapterRanges', () => {
 
   it('first range starts at verse 1 of chapter 1', () => {
     const ranges = getBookChapterRanges(1);
-    expect(ranges[0].startVerseId).toBe(gen1v1);
+    expect(ranges[0]!.startVerseId).toBe(gen1v1);
   });
 });
 
@@ -203,6 +209,108 @@ describe('getReadingPathSuggestions', () => {
     const ch1Read: ReadingSuggestionPassage[] = [{ startVerseId: gen1v1, endVerseId: gen1v31 }];
     const suggestions = getReadingPathSuggestions([1], ch1Read);
     expect(suggestions).toHaveLength(1);
-    expect(suggestions[0].startVerseId).toBe(gen2v1);
+    expect(suggestions[0]!.startVerseId).toBe(gen2v1);
+  });
+});
+
+describe('getReadingSuggestions', () => {
+  const today = '2026-06-15';
+  const yesterday = '2026-06-14';
+
+  it('suggests the start of each reading path when nothing has been read', () => {
+    const suggestions = getReadingSuggestions([], today);
+    expect(suggestions).toHaveLength(3);
+    // Round-robin order: NT (Matthew 1), OT (Genesis 1), Wisdom (Psalms 1).
+    expect(suggestions[0]!.startVerseId).toBe(Bible.makeVerseId(40, 1, 1));
+    expect(suggestions[0]!.context).toEqual({ kind: 'path', path: 'nt' });
+    expect(suggestions[1]!.startVerseId).toBe(Bible.makeVerseId(1, 1, 1));
+    expect(suggestions[1]!.context).toEqual({ kind: 'path', path: 'ot' });
+    expect(suggestions[2]!.startVerseId).toBe(Bible.makeVerseId(19, 1, 1));
+    expect(suggestions[2]!.context).toEqual({ kind: 'path', path: 'wisdom' });
+  });
+
+  it('continues where the reader left off on a recent day', () => {
+    const entries: ReadingSuggestionLogEntry[] = [
+      { startVerseId: gen1v1, endVerseId: gen1v31, date: yesterday },
+    ];
+    const suggestions = getReadingSuggestions(entries, today);
+    expect(suggestions[0]!.startVerseId).toBe(gen2v1);
+    expect(suggestions[0]!.endVerseId).toBe(Bible.getLastBookChapterVerseId(1, 2));
+    expect(suggestions[0]!.context).toEqual({
+      kind: 'continue',
+      lastRead: { startVerseId: gen1v1, endVerseId: gen1v31, date: yesterday },
+    });
+  });
+
+  it('ignores entries older than the look-back window', () => {
+    const entries: ReadingSuggestionLogEntry[] = [
+      { startVerseId: gen1v1, endVerseId: gen1v31, date: '2026-06-01' },
+    ];
+    const suggestions = getReadingSuggestions(entries, today);
+    expect(suggestions.every(s => s.context.kind === 'path')).toBe(true);
+  });
+
+  it('drops continue-suggestions that overlap an entry read today', () => {
+    const entries: ReadingSuggestionLogEntry[] = [
+      { startVerseId: gen1v1, endVerseId: gen1v31, date: yesterday },
+      // Today the reader already covered Genesis 2 (the would-be suggestion).
+      { startVerseId: gen2v1, endVerseId: Bible.getLastBookChapterVerseId(1, 2), date: today },
+    ];
+    const suggestions = getReadingSuggestions(entries, today);
+    expect(suggestions.every(s => s.context.kind === 'path')).toBe(true);
+  });
+
+  it('does not re-suggest a chapter that has already been read', () => {
+    const matthew1Start = Bible.makeVerseId(40, 1, 1);
+    const matthew1End = Bible.getLastBookChapterVerseId(40, 1);
+    const entries: ReadingSuggestionLogEntry[] = [
+      { startVerseId: matthew1Start, endVerseId: matthew1End, date: '2026-01-01' },
+    ];
+    const suggestions = getReadingSuggestions(entries, today);
+    expect(suggestions.map(s => s.startVerseId)).not.toContain(matthew1Start);
+  });
+
+  it('skips path suggestions that overlap a continue-suggestion', () => {
+    // Continue-suggestion will be Genesis 2; the OT path would also offer
+    // Genesis 2 (chapter 1 is read) but must be skipped as redundant.
+    const entries: ReadingSuggestionLogEntry[] = [
+      { startVerseId: gen1v1, endVerseId: gen1v31, date: yesterday },
+    ];
+    const suggestions = getReadingSuggestions(entries, today);
+    const gen2Suggestions = suggestions.filter(s => s.startVerseId === gen2v1);
+    expect(gen2Suggestions).toHaveLength(1);
+    expect(gen2Suggestions[0]!.context.kind).toBe('continue');
+  });
+
+  it('caps results at three suggestions', () => {
+    const entries: ReadingSuggestionLogEntry[] = [
+      { startVerseId: gen1v1, endVerseId: gen1v31, date: yesterday },
+      { startVerseId: exo1v1, endVerseId: exo1v22, date: yesterday },
+      { startVerseId: Bible.makeVerseId(40, 1, 1), endVerseId: Bible.getLastBookChapterVerseId(40, 1), date: yesterday },
+      { startVerseId: Bible.makeVerseId(19, 1, 1), endVerseId: Bible.getLastBookChapterVerseId(19, 1), date: yesterday },
+    ];
+    expect(getReadingSuggestions(entries, today)).toHaveLength(3);
+  });
+
+  it('orders continue-suggestions by most recent reading date', () => {
+    const twoDaysAgo = '2026-06-13';
+    const entries: ReadingSuggestionLogEntry[] = [
+      { startVerseId: gen1v1, endVerseId: gen1v31, date: twoDaysAgo },
+      { startVerseId: exo1v1, endVerseId: exo1v22, date: yesterday },
+    ];
+    const suggestions = getReadingSuggestions(entries, today);
+    expect(suggestions[0]!.context).toMatchObject({ kind: 'continue', lastRead: { date: yesterday } });
+    expect(suggestions[1]!.context).toMatchObject({ kind: 'continue', lastRead: { date: twoDaysAgo } });
+  });
+
+  it('returns empty when the whole Bible has been read', () => {
+    const wholeBible: ReadingSuggestionLogEntry[] = [
+      {
+        startVerseId: gen1v1,
+        endVerseId: Bible.getLastBookChapterVerseId(66, Bible.getBookChapterCount(66)),
+        date: '2026-01-01',
+      },
+    ];
+    expect(getReadingSuggestions(wholeBible, today)).toEqual([]);
   });
 });

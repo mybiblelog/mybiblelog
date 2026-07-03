@@ -1,3 +1,11 @@
+// Capture the focus effect so the test can simulate focus/blur transitions.
+let mockFocusEffectCallback: (() => void | (() => void)) | null = null;
+jest.mock("expo-router", () => ({
+  router: { push: jest.fn() },
+  useFocusEffect: (cb: () => void | (() => void)) => {
+    mockFocusEffectCallback = cb;
+  },
+}));
 jest.mock("@/src/api/notesApi", () => ({
   ...jest.requireActual("@/src/api/notesApi"),
   fetchNotesPage: jest.fn().mockResolvedValue({
@@ -10,9 +18,10 @@ jest.mock("@/src/api/tagsApi", () => ({
   fetchTags: jest.fn().mockResolvedValue([]),
 }));
 
-import { fireEvent, renderWithProviders } from "@/src/test-utils/renderWithProviders";
+import { act, fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/renderWithProviders";
 import type { PassageNote } from "@/src/api/notesApi";
-import { initialNotesQuery, useNotesStore } from "@/src/stores/passageNotes";
+import { fetchNotesPage } from "@/src/api/notesApi";
+import { initialNotesQuery, notesActions, useNotesStore } from "@/src/stores/passageNotes";
 import { useTagsStore } from "@/src/stores/passageNoteTags";
 import Notes from "@/app/(tabs)/notes/index";
 
@@ -23,6 +32,8 @@ function setNotes(notes: PassageNote[], totalSize = notes.length) {
 }
 
 beforeEach(() => {
+  mockFocusEffectCallback = null;
+  (fetchNotesPage as jest.Mock).mockClear();
   useNotesStore.setState({
     state: { status: "idle" },
     query: { ...initialNotesQuery, filterTags: [] },
@@ -103,5 +114,71 @@ describe("Notes screen", () => {
     expect(getByText("Apply")).toBeTruthy();
     expect(getByText("Only untagged notes")).toBeTruthy();
     expect(getByText("Newest First")).toBeTruthy();
+  });
+
+  it("clears applied view options when the screen loses focus", async () => {
+    setNotes([]);
+    useNotesStore.setState({
+      query: { ...initialNotesQuery, filterTags: [], searchText: "beginning" },
+    });
+    renderWithProviders(<Notes />);
+
+    let cleanup: void | (() => void);
+    act(() => {
+      cleanup = mockFocusEffectCallback?.();
+    });
+    await act(async () => {
+      if (typeof cleanup === "function") cleanup();
+    });
+
+    await waitFor(() => {
+      expect(useNotesStore.getState().query).toEqual(initialNotesQuery);
+    });
+    expect(fetchNotesPage).toHaveBeenCalled();
+  });
+
+  it("does not reload on blur when no view options are applied", async () => {
+    setNotes([]);
+    renderWithProviders(<Notes />);
+
+    let cleanup: void | (() => void);
+    act(() => {
+      cleanup = mockFocusEffectCallback?.();
+    });
+    await act(async () => {
+      if (typeof cleanup === "function") cleanup();
+    });
+
+    expect(fetchNotesPage).not.toHaveBeenCalled();
+  });
+
+  it("keeps a deep-link passage filter set after the previous blur reset", async () => {
+    setNotes([]);
+    renderWithProviders(<Notes />);
+
+    // Leave the tab with no filters applied (blur is a no-op)...
+    let cleanup: void | (() => void);
+    act(() => {
+      cleanup = mockFocusEffectCallback?.();
+    });
+    await act(async () => {
+      if (typeof cleanup === "function") cleanup();
+    });
+
+    // ...then openNotesForRange sets a passage filter before pushing the tab.
+    await act(async () => {
+      await notesActions.resetQuery({
+        filterPassageStartVerseId: 101001001,
+        filterPassageEndVerseId: 101050026,
+        filterPassageMatching: "exclusive",
+      });
+    });
+
+    // Re-focusing the screen must not clear the deep-link filter.
+    act(() => {
+      mockFocusEffectCallback?.();
+    });
+    expect(useNotesStore.getState().query.filterPassageStartVerseId).toBe(101001001);
+    expect(useNotesStore.getState().query.filterPassageEndVerseId).toBe(101050026);
   });
 });
