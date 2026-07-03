@@ -4,12 +4,16 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Bible, type ChapterProgress } from "@mybiblelog/shared";
+import type { NotePassage } from "@/src/api/notesApi";
 import type { LogEntry } from "@/src/types/log-entry";
 import {
   AnimatedList,
   Card,
   ChapterMenu,
+  IconButton,
   LogEntryEditorModal,
+  MenuSheet,
+  NoteEditorModal,
   Screen,
   SegmentBar,
   Spinner,
@@ -17,9 +21,12 @@ import {
 } from "@/src/components";
 import { radius, spacing, useTheme } from "@/src/design";
 import { logEntryActions } from "@/src/stores/logEntries";
+import { notesActions } from "@/src/stores/passageNotes";
+import { tagActions } from "@/src/stores/passageNoteTags";
 import { useBookProgress } from "@/src/stores/bibleProgress";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { useSettingsValue } from "@/src/stores/userSettings";
+import { openNotesForRange } from "@/src/notes/openNotesForRange";
 import { openPassageInBible } from "@/src/bible/openInBible";
 import { useToast } from "@/src/toast/ToastProvider";
 
@@ -104,6 +111,9 @@ export default function BibleBookScreen() {
 
   const [selectedChapterIndex, setSelectedChapterIndex] = useState<number | null>(null);
   const [editorChapterIndex, setEditorChapterIndex] = useState<number | null>(null);
+  const [bookMenuOpen, setBookMenuOpen] = useState(false);
+  // Passages to pre-fill the note editor with; non-null while the editor is open.
+  const [noteEditorPassages, setNoteEditorPassages] = useState<NotePassage[] | null>(null);
   // Selection resolves against the current chapter list each render, so if a
   // background sync replaces the list the menu simply closes itself.
   const selectedChapter = useMemo(
@@ -132,6 +142,13 @@ export default function BibleBookScreen() {
     setSelectedChapterIndex(chapterIndex);
   }, []);
 
+  const openNoteEditor = useCallback((passages: NotePassage[]) => {
+    // Tags normally load from the Notes screens; the editor's tag selector
+    // needs them when the editor opens from here instead.
+    void tagActions.loadTags();
+    setNoteEditorPassages(passages);
+  }, []);
+
   if (!book || settings === null) {
     return (
       <Screen edges={[]}>
@@ -142,7 +159,18 @@ export default function BibleBookScreen() {
 
   return (
     <Screen edges={[]}>
-      <Stack.Screen options={{ title: bookName }} />
+      <Stack.Screen
+        options={{
+          title: bookName,
+          headerRight: () => (
+            <IconButton
+              name="ellipsis-horizontal"
+              accessibilityLabel={t("book_actions")}
+              onPress={() => setBookMenuOpen(true)}
+            />
+          ),
+        }}
+      />
 
       <Card style={styles.plaque}>
         <Text variant="label" style={styles.plaquePercent}>
@@ -190,6 +218,58 @@ export default function BibleBookScreen() {
           if (!selectedChapter) return;
           // Important: preserve the chapter selection for the editor before closing the menu.
           setEditorChapterIndex(selectedChapter.chapterIndex);
+        }}
+        onTakeNote={() => {
+          if (!selectedChapter) return;
+          openNoteEditor([
+            {
+              startVerseId: selectedChapter.startVerseId,
+              endVerseId: selectedChapter.endVerseId,
+            },
+          ]);
+        }}
+        onViewNotes={() => {
+          if (!selectedChapter) return;
+          // Chapters keep the inclusive default (notes overlapping the chapter).
+          openNotesForRange(selectedChapter.startVerseId, selectedChapter.endVerseId);
+        }}
+      />
+
+      <MenuSheet
+        visible={bookMenuOpen}
+        onClose={() => setBookMenuOpen(false)}
+        cancelLabel={t("cancel")}
+        actions={[
+          {
+            label: t("menu_take_note"),
+            onPress: () =>
+              openNoteEditor([
+                {
+                  startVerseId: Bible.getFirstBookVerseId(bookIndex),
+                  endVerseId: Bible.getLastBookVerseId(bookIndex),
+                },
+              ]),
+          },
+          {
+            label: t("menu_view_notes"),
+            onPress: () =>
+              openNotesForRange(
+                Bible.getFirstBookVerseId(bookIndex),
+                Bible.getLastBookVerseId(bookIndex),
+                "exclusive"
+              ),
+          },
+        ]}
+      />
+
+      <NoteEditorModal
+        visible={noteEditorPassages !== null}
+        initialPassages={noteEditorPassages ?? undefined}
+        onClose={() => setNoteEditorPassages(null)}
+        onSubmit={(input) => {
+          void notesActions.create(input).then((created) => {
+            if (!created) showToast({ type: "error", message: t("note_could_not_save") });
+          });
         }}
       />
 

@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { memo, useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Bible, type BookProgress } from "@mybiblelog/shared";
@@ -14,7 +14,13 @@ import {
   Text,
 } from "@/src/components";
 import { radius, spacing, useTheme } from "@/src/design";
+import { openNotesForRange } from "@/src/notes/openNotesForRange";
 import { useBibleProgress } from "@/src/stores/bibleProgress";
+import {
+  noteCountsActions,
+  selectAnyBookHasNotes,
+  useBookNoteCounts,
+} from "@/src/stores/passageNoteCounts";
 
 type TestamentFilter = "all" | "old" | "new";
 
@@ -25,13 +31,20 @@ const Separator = () => <View style={styles.separator} />;
 const BookRow = memo(function BookRow({
   book,
   bookName,
+  notesCount,
+  showBadge,
   onPress,
+  onPressNotes,
 }: {
   book: BookProgress;
   bookName: string;
+  notesCount: number;
+  showBadge: boolean;
   onPress: (bookIndex: number) => void;
+  onPressNotes: (bookIndex: number) => void;
 }) {
   const { colors } = useTheme();
+  const t = useT();
   return (
     <Pressable
       style={({ pressed }) => [
@@ -51,6 +64,29 @@ const BookRow = memo(function BookRow({
         <Text variant="bodyStrong" style={styles.bookName} numberOfLines={1}>
           {bookName}
         </Text>
+        {showBadge ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`${bookName}: ${
+              notesCount === 1
+                ? t("book_note_count_one")
+                : t("book_note_count_other", { count: notesCount })
+            }`}
+            hitSlop={8}
+            onPress={() => onPressNotes(book.bookIndex)}
+            style={({ pressed }) => [
+              styles.noteBadge,
+              { backgroundColor: colors.surface },
+              pressed && styles.pressed,
+            ]}
+          >
+            <Text variant="caption" color="mutedText">
+              {notesCount === 1
+                ? t("book_note_count_one")
+                : t("book_note_count_other", { count: notesCount })}
+            </Text>
+          </Pressable>
+        ) : null}
         <Text variant="caption" color="mutedText" style={styles.percent}>
           {book.percentage}%
         </Text>
@@ -65,9 +101,26 @@ export default function BibleIndex() {
   const { locale } = useLocale();
   const progress = useBibleProgress();
   const [testament, setTestament] = useState<TestamentFilter>("all");
+  const noteCounts = useBookNoteCounts();
+  const anyBooksHaveNotes = useMemo(() => selectAnyBookHasNotes(noteCounts), [noteCounts]);
+
+  // Refresh counts on focus so notes added elsewhere (Notes tab, web) show up.
+  useFocusEffect(
+    useCallback(() => {
+      void noteCountsActions.refresh();
+    }, [])
+  );
 
   const handlePress = useCallback((bookIndex: number) => {
     router.push(`/bible/${bookIndex}`);
+  }, []);
+
+  const handlePressNotes = useCallback((bookIndex: number) => {
+    openNotesForRange(
+      Bible.getFirstBookVerseId(bookIndex),
+      Bible.getLastBookVerseId(bookIndex),
+      "exclusive"
+    );
   }, []);
 
   const newTestamentBooks = useMemo(
@@ -138,7 +191,10 @@ export default function BibleIndex() {
           <BookRow
             book={item}
             bookName={Bible.getBookName(item.bookIndex, locale)}
+            notesCount={noteCounts?.[item.bookIndex] ?? 0}
+            showBadge={anyBooksHaveNotes}
             onPress={handlePress}
+            onPressNotes={handlePressNotes}
           />
         )}
       />
@@ -180,6 +236,11 @@ const styles = StyleSheet.create({
   },
   bookName: {
     flex: 1,
+  },
+  noteBadge: {
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
   },
   percent: {
     width: 48,

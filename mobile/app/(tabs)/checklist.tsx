@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import * as Haptics from "expo-haptics";
+import { useFocusEffect } from "expo-router";
 import { memo, useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated from "react-native-reanimated";
@@ -160,6 +161,14 @@ export default function Checklist() {
     const columns = Math.max(1, Math.floor((available + gap) / (54 + gap)));
     return Math.floor((available - gap * (columns - 1)) / columns);
   }, [windowWidth]);
+
+  // Tab screens stay mounted, so collapse everything on blur — re-entry always
+  // starts with all accordions closed (and no visible collapse animation).
+  useFocusEffect(
+    useCallback(() => {
+      return () => setExpandedBooks({});
+    }, [])
+  );
 
   const toggleBook = useCallback((bookIndex: number) => {
     setExpandedBooks((prev) => ({

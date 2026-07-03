@@ -3,6 +3,7 @@ import {
   type CreateLogEntryInput,
   deleteLogEntryRequest,
   fetchLogEntries,
+  getBookIndexFromVerseId,
   isBibleComplete as isBibleCompleteShared,
   postLogEntry,
   putLogEntry,
@@ -30,8 +31,10 @@ import {
   toStored,
   upsertLocal,
 } from "@/src/log-entries/sync";
+import { achievementActions } from "@/src/stores/achievements";
 import { useAuthStore } from "@/src/stores/auth";
 import { getIsOnline, useConnectivityStore } from "@/src/stores/connectivity";
+import { useUserSettingsStore } from "@/src/stores/userSettings";
 
 /**
  * Log-entries store (Zustand).
@@ -68,6 +71,14 @@ function canReachApi(): boolean {
   return isAuthenticated() && getIsOnline() === true;
 }
 
+/** Web `currentLogEntries`: entries within the look-back (tracker-reset) window. */
+function currentEntries(entries: StoredLogEntry[]): StoredLogEntry[] {
+  const settings = useUserSettingsStore.getState().state;
+  const lookBackDate = settings.status === "ready" ? settings.settings.lookBackDate : "0000-00-00";
+  if (!lookBackDate) return entries;
+  return entries.filter((e) => e.date >= lookBackDate);
+}
+
 let syncInFlight: Promise<void> | null = null;
 
 export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
@@ -76,6 +87,13 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
     const current = get().state;
     if (current.status !== "ready") return;
     set({ state: { ...current, entries: sortEntries(entries) } });
+  }
+
+  /** Celebrate any completion the mutation just caused (web `applyAchievement`). */
+  function applyAchievement(bookIndex: number, before: StoredLogEntry[]): void {
+    const after = get().state;
+    if (after.status !== "ready") return;
+    achievementActions.evaluate(bookIndex, before, currentEntries(after.entries));
   }
 
   return {
@@ -194,6 +212,10 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
         startVerseId: entry.startVerseId,
         endVerseId: entry.endVerseId,
       };
+      const beforeState = get().state;
+      const before = beforeState.status === "ready" ? currentEntries(beforeState.entries) : [];
+      const bookIndex = getBookIndexFromVerseId(entry.startVerseId);
+
       if (canReachApi()) {
         try {
           const created = parseApiLogEntry(await postLogEntry(httpClient, input));
@@ -207,6 +229,7 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
             // locally — reconcile with a full reload instead.
             await get().reloadFromApi();
           }
+          applyAchievement(bookIndex, before);
           return;
         } catch (err) {
           // Fall back to the offline queue.
@@ -220,6 +243,7 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
       const clientId = makeClientId();
       const stored = toStored(entry, clientId);
       setEntries([stored, ...current.entries]);
+      applyAchievement(bookIndex, before);
 
       let mutations = await loadPendingLogEntryMutations();
       mutations = coalesceCreate(mutations, clientId, input);
@@ -240,6 +264,9 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
           ? current.entries.find((e) => e.clientId === clientId)
           : undefined;
       const id = existing?.id ?? entry.id;
+      const before = current.status === "ready" ? currentEntries(current.entries) : [];
+      // Like the web store, only the updated entry's (new) book is evaluated.
+      const bookIndex = getBookIndexFromVerseId(entry.startVerseId);
 
       if (canReachApi()) {
         try {
@@ -248,15 +275,16 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
               ? await putLogEntry(httpClient, { id, ...input })
               : await postLogEntry(httpClient, input)
           );
-          const before = get().state;
-          if (saved && before.status === "ready") {
-            setEntries(upsertLocal(before.entries, toStored(saved, clientId)));
+          const beforeApply = get().state;
+          if (saved && beforeApply.status === "ready") {
+            setEntries(upsertLocal(beforeApply.entries, toStored(saved, clientId)));
             const after = get().state;
             if (after.status === "ready") await saveLogEntries(after.entries);
           } else if (!saved) {
             // Unexpected payload: reconcile with a full reload instead.
             await get().reloadFromApi();
           }
+          applyAchievement(bookIndex, before);
           return;
         } catch (err) {
           // Fall back to the offline queue.
@@ -267,6 +295,7 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
       if (current.status !== "ready") return;
       const next = toStored({ ...entry, id }, clientId);
       setEntries(upsertLocal(current.entries, next));
+      applyAchievement(bookIndex, before);
 
       let mutations = await loadPendingLogEntryMutations();
       mutations = coalesceUpdate(mutations, clientId, id, input);

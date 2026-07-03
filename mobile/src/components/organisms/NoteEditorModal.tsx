@@ -22,6 +22,8 @@ type Props = {
   visible: boolean;
   /** Edit this note; omit to create a new one. */
   initialNote?: PassageNote | null;
+  /** Pre-fill a new note with these passages (ignored when editing). */
+  initialPassages?: NotePassage[];
   onClose: () => void;
   onSubmit: (input: NoteInput & { id?: string }) => void;
 };
@@ -45,7 +47,13 @@ const draftFromNote = (note: PassageNote): Draft => ({
  * content, tags. The passage picker, tag selector, and (via the selector) tag
  * editor stack as sibling Modals — the same mechanism as the log-entry editor.
  */
-export function NoteEditorModal({ visible, initialNote, onClose, onSubmit }: Props) {
+export function NoteEditorModal({
+  visible,
+  initialNote,
+  initialPassages,
+  onClose,
+  onSubmit,
+}: Props) {
   const t = useT();
   const { locale } = useLocale();
   const { colors } = useTheme();
@@ -63,7 +71,9 @@ export function NoteEditorModal({ visible, initialNote, onClose, onSubmit }: Pro
 
   useEffect(() => {
     if (visible && !wasVisible.current) {
-      const next = initialNote ? draftFromNote(initialNote) : emptyDraft();
+      const next = initialNote
+        ? draftFromNote(initialNote)
+        : { ...emptyDraft(), passages: (initialPassages ?? []).map((p) => ({ ...p })) };
       setDraft(next);
       setCleanJson(JSON.stringify(next));
       setEditingPassage(null);
@@ -72,7 +82,7 @@ export function NoteEditorModal({ visible, initialNote, onClose, onSubmit }: Pro
       setConfirmRemoveIndex(null);
     }
     wasVisible.current = visible;
-  }, [visible, initialNote]);
+  }, [visible, initialNote, initialPassages]);
 
   const isDirty = JSON.stringify(draft) !== cleanJson;
   // Mirrors the server rule: a note needs content or at least one passage.

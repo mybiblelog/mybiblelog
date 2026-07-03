@@ -18,10 +18,15 @@ jest.mock("@/src/stores/connectivity", () => ({
   getIsOnline: jest.fn(),
   useConnectivityStore: { subscribe: jest.fn() },
 }));
+jest.mock("@/src/stores/achievements", () => ({
+  achievementActions: { evaluate: jest.fn() },
+}));
 
 import { deleteLogEntryRequest, fetchLogEntries, postLogEntry } from "@mybiblelog/shared";
 import { ApiError } from "@/src/api/apiError";
+import { achievementActions } from "@/src/stores/achievements";
 import { getIsOnline } from "@/src/stores/connectivity";
+import { useUserSettingsStore } from "@/src/stores/userSettings";
 import { loadPendingLogEntryMutations, type StoredLogEntry } from "@/src/storage/logEntries";
 import { useLogEntriesStore } from "./logEntries";
 
@@ -118,6 +123,61 @@ describe("entry ordering", () => {
     const state = useLogEntriesStore.getState().state;
     const dates = state.status === "ready" ? state.entries.map((e) => e.date) : [];
     expect(dates).toEqual(["2026-06-15", "2026-06-10", "2026-06-01"]);
+  });
+});
+
+describe("achievements", () => {
+  const settings = {
+    lookBackDate: "2026-01-01",
+    dailyVerseCountGoal: 86,
+    preferredBibleVersion: "kjv",
+    preferredBibleApp: "",
+  };
+  // A well-formed verse range (John 3:16-18); the shared verse-id format is
+  // (book + 100) | chapter | verse.
+  const johnEntry = { date: "2026-06-27", startVerseId: 143003016, endVerseId: 143003018 };
+
+  beforeEach(() => {
+    (achievementActions.evaluate as jest.Mock).mockClear();
+    useUserSettingsStore.setState({
+      state: { status: "ready", settings, isRefreshingFromServer: false },
+    });
+  });
+
+  it("evaluates the affected book after an offline create", async () => {
+    (getIsOnline as jest.Mock).mockReturnValue(false);
+    await actions().createEntry(johnEntry);
+
+    expect(achievementActions.evaluate).toHaveBeenCalledTimes(1);
+    const [bookIndex, before, after] = (achievementActions.evaluate as jest.Mock).mock.calls[0];
+    expect(bookIndex).toBe(43);
+    expect(before).toEqual([]);
+    expect(after).toEqual([expect.objectContaining(johnEntry)]);
+  });
+
+  it("evaluates after an online create", async () => {
+    (getIsOnline as jest.Mock).mockReturnValue(true);
+    (postLogEntry as jest.Mock).mockResolvedValue({ id: "server-1", ...johnEntry });
+    await actions().createEntry(johnEntry);
+    expect(achievementActions.evaluate).toHaveBeenCalledTimes(1);
+  });
+
+  it("excludes entries older than the look-back date from evaluation", async () => {
+    (getIsOnline as jest.Mock).mockReturnValue(false);
+    setReady([{ ...johnEntry, date: "2025-12-25", clientId: "old" }]);
+
+    await actions().createEntry(johnEntry);
+
+    const [, before, after] = (achievementActions.evaluate as jest.Mock).mock.calls[0];
+    expect(before).toEqual([]);
+    expect((after as StoredLogEntry[]).map((e) => e.date)).toEqual([johnEntry.date]);
+  });
+
+  it("does not evaluate on delete", async () => {
+    (getIsOnline as jest.Mock).mockReturnValue(false);
+    setReady([{ ...entry, clientId: "c1", id: "server-1" }]);
+    await actions().deleteEntry("c1");
+    expect(achievementActions.evaluate).not.toHaveBeenCalled();
   });
 });
 

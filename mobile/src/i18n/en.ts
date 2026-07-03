@@ -26,6 +26,9 @@ export const en = {
   whole_bible: "Bible",
   old_testament_short: "OT",
   new_testament_short: "NT",
+  book_actions: "Book actions",
+  book_note_count_one: "1 note",
+  book_note_count_other: "%{count} notes",
 
   add_log_entry_title: "Add Log Entry",
   edit_log_entry_title: "Edit Log Entry",
@@ -45,6 +48,8 @@ export const en = {
   menu_delete: "Delete",
   menu_open_in_bible: "Open in Bible",
   menu_log_reading: "Log reading",
+  menu_take_note: "Take note",
+  menu_view_notes: "View notes",
 
   delete_confirm_title: "Delete log entry?",
   delete_confirm_message: "This cannot be undone.",
@@ -297,6 +302,13 @@ export const en = {
   retry: "Retry",
   edit: "Edit",
   delete: "Delete",
+  ok: "OK",
+
+  // Achievements (mirrors nuxt AppAchievements.vue)
+  achievement_book_complete_title: "Book Complete!",
+  achievement_book_complete_message: "Congratulations! You have completed %{bookName}!",
+  achievement_bible_complete_title: "Bible Complete!",
+  achievement_bible_complete_message: "🎉 Amazing! You have completed reading the entire Bible! 🎉",
 
   chapter_checklist: "Chapter Checklist",
   loading: "Loading...",

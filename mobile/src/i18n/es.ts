@@ -31,6 +31,9 @@ export const es = {
   whole_bible: "Biblia",
   old_testament_short: "AT",
   new_testament_short: "NT",
+  book_actions: "Acciones del libro",
+  book_note_count_one: "1 nota",
+  book_note_count_other: "%{count} notas",
 
   add_log_entry_title: "Agregar registro",
   edit_log_entry_title: "Editar registro",
@@ -50,6 +53,8 @@ export const es = {
   menu_delete: "Eliminar",
   menu_open_in_bible: "Abrir en la Biblia",
   menu_log_reading: "Agregar lectura",
+  menu_take_note: "Tomar nota",
+  menu_view_notes: "Ver notas",
 
   delete_confirm_title: "¿Eliminar registro?",
   delete_confirm_message: "Esta acción no se puede deshacer.",
@@ -309,6 +314,14 @@ export const es = {
   retry: "Reintentar",
   edit: "Editar",
   delete: "Eliminar",
+  ok: "OK",
+
+  // Logros (refleja AppAchievements.vue de nuxt)
+  achievement_book_complete_title: "¡Libro completado!",
+  achievement_book_complete_message: "¡Felicitaciones! Has completado %{bookName}!",
+  achievement_bible_complete_title: "¡Biblia completada!",
+  achievement_bible_complete_message:
+    "🎉 ¡Increíble! Has completado la lectura de toda la Biblia! 🎉",
 
   chapter_checklist: "Lista de capítulos",
   loading: "Cargando...",

@@ -9,6 +9,7 @@ import {
   updateNote,
 } from "@/src/api/notesApi";
 import { reportHandledError } from "@/src/observability/sentry";
+import { useNoteCountsStore } from "@/src/stores/passageNoteCounts";
 
 /**
  * Passage-notes store (Zustand).
@@ -117,6 +118,7 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
   async create(input) {
     try {
       const created = await createNote(input);
+      void useNoteCountsStore.getState().refresh();
       await get().loadFirstPage();
       return created;
     } catch (err) {
@@ -128,6 +130,8 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
   async update(note) {
     try {
       const saved = await updateNote(note);
+      // Passage edits can move a note between books.
+      void useNoteCountsStore.getState().refresh();
       const current = get().state;
       if (current.status === "ready") {
         set({
@@ -147,7 +151,10 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
   async remove(id) {
     try {
       const deleted = await deleteNote(id);
-      if (deleted) await get().loadFirstPage();
+      if (deleted) {
+        void useNoteCountsStore.getState().refresh();
+        await get().loadFirstPage();
+      }
       return deleted;
     } catch (err) {
       reportHandledError(err, { op: "passageNotes.remove" });

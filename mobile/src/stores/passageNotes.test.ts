@@ -4,9 +4,16 @@ jest.mock("@/src/api/notesApi", () => ({
   createNote: jest.fn(),
   updateNote: jest.fn(),
   deleteNote: jest.fn(),
+  fetchBookNoteCounts: jest.fn(),
 }));
 
-import { createNote, deleteNote, fetchNotesPage, type PassageNote } from "@/src/api/notesApi";
+import {
+  createNote,
+  deleteNote,
+  fetchBookNoteCounts,
+  fetchNotesPage,
+  type PassageNote,
+} from "@/src/api/notesApi";
 import { initialNotesQuery, useNotesStore } from "./passageNotes";
 
 const actions = () => useNotesStore.getState();
@@ -28,6 +35,7 @@ beforeEach(() => {
     state: { status: "idle" },
     query: { ...initialNotesQuery, filterTags: [] },
   });
+  (fetchBookNoteCounts as jest.Mock).mockReset().mockResolvedValue({});
 });
 
 describe("loadFirstPage", () => {
@@ -132,5 +140,23 @@ describe("mutations", () => {
 
     expect(removed).toBe(true);
     expect(fetchNotesPage).toHaveBeenCalled();
+  });
+
+  it("create and remove refresh the per-book note counts", async () => {
+    (createNote as jest.Mock).mockResolvedValue(note("9"));
+    (deleteNote as jest.Mock).mockResolvedValue(true);
+    (fetchNotesPage as jest.Mock).mockResolvedValue(page([], 0));
+
+    await actions().create({ content: "note 9", passages: [], tags: [] });
+    expect(fetchBookNoteCounts).toHaveBeenCalledTimes(1);
+
+    await actions().remove("9");
+    expect(fetchBookNoteCounts).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not refresh the counts when the mutation fails", async () => {
+    (createNote as jest.Mock).mockRejectedValue(new Error("boom"));
+    await actions().create({ content: "x", passages: [], tags: [] });
+    expect(fetchBookNoteCounts).not.toHaveBeenCalled();
   });
 });

@@ -112,6 +112,20 @@ export async function fetchNotesPage(
   };
 }
 
+/** Per-book note counts (web `BibleReport` badge data): bookIndex → count. */
+export async function fetchBookNoteCounts(): Promise<Record<number, number>> {
+  const { data } = await httpClient.get<unknown>("/api/passage-notes/count/books");
+  const counts: Record<number, number> = {};
+  if (data && typeof data === "object") {
+    for (const [key, value] of Object.entries(data as Record<string, unknown>)) {
+      const bookIndex = Number(key);
+      const count = Number(value);
+      if (Number.isFinite(bookIndex) && Number.isFinite(count)) counts[bookIndex] = count;
+    }
+  }
+  return counts;
+}
+
 export async function createNote(input: NoteInput): Promise<PassageNote> {
   const { data } = await httpClient.post<unknown>("/api/passage-notes", input);
   const parsed = parseApiPassageNote(data);
