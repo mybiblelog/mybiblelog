@@ -13,12 +13,6 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
-    // expo-modules-core is nested under expo/ (not hoisted in this monorepo),
-    // so jest's resolver needs an explicit pointer.
-    '^expo-modules-core$':
-      '<rootDir>/node_modules/expo/node_modules/expo-modules-core',
-    '^expo-modules-core/(.*)$':
-      '<rootDir>/node_modules/expo/node_modules/expo-modules-core/$1',
   },
   testMatch: [
     '<rootDir>/src/**/*.test.{ts,tsx}',

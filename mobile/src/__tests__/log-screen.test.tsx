@@ -5,7 +5,7 @@ import {
   useUserSettingsStore,
 } from "@/src/stores/userSettings";
 import type { StoredLogEntry } from "@/src/storage/logEntries";
-import Log from "./log";
+import Log from "@/app/(tabs)/log";
 
 function setEntries(entries: StoredLogEntry[]) {
   useLogEntriesStore.setState({

@@ -22,7 +22,7 @@ jest.mock("expo-router", () => {
 });
 
 import { renderWithProviders } from "@/src/test-utils/renderWithProviders";
-import TabsLayout from "./_layout";
+import TabsLayout from "@/app/(tabs)/_layout";
 
 beforeEach(() => {
   capturedScreenOptions = undefined;
