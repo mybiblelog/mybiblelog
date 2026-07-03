@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 import {
   type CreateLogEntryInput,
   deleteLogEntryRequest,
@@ -6,11 +6,11 @@ import {
   isBibleComplete as isBibleCompleteShared,
   postLogEntry,
   putLogEntry,
-} from '@mybiblelog/shared';
-import type { LogEntry } from '@/src/types/log-entry';
-import { httpClient } from '@/src/api/httpClient';
-import { parseApiLogEntries, parseApiLogEntry } from '@/src/api/logEntryMapper';
-import { reportHandledError } from '@/src/observability/sentry';
+} from "@mybiblelog/shared";
+import type { LogEntry } from "@/src/types/log-entry";
+import { httpClient } from "@/src/api/httpClient";
+import { parseApiLogEntries, parseApiLogEntry } from "@/src/api/logEntryMapper";
+import { reportHandledError } from "@/src/observability/sentry";
 import {
   type PendingLogEntryMutation,
   type StoredLogEntry,
@@ -18,7 +18,7 @@ import {
   loadPendingLogEntryMutations,
   saveLogEntries,
   savePendingLogEntryMutations,
-} from '@/src/storage/logEntries';
+} from "@/src/storage/logEntries";
 import {
   coalesceCreate,
   coalesceDelete,
@@ -29,9 +29,9 @@ import {
   sortEntries,
   toStored,
   upsertLocal,
-} from '@/src/log-entries/sync';
-import { useAuthStore } from '@/src/stores/auth';
-import { getIsOnline, useConnectivityStore } from '@/src/stores/connectivity';
+} from "@/src/log-entries/sync";
+import { useAuthStore } from "@/src/stores/auth";
+import { getIsOnline, useConnectivityStore } from "@/src/stores/connectivity";
 
 /**
  * Log-entries store (Zustand).
@@ -49,8 +49,7 @@ import { getIsOnline, useConnectivityStore } from '@/src/stores/connectivity';
  */
 
 export type LogEntriesState =
-  | { status: 'loading' }
-  | { status: 'ready'; entries: StoredLogEntry[]; isSyncing: boolean };
+  { status: "loading" } | { status: "ready"; entries: StoredLogEntry[]; isSyncing: boolean };
 
 type LogEntriesStore = {
   state: LogEntriesState;
@@ -62,7 +61,7 @@ type LogEntriesStore = {
 };
 
 function isAuthenticated(): boolean {
-  return useAuthStore.getState().state.status === 'authenticated';
+  return useAuthStore.getState().state.status === "authenticated";
 }
 
 function canReachApi(): boolean {
@@ -75,45 +74,45 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
   /** Replace the entries array (canonical order) and persist. */
   function setEntries(entries: StoredLogEntry[]): void {
     const current = get().state;
-    if (current.status !== 'ready') return;
+    if (current.status !== "ready") return;
     set({ state: { ...current, entries: sortEntries(entries) } });
   }
 
   return {
-    state: { status: 'loading' },
+    state: { status: "loading" },
 
     async reloadFromApi() {
       if (!canReachApi()) return;
-      if (get().state.status !== 'ready') return;
+      if (get().state.status !== "ready") return;
       try {
         const remote = parseApiLogEntries(await fetchLogEntries(httpClient));
         setEntries(remote.map((e) => toStored(e, e.id ?? undefined)));
         const after = get().state;
-        if (after.status === 'ready') await saveLogEntries(after.entries);
-      }
-      catch (err) {
+        if (after.status === "ready") await saveLogEntries(after.entries);
+      } catch (err) {
         // Network or API error: keep current local state, fail gracefully.
-        reportHandledError(err, { op: 'logEntries.reloadFromApi' });
+        reportHandledError(err, { op: "logEntries.reloadFromApi" });
       }
     },
 
     async syncNow() {
       if (syncInFlight) return syncInFlight;
       if (!canReachApi()) return;
-      if (get().state.status !== 'ready') return;
+      if (get().state.status !== "ready") return;
 
       syncInFlight = (async () => {
         const ready = get().state;
-        if (ready.status === 'ready') set({ state: { ...ready, isSyncing: true } });
+        if (ready.status === "ready") set({ state: { ...ready, isSyncing: true } });
 
         try {
-          const currentEntries = get().state.status === 'ready'
-            ? (get().state as { entries: StoredLogEntry[] }).entries
-            : [];
+          const currentEntries =
+            get().state.status === "ready"
+              ? (get().state as { entries: StoredLogEntry[] }).entries
+              : [];
           let mutations = await loadPendingLogEntryMutations();
 
           const deletedClientIds = new Set(
-            mutations.filter((m) => m.type === 'delete').map((m) => m.clientId),
+            mutations.filter((m) => m.type === "delete").map((m) => m.clientId)
           );
 
           // Ensure legacy unsynced entries (no id) are represented as creates.
@@ -121,7 +120,7 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
             if (e.id) continue;
             if (deletedClientIds.has(e.clientId)) continue;
             const alreadyQueued = mutations.some(
-              (m) => m.clientId === e.clientId && (m.type === 'create' || m.type === 'update'),
+              (m) => m.clientId === e.clientId && (m.type === "create" || m.type === "update")
             );
             if (alreadyQueued) continue;
             mutations = coalesceCreate(mutations, e.clientId, {
@@ -140,11 +139,11 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
           const remaining: PendingLogEntryMutation[] = [];
           for (const m of mutations) {
             try {
-              if (m.type === 'create') {
+              if (m.type === "create") {
                 await postLogEntry(httpClient, m.entry);
                 continue;
               }
-              if (m.type === 'update') {
+              if (m.type === "update") {
                 if (!m.id) {
                   // No server ID yet: treat as create.
                   await postLogEntry(httpClient, m.entry);
@@ -153,7 +152,7 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
                 await putLogEntry(httpClient, { id: m.id, ...m.entry });
                 continue;
               }
-              if (m.type === 'delete') {
+              if (m.type === "delete") {
                 if (!m.id) {
                   // Local-only entry was deleted before sync; nothing to do.
                   continue;
@@ -161,10 +160,9 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
                 await deleteLogEntryRequest(httpClient, m.id);
                 continue;
               }
-            }
-            catch (err) {
+            } catch (err) {
               if (isPermanentMutationError(err)) {
-                reportHandledError(err, { op: 'logEntries.sync.dropMutation', type: m.type });
+                reportHandledError(err, { op: "logEntries.sync.dropMutation", type: m.type });
                 continue;
               }
               remaining.push(m);
@@ -177,14 +175,12 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
           if (remaining.length === 0) {
             await get().reloadFromApi();
           }
-        }
-        catch (err) {
+        } catch (err) {
           // Network or API error: keep local state, fail gracefully.
-          reportHandledError(err, { op: 'logEntries.syncNow' });
-        }
-        finally {
+          reportHandledError(err, { op: "logEntries.syncNow" });
+        } finally {
           const after = get().state;
-          if (after.status === 'ready') set({ state: { ...after, isSyncing: false } });
+          if (after.status === "ready") set({ state: { ...after, isSyncing: false } });
           syncInFlight = null;
         }
       })();
@@ -202,26 +198,24 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
         try {
           const created = parseApiLogEntry(await postLogEntry(httpClient, input));
           const current = get().state;
-          if (created && current.status === 'ready') {
+          if (created && current.status === "ready") {
             setEntries(upsertLocal(current.entries, toStored(created, created.id ?? undefined)));
             const after = get().state;
-            if (after.status === 'ready') await saveLogEntries(after.entries);
-          }
-          else if (!created) {
+            if (after.status === "ready") await saveLogEntries(after.entries);
+          } else if (!created) {
             // Unexpected payload: the create succeeded but we can't apply it
             // locally — reconcile with a full reload instead.
             await get().reloadFromApi();
           }
           return;
-        }
-        catch (err) {
+        } catch (err) {
           // Fall back to the offline queue.
-          reportHandledError(err, { op: 'logEntries.createEntry' });
+          reportHandledError(err, { op: "logEntries.createEntry" });
         }
       }
 
       const current = get().state;
-      if (current.status !== 'ready') return;
+      if (current.status !== "ready") return;
 
       const clientId = makeClientId();
       const stored = toStored(entry, clientId);
@@ -242,7 +236,9 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
       };
       const current = get().state;
       const existing =
-        current.status === 'ready' ? current.entries.find((e) => e.clientId === clientId) : undefined;
+        current.status === "ready"
+          ? current.entries.find((e) => e.clientId === clientId)
+          : undefined;
       const id = existing?.id ?? entry.id;
 
       if (canReachApi()) {
@@ -250,27 +246,25 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
           const saved = parseApiLogEntry(
             id
               ? await putLogEntry(httpClient, { id, ...input })
-              : await postLogEntry(httpClient, input),
+              : await postLogEntry(httpClient, input)
           );
           const before = get().state;
-          if (saved && before.status === 'ready') {
+          if (saved && before.status === "ready") {
             setEntries(upsertLocal(before.entries, toStored(saved, clientId)));
             const after = get().state;
-            if (after.status === 'ready') await saveLogEntries(after.entries);
-          }
-          else if (!saved) {
+            if (after.status === "ready") await saveLogEntries(after.entries);
+          } else if (!saved) {
             // Unexpected payload: reconcile with a full reload instead.
             await get().reloadFromApi();
           }
           return;
-        }
-        catch (err) {
+        } catch (err) {
           // Fall back to the offline queue.
-          reportHandledError(err, { op: 'logEntries.updateEntry' });
+          reportHandledError(err, { op: "logEntries.updateEntry" });
         }
       }
 
-      if (current.status !== 'ready') return;
+      if (current.status !== "ready") return;
       const next = toStored({ ...entry, id }, clientId);
       setEntries(upsertLocal(current.entries, next));
 
@@ -284,7 +278,9 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
     async deleteEntry(clientId) {
       const current = get().state;
       const existing =
-        current.status === 'ready' ? current.entries.find((e) => e.clientId === clientId) : undefined;
+        current.status === "ready"
+          ? current.entries.find((e) => e.clientId === clientId)
+          : undefined;
       const id = existing?.id;
 
       if (canReachApi()) {
@@ -292,22 +288,21 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
           if (id) {
             await deleteLogEntryRequest(httpClient, id);
             const before = get().state;
-            if (before.status === 'ready') {
+            if (before.status === "ready") {
               setEntries(removeLocal(before.entries, clientId));
               const after = get().state;
-              if (after.status === 'ready') await saveLogEntries(after.entries);
+              if (after.status === "ready") await saveLogEntries(after.entries);
             }
             return;
           }
           // No server ID => local-only; fall through to local delete.
-        }
-        catch (err) {
+        } catch (err) {
           // Fall back to the offline queue.
-          reportHandledError(err, { op: 'logEntries.deleteEntry' });
+          reportHandledError(err, { op: "logEntries.deleteEntry" });
         }
       }
 
-      if (current.status !== 'ready') return;
+      if (current.status !== "ready") return;
       setEntries(removeLocal(current.entries, clientId));
 
       let mutations = await loadPendingLogEntryMutations();
@@ -321,7 +316,7 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
 
 /** Selector helper mirroring the Nuxt `isBibleComplete` getter. */
 export function selectIsBibleComplete(state: LogEntriesState): boolean {
-  if (state.status !== 'ready') return false;
+  if (state.status !== "ready") return false;
   return isBibleCompleteShared(state.entries);
 }
 
@@ -335,7 +330,7 @@ export function initLogEntries(): void {
   void (async () => {
     const stored = await loadLogEntries();
     useLogEntriesStore.setState({
-      state: { status: 'ready', entries: sortEntries(stored ?? []), isSyncing: false },
+      state: { status: "ready", entries: sortEntries(stored ?? []), isSyncing: false },
     });
     // Kick a sync if we are already online + authenticated.
     void useLogEntriesStore.getState().syncNow();
@@ -344,7 +339,7 @@ export function initLogEntries(): void {
   // Persist entries whenever they change (mirrors the provider's save effect).
   let prevEntries: StoredLogEntry[] | null = null;
   useLogEntriesStore.subscribe((store) => {
-    if (store.state.status !== 'ready') return;
+    if (store.state.status !== "ready") return;
     if (store.state.entries === prevEntries) return;
     prevEntries = store.state.entries;
     void saveLogEntries(store.state.entries);
@@ -353,7 +348,7 @@ export function initLogEntries(): void {
   // Background sync when we become online while authenticated.
   let wasOnline = getIsOnline();
   const trySync = () => {
-    if (canReachApi() && useLogEntriesStore.getState().state.status === 'ready') {
+    if (canReachApi() && useLogEntriesStore.getState().state.status === "ready") {
       void useLogEntriesStore.getState().syncNow();
     }
   };
@@ -372,12 +367,12 @@ export function initLogEntries(): void {
 
 /** The entry list, or `null` while hydrating from storage. */
 export function useLogEntryList(): StoredLogEntry[] | null {
-  return useLogEntriesStore((s) => (s.state.status === 'ready' ? s.state.entries : null));
+  return useLogEntriesStore((s) => (s.state.status === "ready" ? s.state.entries : null));
 }
 
 /** Whether a background sync is currently running. */
 export function useIsSyncing(): boolean {
-  return useLogEntriesStore((s) => s.state.status === 'ready' && s.state.isSyncing);
+  return useLogEntriesStore((s) => s.state.status === "ready" && s.state.isSyncing);
 }
 
 /**

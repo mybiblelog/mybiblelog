@@ -6,9 +6,7 @@ import { listItemEnter, listItemExit, listLayout } from "@/src/design";
 // Reanimated's animated FlatList carries an awkward generic (every prop becomes
 // a possible SharedValue). We keep the public `AnimatedList` props as a plain
 // FlatListProps<T> and treat the inner animated list as untyped.
-const RNAnimatedFlatList = Animated.FlatList as unknown as ComponentType<
-  Record<string, unknown>
->;
+const RNAnimatedFlatList = Animated.FlatList as unknown as ComponentType<Record<string, unknown>>;
 
 /**
  * FlatList with built-in motion: each item fades/slides in on insert, out on

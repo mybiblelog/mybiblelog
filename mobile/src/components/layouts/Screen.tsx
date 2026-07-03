@@ -35,8 +35,7 @@ export function Screen({
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
-  const paddingTop =
-    (edges.includes("top") ? insets.top : 0) + (padded ? spacing.screenTop : 0);
+  const paddingTop = (edges.includes("top") ? insets.top : 0) + (padded ? spacing.screenTop : 0);
   const paddingBottom = edges.includes("bottom") ? insets.bottom : 0;
 
   return (

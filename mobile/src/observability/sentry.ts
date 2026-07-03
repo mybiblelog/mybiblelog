@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/react-native';
+import * as Sentry from "@sentry/react-native";
 
 /**
  * Crash reporting via Sentry.
@@ -27,8 +27,7 @@ export function initCrashReporting(): void {
       tracesSampleRate: 0,
       environment: process.env.EXPO_PUBLIC_ENV?.trim() || undefined,
     });
-  }
-  catch {
+  } catch {
     // Crash reporting setup must never crash the app.
   }
 }
@@ -42,8 +41,7 @@ export function reportHandledError(err: unknown, context?: Record<string, unknow
   if (!dsn) return;
   try {
     Sentry.captureException(err, context ? { extra: context } : undefined);
-  }
-  catch {
+  } catch {
     // Telemetry must never crash the app.
   }
 }

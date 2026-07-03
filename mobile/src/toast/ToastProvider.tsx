@@ -1,5 +1,13 @@
 import type { ReactNode } from "react";
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   runOnJS,
@@ -59,7 +67,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       opacity.value = withTiming(1, { duration: durations.fast });
       timeoutRef.current = setTimeout(hideToast, durationMs);
     },
-    [hideToast, opacity],
+    [hideToast, opacity]
   );
 
   // Never leave a hide timer running past unmount.

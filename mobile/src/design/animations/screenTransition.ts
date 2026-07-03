@@ -11,18 +11,18 @@
  * types when spread.
  */
 export const stackTransition = {
-  animation: 'slide_from_right',
+  animation: "slide_from_right",
   animationDuration: 280,
 } as const;
 
 /** Bottom-sheet style presentation for modal-like screens (e.g. login). */
 export const modalTransition = {
-  animation: 'slide_from_bottom',
+  animation: "slide_from_bottom",
   animationDuration: 320,
 } as const;
 
 /** Cross-fade for tab roots / replacements where directional slide feels wrong. */
 export const fadeTransition = {
-  animation: 'fade',
+  animation: "fade",
   animationDuration: 200,
 } as const;

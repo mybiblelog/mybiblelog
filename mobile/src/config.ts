@@ -1,4 +1,4 @@
-import Constants from 'expo-constants';
+import Constants from "expo-constants";
 
 export type EnvConfig = {
   apiBaseUrl: string;
@@ -10,14 +10,15 @@ export type EnvConfig = {
 // Validation lives here (runtime) rather than in app.config.ts so that
 // `expo config` (run by EAS before upload, and locally) doesn't require a `.env`
 // to evaluate the config — the env vars are only ever needed by the running app.
-const REQUIRED_KEYS: Record<'apiBaseUrl' | 'googleWebClientId', string> = {
-  apiBaseUrl: 'EXPO_PUBLIC_API_BASE_URL',
-  googleWebClientId: 'EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID',
+const REQUIRED_KEYS: Record<"apiBaseUrl" | "googleWebClientId", string> = {
+  apiBaseUrl: "EXPO_PUBLIC_API_BASE_URL",
+  googleWebClientId: "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID",
 };
 
 function getConfig(): EnvConfig {
   const expoExtra = (Constants.expoConfig?.extra ?? {}) as Partial<EnvConfig>;
-  const manifest2Extra = ((Constants as unknown as { manifest2?: { extra?: unknown } }).manifest2?.extra ?? {}) as Partial<EnvConfig>;
+  const manifest2Extra = ((Constants as unknown as { manifest2?: { extra?: unknown } }).manifest2
+    ?.extra ?? {}) as Partial<EnvConfig>;
   const merged = { ...manifest2Extra, ...expoExtra } as Partial<EnvConfig>;
 
   const missing = (Object.keys(REQUIRED_KEYS) as (keyof typeof REQUIRED_KEYS)[])
@@ -26,7 +27,7 @@ function getConfig(): EnvConfig {
 
   if (missing.length > 0) {
     throw new Error(
-      `Missing required config: ${missing.join(', ')}. Set them in your .env file (see .env.example) or EAS secrets/env before building.`,
+      `Missing required config: ${missing.join(", ")}. Set them in your .env file (see .env.example) or EAS secrets/env before building.`
     );
   }
 

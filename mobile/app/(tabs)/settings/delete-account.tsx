@@ -56,8 +56,7 @@ export default function DeleteAccountScreen() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const fullyUnderstands = ack.logEntries && ack.notes && ack.permanent;
-  const token =
-    authState.status === "authenticated" ? authState.session.token : null;
+  const token = authState.status === "authenticated" ? authState.session.token : null;
 
   async function onConfirmDelete() {
     setConfirmVisible(false);

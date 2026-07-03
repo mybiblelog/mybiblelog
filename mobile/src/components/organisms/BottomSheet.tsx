@@ -116,13 +116,7 @@ export function BottomSheet({
   const isSheet = variant === "sheet";
 
   return (
-    <Modal
-      visible
-      transparent
-      animationType="none"
-      statusBarTranslucent
-      onRequestClose={onClose}
-    >
+    <Modal visible transparent animationType="none" statusBarTranslucent onRequestClose={onClose}>
       <View style={[styles.root, isSheet ? styles.rootSheet : styles.rootCenter]}>
         <AnimatedPressable
           accessibilityRole="button"

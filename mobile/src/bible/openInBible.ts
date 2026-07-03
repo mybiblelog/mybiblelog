@@ -1,5 +1,13 @@
-import { Linking, Platform } from 'react-native';
-import { Bible, BibleApps, type BibleApps as BibleAppsType, type BibleVersions, getAppReadingUrl, getDefaultBibleVersion, isBibleVersionKey } from '@mybiblelog/shared';
+import { Linking, Platform } from "react-native";
+import {
+  Bible,
+  BibleApps,
+  type BibleApps as BibleAppsType,
+  type BibleVersions,
+  getAppReadingUrl,
+  getDefaultBibleVersion,
+  isBibleVersionKey,
+} from "@mybiblelog/shared";
 
 export type OpenInBiblePrefs = {
   preferredBibleApp?: string;
@@ -8,7 +16,7 @@ export type OpenInBiblePrefs = {
 
 function defaultBibleAppForDevice(): keyof typeof BibleAppsType {
   // Prefer the native YouVersion deep link on Android (matches Nuxt intent).
-  if (Platform.OS === 'android') return BibleApps.YOUVERSIONAPP;
+  if (Platform.OS === "android") return BibleApps.YOUVERSIONAPP;
   return BibleApps.BIBLEGATEWAY;
 }
 
@@ -29,7 +37,7 @@ function normalizeBibleVersion(version?: string): keyof typeof BibleVersions {
 
 export async function openPassageInBible(
   startVerseId: number,
-  prefs: OpenInBiblePrefs,
+  prefs: OpenInBiblePrefs
 ): Promise<boolean> {
   const start = Bible.parseVerseId(startVerseId);
   if (!start.book || !start.chapter) return false;
@@ -40,22 +48,18 @@ export async function openPassageInBible(
   const primaryUrl = getAppReadingUrl(app, version, start.book, start.chapter);
 
   // Fallback to web if a deep link fails.
-  const fallbackApp =
-    app === BibleApps.YOUVERSIONAPP ? BibleApps.BIBLECOM : BibleApps.BIBLEGATEWAY;
+  const fallbackApp = app === BibleApps.YOUVERSIONAPP ? BibleApps.BIBLECOM : BibleApps.BIBLEGATEWAY;
   const fallbackUrl = getAppReadingUrl(fallbackApp, version, start.book, start.chapter);
 
   try {
     await Linking.openURL(primaryUrl);
     return true;
-  }
-  catch {
+  } catch {
     try {
       await Linking.openURL(fallbackUrl);
       return true;
-    }
-    catch {
+    } catch {
       return false;
     }
   }
 }
-

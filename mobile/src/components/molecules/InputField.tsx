@@ -15,11 +15,7 @@ export const InputField = forwardRef<TextInput, InputFieldProps>(function InputF
 ) {
   const { colors } = useTheme();
   const [focused, setFocused] = useState(false);
-  const borderColor = error
-    ? colors.destructive
-    : focused
-      ? colors.primary
-      : colors.border;
+  const borderColor = error ? colors.destructive : focused ? colors.primary : colors.border;
 
   return (
     <View style={styles.container}>

@@ -4,14 +4,7 @@ import { memo, useCallback } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Bible, type BookProgress } from "@mybiblelog/shared";
 import { useLocale } from "@/src/i18n/LocaleProvider";
-import {
-  AnimatedList,
-  Card,
-  Screen,
-  SegmentBar,
-  Spinner,
-  Text,
-} from "@/src/components";
+import { AnimatedList, Card, Screen, SegmentBar, Spinner, Text } from "@/src/components";
 import { radius, spacing, useTheme } from "@/src/design";
 import { useBibleProgress } from "@/src/stores/bibleProgress";
 

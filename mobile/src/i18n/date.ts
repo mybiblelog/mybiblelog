@@ -7,7 +7,7 @@
  */
 
 export function parseYmdToDate(ymd: string): Date | null {
-  const parts = ymd.split('-').map((p) => Number(p));
+  const parts = ymd.split("-").map((p) => Number(p));
   if (parts.length !== 3 || parts.some((n) => !Number.isFinite(n))) return null;
   const [year, month, day] = parts;
   const d = new Date(year, month - 1, day);
@@ -20,9 +20,9 @@ function getLongDateFormatter(locale: string): Intl.DateTimeFormat {
   let formatter = longDateFormatters.get(locale);
   if (!formatter) {
     formatter = new Intl.DateTimeFormat(locale, {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
+      month: "long",
+      day: "numeric",
+      year: "numeric",
     });
     longDateFormatters.set(locale, formatter);
   }

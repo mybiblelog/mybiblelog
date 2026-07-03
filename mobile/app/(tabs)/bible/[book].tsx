@@ -108,7 +108,9 @@ export default function BibleBookScreen() {
   // background sync replaces the list the menu simply closes itself.
   const selectedChapter = useMemo(
     () =>
-      selectedChapterIndex ? chapters.find((c) => c.chapterIndex === selectedChapterIndex) : undefined,
+      selectedChapterIndex
+        ? chapters.find((c) => c.chapterIndex === selectedChapterIndex)
+        : undefined,
     [chapters, selectedChapterIndex]
   );
   const editorChapter = useMemo(

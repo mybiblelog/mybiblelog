@@ -86,9 +86,7 @@ export function useLogEntryOverlays({
         submitLabel={t("save")}
         presetDate={presetDate}
         onSubmit={(entry) => {
-          void logEntryActions.createEntry(
-            createDate ? { ...entry, date: createDate } : entry,
-          );
+          void logEntryActions.createEntry(createDate ? { ...entry, date: createDate } : entry);
         }}
       />
 
@@ -102,7 +100,7 @@ export function useLogEntryOverlays({
           if (!editingEntry) return;
           void logEntryActions.updateEntry(
             editingEntry.clientId,
-            updateDate ? { ...entry, date: updateDate } : entry,
+            updateDate ? { ...entry, date: updateDate } : entry
           );
           setEditingClientId(null);
         }}

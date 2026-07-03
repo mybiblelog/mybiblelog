@@ -1,14 +1,14 @@
-import dayjs from 'dayjs';
-import { create } from 'zustand';
+import dayjs from "dayjs";
+import { create } from "zustand";
 import {
   type DateVerseCounts,
   type DateVerseCountsMap,
   computeDateVerseCounts,
-} from '@mybiblelog/shared';
-import { getCache, setCache } from '@/src/storage/dateVerseCountsCache';
-import { subscribeDerivedRecompute } from '@/src/stores/derivedRecompute';
-import { useLogEntriesStore } from '@/src/stores/logEntries';
-import { useUserSettingsStore } from '@/src/stores/userSettings';
+} from "@mybiblelog/shared";
+import { getCache, setCache } from "@/src/storage/dateVerseCountsCache";
+import { subscribeDerivedRecompute } from "@/src/stores/derivedRecompute";
+import { useLogEntriesStore } from "@/src/stores/logEntries";
+import { useUserSettingsStore } from "@/src/stores/userSettings";
 
 /**
  * Date-verse-counts store (Zustand).
@@ -21,7 +21,7 @@ import { useUserSettingsStore } from '@/src/stores/userSettings';
  * `lookBackDate` change.
  */
 
-const DATE_VERSE_COUNTS_CACHE_KEY = 'dateVerseCounts';
+const DATE_VERSE_COUNTS_CACHE_KEY = "dateVerseCounts";
 const DATE_VERSE_COUNTS_CACHE_MINUTES = 60 * 24;
 
 const emptyCounts: DateVerseCounts = { total: 0, unique: 0 };
@@ -46,7 +46,7 @@ export const useDateVerseCountsStore = create<DateVerseCountsStore>((set, get) =
       }
 
       const logState = useLogEntriesStore.getState().state;
-      if (logState.status !== 'ready') return;
+      if (logState.status !== "ready") return;
       const logEntries = logState.entries;
 
       let startDate: string | undefined;
@@ -64,13 +64,13 @@ export const useDateVerseCountsStore = create<DateVerseCountsStore>((set, get) =
 
       const settingsState = useUserSettingsStore.getState().state;
       const trackerStartDate =
-        settingsState.status === 'ready' ? settingsState.settings.lookBackDate : undefined;
+        settingsState.status === "ready" ? settingsState.settings.lookBackDate : undefined;
 
       const computed = computeDateVerseCounts(
         logEntries,
         startDate,
-        dayjs().format('YYYY-MM-DD'),
-        trackerStartDate,
+        dayjs().format("YYYY-MM-DD"),
+        trackerStartDate
       );
 
       // Replace (don't merge over) the previous map: merging would keep stale
@@ -78,8 +78,7 @@ export const useDateVerseCountsStore = create<DateVerseCountsStore>((set, get) =
       // reset, and then re-persist them into the cache.
       set({ dateVerseCounts: computed });
       await setCache(DATE_VERSE_COUNTS_CACHE_KEY, computed, DATE_VERSE_COUNTS_CACHE_MINUTES);
-    }
-    finally {
+    } finally {
       set({ jobs: get().jobs - 1 });
     }
   },

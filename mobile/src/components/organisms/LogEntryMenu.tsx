@@ -10,13 +10,7 @@ type Props = {
 };
 
 /** Context menu for a single log entry (open in Bible / edit / delete). */
-export function LogEntryMenu({
-  visible,
-  onClose,
-  onOpenInBible,
-  onEdit,
-  onDelete,
-}: Props) {
+export function LogEntryMenu({ visible, onClose, onOpenInBible, onEdit, onDelete }: Props) {
   const t = useT();
   const actions: MenuAction[] = [];
   if (onOpenInBible) {
@@ -26,11 +20,6 @@ export function LogEntryMenu({
   actions.push({ label: t("menu_delete"), onPress: onDelete, color: "destructive" });
 
   return (
-    <MenuSheet
-      visible={visible}
-      onClose={onClose}
-      actions={actions}
-      cancelLabel={t("cancel")}
-    />
+    <MenuSheet visible={visible} onClose={onClose} actions={actions} cancelLabel={t("cancel")} />
   );
 }

@@ -46,9 +46,7 @@ async function clearCached() {
   }
 }
 
-type State =
-  | { status: "supported" }
-  | { status: "unsupported"; support: AppSupportStatus };
+type State = { status: "supported" } | { status: "unsupported"; support: AppSupportStatus };
 
 /**
  * Blocks the app with an "update required" screen when the API reports this

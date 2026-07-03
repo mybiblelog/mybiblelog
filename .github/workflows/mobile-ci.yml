@@ -42,6 +42,10 @@ jobs:
         working-directory: mobile
         run: npm run lint
 
+      - name: Format check
+        working-directory: mobile
+        run: npm run format:check
+
       - name: Typecheck
         working-directory: mobile
         run: npm run typecheck

@@ -82,7 +82,7 @@ export default function Calendar() {
     const visiblePrev = firstWeekday ? firstWeekday - 1 : 6;
 
     const lastWeekday = getWeekdayIndex(
-      selectedMonth.date(numberOfDaysInMonth).format("YYYY-MM-DD"),
+      selectedMonth.date(numberOfDaysInMonth).format("YYYY-MM-DD")
     );
     const visibleNext = lastWeekday ? 7 - lastWeekday : lastWeekday;
 
@@ -117,7 +117,7 @@ export default function Calendar() {
 
   const entriesForSelectedDay = useMemo(
     () => (entries ?? []).filter((e) => e.date === selectedDay),
-    [entries, selectedDay],
+    [entries, selectedDay]
   );
 
   const { openAdd, openMenu, overlays } = useLogEntryOverlays({
@@ -147,9 +147,7 @@ export default function Calendar() {
         keyExtractor={(item: StoredLogEntry) => item.clientId}
         contentContainerStyle={styles.pageContent}
         ItemSeparatorComponent={EntrySeparator}
-        renderItem={({ item }) => (
-          <LogEntryRow entry={item} onPressMenu={() => openMenu(item)} />
-        )}
+        renderItem={({ item }) => <LogEntryRow entry={item} onPressMenu={() => openMenu(item)} />}
         ListHeaderComponent={
           <>
             <View style={styles.monthHeader}>
@@ -197,7 +195,9 @@ export default function Calendar() {
               ))}
             </View>
 
-            <View style={[styles.daysGrid, { paddingHorizontal: dayCellMetrics.horizontalPadding }]}>
+            <View
+              style={[styles.daysGrid, { paddingHorizontal: dayCellMetrics.horizontalPadding }]}
+            >
               {days.map((d) => {
                 const isToday = d.date === today;
                 const isSelected = d.date === selectedDay;
@@ -237,13 +237,7 @@ export default function Calendar() {
                     >
                       <Text
                         variant="label"
-                        color={
-                          isSelected
-                            ? "onPrimary"
-                            : d.isCurrentMonth
-                              ? "text"
-                              : "mutedText"
-                        }
+                        color={isSelected ? "onPrimary" : d.isCurrentMonth ? "text" : "mutedText"}
                       >
                         {d.dayNumber}
                       </Text>
@@ -259,9 +253,7 @@ export default function Calendar() {
                     )}
 
                     {d.isCurrentMonth && (
-                      <View
-                        style={[styles.dayProgressTrack, { backgroundColor: colors.border }]}
-                      >
+                      <View style={[styles.dayProgressTrack, { backgroundColor: colors.border }]}>
                         <View
                           style={[
                             styles.dayProgressFill,

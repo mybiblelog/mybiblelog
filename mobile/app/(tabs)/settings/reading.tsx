@@ -1,13 +1,6 @@
 import { useMemo, useState } from "react";
 import { useIsAuthenticated } from "@/src/stores/auth";
-import {
-  InputField,
-  Screen,
-  SelectRow,
-  SelectSheet,
-  Spinner,
-  Text,
-} from "@/src/components";
+import { InputField, Screen, SelectRow, SelectSheet, Spinner, Text } from "@/src/components";
 import { spacing, useTheme } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { userSettingsActions, useSettingsValue } from "@/src/stores/userSettings";

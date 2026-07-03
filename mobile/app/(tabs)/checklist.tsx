@@ -4,15 +4,7 @@ import { memo, useCallback, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { Bible, type BookProgress, type ChapterProgress } from "@mybiblelog/shared";
-import {
-  AnimatedList,
-  Card,
-  Icon,
-  ProgressBar,
-  Screen,
-  Spinner,
-  Text,
-} from "@/src/components";
+import { AnimatedList, Card, Icon, ProgressBar, Screen, Spinner, Text } from "@/src/components";
 import { fadeIn, radius, spacing, useTheme } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { useBibleProgress } from "@/src/stores/bibleProgress";
@@ -184,10 +176,7 @@ export default function Checklist() {
       try {
         if (isComplete) {
           const matching = logEntries.find(
-            (e) =>
-              e.date === date &&
-              e.startVerseId === startVerseId &&
-              e.endVerseId === endVerseId
+            (e) => e.date === date && e.startVerseId === startVerseId && e.endVerseId === endVerseId
           );
 
           if (matching?.clientId) {

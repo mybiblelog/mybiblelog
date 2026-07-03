@@ -1,11 +1,6 @@
-import { useCallback } from 'react';
-import {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
-import { durations, springs } from '../tokens/motion';
+import { useCallback } from "react";
+import { useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
+import { durations, springs } from "../tokens/motion";
 
 type Options = {
   /** Scale applied while pressed. Default 0.96. */
@@ -27,11 +22,7 @@ type Options = {
  * Scale uses a spring for a natural pop; opacity uses a short timing so the
  * dim tracks the finger immediately.
  */
-export function useScalePress({
-  scaleTo = 0.96,
-  opacityTo = 0.9,
-  disabled = false,
-}: Options = {}) {
+export function useScalePress({ scaleTo = 0.96, opacityTo = 0.9, disabled = false }: Options = {}) {
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
 

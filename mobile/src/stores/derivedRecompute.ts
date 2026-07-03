@@ -1,5 +1,5 @@
-import { useLogEntriesStore } from '@/src/stores/logEntries';
-import { useUserSettingsStore } from '@/src/stores/userSettings';
+import { useLogEntriesStore } from "@/src/stores/logEntries";
+import { useUserSettingsStore } from "@/src/stores/userSettings";
 
 /**
  * Shared subscription wiring for the derived stores (`dateVerseCounts`,
@@ -28,7 +28,7 @@ export function subscribeDerivedRecompute(recompute: () => void): void {
   let prevEntries: unknown = null;
   let prevReady = false;
   useLogEntriesStore.subscribe((store) => {
-    const entries = store.state.status === 'ready' ? store.state.entries : null;
+    const entries = store.state.status === "ready" ? store.state.entries : null;
     const ready = entries !== null;
     if (ready && (entries !== prevEntries || !prevReady)) {
       prevEntries = entries;
@@ -40,7 +40,7 @@ export function subscribeDerivedRecompute(recompute: () => void): void {
   // Recompute when the look-back date changes.
   let prevLookBack: string | null = null;
   useUserSettingsStore.subscribe((store) => {
-    const lookBack = store.state.status === 'ready' ? store.state.settings.lookBackDate : null;
+    const lookBack = store.state.status === "ready" ? store.state.settings.lookBackDate : null;
     if (lookBack && lookBack !== prevLookBack) {
       prevLookBack = lookBack;
       schedule();

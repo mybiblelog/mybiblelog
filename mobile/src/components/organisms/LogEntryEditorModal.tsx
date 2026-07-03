@@ -1,7 +1,9 @@
 import { Bible } from "@mybiblelog/shared";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import type { LogEntry } from "@/src/types/log-entry";
+import { formatLongDate, parseYmdToDate } from "@/src/i18n/date";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { radius, spacing, useTheme } from "@/src/design";
 import { useLogEntryEditor } from "@/src/log-entry-editor/useLogEntryEditor";
@@ -11,7 +13,17 @@ import { InputField } from "../molecules/InputField";
 import { SelectRow } from "../molecules/SelectRow";
 import { BottomSheet } from "./BottomSheet";
 import { ConfirmDialog } from "./ConfirmDialog";
+import { DatePickerSheet } from "./DatePickerSheet";
 import { SelectSheet } from "./SelectSheet";
+
+/** `Date` -> `YYYY-MM-DD`, built from local components (never `new Date(string)` /
+ *  ISO string round-trips, which shift by timezone). */
+function toYmd(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
 
 type Props = {
   visible: boolean;
@@ -48,6 +60,26 @@ export function LogEntryEditorModal({
   const [endChapterOpen, setEndChapterOpen] = useState(false);
   const [endVerseOpen, setEndVerseOpen] = useState(false);
   const [discardOpen, setDiscardOpen] = useState(false);
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
+
+  const selectedDate = useMemo(
+    () => parseYmdToDate(editor.value.date) ?? new Date(),
+    [editor.value.date]
+  );
+
+  function openDatePicker() {
+    if (Platform.OS === "android") {
+      DateTimePickerAndroid.open({
+        value: selectedDate,
+        mode: "date",
+        onChange: (_event, date) => {
+          if (date) editor.updateDate(toYmd(date));
+        },
+      });
+      return;
+    }
+    setDatePickerOpen(true);
+  }
 
   const bookOptions = useMemo(
     () =>
@@ -90,6 +122,7 @@ export function LogEntryEditorModal({
       setEndChapterOpen(false);
       setEndVerseOpen(false);
       setDiscardOpen(false);
+      setDatePickerOpen(false);
     }
     wasVisible.current = visible;
   }, [visible, initialEntry, presetDate, reset]);
@@ -112,12 +145,7 @@ export function LogEntryEditorModal({
           <Text variant="heading" style={styles.headerTitle}>
             {title}
           </Text>
-          <Button
-            label={submitLabel}
-            size="sm"
-            onPress={handleSubmit}
-            disabled={!canSubmit}
-          />
+          <Button label={submitLabel} size="sm" onPress={handleSubmit} disabled={!canSubmit} />
         </View>
 
         <View style={[styles.preview, { backgroundColor: colors.primary }]}>
@@ -127,12 +155,21 @@ export function LogEntryEditorModal({
         </View>
 
         <View style={styles.form}>
-          <InputField
-            label={t("date")}
-            value={editor.value.date}
-            onChangeText={editor.updateDate}
-            placeholder={t("date_placeholder")}
-          />
+          {Platform.OS === "web" ? (
+            <InputField
+              label={t("date")}
+              value={editor.value.date}
+              onChangeText={editor.updateDate}
+              placeholder={t("date_placeholder")}
+            />
+          ) : (
+            <SelectRow
+              label={t("date")}
+              value={editor.value.date ? formatLongDate(editor.value.date, locale) : null}
+              placeholder={t("date_placeholder")}
+              onPress={openDatePicker}
+            />
+          )}
 
           <SelectRow
             label={t("book")}
@@ -181,6 +218,12 @@ export function LogEntryEditorModal({
         </View>
       </BottomSheet>
 
+      <DatePickerSheet
+        visible={datePickerOpen}
+        value={selectedDate}
+        onChange={(date) => editor.updateDate(toYmd(date))}
+        onClose={() => setDatePickerOpen(false)}
+      />
       <SelectSheet
         visible={bookOpen}
         title={t("book")}

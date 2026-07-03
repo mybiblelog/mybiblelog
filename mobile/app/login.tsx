@@ -7,13 +7,7 @@ import { spacing, useTheme } from "@/src/design";
 import { Button, InputField, Text } from "@/src/components";
 import { router } from "expo-router";
 import { useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native";
 
 export default function Login() {
   const t = useT();
@@ -21,7 +15,7 @@ export default function Login() {
   const { colors } = useTheme();
   const { state: authState, finishGoogleLogin, loginWithEmailPassword } = useAuth();
   const lastEmail =
-    authState.status === "unauthenticated" ? authState.lastLoggedInEmail ?? null : null;
+    authState.status === "unauthenticated" ? (authState.lastLoggedInEmail ?? null) : null;
 
   const [email, setEmail] = useState(lastEmail ?? "");
   const [password, setPassword] = useState("");
@@ -117,17 +111,12 @@ export default function Login() {
       style={[styles.flex, { backgroundColor: colors.background }]}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <ScrollView
-        contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="handled"
-      >
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <Text variant="title" style={styles.title}>
           {t("login_title")}
         </Text>
         <Text variant="body" color="mutedText" style={styles.subtitle}>
-          {lastEmail
-            ? t("login_sign_in_again_as", { email: lastEmail })
-            : t("auth_login_hint")}
+          {lastEmail ? t("login_sign_in_again_as", { email: lastEmail }) : t("auth_login_hint")}
         </Text>
 
         {!!error && (

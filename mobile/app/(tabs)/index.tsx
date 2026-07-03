@@ -37,7 +37,7 @@ export default function Index() {
 
   const todayEntries = useMemo(
     () => (entries ?? []).filter((e) => e.date === today),
-    [entries, today],
+    [entries, today]
   );
 
   const { openAdd, openMenu, overlays } = useLogEntryOverlays({
@@ -51,7 +51,7 @@ export default function Index() {
 
   const entryStats = useMemo(
     () => computeEntryVerseStatsForDate(entries ?? [], lookBackDate, today),
-    [entries, lookBackDate, today],
+    [entries, lookBackDate, today]
   );
 
   const versesReadToday = useMemo(() => {
@@ -89,17 +89,17 @@ export default function Index() {
         <View style={styles.progressTopRow}>
           <Text variant="label">{t("today_daily_goal")}</Text>
           <Text variant="caption" color="mutedText">
-            {goal > 0 ?
-              t("today_progress_meta_with_goal", {
-                pct: progressPct,
-                read: versesReadToday,
-                goal,
-                verses: t("verses_lowercase"),
-              }) :
-              t("today_progress_meta_no_goal", {
-                read: versesReadToday,
-                verses: t("verses_lowercase"),
-              })}
+            {goal > 0
+              ? t("today_progress_meta_with_goal", {
+                  pct: progressPct,
+                  read: versesReadToday,
+                  goal,
+                  verses: t("verses_lowercase"),
+                })
+              : t("today_progress_meta_no_goal", {
+                  read: versesReadToday,
+                  verses: t("verses_lowercase"),
+                })}
           </Text>
         </View>
         {goal > 0 ? (

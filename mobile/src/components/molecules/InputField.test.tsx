@@ -1,9 +1,5 @@
 import { InputField } from "./InputField";
-import {
-  fireEvent,
-  renderWithProviders,
-  screen,
-} from "@/src/test-utils/renderWithProviders";
+import { fireEvent, renderWithProviders, screen } from "@/src/test-utils/renderWithProviders";
 
 describe("InputField", () => {
   it("renders a label and an error message", () => {
@@ -15,7 +11,7 @@ describe("InputField", () => {
   it("forwards text changes", () => {
     const onChangeText = jest.fn();
     renderWithProviders(
-      <InputField label="Email" placeholder="you@example.com" onChangeText={onChangeText} />,
+      <InputField label="Email" placeholder="you@example.com" onChangeText={onChangeText} />
     );
     fireEvent.changeText(screen.getByPlaceholderText("you@example.com"), "hi@there.com");
     expect(onChangeText).toHaveBeenCalledWith("hi@there.com");
@@ -24,9 +20,7 @@ describe("InputField", () => {
   it("invokes onFocus and onBlur callbacks", () => {
     const onFocus = jest.fn();
     const onBlur = jest.fn();
-    renderWithProviders(
-      <InputField placeholder="x" onFocus={onFocus} onBlur={onBlur} />,
-    );
+    renderWithProviders(<InputField placeholder="x" onFocus={onFocus} onBlur={onBlur} />);
     const input = screen.getByPlaceholderText("x");
     fireEvent(input, "focus");
     fireEvent(input, "blur");

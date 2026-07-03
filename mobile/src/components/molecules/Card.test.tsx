@@ -7,7 +7,7 @@ describe("Card", () => {
     renderWithProviders(
       <Card>
         <Text>Inside</Text>
-      </Card>,
+      </Card>
     );
     expect(screen.getByText("Inside")).toBeTruthy();
   });
@@ -17,8 +17,8 @@ describe("Card", () => {
       renderWithProviders(
         <Card variant="surface" elevated padded={false}>
           <Text>Elevated</Text>
-        </Card>,
-      ),
+        </Card>
+      )
     ).not.toThrow();
   });
 });

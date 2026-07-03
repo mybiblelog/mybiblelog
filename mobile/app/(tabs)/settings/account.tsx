@@ -58,11 +58,7 @@ export default function AccountSettings() {
             <Text variant="body" color="mutedText" style={styles.authText}>
               {t("auth_login")}
             </Text>
-            <Button
-              label={t("auth_login")}
-              size="sm"
-              onPress={() => router.push("/login")}
-            />
+            <Button label={t("auth_login")} size="sm" onPress={() => router.push("/login")} />
           </View>
         )}
       </Card>

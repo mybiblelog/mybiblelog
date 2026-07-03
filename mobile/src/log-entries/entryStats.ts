@@ -1,6 +1,6 @@
-import { Bible } from '@mybiblelog/shared';
-import type { StoredLogEntry } from '@/src/storage/logEntries';
-import { compareEntriesNewestFirst } from '@/src/log-entries/sync';
+import { Bible } from "@mybiblelog/shared";
+import type { StoredLogEntry } from "@/src/storage/logEntries";
+import { compareEntriesNewestFirst } from "@/src/log-entries/sync";
 
 /**
  * Per-entry verse stats for a single day, keyed by `clientId`.
@@ -21,7 +21,7 @@ export type EntryVerseStats = { total: number; newSinceLookBack: number };
 export function computeEntryVerseStatsForDate(
   entries: StoredLogEntry[],
   lookBackDate: string,
-  forDate: string,
+  forDate: string
 ): Map<string, EntryVerseStats> {
   const map = new Map<string, EntryVerseStats>();
   if (!entries.some((e) => e.date === forDate)) return map;

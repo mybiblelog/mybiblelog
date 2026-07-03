@@ -21,10 +21,7 @@ export const LogEntryRow = memo(function LogEntryRow({
     () => Bible.displayVerseRange(entry.startVerseId, entry.endVerseId, locale),
     [entry.endVerseId, entry.startVerseId, locale]
   );
-  const displayDate = useMemo(
-    () => formatLongDate(entry.date, locale),
-    [entry.date, locale]
-  );
+  const displayDate = useMemo(() => formatLongDate(entry.date, locale), [entry.date, locale]);
 
   return (
     <ListItem

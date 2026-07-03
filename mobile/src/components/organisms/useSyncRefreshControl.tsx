@@ -18,12 +18,8 @@ export function useSyncRefreshControl(): ReactElement<RefreshControlProps> {
     setRefreshing(true);
     void (async () => {
       try {
-        await Promise.all([
-          logEntryActions.syncNow(),
-          userSettingsActions.refreshFromServer(),
-        ]);
-      }
-      finally {
+        await Promise.all([logEntryActions.syncNow(), userSettingsActions.refreshFromServer()]);
+      } finally {
         setRefreshing(false);
       }
     })();

@@ -1,4 +1,4 @@
-import { httpClient } from '@/src/api/httpClient';
+import { httpClient } from "@/src/api/httpClient";
 
 export type ServerUserSettings = {
   dailyVerseCountGoal?: number;
@@ -9,21 +9,21 @@ export type ServerUserSettings = {
 };
 
 function toNumber(v: unknown): number | undefined {
-  if (typeof v === 'number' && Number.isFinite(v)) return v;
-  if (typeof v === 'string' && v.trim() !== '' && Number.isFinite(Number(v))) return Number(v);
+  if (typeof v === "number" && Number.isFinite(v)) return v;
+  if (typeof v === "string" && v.trim() !== "" && Number.isFinite(Number(v))) return Number(v);
   return undefined;
 }
 
 export function parseServerUserSettings(value: unknown): ServerUserSettings | null {
-  if (!value || typeof value !== 'object') return null;
+  if (!value || typeof value !== "object") return null;
   const v = value as Record<string, unknown>;
   return {
     dailyVerseCountGoal: toNumber(v.dailyVerseCountGoal),
-    lookBackDate: typeof v.lookBackDate === 'string' ? v.lookBackDate : undefined,
+    lookBackDate: typeof v.lookBackDate === "string" ? v.lookBackDate : undefined,
     preferredBibleVersion:
-      typeof v.preferredBibleVersion === 'string' ? v.preferredBibleVersion : undefined,
-    startPage: typeof v.startPage === 'string' ? v.startPage : undefined,
-    locale: typeof v.locale === 'string' ? v.locale : undefined,
+      typeof v.preferredBibleVersion === "string" ? v.preferredBibleVersion : undefined,
+    startPage: typeof v.startPage === "string" ? v.startPage : undefined,
+    locale: typeof v.locale === "string" ? v.locale : undefined,
   };
 }
 
@@ -32,18 +32,18 @@ export function parseServerUserSettings(value: unknown): ServerUserSettings | nu
 // typed `ApiError`s — the same path the log-entries API uses.
 
 export async function getSettings(): Promise<ServerUserSettings> {
-  const { data } = await httpClient.get<unknown>('/api/settings');
+  const { data } = await httpClient.get<unknown>("/api/settings");
   const parsed = parseServerUserSettings(data);
-  if (!parsed) throw new Error('GET /settings returned unexpected payload');
+  if (!parsed) throw new Error("GET /settings returned unexpected payload");
   return parsed;
 }
 
 export async function updateSettings(
-  settings: Partial<ServerUserSettings>,
+  settings: Partial<ServerUserSettings>
 ): Promise<ServerUserSettings> {
-  const { data } = await httpClient.put<unknown>('/api/settings', { settings });
+  const { data } = await httpClient.put<unknown>("/api/settings", { settings });
   const parsed = parseServerUserSettings(data);
-  if (!parsed) throw new Error('PUT /settings returned unexpected payload');
+  if (!parsed) throw new Error("PUT /settings returned unexpected payload");
   return parsed;
 }
 
@@ -54,5 +54,5 @@ export async function updateSettings(
  * the local session afterward (the server also clears the auth cookie).
  */
 export async function deleteAccount(): Promise<void> {
-  await httpClient.put('/api/settings/delete-account');
+  await httpClient.put("/api/settings/delete-account");
 }

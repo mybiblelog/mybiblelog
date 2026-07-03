@@ -1,9 +1,9 @@
-import { create } from 'zustand';
-import { type BibleProgress, computeBibleProgress } from '@mybiblelog/shared';
-import { getCache, setCache } from '@/src/storage/dateVerseCountsCache';
-import { subscribeDerivedRecompute } from '@/src/stores/derivedRecompute';
-import { useLogEntriesStore } from '@/src/stores/logEntries';
-import { useUserSettingsStore } from '@/src/stores/userSettings';
+import { create } from "zustand";
+import { type BibleProgress, computeBibleProgress } from "@mybiblelog/shared";
+import { getCache, setCache } from "@/src/storage/dateVerseCountsCache";
+import { subscribeDerivedRecompute } from "@/src/stores/derivedRecompute";
+import { useLogEntriesStore } from "@/src/stores/logEntries";
+import { useUserSettingsStore } from "@/src/stores/userSettings";
 
 /**
  * Bible-progress store (Zustand).
@@ -18,7 +18,7 @@ import { useUserSettingsStore } from '@/src/stores/userSettings';
  * screens share one consistent snapshot.
  */
 
-const BIBLE_PROGRESS_CACHE_KEY = 'bibleProgress';
+const BIBLE_PROGRESS_CACHE_KEY = "bibleProgress";
 const BIBLE_PROGRESS_CACHE_MINUTES = 60 * 24;
 
 type BibleProgressStore = {
@@ -41,19 +41,18 @@ export const useBibleProgressStore = create<BibleProgressStore>((set, get) => ({
       }
 
       const logState = useLogEntriesStore.getState().state;
-      if (logState.status !== 'ready') return;
+      if (logState.status !== "ready") return;
 
       const settingsState = useUserSettingsStore.getState().state;
       const lookBackDate =
-        settingsState.status === 'ready' ? settingsState.settings.lookBackDate : '0000-00-00';
+        settingsState.status === "ready" ? settingsState.settings.lookBackDate : "0000-00-00";
 
       const ranges = logState.entries.filter((e) => e.date >= lookBackDate);
       const computed = computeBibleProgress(ranges);
 
       set({ progress: computed });
       await setCache(BIBLE_PROGRESS_CACHE_KEY, computed, BIBLE_PROGRESS_CACHE_MINUTES);
-    }
-    finally {
+    } finally {
       set({ jobs: get().jobs - 1 });
     }
   },
@@ -66,8 +65,8 @@ export function useBibleProgress(): BibleProgress | null {
 
 /** Hook returning a single book's progress (null while loading or out of range). */
 export function useBookProgress(bookIndex: number) {
-  return useBibleProgressStore((s) =>
-    s.progress?.books.find((b) => b.bookIndex === bookIndex) ?? null,
+  return useBibleProgressStore(
+    (s) => s.progress?.books.find((b) => b.bookIndex === bookIndex) ?? null
   );
 }
 

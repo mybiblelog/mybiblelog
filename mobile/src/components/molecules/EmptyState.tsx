@@ -37,9 +37,7 @@ export function EmptyState({
           {text}
         </Text>
       )}
-      {!!ctaLabel && !!onPressCta && (
-        <Button label={ctaLabel} onPress={onPressCta} />
-      )}
+      {!!ctaLabel && !!onPressCta && <Button label={ctaLabel} onPress={onPressCta} />}
     </Animated.View>
   );
 }

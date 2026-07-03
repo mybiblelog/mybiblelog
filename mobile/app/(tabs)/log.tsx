@@ -53,9 +53,7 @@ export default function Log() {
           entries.length === 0 && styles.listContentEmpty,
         ]}
         keyExtractor={(item: StoredLogEntry) => item.clientId}
-        renderItem={({ item }) => (
-          <LogEntryRow entry={item} onPressMenu={() => openMenu(item)} />
-        )}
+        renderItem={({ item }) => <LogEntryRow entry={item} onPressMenu={() => openMenu(item)} />}
         ItemSeparatorComponent={Separator}
         ListEmptyComponent={
           <EmptyState

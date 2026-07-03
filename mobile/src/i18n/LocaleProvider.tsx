@@ -9,7 +9,13 @@ import {
   useMemo,
   useState,
 } from "react";
-import { type MobileLocale, type TranslationKey, fallbackLocale, i18n, mobileLocales } from "@/src/i18n";
+import {
+  type MobileLocale,
+  type TranslationKey,
+  fallbackLocale,
+  i18n,
+  mobileLocales,
+} from "@/src/i18n";
 
 /** Locales the app ships translations for (subset of shared product locales). */
 export type SupportedLocale = MobileLocale;
@@ -91,9 +97,7 @@ export function useLocale() {
 export function useT() {
   const { locale } = useLocale();
   return useCallback(
-    (key: TranslationKey, options?: Record<string, unknown>) =>
-      i18n.t(key, { ...options, locale }),
+    (key: TranslationKey, options?: Record<string, unknown>) => i18n.t(key, { ...options, locale }),
     [locale]
   );
 }
-

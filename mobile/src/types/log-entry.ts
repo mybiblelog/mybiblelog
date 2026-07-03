@@ -13,4 +13,3 @@ export type LogEntry = {
   endVerseId: number;
   date: string;
 };
-
