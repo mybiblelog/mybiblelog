@@ -23,6 +23,9 @@ export const en = {
 
   bible_books_title: "Bible Books",
   bible_book_title: "Book",
+  whole_bible: "Bible",
+  old_testament_short: "OT",
+  new_testament_short: "NT",
 
   add_log_entry_title: "Add Log Entry",
   edit_log_entry_title: "Edit Log Entry",
@@ -229,6 +232,8 @@ export const en = {
   note_could_not_delete: "Unable to delete the note.",
   note_delete_confirm_title: "Delete note?",
   note_delete_confirm_message: "This cannot be undone.",
+  note_passage_remove_confirm_title: "Remove passage?",
+  note_passage_remove_confirm_message: "This passage will be removed from the note.",
 
   query_title: "Search · Filter · Sort",
   query_open: "Search · Filter · Sort",

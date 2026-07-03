@@ -28,6 +28,9 @@ export const es = {
 
   bible_books_title: "Libros de la Biblia",
   bible_book_title: "Libro",
+  whole_bible: "Biblia",
+  old_testament_short: "AT",
+  new_testament_short: "NT",
 
   add_log_entry_title: "Agregar registro",
   edit_log_entry_title: "Editar registro",
@@ -239,6 +242,8 @@ export const es = {
   note_could_not_delete: "No se pudo eliminar la nota.",
   note_delete_confirm_title: "¿Eliminar la nota?",
   note_delete_confirm_message: "Esta acción no se puede deshacer.",
+  note_passage_remove_confirm_title: "¿Quitar el pasaje?",
+  note_passage_remove_confirm_message: "Este pasaje se quitará de la nota.",
 
   query_title: "Buscar · Filtrar · Ordenar",
   query_open: "Buscar · Filtrar · Ordenar",

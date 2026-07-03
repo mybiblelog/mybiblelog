@@ -147,7 +147,11 @@ export default function Calendar() {
         keyExtractor={(item: StoredLogEntry) => item.clientId}
         contentContainerStyle={styles.pageContent}
         ItemSeparatorComponent={EntrySeparator}
-        renderItem={({ item }) => <LogEntryRow entry={item} onPressMenu={() => openMenu(item)} />}
+        renderItem={({ item }) => (
+          <View style={styles.rowWrap}>
+            <LogEntryRow entry={item} onPressMenu={() => openMenu(item)} />
+          </View>
+        )}
         ListHeaderComponent={
           <>
             <View style={styles.monthHeader}>
@@ -231,8 +235,18 @@ export default function Calendar() {
                     <View
                       style={[
                         styles.dayNumberCircle,
-                        isToday && { backgroundColor: colors.border },
-                        isSelected && { backgroundColor: colors.primary },
+                        {
+                          // The radius must live in the same inline object as the
+                          // changing background: Android drops the registered
+                          // style's borderRadius when only backgroundColor
+                          // changes across re-renders (selection square bug).
+                          borderRadius: 999,
+                          backgroundColor: isSelected
+                            ? colors.primary
+                            : isToday
+                              ? colors.border
+                              : "transparent",
+                        },
                       ]}
                     >
                       <Text
@@ -309,6 +323,7 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.listBottom,
   },
   entrySeparator: { height: spacing.md },
+  rowWrap: { paddingHorizontal: spacing.screenH },
   monthHeader: {
     paddingHorizontal: spacing.screenH,
     paddingTop: spacing.screenH,
@@ -371,6 +386,7 @@ const styles = StyleSheet.create({
   entryHeader: {
     borderBottomWidth: 2,
     marginHorizontal: spacing.screenH,
+    marginBottom: spacing.lg,
     paddingTop: spacing.lg,
     paddingBottom: spacing.md,
     flexDirection: "row",

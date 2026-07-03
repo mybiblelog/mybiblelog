@@ -1,9 +1,12 @@
 import { Bible, displayTimeSince } from "@mybiblelog/shared";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import type { PassageNote } from "@/src/api/notesApi";
+import { openPassageInBible } from "@/src/bible/openInBible";
 import { spacing } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { useTagsList } from "@/src/stores/passageNoteTags";
+import { useSettingsValue } from "@/src/stores/userSettings";
+import { useToast } from "@/src/toast/ToastProvider";
 import { IconButton } from "../atoms/IconButton";
 import { TagPill } from "../atoms/TagPill";
 import { Text } from "../atoms/Text";
@@ -19,10 +22,24 @@ export function NoteCard({ note, onPressMenu }: Props) {
   const t = useT();
   const { locale } = useLocale();
   const tags = useTagsList();
+  const settings = useSettingsValue();
+  const { showToast } = useToast();
 
   const noteTags = note.tags
     .map((id) => tags.find((tag) => tag.id === id))
     .filter((tag): tag is NonNullable<typeof tag> => tag !== undefined);
+
+  const handleOpenPassage = (startVerseId: number) => {
+    void (async () => {
+      const ok = await openPassageInBible(startVerseId, {
+        preferredBibleApp: settings?.preferredBibleApp,
+        preferredBibleVersion: settings?.preferredBibleVersion,
+      });
+      if (!ok) {
+        showToast({ type: "error", message: t("calendar_open_bible_failed") });
+      }
+    })();
+  };
 
   return (
     <Card>
@@ -30,15 +47,26 @@ export function NoteCard({ note, onPressMenu }: Props) {
         <View style={styles.headerText}>
           {note.passages.length > 0 ? (
             <View style={styles.passageRow}>
-              {note.passages.map((passage, index) => (
-                <Text
-                  key={`${passage.startVerseId}-${passage.endVerseId}-${index}`}
-                  variant="bodyStrong"
-                  color="primary"
-                >
-                  {Bible.displayVerseRange(passage.startVerseId, passage.endVerseId, locale)}
-                </Text>
-              ))}
+              {note.passages.map((passage, index) => {
+                const label = Bible.displayVerseRange(
+                  passage.startVerseId,
+                  passage.endVerseId,
+                  locale
+                );
+                return (
+                  <Pressable
+                    key={`${passage.startVerseId}-${passage.endVerseId}-${index}`}
+                    accessibilityRole="link"
+                    accessibilityLabel={label}
+                    onPress={() => handleOpenPassage(passage.startVerseId)}
+                    style={({ pressed }) => pressed && styles.pressed}
+                  >
+                    <Text variant="bodyStrong" color="primary">
+                      {label}
+                    </Text>
+                  </Pressable>
+                );
+              })}
             </View>
           ) : null}
           {note.createdAt ? (
@@ -77,6 +105,7 @@ const styles = StyleSheet.create({
   },
   headerText: { flex: 1, gap: 2 },
   passageRow: { flexDirection: "row", flexWrap: "wrap", columnGap: spacing.md },
+  pressed: { opacity: 0.7 },
   pillRow: {
     flexDirection: "row",
     flexWrap: "wrap",

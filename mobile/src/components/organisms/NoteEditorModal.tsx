@@ -58,6 +58,8 @@ export function NoteEditorModal({ visible, initialNote, onClose, onSubmit }: Pro
   const [editingPassage, setEditingPassage] = useState<number | "new" | null>(null);
   const [choosingTags, setChoosingTags] = useState(false);
   const [discardOpen, setDiscardOpen] = useState(false);
+  // Index of the passage pending removal confirmation, or null.
+  const [confirmRemoveIndex, setConfirmRemoveIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (visible && !wasVisible.current) {
@@ -67,6 +69,7 @@ export function NoteEditorModal({ visible, initialNote, onClose, onSubmit }: Pro
       setEditingPassage(null);
       setChoosingTags(false);
       setDiscardOpen(false);
+      setConfirmRemoveIndex(null);
     }
     wasVisible.current = visible;
   }, [visible, initialNote]);
@@ -170,7 +173,7 @@ export function NoteEditorModal({ visible, initialNote, onClose, onSubmit }: Pro
                   <IconButton
                     name="trash-outline"
                     accessibilityLabel={t("delete")}
-                    onPress={() => removePassage(index)}
+                    onPress={() => setConfirmRemoveIndex(index)}
                   />
                 </View>
               ))
@@ -236,6 +239,19 @@ export function NoteEditorModal({ visible, initialNote, onClose, onSubmit }: Pro
         allowCreate
         onDone={(tagIds) => setDraft((prev) => ({ ...prev, tags: tagIds }))}
         onClose={() => setChoosingTags(false)}
+      />
+
+      <ConfirmDialog
+        visible={confirmRemoveIndex !== null}
+        title={t("note_passage_remove_confirm_title")}
+        message={t("note_passage_remove_confirm_message")}
+        cancelLabel={t("cancel")}
+        confirmLabel={t("delete")}
+        onCancel={() => setConfirmRemoveIndex(null)}
+        onConfirm={() => {
+          if (confirmRemoveIndex !== null) removePassage(confirmRemoveIndex);
+          setConfirmRemoveIndex(null);
+        }}
       />
 
       <ConfirmDialog

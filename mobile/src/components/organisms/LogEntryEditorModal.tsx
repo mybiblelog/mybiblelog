@@ -185,6 +185,7 @@ export function LogEntryEditorModal({
               placeholder={t("choose_start_chapter")}
               disabled={editor.value.book === 0}
               onPress={() => setStartChapterOpen(true)}
+              style={styles.row2Item}
             />
             <SelectRow
               label={t("start_verse")}
@@ -192,6 +193,7 @@ export function LogEntryEditorModal({
               placeholder={t("choose_start_verse")}
               disabled={editor.value.startChapter === 0}
               onPress={() => setStartVerseOpen(true)}
+              style={styles.row2Item}
             />
           </View>
 
@@ -202,6 +204,7 @@ export function LogEntryEditorModal({
               placeholder={t("choose_end_chapter")}
               disabled={editor.value.startVerse === 0}
               onPress={() => setEndChapterOpen(true)}
+              style={styles.row2Item}
             />
             <SelectRow
               label={t("end_verse")}
@@ -209,6 +212,7 @@ export function LogEntryEditorModal({
               placeholder={t("choose_end_verse")}
               disabled={editor.value.endChapter === 0}
               onPress={() => setEndVerseOpen(true)}
+              style={styles.row2Item}
             />
           </View>
         </View>
@@ -299,6 +303,7 @@ const styles = StyleSheet.create({
   previewText: { textAlign: "center" },
   form: { gap: spacing.lg },
   row2: { flexDirection: "row", gap: spacing.md },
+  row2Item: { flex: 1 },
   footer: {
     marginTop: spacing.lg,
     flexDirection: "row",

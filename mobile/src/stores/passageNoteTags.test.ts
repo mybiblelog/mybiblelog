@@ -13,7 +13,7 @@ jest.mock("@/src/stores/userSettings", () => ({
   },
 }));
 
-import { createTag, deleteTag, fetchTags, type PassageNoteTag } from "@/src/api/tagsApi";
+import { createTag, deleteTag, fetchTags, updateTag, type PassageNoteTag } from "@/src/api/tagsApi";
 import { userSettingsActions, useUserSettingsStore } from "@/src/stores/userSettings";
 import { useTagsStore } from "./passageNoteTags";
 
@@ -103,6 +103,18 @@ describe("mutations", () => {
       "middle",
       "zebra",
     ]);
+  });
+
+  it("update keeps the existing noteCount when the response omits it", async () => {
+    (updateTag as jest.Mock).mockResolvedValue(tag("1", "renamed", 0));
+    setReady([tag("1", "original", 5)]);
+
+    await actions().update({ id: "1", label: "renamed", color: "#00aaf9", description: "" });
+
+    const state = useTagsStore.getState().state;
+    expect(state.status === "ready" && state.tags[0]).toEqual(
+      expect.objectContaining({ label: "renamed", noteCount: 5 })
+    );
   });
 
   it("remove drops the tag on success", async () => {

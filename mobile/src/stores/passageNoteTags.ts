@@ -132,7 +132,11 @@ export const useTagsStore = create<TagsStore>((set, get) => ({
           state: {
             status: "ready",
             tags: sortPassageNoteTags(
-              current.tags.map((t) => (t.id === saved.id ? { ...t, ...saved } : t)),
+              // The update response omits noteCount (parsed as 0); editing a
+              // tag can't change how many notes use it, so keep the known count.
+              current.tags.map((t) =>
+                t.id === saved.id ? { ...t, ...saved, noteCount: t.noteCount } : t
+              ),
               get().sortOrder
             ),
           },

@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import * as Haptics from "expo-haptics";
-import { memo, useCallback, useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { memo, useCallback, useMemo, useState } from "react";
+import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated from "react-native-reanimated";
 import { Bible, type BookProgress, type ChapterProgress } from "@mybiblelog/shared";
 import { AnimatedList, Card, Icon, ProgressBar, Screen, Spinner, Text } from "@/src/components";
@@ -20,12 +20,14 @@ const ChapterCell = memo(function ChapterCell({
   bookName,
   chapter,
   isBusy,
+  tileWidth,
   onPress,
 }: {
   bookIndex: number;
   bookName: string;
   chapter: ChapterProgress;
   isBusy: boolean;
+  tileWidth: number;
   onPress: (bookIndex: number, chapterIndex: number) => void;
 }) {
   const { colors } = useTheme();
@@ -41,7 +43,7 @@ const ChapterCell = memo(function ChapterCell({
       accessibilityState={{ checked: chapter.complete, busy: isBusy }}
       style={({ pressed }) => [
         styles.chapterCard,
-        { backgroundColor: colors.surface, borderColor: colors.border },
+        { width: tileWidth, backgroundColor: colors.surface, borderColor: colors.border },
         pressed && styles.pressed,
       ]}
     >
@@ -70,6 +72,7 @@ const BookCard = memo(function BookCard({
   bookName,
   isExpanded,
   busyChapterIndex,
+  tileWidth,
   onToggleBook,
   onToggleChapter,
 }: {
@@ -77,6 +80,7 @@ const BookCard = memo(function BookCard({
   bookName: string;
   isExpanded: boolean;
   busyChapterIndex: number | null;
+  tileWidth: number;
   onToggleBook: (bookIndex: number) => void;
   onToggleChapter: (bookIndex: number, chapterIndex: number) => void;
 }) {
@@ -127,6 +131,7 @@ const BookCard = memo(function BookCard({
               bookName={bookName}
               chapter={c}
               isBusy={busyChapterIndex === c.chapterIndex}
+              tileWidth={tileWidth}
               onPress={onToggleChapter}
             />
           ))}
@@ -145,6 +150,16 @@ export default function Checklist() {
 
   const [busyChapter, setBusyChapter] = useState<string | null>(null);
   const [expandedBooks, setExpandedBooks] = useState<Record<string, boolean>>({});
+  const { width: windowWidth } = useWindowDimensions();
+
+  // Tiles expand to fill the card edge-to-edge: derive the column count from a
+  // ~54pt minimum tile, then split the available width (minus gaps) evenly.
+  const tileWidth = useMemo(() => {
+    const gap = spacing.md; // matches chaptersWrap gap
+    const available = windowWidth - spacing.screenH * 2 - spacing.xl * 2;
+    const columns = Math.max(1, Math.floor((available + gap) / (54 + gap)));
+    return Math.floor((available - gap * (columns - 1)) / columns);
+  }, [windowWidth]);
 
   const toggleBook = useCallback((bookIndex: number) => {
     setExpandedBooks((prev) => ({
@@ -233,6 +248,7 @@ export default function Checklist() {
                 bookName={Bible.getBookName(item.bookIndex, locale)}
                 isExpanded={isExpanded}
                 busyChapterIndex={busyChapterIndex}
+                tileWidth={tileWidth}
                 onToggleBook={toggleBook}
                 onToggleChapter={toggleChapter}
               />
@@ -292,7 +308,6 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   chapterCard: {
-    width: 54,
     paddingVertical: spacing.md,
     borderRadius: radius.md,
     borderWidth: StyleSheet.hairlineWidth,
