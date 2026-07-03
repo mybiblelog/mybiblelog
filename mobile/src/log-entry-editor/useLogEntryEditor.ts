@@ -13,7 +13,7 @@ import type { LogEntry } from '@/src/types/log-entry';
  * prop-driven component state, so it stays a hook rather than a global store.
  *
  * The hook keeps its previous public surface (`value`, `derived`, option lists,
- * `select*`/`updateDate`, `reset`, `markClean`, `toLogEntry`) so the editor
+ * `select*`/`updateDate`, `reset`, `toLogEntry`) so the editor
  * modal is unchanged: `value`'s split chapter/verse fields are derived from the
  * machine model's `startVerseId`/`endVerseId`.
  */
@@ -62,8 +62,8 @@ function modelToValue(model: LogEntryEditorModel): LogEntryEditorValue {
 export function useLogEntryEditor(init?: Init) {
   const [model, setModel] = useState<LogEntryEditorModel>(() => buildInitialModel(init));
   // The baseline the dirty check compares against. Kept in state (not a ref) so
-  // markClean()/reset() trigger a re-render and `derived.isDirty` reflects the
-  // change immediately rather than staying stale until the next edit.
+  // reset() triggers a re-render and `derived.isDirty` reflects the change
+  // immediately rather than staying stale until the next edit.
   const [cleanJson, setCleanJson] = useState<string>(() => JSON.stringify(model));
 
   const value = useMemo<LogEntryEditorValue>(() => modelToValue(model), [model]);
@@ -136,10 +136,6 @@ export function useLogEntryEditor(init?: Init) {
     setModel((prev) => LogEntryEditorMachine.selectEndVerse(prev, verse));
   }, []);
 
-  const markClean = useCallback(() => {
-    setCleanJson(JSON.stringify(model));
-  }, [model]);
-
   const reset = useCallback((nextInit?: Init) => {
     const next = buildInitialModel(nextInit);
     setModel(next);
@@ -169,7 +165,6 @@ export function useLogEntryEditor(init?: Init) {
     selectStartVerse,
     selectEndChapter,
     selectEndVerse,
-    markClean,
     reset,
     toLogEntry,
   };

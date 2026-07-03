@@ -53,11 +53,11 @@ describe('useLogEntryEditor', () => {
     expect(result.current.derived.isValid).toBe(false);
   });
 
-  it('tracks dirty state and clears it with markClean', () => {
+  it('tracks dirty state and clears it with reset', () => {
     const { result } = renderHook(() => useLogEntryEditor());
     act(() => result.current.selectBook(1));
     expect(result.current.derived.isDirty).toBe(true);
-    act(() => result.current.markClean());
+    act(() => result.current.reset());
     expect(result.current.derived.isDirty).toBe(false);
   });
 

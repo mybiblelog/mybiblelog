@@ -33,4 +33,19 @@ export function initCrashReporting(): void {
   }
 }
 
+/**
+ * Report a handled (non-fatal) error. Stores and sync paths call this from
+ * their catch blocks so failures that are deliberately swallowed for UX
+ * reasons still show up in telemetry. No-op when crash reporting is disabled.
+ */
+export function reportHandledError(err: unknown, context?: Record<string, unknown>): void {
+  if (!dsn) return;
+  try {
+    Sentry.captureException(err, context ? { extra: context } : undefined);
+  }
+  catch {
+    // Telemetry must never crash the app.
+  }
+}
+
 export { Sentry };

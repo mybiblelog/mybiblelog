@@ -4,6 +4,7 @@ export { EmptyState } from './EmptyState';
 export { InputField } from './InputField';
 export type { InputFieldProps } from './InputField';
 export { ListItem } from './ListItem';
+export { OfflineBanner } from './OfflineBanner';
 export type { ListItemProps } from './ListItem';
 export { SegmentBar } from './SegmentBar';
 export type { SegmentBarSegment } from './SegmentBar';

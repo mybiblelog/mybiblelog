@@ -53,7 +53,9 @@ export default function Login() {
       const result = await loginWithEmailPassword(trimmedEmail, password);
       setIsSubmitting(false);
       if (result.ok) {
-        router.back();
+        // Deep links can land here with no back stack.
+        if (router.canGoBack()) router.back();
+        else router.replace("/");
         return;
       }
 
@@ -99,7 +101,8 @@ export default function Login() {
       const login = await finishGoogleLogin(result.idToken, locale);
       setIsSubmitting(false);
       if (login.ok) {
-        router.back();
+        if (router.canGoBack()) router.back();
+        else router.replace("/");
         return;
       }
       setError(t("auth_generic_error"));

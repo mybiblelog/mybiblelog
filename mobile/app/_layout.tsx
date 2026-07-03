@@ -1,8 +1,8 @@
+import { useEffect } from "react";
 import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { LocaleProvider, useT } from "@/src/i18n/LocaleProvider";
-import { ThemeProvider, useTheme } from "@/src/design";
-import { modalTransition, stackTransition } from "@/src/design";
+import { ThemeProvider, modalTransition, stackTransition, useTheme } from "@/src/design";
 import { initStores } from "@/src/stores/init";
 import { ToastProvider } from "@/src/toast/ToastProvider";
 import { UpgradeGate } from "@/src/upgrade/UpgradeGate";
@@ -15,11 +15,14 @@ initCrashReporting();
 // Configure native Google Sign-In once, before any login attempt.
 configureGoogleSignIn();
 
-// Hydrate the Zustand domain stores (connectivity, auth, log entries, settings).
-// Replaces the former Auth/UserSettings/LogEntries provider nesting.
-initStores();
-
 function RootLayout() {
+  // Hydrate the Zustand domain stores (connectivity, auth, log entries,
+  // settings) once on mount — idempotent, and kept out of module scope so
+  // importing this file (e.g. in tests) has no side effects.
+  useEffect(() => {
+    initStores();
+  }, []);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <LocaleProvider>

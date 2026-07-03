@@ -1,4 +1,5 @@
 import { getApiBaseUrl } from '@/src/api/apiBase';
+import { fetchWithTimeout } from '@/src/api/fetchWithTimeout';
 import { type ApiErrorPayload, parseApiErrorBody } from '@/src/api/apiError';
 
 /**
@@ -24,7 +25,7 @@ export async function googleIdTokenLogin(
   locale?: string,
 ): Promise<GoogleLoginResult | null> {
   try {
-    const res = await fetch(`${getApiBaseUrl()}/auth/oauth2/google/id-token`, {
+    const res = await fetchWithTimeout(`${getApiBaseUrl()}/auth/oauth2/google/id-token`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -75,7 +76,7 @@ export async function emailPasswordLogin(
   let res: Response;
   let body: unknown;
   try {
-    res = await fetch(`${getApiBaseUrl()}/auth/login`, {
+    res = await fetchWithTimeout(`${getApiBaseUrl()}/auth/login`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',

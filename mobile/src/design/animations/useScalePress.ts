@@ -35,15 +35,22 @@ export function useScalePress({
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
 
+  // Shared-value writes inside press handlers run at event time, not during
+  // render — a known false positive of the compiler's immutability rule with
+  // Reanimated.
   const onPressIn = useCallback(() => {
     if (disabled) return;
+    // eslint-disable-next-line react-hooks/immutability
     scale.value = withSpring(scaleTo, springs.press);
+    // eslint-disable-next-line react-hooks/immutability
     opacity.value = withTiming(opacityTo, { duration: durations.fast });
   }, [disabled, opacity, opacityTo, scale, scaleTo]);
 
   const onPressOut = useCallback(() => {
     if (disabled) return;
+    // eslint-disable-next-line react-hooks/immutability
     scale.value = withSpring(1, springs.press);
+    // eslint-disable-next-line react-hooks/immutability
     opacity.value = withTiming(1, { duration: durations.fast });
   }, [disabled, opacity, scale]);
 

@@ -10,6 +10,7 @@ import {
 } from '@/src/auth/authStorage';
 import { getApiBaseUrl } from '@/src/api/apiBase';
 import type { ApiErrorPayload } from '@/src/api/apiError';
+import { fetchWithTimeout } from '@/src/api/fetchWithTimeout';
 import { emailPasswordLogin, googleIdTokenLogin } from '@/src/api/authApi';
 import { signOutGoogle } from '@/src/auth/googleSignIn';
 import { getIsOnline, useConnectivityStore } from '@/src/stores/connectivity';
@@ -44,7 +45,7 @@ type AuthStore = {
  */
 async function validateStoredToken(token: string): Promise<boolean> {
   try {
-    const res = await fetch(`${getApiBaseUrl()}/auth/user`, {
+    const res = await fetchWithTimeout(`${getApiBaseUrl()}/auth/user`, {
       method: 'GET',
       headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
     });
@@ -83,7 +84,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     const current = get().state;
     try {
       if (current.status === 'authenticated') {
-        await fetch(`${getApiBaseUrl()}/auth/logout`, {
+        await fetchWithTimeout(`${getApiBaseUrl()}/auth/logout`, {
           method: 'POST',
           headers: { Accept: 'application/json', Authorization: `Bearer ${current.session.token}` },
         });
@@ -164,4 +165,9 @@ async function revalidate(session: AuthSession): Promise<void> {
 /** Compatibility hook preserving the previous `useAuth()` provider contract. */
 export function useAuth(): AuthStore {
   return useAuthStore();
+}
+
+/** Subscribe only to the authenticated/unauthenticated boolean. */
+export function useIsAuthenticated(): boolean {
+  return useAuthStore((s) => s.state.status === 'authenticated');
 }

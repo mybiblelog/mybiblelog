@@ -1,0 +1,51 @@
+name: Mobile CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'mobile/**'
+      - 'shared/**'
+      - '.github/workflows/mobile-ci.yml'
+  pull_request:
+    paths:
+      - 'mobile/**'
+      - 'shared/**'
+      - '.github/workflows/mobile-ci.yml'
+
+jobs:
+  mobile:
+    name: Lint, typecheck, test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            mobile/package-lock.json
+
+      # mobile depends on @mybiblelog/shared via file:../shared; shared is a
+      # root workspace whose prepare script builds its dist/, and its compiled
+      # output resolves @babel/runtime from the root node_modules.
+      - name: Install workspace dependencies
+        run: npm ci
+
+      - name: Install mobile dependencies
+        working-directory: mobile
+        run: npm ci
+
+      - name: Lint
+        working-directory: mobile
+        run: npm run lint
+
+      - name: Typecheck
+        working-directory: mobile
+        run: npm run typecheck
+
+      - name: Test
+        working-directory: mobile
+        run: npm test -- --ci

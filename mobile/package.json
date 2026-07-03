@@ -12,8 +12,10 @@
     "ios": "expo run:ios",
     "web": "EXPO_PUBLIC_API_BASE_URL=http://localhost:8080 expo start --web",
     "lint": "expo lint",
+    "typecheck": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
+    "eas:build:android:dev": "eas build --platform android --profile development",
     "clean": "rm -rf node_modules .expo .expo-shared .turbo dist build coverage android ios"
   },
   "dependencies": {

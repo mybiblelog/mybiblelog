@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
-import { useAuth } from "@/src/stores/auth";
+import { useIsAuthenticated } from "@/src/stores/auth";
 import {
-  Card,
   InputField,
   Screen,
   SelectRow,
@@ -11,16 +10,17 @@ import {
 } from "@/src/components";
 import { spacing, useTheme } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
-import { useUserSettings } from "@/src/stores/userSettings";
+import { userSettingsActions, useSettingsValue } from "@/src/stores/userSettings";
 import { useToast } from "@/src/toast/ToastProvider";
 import { BibleApps, BibleVersions } from "@mybiblelog/shared";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
 export default function ReadingSettings() {
   const t = useT();
   const { colors } = useTheme();
-  const { state: authState } = useAuth();
-  const { state: settingsState, setLocalSettings, updateServerSettings } = useUserSettings();
+  const isAuthenticated = useIsAuthenticated();
+  const settings = useSettingsValue();
+  const { setLocalSettings, updateServerSettings } = userSettingsActions;
   const { showToast } = useToast();
 
   const [bibleVersionOpen, setBibleVersionOpen] = useState(false);
@@ -61,7 +61,7 @@ export default function ReadingSettings() {
     return Object.keys(names).map((value) => ({ value, label: names[value] }));
   }, []);
 
-  if (settingsState.status !== "ready") {
+  if (settings === null) {
     return (
       <Screen edges={[]}>
         <Spinner center />
@@ -69,8 +69,9 @@ export default function ReadingSettings() {
     );
   }
 
-  const settings = settingsState.settings;
-  const canUseServer = authState.status === "authenticated";
+  const canUseServer = isAuthenticated;
+  // Captured after the null guard so the save closures see a non-null type.
+  const current = settings;
   const bibleVersionLabel =
     bibleVersionOptions.find((o) => o.value === settings.preferredBibleVersion)?.label ??
     settings.preferredBibleVersion;
@@ -79,7 +80,7 @@ export default function ReadingSettings() {
     settings.preferredBibleApp;
 
   async function saveDailyGoal() {
-    const value = settings.dailyVerseCountGoal;
+    const value = current.dailyVerseCountGoal;
     if (!Number.isFinite(value) || value < 1 || value > 1111) {
       showToast({ type: "error", message: t("settings_save_invalid") });
       return;
@@ -96,7 +97,7 @@ export default function ReadingSettings() {
   }
 
   async function saveLookBackDate() {
-    const value = settings.lookBackDate;
+    const value = current.lookBackDate;
     if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
       showToast({ type: "error", message: t("settings_save_invalid") });
       return;
@@ -185,7 +186,7 @@ export default function ReadingSettings() {
           onPress={() => setBibleAppOpen(true)}
         />
 
-        {authState.status !== "authenticated" && (
+        {!isAuthenticated && (
           <Text variant="caption" color="mutedText" style={styles.help}>
             {t("settings_reading_local_only_notice")}
           </Text>

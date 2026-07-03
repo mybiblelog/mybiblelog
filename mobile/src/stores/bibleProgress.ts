@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { type BibleProgress, computeBibleProgress } from '@mybiblelog/shared';
 import { getCache, setCache } from '@/src/storage/dateVerseCountsCache';
+import { subscribeDerivedRecompute } from '@/src/stores/derivedRecompute';
 import { useLogEntriesStore } from '@/src/stores/logEntries';
 import { useUserSettingsStore } from '@/src/stores/userSettings';
 
@@ -76,32 +77,5 @@ let initialized = false;
 export function initBibleProgress(): void {
   if (initialized) return;
   initialized = true;
-
-  const recompute = () => void useBibleProgressStore.getState().cacheBibleProgress();
-
-  // Recompute when the entries array reference changes (add/edit/delete/sync).
-  let prevEntries: unknown = null;
-  let prevReady = false;
-  useLogEntriesStore.subscribe((store) => {
-    const entries = store.state.status === 'ready' ? store.state.entries : null;
-    const ready = entries !== null;
-    if (ready && (entries !== prevEntries || !prevReady)) {
-      prevEntries = entries;
-      recompute();
-    }
-    prevReady = ready;
-  });
-
-  // Recompute when the look-back date changes.
-  let prevLookBack: string | null = null;
-  useUserSettingsStore.subscribe((store) => {
-    const lookBack = store.state.status === 'ready' ? store.state.settings.lookBackDate : null;
-    if (lookBack && lookBack !== prevLookBack) {
-      prevLookBack = lookBack;
-      recompute();
-    }
-  });
-
-  // Initial compute (cache hydrate + first calc).
-  recompute();
+  subscribeDerivedRecompute(() => void useBibleProgressStore.getState().cacheBibleProgress());
 }

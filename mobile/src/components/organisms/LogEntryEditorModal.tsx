@@ -51,8 +51,8 @@ export function LogEntryEditorModal({
 
   const bookOptions = useMemo(
     () =>
-      editor.books.map((b: any) => ({
-        value: b.bibleOrder as number,
+      editor.books.map((b) => ({
+        value: b.bibleOrder,
         label: Bible.getBookName(b.bibleOrder, locale),
       })),
     [editor.books, locale]
@@ -79,8 +79,8 @@ export function LogEntryEditorModal({
 
   useEffect(() => {
     if (visible && !wasVisible.current) {
-      const init = initialEntry ?? (presetDate ? ({ date: presetDate } as any) : undefined);
-      // reset() establishes the clean baseline; no separate markClean() needed.
+      const init = initialEntry ?? (presetDate ? { date: presetDate } : undefined);
+      // reset() establishes the clean baseline.
       reset(init);
     }
     if (!visible && wasVisible.current) {

@@ -6,17 +6,18 @@ import {
   saveLocalUserSettings,
 } from '@/src/settings/userSettingsStorage';
 import { type ServerUserSettings, getSettings, updateSettings } from '@/src/api/settingsApi';
-import { getAuthToken, useAuthStore } from '@/src/stores/auth';
+import { reportHandledError } from '@/src/observability/sentry';
+import { useAuthStore } from '@/src/stores/auth';
 import { getIsOnline, useConnectivityStore } from '@/src/stores/connectivity';
 
 /**
  * User-settings store (Zustand).
  *
- * Replaces `UserSettingsProvider`, mirroring the Nuxt user-settings store: local
- * device settings overlaid by server truth while authenticated. Server-backed
- * fields (`dailyVerseCountGoal`, `lookBackDate`, `preferredBibleVersion`) refresh
- * from the API; `preferredBibleApp` stays device-only. `useUserSettings()` keeps
- * the previous provider contract.
+ * Mirrors the Nuxt user-settings store: local device settings overlaid by
+ * server truth while authenticated. Server-backed fields
+ * (`dailyVerseCountGoal`, `lookBackDate`, `preferredBibleVersion`) refresh
+ * from the API; `preferredBibleApp` stays device-only. Components subscribe
+ * via `useSettingsValue()` and mutate via `userSettingsActions`.
  */
 
 export type UserSettingsState =
@@ -70,14 +71,12 @@ export const useUserSettingsStore = create<UserSettingsStore>((set, get) => ({
     if (refreshInFlight) return refreshInFlight;
     if (!isAuthenticated() || getIsOnline() !== true) return;
     if (get().state.status !== 'ready') return;
-    const token = getAuthToken();
-    if (!token) return;
 
     refreshInFlight = (async () => {
       const ready = get().state;
       if (ready.status === 'ready') set({ state: { ...ready, isRefreshingFromServer: true } });
       try {
-        const server = await getSettings(token);
+        const server = await getSettings();
         const before = get().state;
         if (before.status === 'ready') {
           const next = applyServerTruth(before.settings, server);
@@ -87,8 +86,9 @@ export const useUserSettingsStore = create<UserSettingsStore>((set, get) => ({
           }
         }
       }
-      catch {
-        // Network or API error: keep local settings, fail gracefully
+      catch (err) {
+        // Network or API error: keep local settings, fail gracefully.
+        reportHandledError(err, { op: 'userSettings.refreshFromServer' });
       }
       finally {
         const after = get().state;
@@ -104,16 +104,15 @@ export const useUserSettingsStore = create<UserSettingsStore>((set, get) => ({
     if (!isAuthenticated() || getIsOnline() !== true) return false;
     const current = get().state;
     if (current.status !== 'ready') return false;
-    const token = getAuthToken();
-    if (!token) return false;
     try {
-      const updated = await updateSettings(token, partial);
+      const updated = await updateSettings(partial);
       const next = applyServerTruth(current.settings, updated);
       set({ state: { status: 'ready', settings: next, isRefreshingFromServer: false } });
       await saveLocalUserSettings(next);
       return true;
     }
-    catch {
+    catch (err) {
+      reportHandledError(err, { op: 'userSettings.updateServerSettings' });
       return false;
     }
   },
@@ -147,10 +146,26 @@ export function initUserSettings(): void {
   useAuthStore.subscribe(() => tryRefresh());
 }
 
-/** Compatibility hook preserving the previous `useUserSettings()` provider contract. */
-export function useUserSettings(): UserSettingsStore {
-  return useUserSettingsStore();
+/**
+ * The current settings object, or `null` while hydrating. The reference only
+ * changes when a setting actually changes, so consumers don't re-render when
+ * `isRefreshingFromServer` toggles during background refreshes.
+ */
+export function useSettingsValue(): LocalUserSettings | null {
+  return useUserSettingsStore((s) => (s.state.status === 'ready' ? s.state.settings : null));
 }
+
+/**
+ * Store actions, stable for the lifetime of the app — safe to use directly in
+ * event handlers without subscribing the component to any store state.
+ */
+export const userSettingsActions = {
+  setLocalSettings: (partial: Partial<LocalUserSettings>) =>
+    useUserSettingsStore.getState().setLocalSettings(partial),
+  updateServerSettings: (partial: Partial<ServerUserSettings>) =>
+    useUserSettingsStore.getState().updateServerSettings(partial),
+  refreshFromServer: () => useUserSettingsStore.getState().refreshFromServer(),
+};
 
 export function getDefaultLocalUserSettingsForTest(): LocalUserSettings {
   return DEFAULT_LOCAL_USER_SETTINGS;

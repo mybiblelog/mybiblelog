@@ -24,5 +24,11 @@ module.exports = {
     '<rootDir>/src/**/*.test.{ts,tsx}',
     '<rootDir>/app/**/*.test.{ts,tsx}',
   ],
+  collectCoverageFrom: [
+    'src/**/*.{ts,tsx}',
+    'app/**/*.{ts,tsx}',
+    '!**/*.test.{ts,tsx}',
+    '!src/test-utils/**',
+  ],
   clearMocks: true,
 };

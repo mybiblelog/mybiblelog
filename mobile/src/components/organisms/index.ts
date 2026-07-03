@@ -1,10 +1,11 @@
-export { AddLogEntryModal } from './AddLogEntryModal';
 export { AnimatedList } from './AnimatedList';
 export { BottomSheet } from './BottomSheet';
 export { ChapterMenu } from './ChapterMenu';
 export { ConfirmDialog } from './ConfirmDialog';
 export { LogEntryEditorModal } from './LogEntryEditorModal';
 export { LogEntryMenu } from './LogEntryMenu';
+export { useLogEntryOverlays } from './LogEntryOverlays';
+export { useSyncRefreshControl } from './useSyncRefreshControl';
 export { LogEntryRow } from './LogEntryRow';
 export { MenuSheet } from './MenuSheet';
 export type { MenuAction } from './MenuSheet';

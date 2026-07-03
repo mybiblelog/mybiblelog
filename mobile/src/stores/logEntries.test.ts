@@ -24,6 +24,7 @@ import {
   fetchLogEntries,
   postLogEntry,
 } from '@mybiblelog/shared';
+import { ApiError } from '@/src/api/apiError';
 import { getIsOnline } from '@/src/stores/connectivity';
 import { loadPendingLogEntryMutations, type StoredLogEntry } from '@/src/storage/logEntries';
 import { useLogEntriesStore } from './logEntries';
@@ -88,14 +89,13 @@ describe('deleteEntry (offline)', () => {
 describe('createEntry (online)', () => {
   beforeEach(() => (getIsOnline as jest.Mock).mockReturnValue(true));
 
-  it('posts to the API and reloads instead of queueing', async () => {
+  it('posts to the API and applies the response locally without a full reload', async () => {
     (postLogEntry as jest.Mock).mockResolvedValue({ id: 'server-1', ...entry });
-    (fetchLogEntries as jest.Mock).mockResolvedValue([{ id: 'server-1', ...entry }]);
 
     await actions().createEntry(entry);
 
     expect(postLogEntry).toHaveBeenCalledTimes(1);
-    expect(fetchLogEntries).toHaveBeenCalled();
+    expect(fetchLogEntries).not.toHaveBeenCalled();
     const queue = await loadPendingLogEntryMutations();
     expect(queue).toHaveLength(0);
     const state = useLogEntriesStore.getState().state;
@@ -109,5 +109,54 @@ describe('createEntry (online)', () => {
     expect(queue).toHaveLength(1);
     expect(queue[0]).toMatchObject({ type: 'create' });
     expect(deleteLogEntryRequest).not.toHaveBeenCalled();
+  });
+});
+
+describe('entry ordering', () => {
+  beforeEach(() => (getIsOnline as jest.Mock).mockReturnValue(false));
+
+  it('keeps the list sorted newest-first after local creates', async () => {
+    await actions().createEntry({ ...entry, date: '2026-06-01' });
+    await actions().createEntry({ ...entry, date: '2026-06-15' });
+    await actions().createEntry({ ...entry, date: '2026-06-10' });
+    const state = useLogEntriesStore.getState().state;
+    const dates = state.status === 'ready' ? state.entries.map((e) => e.date) : [];
+    expect(dates).toEqual(['2026-06-15', '2026-06-10', '2026-06-01']);
+  });
+});
+
+describe('syncNow poison-pill handling', () => {
+  beforeEach(() => (getIsOnline as jest.Mock).mockReturnValue(true));
+
+  it('drops a mutation the server permanently rejects (4xx) and drains the queue', async () => {
+    await AsyncStorage.setItem(
+      'logEntries.mutations.v1',
+      JSON.stringify([{ type: 'create', clientId: 'bad', entry, ts: 1 }]),
+    );
+    (postLogEntry as jest.Mock).mockRejectedValue(
+      new ApiError({ code: 'validation_error', errors: [] }, 400),
+    );
+    (fetchLogEntries as jest.Mock).mockResolvedValue([]);
+
+    await actions().syncNow();
+
+    const queue = await loadPendingLogEntryMutations();
+    expect(queue).toHaveLength(0);
+    // Queue drained, so the store reconciled with the server.
+    expect(fetchLogEntries).toHaveBeenCalled();
+  });
+
+  it('keeps a mutation queued after a transient (network/5xx) failure', async () => {
+    await AsyncStorage.setItem(
+      'logEntries.mutations.v1',
+      JSON.stringify([{ type: 'create', clientId: 'c-retry', entry, ts: 1 }]),
+    );
+    (postLogEntry as jest.Mock).mockRejectedValue(new Error('network down'));
+
+    await actions().syncNow();
+
+    const queue = await loadPendingLogEntryMutations();
+    expect(queue).toHaveLength(1);
+    expect(fetchLogEntries).not.toHaveBeenCalled();
   });
 });

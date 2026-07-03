@@ -3,9 +3,15 @@ import { renderWithProviders } from "@/src/test-utils/renderWithProviders";
 
 function renderSegments(segments: SegmentBarSegment[]) {
   const tree = renderWithProviders(<SegmentBar segments={segments} />).toJSON();
-  // The bar is a single View; its children are the rendered segments.
-  const root = Array.isArray(tree) ? tree[0] : tree;
-  const children = root?.children ?? [];
+  // Unwrap provider wrappers (e.g. SafeAreaProvider) down to the bar View;
+  // its children are the rendered segments.
+  let node = Array.isArray(tree) ? tree[0] : tree;
+  while (node && node.type !== "View") {
+    const next = node.children?.[0];
+    if (!next || typeof next === "string") break;
+    node = next;
+  }
+  const children = node?.children ?? [];
   return Array.isArray(children) ? children : [children];
 }
 

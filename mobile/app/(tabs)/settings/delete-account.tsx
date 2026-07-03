@@ -64,7 +64,7 @@ export default function DeleteAccountScreen() {
     if (!token || isDeleting) return;
     setIsDeleting(true);
     try {
-      await deleteAccount(token);
+      await deleteAccount();
       // Clear the local session, then return to the settings root.
       await logout();
       router.replace("/settings");

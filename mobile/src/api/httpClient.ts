@@ -1,6 +1,7 @@
 import type { ApiResponse, HttpClient } from '@mybiblelog/shared';
 import { getApiOrigin } from '@/src/api/apiBase';
 import { ApiError, parseApiErrorBody } from '@/src/api/apiError';
+import { fetchWithTimeout } from '@/src/api/fetchWithTimeout';
 import { getAuthToken } from '@/src/stores/auth';
 
 /**
@@ -21,7 +22,7 @@ async function request<T>(method: Method, path: string, body?: unknown): Promise
   if (token) headers.Authorization = `Bearer ${token}`;
   if (body !== undefined) headers['Content-Type'] = 'application/json';
 
-  const res = await fetch(`${getApiOrigin()}${path}`, {
+  const res = await fetchWithTimeout(`${getApiOrigin()}${path}`, {
     method,
     headers,
     body: body !== undefined ? JSON.stringify(body) : undefined,
@@ -32,7 +33,7 @@ async function request<T>(method: Method, path: string, body?: unknown): Promise
     | undefined;
 
   if (!res.ok) {
-    throw new ApiError(parseApiErrorBody(json));
+    throw new ApiError(parseApiErrorBody(json), res.status);
   }
 
   return { data: (json?.data as T), meta: json?.meta };

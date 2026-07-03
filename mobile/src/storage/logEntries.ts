@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { LogEntry } from '@/src/types/log-entry';
+import { makeClientId } from '@/src/log-entries/sync';
 
 const STORAGE_KEY = 'logEntries.v1';
 const MUTATIONS_KEY = 'logEntries.mutations.v1';
@@ -19,11 +20,6 @@ function isLogEntry(value: unknown): value is LogEntry {
 }
 
 export type StoredLogEntry = LogEntry & { clientId: string };
-
-function makeClientId(): string {
-  // Stable enough for client-side IDs without extra deps.
-  return `le_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
-}
 
 function ensureClientIds(entries: LogEntry[]): StoredLogEntry[] {
   return entries.map((e) => ({
@@ -98,7 +94,9 @@ export async function loadPendingLogEntryMutations(): Promise<PendingLogEntryMut
     console.warn('Failed to load log entry mutations', err);
     return [];
   }
-} export async function savePendingLogEntryMutations(
+}
+
+export async function savePendingLogEntryMutations(
   mutations: PendingLogEntryMutation[],
 ): Promise<void> {
   try {

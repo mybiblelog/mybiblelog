@@ -30,12 +30,15 @@ export type ApiErrorPayload = {
 export class ApiError extends Error {
   readonly code: string;
   readonly errors: ApiErrorDetail[];
+  /** HTTP status of the failed response, when known. */
+  readonly status?: number;
 
-  constructor(payload: ApiErrorPayload) {
+  constructor(payload: ApiErrorPayload, status?: number) {
     super(payload.code);
     this.name = 'ApiError';
     this.code = payload.code;
     this.errors = payload.errors ?? [];
+    this.status = status;
   }
 }
 

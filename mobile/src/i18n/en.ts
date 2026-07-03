@@ -206,6 +206,15 @@ export const en = {
   calendar_no_entries: 'No Entries',
   calendar_verses: 'verses',
   calendar_open_bible_failed: 'Unable to open Bible app.',
+  calendar_prev_month: 'Previous month',
+  calendar_next_month: 'Next month',
+  calendar_day_verses_read: '%{count} verses read',
+
+  dismiss: 'Dismiss',
+  offline_banner: 'You’re offline — changes will sync when you reconnect.',
+  today_no_goal_hint: 'Set a daily goal in Settings → Reading to track your progress here.',
+  chapter_read_a11y: '%{book} chapter %{chapter}, read',
+  chapter_unread_a11y: '%{book} chapter %{chapter}, not read',
 
   chapter_checklist: 'Chapter Checklist',
   loading: 'Loading...',

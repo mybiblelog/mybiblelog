@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { spacing, useTheme } from "@/src/design";
+import { OfflineBanner } from "../molecules/OfflineBanner";
 
 type Edge = "top" | "bottom";
 
@@ -47,6 +48,7 @@ export function Screen({
         style,
       ]}
     >
+      <OfflineBanner />
       {children}
     </View>
   );

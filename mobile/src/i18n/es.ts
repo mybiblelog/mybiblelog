@@ -1,3 +1,8 @@
+import type { en } from './en';
+
+// `satisfies` guarantees at compile time that every English key has a Spanish
+// translation (and no stray keys exist) — a missing key is a type error, not a
+// silent runtime fallback.
 export const es = {
   start_tab_title: 'Inicio',
   log_tab_title: 'Registro',
@@ -211,6 +216,15 @@ export const es = {
   calendar_no_entries: 'No hay entradas',
   calendar_verses: 'versículos',
   calendar_open_bible_failed: 'No se pudo abrir la Biblia.',
+  calendar_prev_month: 'Mes anterior',
+  calendar_next_month: 'Mes siguiente',
+  calendar_day_verses_read: '%{count} versículos leídos',
+
+  dismiss: 'Descartar',
+  offline_banner: 'Sin conexión: los cambios se sincronizarán cuando te vuelvas a conectar.',
+  today_no_goal_hint: 'Establece una meta diaria en Ajustes → Lectura para seguir tu progreso aquí.',
+  chapter_read_a11y: '%{book} capítulo %{chapter}, leído',
+  chapter_unread_a11y: '%{book} capítulo %{chapter}, no leído',
 
   chapter_checklist: 'Lista de capítulos',
   loading: 'Cargando...',
@@ -218,5 +232,5 @@ export const es = {
     'Este capítulo se registró antes de hoy. Puedes editar entradas anteriores en la página del Calendario.',
   unable_to_mark_complete: 'No se puede marcar el capítulo como completo.',
   unable_to_mark_incomplete: 'No se puede marcar el capítulo como incompleto.',
-} as const;
+} as const satisfies Record<keyof typeof en, string>;
 

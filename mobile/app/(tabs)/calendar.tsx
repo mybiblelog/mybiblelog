@@ -1,54 +1,25 @@
 import dayjs from "dayjs";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Bible } from "@mybiblelog/shared";
 import {
   AnimatedList,
   Button,
-  ConfirmDialog,
   IconButton,
-  LogEntryEditorModal,
-  LogEntryMenu,
   LogEntryRow,
   Screen,
   Text,
+  useLogEntryOverlays,
+  useSyncRefreshControl,
 } from "@/src/components";
 import { radius, spacing, useTheme } from "@/src/design";
-import { openPassageInBible } from "@/src/bible/openInBible";
+import { formatLongDate, getWeekdayIndex } from "@/src/i18n/date";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
-import { useLogEntries } from "@/src/stores/logEntries";
-import { useUserSettings } from "@/src/stores/userSettings";
+import type { StoredLogEntry } from "@/src/storage/logEntries";
+import { useLogEntryList } from "@/src/stores/logEntries";
+import { useSettingsValue } from "@/src/stores/userSettings";
 import { useDateVerseCounts } from "@/src/stores/dateVerseCounts";
-import { useToast } from "@/src/toast/ToastProvider";
-
-// Brand gold for a fully-read day star — a decorative accent outside the
-// theme palette.
-const GOLD_STAR = "#ffd700";
-
-function parseYmdToDate(ymd: string): Date | null {
-  const parts = ymd.split("-").map((p) => Number(p));
-  if (parts.length !== 3 || parts.some((n) => !Number.isFinite(n))) return null;
-  const [year, month, day] = parts;
-  return new Date(year, month - 1, day);
-}
-
-function formatLongDateLocale(ymd: string, locale: string): string {
-  const d = parseYmdToDate(ymd);
-  if (!d || Number.isNaN(d.getTime())) return ymd;
-  return new Intl.DateTimeFormat(locale, {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  }).format(d);
-}
-
-function getWeekdayIndex(ymd: string): number {
-  const d = parseYmdToDate(ymd);
-  if (!d) return 0;
-  // JS: Sunday=0 ... Saturday=6 (matches Nuxt's use of weekday() for their Monday-first calc)
-  return d.getDay();
-}
 
 function getWeekdayLabels(locale: string): string[] {
   const options: Intl.DateTimeFormatOptions = { weekday: "short" };
@@ -63,26 +34,30 @@ function getWeekdayLabels(locale: string): string[] {
   ];
 }
 
+type DayCell = {
+  date: string;
+  dayNumber: number;
+  isCurrentMonth: boolean;
+  uniquePct: number;
+  totalPct: number;
+};
+
+const EntrySeparator = () => <View style={styles.entrySeparator} />;
+
 export default function Calendar() {
   const { colors } = useTheme();
   const t = useT();
   const { locale } = useLocale();
-  const { showToast } = useToast();
   const { width: windowWidth } = useWindowDimensions();
-  const { state: logState, createEntry, updateEntry, deleteEntry } = useLogEntries();
-  const { state: settingsState } = useUserSettings();
+  const entries = useLogEntryList();
+  const settings = useSettingsValue();
+  const refreshControl = useSyncRefreshControl();
 
   const today = useMemo(() => dayjs().format("YYYY-MM-DD"), []);
   const [selectedMonth, setSelectedMonth] = useState(() => dayjs());
   const [selectedDay, setSelectedDay] = useState<string>(today);
 
-  const [isAddOpen, setIsAddOpen] = useState(false);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [menuIndex, setMenuIndex] = useState<number | null>(null);
-  const [confirmDeleteIndex, setConfirmDeleteIndex] = useState<number | null>(null);
-
-  const dailyGoal =
-    settingsState.status === "ready" ? settingsState.settings.dailyVerseCountGoal : 0;
+  const dailyGoal = settings?.dailyVerseCountGoal ?? 0;
 
   // Month label like Nuxt CalendarDateIndicator.
   const monthLabel = useMemo(() => {
@@ -98,40 +73,34 @@ export default function Calendar() {
   // verses since the tracker start (lookBackDate).
   const dateVerseCounts = useDateVerseCounts();
 
-  type DayCell = {
-    date: string;
-    isCurrentMonth: boolean;
-    uniquePct: number;
-    totalPct: number;
-  };
-
   const days = useMemo<DayCell[]>(() => {
-    const year = Number(selectedMonth.format("YYYY"));
-    const month = Number(selectedMonth.format("M"));
+    // Monday-first grid. Cells are derived arithmetically from the index —
+    // only the leading day of the grid needs date math.
     const numberOfDaysInMonth = selectedMonth.daysInMonth();
-
-    const firstDay = dayjs(selectedMonth).date(1).format("YYYY-MM-DD");
-    const firstWeekday = getWeekdayIndex(firstDay);
+    const firstDay = selectedMonth.date(1);
+    const firstWeekday = getWeekdayIndex(firstDay.format("YYYY-MM-DD"));
     const visiblePrev = firstWeekday ? firstWeekday - 1 : 6;
 
-    const lastDay = dayjs(selectedMonth).date(numberOfDaysInMonth).format("YYYY-MM-DD");
-    const lastWeekday = getWeekdayIndex(lastDay);
+    const lastWeekday = getWeekdayIndex(
+      selectedMonth.date(numberOfDaysInMonth).format("YYYY-MM-DD"),
+    );
     const visibleNext = lastWeekday ? 7 - lastWeekday : lastWeekday;
 
-    const startGrid = dayjs(firstDay).subtract(visiblePrev, "day");
+    const startGrid = firstDay.subtract(visiblePrev, "day");
     const totalCells = visiblePrev + numberOfDaysInMonth + visibleNext;
 
     const out: DayCell[] = [];
+    let cursor = startGrid;
     for (let i = 0; i < totalCells; i++) {
-      const date = startGrid.add(i, "day").format("YYYY-MM-DD");
-      const isCurrentMonth =
-        Number(dayjs(date).format("YYYY")) === year && Number(dayjs(date).format("M")) === month;
+      const date = cursor.format("YYYY-MM-DD");
+      const isCurrentMonth = i >= visiblePrev && i < visiblePrev + numberOfDaysInMonth;
 
       const counts = dateVerseCounts[date] ?? { total: 0, unique: 0 };
       const uniquePct = dailyGoal ? (counts.unique / dailyGoal) * 100 : 0;
       const totalPct = dailyGoal ? (counts.total / dailyGoal) * 100 : 0;
 
-      out.push({ date, isCurrentMonth, uniquePct, totalPct });
+      out.push({ date, dayNumber: cursor.date(), isCurrentMonth, uniquePct, totalPct });
+      cursor = cursor.add(1, "day");
     }
     return out;
   }, [dailyGoal, dateVerseCounts, selectedMonth]);
@@ -146,25 +115,16 @@ export default function Calendar() {
     return { horizontalPadding, gap, cellWidth };
   }, [windowWidth]);
 
-  // When month changes, select first day of that month (Nuxt behavior).
-  useEffect(() => {
-    const first = dayjs(selectedMonth).date(1).format("YYYY-MM-DD");
-    if (dayjs(selectedDay).format("YYYY-MM") !== dayjs(selectedMonth).format("YYYY-MM")) {
-      setSelectedDay(first);
-    }
-  }, [selectedDay, selectedMonth]);
+  const entriesForSelectedDay = useMemo(
+    () => (entries ?? []).filter((e) => e.date === selectedDay),
+    [entries, selectedDay],
+  );
 
-  const entriesForSelectedDay = useMemo(() => {
-    if (logState.status !== "ready") return [];
-    return logState.entries.filter((e) => e.date === selectedDay);
-  }, [logState, selectedDay]);
-
-  // Keep indices valid if list changes (sync/reload).
-  useEffect(() => {
-    if (menuIndex !== null && !entriesForSelectedDay[menuIndex]) setMenuIndex(null);
-    if (editingIndex !== null && !entriesForSelectedDay[editingIndex]) setEditingIndex(null);
-    if (confirmDeleteIndex !== null && !entriesForSelectedDay[confirmDeleteIndex]) setConfirmDeleteIndex(null);
-  }, [confirmDeleteIndex, editingIndex, entriesForSelectedDay, menuIndex]);
+  const { openAdd, openMenu, overlays } = useLogEntryOverlays({
+    entries: entriesForSelectedDay,
+    presetDate: selectedDay,
+    createDate: selectedDay,
+  });
 
   const verseCountForSelectedDay = useMemo(() => {
     let sum = 0;
@@ -175,7 +135,7 @@ export default function Calendar() {
   }, [entriesForSelectedDay]);
 
   const selectedDayDisplay = useMemo(
-    () => formatLongDateLocale(selectedDay, locale),
+    () => formatLongDate(selectedDay, locale),
     [locale, selectedDay]
   );
 
@@ -183,15 +143,12 @@ export default function Calendar() {
     <Screen>
       <AnimatedList
         data={entriesForSelectedDay}
-        keyExtractor={(item) =>
-          item.clientId ??
-          item.id ??
-          `${item.date}-${item.startVerseId}-${item.endVerseId}`
-        }
+        refreshControl={refreshControl}
+        keyExtractor={(item: StoredLogEntry) => item.clientId}
         contentContainerStyle={styles.pageContent}
-        ItemSeparatorComponent={() => <View style={styles.entrySeparator} />}
-        renderItem={({ item, index }) => (
-          <LogEntryRow entry={item} onPressMenu={() => setMenuIndex(index)} />
+        ItemSeparatorComponent={EntrySeparator}
+        renderItem={({ item }) => (
+          <LogEntryRow entry={item} onPressMenu={() => openMenu(item)} />
         )}
         ListHeaderComponent={
           <>
@@ -200,7 +157,7 @@ export default function Calendar() {
               <View style={styles.monthNav}>
                 <IconButton
                   name="chevron-back"
-                  accessibilityLabel={t("calendar_today")}
+                  accessibilityLabel={t("calendar_prev_month")}
                   onPress={() => {
                     const next = dayjs(selectedMonth).subtract(1, "month");
                     setSelectedMonth(next);
@@ -213,15 +170,14 @@ export default function Calendar() {
                   variant="ghost"
                   size="sm"
                   onPress={() => {
-                    const now = dayjs();
-                    setSelectedMonth(now);
+                    setSelectedMonth(dayjs());
                     setSelectedDay(today);
                   }}
                 />
 
                 <IconButton
                   name="chevron-forward"
-                  accessibilityLabel={t("calendar_today")}
+                  accessibilityLabel={t("calendar_next_month")}
                   onPress={() => {
                     const next = dayjs(selectedMonth).add(1, "month");
                     setSelectedMonth(next);
@@ -243,7 +199,6 @@ export default function Calendar() {
 
             <View style={[styles.daysGrid, { paddingHorizontal: dayCellMetrics.horizontalPadding }]}>
               {days.map((d) => {
-                const dayNum = dayjs(d.date).format("D");
                 const isToday = d.date === today;
                 const isSelected = d.date === selectedDay;
 
@@ -255,12 +210,12 @@ export default function Calendar() {
 
                 return (
                   <Pressable
-                    key={`${selectedMonth.format("YYYY-MM")}:${d.date}`}
+                    key={d.date}
                     disabled={!d.isCurrentMonth}
-                    onPress={() => {
-                      if (!d.isCurrentMonth) return;
-                      setSelectedDay(d.date);
-                    }}
+                    accessibilityRole="button"
+                    accessibilityLabel={formatLongDate(d.date, locale)}
+                    accessibilityState={{ selected: isSelected, disabled: !d.isCurrentMonth }}
+                    onPress={() => setSelectedDay(d.date)}
                     style={[
                       styles.dayCell,
                       {
@@ -290,7 +245,7 @@ export default function Calendar() {
                               : "mutedText"
                         }
                       >
-                        {dayNum}
+                        {d.dayNumber}
                       </Text>
                     </View>
 
@@ -298,7 +253,7 @@ export default function Calendar() {
                       <Ionicons
                         name="star"
                         size={16}
-                        color={showGoldStar ? GOLD_STAR : colors.secondary}
+                        color={showGoldStar ? colors.starGold : colors.secondary}
                         style={styles.dayStar}
                       />
                     )}
@@ -310,7 +265,6 @@ export default function Calendar() {
                         <View
                           style={[
                             styles.dayProgressFill,
-                            styles.dayProgressFillSecondary,
                             { width: `${secondaryPct}%`, backgroundColor: colors.secondary },
                           ]}
                         />
@@ -339,7 +293,7 @@ export default function Calendar() {
                 accessibilityLabel={t("add_log_entry_title")}
                 color="onPrimary"
                 style={[styles.addButton, { backgroundColor: colors.primary }]}
-                onPress={() => setIsAddOpen(true)}
+                onPress={openAdd}
               />
             </View>
           </>
@@ -353,73 +307,7 @@ export default function Calendar() {
         }
       />
 
-      <LogEntryEditorModal
-        visible={isAddOpen}
-        onClose={() => setIsAddOpen(false)}
-        title={t("add_log_entry_title")}
-        submitLabel={t("save")}
-        presetDate={selectedDay}
-        onSubmit={(entry) => {
-          void createEntry({ ...entry, date: selectedDay });
-        }}
-      />
-
-      <LogEntryEditorModal
-        visible={editingIndex !== null && entriesForSelectedDay[editingIndex] !== undefined}
-        onClose={() => setEditingIndex(null)}
-        title={t("edit_log_entry_title")}
-        submitLabel={t("save")}
-        initialEntry={editingIndex !== null ? entriesForSelectedDay[editingIndex] : undefined}
-        onSubmit={(entry) => {
-          if (editingIndex === null) return;
-          const existing = entriesForSelectedDay[editingIndex];
-          if (!existing?.clientId) return;
-          void updateEntry(existing.clientId, entry);
-          setEditingIndex(null);
-        }}
-      />
-
-      <LogEntryMenu
-        visible={menuIndex !== null && entriesForSelectedDay[menuIndex] !== undefined}
-        onClose={() => setMenuIndex(null)}
-        onOpenInBible={() => {
-          if (menuIndex === null) return;
-          const entry = entriesForSelectedDay[menuIndex];
-          if (!entry) return;
-          void (async () => {
-            const ok = await openPassageInBible(entry.startVerseId, {
-              preferredBibleApp: settingsState.status === "ready" ? settingsState.settings.preferredBibleApp : undefined,
-              preferredBibleVersion: settingsState.status === "ready" ? settingsState.settings.preferredBibleVersion : undefined,
-            });
-            if (!ok) {
-              showToast({ type: "error", message: t("calendar_open_bible_failed") });
-            }
-          })();
-        }}
-        onEdit={() => {
-          if (menuIndex === null) return;
-          setEditingIndex(menuIndex);
-        }}
-        onDelete={() => {
-          if (menuIndex === null) return;
-          setConfirmDeleteIndex(menuIndex);
-        }}
-      />
-
-      <ConfirmDialog
-        visible={confirmDeleteIndex !== null && entriesForSelectedDay[confirmDeleteIndex] !== undefined}
-        title={t("delete_confirm_title")}
-        message={t("delete_confirm_message")}
-        confirmLabel={t("menu_delete")}
-        cancelLabel={t("cancel")}
-        onCancel={() => setConfirmDeleteIndex(null)}
-        onConfirm={() => {
-          if (confirmDeleteIndex === null) return;
-          const existing = entriesForSelectedDay[confirmDeleteIndex];
-          if (existing?.clientId) void deleteEntry(existing.clientId);
-          setConfirmDeleteIndex(null);
-        }}
-      />
+      {overlays}
     </Screen>
   );
 }
@@ -488,7 +376,6 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
   },
-  dayProgressFillSecondary: {},
   entryHeader: {
     borderBottomWidth: 2,
     marginHorizontal: spacing.screenH,
@@ -511,4 +398,3 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-

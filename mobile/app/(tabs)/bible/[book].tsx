@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Bible, type ChapterProgress } from "@mybiblelog/shared";
@@ -16,33 +16,32 @@ import {
   Text,
 } from "@/src/components";
 import { radius, spacing, useTheme } from "@/src/design";
-import { useLogEntries } from "@/src/stores/logEntries";
+import { logEntryActions } from "@/src/stores/logEntries";
 import { useBookProgress } from "@/src/stores/bibleProgress";
-import { useLocale } from "@/src/i18n/LocaleProvider";
-import { useUserSettings } from "@/src/stores/userSettings";
+import { useLocale, useT } from "@/src/i18n/LocaleProvider";
+import { useSettingsValue } from "@/src/stores/userSettings";
 import { openPassageInBible } from "@/src/bible/openInBible";
 import { useToast } from "@/src/toast/ToastProvider";
-
-// Brand gold for a fully-read chapter star — a single decorative accent
-// outside the theme palette.
-const GOLD_STAR = "#ffd700";
 
 /** Memoized chapter tile. Its `chapter` snapshot is reference-stable from the
  * precomputed store, so it only re-renders when its data or layout changes. */
 const ChapterTile = memo(function ChapterTile({
   chapter,
+  bookName,
   width,
   marginRight,
   marginBottom,
   onPress,
 }: {
   chapter: ChapterProgress;
+  bookName: string;
   width: number;
   marginRight: number;
   marginBottom: number;
   onPress: (chapterIndex: number) => void;
 }) {
   const { colors } = useTheme();
+  const t = useT();
   return (
     <Pressable
       style={({ pressed }) => [
@@ -50,12 +49,21 @@ const ChapterTile = memo(function ChapterTile({
         { backgroundColor: colors.surfaceAlt, width, marginRight, marginBottom },
         pressed && styles.pressed,
       ]}
+      accessibilityRole="button"
+      accessibilityLabel={t(chapter.complete ? "chapter_read_a11y" : "chapter_unread_a11y", {
+        book: bookName,
+        chapter: chapter.chapterIndex,
+      })}
       onPress={() => onPress(chapter.chapterIndex)}
     >
       <Text variant="bodyStrong">{chapter.chapterIndex}</Text>
 
       <View style={styles.tileCenter}>
-        <Ionicons name="star" size={22} color={chapter.complete ? GOLD_STAR : colors.border} />
+        <Ionicons
+          name="star"
+          size={22}
+          color={chapter.complete ? colors.starGold : colors.border}
+        />
       </View>
 
       <View style={styles.tileBar}>
@@ -66,18 +74,18 @@ const ChapterTile = memo(function ChapterTile({
 });
 
 export default function BibleBookScreen() {
+  const t = useT();
   const { showToast } = useToast();
   const { locale } = useLocale();
   const { width: windowWidth } = useWindowDimensions();
-  const { createEntry } = useLogEntries();
-  const { state: settingsState } = useUserSettings();
+  const settings = useSettingsValue();
   const params = useLocalSearchParams<{ book?: string }>();
 
   const bookIndex = useMemo(() => Number(params.book), [params.book]);
   const bookName = useMemo(() => {
-    if (!Number.isFinite(bookIndex) || bookIndex < 1) return "Book";
-    return Bible.getBookName(bookIndex, locale) || "Book";
-  }, [bookIndex, locale]);
+    if (!Number.isFinite(bookIndex) || bookIndex < 1) return t("book");
+    return Bible.getBookName(bookIndex, locale) || t("book");
+  }, [bookIndex, locale, t]);
 
   const book = useBookProgress(bookIndex);
   // Stabilize the array reference so dependent memos/effects don't re-run every render.
@@ -96,6 +104,8 @@ export default function BibleBookScreen() {
 
   const [selectedChapterIndex, setSelectedChapterIndex] = useState<number | null>(null);
   const [editorChapterIndex, setEditorChapterIndex] = useState<number | null>(null);
+  // Selection resolves against the current chapter list each render, so if a
+  // background sync replaces the list the menu simply closes itself.
   const selectedChapter = useMemo(
     () =>
       selectedChapterIndex ? chapters.find((c) => c.chapterIndex === selectedChapterIndex) : undefined,
@@ -106,14 +116,6 @@ export default function BibleBookScreen() {
       editorChapterIndex ? chapters.find((c) => c.chapterIndex === editorChapterIndex) : undefined,
     [chapters, editorChapterIndex]
   );
-
-  // If the list changes (sync), ensure selection is still valid.
-  useEffect(() => {
-    if (selectedChapterIndex === null) return;
-    if (!chapters.some((c) => c.chapterIndex === selectedChapterIndex)) {
-      setSelectedChapterIndex(null);
-    }
-  }, [chapters, selectedChapterIndex]);
 
   const initialEntryForEditor = useMemo<LogEntry | undefined>(() => {
     if (!editorChapter) return undefined;
@@ -128,7 +130,7 @@ export default function BibleBookScreen() {
     setSelectedChapterIndex(chapterIndex);
   }, []);
 
-  if (!book || settingsState.status !== "ready") {
+  if (!book || settings === null) {
     return (
       <Screen edges={[]}>
         <Spinner center />
@@ -149,12 +151,13 @@ export default function BibleBookScreen() {
 
       <AnimatedList
         data={chapters}
-        keyExtractor={(item) => String(item.chapterIndex)}
+        keyExtractor={(item: ChapterProgress) => String(item.chapterIndex)}
         numColumns={3}
         contentContainerStyle={styles.gridContent}
         renderItem={({ item, index }) => (
           <ChapterTile
             chapter={item}
+            bookName={bookName}
             width={tileMetrics.tileWidth}
             marginRight={
               index % tileMetrics.columns === tileMetrics.columns - 1 ? 0 : tileMetrics.gap
@@ -166,17 +169,18 @@ export default function BibleBookScreen() {
       />
 
       <ChapterMenu
-        visible={selectedChapterIndex !== null}
+        visible={selectedChapter !== undefined}
         onClose={() => setSelectedChapterIndex(null)}
         onOpenInBible={() => {
           if (!selectedChapter) return;
+          const { startVerseId } = selectedChapter;
           void (async () => {
-            const ok = await openPassageInBible(selectedChapter.startVerseId, {
-              preferredBibleApp: settingsState.settings.preferredBibleApp,
-              preferredBibleVersion: settingsState.settings.preferredBibleVersion,
+            const ok = await openPassageInBible(startVerseId, {
+              preferredBibleApp: settings.preferredBibleApp,
+              preferredBibleVersion: settings.preferredBibleVersion,
             });
             if (!ok) {
-              showToast({ type: "error", message: "Unable to open Bible app." });
+              showToast({ type: "error", message: t("calendar_open_bible_failed") });
             }
           })();
         }}
@@ -191,10 +195,10 @@ export default function BibleBookScreen() {
         visible={editorChapterIndex !== null && !!initialEntryForEditor}
         onClose={() => setEditorChapterIndex(null)}
         title={`${bookName} ${editorChapterIndex ?? ""}`}
-        submitLabel="Save"
+        submitLabel={t("save")}
         initialEntry={initialEntryForEditor}
         onSubmit={(entry) => {
-          void createEntry(entry);
+          void logEntryActions.createEntry(entry);
         }}
       />
     </Screen>

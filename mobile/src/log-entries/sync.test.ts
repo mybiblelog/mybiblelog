@@ -1,10 +1,13 @@
 import type { PendingLogEntryMutation } from '@/src/storage/logEntries';
+import { ApiError } from '@/src/api/apiError';
 import {
   coalesceCreate,
   coalesceDelete,
   coalesceUpdate,
+  isPermanentMutationError,
   normalizeMutationQueue,
   removeLocal,
+  sortEntries,
   toStored,
   upsertLocal,
 } from '@/src/log-entries/sync';
@@ -83,5 +86,39 @@ describe('local entry helpers', () => {
     const a = toStored({ ...entry, clientId: 'a' });
     const b = toStored({ ...entry, clientId: 'b' });
     expect(removeLocal([a, b], 'a').map((e) => e.clientId)).toEqual(['b']);
+  });
+});
+
+describe('sortEntries', () => {
+  it('orders newest date first with a deterministic verse tie-break', () => {
+    const sorted = sortEntries([
+      { clientId: 'a', date: '2026-06-01', startVerseId: 5, endVerseId: 6 },
+      { clientId: 'b', date: '2026-06-10', startVerseId: 9, endVerseId: 9 },
+      { clientId: 'c', date: '2026-06-10', startVerseId: 1, endVerseId: 2 },
+    ]);
+    expect(sorted.map((e) => e.clientId)).toEqual(['c', 'b', 'a']);
+  });
+});
+
+describe('isPermanentMutationError', () => {
+  const payload = { code: 'validation_error', errors: [] };
+
+  it('treats validation/conflict 4xx responses as permanent', () => {
+    expect(isPermanentMutationError(new ApiError(payload, 400))).toBe(true);
+    expect(isPermanentMutationError(new ApiError(payload, 404))).toBe(true);
+    expect(isPermanentMutationError(new ApiError(payload, 422))).toBe(true);
+  });
+
+  it('treats auth, timeout, rate-limit and 5xx responses as transient', () => {
+    expect(isPermanentMutationError(new ApiError(payload, 401))).toBe(false);
+    expect(isPermanentMutationError(new ApiError(payload, 403))).toBe(false);
+    expect(isPermanentMutationError(new ApiError(payload, 408))).toBe(false);
+    expect(isPermanentMutationError(new ApiError(payload, 429))).toBe(false);
+    expect(isPermanentMutationError(new ApiError(payload, 500))).toBe(false);
+  });
+
+  it('treats network errors and unknown statuses as transient', () => {
+    expect(isPermanentMutationError(new Error('network down'))).toBe(false);
+    expect(isPermanentMutationError(new ApiError(payload))).toBe(false);
   });
 });

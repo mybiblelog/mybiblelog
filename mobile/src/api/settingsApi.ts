@@ -1,4 +1,4 @@
-import { getApiBaseUrl } from '@/src/api/apiBase';
+import { httpClient } from '@/src/api/httpClient';
 
 export type ServerUserSettings = {
   dailyVerseCountGoal?: number;
@@ -7,19 +7,6 @@ export type ServerUserSettings = {
   startPage?: string;
   locale?: string;
 };
-
-type ApiResponse<T> = { data?: T };
-
-async function apiFetch(token: string, path: string, init?: RequestInit): Promise<Response> {
-  return fetch(`${getApiBaseUrl()}${path}`, {
-    ...init,
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${token}`,
-      ...(init?.headers ?? {}),
-    },
-  });
-}
 
 function toNumber(v: unknown): number | undefined {
   if (typeof v === 'number' && Number.isFinite(v)) return v;
@@ -40,27 +27,22 @@ export function parseServerUserSettings(value: unknown): ServerUserSettings | nu
   };
 }
 
-export async function getSettings(token: string): Promise<ServerUserSettings> {
-  const res = await apiFetch(token, '/settings', { method: 'GET' });
-  if (!res.ok) throw new Error(`GET /settings failed: ${res.status}`);
-  const json = (await res.json()) as ApiResponse<unknown>;
-  const parsed = parseServerUserSettings(json.data);
+// All requests go through the shared `httpClient` adapter, which injects the
+// bearer token from the auth store, applies the request timeout, and raises
+// typed `ApiError`s — the same path the log-entries API uses.
+
+export async function getSettings(): Promise<ServerUserSettings> {
+  const { data } = await httpClient.get<unknown>('/api/settings');
+  const parsed = parseServerUserSettings(data);
   if (!parsed) throw new Error('GET /settings returned unexpected payload');
   return parsed;
 }
 
 export async function updateSettings(
-  token: string,
   settings: Partial<ServerUserSettings>,
 ): Promise<ServerUserSettings> {
-  const res = await apiFetch(token, '/settings', {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ settings }),
-  });
-  if (!res.ok) throw new Error(`PUT /settings failed: ${res.status}`);
-  const json = (await res.json()) as ApiResponse<unknown>;
-  const parsed = parseServerUserSettings(json.data);
+  const { data } = await httpClient.put<unknown>('/api/settings', { settings });
+  const parsed = parseServerUserSettings(data);
   if (!parsed) throw new Error('PUT /settings returned unexpected payload');
   return parsed;
 }
@@ -71,8 +53,6 @@ export async function updateSettings(
  * `PUT /settings/delete-account` flow. The caller is responsible for clearing
  * the local session afterward (the server also clears the auth cookie).
  */
-export async function deleteAccount(token: string): Promise<void> {
-  const res = await apiFetch(token, '/settings/delete-account', { method: 'PUT' });
-  if (!res.ok) throw new Error(`PUT /settings/delete-account failed: ${res.status}`);
+export async function deleteAccount(): Promise<void> {
+  await httpClient.put('/api/settings/delete-account');
 }
-

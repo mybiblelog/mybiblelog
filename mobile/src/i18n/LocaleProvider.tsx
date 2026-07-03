@@ -37,12 +37,14 @@ type LocaleContextValue = {
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<SupportedLocale>(
-    getDevicePreferredLocale()
-  );
-
-  // Initialize i18n right away (so first render uses a supported locale).
-  i18n.locale = locale;
+  const [locale, setLocaleState] = useState<SupportedLocale>(() => {
+    const initial = getDevicePreferredLocale();
+    // Initialize the ambient i18n locale once (for the standalone `t()`
+    // helper); `useT` always passes the locale explicitly, and the effect
+    // below keeps the ambient value in sync on changes.
+    i18n.locale = initial;
+    return initial;
+  });
 
   useEffect(() => {
     let isMounted = true;

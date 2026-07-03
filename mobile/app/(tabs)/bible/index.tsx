@@ -15,9 +15,7 @@ import {
 import { radius, spacing, useTheme } from "@/src/design";
 import { useBibleProgress } from "@/src/stores/bibleProgress";
 
-// Brand gold for a fully-read book star — intentionally outside the theme
-// palette (a single decorative accent).
-const GOLD_STAR = "#ffd700";
+const Separator = () => <View style={styles.separator} />;
 
 /** Memoized book row. Its `book` snapshot is reference-stable from the
  * precomputed store, so it only re-renders when its data or the theme changes. */
@@ -44,7 +42,7 @@ const BookRow = memo(function BookRow({
         <Ionicons
           name="star"
           size={18}
-          color={book.complete ? GOLD_STAR : colors.border}
+          color={book.complete ? colors.starGold : colors.border}
           style={styles.star}
         />
         <Text variant="bodyStrong" style={styles.bookName} numberOfLines={1}>
@@ -88,7 +86,7 @@ export default function BibleIndex() {
         data={progress.books}
         keyExtractor={(item) => String(item.bookIndex)}
         contentContainerStyle={styles.listContent}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ItemSeparatorComponent={Separator}
         renderItem={({ item }) => (
           <BookRow
             book={item}

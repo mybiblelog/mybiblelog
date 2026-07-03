@@ -64,14 +64,16 @@ describe('cacheDateVerseCounts', () => {
     expect(mockComputeDateVerseCounts).not.toHaveBeenCalled();
   });
 
-  it('hydrates from cache before recomputing', async () => {
+  it('replaces cache-hydrated values with the computed map (no stale merge)', async () => {
+    // A date present in the old cache but absent from the fresh computation
+    // (e.g. its entries were deleted) must not survive the recompute.
     (getCache as jest.Mock).mockResolvedValue({ '2026-01-01': { total: 1, unique: 1 } });
-    mockComputeDateVerseCounts.mockReturnValue({});
+    mockComputeDateVerseCounts.mockReturnValue({ '2026-06-27': { total: 2, unique: 2 } });
     setEntries([{ clientId: 'a', date: '2026-06-27', startVerseId: 1, endVerseId: 2 }]);
     setLookBack('2020-01-01');
     await useDateVerseCountsStore.getState().cacheDateVerseCounts();
-    expect(useDateVerseCountsStore.getState().dateVerseCounts).toMatchObject({
-      '2026-01-01': { total: 1, unique: 1 },
+    expect(useDateVerseCountsStore.getState().dateVerseCounts).toEqual({
+      '2026-06-27': { total: 2, unique: 2 },
     });
   });
 });

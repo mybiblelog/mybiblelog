@@ -34,6 +34,8 @@ export type ThemeColors = {
   placeholder: string;
   /** Subtle highlight tint used by skeletons / shimmer. */
   skeleton: string;
+  /** Decorative gold used for "fully read" stars (same in both schemes). */
+  starGold: string;
 };
 
 export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
@@ -54,6 +56,7 @@ export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
     backdrop: 'rgba(0,0,0,0.35)',
     placeholder: 'rgba(0,0,0,0.45)',
     skeleton: 'rgba(0,0,0,0.08)',
+    starGold: '#ffd700',
   },
   dark: {
     background: '#0b0b0f',
@@ -72,5 +75,6 @@ export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
     backdrop: 'rgba(0,0,0,0.55)',
     placeholder: 'rgba(245,245,247,0.45)',
     skeleton: 'rgba(245,245,247,0.10)',
+    starGold: '#ffd700',
   },
 };
