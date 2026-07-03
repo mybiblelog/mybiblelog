@@ -37,6 +37,7 @@ function applyServerTruth(local: LocalUserSettings, server: ServerUserSettings):
     dailyVerseCountGoal: server.dailyVerseCountGoal ?? local.dailyVerseCountGoal,
     lookBackDate: server.lookBackDate ?? local.lookBackDate,
     preferredBibleVersion: server.preferredBibleVersion ?? local.preferredBibleVersion,
+    passageNoteTagSortOrder: server.passageNoteTagSortOrder ?? local.passageNoteTagSortOrder,
     // preferredBibleApp stays device-only
   };
 }
@@ -46,7 +47,8 @@ function shallowEqualReadingSettings(a: LocalUserSettings, b: LocalUserSettings)
     a.dailyVerseCountGoal === b.dailyVerseCountGoal &&
     a.lookBackDate === b.lookBackDate &&
     a.preferredBibleVersion === b.preferredBibleVersion &&
-    a.preferredBibleApp === b.preferredBibleApp
+    a.preferredBibleApp === b.preferredBibleApp &&
+    a.passageNoteTagSortOrder === b.passageNoteTagSortOrder
   );
 }
 

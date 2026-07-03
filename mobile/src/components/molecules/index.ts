@@ -1,4 +1,5 @@
 export { Card } from "./Card";
+export { CheckboxRow } from "./CheckboxRow";
 export { ErrorState } from "./ErrorState";
 export { EmptyState } from "./EmptyState";
 export { InputField } from "./InputField";
@@ -8,4 +9,6 @@ export { OfflineBanner } from "./OfflineBanner";
 export type { ListItemProps } from "./ListItem";
 export { SegmentBar } from "./SegmentBar";
 export type { SegmentBarSegment } from "./SegmentBar";
+export { SegmentedControl } from "./SegmentedControl";
+export type { SegmentedControlOption } from "./SegmentedControl";
 export { SelectRow } from "./SelectRow";

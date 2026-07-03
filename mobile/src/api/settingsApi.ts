@@ -6,6 +6,7 @@ export type ServerUserSettings = {
   preferredBibleVersion?: string;
   startPage?: string;
   locale?: string;
+  passageNoteTagSortOrder?: string;
 };
 
 function toNumber(v: unknown): number | undefined {
@@ -24,6 +25,8 @@ export function parseServerUserSettings(value: unknown): ServerUserSettings | nu
       typeof v.preferredBibleVersion === "string" ? v.preferredBibleVersion : undefined,
     startPage: typeof v.startPage === "string" ? v.startPage : undefined,
     locale: typeof v.locale === "string" ? v.locale : undefined,
+    passageNoteTagSortOrder:
+      typeof v.passageNoteTagSortOrder === "string" ? v.passageNoteTagSortOrder : undefined,
   };
 }
 

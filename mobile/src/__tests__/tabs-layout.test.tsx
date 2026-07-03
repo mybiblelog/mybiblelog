@@ -38,7 +38,7 @@ describe("(tabs) layout", () => {
   it("registers all six tabs", () => {
     const names = capturedScreens.map((s) => s.name);
     expect(names).toEqual(
-      expect.arrayContaining(["index", "bible", "calendar", "checklist", "log", "settings"])
+      expect.arrayContaining(["index", "bible", "calendar", "checklist", "notes", "settings"])
     );
   });
 

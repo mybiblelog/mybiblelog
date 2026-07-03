@@ -9,6 +9,10 @@ export type LocalUserSettings = {
    * Device-only preference (not currently stored on server).
    */
   preferredBibleApp: string;
+  /**
+   * Server-persisted tag sort order for the Tags screen (shared with web).
+   */
+  passageNoteTagSortOrder?: string;
 };
 
 const STORAGE_KEY = "userSettings.v1";

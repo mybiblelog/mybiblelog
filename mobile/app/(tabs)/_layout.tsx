@@ -58,11 +58,11 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="log"
+        name="notes"
         options={{
-          title: t("log_tab_title"),
+          title: t("notes_tab_title"),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="list-outline" color={color} size={size} />
+            <Ionicons name="document-text-outline" color={color} size={size} />
           ),
         }}
       />
