@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Bible, type BookProgress } from "@mybiblelog/shared";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
@@ -104,15 +104,20 @@ export default function BibleIndex() {
   const [testament, setTestament] = useState<TestamentFilter>("all");
   const noteCounts = useBookNoteCounts();
   const anyBooksHaveNotes = useMemo(() => selectAnyBookHasNotes(noteCounts), [noteCounts]);
+  const navigatingRef = useRef(false);
 
   // Refresh counts on focus so notes added elsewhere (Notes tab, web) show up.
+  // Also clears the navigation guard so a book can be opened again after returning.
   useFocusEffect(
     useCallback(() => {
+      navigatingRef.current = false;
       void noteCountsActions.refresh();
     }, [])
   );
 
   const handlePress = useCallback((bookIndex: number) => {
+    if (navigatingRef.current) return;
+    navigatingRef.current = true;
     router.push(`/bible/${bookIndex}`);
   }, []);
 
