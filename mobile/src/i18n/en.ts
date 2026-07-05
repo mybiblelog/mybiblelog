@@ -124,7 +124,11 @@ export const en = {
 
   settings_auth_label: "Account",
   auth_loading: "Checking login…",
+  auth_logged_in_label: "Logged In",
   auth_logged_in_as: "Signed in as",
+  auth_not_logged_in: "Not Logged In",
+  auth_offline_sync_hint:
+    "Your offline data on this device will not sync to your account until you are online and logged in.",
   auth_login: "Login",
   auth_logout: "Logout",
 

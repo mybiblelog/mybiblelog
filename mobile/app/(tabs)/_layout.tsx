@@ -1,11 +1,15 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+import { View } from "react-native";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { useTheme } from "@/src/design";
+import { AttentionDot } from "@/src/components";
+import { useIsUnauthenticated } from "@/src/stores/auth";
 
 export default function TabsLayout() {
   const t = useT();
   const { colors } = useTheme();
+  const showSignInAlert = useIsUnauthenticated();
   return (
     <Tabs
       screenOptions={{
@@ -77,7 +81,10 @@ export default function TabsLayout() {
           tabBarButtonTestID: "tab.settings",
           title: t("settings_tab_title"),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="settings-outline" color={color} size={size} />
+            <View>
+              <Ionicons name="settings-outline" color={color} size={size} />
+              {showSignInAlert && <AttentionDot />}
+            </View>
           ),
         }}
       />

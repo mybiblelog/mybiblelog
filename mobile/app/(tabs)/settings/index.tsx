@@ -1,19 +1,22 @@
 import { router } from "expo-router";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { radius, spacing, useTheme } from "@/src/design";
-import { Icon, type IconName, ListItem } from "@/src/components";
+import { AttentionDot, Icon, type IconName, ListItem } from "@/src/components";
 import { useT } from "@/src/i18n/LocaleProvider";
+import { useIsUnauthenticated } from "@/src/stores/auth";
 
 function SectionRow({
   icon,
   title,
   subtitle,
   onPress,
+  alert = false,
 }: {
   icon: IconName;
   title: string;
   subtitle?: string;
   onPress: () => void;
+  alert?: boolean;
 }) {
   const { colors } = useTheme();
   return (
@@ -27,6 +30,7 @@ function SectionRow({
       leading={
         <View style={[styles.badge, { backgroundColor: colors.border }]}>
           <Icon name={icon} size={18} color="text" />
+          {alert && <AttentionDot />}
         </View>
       }
     />
@@ -36,6 +40,7 @@ function SectionRow({
 export default function SettingsIndex() {
   const t = useT();
   const { colors } = useTheme();
+  const showSignInAlert = useIsUnauthenticated();
   return (
     <ScrollView
       style={[styles.flex, { backgroundColor: colors.background }]}
@@ -46,6 +51,7 @@ export default function SettingsIndex() {
         title={t("settings_section_account")}
         subtitle={t("settings_section_account_subtitle")}
         onPress={() => router.push("/settings/account")}
+        alert={showSignInAlert}
       />
       <SectionRow
         icon="bookmarks-outline"

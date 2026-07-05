@@ -130,7 +130,11 @@ export const es = {
 
   settings_auth_label: "Cuenta",
   auth_loading: "Comprobando sesión…",
+  auth_logged_in_label: "Sesión iniciada",
   auth_logged_in_as: "Sesión iniciada como",
+  auth_not_logged_in: "Sesión no iniciada",
+  auth_offline_sync_hint:
+    "Tus datos sin conexión en este dispositivo no se sincronizarán con tu cuenta hasta que estés en línea y hayas iniciado sesión.",
   auth_login: "Iniciar sesión",
   auth_logout: "Cerrar sesión",
 

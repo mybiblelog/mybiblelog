@@ -1,7 +1,7 @@
 import { useAuth } from "@/src/stores/auth";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { spacing, useTheme } from "@/src/design";
-import { Button, Card, ListItem, Text } from "@/src/components";
+import { Button, Card, Icon, ListItem, Text } from "@/src/components";
 import { router } from "expo-router";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { ScrollView, StyleSheet, View } from "react-native";
@@ -42,29 +42,46 @@ export default function AccountSettings() {
             {t("auth_loading")}
           </Text>
         ) : authState.status === "authenticated" ? (
-          <View style={styles.authRow}>
-            <Text variant="bodyStrong" style={styles.authText}>
-              {t("auth_logged_in_as")} {authState.session.user.email}
-            </Text>
+          <>
+            <View style={styles.authStatusRow}>
+              <Icon name="checkmark-circle-outline" size={22} color="success" />
+              <View style={styles.authStatusTextCol}>
+                <Text variant="bodyStrong">{t("auth_logged_in_label")}</Text>
+                <Text variant="caption" color="mutedText">
+                  {t("auth_logged_in_as")} {authState.session.user.email}
+                </Text>
+              </View>
+            </View>
             <Button
               label={t("auth_logout")}
               variant="destructive"
               size="sm"
               onPress={() => void logout()}
+              style={styles.authActionButton}
             />
-          </View>
+          </>
         ) : (
-          <View style={styles.authRow}>
-            <Text variant="body" color="mutedText" style={styles.authText}>
-              {t("auth_login")}
-            </Text>
+          <>
+            <View style={styles.authStatusRow}>
+              <Icon name="alert-circle-outline" size={22} color="destructive" />
+              <View style={styles.authStatusTextCol}>
+                <Text variant="bodyStrong" color="destructive">
+                  {t("auth_not_logged_in")}
+                </Text>
+                <Text variant="caption" color="mutedText">
+                  {t("auth_offline_sync_hint")}
+                </Text>
+              </View>
+            </View>
             <Button
               label={t("auth_login")}
               testID="settings.login"
-              size="sm"
+              leftIcon="log-in-outline"
+              fullWidth
               onPress={() => router.push("/login")}
+              style={styles.authActionButtonSpacing}
             />
-          </View>
+          </>
         )}
       </Card>
 
@@ -90,11 +107,12 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   content: { padding: spacing.screenH, paddingBottom: spacing.listBottom },
   sectionLabel: { marginTop: spacing.lg, marginBottom: spacing.sm },
-  authRow: {
+  authStatusRow: {
     flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: spacing.lg,
+    alignItems: "flex-start",
+    gap: spacing.md,
   },
-  authText: { flex: 1 },
+  authStatusTextCol: { flex: 1, gap: spacing.xs },
+  authActionButton: { marginTop: spacing.lg, alignSelf: "flex-end" },
+  authActionButtonSpacing: { marginTop: spacing.lg },
 });
