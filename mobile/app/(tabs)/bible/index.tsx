@@ -203,6 +203,10 @@ export default function BibleIndex() {
       <AnimatedList
         data={filtered.books}
         keyExtractor={(item) => String(item.bookIndex)}
+        // Fixed-size list (66 books): render it all up front instead of
+        // FlatList's default incremental backfill, so the page doesn't
+        // visibly grow after mount.
+        initialNumToRender={filtered.books.length}
         contentContainerStyle={styles.listContent}
         ItemSeparatorComponent={Separator}
         renderItem={({ item }) => (
