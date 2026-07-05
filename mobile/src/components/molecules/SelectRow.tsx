@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
 import { radius, spacing, TOUCH_TARGET, useScalePress, useTheme } from "@/src/design";
 import { AnimatedPressable } from "../atoms/AnimatedPressable";
 import { Icon } from "../atoms/Icon";
@@ -14,19 +14,23 @@ export function SelectRow({
   placeholder,
   onPress,
   disabled = false,
+  testID,
+  style,
 }: {
   label?: string;
   value?: string | number | null;
   placeholder: string;
   onPress: () => void;
   disabled?: boolean;
+  testID?: string;
+  style?: StyleProp<ViewStyle>;
 }) {
   const { colors } = useTheme();
   const press = useScalePress({ disabled, scaleTo: 0.98 });
   const hasValue = value !== null && value !== undefined && value !== "" && value !== 0;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       {!!label && (
         <Text variant="label" color="mutedText">
           {label}
@@ -35,6 +39,7 @@ export function SelectRow({
       <AnimatedPressable
         accessibilityRole="button"
         accessibilityLabel={label ?? placeholder}
+        testID={testID}
         onPress={disabled ? undefined : onPress}
         onPressIn={press.onPressIn}
         onPressOut={press.onPressOut}
@@ -56,7 +61,7 @@ export function SelectRow({
 }
 
 const styles = StyleSheet.create({
-  container: { gap: spacing.xs, flex: 1 },
+  container: { gap: spacing.xs },
   select: {
     flexDirection: "row",
     alignItems: "center",

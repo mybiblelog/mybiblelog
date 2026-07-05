@@ -15,9 +15,10 @@ export default function BibleLayout() {
         ...stackTransition,
       }}
     >
-      <Stack.Screen name="index" options={{ title: t("bible_books_title") }} />
+      {/* The index screen renders its own in-content header (like the other tabs). */}
+      <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="[book]" options={{ title: t("bible_book_title") }} />
+      <Stack.Screen name="progress" options={{ title: t("progress_title") }} />
     </Stack>
   );
 }
-

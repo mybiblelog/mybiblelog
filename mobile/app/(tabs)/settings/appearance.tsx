@@ -26,18 +26,14 @@ export default function AppearanceSettings() {
       <Card padded={false} style={styles.card}>
         {options.map((opt, i) => (
           <Fragment key={opt.value}>
-            {i > 0 ? (
-              <View style={[styles.divider, { backgroundColor: colors.border }]} />
-            ) : null}
+            {i > 0 ? <View style={[styles.divider, { backgroundColor: colors.border }]} /> : null}
             <ListItem
               title={opt.label}
               bordered={false}
               style={styles.row}
               onPress={() => setMode(opt.value)}
               trailing={
-                mode === opt.value ? (
-                  <Icon name="checkmark" size={20} color="primary" />
-                ) : undefined
+                mode === opt.value ? <Icon name="checkmark" size={20} color="primary" /> : undefined
               }
             />
           </Fragment>

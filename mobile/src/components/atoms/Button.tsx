@@ -19,6 +19,7 @@ export type ButtonProps = {
   leftIcon?: IconName;
   fullWidth?: boolean;
   accessibilityLabel?: string;
+  testID?: string;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -36,6 +37,7 @@ export function Button({
   leftIcon,
   fullWidth = false,
   accessibilityLabel,
+  testID,
   style,
 }: ButtonProps) {
   const { colors } = useTheme();
@@ -55,6 +57,7 @@ export function Button({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? label}
       accessibilityState={{ disabled: !isInteractive, busy: loading }}
+      testID={testID}
       onPress={isInteractive ? onPress : undefined}
       onPressIn={press.onPressIn}
       onPressOut={press.onPressOut}

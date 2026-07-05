@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 import {
   type AuthSession,
   clearAuthSession,
@@ -7,12 +7,13 @@ import {
   loadLastLoggedInEmail,
   saveAuthSession,
   saveLastLoggedInEmail,
-} from '@/src/auth/authStorage';
-import { getApiBaseUrl } from '@/src/api/apiBase';
-import type { ApiErrorPayload } from '@/src/api/apiError';
-import { emailPasswordLogin, googleIdTokenLogin } from '@/src/api/authApi';
-import { signOutGoogle } from '@/src/auth/googleSignIn';
-import { getIsOnline, useConnectivityStore } from '@/src/stores/connectivity';
+} from "@/src/auth/authStorage";
+import { getApiBaseUrl } from "@/src/api/apiBase";
+import type { ApiErrorPayload } from "@/src/api/apiError";
+import { fetchWithTimeout } from "@/src/api/fetchWithTimeout";
+import { emailPasswordLogin, googleIdTokenLogin } from "@/src/api/authApi";
+import { signOutGoogle } from "@/src/auth/googleSignIn";
+import { getIsOnline, useConnectivityStore } from "@/src/stores/connectivity";
 
 /**
  * Auth store (Zustand).
@@ -24,16 +25,16 @@ import { getIsOnline, useConnectivityStore } from '@/src/stores/connectivity';
  */
 
 export type AuthState =
-  | { status: 'loading' }
-  | { status: 'unauthenticated'; lastLoggedInEmail?: string | null }
-  | { status: 'authenticated'; session: AuthSession };
+  | { status: "loading" }
+  | { status: "unauthenticated"; lastLoggedInEmail?: string | null }
+  | { status: "authenticated"; session: AuthSession };
 
 type AuthStore = {
   state: AuthState;
   finishGoogleLogin: (idToken: string, locale?: string) => Promise<{ ok: true } | { ok: false }>;
   loginWithEmailPassword: (
     email: string,
-    password: string,
+    password: string
   ) => Promise<{ ok: true } | { ok: false; error: ApiErrorPayload }>;
   logout: () => Promise<void>;
 };
@@ -44,28 +45,27 @@ type AuthStore = {
  */
 async function validateStoredToken(token: string): Promise<boolean> {
   try {
-    const res = await fetch(`${getApiBaseUrl()}/auth/user`, {
-      method: 'GET',
-      headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
+    const res = await fetchWithTimeout(`${getApiBaseUrl()}/auth/user`, {
+      method: "GET",
+      headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
     });
     return res.ok;
-  }
-  catch {
+  } catch {
     return true;
   }
 }
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
-  state: { status: 'loading' },
+  state: { status: "loading" },
 
   finishGoogleLogin: async (idToken, locale) => {
-    if (typeof idToken !== 'string' || idToken.length === 0) return { ok: false };
+    if (typeof idToken !== "string" || idToken.length === 0) return { ok: false };
     const result = await googleIdTokenLogin(idToken, locale);
     if (!result) return { ok: false };
     const session: AuthSession = { token: result.token, user: { email: result.email } };
     await clearLastLoggedInEmail();
     await saveAuthSession(session);
-    set({ state: { status: 'authenticated', session } });
+    set({ state: { status: "authenticated", session } });
     return { ok: true };
   },
 
@@ -75,34 +75,33 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     const session: AuthSession = { token: result.token, user: { email: result.email } };
     await clearLastLoggedInEmail();
     await saveAuthSession(session);
-    set({ state: { status: 'authenticated', session } });
+    set({ state: { status: "authenticated", session } });
     return { ok: true };
   },
 
   logout: async () => {
     const current = get().state;
     try {
-      if (current.status === 'authenticated') {
-        await fetch(`${getApiBaseUrl()}/auth/logout`, {
-          method: 'POST',
-          headers: { Accept: 'application/json', Authorization: `Bearer ${current.session.token}` },
+      if (current.status === "authenticated") {
+        await fetchWithTimeout(`${getApiBaseUrl()}/auth/logout`, {
+          method: "POST",
+          headers: { Accept: "application/json", Authorization: `Bearer ${current.session.token}` },
         });
       }
-    }
-    catch {
+    } catch {
       // ignore logout network errors; local logout still proceeds
     }
     await signOutGoogle();
     await clearAuthSession();
     await clearLastLoggedInEmail();
-    set({ state: { status: 'unauthenticated' } });
+    set({ state: { status: "unauthenticated" } });
   },
 }));
 
 /** Synchronous token accessor for the HTTP adapter and store actions. */
 export function getAuthToken(): string | null {
   const s = useAuthStore.getState().state;
-  return s.status === 'authenticated' ? s.session.token : null;
+  return s.status === "authenticated" ? s.session.token : null;
 }
 
 let initialized = false;
@@ -122,7 +121,7 @@ export function initAuth(): void {
     const isOnline = s.isOnline;
     if (isOnline === true && wasOnline !== true) {
       const current = useAuthStore.getState().state;
-      if (current.status === 'authenticated') {
+      if (current.status === "authenticated") {
         void revalidate(current.session);
       }
     }
@@ -135,13 +134,13 @@ async function hydrateAndValidate(): Promise<void> {
 
   if (!session) {
     useAuthStore.setState({
-      state: { status: 'unauthenticated', lastLoggedInEmail: lastEmail ?? undefined },
+      state: { status: "unauthenticated", lastLoggedInEmail: lastEmail ?? undefined },
     });
     return;
   }
 
   if (getIsOnline() !== true) {
-    useAuthStore.setState({ state: { status: 'authenticated', session } });
+    useAuthStore.setState({ state: { status: "authenticated", session } });
     return;
   }
 
@@ -154,14 +153,19 @@ async function revalidate(session: AuthSession): Promise<void> {
     await clearAuthSession();
     await saveLastLoggedInEmail(session.user.email);
     useAuthStore.setState({
-      state: { status: 'unauthenticated', lastLoggedInEmail: session.user.email },
+      state: { status: "unauthenticated", lastLoggedInEmail: session.user.email },
     });
     return;
   }
-  useAuthStore.setState({ state: { status: 'authenticated', session } });
+  useAuthStore.setState({ state: { status: "authenticated", session } });
 }
 
 /** Compatibility hook preserving the previous `useAuth()` provider contract. */
 export function useAuth(): AuthStore {
   return useAuthStore();
+}
+
+/** Subscribe only to the authenticated/unauthenticated boolean. */
+export function useIsAuthenticated(): boolean {
+  return useAuthStore((s) => s.state.status === "authenticated");
 }

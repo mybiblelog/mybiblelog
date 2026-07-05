@@ -1,5 +1,5 @@
-import { FadeIn, FadeOut } from 'react-native-reanimated';
-import { durations, easings } from '../tokens/motion';
+import { FadeIn, FadeOut } from "react-native-reanimated";
+import { durations, easings } from "../tokens/motion";
 
 /**
  * Token-timed fade entering/exiting animations. Pass to a Reanimated view's

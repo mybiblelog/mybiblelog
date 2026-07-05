@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/react-native';
+import * as Sentry from "@sentry/react-native";
 
 /**
  * Crash reporting via Sentry.
@@ -27,9 +27,22 @@ export function initCrashReporting(): void {
       tracesSampleRate: 0,
       environment: process.env.EXPO_PUBLIC_ENV?.trim() || undefined,
     });
-  }
-  catch {
+  } catch {
     // Crash reporting setup must never crash the app.
+  }
+}
+
+/**
+ * Report a handled (non-fatal) error. Stores and sync paths call this from
+ * their catch blocks so failures that are deliberately swallowed for UX
+ * reasons still show up in telemetry. No-op when crash reporting is disabled.
+ */
+export function reportHandledError(err: unknown, context?: Record<string, unknown>): void {
+  if (!dsn) return;
+  try {
+    Sentry.captureException(err, context ? { extra: context } : undefined);
+  } catch {
+    // Telemetry must never crash the app.
   }
 }
 

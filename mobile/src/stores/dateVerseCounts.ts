@@ -1,13 +1,14 @@
-import dayjs from 'dayjs';
-import { create } from 'zustand';
+import dayjs from "dayjs";
+import { create } from "zustand";
 import {
   type DateVerseCounts,
   type DateVerseCountsMap,
   computeDateVerseCounts,
-} from '@mybiblelog/shared';
-import { getCache, setCache } from '@/src/storage/dateVerseCountsCache';
-import { useLogEntriesStore } from '@/src/stores/logEntries';
-import { useUserSettingsStore } from '@/src/stores/userSettings';
+} from "@mybiblelog/shared";
+import { getCache, setCache } from "@/src/storage/dateVerseCountsCache";
+import { subscribeDerivedRecompute } from "@/src/stores/derivedRecompute";
+import { useLogEntriesStore } from "@/src/stores/logEntries";
+import { useUserSettingsStore } from "@/src/stores/userSettings";
 
 /**
  * Date-verse-counts store (Zustand).
@@ -20,7 +21,7 @@ import { useUserSettingsStore } from '@/src/stores/userSettings';
  * `lookBackDate` change.
  */
 
-const DATE_VERSE_COUNTS_CACHE_KEY = 'dateVerseCounts';
+const DATE_VERSE_COUNTS_CACHE_KEY = "dateVerseCounts";
 const DATE_VERSE_COUNTS_CACHE_MINUTES = 60 * 24;
 
 const emptyCounts: DateVerseCounts = { total: 0, unique: 0 };
@@ -45,7 +46,8 @@ export const useDateVerseCountsStore = create<DateVerseCountsStore>((set, get) =
       }
 
       const logState = useLogEntriesStore.getState().state;
-      const logEntries = logState.status === 'ready' ? logState.entries : [];
+      if (logState.status !== "ready") return;
+      const logEntries = logState.entries;
 
       let startDate: string | undefined;
       for (const entry of logEntries) {
@@ -53,23 +55,30 @@ export const useDateVerseCountsStore = create<DateVerseCountsStore>((set, get) =
           startDate = entry.date;
         }
       }
-      if (!startDate) return;
+      if (!startDate) {
+        // No entries at all: clear any stale cached counts.
+        set({ dateVerseCounts: {} });
+        await setCache(DATE_VERSE_COUNTS_CACHE_KEY, {}, DATE_VERSE_COUNTS_CACHE_MINUTES);
+        return;
+      }
 
       const settingsState = useUserSettingsStore.getState().state;
       const trackerStartDate =
-        settingsState.status === 'ready' ? settingsState.settings.lookBackDate : undefined;
+        settingsState.status === "ready" ? settingsState.settings.lookBackDate : undefined;
 
       const computed = computeDateVerseCounts(
         logEntries,
         startDate,
-        dayjs().format('YYYY-MM-DD'),
-        trackerStartDate,
+        dayjs().format("YYYY-MM-DD"),
+        trackerStartDate
       );
 
-      set({ dateVerseCounts: { ...get().dateVerseCounts, ...computed } });
-      await setCache(DATE_VERSE_COUNTS_CACHE_KEY, get().dateVerseCounts, DATE_VERSE_COUNTS_CACHE_MINUTES);
-    }
-    finally {
+      // Replace (don't merge over) the previous map: merging would keep stale
+      // counts for dates whose entries were deleted or excluded by a tracker
+      // reset, and then re-persist them into the cache.
+      set({ dateVerseCounts: computed });
+      await setCache(DATE_VERSE_COUNTS_CACHE_KEY, computed, DATE_VERSE_COUNTS_CACHE_MINUTES);
+    } finally {
       set({ jobs: get().jobs - 1 });
     }
   },
@@ -91,32 +100,5 @@ let initialized = false;
 export function initDateVerseCounts(): void {
   if (initialized) return;
   initialized = true;
-
-  const recompute = () => void useDateVerseCountsStore.getState().cacheDateVerseCounts();
-
-  // Recompute when the entries array reference changes (add/edit/delete/sync).
-  let prevEntries: unknown = null;
-  let prevReady = false;
-  useLogEntriesStore.subscribe((store) => {
-    const entries = store.state.status === 'ready' ? store.state.entries : null;
-    const ready = entries !== null;
-    if (ready && (entries !== prevEntries || !prevReady)) {
-      prevEntries = entries;
-      recompute();
-    }
-    prevReady = ready;
-  });
-
-  // Recompute when the look-back date changes.
-  let prevLookBack: string | null = null;
-  useUserSettingsStore.subscribe((store) => {
-    const lookBack = store.state.status === 'ready' ? store.state.settings.lookBackDate : null;
-    if (lookBack && lookBack !== prevLookBack) {
-      prevLookBack = lookBack;
-      recompute();
-    }
-  });
-
-  // Initial compute (cache hydrate + first calc).
-  recompute();
+  subscribeDerivedRecompute(() => void useDateVerseCountsStore.getState().cacheDateVerseCounts());
 }

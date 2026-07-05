@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { spacing, useTheme } from "@/src/design";
+import { OfflineBanner } from "../molecules/OfflineBanner";
 
 type Edge = "top" | "bottom";
 
@@ -34,8 +35,7 @@ export function Screen({
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
-  const paddingTop =
-    (edges.includes("top") ? insets.top : 0) + (padded ? spacing.screenTop : 0);
+  const paddingTop = (edges.includes("top") ? insets.top : 0) + (padded ? spacing.screenTop : 0);
   const paddingBottom = edges.includes("bottom") ? insets.bottom : 0;
 
   return (
@@ -47,6 +47,7 @@ export function Screen({
         style,
       ]}
     >
+      <OfflineBanner />
       {children}
     </View>
   );

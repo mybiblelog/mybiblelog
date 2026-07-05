@@ -7,13 +7,7 @@ import { spacing, useTheme } from "@/src/design";
 import { Button, InputField, Text } from "@/src/components";
 import { router } from "expo-router";
 import { useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from "react-native";
+import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native";
 
 export default function Login() {
   const t = useT();
@@ -21,7 +15,7 @@ export default function Login() {
   const { colors } = useTheme();
   const { state: authState, finishGoogleLogin, loginWithEmailPassword } = useAuth();
   const lastEmail =
-    authState.status === "unauthenticated" ? authState.lastLoggedInEmail ?? null : null;
+    authState.status === "unauthenticated" ? (authState.lastLoggedInEmail ?? null) : null;
 
   const [email, setEmail] = useState(lastEmail ?? "");
   const [password, setPassword] = useState("");
@@ -53,7 +47,9 @@ export default function Login() {
       const result = await loginWithEmailPassword(trimmedEmail, password);
       setIsSubmitting(false);
       if (result.ok) {
-        router.back();
+        // Deep links can land here with no back stack.
+        if (router.canGoBack()) router.back();
+        else router.replace("/");
         return;
       }
 
@@ -99,7 +95,8 @@ export default function Login() {
       const login = await finishGoogleLogin(result.idToken, locale);
       setIsSubmitting(false);
       if (login.ok) {
-        router.back();
+        if (router.canGoBack()) router.back();
+        else router.replace("/");
         return;
       }
       setError(t("auth_generic_error"));
@@ -114,17 +111,12 @@ export default function Login() {
       style={[styles.flex, { backgroundColor: colors.background }]}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <ScrollView
-        contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="handled"
-      >
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
         <Text variant="title" style={styles.title}>
           {t("login_title")}
         </Text>
         <Text variant="body" color="mutedText" style={styles.subtitle}>
-          {lastEmail
-            ? t("login_sign_in_again_as", { email: lastEmail })
-            : t("auth_login_hint")}
+          {lastEmail ? t("login_sign_in_again_as", { email: lastEmail }) : t("auth_login_hint")}
         </Text>
 
         {!!error && (
@@ -136,6 +128,7 @@ export default function Login() {
         <View style={styles.form}>
           <InputField
             label={t("auth_email")}
+            testID="login.email"
             value={email}
             onChangeText={setEmail}
             autoCapitalize="none"
@@ -148,6 +141,7 @@ export default function Login() {
           />
           <InputField
             label={t("auth_password")}
+            testID="login.password"
             value={password}
             onChangeText={setPassword}
             autoCapitalize="none"
@@ -164,6 +158,7 @@ export default function Login() {
 
         <Button
           label={t("login_with_email")}
+          testID="login.submit"
           onPress={onEmailLogin}
           loading={isSubmitting}
           fullWidth

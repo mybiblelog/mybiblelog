@@ -1,43 +1,50 @@
 import dayjs from "dayjs";
+import * as Haptics from "expo-haptics";
+import { useFocusEffect } from "expo-router";
 import { memo, useCallback, useMemo, useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated from "react-native-reanimated";
 import { Bible, type BookProgress, type ChapterProgress } from "@mybiblelog/shared";
-import {
-  AnimatedList,
-  Card,
-  Icon,
-  ProgressBar,
-  Screen,
-  Spinner,
-  Text,
-} from "@/src/components";
+import { AnimatedList, Card, Icon, ProgressBar, Screen, Spinner, Text } from "@/src/components";
 import { fadeIn, radius, spacing, useTheme } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { useBibleProgress } from "@/src/stores/bibleProgress";
-import { useLogEntries } from "@/src/stores/logEntries";
+import { logEntryActions, useLogEntryList } from "@/src/stores/logEntries";
 import { useToast } from "@/src/toast/ToastProvider";
+
+const Separator = () => <View style={styles.separator} />;
 
 /** Memoized single-chapter cell. Re-renders only when its busy state or data
  * changes — not when a sibling chapter's spinner toggles. */
 const ChapterCell = memo(function ChapterCell({
   bookIndex,
+  bookName,
   chapter,
   isBusy,
+  tileWidth,
   onPress,
 }: {
   bookIndex: number;
+  bookName: string;
   chapter: ChapterProgress;
   isBusy: boolean;
+  tileWidth: number;
   onPress: (bookIndex: number, chapterIndex: number) => void;
 }) {
   const { colors } = useTheme();
+  const t = useT();
   return (
     <Pressable
       onPress={() => onPress(bookIndex, chapter.chapterIndex)}
+      accessibilityRole="button"
+      accessibilityLabel={t(chapter.complete ? "chapter_read_a11y" : "chapter_unread_a11y", {
+        book: bookName,
+        chapter: chapter.chapterIndex,
+      })}
+      accessibilityState={{ checked: chapter.complete, busy: isBusy }}
       style={({ pressed }) => [
         styles.chapterCard,
-        { backgroundColor: colors.surface, borderColor: colors.border },
+        { width: tileWidth, backgroundColor: colors.surface, borderColor: colors.border },
         pressed && styles.pressed,
       ]}
     >
@@ -66,6 +73,7 @@ const BookCard = memo(function BookCard({
   bookName,
   isExpanded,
   busyChapterIndex,
+  tileWidth,
   onToggleBook,
   onToggleChapter,
 }: {
@@ -73,6 +81,7 @@ const BookCard = memo(function BookCard({
   bookName: string;
   isExpanded: boolean;
   busyChapterIndex: number | null;
+  tileWidth: number;
   onToggleBook: (bookIndex: number) => void;
   onToggleChapter: (bookIndex: number, chapterIndex: number) => void;
 }) {
@@ -80,6 +89,9 @@ const BookCard = memo(function BookCard({
     <Card padded style={styles.bookCard}>
       <Pressable
         onPress={() => onToggleBook(book.bookIndex)}
+        accessibilityRole="button"
+        accessibilityLabel={bookName}
+        accessibilityState={{ expanded: isExpanded }}
         style={({ pressed }) => [styles.bookHeader, pressed && styles.pressed]}
       >
         <View style={styles.bookHeaderLeft}>
@@ -117,8 +129,10 @@ const BookCard = memo(function BookCard({
             <ChapterCell
               key={c.chapterIndex}
               bookIndex={book.bookIndex}
+              bookName={bookName}
               chapter={c}
               isBusy={busyChapterIndex === c.chapterIndex}
+              tileWidth={tileWidth}
               onPress={onToggleChapter}
             />
           ))}
@@ -132,16 +146,29 @@ export default function Checklist() {
   const t = useT();
   const { locale } = useLocale();
   const { showToast } = useToast();
-  const { state: logState, createEntry, deleteEntry } = useLogEntries();
+  const logEntries = useLogEntryList();
   const progress = useBibleProgress();
 
   const [busyChapter, setBusyChapter] = useState<string | null>(null);
   const [expandedBooks, setExpandedBooks] = useState<Record<string, boolean>>({});
+  const { width: windowWidth } = useWindowDimensions();
 
-  const logEntries = useMemo(() => {
-    if (logState.status !== "ready") return [];
-    return logState.entries;
-  }, [logState]);
+  // Tiles expand to fill the card edge-to-edge: derive the column count from a
+  // ~54pt minimum tile, then split the available width (minus gaps) evenly.
+  const tileWidth = useMemo(() => {
+    const gap = spacing.md; // matches chaptersWrap gap
+    const available = windowWidth - spacing.screenH * 2 - spacing.xl * 2;
+    const columns = Math.max(1, Math.floor((available + gap) / (54 + gap)));
+    return Math.floor((available - gap * (columns - 1)) / columns);
+  }, [windowWidth]);
+
+  // Tab screens stay mounted, so collapse everything on blur — re-entry always
+  // starts with all accordions closed (and no visible collapse animation).
+  useFocusEffect(
+    useCallback(() => {
+      return () => setExpandedBooks({});
+    }, [])
+  );
 
   const toggleBook = useCallback((bookIndex: number) => {
     setExpandedBooks((prev) => ({
@@ -153,7 +180,7 @@ export default function Checklist() {
   const toggleChapter = useCallback(
     async (bookIndex: number, chapterIndex: number) => {
       if (busyChapter) return;
-      if (logState.status !== "ready") return;
+      if (logEntries === null) return;
 
       const key = `${bookIndex}.${chapterIndex}`;
       setBusyChapter(key);
@@ -173,19 +200,18 @@ export default function Checklist() {
       try {
         if (isComplete) {
           const matching = logEntries.find(
-            (e) =>
-              e.date === date &&
-              e.startVerseId === startVerseId &&
-              e.endVerseId === endVerseId
+            (e) => e.date === date && e.startVerseId === startVerseId && e.endVerseId === endVerseId
           );
 
           if (matching?.clientId) {
-            await deleteEntry(matching.clientId);
+            await logEntryActions.deleteEntry(matching.clientId);
           } else {
             showToast({ type: "info", message: t("logged_before_today") });
           }
         } else {
-          await createEntry({ date, startVerseId, endVerseId });
+          await logEntryActions.createEntry({ date, startVerseId, endVerseId });
+          // A light tap marks the moment a chapter is completed.
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
         }
       } catch {
         showToast({
@@ -196,7 +222,7 @@ export default function Checklist() {
         setBusyChapter(null);
       }
     },
-    [busyChapter, logState.status, logEntries, progress, createEntry, deleteEntry, showToast, t]
+    [busyChapter, logEntries, progress, showToast, t]
   );
 
   const busy = Boolean(busyChapter);
@@ -217,7 +243,7 @@ export default function Checklist() {
       ) : (
         <AnimatedList
           data={progress.books}
-          keyExtractor={(b) => String(b.bookIndex)}
+          keyExtractor={(b: BookProgress) => String(b.bookIndex)}
           contentContainerStyle={styles.listContent}
           renderItem={({ item }) => {
             const isExpanded = expandedBooks[String(item.bookIndex)] === true;
@@ -231,12 +257,13 @@ export default function Checklist() {
                 bookName={Bible.getBookName(item.bookIndex, locale)}
                 isExpanded={isExpanded}
                 busyChapterIndex={busyChapterIndex}
+                tileWidth={tileWidth}
                 onToggleBook={toggleBook}
                 onToggleChapter={toggleChapter}
               />
             );
           }}
-          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          ItemSeparatorComponent={Separator}
         />
       )}
     </Screen>
@@ -290,7 +317,6 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   chapterCard: {
-    width: 54,
     paddingVertical: spacing.md,
     borderRadius: radius.md,
     borderWidth: StyleSheet.hairlineWidth,

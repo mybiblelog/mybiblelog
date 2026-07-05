@@ -56,15 +56,14 @@ export default function DeleteAccountScreen() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const fullyUnderstands = ack.logEntries && ack.notes && ack.permanent;
-  const token =
-    authState.status === "authenticated" ? authState.session.token : null;
+  const token = authState.status === "authenticated" ? authState.session.token : null;
 
   async function onConfirmDelete() {
     setConfirmVisible(false);
     if (!token || isDeleting) return;
     setIsDeleting(true);
     try {
-      await deleteAccount(token);
+      await deleteAccount();
       // Clear the local session, then return to the settings root.
       await logout();
       router.replace("/settings");

@@ -19,6 +19,7 @@ export type ListItemProps = {
   chevron?: boolean;
   onPress?: () => void;
   bordered?: boolean;
+  testID?: string;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -37,6 +38,7 @@ export function ListItem({
   chevron,
   onPress,
   bordered = true,
+  testID,
   style,
 }: ListItemProps) {
   const { colors } = useTheme();
@@ -74,11 +76,17 @@ export function ListItem({
     style,
   ];
 
-  if (!onPress) return <View style={base}>{inner}</View>;
+  if (!onPress)
+    return (
+      <View testID={testID} style={base}>
+        {inner}
+      </View>
+    );
 
   return (
     <AnimatedPressable
       accessibilityRole="button"
+      testID={testID}
       onPress={onPress}
       onPressIn={press.onPressIn}
       onPressOut={press.onPressOut}

@@ -1,0 +1,6 @@
+# Maestro workspace config. Run via `npm run e2e` (scripts/e2e/run.mjs), which
+# seeds a test user and passes E2E_EMAIL / E2E_PASSWORD to the flows.
+flows:
+  - "flows/*.yaml"
+executionOrder:
+  continueOnFailure: false

@@ -24,6 +24,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
+          tabBarButtonTestID: "tab.today",
           title: t("tab_today"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="today-outline" color={color} size={size} />
@@ -33,6 +34,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="bible"
         options={{
+          tabBarButtonTestID: "tab.bible",
           title: t("tab_bible"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="book-outline" color={color} size={size} />
@@ -42,6 +44,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="calendar"
         options={{
+          tabBarButtonTestID: "tab.calendar",
           title: t("tab_calendar"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar-outline" color={color} size={size} />
@@ -51,6 +54,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="checklist"
         options={{
+          tabBarButtonTestID: "tab.checklist",
           title: t("tab_checklist"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="checkbox-outline" color={color} size={size} />
@@ -58,17 +62,19 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="log"
+        name="notes"
         options={{
-          title: t("log_tab_title"),
+          tabBarButtonTestID: "tab.notes",
+          title: t("notes_tab_title"),
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="list-outline" color={color} size={size} />
+            <Ionicons name="document-text-outline" color={color} size={size} />
           ),
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
+          tabBarButtonTestID: "tab.settings",
           title: t("settings_tab_title"),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="settings-outline" color={color} size={size} />
@@ -78,4 +84,3 @@ export default function TabsLayout() {
     </Tabs>
   );
 }
-

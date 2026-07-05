@@ -3,8 +3,8 @@ import {
   isCancelledResponse,
   isErrorWithCode,
   isSuccessResponse,
-} from 'react-native-nitro-google-signin';
-import { GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID } from '@/src/config';
+} from "react-native-nitro-google-signin";
+import { GOOGLE_IOS_CLIENT_ID, GOOGLE_WEB_CLIENT_ID } from "@/src/config";
 
 /**
  * Thin wrapper around the native Google Sign-In SDK. The app uses Google purely
@@ -28,9 +28,7 @@ export function configureGoogleSignIn(): void {
 }
 
 export type GoogleSignInResult =
-  | { ok: true; idToken: string }
-  | { ok: 'cancelled' }
-  | { ok: false };
+  { ok: true; idToken: string } | { ok: "cancelled" } | { ok: false };
 
 /**
  * Presents the explicit "Sign in with Google" UI and returns the resulting
@@ -43,17 +41,16 @@ export async function signInWithGoogle(): Promise<GoogleSignInResult> {
     const response = await GoogleOneTapSignIn.presentExplicitSignIn();
 
     if (isCancelledResponse(response)) {
-      return { ok: 'cancelled' };
+      return { ok: "cancelled" };
     }
     if (isSuccessResponse(response)) {
       const idToken = response.data.idToken;
-      if (typeof idToken === 'string' && idToken.length > 0) {
+      if (typeof idToken === "string" && idToken.length > 0) {
         return { ok: true, idToken };
       }
     }
     return { ok: false };
-  }
-  catch (err) {
+  } catch (err) {
     if (isErrorWithCode(err)) {
       // Native error (e.g. Play Services missing) — treat as a generic failure.
       return { ok: false };
@@ -66,8 +63,7 @@ export async function signInWithGoogle(): Promise<GoogleSignInResult> {
 export async function signOutGoogle(): Promise<void> {
   try {
     await GoogleOneTapSignIn.signOut();
-  }
-  catch {
+  } catch {
     // ignore — local app logout proceeds regardless
   }
 }

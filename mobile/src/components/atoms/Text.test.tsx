@@ -11,7 +11,7 @@ describe("Text", () => {
     renderWithProviders(
       <Text variant="title" color="mutedText">
         Titled
-      </Text>,
+      </Text>
     );
     const node = screen.getByText("Titled");
     const flat = Array.isArray(node.props.style)

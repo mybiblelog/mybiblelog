@@ -1,9 +1,5 @@
 import { EmptyState } from "./EmptyState";
-import {
-  fireEvent,
-  renderWithProviders,
-  screen,
-} from "@/src/test-utils/renderWithProviders";
+import { fireEvent, renderWithProviders, screen } from "@/src/test-utils/renderWithProviders";
 
 describe("EmptyState", () => {
   it("renders title and supporting text", () => {
@@ -14,9 +10,7 @@ describe("EmptyState", () => {
 
   it("renders a CTA only when both label and handler are provided", () => {
     const onPressCta = jest.fn();
-    renderWithProviders(
-      <EmptyState title="Empty" ctaLabel="Add entry" onPressCta={onPressCta} />,
-    );
+    renderWithProviders(<EmptyState title="Empty" ctaLabel="Add entry" onPressCta={onPressCta} />);
     fireEvent.press(screen.getByText("Add entry"));
     expect(onPressCta).toHaveBeenCalledTimes(1);
   });

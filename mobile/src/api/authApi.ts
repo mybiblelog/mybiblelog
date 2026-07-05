@@ -1,5 +1,6 @@
-import { getApiBaseUrl } from '@/src/api/apiBase';
-import { type ApiErrorPayload, parseApiErrorBody } from '@/src/api/apiError';
+import { getApiBaseUrl } from "@/src/api/apiBase";
+import { fetchWithTimeout } from "@/src/api/fetchWithTimeout";
+import { type ApiErrorPayload, parseApiErrorBody } from "@/src/api/apiError";
 
 /**
  * Exchanges a Google `id_token` (obtained natively, see `auth/googleSignIn.ts`)
@@ -21,14 +22,14 @@ export type GoogleLoginResult = { token: string; email: string };
 
 export async function googleIdTokenLogin(
   idToken: string,
-  locale?: string,
+  locale?: string
 ): Promise<GoogleLoginResult | null> {
   try {
-    const res = await fetch(`${getApiBaseUrl()}/auth/oauth2/google/id-token`, {
-      method: 'POST',
+    const res = await fetchWithTimeout(`${getApiBaseUrl()}/auth/oauth2/google/id-token`, {
+      method: "POST",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(locale ? { idToken, locale } : { idToken }),
     });
@@ -38,11 +39,10 @@ export async function googleIdTokenLogin(
     const json = (await res.json()) as GoogleLoginResponse;
     const token = json?.data?.token;
     const email = json?.data?.user?.email;
-    if (typeof token !== 'string' || token.length === 0) return null;
-    if (typeof email !== 'string' || email.length === 0) return null;
+    if (typeof token !== "string" || token.length === 0) return null;
+    if (typeof email !== "string" || email.length === 0) return null;
     return { token, email };
-  }
-  catch {
+  } catch {
     return null;
   }
 }
@@ -65,28 +65,26 @@ type EmailPasswordLoginResponse = {
 };
 
 export type EmailPasswordLoginResult =
-  | { ok: true; token: string; email: string }
-  | { ok: false; error: ApiErrorPayload };
+  { ok: true; token: string; email: string } | { ok: false; error: ApiErrorPayload };
 
 export async function emailPasswordLogin(
   email: string,
-  password: string,
+  password: string
 ): Promise<EmailPasswordLoginResult> {
   let res: Response;
   let body: unknown;
   try {
-    res = await fetch(`${getApiBaseUrl()}/auth/login`, {
-      method: 'POST',
+    res = await fetchWithTimeout(`${getApiBaseUrl()}/auth/login`, {
+      method: "POST",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, password }),
     });
     body = await res.json().catch(() => undefined);
-  }
-  catch {
-    return { ok: false, error: { code: 'network_error', errors: [] } };
+  } catch {
+    return { ok: false, error: { code: "network_error", errors: [] } };
   }
 
   if (!res.ok) {
@@ -96,11 +94,11 @@ export async function emailPasswordLogin(
   const json = body as EmailPasswordLoginResponse | undefined;
   const token = json?.data?.token;
   const resolvedEmail = json?.data?.user?.email;
-  if (typeof token !== 'string' || token.length === 0) {
-    return { ok: false, error: { code: 'unknown_error', errors: [] } };
+  if (typeof token !== "string" || token.length === 0) {
+    return { ok: false, error: { code: "unknown_error", errors: [] } };
   }
-  if (typeof resolvedEmail !== 'string' || resolvedEmail.length === 0) {
-    return { ok: false, error: { code: 'unknown_error', errors: [] } };
+  if (typeof resolvedEmail !== "string" || resolvedEmail.length === 0) {
+    return { ok: false, error: { code: "unknown_error", errors: [] } };
   }
   return { ok: true, token, email: resolvedEmail };
 }

@@ -22,7 +22,7 @@ jest.mock("expo-router", () => {
 });
 
 import { renderWithProviders } from "@/src/test-utils/renderWithProviders";
-import TabsLayout from "./_layout";
+import TabsLayout from "@/app/(tabs)/_layout";
 
 beforeEach(() => {
   capturedScreenOptions = undefined;
@@ -38,7 +38,7 @@ describe("(tabs) layout", () => {
   it("registers all six tabs", () => {
     const names = capturedScreens.map((s) => s.name);
     expect(names).toEqual(
-      expect.arrayContaining(["index", "bible", "calendar", "checklist", "log", "settings"]),
+      expect.arrayContaining(["index", "bible", "calendar", "checklist", "notes", "settings"])
     );
   });
 

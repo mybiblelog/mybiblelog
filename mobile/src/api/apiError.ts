@@ -30,12 +30,15 @@ export type ApiErrorPayload = {
 export class ApiError extends Error {
   readonly code: string;
   readonly errors: ApiErrorDetail[];
+  /** HTTP status of the failed response, when known. */
+  readonly status?: number;
 
-  constructor(payload: ApiErrorPayload) {
+  constructor(payload: ApiErrorPayload, status?: number) {
     super(payload.code);
-    this.name = 'ApiError';
+    this.name = "ApiError";
     this.code = payload.code;
     this.errors = payload.errors ?? [];
+    this.status = status;
   }
 }
 
@@ -45,24 +48,24 @@ export class ApiError extends Error {
  */
 export function parseApiErrorBody(body: unknown): ApiErrorPayload {
   const error =
-    body && typeof body === 'object' ? (body as Record<string, unknown>).error : undefined;
-  if (!error || typeof error !== 'object') {
-    return { code: 'unknown_error', errors: [] };
+    body && typeof body === "object" ? (body as Record<string, unknown>).error : undefined;
+  if (!error || typeof error !== "object") {
+    return { code: "unknown_error", errors: [] };
   }
 
   const e = error as Record<string, unknown>;
-  const code = typeof e.code === 'string' && e.code ? e.code : 'unknown_error';
+  const code = typeof e.code === "string" && e.code ? e.code : "unknown_error";
   const rawErrors = Array.isArray(e.errors) ? e.errors : [];
   const errors: ApiErrorDetail[] = rawErrors.flatMap((entry) => {
-    if (!entry || typeof entry !== 'object') return [];
+    if (!entry || typeof entry !== "object") return [];
     const detail = entry as Record<string, unknown>;
-    if (typeof detail.code !== 'string') return [];
+    if (typeof detail.code !== "string") return [];
     return [
       {
-        field: typeof detail.field === 'string' ? detail.field : null,
+        field: typeof detail.field === "string" ? detail.field : null,
         code: detail.code,
         properties:
-          detail.properties && typeof detail.properties === 'object'
+          detail.properties && typeof detail.properties === "object"
             ? (detail.properties as Record<string, unknown>)
             : undefined,
       },
@@ -88,8 +91,7 @@ export function mapFormErrors(payload: ApiErrorPayload): Record<string, ApiError
   return payload.errors.reduce<Record<string, ApiErrorDetail>>((acc, err) => {
     if (err.field) {
       acc[err.field] = err;
-    }
-    else {
+    } else {
       acc._form = err;
     }
     return acc;

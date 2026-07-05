@@ -15,12 +15,10 @@ export default function AboutSettings() {
 
   // Prefer the build-time version from app config; fall back to the native
   // application version when available (e.g. on a standalone build).
-  const version =
-    Constants.expoConfig?.version ?? Application.nativeApplicationVersion ?? "—";
+  const version = Constants.expoConfig?.version ?? Application.nativeApplicationVersion ?? "—";
   const buildNumber = Application.nativeBuildVersion;
 
-  const onLinkError = () =>
-    showToast({ type: "error", message: t("about_open_link_failed") });
+  const onLinkError = () => showToast({ type: "error", message: t("about_open_link_failed") });
 
   async function openUrl(url: string) {
     try {
@@ -49,9 +47,7 @@ export default function AboutSettings() {
           <Text variant="bodyStrong" color="mutedText">
             {t("about_version")}
           </Text>
-          <Text variant="bodyStrong">
-            {buildNumber ? `${version} (${buildNumber})` : version}
-          </Text>
+          <Text variant="bodyStrong">{buildNumber ? `${version} (${buildNumber})` : version}</Text>
         </View>
       </Card>
 
@@ -61,9 +57,7 @@ export default function AboutSettings() {
       <Card padded={false} style={styles.card}>
         {links.map((link, i) => (
           <Fragment key={link.url}>
-            {i > 0 ? (
-              <View style={[styles.divider, { backgroundColor: colors.border }]} />
-            ) : null}
+            {i > 0 ? <View style={[styles.divider, { backgroundColor: colors.border }]} /> : null}
             <ListItem
               title={link.label}
               leadingIcon={link.icon}

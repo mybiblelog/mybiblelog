@@ -2,7 +2,6 @@ import { useT } from "@/src/i18n/LocaleProvider";
 import { spacing, useTheme } from "@/src/design";
 import { Button, Card, Screen, Text } from "@/src/components";
 import type { AppSupportStatus } from "@/src/api/appSupportApi";
-import { useMemo } from "react";
 import { Linking, StyleSheet } from "react-native";
 
 export default function UpgradeRequiredScreen({
@@ -21,11 +20,10 @@ export default function UpgradeRequiredScreen({
   // Always use client-localized copy. The API may include `message`, but it is not localized.
   const message = t("upgrade_required_message");
 
-  const details = useMemo(() => {
-    const current = status.current?.version ?? "?";
-    const min = status.minimumSupported?.version ?? "?";
-    return t("upgrade_required_details", { current, min });
-  }, [status.current?.version, status.minimumSupported?.version, t]);
+  const details = t("upgrade_required_details", {
+    current: status.current?.version ?? "?",
+    min: status.minimumSupported?.version ?? "?",
+  });
 
   async function onPressUpdate() {
     if (!storeUrl) return;

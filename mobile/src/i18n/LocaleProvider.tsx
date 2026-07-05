@@ -9,7 +9,13 @@ import {
   useMemo,
   useState,
 } from "react";
-import { type MobileLocale, type TranslationKey, fallbackLocale, i18n, mobileLocales } from "@/src/i18n";
+import {
+  type MobileLocale,
+  type TranslationKey,
+  fallbackLocale,
+  i18n,
+  mobileLocales,
+} from "@/src/i18n";
 
 /** Locales the app ships translations for (subset of shared product locales). */
 export type SupportedLocale = MobileLocale;
@@ -37,12 +43,14 @@ type LocaleContextValue = {
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<SupportedLocale>(
-    getDevicePreferredLocale()
-  );
-
-  // Initialize i18n right away (so first render uses a supported locale).
-  i18n.locale = locale;
+  const [locale, setLocaleState] = useState<SupportedLocale>(() => {
+    const initial = getDevicePreferredLocale();
+    // Initialize the ambient i18n locale once (for the standalone `t()`
+    // helper); `useT` always passes the locale explicitly, and the effect
+    // below keeps the ambient value in sync on changes.
+    i18n.locale = initial;
+    return initial;
+  });
 
   useEffect(() => {
     let isMounted = true;
@@ -89,9 +97,7 @@ export function useLocale() {
 export function useT() {
   const { locale } = useLocale();
   return useCallback(
-    (key: TranslationKey, options?: Record<string, unknown>) =>
-      i18n.t(key, { ...options, locale }),
+    (key: TranslationKey, options?: Record<string, unknown>) => i18n.t(key, { ...options, locale }),
     [locale]
   );
 }
-

@@ -28,12 +28,7 @@ function SegmentBarComponent({
   );
 
   return (
-    <View
-      style={[
-        styles.bar,
-        { backgroundColor: colors.border, height: thick ? 12 : 8 },
-      ]}
-    >
+    <View style={[styles.bar, { backgroundColor: colors.border, height: thick ? 12 : 8 }]}>
       {data.map((seg) => (
         <View
           key={seg.startVerseId}

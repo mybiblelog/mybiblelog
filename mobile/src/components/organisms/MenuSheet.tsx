@@ -13,13 +13,7 @@ export type MenuAction = {
   color?: keyof ThemeColors;
 };
 
-function MenuRow({
-  action,
-  onClose,
-}: {
-  action: MenuAction;
-  onClose: () => void;
-}) {
+function MenuRow({ action, onClose }: { action: MenuAction; onClose: () => void }) {
   const press = useScalePress({ scaleTo: 0.98, opacityTo: 0.9 });
   return (
     <AnimatedPressable
@@ -57,9 +51,7 @@ export function MenuSheet({
     <BottomSheet visible={visible} onClose={onClose} padded={false}>
       {actions.map((action, i) => (
         <Fragment key={action.label}>
-          {i > 0 ? (
-            <View style={[styles.divider, { backgroundColor: colors.border }]} />
-          ) : null}
+          {i > 0 ? <View style={[styles.divider, { backgroundColor: colors.border }]} /> : null}
           <MenuRow action={action} onClose={onClose} />
         </Fragment>
       ))}

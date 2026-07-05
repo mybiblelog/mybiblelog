@@ -1,9 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchAppSupportStatus, type AppSupportStatus } from "@/src/api/appSupportApi";
 import UpgradeRequiredScreen from "@/src/upgrade/UpgradeRequiredScreen";
-import { useTheme } from "@/src/design";
 import { type ReactNode, useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 const STORAGE_KEY = "forceUpgradeStatus.v1";
 
@@ -12,15 +10,20 @@ type Cached = {
   status: AppSupportStatus;
 };
 
+function parseCachedUnsupported(raw: string): AppSupportStatus | null {
+  const parsed: unknown = JSON.parse(raw);
+  if (!parsed || typeof parsed !== "object") return null;
+  const status = (parsed as { status?: unknown }).status;
+  if (!status || typeof status !== "object") return null;
+  const s = status as Partial<AppSupportStatus>;
+  return s.forceUpgrade === true ? (s as AppSupportStatus) : null;
+}
+
 async function loadCachedUnsupported(): Promise<AppSupportStatus | null> {
   try {
     const raw = await AsyncStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as Cached;
-    if (!parsed?.status || typeof parsed !== "object") return null;
-    const status = (parsed as any).status as AppSupportStatus;
-    if (status?.forceUpgrade === true) return status;
-    return null;
+    return parseCachedUnsupported(raw);
   } catch {
     return null;
   }
@@ -43,14 +46,19 @@ async function clearCached() {
   }
 }
 
-type State =
-  | { status: "checking" }
-  | { status: "supported" }
-  | { status: "unsupported"; support: AppSupportStatus };
+type State = { status: "supported" } | { status: "unsupported"; support: AppSupportStatus };
 
+/**
+ * Blocks the app with an "update required" screen when the API reports this
+ * app version is no longer supported.
+ *
+ * The check is optimistic: the app renders immediately while the support
+ * status is fetched in the background, so a slow network never delays cold
+ * start. A cached `forceUpgrade` verdict (from a previous launch) flips to the
+ * block screen as soon as it loads; a fresh verdict replaces the cache.
+ */
 export function UpgradeGate({ children }: { children: ReactNode }) {
-  const { colors } = useTheme();
-  const [state, setState] = useState<State>({ status: "checking" });
+  const [state, setState] = useState<State>({ status: "supported" });
 
   useEffect(() => {
     let isMounted = true;
@@ -82,7 +90,7 @@ export function UpgradeGate({ children }: { children: ReactNode }) {
 
         setState({ status: "supported" });
       } catch {
-        // Network or other error: fail gracefully, allow app to run
+        // Network or other error: fail gracefully, allow app to run.
         if (isMounted) setState({ status: "supported" });
       }
     })();
@@ -96,22 +104,5 @@ export function UpgradeGate({ children }: { children: ReactNode }) {
     return <UpgradeRequiredScreen status={state.support} />;
   }
 
-  if (state.status === "checking") {
-    return (
-      <View style={[styles.loading, { backgroundColor: colors.background }]}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
-
   return <>{children}</>;
 }
-
-const styles = StyleSheet.create({
-  loading: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
-

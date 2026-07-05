@@ -49,9 +49,7 @@ export function SelectSheet<T extends string | number>({
                 onSelect(item.value);
                 onClose();
               }}
-              trailing={
-                selected ? <Icon name="checkmark" size={20} color="primary" /> : undefined
-              }
+              trailing={selected ? <Icon name="checkmark" size={20} color="primary" /> : undefined}
               style={selected ? { backgroundColor: colors.surfaceAlt } : undefined}
             />
           );

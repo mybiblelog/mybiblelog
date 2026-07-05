@@ -11,6 +11,7 @@ export type IconButtonProps = {
   color?: keyof ThemeColors;
   disabled?: boolean;
   accessibilityLabel: string;
+  testID?: string;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -22,6 +23,7 @@ export function IconButton({
   color = "mutedText",
   disabled = false,
   accessibilityLabel,
+  testID,
   style,
 }: IconButtonProps) {
   const press = useScalePress({ disabled, scaleTo: 0.9 });
@@ -30,6 +32,7 @@ export function IconButton({
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
       accessibilityState={{ disabled }}
+      testID={testID}
       onPress={disabled ? undefined : onPress}
       onPressIn={press.onPressIn}
       onPressOut={press.onPressOut}

@@ -60,6 +60,7 @@ export default function AccountSettings() {
             </Text>
             <Button
               label={t("auth_login")}
+              testID="settings.login"
               size="sm"
               onPress={() => router.push("/login")}
             />

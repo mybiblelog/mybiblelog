@@ -1,0 +1,74 @@
+# Reusable login: cold-start with cleared state, then email/password sign-in.
+#
+# The app is offline-first and never forces a login redirect — sign-in lives
+# at Settings -> Account -> Login. Google Sign-In is a native SDK sheet and
+# cannot be automated; email login is the automated path. Expects
+# E2E_EMAIL / E2E_PASSWORD env vars.
+appId: com.mybiblelog.app
+---
+- launchApp:
+    clearState: true
+# Dev-client builds land on the Expo launcher after a state clear. Its LAN
+# server discovery is flaky, so once the launcher is up, deep-link straight
+# to the adb-reversed localhost dev server (run.mjs sets `adb reverse
+# tcp:8081`). Deep-linking before the launcher settles gets swallowed.
+- extendedWaitUntil:
+    optional: true
+    visible: "DEVELOPMENT SERVERS"
+    timeout: 20000
+- openLink: "biblelog://expo-development-client/?url=http%3A%2F%2F127.0.0.1%3A8081"
+# The first launch after a state clear pops the developer-menu intro sheet
+# over the bundle-loading spinner; dismiss it before the app UI can appear.
+# "Continue" swaps the intro for the actual dev-tools sheet; back closes it.
+- extendedWaitUntil:
+    optional: true
+    visible: "This is the developer menu.*"
+    timeout: 45000
+- runFlow:
+    when:
+      visible: "This is the developer menu.*"
+    commands:
+      - tapOn: "Continue"
+      - extendedWaitUntil:
+          visible: "Reload"
+          timeout: 10000
+      - back
+- extendedWaitUntil:
+    visible:
+      id: "today.add-entry"
+    timeout: 90000
+# The dev-client's floating gear button hovers over the top-right corner and
+# steals taps meant for header buttons (Add, Create Tag, ...). Drag it down
+# the right edge, out of every tap target used by the flows.
+- swipe:
+    start: 90%, 7%
+    end: 90%, 65%
+- tapOn:
+    id: "tab.settings"
+- tapOn: "Account"
+- tapOn:
+    id: "settings.login"
+- extendedWaitUntil:
+    visible:
+      id: "login.email"
+    timeout: 15000
+- tapOn:
+    id: "login.email"
+- inputText: ${E2E_EMAIL}
+- hideKeyboard
+- tapOn:
+    id: "login.password"
+- inputText: ${E2E_PASSWORD}
+- hideKeyboard
+- tapOn:
+    id: "login.submit"
+# Successful login pops back to the Account screen; return to Today.
+- extendedWaitUntil:
+    visible: "Logout"
+    timeout: 20000
+- tapOn:
+    id: "tab.today"
+- extendedWaitUntil:
+    visible:
+      id: "today.add-entry"
+    timeout: 15000

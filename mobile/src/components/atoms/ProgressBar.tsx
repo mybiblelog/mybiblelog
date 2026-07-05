@@ -1,10 +1,6 @@
 import { useEffect } from "react";
 import { StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { durations, easings, radius, useTheme } from "@/src/design";
 import type { ThemeColors } from "@/src/design";
 

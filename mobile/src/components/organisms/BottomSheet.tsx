@@ -9,6 +9,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { durations, easings, radius, spacing, useTheme } from "@/src/design";
+import { useT } from "@/src/i18n/LocaleProvider";
 import { AnimatedPressable } from "../atoms/AnimatedPressable";
 
 type Props = {
@@ -44,6 +45,7 @@ export function BottomSheet({
   contentStyle,
 }: Props) {
   const { colors } = useTheme();
+  const t = useT();
   const insets = useSafeAreaInsets();
   const [mounted, setMounted] = useState(visible);
   const progress = useSharedValue(0);
@@ -51,9 +53,10 @@ export function BottomSheet({
 
   const finishClose = useCallback(() => setMounted(false), []);
 
-  useEffect(() => {
-    if (visible) setMounted(true);
-  }, [visible]);
+  // Mount as soon as we're asked to show — adjusted during render (the
+  // sanctioned "derive state from props" pattern) so the modal appears in the
+  // same frame instead of one effect-tick later.
+  if (visible && !mounted) setMounted(true);
 
   useEffect(() => {
     if (!mounted) return;
@@ -93,12 +96,17 @@ export function BottomSheet({
   const pan = Gesture.Pan()
     .enabled(swipeToDismiss && variant === "sheet")
     .onUpdate((e) => {
+      // Shared-value writes inside gesture worklets run at event time, not
+      // during render — a known false positive of the compiler's
+      // immutability rule with Reanimated.
+      // eslint-disable-next-line react-hooks/immutability
       dragY.value = Math.max(0, e.translationY);
     })
     .onEnd((e) => {
       if (e.translationY > DISMISS_DISTANCE || e.velocityY > 800) {
         runOnJS(onClose)();
       } else {
+        // eslint-disable-next-line react-hooks/immutability
         dragY.value = withTiming(0, { duration: durations.fast });
       }
     });
@@ -108,17 +116,11 @@ export function BottomSheet({
   const isSheet = variant === "sheet";
 
   return (
-    <Modal
-      visible
-      transparent
-      animationType="none"
-      statusBarTranslucent
-      onRequestClose={onClose}
-    >
+    <Modal visible transparent animationType="none" statusBarTranslucent onRequestClose={onClose}>
       <View style={[styles.root, isSheet ? styles.rootSheet : styles.rootCenter]}>
         <AnimatedPressable
           accessibilityRole="button"
-          accessibilityLabel="Dismiss"
+          accessibilityLabel={t("dismiss")}
           onPress={onClose}
           style={[styles.backdrop, { backgroundColor: colors.backdrop }, backdropStyle]}
         />

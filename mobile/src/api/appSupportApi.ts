@@ -1,8 +1,8 @@
-import Constants from 'expo-constants';
-import { Platform } from 'react-native';
-import { getApiBaseUrl } from './apiBase';
+import Constants from "expo-constants";
+import { Platform } from "react-native";
+import { getApiBaseUrl } from "./apiBase";
 
-export type MobilePlatform = 'ios' | 'android';
+export type MobilePlatform = "ios" | "android";
 
 export type AppSupportStatus = {
   platform: MobilePlatform;
@@ -18,19 +18,19 @@ export type AppSupportStatus = {
 type ApiResponse<T> = { data?: T };
 
 function getPlatform(): MobilePlatform | null {
-  if (Platform.OS === 'ios') return 'ios';
-  if (Platform.OS === 'android') return 'android';
+  if (Platform.OS === "ios") return "ios";
+  if (Platform.OS === "android") return "android";
   return null;
 }
 
 function getAppVersion(): string | null {
   const v = Constants.expoConfig?.version;
-  return typeof v === 'string' && v.trim() ? v.trim() : null;
+  return typeof v === "string" && v.trim() ? v.trim() : null;
 }
 
-export async function fetchAppSupportStatus(
-  init?: { signal?: AbortSignal },
-): Promise<AppSupportStatus | null> {
+export async function fetchAppSupportStatus(init?: {
+  signal?: AbortSignal;
+}): Promise<AppSupportStatus | null> {
   const platform = getPlatform();
   const version = getAppVersion();
   if (!platform || !version) return null;
@@ -40,20 +40,18 @@ export async function fetchAppSupportStatus(
 
   try {
     const res = await fetch(url, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
+      method: "GET",
+      headers: { Accept: "application/json" },
       signal: init?.signal,
     });
     if (!res.ok) return null;
     const json = (await res.json()) as ApiResponse<AppSupportStatus>;
     const data = json?.data;
-    if (!data || typeof data !== 'object') return null;
+    if (!data || typeof data !== "object") return null;
     if (data.platform !== platform) return null;
-    if (typeof data.forceUpgrade !== 'boolean' || typeof data.supported !== 'boolean') return null;
+    if (typeof data.forceUpgrade !== "boolean" || typeof data.supported !== "boolean") return null;
     return data;
-  }
-  catch {
+  } catch {
     return null;
   }
 }
-

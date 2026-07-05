@@ -1,9 +1,5 @@
 import { ListItem } from "./ListItem";
-import {
-  fireEvent,
-  renderWithProviders,
-  screen,
-} from "@/src/test-utils/renderWithProviders";
+import { fireEvent, renderWithProviders, screen } from "@/src/test-utils/renderWithProviders";
 
 describe("ListItem", () => {
   it("renders title, subtitle, and meta", () => {

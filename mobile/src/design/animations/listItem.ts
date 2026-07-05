@@ -1,9 +1,5 @@
-import {
-  FadeInDown,
-  FadeOutUp,
-  LinearTransition,
-} from 'react-native-reanimated';
-import { durations, easings } from '../tokens/motion';
+import { FadeInDown, FadeOutUp, LinearTransition } from "react-native-reanimated";
+import { durations, easings } from "../tokens/motion";
 
 /**
  * List item enter/exit + layout animations. Use on rows inside an animated

@@ -1,7 +1,21 @@
 import type { ReactNode } from "react";
-import { createContext, useContext, useMemo, useRef, useState } from "react";
-import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
-import { useTheme } from "@/src/design";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import { durations, useTheme } from "@/src/design";
 
 export type ToastType = "success" | "error" | "info";
 
@@ -21,52 +35,58 @@ function makeId() {
   return `toast_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
+const DEFAULT_TOAST_DURATION_MS = 1800;
+
 export function ToastProvider({ children }: { children: ReactNode }) {
   const { colors } = useTheme();
   const [toast, setToast] = useState<Toast | null>(null);
-  const opacity = useRef(new Animated.Value(0)).current;
+  const opacity = useSharedValue(0);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  function hideToast() {
+  const clearToast = useCallback(() => setToast(null), []);
+
+  // Shared-value writes below happen in event-time callbacks, not during
+  // render — a known false positive of the compiler's immutability rule with
+  // Reanimated.
+  const hideToast = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = null;
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 160,
-      useNativeDriver: true,
-    }).start(({ finished }) => {
-      if (finished) setToast(null);
+    // eslint-disable-next-line react-hooks/immutability
+    opacity.value = withTiming(0, { duration: durations.fast }, (finished) => {
+      if (finished) runOnJS(clearToast)();
     });
-  }
+  }, [clearToast, opacity]);
 
-  function showToast(t: Omit<Toast, "id"> & { durationMs?: number }) {
-    const id = makeId();
-    const durationMs = t.durationMs ?? 1800;
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setToast({ id, type: t.type, message: t.message });
-    opacity.setValue(0);
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 160,
-      useNativeDriver: true,
-    }).start();
-    timeoutRef.current = setTimeout(() => hideToast(), durationMs);
-  }
+  const showToast = useCallback(
+    (t: Omit<Toast, "id"> & { durationMs?: number }) => {
+      const durationMs = t.durationMs ?? DEFAULT_TOAST_DURATION_MS;
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      setToast({ id: makeId(), type: t.type, message: t.message });
+      // eslint-disable-next-line react-hooks/immutability
+      opacity.value = 0;
+      opacity.value = withTiming(1, { duration: durations.fast });
+      timeoutRef.current = setTimeout(hideToast, durationMs);
+    },
+    [hideToast, opacity]
+  );
 
-  const value = useMemo<ToastContextValue>(() => ({ showToast }), []);
+  // Never leave a hide timer running past unmount.
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
+
+  const value = useMemo<ToastContextValue>(() => ({ showToast }), [showToast]);
 
   return (
     <ToastContext.Provider value={value}>
       {children}
       {toast && (
         <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
-          <Animated.View
-            style={[
-              styles.toastWrap,
-              { opacity },
-            ]}
-            pointerEvents="box-none"
-          >
+          <Animated.View style={[styles.toastWrap, animatedStyle]} pointerEvents="box-none">
             <Pressable
               onPress={hideToast}
               style={[
@@ -133,4 +153,3 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-

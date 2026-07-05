@@ -10,17 +10,20 @@ export function Card({
   variant = "surfaceAlt",
   elevated = false,
   padded = true,
+  testID,
   style,
 }: {
   children: ReactNode;
   variant?: CardVariant;
   elevated?: boolean;
   padded?: boolean;
+  testID?: string;
   style?: StyleProp<ViewStyle>;
 }) {
   const { colors } = useTheme();
   return (
     <View
+      testID={testID}
       style={[
         styles.card,
         padded && styles.padded,

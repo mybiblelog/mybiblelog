@@ -1,9 +1,5 @@
 import { Button } from "./Button";
-import {
-  fireEvent,
-  renderWithProviders,
-  screen,
-} from "@/src/test-utils/renderWithProviders";
+import { fireEvent, renderWithProviders, screen } from "@/src/test-utils/renderWithProviders";
 
 describe("Button", () => {
   it("renders its label", () => {
@@ -43,9 +39,7 @@ describe("Button", () => {
   });
 
   it("uses an explicit accessibilityLabel over the visible label", () => {
-    renderWithProviders(
-      <Button label="X" accessibilityLabel="Close dialog" />,
-    );
+    renderWithProviders(<Button label="X" accessibilityLabel="Close dialog" />);
     expect(screen.getByLabelText("Close dialog")).toBeTruthy();
   });
 });

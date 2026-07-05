@@ -1,7 +1,7 @@
-import dayjs from 'dayjs';
-import { Bible, LogEntryEditorMachine, type LogEntryEditorModel } from '@mybiblelog/shared';
-import { useCallback, useMemo, useState } from 'react';
-import type { LogEntry } from '@/src/types/log-entry';
+import dayjs from "dayjs";
+import { Bible, LogEntryEditorMachine, type LogEntryEditorModel } from "@mybiblelog/shared";
+import { useCallback, useMemo, useState } from "react";
+import type { LogEntry } from "@/src/types/log-entry";
 
 /**
  * Thin React hook around the shared `LogEntryEditorMachine`.
@@ -13,7 +13,7 @@ import type { LogEntry } from '@/src/types/log-entry';
  * prop-driven component state, so it stays a hook rather than a global store.
  *
  * The hook keeps its previous public surface (`value`, `derived`, option lists,
- * `select*`/`updateDate`, `reset`, `markClean`, `toLogEntry`) so the editor
+ * `select*`/`updateDate`, `reset`, `toLogEntry`) so the editor
  * modal is unchanged: `value`'s split chapter/verse fields are derived from the
  * machine model's `startVerseId`/`endVerseId`.
  */
@@ -39,10 +39,10 @@ type Init = Partial<LogEntry> & { book?: number };
 function buildInitialModel(init?: Init): LogEntryEditorModel {
   return LogEntryEditorMachine.initLogEntryEditorModel({
     id: init?.id ?? null,
-    date: init?.date ?? dayjs().format('YYYY-MM-DD'),
+    date: init?.date ?? dayjs().format("YYYY-MM-DD"),
     book: init?.book ?? null,
-    startVerseId: typeof init?.startVerseId === 'number' ? init.startVerseId : null,
-    endVerseId: typeof init?.endVerseId === 'number' ? init.endVerseId : null,
+    startVerseId: typeof init?.startVerseId === "number" ? init.startVerseId : null,
+    endVerseId: typeof init?.endVerseId === "number" ? init.endVerseId : null,
   });
 }
 
@@ -50,7 +50,7 @@ function modelToValue(model: LogEntryEditorModel): LogEntryEditorValue {
   const start = model.startVerseId ? Bible.parseVerseId(model.startVerseId) : null;
   const end = model.endVerseId ? Bible.parseVerseId(model.endVerseId) : null;
   return {
-    date: model.date ?? '',
+    date: model.date ?? "",
     book: model.book ?? 0,
     startChapter: start?.chapter ?? 0,
     startVerse: start?.verse ?? 0,
@@ -62,18 +62,18 @@ function modelToValue(model: LogEntryEditorModel): LogEntryEditorValue {
 export function useLogEntryEditor(init?: Init) {
   const [model, setModel] = useState<LogEntryEditorModel>(() => buildInitialModel(init));
   // The baseline the dirty check compares against. Kept in state (not a ref) so
-  // markClean()/reset() trigger a re-render and `derived.isDirty` reflects the
-  // change immediately rather than staying stale until the next edit.
+  // reset() triggers a re-render and `derived.isDirty` reflects the change
+  // immediately rather than staying stale until the next edit.
   const [cleanJson, setCleanJson] = useState<string>(() => JSON.stringify(model));
 
   const value = useMemo<LogEntryEditorValue>(() => modelToValue(model), [model]);
 
   const derived = useMemo<LogEntryEditorDerived>(() => {
     const { startVerseId, endVerseId } = model;
-    const dateValid = dayjs(value.date, 'YYYY-MM-DD', true).isValid();
+    const dateValid = dayjs(value.date, "YYYY-MM-DD", true).isValid();
     const rangeValid =
-      typeof startVerseId === 'number' &&
-      typeof endVerseId === 'number' &&
+      typeof startVerseId === "number" &&
+      typeof endVerseId === "number" &&
       Bible.validateRange(startVerseId, endVerseId);
     return {
       startVerseId: startVerseId ?? null,
@@ -136,10 +136,6 @@ export function useLogEntryEditor(init?: Init) {
     setModel((prev) => LogEntryEditorMachine.selectEndVerse(prev, verse));
   }, []);
 
-  const markClean = useCallback(() => {
-    setCleanJson(JSON.stringify(model));
-  }, [model]);
-
   const reset = useCallback((nextInit?: Init) => {
     const next = buildInitialModel(nextInit);
     setModel(next);
@@ -169,7 +165,6 @@ export function useLogEntryEditor(init?: Init) {
     selectStartVerse,
     selectEndChapter,
     selectEndVerse,
-    markClean,
     reset,
     toLogEntry,
   };
