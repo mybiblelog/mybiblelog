@@ -43,11 +43,7 @@
 
       <section class="notes-page__content">
         <template v-if="passageNotesStore.loading">
-          <div class="passage-note">
-            <div class="mbl-text-center">
-              {{ t('loading') }}
-            </div>
-          </div>
+          <skeleton-loader variant="note" :count="loadingSkeletonCount" />
         </template>
         <template v-else-if="!passageNotesStore.passageNotes.length">
           <div class="mbl-empty-state">
@@ -135,6 +131,7 @@ import PassageNote from '~/components/notes/PassageNote.vue';
 import PassageNotesQueryManager from '~/components/notes/PassageNotesQueryManager.vue';
 import CaretLeftIcon from '~/components/svg/CaretLeftIcon.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
+import SkeletonLoader from '~/components/ui/SkeletonLoader.vue';
 import { usePassageNotesStore } from '~/stores/passage-notes';
 import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
 import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
@@ -157,6 +154,13 @@ const router = useRouter();
 const passageNotesStore = usePassageNotesStore();
 const passageNoteTagsStore = usePassageNoteTagsStore();
 const passageNoteEditorStore = usePassageNoteEditorStore();
+
+// Roughly match the number of notes about to display without
+// filling the page with placeholders
+const loadingSkeletonCount = computed(() => {
+  const limit = Number(passageNotesStore.query?.limit || 10);
+  return Math.max(1, Math.min(limit, 5));
+});
 
 const pagerPage = computed(() => Number(passageNotesStore.pagination?.page || 1));
 const pagerTotalPages = computed(() => Math.max(1, Number(passageNotesStore.pagination?.totalPages || 1)));

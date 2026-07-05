@@ -40,12 +40,19 @@
           :passage="entry"
           :actions="actionsForTodayLogEntry(entry)"
         />
+        <skeleton-loader
+          v-if="loadingLogEntries && !logEntriesForToday.length"
+          key="loading"
+        />
         <log-entry
-          v-if="!logEntriesForToday.length"
+          v-if="!loadingLogEntries && !logEntriesForToday.length"
           key="no-entries"
           role="listitem"
           :message="$t('no_entries')"
         />
+        <template #placeholder>
+          <skeleton-loader />
+        </template>
       </client-only>
     </div>
     <br>
@@ -63,11 +70,10 @@
             :passage="passage"
             :actions="actionsForReadingSuggestionPassage(passage)"
           />
-          <log-entry
+          <skeleton-loader
             v-if="loadingReadingSuggestions && !readingSuggestionsWithNewVerseCounts.length"
             key="loading"
-            role="listitem"
-            :message="$t('loading')"
+            :count="3"
           />
           <log-entry
             v-if="!loadingReadingSuggestions && !readingSuggestionsWithNewVerseCounts.length"
@@ -75,6 +81,9 @@
             role="listitem"
             :message="$t('no_suggestions')"
           />
+          <template #placeholder>
+            <skeleton-loader :count="3" />
+          </template>
         </client-only>
       </div>
       <div class="mbl-text-center" style="margin-top: 1rem;">
@@ -102,14 +111,11 @@
     </div>
     <div class="today-page__recent-notes-container" role="list" data-testid="recent-notes">
       <client-only>
-        <div
+        <skeleton-loader
           v-if="loadingRecentNotes && !recentNotes.length"
-          class="passage-note"
-        >
-          <div class="passage-note--content mbl-text-center">
-            {{ $t('loading') }}
-          </div>
-        </div>
+          variant="note"
+          :count="3"
+        />
         <template v-else-if="!recentNotes.length">
           <log-entry
             :message="$t('no_recent_notes')"
@@ -131,6 +137,9 @@
             </nuxt-link>
           </div>
         </template>
+        <template #placeholder>
+          <skeleton-loader variant="note" :count="3" />
+        </template>
       </client-only>
     </div>
   </div>
@@ -145,6 +154,7 @@ import DoubleProgressBar from '@/components/ui/DoubleProgressBar';
 import LogEntry from '@/components/log/LogEntry';
 import PassageNote from '@/components/notes/PassageNote';
 import ReadingTrackerResetCard from '@/components/ui/ReadingTrackerResetCard';
+import SkeletonLoader from '@/components/ui/SkeletonLoader';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
@@ -164,10 +174,12 @@ export default {
     LogEntry,
     PassageNote,
     ReadingTrackerResetCard,
+    SkeletonLoader,
   },
   middleware: ['auth'],
   data() {
     return {
+      loadingLogEntries: true,
       loadingReadingSuggestions: true,
     };
   },
@@ -256,7 +268,12 @@ export default {
     },
   },
   async mounted() {
-    await useAppInitStore().loadUserData();
+    try {
+      await useAppInitStore().loadUserData();
+    }
+    finally {
+      this.loadingLogEntries = false;
+    }
     await this.readingSuggestionsStore.refreshReadingSuggestions();
     this.loadingReadingSuggestions = false;
     // Load the 3 most recent notes using the passage-notes store

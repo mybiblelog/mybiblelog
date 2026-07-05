@@ -73,7 +73,8 @@
             </div>
           </div>
         </div>
-        <div v-if="!passageNoteTags.length" class="tag-line">
+        <skeleton-loader v-if="loading && !passageNoteTags.length" variant="tag" :count="3" />
+        <div v-if="!loading && !passageNoteTags.length" class="tag-line">
           <div class="mbl-text-center">
             {{ $t('no_tags') }}
           </div>
@@ -87,6 +88,7 @@
 import { displayDateTime, displayTimeSince } from '@mybiblelog/shared';
 import { encodePassageNotesQueryToRoute } from '@/helpers/passage-notes-route-query';
 import HyperlinkedText from '@/components/ui/HyperlinkedText';
+import SkeletonLoader from '@/components/ui/SkeletonLoader';
 import CaretRightIcon from '@/components/svg/CaretRightIcon';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
@@ -97,9 +99,15 @@ export default {
   name: 'NoteTagsListPage',
   components: {
     HyperlinkedText,
+    SkeletonLoader,
     CaretRightIcon,
   },
   middleware: ['auth'],
+  data() {
+    return {
+      loading: true,
+    };
+  },
   head() {
     return {
       title: this.$t('note_tags'),
@@ -121,8 +129,13 @@ export default {
       },
     },
   },
-  mounted() {
-    this.passageNoteTagsStore.loadPassageNoteTags();
+  async mounted() {
+    try {
+      await this.passageNoteTagsStore.loadPassageNoteTags();
+    }
+    finally {
+      this.loading = false;
+    }
   },
   methods: {
     tagCreatedAtDate(tag) {

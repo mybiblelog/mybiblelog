@@ -81,7 +81,8 @@
           </div>
         </div>
       </div>
-      <div v-if="!passageNoteTagsStore.passageNoteTags.length" class="tag-line">
+      <skeleton-loader v-if="loading && !passageNoteTagsStore.passageNoteTags.length" variant="tag" :count="3" />
+      <div v-if="!loading && !passageNoteTagsStore.passageNoteTags.length" class="tag-line">
         <div class="mbl-text-center">
           {{ t('no_tags') }}
         </div>
@@ -92,6 +93,7 @@
 
 <script setup lang="ts">
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
+import SkeletonLoader from '~/components/ui/SkeletonLoader.vue';
 import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
 import { usePassageNoteTagEditorStore } from '~/stores/passage-note-tag-editor';
 import { useDialogStore } from '~/stores/dialog';
@@ -107,10 +109,16 @@ const passageNoteTagsStore = usePassageNoteTagsStore();
 const tagEditorStore = usePassageNoteTagEditorStore();
 
 const hydrated = ref(false);
+const loading = ref(true);
 
-onMounted(() => {
+onMounted(async () => {
   hydrated.value = true;
-  passageNoteTagsStore.loadPassageNoteTags();
+  try {
+    await passageNoteTagsStore.loadPassageNoteTags();
+  }
+  finally {
+    loading.value = false;
+  }
 });
 
 function onSortOrderChange(e: Event) {
