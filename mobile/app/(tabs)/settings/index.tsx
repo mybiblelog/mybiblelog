@@ -1,7 +1,7 @@
 import { router } from "expo-router";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { radius, spacing, useTheme } from "@/src/design";
-import { AttentionDot, Icon, type IconName, ListItem } from "@/src/components";
+import { AttentionDot, Icon, type IconName, ListItem, Screen } from "@/src/components";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { useIsUnauthenticated } from "@/src/stores/auth";
 
@@ -39,50 +39,47 @@ function SectionRow({
 
 export default function SettingsIndex() {
   const t = useT();
-  const { colors } = useTheme();
   const showSignInAlert = useIsUnauthenticated();
   return (
-    <ScrollView
-      style={[styles.flex, { backgroundColor: colors.background }]}
-      contentContainerStyle={styles.content}
-    >
-      <SectionRow
-        icon="person-circle-outline"
-        title={t("settings_section_account")}
-        subtitle={t("settings_section_account_subtitle")}
-        onPress={() => router.push("/settings/account")}
-        alert={showSignInAlert}
-      />
-      <SectionRow
-        icon="bookmarks-outline"
-        title={t("settings_section_reading")}
-        subtitle={t("settings_section_reading_subtitle")}
-        onPress={() => router.push("/settings/reading")}
-      />
-      <SectionRow
-        icon="color-palette-outline"
-        title={t("settings_section_appearance")}
-        subtitle={t("settings_section_appearance_subtitle")}
-        onPress={() => router.push("/settings/appearance")}
-      />
-      <SectionRow
-        icon="language-outline"
-        title={t("settings_section_language")}
-        subtitle={t("settings_section_language_subtitle")}
-        onPress={() => router.push("/settings/language")}
-      />
-      <SectionRow
-        icon="information-circle-outline"
-        title={t("settings_section_about")}
-        subtitle={t("settings_section_about_subtitle")}
-        onPress={() => router.push("/settings/about")}
-      />
-    </ScrollView>
+    <Screen edges={[]}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <SectionRow
+          icon="person-circle-outline"
+          title={t("settings_section_account")}
+          subtitle={t("settings_section_account_subtitle")}
+          onPress={() => router.push("/settings/account")}
+          alert={showSignInAlert}
+        />
+        <SectionRow
+          icon="bookmarks-outline"
+          title={t("settings_section_reading")}
+          subtitle={t("settings_section_reading_subtitle")}
+          onPress={() => router.push("/settings/reading")}
+        />
+        <SectionRow
+          icon="color-palette-outline"
+          title={t("settings_section_appearance")}
+          subtitle={t("settings_section_appearance_subtitle")}
+          onPress={() => router.push("/settings/appearance")}
+        />
+        <SectionRow
+          icon="language-outline"
+          title={t("settings_section_language")}
+          subtitle={t("settings_section_language_subtitle")}
+          onPress={() => router.push("/settings/language")}
+        />
+        <SectionRow
+          icon="information-circle-outline"
+          title={t("settings_section_about")}
+          subtitle={t("settings_section_about_subtitle")}
+          onPress={() => router.push("/settings/about")}
+        />
+      </ScrollView>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1 },
   content: {
     padding: spacing.screenH,
     gap: spacing.md,

@@ -129,6 +129,7 @@ export const en = {
   auth_not_logged_in: "Not Logged In",
   auth_offline_sync_hint:
     "Your offline data on this device will not sync to your account until you are online and logged in.",
+  auth_login_requires_connection: "Logging in requires an internet connection.",
   auth_login: "Login",
   auth_logout: "Logout",
 

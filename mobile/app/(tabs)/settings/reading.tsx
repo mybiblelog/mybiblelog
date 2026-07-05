@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useIsAuthenticated } from "@/src/stores/auth";
 import { InputField, Screen, SelectRow, SelectSheet, Spinner, Text } from "@/src/components";
-import { spacing, useTheme } from "@/src/design";
+import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { userSettingsActions, useSettingsValue } from "@/src/stores/userSettings";
 import { useToast } from "@/src/toast/ToastProvider";
@@ -10,7 +10,6 @@ import { ScrollView, StyleSheet } from "react-native";
 
 export default function ReadingSettings() {
   const t = useT();
-  const { colors } = useTheme();
   const isAuthenticated = useIsAuthenticated();
   const settings = useSettingsValue();
   const { setLocalSettings, updateServerSettings } = userSettingsActions;
@@ -126,11 +125,8 @@ export default function ReadingSettings() {
   }
 
   return (
-    <>
-      <ScrollView
-        style={[styles.flex, { backgroundColor: colors.background }]}
-        contentContainerStyle={styles.content}
-      >
+    <Screen edges={[]}>
+      <ScrollView contentContainerStyle={styles.content}>
         <Text variant="label" color="mutedText" style={styles.sectionLabel}>
           {t("settings_reading_daily_goal_title")}
         </Text>
@@ -203,12 +199,11 @@ export default function ReadingSettings() {
         onSelect={(v) => void selectPreferredBibleApp(String(v))}
         onClose={() => setBibleAppOpen(false)}
       />
-    </>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1 },
   content: { padding: spacing.screenH, paddingBottom: spacing.listBottom },
   sectionLabel: { marginTop: spacing.lg, marginBottom: spacing.sm },
   help: { marginTop: spacing.lg },

@@ -1,11 +1,16 @@
 jest.mock("expo-router", () => ({ router: { push: jest.fn() } }));
+const mockUseNetInfo = jest.fn();
 jest.mock("@react-native-community/netinfo", () => ({
-  useNetInfo: () => ({ isConnected: true, isInternetReachable: true }),
+  useNetInfo: () => mockUseNetInfo(),
 }));
 
 import { renderWithProviders } from "@/src/test-utils/renderWithProviders";
 import { useAuthStore } from "@/src/stores/auth";
 import AccountSettings from "@/app/(tabs)/settings/account";
+
+beforeEach(() => {
+  mockUseNetInfo.mockReturnValue({ isConnected: true, isInternetReachable: true });
+});
 
 describe("Account settings screen", () => {
   it("clarifies the signed-out state and offers a single Login action", () => {
@@ -31,5 +36,24 @@ describe("Account settings screen", () => {
 
     expect(getByText("Logged In")).toBeTruthy();
     expect(getByText("Signed in as a@b.com")).toBeTruthy();
+  });
+
+  it("hides the Login button and explains why when offline and signed out", () => {
+    mockUseNetInfo.mockReturnValue({ isConnected: false, isInternetReachable: false });
+    useAuthStore.setState({ state: { status: "unauthenticated" } });
+    const { getByText, queryByTestId } = renderWithProviders(<AccountSettings />);
+
+    expect(queryByTestId("settings.login")).toBeNull();
+    expect(getByText("Logging in requires an internet connection.")).toBeTruthy();
+  });
+
+  it("still allows logout while offline", () => {
+    mockUseNetInfo.mockReturnValue({ isConnected: false, isInternetReachable: false });
+    useAuthStore.setState({
+      state: { status: "authenticated", session: { token: "t", user: { email: "a@b.com" } } },
+    });
+    const { getByText } = renderWithProviders(<AccountSettings />);
+
+    expect(getByText("Logout")).toBeTruthy();
   });
 });
