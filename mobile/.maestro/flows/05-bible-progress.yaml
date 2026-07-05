@@ -1,0 +1,18 @@
+# Bible Books -> Progress page (seeded Genesis 1 entry gives non-zero data).
+appId: com.mybiblelog.app
+tags:
+  - smoke
+---
+- runFlow: ../common/login.yaml
+- tapOn:
+    id: "tab.bible"
+- assertVisible: "Genesis"
+- tapOn:
+    id: "bible.progress-link"
+- assertVisible: "Your Progress So Far"
+- assertVisible: "Your Historical Outlook"
+- scrollUntilVisible:
+    element: "Set a Goal"
+    direction: DOWN
+- back
+- assertVisible: "Bible Books"

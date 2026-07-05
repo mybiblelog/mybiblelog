@@ -1,0 +1,29 @@
+# Smoke: add a log entry through the structured book/chapter/verse picker.
+appId: com.mybiblelog.app
+tags:
+  - smoke
+---
+- runFlow: ../common/login.yaml
+- tapOn:
+    id: "today.add-entry"
+- tapOn:
+    id: "entry-editor.book"
+- tapOn: "Exodus"
+- tapOn:
+    id: "entry-editor.start-chapter"
+- tapOn: "1"
+- tapOn:
+    id: "entry-editor.start-verse"
+- tapOn: "1"
+- tapOn:
+    id: "entry-editor.end-chapter"
+- tapOn: "1"
+- tapOn:
+    id: "entry-editor.end-verse"
+- scrollUntilVisible:
+    element: "22"
+    direction: DOWN
+- tapOn: "22"
+- tapOn:
+    id: "entry-editor.save"
+- assertVisible: "Exodus 1"

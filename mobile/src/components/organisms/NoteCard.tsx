@@ -15,10 +15,11 @@ import { Card } from "../molecules/Card";
 type Props = {
   note: PassageNote;
   onPressMenu: (note: PassageNote) => void;
+  testID?: string;
 };
 
 /** A note in the list (web `PassageNote.vue` equivalent). */
-export function NoteCard({ note, onPressMenu }: Props) {
+export function NoteCard({ note, onPressMenu, testID }: Props) {
   const t = useT();
   const { locale } = useLocale();
   const tags = useTagsList();
@@ -42,7 +43,7 @@ export function NoteCard({ note, onPressMenu }: Props) {
   };
 
   return (
-    <Card>
+    <Card testID={testID}>
       <View style={styles.header}>
         <View style={styles.headerText}>
           {note.passages.length > 0 ? (

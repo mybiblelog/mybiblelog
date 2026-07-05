@@ -93,7 +93,13 @@ export function NotesQuerySheet({ visible, appliedQuery, onApply, onClose }: Pro
           <Text variant="heading" style={styles.headerTitle}>
             {t("query_title")}
           </Text>
-          <Button label={t("query_apply")} size="sm" onPress={handleApply} disabled={!isDirty} />
+          <Button
+            label={t("query_apply")}
+            testID="notes-query.apply"
+            size="sm"
+            onPress={handleApply}
+            disabled={!isDirty}
+          />
         </View>
 
         <ScrollView
@@ -103,6 +109,7 @@ export function NotesQuerySheet({ visible, appliedQuery, onApply, onClose }: Pro
         >
           <InputField
             label={t("query_search_label")}
+            testID="notes-query.search"
             value={draft.searchText}
             onChangeText={(searchText) => setDraft((prev) => ({ ...prev, searchText }))}
             placeholder={t("query_search_placeholder")}
@@ -126,6 +133,7 @@ export function NotesQuerySheet({ visible, appliedQuery, onApply, onClose }: Pro
                 ) : null}
                 <Button
                   label={t("query_choose_tags")}
+                  testID="notes-query.choose-tags"
                   size="sm"
                   variant="secondary"
                   onPress={() => setChoosingTags(true)}

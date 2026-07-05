@@ -93,7 +93,7 @@ export default function Index() {
             {todayDisplay}
           </Text>
         </View>
-        <Button label={t("add")} leftIcon="add" onPress={openAdd} />
+        <Button label={t("add")} testID="today.add-entry" leftIcon="add" onPress={openAdd} />
       </View>
 
       <Card style={styles.progressCard}>
@@ -132,6 +132,7 @@ export default function Index() {
           return (
             <LogEntryRow
               entry={item}
+              testID="today.entry-row"
               meta={
                 stats
                   ? t("today_entry_meta", { new: stats.newSinceLookBack, total: stats.total })

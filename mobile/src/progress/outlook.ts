@@ -57,7 +57,11 @@ export function getHistoricalOutlook(
     daysSinceLookBack > 0
       ? Math.floor(getVersesRead(entries, lookBackDate) / daysSinceLookBack)
       : 0;
-  return { daysSinceLookBack, averageDailyVerses, ...projectFinish(unread, averageDailyVerses, today) };
+  return {
+    daysSinceLookBack,
+    averageDailyVerses,
+    ...projectFinish(unread, averageDailyVerses, today),
+  };
 }
 
 /**

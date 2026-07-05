@@ -14,6 +14,7 @@ export function SelectRow({
   placeholder,
   onPress,
   disabled = false,
+  testID,
   style,
 }: {
   label?: string;
@@ -21,6 +22,7 @@ export function SelectRow({
   placeholder: string;
   onPress: () => void;
   disabled?: boolean;
+  testID?: string;
   style?: StyleProp<ViewStyle>;
 }) {
   const { colors } = useTheme();
@@ -37,6 +39,7 @@ export function SelectRow({
       <AnimatedPressable
         accessibilityRole="button"
         accessibilityLabel={label ?? placeholder}
+        testID={testID}
         onPress={disabled ? undefined : onPress}
         onPressIn={press.onPressIn}
         onPressOut={press.onPressOut}

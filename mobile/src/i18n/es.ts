@@ -39,6 +39,44 @@ export const es = {
   notes_view_all: "Ver Todas las Notas",
 
   bible_books_title: "Libros de la Biblia",
+
+  progress_title: "Progreso",
+  progress_settings_title: "Sus Configuraciones de Lectura",
+  progress_settings_description:
+    "Estas configuraciones se utilizan para calcular y mostrar su progreso.",
+  progress_update_settings: "Actualizar Configuraciones",
+  progress_look_back_date: "Fecha de Revisión",
+  progress_daily_goal: "Meta de Versos Diarios",
+  progress_so_far_title: "Su Progreso Hasta Ahora",
+  progress_total_verses: "Total de Versos de la Biblia",
+  progress_verses_read: "Versos Leídos",
+  progress_verses_remaining: "Versos Restantes",
+  progress_percent_complete: "Porcentaje Completado",
+  progress_outlook_historical_title: "Su Perspectiva Histórica",
+  progress_outlook_historical_description:
+    "Basado en sus hábitos de lectura desde su Fecha de Revisión, ¿cuánto tiempo le tomará terminar la Biblia?",
+  progress_outlook_30_title: "Su Perspectiva de 30 Días",
+  progress_outlook_30_description:
+    "Basado en sus hábitos de lectura de los últimos 30 días, ¿cuánto tiempo le tomará terminar la Biblia?",
+  progress_outlook_7_title: "Su Perspectiva de 7 Días",
+  progress_outlook_7_description:
+    "Basado en sus hábitos de lectura de los últimos 7 días, ¿cuánto tiempo le tomará terminar la Biblia?",
+  progress_outlook_today_title: "La Perspectiva de Hoy",
+  progress_outlook_today_description:
+    "Basado en su lectura de hoy, ¿cuánto tiempo le tomará terminar la Biblia?",
+  progress_days_since_look_back: "Días Desde la Fecha de Revisión",
+  progress_avg_daily_verses: "Promedio de Versos Leídos Diariamente",
+  progress_days_to_finish: "Días para Terminar a Este Ritmo",
+  progress_date_to_finish: "Fecha para Terminar a Este Ritmo",
+  progress_never: "Nunca",
+  progress_goal_title: "Establecer una Meta",
+  progress_goal_description:
+    "Elija una fecha objetivo para terminar de leer la Biblia y trabaje hacia atrás para ver cuántos versos deberá leer cada día.",
+  progress_goal_date: "Fecha de Finalización de la Meta",
+  progress_goal_date_placeholder: "Elija una fecha",
+  progress_goal_date_error: "La fecha de finalización de la meta debe ser en el futuro.",
+  progress_goal_days: "Días para Terminar por Meta",
+  progress_goal_verses_per_day: "Versos Requeridos Cada Día",
   bible_book_title: "Libro",
   whole_bible: "Biblia",
   old_testament_short: "AT",

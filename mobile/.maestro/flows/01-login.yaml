@@ -1,0 +1,9 @@
+# Smoke: email/password login lands on the Today screen.
+appId: com.mybiblelog.app
+tags:
+  - smoke
+---
+- runFlow: ../common/login.yaml
+- assertVisible: "Today"
+- assertVisible:
+    id: "today.add-entry"

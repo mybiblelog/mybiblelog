@@ -68,10 +68,11 @@ export default function Notes() {
       </Text>
       <Button
         label={t("tags_title")}
+        testID="notes.tags"
         variant="secondary"
         onPress={() => router.push("/(tabs)/notes/tags")}
       />
-      <Button label={t("notes_new")} leftIcon="add" onPress={openAdd} />
+      <Button label={t("notes_new")} testID="notes.new" leftIcon="add" onPress={openAdd} />
     </View>
   );
 
@@ -80,6 +81,7 @@ export default function Notes() {
       <View style={styles.queryButtonWrap}>
         <Button
           label={t("query_open")}
+          testID="notes.query"
           variant="secondary"
           size="sm"
           leftIcon="options-outline"
@@ -92,6 +94,7 @@ export default function Notes() {
       {hasAppliedOptions ? (
         <Button
           label={t("query_reset")}
+          testID="notes.reset"
           variant="ghost"
           size="sm"
           onPress={() => void notesActions.resetQuery()}

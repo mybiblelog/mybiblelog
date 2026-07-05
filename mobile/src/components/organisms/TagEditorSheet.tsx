@@ -89,6 +89,7 @@ export function TagEditorSheet({ visible, initialTag, onClose, onSaved }: Props)
         </Text>
         <Button
           label={t("save")}
+          testID="tag-editor.save"
           size="sm"
           onPress={handleSave}
           disabled={!canSave}
@@ -103,6 +104,7 @@ export function TagEditorSheet({ visible, initialTag, onClose, onSaved }: Props)
       >
         <InputField
           label={t("tag_label")}
+          testID="tag-editor.label"
           value={label}
           onChangeText={setLabel}
           maxLength={TAG_LABEL_MAX_LENGTH}

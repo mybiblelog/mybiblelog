@@ -11,10 +11,12 @@ export const LogEntryRow = memo(function LogEntryRow({
   entry,
   onPressMenu,
   meta,
+  testID,
 }: {
   entry: LogEntry;
   onPressMenu: () => void;
   meta?: string;
+  testID?: string;
 }) {
   const { locale } = useLocale();
   const range = useMemo(
@@ -28,6 +30,7 @@ export const LogEntryRow = memo(function LogEntryRow({
       title={range}
       subtitle={displayDate}
       meta={meta}
+      testID={testID}
       trailing={
         <IconButton
           name="ellipsis-vertical"

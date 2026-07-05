@@ -139,7 +139,13 @@ export function NoteEditorModal({
           <Text variant="heading" style={styles.headerTitle}>
             {initialNote ? t("note_editor_edit") : t("note_editor_new")}
           </Text>
-          <Button label={t("save")} size="sm" onPress={handleSubmit} disabled={!canSubmit} />
+          <Button
+            label={t("save")}
+            testID="note-editor.save"
+            size="sm"
+            onPress={handleSubmit}
+            disabled={!canSubmit}
+          />
         </View>
 
         <ScrollView
@@ -192,6 +198,7 @@ export function NoteEditorModal({
 
           <InputField
             label={t("note_content")}
+            testID="note-editor.content"
             value={draft.content}
             onChangeText={(content) => setDraft((prev) => ({ ...prev, content }))}
             maxLength={NOTE_CONTENT_MAX_LENGTH}
@@ -211,6 +218,7 @@ export function NoteEditorModal({
               </Text>
               <Button
                 label={t("note_manage_tags")}
+                testID="note-editor.choose-tags"
                 size="sm"
                 variant="secondary"
                 onPress={() => setChoosingTags(true)}

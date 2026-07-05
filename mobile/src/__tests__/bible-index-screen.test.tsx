@@ -68,4 +68,10 @@ describe("Bible Books screen", () => {
     fireEvent.press(getByText("Genesis"));
     expect(router.push).toHaveBeenCalledWith("/bible/1");
   });
+
+  it("navigates to the Progress page from the header link", () => {
+    const { getByText } = renderWithProviders(<BibleIndex />);
+    fireEvent.press(getByText("Progress"));
+    expect(router.push).toHaveBeenCalledWith("/bible/progress");
+  });
 });

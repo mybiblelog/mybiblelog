@@ -6,6 +6,7 @@ import { Bible, type BookProgress } from "@mybiblelog/shared";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import {
   AnimatedList,
+  Button,
   Card,
   Screen,
   SegmentBar,
@@ -149,7 +150,19 @@ export default function BibleIndex() {
 
   const header = (
     <View style={styles.header}>
-      <Text variant="title">{t("bible_books_title")}</Text>
+      <View style={styles.headerRow}>
+        <Text variant="title" style={styles.headerTitle}>
+          {t("bible_books_title")}
+        </Text>
+        <Button
+          label={t("progress_title")}
+          testID="bible.progress-link"
+          variant="ghost"
+          size="sm"
+          leftIcon="stats-chart-outline"
+          onPress={() => router.push("/bible/progress")}
+        />
+      </View>
       <SegmentedControl
         options={[
           { value: "all", label: t("whole_bible") },
@@ -208,6 +221,12 @@ const styles = StyleSheet.create({
     paddingTop: spacing.screenTop,
     gap: spacing.md,
   },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.md,
+  },
+  headerTitle: { flex: 1 },
   plaque: {
     margin: spacing.screenH,
   },

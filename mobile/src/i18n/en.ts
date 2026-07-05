@@ -34,6 +34,43 @@ export const en = {
   notes_view_all: "View All Notes",
 
   bible_books_title: "Bible Books",
+
+  progress_title: "Progress",
+  progress_settings_title: "Your Reading Settings",
+  progress_settings_description: "These settings are used to calculate and display your progress.",
+  progress_update_settings: "Update Settings",
+  progress_look_back_date: "Look Back Date",
+  progress_daily_goal: "Daily Verse Count Goal",
+  progress_so_far_title: "Your Progress So Far",
+  progress_total_verses: "Total Bible Verses",
+  progress_verses_read: "Verses Read",
+  progress_verses_remaining: "Verses Remaining",
+  progress_percent_complete: "Percent Complete",
+  progress_outlook_historical_title: "Your Historical Outlook",
+  progress_outlook_historical_description:
+    "Based on your reading habits since your Look Back Date, how long will it take you to finish the Bible?",
+  progress_outlook_30_title: "Your 30-Day Outlook",
+  progress_outlook_30_description:
+    "Based on your reading habits from the past 30 days, how long will it take you to finish the Bible?",
+  progress_outlook_7_title: "Your 7-Day Outlook",
+  progress_outlook_7_description:
+    "Based on your reading habits from the past 7 days, how long will it take you to finish the Bible?",
+  progress_outlook_today_title: "Today's Outlook",
+  progress_outlook_today_description:
+    "Based on your reading today, how long will it take you to finish the Bible?",
+  progress_days_since_look_back: "Days Since Look Back Date",
+  progress_avg_daily_verses: "Average Daily Verses Read",
+  progress_days_to_finish: "Days to Finish at This Rate",
+  progress_date_to_finish: "Date to Finish at This Rate",
+  progress_never: "Never",
+  progress_goal_title: "Set a Goal",
+  progress_goal_description:
+    "Choose a target date to finish reading the Bible and work backwards to see how many verses you will need to read each day.",
+  progress_goal_date: "Goal Finish Date",
+  progress_goal_date_placeholder: "Choose a date",
+  progress_goal_date_error: "Goal date must be in the future.",
+  progress_goal_days: "Days to Finish by Goal",
+  progress_goal_verses_per_day: "Verses Required Each Day",
   bible_book_title: "Book",
   whole_bible: "Bible",
   old_testament_short: "OT",

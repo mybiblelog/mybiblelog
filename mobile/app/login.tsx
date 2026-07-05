@@ -128,6 +128,7 @@ export default function Login() {
         <View style={styles.form}>
           <InputField
             label={t("auth_email")}
+            testID="login.email"
             value={email}
             onChangeText={setEmail}
             autoCapitalize="none"
@@ -140,6 +141,7 @@ export default function Login() {
           />
           <InputField
             label={t("auth_password")}
+            testID="login.password"
             value={password}
             onChangeText={setPassword}
             autoCapitalize="none"
@@ -156,6 +158,7 @@ export default function Login() {
 
         <Button
           label={t("login_with_email")}
+          testID="login.submit"
           onPress={onEmailLogin}
           loading={isSubmitting}
           fullWidth

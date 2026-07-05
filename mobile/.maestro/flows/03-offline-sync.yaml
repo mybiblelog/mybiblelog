@@ -1,0 +1,58 @@
+# Offline -> online sync convergence (Android-only: setAirplaneMode).
+#
+# The app queues log-entry mutations while offline (local-first) and drains
+# the queue when connectivity returns. There is no sync-status chrome, so
+# convergence is asserted by the entry surviving a pull-to-refresh, which
+# reloads the list from the server.
+appId: com.mybiblelog.app
+tags:
+  - android-only
+# Restore connectivity even when the flow fails mid-airplane-mode, so
+# subsequent flows (and the dev-server connection) aren't left offline.
+onFlowComplete:
+  - setAirplaneMode: disabled
+---
+- runFlow: ../common/login.yaml
+- setAirplaneMode: enabled
+- extendedWaitUntil:
+    visible: "You.re offline.*"
+    timeout: 10000
+- tapOn:
+    id: "today.add-entry"
+- tapOn:
+    id: "entry-editor.book"
+- tapOn: "Leviticus"
+- tapOn:
+    id: "entry-editor.start-chapter"
+- tapOn: "1"
+- tapOn:
+    id: "entry-editor.start-verse"
+- tapOn: "1"
+- tapOn:
+    id: "entry-editor.end-chapter"
+- tapOn: "1"
+- tapOn:
+    id: "entry-editor.end-verse"
+- scrollUntilVisible:
+    element: "17"
+    direction: DOWN
+- tapOn: "17"
+- tapOn:
+    id: "entry-editor.save"
+# Local-first: the entry renders immediately while offline.
+- assertVisible: "Leviticus 1"
+- setAirplaneMode: disabled
+- extendedWaitUntil:
+    notVisible: "You.re offline.*"
+    timeout: 20000
+# Give the reconnect-triggered background sync a moment to drain the queue.
+- waitForAnimationToEnd:
+    timeout: 5000
+# Pull-to-refresh reloads from the server; the entry surviving proves the
+# queued create reached the API.
+- swipe:
+    start: 50%, 35%
+    end: 50%, 75%
+- extendedWaitUntil:
+    visible: "Leviticus 1"
+    timeout: 15000

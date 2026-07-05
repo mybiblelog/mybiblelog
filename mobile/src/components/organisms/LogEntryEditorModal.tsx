@@ -145,7 +145,13 @@ export function LogEntryEditorModal({
           <Text variant="heading" style={styles.headerTitle}>
             {title}
           </Text>
-          <Button label={submitLabel} size="sm" onPress={handleSubmit} disabled={!canSubmit} />
+          <Button
+            label={submitLabel}
+            testID="entry-editor.save"
+            size="sm"
+            onPress={handleSubmit}
+            disabled={!canSubmit}
+          />
         </View>
 
         <View style={[styles.preview, { backgroundColor: colors.primary }]}>
@@ -173,6 +179,7 @@ export function LogEntryEditorModal({
 
           <SelectRow
             label={t("book")}
+            testID="entry-editor.book"
             value={selectedBookLabel}
             placeholder={t("choose_book")}
             onPress={() => setBookOpen(true)}
@@ -181,6 +188,7 @@ export function LogEntryEditorModal({
           <View style={styles.row2}>
             <SelectRow
               label={t("start_chapter")}
+              testID="entry-editor.start-chapter"
               value={editor.value.startChapter || null}
               placeholder={t("choose_start_chapter")}
               disabled={editor.value.book === 0}
@@ -189,6 +197,7 @@ export function LogEntryEditorModal({
             />
             <SelectRow
               label={t("start_verse")}
+              testID="entry-editor.start-verse"
               value={editor.value.startVerse || null}
               placeholder={t("choose_start_verse")}
               disabled={editor.value.startChapter === 0}
@@ -200,6 +209,7 @@ export function LogEntryEditorModal({
           <View style={styles.row2}>
             <SelectRow
               label={t("end_chapter")}
+              testID="entry-editor.end-chapter"
               value={editor.value.endChapter || null}
               placeholder={t("choose_end_chapter")}
               disabled={editor.value.startVerse === 0}
@@ -208,6 +218,7 @@ export function LogEntryEditorModal({
             />
             <SelectRow
               label={t("end_verse")}
+              testID="entry-editor.end-verse"
               value={editor.value.endVerse || null}
               placeholder={t("choose_end_verse")}
               disabled={editor.value.endChapter === 0}

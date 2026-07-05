@@ -132,6 +132,7 @@ export default function Tags() {
         />
         <Button
           label={t("tag_create")}
+          testID="tags.new"
           size="sm"
           leftIcon="add"
           onPress={() => setCreating(true)}

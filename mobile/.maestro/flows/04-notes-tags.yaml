@@ -1,0 +1,56 @@
+# Smoke: create a tag and a note, filter the notes list, and verify filters
+# clear when leaving the Notes tab (blur-reset behavior).
+appId: com.mybiblelog.app
+tags:
+  - smoke
+---
+- runFlow: ../common/login.yaml
+- tapOn:
+    id: "tab.notes"
+
+# Create a tag.
+- tapOn:
+    id: "notes.tags"
+- tapOn:
+    id: "tags.new"
+- tapOn:
+    id: "tag-editor.label"
+- inputText: "Focus"
+- hideKeyboard
+- tapOn:
+    id: "tag-editor.save"
+- assertVisible: "Focus"
+- back
+
+# Create a note.
+- tapOn:
+    id: "notes.new"
+- tapOn:
+    id: "note-editor.content"
+- inputText: "Maestro note"
+- hideKeyboard
+- tapOn:
+    id: "note-editor.save"
+- assertVisible: "Maestro note"
+
+# Filter by search text.
+- tapOn:
+    id: "notes.query"
+- tapOn:
+    id: "notes-query.search"
+- inputText: "Maestro"
+- hideKeyboard
+- tapOn:
+    id: "notes-query.apply"
+- assertVisible: "Maestro note"
+- assertVisible:
+    id: "notes.reset"
+
+# Leaving the tab clears the applied filters.
+- tapOn:
+    id: "tab.today"
+- tapOn:
+    id: "tab.notes"
+- assertNotVisible:
+    id: "notes.reset"
+- assertVisible: "Maestro note"
