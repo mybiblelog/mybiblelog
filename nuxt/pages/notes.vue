@@ -45,11 +45,7 @@
         <section class="notes-page__content">
           <div>
             <template v-if="loading">
-              <div class="passage-note">
-                <div class="passage-note--content mbl-text-center">
-                  {{ $t('results.loading') }}
-                </div>
-              </div>
+              <skeleton-loader variant="note" :count="loadingSkeletonCount" />
             </template>
             <template v-else-if="!passageNotes.length">
               <div class="mbl-empty-state">
@@ -144,6 +140,7 @@ import PassageNotesQueryManager from '@/components/notes/PassageNotesQueryManage
 import AppModal from '@/components/popups/AppModal';
 import CaretLeftIcon from '@/components/svg/CaretLeftIcon';
 import CaretRightIcon from '@/components/svg/CaretRightIcon';
+import SkeletonLoader from '@/components/ui/SkeletonLoader';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
@@ -159,6 +156,7 @@ export default {
     AppModal,
     CaretLeftIcon,
     CaretRightIcon,
+    SkeletonLoader,
   },
   middleware: ['auth'],
   data() {
@@ -190,6 +188,12 @@ export default {
     },
     passageNotes() {
       return this.passageNotesStore.passageNotes;
+    },
+    loadingSkeletonCount() {
+      // Roughly match the number of notes about to display without
+      // filling the page with placeholders
+      const limit = Number((this.query && this.query.limit) || 10);
+      return Math.max(1, Math.min(limit, 5));
     },
     pagination() {
       return this.passageNotesStore.pagination;

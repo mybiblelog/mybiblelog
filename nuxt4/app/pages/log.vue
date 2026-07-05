@@ -41,7 +41,7 @@
         <section class="log-page__content">
           <div>
             <template v-if="loading">
-              <log-entry key="loading" :message="t('results.loading')" empty />
+              <skeleton-loader :count="5" />
             </template>
             <template v-else-if="!pagedLogEntries.length">
               <div class="mbl-empty-state">
@@ -146,6 +146,7 @@ import LogEntriesQueryManager from '~/components/log/LogEntriesQueryManager.vue'
 import AppModal from '~/components/popups/AppModal.vue';
 import CaretLeftIcon from '~/components/svg/CaretLeftIcon.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
+import SkeletonLoader from '~/components/ui/SkeletonLoader.vue';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';

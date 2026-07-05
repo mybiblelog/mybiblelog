@@ -43,12 +43,19 @@
           :passage="entry"
           :actions="actionsForTodayLogEntry(entry)"
         />
+        <skeleton-loader
+          v-if="loadingLogEntries && !logEntriesForToday.length"
+          key="loading"
+        />
         <log-entry
-          v-if="!logEntriesForToday.length"
+          v-if="!loadingLogEntries && !logEntriesForToday.length"
           key="no-entries"
           role="listitem"
           :message="t('no_entries')"
         />
+        <template #fallback>
+          <skeleton-loader />
+        </template>
       </ClientOnly>
     </div>
     <br>
@@ -66,11 +73,10 @@
             :passage="passage"
             :actions="actionsForReadingSuggestionPassage(passage)"
           />
-          <log-entry
+          <skeleton-loader
             v-if="loadingReadingSuggestions && !readingSuggestions.length"
             key="loading"
-            role="listitem"
-            :message="t('loading')"
+            :count="3"
           />
           <log-entry
             v-if="!loadingReadingSuggestions && !readingSuggestions.length"
@@ -78,6 +84,9 @@
             role="listitem"
             :message="t('no_suggestions')"
           />
+          <template #fallback>
+            <skeleton-loader :count="3" />
+          </template>
         </ClientOnly>
       </div>
       <div class="mbl-text-center" style="margin-top: 1rem;">
@@ -105,11 +114,11 @@
     </div>
     <div class="today-page__recent-notes-container" role="list" data-testid="recent-notes">
       <ClientOnly>
-        <div v-if="passageNotesStore.loading && !recentNotes.length" class="passage-note">
-          <div class="passage-note--content mbl-text-center">
-            {{ t('loading') }}
-          </div>
-        </div>
+        <skeleton-loader
+          v-if="passageNotesStore.loading && !recentNotes.length"
+          variant="note"
+          :count="3"
+        />
         <template v-else-if="!recentNotes.length">
           <log-entry :message="t('no_recent_notes')" role="listitem" />
         </template>
@@ -129,6 +138,9 @@
             </NuxtLink>
           </div>
         </template>
+        <template #fallback>
+          <skeleton-loader variant="note" :count="3" />
+        </template>
       </ClientOnly>
     </div>
   </div>
@@ -140,6 +152,7 @@ import { Bible } from '@mybiblelog/shared';
 import BusyBar from '~/components/ui/BusyBar.vue';
 import DoubleProgressBar from '~/components/ui/DoubleProgressBar.vue';
 import ReadingTrackerResetCard from '~/components/ui/ReadingTrackerResetCard.vue';
+import SkeletonLoader from '~/components/ui/SkeletonLoader.vue';
 import LogEntry from '~/components/log/LogEntry.vue';
 import PassageNote from '~/components/notes/PassageNote.vue';
 import { useAppInitStore } from '~/stores/app-init';
@@ -170,6 +183,7 @@ const dialogStore = useDialogStore();
 const toastStore = useToastStore();
 
 const hydrated = ref(false);
+const loadingLogEntries = ref(true);
 const loadingReadingSuggestions = ref(true);
 
 const userSettings = computed(() => userSettingsStore.settings);
@@ -319,7 +333,12 @@ const deletePassageNote = async (id: number | string) => {
 
 onMounted(async () => {
   hydrated.value = true;
-  await appInitStore.loadUserData();
+  try {
+    await appInitStore.loadUserData();
+  }
+  finally {
+    loadingLogEntries.value = false;
+  }
   readingSuggestionsStore.refreshReadingSuggestions();
   loadingReadingSuggestions.value = false;
   await passageNotesStore.resetQuery({
