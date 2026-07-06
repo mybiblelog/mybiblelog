@@ -21,8 +21,9 @@ export const listPassageNoteTags: RouteHandler = async (req, deps) => {
   const currentUser = await deps.authenticate(req);
   const tags = await deps.repositories.passageNoteTags.listByOwner(currentUser.id);
 
+  const noteCounts = await deps.repositories.passageNotes.countByTags(tags.map((tag) => tag.id));
   for (const tag of tags) {
-    tag.noteCount = await deps.repositories.passageNotes.countByTag(tag.id);
+    tag.noteCount = noteCounts[tag.id] ?? 0;
   }
 
   return { status: 200, body: { data: tags.map(toPassageNoteTagJSON) } };
@@ -60,7 +61,8 @@ export const updatePassageNoteTag: RouteHandler = async (req, deps) => {
   if (!tag) {
     throw new NotFoundError();
   }
-
+  const noteCount = await deps.repositories.passageNotes.countByTag(tag.id);
+  tag.noteCount = noteCount;
   return { status: 200, body: { data: toPassageNoteTagJSON(tag) } };
 };
 

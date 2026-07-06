@@ -134,6 +134,24 @@ describe('passage-note.repository', () => {
       expect(await passageNotes.countByTag(tag.id)).toBe(2);
     });
 
+    it('countByTags counts notes per tag in a single query', async () => {
+      const { passageNotes, passageNoteTags } = await getRepos();
+      const tagA = await passageNoteTags.create(ownerId, { label: 'A', color: '#111111' });
+      const tagB = await passageNoteTags.create(ownerId, { label: 'B', color: '#222222' });
+      const tagC = await passageNoteTags.create(ownerId, { label: 'C', color: '#333333' });
+      await passageNotes.create(ownerId, { content: 'a', tags: [tagA.id] });
+      await passageNotes.create(ownerId, { content: 'ab', tags: [tagA.id, tagB.id] });
+      await passageNotes.create(ownerId, { content: 'untagged' });
+
+      const counts = await passageNotes.countByTags([tagA.id, tagB.id, tagC.id]);
+      expect(counts).toEqual({ [tagA.id]: 2, [tagB.id]: 1, [tagC.id]: 0 });
+    });
+
+    it('countByTags returns an empty object for no tags', async () => {
+      const { passageNotes } = await getRepos();
+      expect(await passageNotes.countByTags([])).toEqual({});
+    });
+
     it('countByBook attributes a Genesis passage to exactly one book', async () => {
       const { passageNotes } = await getRepos();
       await passageNotes.create(ownerId, { passages: [GEN_1_1_5] });
