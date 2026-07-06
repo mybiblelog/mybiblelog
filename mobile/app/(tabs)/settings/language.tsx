@@ -24,9 +24,7 @@ export default function LanguageSettings() {
         <Card padded={false} style={styles.card}>
           {options.map((opt, i) => (
             <Fragment key={opt.value}>
-              {i > 0 ? (
-                <View style={[styles.divider, { backgroundColor: colors.border }]} />
-              ) : null}
+              {i > 0 ? <View style={[styles.divider, { backgroundColor: colors.border }]} /> : null}
               <ListItem
                 title={opt.label}
                 bordered={false}
