@@ -11,12 +11,14 @@ function SectionRow({
   subtitle,
   onPress,
   alert = false,
+  testID,
 }: {
   icon: IconName;
   title: string;
   subtitle?: string;
   onPress: () => void;
   alert?: boolean;
+  testID?: string;
 }) {
   const { colors } = useTheme();
   return (
@@ -26,6 +28,7 @@ function SectionRow({
       chevron
       onPress={onPress}
       bordered={false}
+      testID={testID}
       style={{ backgroundColor: colors.surfaceAlt }}
       leading={
         <View style={[styles.badge, { backgroundColor: colors.border }]}>
@@ -55,6 +58,13 @@ export default function SettingsIndex() {
           title={t("settings_section_reading")}
           subtitle={t("settings_section_reading_subtitle")}
           onPress={() => router.push("/settings/reading")}
+        />
+        <SectionRow
+          icon="stats-chart-outline"
+          title={t("settings_section_insights")}
+          subtitle={t("settings_section_insights_subtitle")}
+          onPress={() => router.push("/settings/insights")}
+          testID="settings.insights-link"
         />
         <SectionRow
           icon="color-palette-outline"

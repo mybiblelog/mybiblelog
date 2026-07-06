@@ -1,8 +1,12 @@
 export { AchievementModal } from "./AchievementModal";
+export { ActivityHeatmap } from "./ActivityHeatmap";
 export { AnimatedList } from "./AnimatedList";
+export { BookFrequencyChart } from "./BookFrequencyChart";
+export { BookRecencyList } from "./BookRecencyList";
 export { BottomSheet } from "./BottomSheet";
 export { ChapterMenu } from "./ChapterMenu";
 export { ConfirmDialog } from "./ConfirmDialog";
+export { DailyVersesChart } from "./DailyVersesChart";
 export { DatePickerSheet } from "./DatePickerSheet";
 export { LogEntryEditorModal } from "./LogEntryEditorModal";
 export { LogEntryMenu } from "./LogEntryMenu";

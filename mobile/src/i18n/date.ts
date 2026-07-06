@@ -40,3 +40,29 @@ export function formatLongDate(ymd: string, locale: string): string {
 export function getWeekdayIndex(ymd: string): number {
   return parseYmdToDate(ymd)?.getDay() ?? 0;
 }
+
+export type RelativeDateInfo =
+  { unit: "today" | "yesterday" } | { unit: "days" | "weeks" | "months" | "years"; count: number };
+
+/**
+ * Buckets how long ago a past `YYYY-MM-DD` date was (today/yesterday/N
+ * days-weeks-months-years). Callers localize the result via `t()` — this
+ * avoids `Intl.RelativeTimeFormat`, which some Hermes/Android builds don't
+ * implement even though `Intl.DateTimeFormat` works fine. Returns `null` if
+ * unparseable.
+ */
+export function getRelativeDateInfo(ymd: string): RelativeDateInfo | null {
+  const d = parseYmdToDate(ymd);
+  if (!d) return null;
+
+  const today = new Date();
+  const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const diffDays = Math.round((start.getTime() - d.getTime()) / (1000 * 60 * 60 * 24));
+
+  if (diffDays <= 0) return { unit: "today" };
+  if (diffDays === 1) return { unit: "yesterday" };
+  if (diffDays < 7) return { unit: "days", count: diffDays };
+  if (diffDays < 30) return { unit: "weeks", count: Math.round(diffDays / 7) };
+  if (diffDays < 365) return { unit: "months", count: Math.round(diffDays / 30) };
+  return { unit: "years", count: Math.round(diffDays / 365) };
+}

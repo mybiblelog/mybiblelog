@@ -1,0 +1,19 @@
+# Settings -> Insights (seeded Genesis 1 entry gives non-zero data for all 4 views).
+appId: com.mybiblelog.app
+tags:
+  - smoke
+---
+- runFlow: ../common/login.yaml
+- tapOn:
+    id: "tab.settings"
+- tapOn:
+    id: "settings.insights-link"
+- assertVisible: "Activity"
+- tapOn: "Books"
+- assertVisible: "Genesis"
+- tapOn: "Frequency"
+- assertVisible: "Verse counts"
+- tapOn: "Trend"
+- assertVisible: "Time window"
+- back
+- assertVisible: "Settings"
