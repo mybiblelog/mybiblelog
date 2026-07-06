@@ -8,6 +8,7 @@ import {
   EmptyState,
   ErrorState,
   NoteCard,
+  OfflineNotesView,
   Screen,
   Spinner,
   Text,
@@ -15,6 +16,8 @@ import {
 } from "@/src/components";
 import { spacing, useTheme } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
+import { useIsUnauthenticated } from "@/src/stores/auth";
+import { useIsOnline } from "@/src/stores/connectivity";
 import {
   notesActions,
   selectHasAppliedViewOptions,
@@ -33,6 +36,12 @@ export default function Notes() {
   const hasAppliedOptions = useNotesHasAppliedOptions();
   const { openAdd, openMenu, openQuery, overlays } = useNoteOverlays();
   const [refreshing, setRefreshing] = useState(false);
+  const isUnauthenticated = useIsUnauthenticated();
+  const isOnline = useIsOnline();
+  // When we can't reach the API (logged out or offline), swap to the on-device
+  // local notes surface. `useIsUnauthenticated()` is false while auth is still
+  // loading, so this doesn't flash the local view on startup.
+  const showLocalView = isUnauthenticated || isOnline === false;
 
   useEffect(() => {
     if (useNotesStore.getState().state.status === "idle") {
@@ -60,6 +69,10 @@ export default function Notes() {
       setRefreshing(false)
     );
   }, []);
+
+  if (showLocalView) {
+    return <OfflineNotesView />;
+  }
 
   const header = (
     <View style={styles.header}>

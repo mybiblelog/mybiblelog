@@ -275,6 +275,13 @@ export const en = {
   notes_showing_count: "%{count} of %{total} notes loaded",
   notes_empty_title: "No notes found",
   notes_empty_text: "Create a note, or adjust your search filters.",
+  notes_offline_hint: "Saved on this device — these notes sync when you’re online and signed in.",
+  notes_offline_empty_title: "No offline notes yet",
+  notes_offline_empty_text:
+    "Notes you create here are saved on this device and sync when you’re back online.",
+  notes_signin_title: "Sign in to sync your notes",
+  notes_signin_text:
+    "You’re not signed in. Log in to sync notes from this device and see all your notes.",
   note_actions: "Note actions",
   note_editor_new: "New Note",
   note_editor_edit: "Edit Note",

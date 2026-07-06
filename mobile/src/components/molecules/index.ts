@@ -2,6 +2,7 @@ export { Card } from "./Card";
 export { CheckboxRow } from "./CheckboxRow";
 export { ErrorState } from "./ErrorState";
 export { EmptyState } from "./EmptyState";
+export { InlineAlert } from "./InlineAlert";
 export { InputField } from "./InputField";
 export type { InputFieldProps } from "./InputField";
 export { ListItem } from "./ListItem";

@@ -286,6 +286,14 @@ export const es = {
   notes_showing_count: "%{count} de %{total} notas cargadas",
   notes_empty_title: "No se encontraron notas",
   notes_empty_text: "Crea una nota o ajusta tus filtros de búsqueda.",
+  notes_offline_hint:
+    "Guardadas en este dispositivo: estas notas se sincronizan cuando tienes conexión y sesión iniciada.",
+  notes_offline_empty_title: "Aún no hay notas sin conexión",
+  notes_offline_empty_text:
+    "Las notas que crees aquí se guardan en este dispositivo y se sincronizan cuando vuelvas a estar en línea.",
+  notes_signin_title: "Inicia sesión para sincronizar tus notas",
+  notes_signin_text:
+    "No has iniciado sesión. Inicia sesión para sincronizar las notas de este dispositivo y ver todas tus notas.",
   note_actions: "Acciones de la nota",
   note_editor_new: "Nueva nota",
   note_editor_edit: "Editar nota",

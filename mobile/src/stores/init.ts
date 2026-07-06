@@ -1,6 +1,7 @@
 import { initConnectivity } from "@/src/stores/connectivity";
 import { initAuth } from "@/src/stores/auth";
 import { initLogEntries } from "@/src/stores/logEntries";
+import { initNotes } from "@/src/stores/offlineNotes";
 import { initUserSettings } from "@/src/stores/userSettings";
 import { initDateVerseCounts } from "@/src/stores/dateVerseCounts";
 import { initBibleProgress } from "@/src/stores/bibleProgress";
@@ -30,6 +31,9 @@ export function initStores(): void {
     initConnectivity();
     initAuth();
     initLogEntries();
+    // Offline notes: hydrate local notes + subscribe to auth/connectivity so the
+    // queue drains and the online list refreshes once reachable.
+    initNotes();
     initUserSettings();
     // Depends on log entries + user settings stores; subscribes to both.
     initDateVerseCounts();

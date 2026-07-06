@@ -14,6 +14,8 @@ export type { MenuAction } from "./MenuSheet";
 export { NoteCard } from "./NoteCard";
 export { NoteEditorModal } from "./NoteEditorModal";
 export { useNoteOverlays } from "./NoteOverlays";
+export { useLocalNoteOverlays } from "./LocalNoteOverlays";
+export { OfflineNotesView } from "./OfflineNotesView";
 export { NotesQuerySheet } from "./NotesQuerySheet";
 export { PassageRangeSheet } from "./PassageRangeSheet";
 export { ReadingSuggestionsSection } from "./ReadingSuggestionsSection";
