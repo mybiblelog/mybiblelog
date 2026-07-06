@@ -49,6 +49,7 @@ export default function ReadingSettings() {
       [BibleApps.BIBLECOM]: "Bible.com (YouVersion)",
       [BibleApps.BLUELETTERBIBLE]: "Blue Letter Bible",
       [BibleApps.OLIVETREE]: "Olive Tree App",
+      [BibleApps.LOGOS]: "Logos",
     };
     return Object.keys(names).map((value) => ({ value, label: names[value] }));
   }, []);
