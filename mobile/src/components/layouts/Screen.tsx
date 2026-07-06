@@ -40,7 +40,11 @@ export function Screen({
 
   return (
     <View
-      style={[styles.root, { backgroundColor: colors.background, paddingTop, paddingBottom }, style]}
+      style={[
+        styles.root,
+        { backgroundColor: colors.background, paddingTop, paddingBottom },
+        style,
+      ]}
     >
       {/* Full-bleed: never inset by `padded`, so it always spans the screen width. */}
       <OfflineBanner />

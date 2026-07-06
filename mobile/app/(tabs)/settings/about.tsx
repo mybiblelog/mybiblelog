@@ -57,9 +57,7 @@ export default function AboutSettings() {
         <Card padded={false} style={styles.card}>
           {links.map((link, i) => (
             <Fragment key={link.url}>
-              {i > 0 ? (
-                <View style={[styles.divider, { backgroundColor: colors.border }]} />
-              ) : null}
+              {i > 0 ? <View style={[styles.divider, { backgroundColor: colors.border }]} /> : null}
               <ListItem
                 title={link.label}
                 leadingIcon={link.icon}
