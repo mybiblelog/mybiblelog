@@ -3,9 +3,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 // Pin the allowed audiences so the audience the helper passes to the library is
 // deterministic (the library itself enforces the audience match).
 vi.mock('../config', () => ({
-  default: {
+  getConfig: () => ({
     google: { allowedClientIds: ['allowed-client-id', 'allowed-ios-id'] },
-  },
+  }),
 }));
 
 // Mock google-auth-library so verification is exercised without real Google
