@@ -169,3 +169,8 @@ export function useAuth(): AuthStore {
 export function useIsAuthenticated(): boolean {
   return useAuthStore((s) => s.state.status === "authenticated");
 }
+
+/** True once resolved as logged-out (false while the session is still loading). */
+export function useIsUnauthenticated(): boolean {
+  return useAuthStore((s) => s.state.status === "unauthenticated");
+}

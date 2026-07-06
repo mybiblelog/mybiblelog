@@ -22,11 +22,19 @@ jest.mock("expo-router", () => {
 });
 
 import { renderWithProviders } from "@/src/test-utils/renderWithProviders";
+import { useAuthStore } from "@/src/stores/auth";
 import TabsLayout from "@/app/(tabs)/_layout";
+
+function settingsIcon() {
+  const settingsScreen = capturedScreens.find((s) => s.name === "settings");
+  const options = (settingsScreen as any).options;
+  return renderWithProviders(options.tabBarIcon({ color: "#000", size: 20, focused: false }));
+}
 
 beforeEach(() => {
   capturedScreenOptions = undefined;
   capturedScreens.length = 0;
+  useAuthStore.setState({ state: { status: "loading" } });
   renderWithProviders(<TabsLayout />);
 });
 
@@ -45,5 +53,21 @@ describe("(tabs) layout", () => {
   it("no longer uses a per-tab tabPress listener (popToTopOnBlur replaces it)", () => {
     const withListeners = capturedScreens.filter((s) => s.listeners !== undefined);
     expect(withListeners).toHaveLength(0);
+  });
+
+  it("shows an attention dot on the settings tab icon when signed out", () => {
+    useAuthStore.setState({ state: { status: "unauthenticated" } });
+    capturedScreens.length = 0;
+    renderWithProviders(<TabsLayout />);
+    expect(settingsIcon().queryByTestId("attentionDot")).toBeTruthy();
+  });
+
+  it("hides the attention dot once signed in", () => {
+    useAuthStore.setState({
+      state: { status: "authenticated", session: { token: "t", user: { email: "a@b.com" } } },
+    });
+    capturedScreens.length = 0;
+    renderWithProviders(<TabsLayout />);
+    expect(settingsIcon().queryByTestId("attentionDot")).toBeNull();
   });
 });

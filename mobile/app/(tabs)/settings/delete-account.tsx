@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { deleteAccount } from "@/src/api/settingsApi";
 import { useAuth } from "@/src/stores/auth";
-import { Button, Card, ConfirmDialog, Icon, Text } from "@/src/components";
+import { Button, Card, ConfirmDialog, Icon, Screen, Text } from "@/src/components";
 import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { useToast } from "@/src/toast/ToastProvider";
@@ -81,61 +81,63 @@ export default function DeleteAccountScreen() {
   ];
 
   return (
-    <ScrollView contentContainerStyle={styles.content}>
-      <Text variant="bodyStrong" style={styles.description}>
-        {t("delete_account_description")}
-      </Text>
+    <Screen edges={[]}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text variant="bodyStrong" style={styles.description}>
+          {t("delete_account_description")}
+        </Text>
 
-      <View style={styles.bullets}>
-        {bullets.map((line, i) => (
-          <View key={i} style={styles.bulletRow}>
-            <Text variant="body" color="mutedText">
-              •
-            </Text>
-            <Text variant="body" color="mutedText" style={styles.bulletText}>
-              {line}
-            </Text>
-          </View>
-        ))}
-      </View>
+        <View style={styles.bullets}>
+          {bullets.map((line, i) => (
+            <View key={i} style={styles.bulletRow}>
+              <Text variant="body" color="mutedText">
+                •
+              </Text>
+              <Text variant="body" color="mutedText" style={styles.bulletText}>
+                {line}
+              </Text>
+            </View>
+          ))}
+        </View>
 
-      <Card style={styles.card}>
-        <Checkbox
-          checked={ack.logEntries}
-          label={t("delete_account_understand_log_entries")}
-          onToggle={() => setAck((a) => ({ ...a, logEntries: !a.logEntries }))}
+        <Card style={styles.card}>
+          <Checkbox
+            checked={ack.logEntries}
+            label={t("delete_account_understand_log_entries")}
+            onToggle={() => setAck((a) => ({ ...a, logEntries: !a.logEntries }))}
+          />
+          <Checkbox
+            checked={ack.notes}
+            label={t("delete_account_understand_notes")}
+            onToggle={() => setAck((a) => ({ ...a, notes: !a.notes }))}
+          />
+          <Checkbox
+            checked={ack.permanent}
+            label={t("delete_account_understand_permanent")}
+            onToggle={() => setAck((a) => ({ ...a, permanent: !a.permanent }))}
+          />
+        </Card>
+
+        <Button
+          label={t("delete_account_confirm_button")}
+          variant="destructive"
+          fullWidth
+          loading={isDeleting}
+          disabled={!fullyUnderstands || isDeleting}
+          onPress={() => setConfirmVisible(true)}
         />
-        <Checkbox
-          checked={ack.notes}
-          label={t("delete_account_understand_notes")}
-          onToggle={() => setAck((a) => ({ ...a, notes: !a.notes }))}
-        />
-        <Checkbox
-          checked={ack.permanent}
-          label={t("delete_account_understand_permanent")}
-          onToggle={() => setAck((a) => ({ ...a, permanent: !a.permanent }))}
-        />
-      </Card>
 
-      <Button
-        label={t("delete_account_confirm_button")}
-        variant="destructive"
-        fullWidth
-        loading={isDeleting}
-        disabled={!fullyUnderstands || isDeleting}
-        onPress={() => setConfirmVisible(true)}
-      />
-
-      <ConfirmDialog
-        visible={confirmVisible}
-        title={t("delete_account_confirm_title")}
-        message={t("delete_account_confirm_message")}
-        confirmLabel={t("delete_account_confirm_button")}
-        cancelLabel={t("cancel")}
-        onConfirm={onConfirmDelete}
-        onCancel={() => setConfirmVisible(false)}
-      />
-    </ScrollView>
+        <ConfirmDialog
+          visible={confirmVisible}
+          title={t("delete_account_confirm_title")}
+          message={t("delete_account_confirm_message")}
+          confirmLabel={t("delete_account_confirm_button")}
+          cancelLabel={t("cancel")}
+          onConfirm={onConfirmDelete}
+          onCancel={() => setConfirmVisible(false)}
+        />
+      </ScrollView>
+    </Screen>
   );
 }
 

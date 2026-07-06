@@ -3,7 +3,7 @@ import Constants from "expo-constants";
 import { Fragment } from "react";
 import { Linking, ScrollView, StyleSheet, View } from "react-native";
 import { spacing, useTheme } from "@/src/design";
-import { Card, Icon, type IconName, ListItem, Text } from "@/src/components";
+import { Card, Icon, type IconName, ListItem, Screen, Text } from "@/src/components";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { useToast } from "@/src/toast/ToastProvider";
 import { PRIVACY_POLICY_URL, TERMS_URL, WEBSITE_BASE_URL } from "@/src/constants/links";
@@ -35,46 +35,48 @@ export default function AboutSettings() {
   ];
 
   return (
-    <ScrollView
-      style={[styles.flex, { backgroundColor: colors.background }]}
-      contentContainerStyle={styles.content}
-    >
-      <Text variant="label" color="mutedText" style={styles.sectionLabel}>
-        {t("about_app_label")}
-      </Text>
-      <Card>
-        <View style={styles.infoRow}>
-          <Text variant="bodyStrong" color="mutedText">
-            {t("about_version")}
-          </Text>
-          <Text variant="bodyStrong">{buildNumber ? `${version} (${buildNumber})` : version}</Text>
-        </View>
-      </Card>
+    <Screen edges={[]}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text variant="label" color="mutedText" style={styles.sectionLabel}>
+          {t("about_app_label")}
+        </Text>
+        <Card>
+          <View style={styles.infoRow}>
+            <Text variant="bodyStrong" color="mutedText">
+              {t("about_version")}
+            </Text>
+            <Text variant="bodyStrong">
+              {buildNumber ? `${version} (${buildNumber})` : version}
+            </Text>
+          </View>
+        </Card>
 
-      <Text variant="label" color="mutedText" style={styles.sectionLabel}>
-        {t("about_legal_label")}
-      </Text>
-      <Card padded={false} style={styles.card}>
-        {links.map((link, i) => (
-          <Fragment key={link.url}>
-            {i > 0 ? <View style={[styles.divider, { backgroundColor: colors.border }]} /> : null}
-            <ListItem
-              title={link.label}
-              leadingIcon={link.icon}
-              trailing={<Icon name="open-outline" size={16} color="mutedText" />}
-              bordered={false}
-              style={styles.row}
-              onPress={() => void openUrl(link.url)}
-            />
-          </Fragment>
-        ))}
-      </Card>
-    </ScrollView>
+        <Text variant="label" color="mutedText" style={styles.sectionLabel}>
+          {t("about_legal_label")}
+        </Text>
+        <Card padded={false} style={styles.card}>
+          {links.map((link, i) => (
+            <Fragment key={link.url}>
+              {i > 0 ? (
+                <View style={[styles.divider, { backgroundColor: colors.border }]} />
+              ) : null}
+              <ListItem
+                title={link.label}
+                leadingIcon={link.icon}
+                trailing={<Icon name="open-outline" size={16} color="mutedText" />}
+                bordered={false}
+                style={styles.row}
+                onPress={() => void openUrl(link.url)}
+              />
+            </Fragment>
+          ))}
+        </Card>
+      </ScrollView>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1 },
   content: { padding: spacing.screenH, paddingBottom: spacing.listBottom },
   sectionLabel: { marginTop: spacing.lg, marginBottom: spacing.sm },
   card: { overflow: "hidden" },

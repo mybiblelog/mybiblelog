@@ -244,6 +244,10 @@ export default function Checklist() {
         <AnimatedList
           data={progress.books}
           keyExtractor={(b: BookProgress) => String(b.bookIndex)}
+          // Fixed-size list (66 books): render it all up front instead of
+          // FlatList's default incremental backfill, so the page doesn't
+          // visibly grow after mount.
+          initialNumToRender={progress.books.length}
           contentContainerStyle={styles.listContent}
           renderItem={({ item }) => {
             const isExpanded = expandedBooks[String(item.bookIndex)] === true;

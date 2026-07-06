@@ -35,20 +35,16 @@ export function Screen({
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
-  const paddingTop = (edges.includes("top") ? insets.top : 0) + (padded ? spacing.screenTop : 0);
+  const paddingTop = edges.includes("top") ? insets.top : 0;
   const paddingBottom = edges.includes("bottom") ? insets.bottom : 0;
 
   return (
     <View
-      style={[
-        styles.root,
-        { backgroundColor: colors.background, paddingTop, paddingBottom },
-        padded && styles.padded,
-        style,
-      ]}
+      style={[styles.root, { backgroundColor: colors.background, paddingTop, paddingBottom }, style]}
     >
+      {/* Full-bleed: never inset by `padded`, so it always spans the screen width. */}
       <OfflineBanner />
-      {children}
+      <View style={[styles.body, padded && styles.padded]}>{children}</View>
     </View>
   );
 }
@@ -57,7 +53,11 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
   },
+  body: {
+    flex: 1,
+  },
   padded: {
     paddingHorizontal: spacing.screenH,
+    paddingTop: spacing.screenTop,
   },
 });

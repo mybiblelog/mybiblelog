@@ -42,6 +42,7 @@ one tag, one note — works for every flow) and `empty`.
 | `03-offline-sync` | android-only | Entries created in airplane mode render locally, then survive a post-reconnect pull-to-refresh (server convergence). `setAirplaneMode` only works on Android. |
 | `04-notes-tags` | smoke | Tag + note creation, search filtering, and filters clearing when the Notes tab loses focus. |
 | `05-bible-progress` | smoke | Bible Books renders seeded progress and links to the Progress page. |
+| `06-insights` | smoke | Settings links to Insights; all four views (Activity/Books/Frequency/Trend) render. |
 
 Future candidates: settings language round-trip (es→en), checklist chapter
 toggles. Calendar flows were skipped as date-brittle.
