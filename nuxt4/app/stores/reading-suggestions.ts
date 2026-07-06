@@ -42,9 +42,9 @@ export const useReadingSuggestionsStore = defineStore('reading-suggestions', {
           return capitalize(message);
         }
         switch (context.path) {
-          case 'nt': return t('reading_suggestion.new_testament');
-          case 'ot': return t('reading_suggestion.old_testament');
-          case 'wisdom': return t('reading_suggestion.wisdom');
+        case 'nt': return t('reading_suggestion.new_testament');
+        case 'ot': return t('reading_suggestion.old_testament');
+        case 'wisdom': return t('reading_suggestion.wisdom');
         }
       };
 
