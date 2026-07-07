@@ -1,59 +1,69 @@
 <template>
   <div class="heatmap">
-    <div class="heatmap__scroll">
-      <div class="heatmap__inner">
-        <!-- Month labels -->
-        <div class="heatmap__months">
-          <div class="heatmap__weekday-spacer" />
-          <div
-            v-for="(label, weekIndex) in monthLabels"
-            :key="`m-${weekIndex}`"
-            class="heatmap__month"
-          >
-            {{ label }}
-          </div>
-        </div>
-
-        <div class="heatmap__body">
-          <!-- Weekday labels -->
-          <div class="heatmap__weekdays">
+    <!-- Wide screens show the full year; narrow screens show only the most recent
+         months (see recentWeeks) so the same strip layout fits without scrolling. -->
+    <div
+      v-for="strip in strips"
+      :key="strip.name"
+      class="heatmap__strip"
+      :class="`heatmap__strip--${strip.variant}`"
+    >
+      <div class="heatmap__scroll">
+        <div class="heatmap__inner" :style="{ '--heat-cols': strip.weeks.length }">
+          <!-- Month labels -->
+          <div class="heatmap__months">
+            <div class="heatmap__weekday-spacer" />
             <div
-              v-for="(label, dayIndex) in weekdayLabels"
-              :key="`wd-${dayIndex}`"
-              class="heatmap__weekday"
+              v-for="(label, weekIndex) in strip.monthLabels"
+              :key="`m-${weekIndex}`"
+              class="heatmap__month"
             >
-              {{ label }}
+              <span class="heatmap__month-name">{{ label.month }}</span>
+              <span class="heatmap__month-year">{{ label.year }}</span>
             </div>
           </div>
 
-          <!-- Week columns -->
-          <div class="heatmap__grid">
-            <div
-              v-for="(week, weekIndex) in calendar.weeks"
-              :key="`w-${weekIndex}`"
-              class="heatmap__week"
-            >
+          <div class="heatmap__body">
+            <!-- Weekday labels -->
+            <div class="heatmap__weekdays">
               <div
-                v-for="cell in week"
-                :key="cell.date"
-                class="heatmap__cell"
-                :class="[`heatmap__cell--level-${cell.level}`, { 'heatmap__cell--future': cell.future }]"
-                :aria-label="cellTitle(cell) || undefined"
-                @mouseenter="showTooltip($event, cell)"
-                @mouseleave="hideTooltip"
-              />
+                v-for="(label, dayIndex) in weekdayLabels"
+                :key="`wd-${dayIndex}`"
+                class="heatmap__weekday"
+              >
+                {{ label }}
+              </div>
+            </div>
+
+            <!-- Week columns -->
+            <div class="heatmap__grid">
+              <div
+                v-for="(week, weekIndex) in strip.weeks"
+                :key="`w-${weekIndex}`"
+                class="heatmap__week"
+              >
+                <div
+                  v-for="cell in week"
+                  :key="cell.date"
+                  class="heatmap__cell"
+                  :class="[`heatmap__cell--level-${cell.level}`, { 'heatmap__cell--future': cell.future }]"
+                  :aria-label="cellTitle(cell) || undefined"
+                  @mouseenter="showTooltip($event, cell)"
+                  @mouseleave="hideTooltip"
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div
-        v-if="tooltip"
-        class="heatmap__tooltip"
-        :style="{ left: `${tooltip.x}px`, top: `${tooltip.y}px` }"
-      >
-        {{ tooltip.text }}
-      </div>
+    <div
+      v-if="tooltip"
+      class="heatmap__tooltip"
+      :style="{ left: `${tooltip.x}px`, top: `${tooltip.y}px` }"
+    >
+      {{ tooltip.text }}
     </div>
 
     <!-- Legend -->
@@ -68,9 +78,13 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
-import { buildContributionCalendar, type HeatmapCell, type InsightsLogEntry } from '@mybiblelog/shared';
+import { buildContributionCalendar, type HeatmapCell, type HeatmapWeek, type InsightsLogEntry } from '@mybiblelog/shared';
 
 dayjs.extend(localizedFormat);
+
+// How much of the year the narrow-screen strip shows (the full year won't fit a
+// phone at a legible cell size, so we trim to the most recent months).
+const NARROW_MONTHS = 6;
 
 const props = defineProps({
   entries: {
@@ -83,19 +97,40 @@ const { locale, t } = useI18n();
 
 const calendar = computed(() => buildContributionCalendar(props.entries as InsightsLogEntry[]));
 
-// One label per week column: the month name when that column begins a new month.
-const monthLabels = computed(() => {
+// One label per week column: the month name (plus its year on a second line) when
+// that column begins a new month. Showing the year keeps the two stacked strips
+// readable so they can't be misread — e.g. Dec 2025 above Jan 2026.
+type MonthLabel = { month: string; year: string };
+function buildMonthLabels(weeks: HeatmapWeek[]): MonthLabel[] {
   let lastMonth = -1;
-  return calendar.value.weeks.map((week) => {
-    const firstCell = week[0]!;
-    const d = dayjs(firstCell.date).locale(locale.value);
+  return weeks.map((week) => {
+    const d = dayjs(week[0]!.date).locale(locale.value);
     const month = d.month();
     if (month !== lastMonth) {
       lastMonth = month;
-      return d.format('MMM');
+      return { month: d.format('MMM'), year: d.format('YYYY') };
     }
-    return '';
+    return { month: '', year: '' };
   });
+}
+
+// The strips rendered into the DOM; CSS shows the right ones per breakpoint.
+// Wide screens get the whole year as one strip; narrow screens get the same year
+// split into two stacked NARROW_MONTHS-month grids (most recent on top) so the
+// cells stay legible without horizontal scrolling.
+const strips = computed(() => {
+  const weeks = calendar.value.weeks;
+  const cutoff = dayjs().subtract(NARROW_MONTHS, 'month').format('YYYY-MM-DD');
+  const idx = weeks.findIndex(week => week[week.length - 1]!.date >= cutoff);
+  const splitAt = idx <= 0 ? 0 : idx;
+  const recent = splitAt > 0 ? weeks.slice(splitAt) : weeks;
+  const previous = weeks.slice(0, splitAt);
+
+  return [
+    { name: 'wide', variant: 'wide', weeks, monthLabels: buildMonthLabels(weeks) },
+    { name: 'narrow-recent', variant: 'narrow', weeks: recent, monthLabels: buildMonthLabels(recent) },
+    { name: 'narrow-previous', variant: 'narrow', weeks: previous, monthLabels: buildMonthLabels(previous) },
+  ].filter(strip => strip.weeks.length > 0);
 });
 
 // Sunday → Saturday; only show Mon / Wed / Fri to reduce clutter (GitHub-style).
@@ -168,14 +203,23 @@ function hideTooltip(): void {
   pointer-events: none;
 }
 
+/*
+ * The strip is fluid: columns and cells shrink to fit the container width so the
+ * whole range is always visible with no horizontal scroll. Width stays fixed on
+ * the cells so rows keep lining up with the Mon/Wed/Fri weekday labels (cells go
+ * slightly rectangular when squeezed, which reads fine at this scale). The inner
+ * is capped at the natural 12px-cell size so it never grows past the original
+ * design on very wide screens.
+ */
 .heatmap__scroll {
-  overflow-x: auto;
   padding-bottom: 0.25rem;
 }
 
 .heatmap__inner {
-  display: inline-block;
-  min-width: min-content;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: calc(32px + var(--heat-cols, 53) * (var(--heat-cell-size) + var(--heat-cell-gap)));
 }
 
 .heatmap__months {
@@ -184,16 +228,24 @@ function hideTooltip(): void {
 }
 
 .heatmap__weekday-spacer {
-  width: 28px;
+  width: 32px;
   flex: none;
 }
 
 .heatmap__month {
-  width: calc(var(--heat-cell-size) + var(--heat-cell-gap));
-  flex: none;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
   font-size: 0.7rem;
+  line-height: 1.15;
   color: var(--mbl-text-muted);
   white-space: nowrap;
+}
+
+.heatmap__month-year {
+  font-size: 0.6rem;
+  opacity: 0.75;
 }
 
 .heatmap__body {
@@ -218,21 +270,48 @@ function hideTooltip(): void {
 
 .heatmap__grid {
   display: flex;
+  flex: 1 1 0;
+  min-width: 0;
   gap: var(--heat-cell-gap);
 }
 
 .heatmap__week {
   display: flex;
+  flex: 1 1 0;
+  min-width: 0;
   flex-direction: column;
   gap: var(--heat-cell-gap);
 }
 
 .heatmap__cell {
-  width: var(--heat-cell-size);
+  box-sizing: border-box;
+  width: 100%;
   height: var(--heat-cell-size);
   border-radius: 2px;
   background: var(--mbl-heat-0);
   border: 1px solid var(--mbl-heat-empty-border);
+}
+
+/*
+ * Full-year strip on wide screens; two stacked half-year strips on narrow screens.
+ * The second narrow strip (the previous 6 months) gets a gap above it.
+ */
+.heatmap__strip--wide {
+  display: none;
+}
+
+.heatmap__strip--narrow + .heatmap__strip--narrow {
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .heatmap__strip--wide {
+    display: block;
+  }
+
+  .heatmap__strip--narrow {
+    display: none;
+  }
 }
 
 .heatmap__cell--level-1 { background: var(--mbl-heat-1); border-color: transparent; }
@@ -244,6 +323,7 @@ function hideTooltip(): void {
   visibility: hidden;
 }
 
+/* The legend cells are fixed-size swatches, not fluid grid columns. */
 .heatmap__legend {
   display: flex;
   align-items: center;
@@ -251,6 +331,11 @@ function hideTooltip(): void {
   margin-top: 0.75rem;
   font-size: 0.7rem;
   color: var(--mbl-text-muted);
+}
+
+.heatmap__legend .heatmap__cell {
+  width: var(--heat-cell-size);
+  flex: none;
 }
 
 .heatmap__legend span {
