@@ -5,7 +5,7 @@
         <h1 class="mbl-title mbl-title--3">
           {{ t('insights') }}
         </h1>
-        <div class="mbl-dropdown narrow-screen" :class="menuOpen ? 'mbl-dropdown--active' : ''">
+        <div class="mbl-dropdown narrow-screen mbl-dropdown--right" :class="menuOpen ? 'mbl-dropdown--active' : ''">
           <div class="mbl-dropdown__trigger" @click="toggleMenu">
             <button class="mbl-button" type="button" aria-haspopup="true">
               <span>{{ t('menu') }}</span>
