@@ -28,8 +28,18 @@ export default defineConfig({
    * so the Playwright default (~half the CPU cores) overwhelms on-demand route
    * compilation and times out timing-sensitive specs (log/settings/notes). Cap
    * to a level one dev server handles reliably; override with `--workers=N`.
+   * Nuxt4's Vite dev server compiles each route lazily on first hit (webpack's
+   * nuxt2 pipeline handles concurrent first-hits more gracefully), so it needs
+   * a lower cap to avoid contention on cold/uncompiled routes.
    */
-  workers: process.env.CI ? 1 : 3,
+  workers: process.env.CI ? 1 : (isNuxt4 ? 2 : 3),
+  /*
+   * Give Nuxt4 more headroom per action: the same on-demand Vite compilation
+   * above can make a route's first hit exceed the default 30s action timeout
+   * even with fewer workers, causing flaky failures on whichever spec happens
+   * to hit an uncompiled route first (not a fixed/reproducible test).
+   */
+  timeout: isNuxt4 ? 45_000 : 30_000,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [['html', { open: 'never' }], ['list']],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */

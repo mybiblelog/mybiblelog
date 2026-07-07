@@ -15,7 +15,7 @@ export interface RateLimitStore {
  * per-process); for multi-node deployments provide a distributed store instead.
  *
  * Ports the timestamp-array logic previously embedded in
- * `api/http/helpers/rateLimit.ts`.
+ * `api/http/helpers/rate-limit.ts`.
  */
 export class MemoryRateLimitStore implements RateLimitStore {
   private store = new Map<string, number[]>();
