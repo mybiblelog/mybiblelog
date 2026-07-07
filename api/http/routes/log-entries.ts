@@ -59,7 +59,7 @@ export const logEntryRoutes: RouteDefinition[] = [
     },
   },
   {
-    method: 'PUT',
+    method: 'PATCH',
     path: '/log-entries/:id',
     handler: updateLogEntry,
     docs: {

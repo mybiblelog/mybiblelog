@@ -62,7 +62,7 @@ onMounted(async () => {
   }
   try {
     const { $http } = useNuxtApp();
-    const { data } = await $http.put<{ data: { email: string } }>(`/api/reminders/daily-reminder/unsubscribe/${code}`);
+    const { data } = await $http.post<{ data: { email: string } }>(`/api/reminders/daily-reminder/unsubscribe/${code}`);
     complete.value = true;
     email.value = data.email;
   }

@@ -60,7 +60,7 @@ export const passageNoteTagRoutes: RouteDefinition[] = [
     },
   },
   {
-    method: 'PUT',
+    method: 'PATCH',
     path: '/passage-note-tags/:id',
     handler: updatePassageNoteTag,
     docs: {

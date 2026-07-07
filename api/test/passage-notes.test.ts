@@ -486,7 +486,7 @@ describe('passage-notes.test.js', () => {
     });
   });
 
-  describe('PUT /api/passage-notes/:id', () => {
+  describe('PATCH /api/passage-notes/:id', () => {
     it('protected', async () => {
       const testUser = await createTestUser();
       try {
@@ -500,7 +500,7 @@ describe('passage-notes.test.js', () => {
           .send(passageNote1);
 
         const response = await requestApi
-          .put(`/api/passage-notes/${createResponse.body.data.id}`)
+          .patch(`/api/passage-notes/${createResponse.body.data.id}`)
           .send(passageNote2);
         expect(response.status).toBe(401);
       }
@@ -513,7 +513,7 @@ describe('passage-notes.test.js', () => {
       const testUser = await createTestUser();
       try {
         const response = await requestApi
-          .put('/api/passage-notes/123456789012345678901234')
+          .patch('/api/passage-notes/123456789012345678901234')
           .set('Authorization', `Bearer ${testUser.token}`)
           .send(passageNote1);
         expect(response.status).toBe(404);
@@ -538,7 +538,7 @@ describe('passage-notes.test.js', () => {
           .send(passageNote1);
 
         const response = await requestApi
-          .put(`/api/passage-notes/${createResponse.body.data.id}`)
+          .patch(`/api/passage-notes/${createResponse.body.data.id}`)
           .set('Authorization', `Bearer ${testUser.token}`)
           .send({ passages: passageNote2.passages });
         expect(response.status).toBe(200);
@@ -566,7 +566,7 @@ describe('passage-notes.test.js', () => {
           .send(passageNote1);
 
         const response = await requestApi
-          .put(`/api/passage-notes/${createResponse.body.data.id}`)
+          .patch(`/api/passage-notes/${createResponse.body.data.id}`)
           .set('Authorization', `Bearer ${testUser.token}`)
           .send({ content: passageNote2.content });
         expect(response.status).toBe(200);
@@ -593,7 +593,7 @@ describe('passage-notes.test.js', () => {
 
         // Update content to empty string (should not be ignored)
         const updateResponse = await requestApi
-          .put(`/api/passage-notes/${createResponse.body.data.id}`)
+          .patch(`/api/passage-notes/${createResponse.body.data.id}`)
           .set('Authorization', `Bearer ${testUser.token}`)
           .send({ content: '' });
         expect(updateResponse.status).toBe(200);
@@ -628,7 +628,7 @@ describe('passage-notes.test.js', () => {
           .send(passageNote1);
 
         const response = await requestApi
-          .put(`/api/passage-notes/${createResponse.body.data.id}`)
+          .patch(`/api/passage-notes/${createResponse.body.data.id}`)
           .set('Authorization', `Bearer ${testUser.token}`)
           .send({ tags: [tags[0].id] });
         expect(response.status).toBe(200);
@@ -645,7 +645,7 @@ describe('passage-notes.test.js', () => {
       const testUser = await createTestUser();
       try {
         const response = await requestApi
-          .put('/api/passage-notes/invalid-id')
+          .patch('/api/passage-notes/invalid-id')
           .set('Authorization', `Bearer ${testUser.token}`)
           .send(passageNote1);
         expect(response.status).toBe(400);

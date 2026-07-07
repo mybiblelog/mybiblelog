@@ -70,7 +70,7 @@ export default {
   methods: {
     async unsubscribe() {
       try {
-        const { data } = await this.$http.put(`/api/reminders/daily-reminder/unsubscribe/${this.reminderPublicToken}`);
+        const { data } = await this.$http.post(`/api/reminders/daily-reminder/unsubscribe/${this.reminderPublicToken}`);
         this.complete = true;
         this.email = data.email;
       }

@@ -86,7 +86,7 @@ export default {
       this.formBusy = true;
       const toastStore = useToastStore();
       try {
-        await this.$http.put('/api/settings/delete-account');
+        await this.$http.delete('/api/settings/account');
         await useAuthStore().logout();
       }
       catch (err) {

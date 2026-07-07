@@ -51,7 +51,7 @@ export const createLogEntry: RouteHandler = async (req, deps) => {
   return { status: 200, body: { data: toLogEntryJSON(logEntry) } };
 };
 
-// PUT /log-entries/:id - Update a log entry
+// PATCH /log-entries/:id - Update a log entry
 export const updateLogEntry: RouteHandler = async (req, deps) => {
   const { params, body } = validate(req, { params: objectIdParam, body: logEntryUpdateSchema });
   const currentUser = await deps.authenticate(req);

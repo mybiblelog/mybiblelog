@@ -4,7 +4,7 @@
  * This module encodes the HTTP contract the e2e suite depends on:
  *   - POST /api/auth/register  { email, password, locale }        (x-test-bypass-secret skips email verification)
  *   - POST /api/auth/login     { email, password } -> data.token  (x-test-bypass-secret skips rate limiting)
- *   - PUT  /api/settings/delete-account                            (Bearer token)
+ *   - DELETE /api/settings/account                                  (Bearer token)
  *
  * It intentionally does NOT import from the api/ workspace so the suite can run
  * unchanged against a migrated backend that honors the same contract.
@@ -107,7 +107,7 @@ export async function getCurrentUser(token: string): Promise<{ email: string; is
 export async function deleteTestUser(user: Pick<TestUser, 'token'>): Promise<void> {
   const ctx = await request.newContext({ baseURL: env.apiUrl });
   try {
-    await ctx.put('/api/settings/delete-account', {
+    await ctx.delete('/api/settings/account', {
       headers: { Authorization: `Bearer ${user.token}` },
     });
   }

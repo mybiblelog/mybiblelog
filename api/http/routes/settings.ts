@@ -28,7 +28,7 @@ export const settingsRoutes: RouteDefinition[] = [
     },
   },
   {
-    method: 'PUT',
+    method: 'PATCH',
     path: '/settings',
     handler: updateSettings,
     docs: {
@@ -40,8 +40,8 @@ export const settingsRoutes: RouteDefinition[] = [
     },
   },
   {
-    method: 'PUT',
-    path: '/settings/delete-account',
+    method: 'DELETE',
+    path: '/settings/account',
     handler: deleteUserAccount,
     docs: {
       summary: 'Delete user account and all associated data',

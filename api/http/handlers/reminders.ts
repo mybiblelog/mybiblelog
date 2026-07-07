@@ -56,7 +56,7 @@ export const getDailyReminder: RouteHandler = async (req, deps) => {
   return { status: 200, body: { data: toDailyReminderJSON(reminder) } };
 };
 
-// PUT /reminders/daily-reminder - Update the current user's daily reminder
+// PATCH /reminders/daily-reminder - Update the current user's daily reminder
 export const updateDailyReminder: RouteHandler = async (req, deps) => {
   const currentUser = await deps.authenticate(req);
   const { body } = validate(req, { body: dailyReminderPatchSchema });
@@ -64,7 +64,7 @@ export const updateDailyReminder: RouteHandler = async (req, deps) => {
   return { status: 200, body: { data: toDailyReminderJSON(reminder) } };
 };
 
-// PUT /reminders/daily-reminder/unsubscribe/:token - Unsubscribe via public token
+// POST /reminders/daily-reminder/unsubscribe/:token - Unsubscribe via public token
 export const unsubscribeDailyReminder: RouteHandler = async (req, deps) => {
   const token = req.params.token ?? '';
 

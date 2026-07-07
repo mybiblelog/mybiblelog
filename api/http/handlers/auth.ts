@@ -302,7 +302,7 @@ export const resendEmailVerification: RouteHandler = async (req, deps) => {
   return { status: 200, body: { data: { success: true, secondsUntilCanRetry: defaultSecondsUntilCanRetry } } };
 };
 
-// PUT /auth/change-password - Change the current user's password
+// PATCH /auth/change-password - Change the current user's password
 export const changePassword: RouteHandler = async (req, deps) => {
   await deps.rateLimiter.check(req, { maxRequests: 10, windowMs: 60 * 60 * 1000 });
 

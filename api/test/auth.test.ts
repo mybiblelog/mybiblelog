@@ -296,14 +296,14 @@ describe('Auth routes', () => {
   });
 
 
-  describe('PUT /api/auth/change-password', () => {
+  describe('PATCH /api/auth/change-password', () => {
     test('Incorrect password for password change', async () => {
       // Arrange
       const testUser = await createTestUser();
 
       // Act
       const response = await requestApi
-        .put('/api/auth/change-password')
+        .patch('/api/auth/change-password')
         .set('Authorization', `Bearer ${testUser.token}`)
         .send({
           currentPassword: 'wrongpassword',

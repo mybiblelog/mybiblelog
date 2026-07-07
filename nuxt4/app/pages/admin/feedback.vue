@@ -299,7 +299,7 @@ function onPageChanged(newPage: number) {
 
 async function setStatus(feedback: Feedback, status: FeedbackStatus) {
   try {
-    await $http.put(`/api/admin/feedback/${feedback._id}`, { status });
+    await $http.patch(`/api/admin/feedback/${feedback._id}`, { status });
     await loadFeedbacks();
   }
   catch {

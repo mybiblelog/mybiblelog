@@ -138,7 +138,7 @@ export const listFeedback: RouteHandler = async (req, deps) => {
   };
 };
 
-// PUT /admin/feedback/:id - Update a feedback submission's status
+// PATCH /admin/feedback/:id - Update a feedback submission's status
 export const updateFeedback: RouteHandler = async (req, deps) => {
   await deps.authenticate(req, { adminOnly: true });
 

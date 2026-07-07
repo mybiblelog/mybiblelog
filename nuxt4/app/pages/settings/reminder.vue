@@ -42,7 +42,7 @@ import { useToastStore } from '~/stores/toast';
 
 type Http = {
   get: <T = unknown>(path: string) => Promise<T>;
-  put: <T = unknown>(path: string, body?: unknown) => Promise<T>;
+  patch: <T = unknown>(path: string, body?: unknown) => Promise<T>;
 };
 
 definePageMeta({ middleware: ['auth'] });
@@ -95,7 +95,7 @@ async function handleReminderSubmit() {
 
   try {
     const { $http } = useNuxtApp() as unknown as { $http: Http };
-    await $http.put('/api/reminders/daily-reminder', {
+    await $http.patch('/api/reminders/daily-reminder', {
       hour,
       minute,
       timezoneOffset,

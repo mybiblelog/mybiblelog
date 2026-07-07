@@ -16,19 +16,19 @@ describe('user-settings store', () => {
   });
 
   it('updateSettings persists then applies and returns true on success', async () => {
-    const put = vi.fn().mockResolvedValue({ data: {} });
-    vi.stubGlobal('useNuxtApp', () => ({ $http: { put } }));
+    const patch = vi.fn().mockResolvedValue({ data: {} });
+    vi.stubGlobal('useNuxtApp', () => ({ $http: { patch } }));
     const store = useUserSettingsStore();
 
     const ok = await store.updateSettings({ dailyVerseCountGoal: 40 });
 
     expect(ok).toBe(true);
-    expect(put).toHaveBeenCalledTimes(1);
+    expect(patch).toHaveBeenCalledTimes(1);
     expect(store.settings.dailyVerseCountGoal).toBe(40);
   });
 
   it('updateSettings returns false and does not apply on failure', async () => {
-    vi.stubGlobal('useNuxtApp', () => ({ $http: { put: vi.fn().mockRejectedValue(new Error('boom')) } }));
+    vi.stubGlobal('useNuxtApp', () => ({ $http: { patch: vi.fn().mockRejectedValue(new Error('boom')) } }));
     const store = useUserSettingsStore();
 
     const ok = await store.updateSettings({ dailyVerseCountGoal: 40 });

@@ -21,7 +21,7 @@ export const getSettings: RouteHandler = async (req, deps) => {
   return { status: 200, body: { data: currentUser.settings } };
 };
 
-// PUT /settings - Update the current user's settings
+// PATCH /settings - Update the current user's settings
 export const updateSettings: RouteHandler = async (req, deps) => {
   const currentUser = await deps.authenticate(req);
   const { body } = validate(req, { body: settingsUpdateBodySchema });
@@ -32,7 +32,7 @@ export const updateSettings: RouteHandler = async (req, deps) => {
   return { status: 200, body: { data: updatedSettings } };
 };
 
-// PUT /settings/delete-account - Delete the account and all associated data
+// DELETE /settings/account - Delete the account and all associated data
 export const deleteUserAccount: RouteHandler = async (req, deps) => {
   const currentUser = await deps.authenticate(req);
   const success = await deleteAccount(currentUser.email);

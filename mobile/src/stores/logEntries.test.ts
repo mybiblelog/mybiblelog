@@ -4,7 +4,7 @@ jest.mock("@mybiblelog/shared", () => ({
   ...jest.requireActual("@mybiblelog/shared"),
   fetchLogEntries: jest.fn(),
   postLogEntry: jest.fn(),
-  putLogEntry: jest.fn(),
+  patchLogEntry: jest.fn(),
   deleteLogEntryRequest: jest.fn(),
 }));
 jest.mock("@/src/api/httpClient", () => ({ httpClient: {} }));

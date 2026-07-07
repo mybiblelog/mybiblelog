@@ -91,7 +91,7 @@ export default {
       const timezoneOffset = new Date().getTimezoneOffset();
 
       try {
-        await this.$http.put('/api/reminders/daily-reminder', {
+        await this.$http.patch('/api/reminders/daily-reminder', {
           hour,
           minute,
           timezoneOffset,

@@ -89,7 +89,7 @@ async function createTestUser({ locale = 'en', isAdmin = false }: CreateTestUser
  * Deletes a test user
  */
 async function deleteTestUser(user: TestUser | { token: TestUser['token'] }): Promise<void> {
-  await api.put(`/api/settings/delete-account`)
+  await api.delete(`/api/settings/account`)
     .set('Authorization', `Bearer ${user.token}`);
 }
 

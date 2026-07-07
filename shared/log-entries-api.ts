@@ -41,11 +41,11 @@ export const postLogEntry = async (
   return data;
 };
 
-export const putLogEntry = async (
+export const patchLogEntry = async (
   http: HttpClient,
   { id, ...input }: UpdateLogEntryInput,
 ): Promise<LogEntry> => {
-  const { data } = await http.put<LogEntry>(`/api/log-entries/${id}`, input);
+  const { data } = await http.patch<LogEntry>(`/api/log-entries/${id}`, input);
   return data;
 };
 

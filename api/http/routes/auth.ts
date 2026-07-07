@@ -193,7 +193,7 @@ export const authRoutes: RouteDefinition[] = [
     },
   },
   {
-    method: 'PUT',
+    method: 'PATCH',
     path: '/auth/change-password',
     handler: changePassword,
     docs: {

@@ -134,9 +134,9 @@ export async function createNote(input: NoteInput): Promise<PassageNote> {
 }
 
 export async function updateNote(input: NoteInput & { id: string }): Promise<PassageNote> {
-  const { data } = await httpClient.put<unknown>(`/api/passage-notes/${input.id}`, input);
+  const { data } = await httpClient.patch<unknown>(`/api/passage-notes/${input.id}`, input);
   const parsed = parseApiPassageNote(data);
-  if (!parsed) throw new Error("PUT /passage-notes returned unexpected payload");
+  if (!parsed) throw new Error("PATCH /passage-notes returned unexpected payload");
   return parsed;
 }
 

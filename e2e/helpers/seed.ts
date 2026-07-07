@@ -6,7 +6,7 @@
  *   - POST /api/log-entries        { date, startVerseId, endVerseId }
  *   - POST /api/passage-note-tags  { label, color, description? }
  *   - POST /api/passage-notes      { content, passages: [{ startVerseId, endVerseId }], tags?: [tagId] }
- *   - PUT  /api/settings           { settings: { ...partial } }
+ *   - PATCH /api/settings          { settings: { ...partial } }
  */
 import type { APIRequestContext, APIResponse } from '@playwright/test';
 
@@ -66,7 +66,7 @@ export async function seedNote(api: APIRequestContext, note: SeedNote) {
 }
 
 export async function setSettings(api: APIRequestContext, settings: UserSettingsPatch) {
-  const response = await ensureOk(await api.put('/api/settings', { data: { settings } }), 'update settings');
+  const response = await ensureOk(await api.patch('/api/settings', { data: { settings } }), 'update settings');
   return dataOf(response);
 }
 

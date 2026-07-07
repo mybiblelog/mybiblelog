@@ -217,7 +217,7 @@ export const createPassageNote: RouteHandler = async (req, deps) => {
   return { status: 200, body: { data: toPassageNoteJSON(passageNote) } };
 };
 
-// PUT /passage-notes/:id - Update a passage note
+// PATCH /passage-notes/:id - Update a passage note
 export const updatePassageNote: RouteHandler = async (req, deps) => {
   const { params, body } = validate(req, { params: objectIdParam, body: passageNoteUpdateSchema });
   const currentUser = await deps.authenticate(req);

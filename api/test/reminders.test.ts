@@ -29,10 +29,10 @@ describe('Reminders routes', () => {
     expect(res.body.data).toHaveProperty('active');
   });
 
-  test('PUT /api/reminders/daily-reminder (update single property)', async () => {
+  test('PATCH /api/reminders/daily-reminder (update single property)', async () => {
     // Act
     const res = await requestApi
-      .put('/api/reminders/daily-reminder')
+      .patch('/api/reminders/daily-reminder')
       .set('Authorization', `Bearer ${testUser.token}`)
       .send({
         hour: 9,
@@ -45,10 +45,10 @@ describe('Reminders routes', () => {
     expect(res.body.data.hour).toBe(9);
   });
 
-  test('PUT /api/reminders/daily-reminder (update multiple properties)', async () => {
+  test('PATCH /api/reminders/daily-reminder (update multiple properties)', async () => {
     // Act
     const res = await requestApi
-      .put('/api/reminders/daily-reminder')
+      .patch('/api/reminders/daily-reminder')
       .set('Authorization', `Bearer ${testUser.token}`)
       .send({
         hour: 10,
@@ -78,9 +78,9 @@ describe('Reminders routes', () => {
   ];
 
   for (const { name, body } of invalidReminderCases) {
-    test(`PUT /api/reminders/daily-reminder rejects ${name}`, async () => {
+    test(`PATCH /api/reminders/daily-reminder rejects ${name}`, async () => {
       const res = await requestApi
-        .put('/api/reminders/daily-reminder')
+        .patch('/api/reminders/daily-reminder')
         .set('Authorization', `Bearer ${testUser.token}`)
         .send(body);
 

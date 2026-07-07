@@ -90,7 +90,7 @@ export {
 export {
   fetchLogEntries,
   postLogEntry,
-  putLogEntry,
+  patchLogEntry,
   deleteLogEntryRequest,
   type LogEntry,
   type CreateLogEntryInput,

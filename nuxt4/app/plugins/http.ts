@@ -87,10 +87,10 @@ export default defineNuxtPlugin({
         }
       },
 
-      async put<T = unknown>(path: string, body: unknown = {}): Promise<T> {
+      async patch<T = unknown>(path: string, body: unknown = {}): Promise<T> {
         try {
           const json = await $fetch<T>(path, {
-            method: 'PUT',
+            method: 'PATCH',
             headers: buildHeaders(),
             body: JSON.stringify(body),
             credentials: 'include',

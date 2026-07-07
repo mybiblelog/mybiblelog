@@ -60,7 +60,7 @@ type ApiMetaPagination = {
 type Http = {
   get: <T>(path: string) => Promise<{ data: T; meta?: unknown }>;
   post: <T>(path: string, body?: unknown) => Promise<{ data: T }>;
-  put: <T>(path: string, body?: unknown) => Promise<{ data: T }>;
+  patch: <T>(path: string, body?: unknown) => Promise<{ data: T }>;
   delete: <T>(path: string) => Promise<{ data: T }>;
 };
 
@@ -187,7 +187,7 @@ export const usePassageNotesStore = defineStore('passage-notes', {
     async updatePassageNote(passageNoteUpdate: Record<string, unknown> & { id: number | string }): Promise<unknown | null> {
       const { $http } = useNuxtApp() as { $http: Http };
       const { id } = passageNoteUpdate;
-      const { data } = await $http.put(`/api/passage-notes/${id}`, passageNoteUpdate);
+      const { data } = await $http.patch(`/api/passage-notes/${id}`, passageNoteUpdate);
       return data || null;
     },
 

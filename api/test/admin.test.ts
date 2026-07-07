@@ -63,7 +63,7 @@ describe('admin.test.js', () => {
         const feedbackId = submitResponse.body.data._id;
 
         await requestApi
-          .put(`/api/admin/feedback/${feedbackId}`)
+          .patch(`/api/admin/feedback/${feedbackId}`)
           .set('Authorization', `Bearer ${admin.token}`)
           .send({ status: 'archived' });
 
@@ -92,7 +92,7 @@ describe('admin.test.js', () => {
         const feedbackId = submitResponse.body.data._id;
 
         await requestApi
-          .put(`/api/admin/feedback/${feedbackId}`)
+          .patch(`/api/admin/feedback/${feedbackId}`)
           .set('Authorization', `Bearer ${admin.token}`)
           .send({ status: 'resolved' });
 
@@ -112,10 +112,10 @@ describe('admin.test.js', () => {
     });
   });
 
-  describe('PUT /api/admin/feedback/:id', () => {
+  describe('PATCH /api/admin/feedback/:id', () => {
     it('unauthenticated users get 401', async () => {
       const response = await requestApi
-        .put('/api/admin/feedback/507f1f77bcf86cd799439011')
+        .patch('/api/admin/feedback/507f1f77bcf86cd799439011')
         .send({ status: 'resolved' });
       expect(response.status).toBe(401);
     });
@@ -124,7 +124,7 @@ describe('admin.test.js', () => {
       const testUser = await createTestUser();
       try {
         const response = await requestApi
-          .put('/api/admin/feedback/507f1f77bcf86cd799439011')
+          .patch('/api/admin/feedback/507f1f77bcf86cd799439011')
           .set('Authorization', `Bearer ${testUser.token}`)
           .send({ status: 'resolved' });
         expect(response.status).toBe(403);
@@ -138,7 +138,7 @@ describe('admin.test.js', () => {
       const admin = await createTestAdmin();
       try {
         const response = await requestApi
-          .put('/api/admin/feedback/507f1f77bcf86cd799439011')
+          .patch('/api/admin/feedback/507f1f77bcf86cd799439011')
           .set('Authorization', `Bearer ${admin.token}`)
           .send({ status: 'resolved' });
         expect(response.status).toBe(404);
@@ -158,7 +158,7 @@ describe('admin.test.js', () => {
         const feedbackId = submitResponse.body.data._id;
 
         const response = await requestApi
-          .put(`/api/admin/feedback/${feedbackId}`)
+          .patch(`/api/admin/feedback/${feedbackId}`)
           .set('Authorization', `Bearer ${admin.token}`)
           .send({ status: 'resolved' });
         expect(response.status).toBe(200);

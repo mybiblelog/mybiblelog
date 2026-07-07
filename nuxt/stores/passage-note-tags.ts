@@ -291,7 +291,7 @@ export const usePassageNoteTagsStore = defineStore('passage-note-tags', {
     async updatePassageNoteTag(
       { id, label, color, description }: { id: number | string; label: unknown; color: unknown; description: unknown },
     ): Promise<PassageNoteTag | null> {
-      const { data } = await this.$http.put<PassageNoteTag | null>(`/api/passage-note-tags/${id}`, { id, label, color, description });
+      const { data } = await this.$http.patch<PassageNoteTag | null>(`/api/passage-note-tags/${id}`, { id, label, color, description });
       if (!data) { return null; }
       this.updatePassageNoteTagInState(data);
       return data;
