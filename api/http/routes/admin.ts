@@ -47,7 +47,7 @@ export const adminRoutes: RouteDefinition[] = [
     },
   },
   {
-    method: 'PUT',
+    method: 'PATCH',
     path: '/admin/feedback/:id',
     handler: updateFeedback,
     docs: {

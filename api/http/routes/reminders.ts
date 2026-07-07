@@ -39,7 +39,7 @@ export const reminderRoutes: RouteDefinition[] = [
     },
   },
   {
-    method: 'PUT',
+    method: 'PATCH',
     path: '/reminders/daily-reminder',
     handler: updateDailyReminder,
     docs: {
@@ -51,7 +51,7 @@ export const reminderRoutes: RouteDefinition[] = [
     },
   },
   {
-    method: 'PUT',
+    method: 'POST',
     path: '/reminders/daily-reminder/unsubscribe/:token',
     handler: unsubscribeDailyReminder,
     docs: {

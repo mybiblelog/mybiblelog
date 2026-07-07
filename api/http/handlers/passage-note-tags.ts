@@ -51,7 +51,7 @@ export const createPassageNoteTag: RouteHandler = async (req, deps) => {
   return { status: 200, body: { data: toPassageNoteTagJSON(tag) } };
 };
 
-// PUT /passage-note-tags/:id - Update a tag
+// PATCH /passage-note-tags/:id - Update a tag
 export const updatePassageNoteTag: RouteHandler = async (req, deps) => {
   const { params, body } = validate(req, { params: objectIdParam, body: passageNoteTagUpdateSchema });
   const currentUser = await deps.authenticate(req);

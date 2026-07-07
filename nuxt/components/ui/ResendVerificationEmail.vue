@@ -102,7 +102,7 @@ export default {
       this.loading = true;
       this.lastResult = null;
       try {
-        const { data } = await this.$http.post('/api/auth/resend-email-verification', {
+        const { data } = await this.$http.post('/api/auth/verify-email/resend', {
           email: this.normalizedEmail,
           locale: this.$i18n.locale,
         });

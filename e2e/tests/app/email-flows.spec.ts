@@ -93,7 +93,7 @@ test.describe('Password reset', () => {
     await waitForHydration(page);
     await page.getByRole('textbox', { name: 'Email' }).fill(user.email);
     const resetRequestPromise = page.waitForRequest(
-      (request) => request.method() === 'POST' && request.url().includes('/api/auth/reset-password'),
+      (request) => request.method() === 'POST' && request.url().includes('/api/auth/password/reset'),
     );
     await page.getByRole('button', { name: 'Forgot your password? Reset it via email.' }).click();
     expect((await resetRequestPromise).postDataJSON()).toMatchObject({ email: user.email });

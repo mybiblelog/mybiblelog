@@ -14,7 +14,7 @@ import { getAuthToken } from "@/src/stores/auth";
  * non-OK responses are parsed into a typed `ApiError`.
  */
 
-type Method = "GET" | "POST" | "PUT" | "DELETE";
+type Method = "GET" | "POST" | "PATCH" | "DELETE";
 
 async function request<T>(method: Method, path: string, body?: unknown): Promise<ApiResponse<T>> {
   const headers: Record<string, string> = { Accept: "application/json" };
@@ -41,6 +41,6 @@ async function request<T>(method: Method, path: string, body?: unknown): Promise
 export const httpClient: HttpClient = {
   get: <T = unknown>(path: string) => request<T>("GET", path),
   post: <T = unknown>(path: string, body?: unknown) => request<T>("POST", path, body),
-  put: <T = unknown>(path: string, body?: unknown) => request<T>("PUT", path, body),
+  patch: <T = unknown>(path: string, body?: unknown) => request<T>("PATCH", path, body),
   delete: <T = unknown>(path: string) => request<T>("DELETE", path),
 };

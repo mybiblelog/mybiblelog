@@ -1,5 +1,5 @@
 import { type RouteHandler } from '../types';
-import checkTestBypass from '../helpers/checkTestBypass';
+import checkTestBypass from '../helpers/check-test-bypass';
 import { NotFoundError } from '../errors/http-errors';
 import { validate } from '../../validation/validate';
 import { testEmailsQuerySchema } from '../../validation/schemas/test-emails';

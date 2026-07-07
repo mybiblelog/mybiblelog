@@ -90,7 +90,7 @@ export default {
 
     // Determine if password reset code is valid
     try {
-      const { data } = await this.$http.get(`/api/auth/reset-password/${this.passwordResetCode}/valid`);
+      const { data } = await this.$http.get(`/api/auth/password/reset/${this.passwordResetCode}/valid`);
       this.passwordResetCodeValid = data.valid;
     }
     catch {
@@ -123,7 +123,7 @@ export default {
       }
 
       try {
-        await this.$http.post(`/api/auth/reset-password/${this.passwordResetCode}`, { newPassword });
+        await this.$http.post(`/api/auth/password/reset/${this.passwordResetCode}`, { newPassword });
         // If successful, automatically log the user in
         await useAuthStore().refreshUser();
         await this.$router.push(this.localePath('/start'));

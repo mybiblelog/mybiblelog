@@ -35,7 +35,7 @@ export type PassageNoteTagsState = {
 type Http = {
   get: <T>(path: string) => Promise<{ data: T }>;
   post: <T>(path: string, body?: unknown) => Promise<{ data: T }>;
-  put: <T>(path: string, body?: unknown) => Promise<{ data: T }>;
+  patch: <T>(path: string, body?: unknown) => Promise<{ data: T }>;
   delete: <T>(path: string) => Promise<{ data: T }>;
 };
 
@@ -296,7 +296,7 @@ export const usePassageNoteTagsStore = defineStore('passage-note-tags', {
       { id, label, color, description }: { id: number | string; label: unknown; color: unknown; description: unknown },
     ): Promise<PassageNoteTag | null> {
       const { $http } = useNuxtApp() as { $http: Http };
-      const { data } = await $http.put<PassageNoteTag | null>(`/api/passage-note-tags/${id}`, { id, label, color, description });
+      const { data } = await $http.patch<PassageNoteTag | null>(`/api/passage-note-tags/${id}`, { id, label, color, description });
       if (!data) { return null; }
       this.updatePassageNoteTagInState(data);
       return data;

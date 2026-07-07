@@ -246,7 +246,7 @@ async function submitSetPassword() {
   }
 
   try {
-    await $http.post('/api/auth/set-password', { password, confirmPassword });
+    await $http.post('/api/auth/password/set', { password, confirmPassword });
     setPasswordModel.password = '';
     setPasswordModel.confirmPassword = '';
     await authStore.refreshUser();

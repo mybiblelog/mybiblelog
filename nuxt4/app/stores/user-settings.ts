@@ -50,7 +50,7 @@ const defaultSettings: UserSettings = {
 
 type Http = {
   get: <T>(path: string) => Promise<T>;
-  put: <T>(path: string, body?: unknown) => Promise<T>;
+  patch: <T>(path: string, body?: unknown) => Promise<T>;
 };
 
 export const useUserSettingsStore = defineStore('user-settings', {
@@ -119,7 +119,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
           localStorage.setItem(LocalStorageKeys.PREFERRED_BIBLE_APP, preferredBibleApp);
         }
 
-        await $http.put('/api/settings', {
+        await $http.patch('/api/settings', {
           settings: {
             lookBackDate,
             dailyVerseCountGoal,

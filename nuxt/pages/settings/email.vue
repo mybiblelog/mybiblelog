@@ -272,7 +272,7 @@ export default {
       }
 
       try {
-        await this.$http.post('/api/auth/set-password', { password, confirmPassword });
+        await this.$http.post('/api/auth/password/set', { password, confirmPassword });
         this.resetSetPasswordForm();
         await this.authStore.refreshUser();
       }

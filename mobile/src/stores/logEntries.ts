@@ -6,7 +6,7 @@ import {
   getBookIndexFromVerseId,
   isBibleComplete as isBibleCompleteShared,
   postLogEntry,
-  putLogEntry,
+  patchLogEntry,
 } from "@mybiblelog/shared";
 import type { LogEntry } from "@/src/types/log-entry";
 import { httpClient } from "@/src/api/httpClient";
@@ -167,7 +167,7 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
                   await postLogEntry(httpClient, m.entry);
                   continue;
                 }
-                await putLogEntry(httpClient, { id: m.id, ...m.entry });
+                await patchLogEntry(httpClient, { id: m.id, ...m.entry });
                 continue;
               }
               if (m.type === "delete") {
@@ -272,7 +272,7 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
         try {
           const saved = parseApiLogEntry(
             id
-              ? await putLogEntry(httpClient, { id, ...input })
+              ? await patchLogEntry(httpClient, { id, ...input })
               : await postLogEntry(httpClient, input)
           );
           const beforeApply = get().state;

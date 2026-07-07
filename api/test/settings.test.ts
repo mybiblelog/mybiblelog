@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { requestApi, createTestUser, deleteTestUser } from './helpers';
-import { AUTH_COOKIE_NAME } from '../http/helpers/authCurrentUser';
+import { AUTH_COOKIE_NAME } from '../http/helpers/auth-current-user';
 
 describe('settings.test.js', () => {
   describe('GET /api/settings', () => {
@@ -35,10 +35,10 @@ describe('settings.test.js', () => {
     });
   });
 
-  describe('PUT /api/settings', () => {
+  describe('PATCH /api/settings', () => {
     it('protected from guests', async () => {
       const response = await requestApi
-        .put('/api/settings')
+        .patch('/api/settings')
         .send({ settings: { dailyVerseCountGoal: 100 } });
       expect(response.status).toBe(401);
     });
@@ -55,7 +55,7 @@ describe('settings.test.js', () => {
         // Update just the dailyVerseCountGoal
         const newGoal = originalGoal + 10;
         const putResponse = await requestApi
-          .put('/api/settings')
+          .patch('/api/settings')
           .set('Authorization', `Bearer ${testUser.token}`)
           .send({ settings: { dailyVerseCountGoal: newGoal } });
         expect(putResponse.status).toBe(200);
@@ -84,7 +84,7 @@ describe('settings.test.js', () => {
         };
 
         const putResponse = await requestApi
-          .put('/api/settings')
+          .patch('/api/settings')
           .set('Authorization', `Bearer ${testUser.token}`)
           .send({ settings: newSettings });
         expect(putResponse.status).toBe(200);
@@ -113,7 +113,7 @@ describe('settings.test.js', () => {
 
         // Update with some undefined values
         const putResponse = await requestApi
-          .put('/api/settings')
+          .patch('/api/settings')
           .set('Authorization', `Bearer ${testUser.token}`)
           .send({ settings: { dailyVerseCountGoal: 100, lookBackDate: undefined } });
         expect(putResponse.status).toBe(200);
@@ -149,7 +149,7 @@ describe('settings.test.js', () => {
         const testUser = await createTestUser();
         try {
           const response = await requestApi
-            .put('/api/settings')
+            .patch('/api/settings')
             .set('Authorization', `Bearer ${testUser.token}`)
             .send({ settings });
           expect(response.status).toBe(400);
@@ -165,10 +165,10 @@ describe('settings.test.js', () => {
     }
   });
 
-  describe('PUT /api/settings/delete-account', () => {
+  describe('DELETE /api/settings/account', () => {
     it('protected from guests', async () => {
       const response = await requestApi
-        .put('/api/settings/delete-account');
+        .delete('/api/settings/account');
       expect(response.status).toBe(401);
     });
 
@@ -176,7 +176,7 @@ describe('settings.test.js', () => {
       const testUser = await createTestUser();
       try {
         const response = await requestApi
-          .put('/api/settings/delete-account')
+          .delete('/api/settings/account')
           .set('Authorization', `Bearer ${testUser.token}`);
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty('data');

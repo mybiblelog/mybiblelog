@@ -48,9 +48,9 @@ export async function createTag(input: TagInput): Promise<PassageNoteTag> {
 }
 
 export async function updateTag(input: TagInput & { id: string }): Promise<PassageNoteTag> {
-  const { data } = await httpClient.put<unknown>(`/api/passage-note-tags/${input.id}`, input);
+  const { data } = await httpClient.patch<unknown>(`/api/passage-note-tags/${input.id}`, input);
   const parsed = parseApiPassageNoteTag(data);
-  if (!parsed) throw new Error("PUT /passage-note-tags returned unexpected payload");
+  if (!parsed) throw new Error("PATCH /passage-note-tags returned unexpected payload");
   return parsed;
 }
 

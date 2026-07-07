@@ -4,7 +4,7 @@
  * - `testUser`: fresh user created via the API per test (parallel-safe), deleted in teardown.
  * - `api`: APIRequestContext authenticated as `testUser` for seeding data.
  * - `context`: browser context pre-authenticated by injecting the `auth_token`
- *   cookie (HttpOnly, Lax — matches the contract in api/http/helpers/authCurrentUser.ts),
+ *   cookie (HttpOnly, Lax — matches the contract in api/http/helpers/auth-current-user.ts),
  *   plus `i18n_redirected=en` to pin the locale and avoid the root-path locale redirect.
  *
  * Public/unauthenticated specs (e2e/tests/public/**) import from '@playwright/test' directly.

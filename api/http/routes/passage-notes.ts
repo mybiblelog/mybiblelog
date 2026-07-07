@@ -64,7 +64,7 @@ export const passageNoteRoutes: RouteDefinition[] = [
     },
   },
   {
-    method: 'PUT',
+    method: 'PATCH',
     path: '/passage-notes/:id',
     handler: updatePassageNote,
     docs: {

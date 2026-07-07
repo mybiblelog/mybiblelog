@@ -6,7 +6,7 @@ import {
   getBookIndexFromVerseId,
   isBibleComplete,
   postLogEntry,
-  putLogEntry,
+  patchLogEntry,
   type CreateLogEntryInput,
   type LogEntry,
   type UpdateLogEntryInput,
@@ -88,7 +88,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
       const before = this.currentLogEntries;
       const bookIndex = getBookIndexFromVerseId(input.startVerseId);
 
-      const updated = await putLogEntry(this.$http, input);
+      const updated = await patchLogEntry(this.$http, input);
 
       const existing = this.logEntries.find(le => le.id === updated.id);
       if (existing) {

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import checkTestBypass from '../http/helpers/checkTestBypass';
+import checkTestBypass from '../http/helpers/check-test-bypass';
 import { withEnvConfig, restoreEnvConfig } from './config-helpers';
 
 /**

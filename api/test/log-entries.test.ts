@@ -290,7 +290,7 @@ describe('log-entries.test.js', () => {
     });
   });
 
-  describe('PUT /api/log-entries/:id', () => {
+  describe('PATCH /api/log-entries/:id', () => {
     it('protected', async () => {
       const testUser = await createTestUser();
       try {
@@ -301,7 +301,7 @@ describe('log-entries.test.js', () => {
           .send(logEntry1);
 
         const response = await requestApi
-          .put(`/api/log-entries/${createResponse.body.data.id}`)
+          .patch(`/api/log-entries/${createResponse.body.data.id}`)
           .send(logEntry2);
         expect(response.status).toBe(401);
       }
@@ -314,7 +314,7 @@ describe('log-entries.test.js', () => {
       const testUser = await createTestUser();
       try {
         const response = await requestApi
-          .put(`/api/log-entries/${missingObjectId}`)
+          .patch(`/api/log-entries/${missingObjectId}`)
           .set('Authorization', `Bearer ${testUser.token}`)
           .send(logEntry2);
         expect(response.status).toBe(404);
@@ -336,7 +336,7 @@ describe('log-entries.test.js', () => {
           .send(logEntry1);
 
         const response = await requestApi
-          .put(`/api/log-entries/${createResponse.body.data.id}`)
+          .patch(`/api/log-entries/${createResponse.body.data.id}`)
           .set('Authorization', `Bearer ${testUser.token}`)
           .send(invalidLogEntry2);
         expect(response.status).toBe(400);
@@ -358,7 +358,7 @@ describe('log-entries.test.js', () => {
           .send(logEntry1);
 
         const response = await requestApi
-          .put(`/api/log-entries/${createResponse.body.data.id}`)
+          .patch(`/api/log-entries/${createResponse.body.data.id}`)
           .set('Authorization', `Bearer ${testUser.token}`)
           .send({ date: logEntry2.date });
 
@@ -382,7 +382,7 @@ describe('log-entries.test.js', () => {
           .send(logEntry1);
 
         const response = await requestApi
-          .put(`/api/log-entries/${createResponse.body.data.id}`)
+          .patch(`/api/log-entries/${createResponse.body.data.id}`)
           .set('Authorization', `Bearer ${testUser.token}`)
           .send({
             startVerseId: logEntry2.startVerseId,
@@ -404,7 +404,7 @@ describe('log-entries.test.js', () => {
       const testUser = await createTestUser();
       try {
         const response = await requestApi
-          .put('/api/log-entries/invalid-id')
+          .patch('/api/log-entries/invalid-id')
           .set('Authorization', `Bearer ${testUser.token}`)
           .send(logEntry2);
         expect(response.status).toBe(400);

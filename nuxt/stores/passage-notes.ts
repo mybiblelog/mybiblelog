@@ -188,7 +188,7 @@ export const usePassageNotesStore = defineStore('passage-notes', {
 
     async updatePassageNote(passageNoteUpdate: Record<string, unknown> & { id: number | string }): Promise<unknown | null> {
       const { id } = passageNoteUpdate;
-      const { data } = await this.$http.put(`/api/passage-notes/${id}`, passageNoteUpdate);
+      const { data } = await this.$http.patch(`/api/passage-notes/${id}`, passageNoteUpdate);
       return data || null;
     },
 

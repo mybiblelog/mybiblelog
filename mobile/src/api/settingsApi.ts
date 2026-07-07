@@ -44,18 +44,18 @@ export async function getSettings(): Promise<ServerUserSettings> {
 export async function updateSettings(
   settings: Partial<ServerUserSettings>
 ): Promise<ServerUserSettings> {
-  const { data } = await httpClient.put<unknown>("/api/settings", { settings });
+  const { data } = await httpClient.patch<unknown>("/api/settings", { settings });
   const parsed = parseServerUserSettings(data);
-  if (!parsed) throw new Error("PUT /settings returned unexpected payload");
+  if (!parsed) throw new Error("PATCH /settings returned unexpected payload");
   return parsed;
 }
 
 /**
  * Permanently delete the authenticated user's account and all associated data
  * (log entries, notes, tags, reminders). Mirrors the web app's
- * `PUT /settings/delete-account` flow. The caller is responsible for clearing
+ * `DELETE /settings/account` flow. The caller is responsible for clearing
  * the local session afterward (the server also clears the auth cookie).
  */
 export async function deleteAccount(): Promise<void> {
-  await httpClient.put("/api/settings/delete-account");
+  await httpClient.delete("/api/settings/account");
 }

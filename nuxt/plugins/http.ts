@@ -8,7 +8,7 @@ type ApiErrorEnvelope = {
   error: ApiErrorPayload;
 };
 
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 
 const plugin: Plugin = (context, inject) => {
   type AppWithSsrToken = {
@@ -77,8 +77,8 @@ const plugin: Plugin = (context, inject) => {
       });
     }
 
-    put<T = unknown>(path: string, body: unknown = {}): Promise<T> {
-      return this.request<T>('PUT', path, {
+    patch<T = unknown>(path: string, body: unknown = {}): Promise<T> {
+      return this.request<T>('PATCH', path, {
         body: JSON.stringify(body),
       });
     }

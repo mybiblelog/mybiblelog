@@ -121,7 +121,7 @@ export default {
       }
 
       try {
-        await this.$http.put('/api/auth/change-password', {
+        await this.$http.patch('/api/auth/password', {
           currentPassword,
           newPassword,
         });

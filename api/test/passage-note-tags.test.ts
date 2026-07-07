@@ -297,7 +297,7 @@ describe('passage-note-tags.test.js', () => {
     });
   });
 
-  describe('PUT /api/passage-note-tags/:id', () => {
+  describe('PATCH /api/passage-note-tags/:id', () => {
     it('protected', async () => {
       const testUser = await createTestUser();
       try {
@@ -308,7 +308,7 @@ describe('passage-note-tags.test.js', () => {
           .send(tag1);
 
         const response = await requestApi
-          .put(`/api/passage-note-tags/${createResponse.body.data.id}`)
+          .patch(`/api/passage-note-tags/${createResponse.body.data.id}`)
           .send(tag2);
         expect(response.status).toBe(401);
       }
@@ -321,7 +321,7 @@ describe('passage-note-tags.test.js', () => {
       const testUser = await createTestUser();
       try {
         const response = await requestApi
-          .put(`/api/passage-note-tags/${missingObjectId}`)
+          .patch(`/api/passage-note-tags/${missingObjectId}`)
           .set('Authorization', `Bearer ${testUser.token}`)
           .send(tag1);
         expect(response.status).toBe(404);
@@ -337,7 +337,7 @@ describe('passage-note-tags.test.js', () => {
       const testUser = await createTestUser();
       try {
         const response = await requestApi
-          .put('/api/passage-note-tags/invalid-id')
+          .patch('/api/passage-note-tags/invalid-id')
           .set('Authorization', `Bearer ${testUser.token}`)
           .send(tag1);
         expect(response.status).toBe(400);
@@ -359,7 +359,7 @@ describe('passage-note-tags.test.js', () => {
           .send(tag1);
 
         const response = await requestApi
-          .put(`/api/passage-note-tags/${createResponse.body.data.id}`)
+          .patch(`/api/passage-note-tags/${createResponse.body.data.id}`)
           .set('Authorization', `Bearer ${testUser.token}`)
           .send({ label: 'Updated Label' });
         expect(response.status).toBe(200);
@@ -384,7 +384,7 @@ describe('passage-note-tags.test.js', () => {
           .send(tag1);
 
         const response = await requestApi
-          .put(`/api/passage-note-tags/${createResponse.body.data.id}`)
+          .patch(`/api/passage-note-tags/${createResponse.body.data.id}`)
           .set('Authorization', `Bearer ${testUser.token}`)
           .send({ color: '#00FF00' });
         expect(response.status).toBe(200);
@@ -409,7 +409,7 @@ describe('passage-note-tags.test.js', () => {
           .send(tag1);
 
         const response = await requestApi
-          .put(`/api/passage-note-tags/${createResponse.body.data.id}`)
+          .patch(`/api/passage-note-tags/${createResponse.body.data.id}`)
           .set('Authorization', `Bearer ${testUser.token}`)
           .send({ description: 'Updated description' });
         expect(response.status).toBe(200);

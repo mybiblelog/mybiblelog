@@ -159,13 +159,13 @@ describe('log entry handlers (unit)', () => {
   describe('updateLogEntry', () => {
     it('throws ValidationError for an invalid id', async () => {
       const deps = makeDeps({});
-      await expect(updateLogEntry(makeRequest({ method: 'PUT', params: { id: 'bad' }, body: {} }), deps))
+      await expect(updateLogEntry(makeRequest({ method: 'PATCH', params: { id: 'bad' }, body: {} }), deps))
         .rejects.toBeInstanceOf(ValidationError);
     });
 
     it('throws NotFoundError when the entry does not exist', async () => {
       const deps = makeDeps({ logEntries: { update: async () => null } });
-      await expect(updateLogEntry(makeRequest({ method: 'PUT', params: { id: ENTRY_ID }, body: {} }), deps))
+      await expect(updateLogEntry(makeRequest({ method: 'PATCH', params: { id: ENTRY_ID }, body: {} }), deps))
         .rejects.toBeInstanceOf(NotFoundError);
     });
 
@@ -173,7 +173,7 @@ describe('log entry handlers (unit)', () => {
       const updated = { ...sampleEntry, date: '2024-02-02' };
       const deps = makeDeps({ logEntries: { update: async () => updated } });
       const result = await updateLogEntry(
-        makeRequest({ method: 'PUT', params: { id: ENTRY_ID }, body: { date: '2024-02-02' } }),
+        makeRequest({ method: 'PATCH', params: { id: ENTRY_ID }, body: { date: '2024-02-02' } }),
         deps,
       );
       expect(result.status).toBe(200);

@@ -15,6 +15,6 @@ export type ApiResponse<T = unknown> = {
 export interface HttpClient {
   get: <T = unknown>(path: string, options?: unknown) => Promise<ApiResponse<T>>;
   post: <T = unknown>(path: string, body?: unknown) => Promise<ApiResponse<T>>;
-  put: <T = unknown>(path: string, body?: unknown) => Promise<ApiResponse<T>>;
+  patch: <T = unknown>(path: string, body?: unknown) => Promise<ApiResponse<T>>;
   delete: <T = unknown>(path: string) => Promise<ApiResponse<T>>;
 }

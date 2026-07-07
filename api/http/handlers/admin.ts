@@ -3,7 +3,7 @@ import utc from 'dayjs/plugin/utc';
 import { generateUserJWT } from '../../repositories/helpers/user-auth';
 import { type Repositories } from '../../repositories/useRepositories';
 import { type AdminUserListQuery, type FeedbackStatus } from '../../repositories/helpers/types';
-import deleteAccount from '../helpers/deleteAccount';
+import deleteAccount from '../helpers/delete-account';
 import { InvalidRequestError, NotFoundError } from '../errors/http-errors';
 import { ApiErrorDetailCode } from '../errors/error-codes';
 import { authCookie } from '../helpers/auth-cookie';
@@ -138,7 +138,7 @@ export const listFeedback: RouteHandler = async (req, deps) => {
   };
 };
 
-// PUT /admin/feedback/:id - Update a feedback submission's status
+// PATCH /admin/feedback/:id - Update a feedback submission's status
 export const updateFeedback: RouteHandler = async (req, deps) => {
   await deps.authenticate(req, { adminOnly: true });
 

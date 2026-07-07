@@ -81,7 +81,7 @@ async function onResend() {
   lastResult.value = null;
   try {
     const data = await $http.post<{ success?: boolean; secondsUntilCanRetry?: number }>(
-      '/api/auth/resend-email-verification',
+      '/api/auth/verify-email/resend',
       { email: normalizedEmail.value, locale: i18nLocale.value },
     );
     const secondsUntilCanRetry = Number((data as any)?.secondsUntilCanRetry) || 0;

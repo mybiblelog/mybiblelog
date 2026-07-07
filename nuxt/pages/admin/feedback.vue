@@ -286,7 +286,7 @@ export default {
     async setStatus(feedback, status) {
       const dialogStore = useDialogStore();
       try {
-        await this.$http.put(`/api/admin/feedback/${feedback._id}`, { status });
+        await this.$http.patch(`/api/admin/feedback/${feedback._id}`, { status });
         await this.loadFeedbacks();
       }
       catch {

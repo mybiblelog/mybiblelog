@@ -60,7 +60,7 @@ const { t } = useI18n();
 const toastStore = useToastStore();
 
 const { $http, $terr } = useNuxtApp() as {
-  $http: { put: <T>(path: string, body?: unknown) => Promise<T> };
+  $http: { patch: <T>(path: string, body?: unknown) => Promise<T> };
   $terr: (error: unknown, props?: Record<string, unknown>) => string;
 };
 
@@ -100,7 +100,7 @@ async function submitChangePassword() {
   }
 
   try {
-    await $http.put('/api/auth/change-password', { currentPassword, newPassword });
+    await $http.patch('/api/auth/password', { currentPassword, newPassword });
     model.currentPassword = '';
     model.newPassword = '';
     model.confirmNewPassword = '';

@@ -119,7 +119,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
           localStorage.setItem(LocalStorageKeys.PREFERRED_BIBLE_APP, preferredBibleApp);
         }
 
-        await this.$http.put('/api/settings', {
+        await this.$http.patch('/api/settings', {
           settings: {
             lookBackDate,
             dailyVerseCountGoal,

@@ -37,7 +37,7 @@ import {
 } from '../http/handlers/auth';
 import { type HttpRequest, type RouteDependencies } from '../http/types';
 import { type UserRecord } from '../repositories/helpers/types';
-import { AUTH_COOKIE_NAME } from '../http/helpers/authCurrentUser';
+import { AUTH_COOKIE_NAME } from '../http/helpers/auth-current-user';
 import { ValidationError } from '../http/errors/validation-errors';
 import { UnauthorizedError, NotFoundError, InvalidRequestError } from '../http/errors/http-errors';
 import googleIdToken from '../http/helpers/google-id-token';
