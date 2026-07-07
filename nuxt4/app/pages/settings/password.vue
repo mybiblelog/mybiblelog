@@ -100,7 +100,7 @@ async function submitChangePassword() {
   }
 
   try {
-    await $http.patch('/api/auth/change-password', { currentPassword, newPassword });
+    await $http.patch('/api/auth/password', { currentPassword, newPassword });
     model.currentPassword = '';
     model.newPassword = '';
     model.confirmNewPassword = '';

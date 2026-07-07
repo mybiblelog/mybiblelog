@@ -85,7 +85,7 @@ onMounted(async () => {
   passwordResetCode.value = code;
 
   try {
-    const { data } = await $http.get<{ data: { valid: boolean } }>(`/api/auth/reset-password/${code}/valid`);
+    const { data } = await $http.get<{ data: { valid: boolean } }>(`/api/auth/password/reset/${code}/valid`);
     passwordResetCodeValid.value = data.valid;
   }
   catch {
@@ -108,7 +108,7 @@ const submitChangePassword = async () => {
   }
 
   try {
-    await $http.post(`/api/auth/reset-password/${passwordResetCode.value}`, { newPassword: newPassword.value });
+    await $http.post(`/api/auth/password/reset/${passwordResetCode.value}`, { newPassword: newPassword.value });
     await authStore.refreshUser();
     await router.push(localePath('/start'));
   }

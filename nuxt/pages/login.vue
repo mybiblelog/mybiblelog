@@ -172,7 +172,7 @@ export default {
       }
       this.submitting = true;
       try {
-        await this.$http.post('/api/auth/reset-password', { email: this.email });
+        await this.$http.post('/api/auth/password/reset', { email: this.email });
         this.passwordResetSubmitted = true;
       }
       catch (err) {

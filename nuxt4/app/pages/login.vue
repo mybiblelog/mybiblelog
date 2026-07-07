@@ -150,7 +150,7 @@ const sendPasswordReset = async () => {
   }
   submitting.value = true;
   try {
-    await $http.post('/api/auth/reset-password', { email: email.value });
+    await $http.post('/api/auth/password/reset', { email: email.value });
     passwordResetSubmitted.value = true;
   }
   catch (err) {

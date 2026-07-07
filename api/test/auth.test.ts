@@ -296,14 +296,14 @@ describe('Auth routes', () => {
   });
 
 
-  describe('PATCH /api/auth/change-password', () => {
+  describe('PATCH /api/auth/password', () => {
     test('Incorrect password for password change', async () => {
       // Arrange
       const testUser = await createTestUser();
 
       // Act
       const response = await requestApi
-        .patch('/api/auth/change-password')
+        .patch('/api/auth/password')
         .set('Authorization', `Bearer ${testUser.token}`)
         .send({
           currentPassword: 'wrongpassword',
@@ -325,11 +325,11 @@ describe('Auth routes', () => {
   });
 
 
-  describe('POST /api/auth/reset-password', () => {
+  describe('POST /api/auth/password/reset', () => {
     it('never includes the reset code in the response body', async () => {
       const testUser = await createTestUser();
       const response = await requestApi
-        .post('/api/auth/reset-password')
+        .post('/api/auth/password/reset')
         .send({
           email: testUser.email,
         });
@@ -343,7 +343,7 @@ describe('Auth routes', () => {
 
     it('returns generic success for an unknown email to prevent account enumeration', async () => {
       const response = await requestApi
-        .post('/api/auth/reset-password')
+        .post('/api/auth/password/reset')
         .set('x-test-bypass-secret', TEST_BYPASS_SECRET!)
         .send({
           email: 'unknown-account@example.com',
@@ -355,10 +355,10 @@ describe('Auth routes', () => {
     });
   });
 
-  describe('POST /api/auth/resend-email-verification', () => {
+  describe('POST /api/auth/verify-email/resend', () => {
     it('returns 200 for unknown email (avoid enumeration)', async () => {
       const res = await requestApi
-        .post('/api/auth/resend-email-verification')
+        .post('/api/auth/verify-email/resend')
         .send({ email: 'unknown_user@example.com', locale: 'en' });
 
       expect(res.statusCode).toBe(200);
@@ -374,10 +374,10 @@ describe('Auth routes', () => {
     // (`requireEmailVerification`) and is covered at the handler level.
   });
 
-  describe('POST /api/auth/reset-password/:passwordResetCode', () => {
+  describe('POST /api/auth/password/reset/:passwordResetCode', () => {
     it('returns 404 for invalid reset code', async () => {
       const res = await requestApi
-        .post('/api/auth/reset-password/invalid-code-12345')
+        .post('/api/auth/password/reset/invalid-code-12345')
         .send({ newPassword: 'newpassword123' });
       expect(res.statusCode).toBe(404);
       expect(res.body).toHaveProperty('error');
@@ -405,7 +405,7 @@ describe('Auth routes', () => {
     // Note: A full test that verifies token and cookie would require mocking
     // the Google OAuth API calls (getAccessTokenFromCode and getUserProfileFromToken).
     // The endpoint does set a cookie and return a token when successful,
-    // as seen in the route implementation at api/http/routes/auth.ts:414-483
+    // as seen in the route implementation at api/http/handlers/auth/oauth.ts
   });
 
   describe('POST /api/auth/oauth2/google/id-token', () => {
