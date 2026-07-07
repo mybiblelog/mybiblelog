@@ -96,6 +96,34 @@ const BibleGatewayVersions: BibleVersionsType = {
   [BibleVersions.KRV]: 'KLB', // Bible Gateway doesn't support KRV
 } as const;
 
+// The ref.ly / Logos version code for each translation.
+// ref.ly links (e.g. https://ref.ly/Romans%208;NIV) redirect into the Logos
+// web app, resolving the resource edition and Logos book numbering server-side.
+// Codes ref.ly doesn't recognize are ignored and the passage opens in the
+// user's default Logos Bible, so unverified entries degrade gracefully.
+const LogosVersions: BibleVersionsType = {
+  [BibleVersions.AMP]: 'AMP',
+  [BibleVersions.KJV]: 'KJV',
+  [BibleVersions.NKJV]: 'NKJV',
+  [BibleVersions.NIV]: 'NIV',
+  [BibleVersions.ESV]: 'ESV',
+  [BibleVersions.NASB1995]: 'NASB95',
+  [BibleVersions.NASB2020]: 'NASB',
+  [BibleVersions.NABRE]: 'NABRE',
+  [BibleVersions.NLT]: 'NLT',
+  [BibleVersions.TPT]: 'TPT',
+  [BibleVersions.MSG]: 'MSG',
+  [BibleVersions.RVR1960]: 'RVR60',
+  [BibleVersions.RVR2020]: 'RVR60', // 2020 not confirmed on ref.ly -- fall back to 1960
+  [BibleVersions.UKR]: 'UKR',
+  [BibleVersions.BDS]: 'BDS',
+  [BibleVersions.LSG]: 'LSG',
+  [BibleVersions.ARC]: 'ARC',
+  [BibleVersions.LUT]: 'LUT',
+  [BibleVersions.KLB]: 'KLB',
+  [BibleVersions.KRV]: 'KRV',
+} as const;
+
 // The language code of each translation on Bible.com
 const BibleComTranslationLanguages: BibleVersionsType = {
   [BibleVersions.AMP]: 1588,
@@ -164,12 +192,26 @@ const getOliveTreeReadingUrl = (version: keyof typeof BibleVersions, bookIndex: 
   return `olivetree://bible/${bookIndex}.${chapterIndex}.1`;
 };
 
+const getLogosReadingURL = (version: keyof typeof BibleVersions, bookIndex: number, chapterIndex: number) => {
+  // Example: https://ref.ly/Romans%208;NIV
+  // ref.ly is Logos's reference-link service; it redirects into the Logos web
+  // app (app.logos.com), resolving the resource edition + Logos book number.
+  const versionCode = LogosVersions[version] || LogosVersions[defaultBibleVersion];
+  const bookName = Bible.getBookName(bookIndex, 'en');
+  // Full book name, space-separated from the chapter, URL-encoded.
+  // e.g. "Song of Songs 2" -> "Song%20of%20Songs%202" (do NOT glue -- glued
+  // multi-word names like "SongofSongs2" don't reliably resolve on ref.ly).
+  const reference = encodeURIComponent(`${bookName} ${chapterIndex}`);
+  return `https://ref.ly/${reference};${versionCode}`;
+};
+
 export const BibleApps = {
   YOUVERSIONAPP: 'YOUVERSIONAPP',
   BIBLECOM: 'BIBLECOM',
   BLUELETTERBIBLE: 'BLUELETTERBIBLE',
   BIBLEGATEWAY: 'BIBLEGATEWAY',
   OLIVETREE: 'OLIVETREE',
+  LOGOS: 'LOGOS',
 } as const;
 
 export const getAppReadingUrl = (app: keyof typeof BibleApps, version: keyof typeof BibleVersions, bookIndex: number, chapterIndex: number) => {
@@ -182,6 +224,8 @@ export const getAppReadingUrl = (app: keyof typeof BibleApps, version: keyof typ
     return getBlueLetterBibleReadingURL(version, bookIndex, chapterIndex);
   case BibleApps.OLIVETREE:
     return getOliveTreeReadingUrl(version, bookIndex, chapterIndex);
+  case BibleApps.LOGOS:
+    return getLogosReadingURL(version, bookIndex, chapterIndex);
   case BibleApps.BIBLEGATEWAY:
   default:
     return getBibleGatewayReadingURL(version, bookIndex, chapterIndex);
@@ -237,6 +281,7 @@ export const bibleAppNames: Record<typeof BibleApps[keyof typeof BibleApps], str
   [BibleApps.BIBLECOM]: 'Bible.com (YouVersion)',
   [BibleApps.BLUELETTERBIBLE]: 'Blue Letter Bible',
   [BibleApps.OLIVETREE]: 'Olive Tree App',
+  [BibleApps.LOGOS]: 'Logos',
 };
 
 export const bibleAppOptions = Object.entries(bibleAppNames).map(([value, text]) => ({ text, value }));

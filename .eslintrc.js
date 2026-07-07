@@ -1,5 +1,11 @@
 module.exports = {
   root: true,
+  // mobile/ is a self-contained package with its own ESLint 9 flat config
+  // (eslint.config.js), Prettier, and `expo lint` — this root config (ESLint 8,
+  // eslintrc) can't read its flat config and its stylistic rules conflict with
+  // mobile's Prettier (single vs double quotes, trailing commas). Leave mobile
+  // to its own tooling.
+  ignorePatterns: ['mobile/'],
   env: {
     browser: true,
     node: true,
@@ -116,15 +122,6 @@ module.exports = {
     ],
   },
   overrides: [
-    {
-      // mobile/ has its own ESLint setup (`expo lint` + eslint.config.js), which
-      // governs its console policy; disabling here avoids the two configs
-      // demanding contradictory eslint-disable comments.
-      files: ['mobile/**'],
-      rules: {
-        'no-console': 'off',
-      },
-    },
     {
       files: ['**/*.ts'],
       parser: '@typescript-eslint/parser',

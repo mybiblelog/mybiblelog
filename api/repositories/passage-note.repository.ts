@@ -275,6 +275,34 @@ export const createPassageNoteRepository = ({ passageNotes }: Collections) => {
       return passageNotes.countDocuments({ tags: new ObjectId(tagId) });
     },
 
+    /**
+     * Counts, in a single aggregation, how many notes reference each of the
+     * given tags. Returns an object keyed by tag id; tags with no notes are
+     * present with a count of 0. Avoids the N+1 of calling `countByTag` per tag.
+     */
+    async countByTags(tagIds: string[]): Promise<Record<string, number>> {
+      const counts: Record<string, number> = {};
+      for (const tagId of tagIds) {
+        counts[tagId] = 0;
+      }
+      if (tagIds.length === 0) {
+        return counts;
+      }
+
+      const objectIds = tagIds.map((tagId) => new ObjectId(tagId));
+      const rows = await passageNotes.aggregate<{ _id: ObjectId; count: number }>([
+        { $match: { tags: { $in: objectIds } } },
+        { $unwind: '$tags' },
+        { $match: { tags: { $in: objectIds } } },
+        { $group: { _id: '$tags', count: { $sum: 1 } } },
+      ]).toArray();
+
+      for (const row of rows) {
+        counts[row._id.toString()] = row.count;
+      }
+      return counts;
+    },
+
     async countByOwner(ownerId: string): Promise<number> {
       return passageNotes.countDocuments({ owner: new ObjectId(ownerId) });
     },

@@ -5,7 +5,7 @@ import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { userSettingsActions, useSettingsValue } from "@/src/stores/userSettings";
 import { useToast } from "@/src/toast/ToastProvider";
-import { BibleApps, BibleVersions } from "@mybiblelog/shared";
+import { bibleAppNames, BibleVersions } from "@mybiblelog/shared";
 import { ScrollView, StyleSheet } from "react-native";
 
 export default function ReadingSettings() {
@@ -42,16 +42,10 @@ export default function ReadingSettings() {
     return Object.keys(names).map((value) => ({ value, label: names[value] }));
   }, []);
 
-  const bibleAppOptions = useMemo(() => {
-    const names: Record<string, string> = {
-      [BibleApps.BIBLEGATEWAY]: "Bible Gateway",
-      [BibleApps.YOUVERSIONAPP]: "YouVersion App",
-      [BibleApps.BIBLECOM]: "Bible.com (YouVersion)",
-      [BibleApps.BLUELETTERBIBLE]: "Blue Letter Bible",
-      [BibleApps.OLIVETREE]: "Olive Tree App",
-    };
-    return Object.keys(names).map((value) => ({ value, label: names[value] }));
-  }, []);
+  const bibleAppOptions = useMemo(
+    () => Object.entries(bibleAppNames).map(([value, label]) => ({ value, label })),
+    []
+  );
 
   if (settings === null) {
     return (
