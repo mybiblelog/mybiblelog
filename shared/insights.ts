@@ -144,6 +144,55 @@ export const computeBookLastRead = (
   return result;
 };
 
+/**
+ * Buckets a book's last-read date into a 0–4 recency level within the timeframe
+ * [startDate, endDate]. The timeframe is split into four equal quarters:
+ * - `null` (not read in the timeframe) → level 0 (unread)
+ * - oldest quarter → level 1, then 2, 3, and the most recent quarter → level 4
+ * Higher level = more recently read (greener), matching the heatmap convention.
+ */
+export const getRecencyLevel = (
+  lastReadDate: string | null,
+  startDate: string,
+  endDate: string,
+): number => {
+  if (!lastReadDate) {
+    return 0;
+  }
+  const totalDays = dayjs(endDate).diff(dayjs(startDate), 'day');
+  const pos = dayjs(lastReadDate).diff(dayjs(startDate), 'day');
+  const fraction = totalDays > 0 ? pos / totalDays : 1;
+  if (fraction < 0.25) { return 1; }
+  if (fraction < 0.5) { return 2; }
+  if (fraction < 0.75) { return 3; }
+  return 4;
+};
+
+export type BookRecency = {
+  bookIndex: number;
+  lastReadDate: string | null;
+  /** 0 = not read within the timeframe; 1 (oldest quarter) → 4 (most recent). */
+  level: number;
+};
+
+/**
+ * For every book (1–66), determines the most recent date it was read within
+ * [startDate, endDate] and buckets it into a 0–4 recency level. Books not read
+ * in that window get `lastReadDate: null` and `level: 0`. Returned in Bible order.
+ */
+export const computeBookRecency = (
+  entries: ReadonlyArray<Readonly<InsightsLogEntry>>,
+  startDate: string,
+  endDate: string,
+): BookRecency[] => {
+  const filtered = filterEntriesByDateRange(entries, startDate, endDate);
+  return computeBookLastRead(filtered).map(book => ({
+    bookIndex: book.bookIndex,
+    lastReadDate: book.lastReadDate,
+    level: getRecencyLevel(book.lastReadDate, startDate, endDate),
+  }));
+};
+
 export type BookFrequency = {
   bookIndex: number;
   /** Unique verses read in this book within the date range. */

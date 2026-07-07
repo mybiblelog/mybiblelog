@@ -205,6 +205,15 @@
   --mbl-heat-3: #30a14e;
   --mbl-heat-4: #216e39;
   --mbl-heat-empty-border: var(--mbl-border-soft);
+
+  /* Insights book recency: 0 (not read in timeframe) → 4 (most recent quarter).
+     Oldest quarter red, ramping through orange/amber to green for most recent. */
+  --mbl-recency-0: #1a1a1a;
+  --mbl-recency-1: #e5484d;
+  --mbl-recency-2: #f76b15;
+  --mbl-recency-3: #ffc53d;
+  --mbl-recency-4: #30a14e;
+  --mbl-recency-swatch-border: var(--mbl-border-soft);
 }
 
 [data-theme="light"] {
@@ -293,6 +302,14 @@
   --mbl-heat-2: #006d32;
   --mbl-heat-3: #26a641;
   --mbl-heat-4: #39d353;
+
+  /* Insights book recency: brighter mids for contrast on the dark canvas;
+     level 0 lifts off pure black so the swatch stays visible. */
+  --mbl-recency-0: #2a2a2e;
+  --mbl-recency-1: #ff6369;
+  --mbl-recency-2: #ff8b3d;
+  --mbl-recency-3: #ffd15c;
+  --mbl-recency-4: #3fb950;
 }
 
 [data-theme="dark"] {

@@ -78,3 +78,17 @@ export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
     starGold: "#ffd700",
   },
 };
+
+/**
+ * Insights book-recency ramp, indexed by level 0–4: 0 = not read in the
+ * timeframe (near-black), 1 = oldest quarter (red) → 4 = most recent (green).
+ * Kept separate from `ThemeColors` (a flat string map keyed by semantic role)
+ * because it's an array, not a single color role.
+ */
+export const recencyByScheme: Record<
+  ColorSchemeName,
+  readonly [string, string, string, string, string]
+> = {
+  light: ["#1a1a1a", "#e5484d", "#f76b15", "#ffc53d", "#30a14e"],
+  dark: ["#2a2a2e", "#ff6369", "#ff8b3d", "#ffd15c", "#3fb950"],
+};

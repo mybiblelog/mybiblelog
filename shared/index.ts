@@ -12,6 +12,8 @@ export {
   getIntensityLevel,
   buildContributionCalendar,
   computeBookLastRead,
+  getRecencyLevel,
+  computeBookRecency,
   computeBookFrequencies,
   computeDailyVerseSeries,
   type InsightsLogEntry,
@@ -19,6 +21,7 @@ export {
   type HeatmapWeek,
   type ContributionCalendar,
   type BookLastRead,
+  type BookRecency,
   type BookFrequency,
   type DailyVersePoint,
 } from './insights';

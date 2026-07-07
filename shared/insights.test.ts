@@ -5,9 +5,11 @@ import {
   buildContributionCalendar,
   computeBookFrequencies,
   computeBookLastRead,
+  computeBookRecency,
   computeDailyVerseSeries,
   filterEntriesByDateRange,
   getIntensityLevel,
+  getRecencyLevel,
 } from './insights';
 
 const entry = (date: string, start: number, end: number) => ({
@@ -146,6 +148,58 @@ test('computeBookLastRead attributes a multi-book entry to every book it spans',
   expect(result.find(b => b.bookIndex === 1)?.lastReadDate).toBe('2026-04-01');
   expect(result.find(b => b.bookIndex === 2)?.lastReadDate).toBe('2026-03-10');
   expect(result.find(b => b.bookIndex === 3)?.lastReadDate).toBe(null);
+});
+
+// ---------------------------------------------------------------------------
+// getRecencyLevel
+// ---------------------------------------------------------------------------
+
+test('getRecencyLevel returns 0 when the book was not read in the timeframe', () => {
+  expect(getRecencyLevel(null, '2026-01-01', '2026-01-09')).toBe(0);
+});
+
+test('getRecencyLevel buckets the read date into quartiles of the timeframe', () => {
+  // Timeframe of 8 days → quartile boundaries land on whole days.
+  const start = '2026-01-01';
+  const end = '2026-01-09';
+  expect(getRecencyLevel('2026-01-01', start, end)).toBe(1); // oldest, fraction 0
+  expect(getRecencyLevel('2026-01-02', start, end)).toBe(1); // 0.125
+  expect(getRecencyLevel('2026-01-03', start, end)).toBe(2); // boundary 0.25 → not <0.25
+  expect(getRecencyLevel('2026-01-04', start, end)).toBe(2); // 0.375
+  expect(getRecencyLevel('2026-01-05', start, end)).toBe(3); // boundary 0.5
+  expect(getRecencyLevel('2026-01-07', start, end)).toBe(4); // boundary 0.75
+  expect(getRecencyLevel('2026-01-09', start, end)).toBe(4); // most recent, fraction 1
+});
+
+test('getRecencyLevel returns 4 (most recent) for a single-day timeframe', () => {
+  expect(getRecencyLevel('2026-06-15', '2026-06-15', '2026-06-15')).toBe(4);
+});
+
+// ---------------------------------------------------------------------------
+// computeBookRecency
+// ---------------------------------------------------------------------------
+
+test('computeBookRecency returns level 0 for every book when nothing was read', () => {
+  const result = computeBookRecency([], '2026-06-01', '2026-06-30');
+  expect(result).toHaveLength(Bible.getBookCount());
+  expect(result[0]).toEqual({ bookIndex: 1, lastReadDate: null, level: 0 });
+  expect(result.every(b => b.level === 0 && b.lastReadDate === null)).toBe(true);
+});
+
+test('computeBookRecency levels books by their most recent read and ignores out-of-range reads', () => {
+  const entries = [
+    // Genesis read near the end of the window → most recent quarter (level 4).
+    entry('2026-06-28', Bible.makeVerseId(1, 1, 1), Bible.makeVerseId(1, 1, 5)),
+    // Exodus read before the window starts → filtered out → unread (level 0).
+    entry('2026-05-01', Bible.makeVerseId(2, 1, 1), Bible.makeVerseId(2, 1, 5)),
+  ];
+  const result = computeBookRecency(entries, '2026-06-01', '2026-06-30');
+  const genesis = result.find(b => b.bookIndex === 1);
+  expect(genesis?.lastReadDate).toBe('2026-06-28');
+  expect(genesis?.level).toBe(4);
+  const exodus = result.find(b => b.bookIndex === 2);
+  expect(exodus?.lastReadDate).toBe(null);
+  expect(exodus?.level).toBe(0);
 });
 
 // ---------------------------------------------------------------------------
