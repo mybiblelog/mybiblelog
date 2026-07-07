@@ -1,4 +1,4 @@
-export { brand, colorsByScheme } from "./colors";
+export { brand, colorsByScheme, recencyByScheme } from "./colors";
 export type { ColorSchemeName, ThemeColors } from "./colors";
 export { spacing, TOUCH_TARGET } from "./spacing";
 export { radius } from "./radius";

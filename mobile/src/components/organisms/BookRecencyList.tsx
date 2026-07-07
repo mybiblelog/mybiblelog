@@ -1,15 +1,28 @@
+import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Bible, computeBookLastRead, type InsightsLogEntry } from "@mybiblelog/shared";
-import { spacing } from "@/src/design";
+import { Bible, computeBookRecency, type InsightsLogEntry } from "@mybiblelog/shared";
+import { radius, recencyByScheme, spacing, useTheme } from "@/src/design";
+import { Text } from "../atoms/Text";
 import { ListItem } from "../molecules/ListItem";
+import { SegmentedControl } from "../molecules/SegmentedControl";
 import { SelectRow } from "../molecules/SelectRow";
 import { SelectSheet } from "./SelectSheet";
-import { formatLongDate, getRelativeDateInfo } from "@/src/i18n/date";
+import { getRelativeDateInfo } from "@/src/i18n/date";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 
 type SortOrder = "bible" | "alpha" | "recent" | "oldest";
+type Timeframe = number | "all";
+type Testament = "all" | "old" | "new";
 type T = ReturnType<typeof useT>;
+
+const TIMEFRAME_OPTIONS = [30, 60, 90, 180, 365];
+
+const newTestamentBooks = new Set(
+  Bible.getBooks()
+    .filter((book) => book.newTestament)
+    .map((book) => book.bibleOrder)
+);
 
 const stripLeadingNumbers = (str: string) => str.replace(/^\d+\s*/, "").trim();
 
@@ -43,8 +56,27 @@ function formatRelative(t: T, ymd: string): string {
 export function BookRecencyList({ entries }: { entries: InsightsLogEntry[] }) {
   const t = useT();
   const { locale } = useLocale();
+  const { colors, scheme } = useTheme();
+  const recency = recencyByScheme[scheme];
+  const [days, setDays] = useState<Timeframe>(365);
+  const [testament, setTestament] = useState<Testament>("all");
   const [sort, setSort] = useState<SortOrder>("recent");
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [timeframeSheetOpen, setTimeframeSheetOpen] = useState(false);
+  const [sortSheetOpen, setSortSheetOpen] = useState(false);
+
+  const timeframeOptions = [
+    ...TIMEFRAME_OPTIONS.map((n) => ({
+      value: n as Timeframe,
+      label: t("insights_books_last_n_days", { count: n }),
+    })),
+    { value: "all" as Timeframe, label: t("insights_books_all_time") },
+  ];
+
+  const testamentOptions = [
+    { value: "all" as const, label: t("insights_books_whole_bible") },
+    { value: "old" as const, label: t("insights_books_old_testament") },
+    { value: "new" as const, label: t("insights_books_new_testament") },
+  ];
 
   const sortOptions = [
     { value: "bible" as const, label: t("insights_books_sort_bible_order") },
@@ -54,11 +86,26 @@ export function BookRecencyList({ entries }: { entries: InsightsLogEntry[] }) {
   ];
 
   const rows = useMemo(() => {
-    const data = computeBookLastRead(entries).map((book) => ({
-      bookIndex: book.bookIndex,
-      bookName: Bible.getBookName(book.bookIndex, locale),
-      lastReadDate: book.lastReadDate,
-    }));
+    const endDate = dayjs().format("YYYY-MM-DD");
+    const startDate =
+      days === "all"
+        ? entries.reduce((min, e) => (e.date < min ? e.date : min), endDate)
+        : dayjs()
+            .subtract(days - 1, "day")
+            .format("YYYY-MM-DD");
+
+    const data = computeBookRecency(entries, startDate, endDate)
+      .filter((book) => {
+        if (testament === "old") return !newTestamentBooks.has(book.bookIndex);
+        if (testament === "new") return newTestamentBooks.has(book.bookIndex);
+        return true;
+      })
+      .map((book) => ({
+        bookIndex: book.bookIndex,
+        bookName: Bible.getBookName(book.bookIndex, locale),
+        level: book.level,
+        lastReadDate: book.lastReadDate,
+      }));
 
     return data.sort((a, b) => {
       if (sort === "bible") return a.bookIndex - b.bookIndex;
@@ -68,6 +115,7 @@ export function BookRecencyList({ entries }: { entries: InsightsLogEntry[] }) {
           locale
         );
       }
+      // Books not read in the timeframe always sort last.
       if (!a.lastReadDate && !b.lastReadDate) return a.bookIndex - b.bookIndex;
       if (!a.lastReadDate) return 1;
       if (!b.lastReadDate) return -1;
@@ -75,26 +123,76 @@ export function BookRecencyList({ entries }: { entries: InsightsLogEntry[] }) {
         ? b.lastReadDate.localeCompare(a.lastReadDate)
         : a.lastReadDate.localeCompare(b.lastReadDate);
     });
-  }, [entries, sort, locale]);
+  }, [entries, days, testament, sort, locale]);
 
   return (
     <View style={styles.container}>
-      <SelectRow
-        label={t("insights_books_sort_label")}
-        value={sortOptions.find((o) => o.value === sort)?.label}
-        placeholder={t("insights_books_sort_label")}
-        onPress={() => setSheetOpen(true)}
-        testID="insights.books-sort-row"
-      />
+      <View style={styles.controls}>
+        <SelectRow
+          label={t("insights_books_timeframe_label")}
+          value={timeframeOptions.find((o) => o.value === days)?.label}
+          placeholder={t("insights_books_timeframe_label")}
+          onPress={() => setTimeframeSheetOpen(true)}
+          testID="insights.books-timeframe-row"
+        />
+        <SegmentedControl
+          label={t("insights_books_testament_label")}
+          options={testamentOptions}
+          value={testament}
+          onChange={setTestament}
+        />
+        <SelectRow
+          label={t("insights_books_sort_label")}
+          value={sortOptions.find((o) => o.value === sort)?.label}
+          placeholder={t("insights_books_sort_label")}
+          onPress={() => setSortSheetOpen(true)}
+          testID="insights.books-sort-row"
+        />
+      </View>
+
+      <View style={styles.legend}>
+        <Text variant="caption" color="mutedText">
+          {t("insights_books_less_recent")}
+        </Text>
+        {[1, 2, 3, 4].map((level) => (
+          <View
+            key={level}
+            style={[styles.swatch, { backgroundColor: recency[level], borderColor: colors.border }]}
+          />
+        ))}
+        <Text variant="caption" color="mutedText">
+          {t("insights_books_more_recent")}
+        </Text>
+        <View
+          style={[
+            styles.swatch,
+            styles.legendGap,
+            { backgroundColor: recency[0], borderColor: colors.border },
+          ]}
+        />
+        <Text variant="caption" color="mutedText">
+          {t("insights_books_not_read")}
+        </Text>
+      </View>
+
       <View style={styles.list}>
         {rows.map((row) => (
           <ListItem
             key={row.bookIndex}
             title={row.bookName}
             subtitle={
-              row.lastReadDate
-                ? `${formatRelative(t, row.lastReadDate)} · ${formatLongDate(row.lastReadDate, locale)}`
-                : t("insights_books_never_read")
+              row.level > 0
+                ? formatRelative(t, row.lastReadDate!)
+                : t("insights_books_not_read_in_timeframe")
+            }
+            leading={
+              <View
+                testID={`insights.books-swatch.${row.bookIndex}`}
+                style={[
+                  styles.swatch,
+                  { backgroundColor: recency[row.level], borderColor: colors.border },
+                ]}
+              />
             }
             bordered={false}
           />
@@ -102,12 +200,20 @@ export function BookRecencyList({ entries }: { entries: InsightsLogEntry[] }) {
       </View>
 
       <SelectSheet
-        visible={sheetOpen}
+        visible={timeframeSheetOpen}
+        title={t("insights_books_timeframe_label")}
+        options={timeframeOptions}
+        selectedValue={days}
+        onSelect={setDays}
+        onClose={() => setTimeframeSheetOpen(false)}
+      />
+      <SelectSheet
+        visible={sortSheetOpen}
         title={t("insights_books_sort_label")}
         options={sortOptions}
         selectedValue={sort}
         onSelect={setSort}
-        onClose={() => setSheetOpen(false)}
+        onClose={() => setSortSheetOpen(false)}
       />
     </View>
   );
@@ -115,5 +221,14 @@ export function BookRecencyList({ entries }: { entries: InsightsLogEntry[] }) {
 
 const styles = StyleSheet.create({
   container: { gap: spacing.md },
+  controls: { gap: spacing.md },
+  legend: { flexDirection: "row", alignItems: "center", gap: spacing.xs, flexWrap: "wrap" },
+  legendGap: { marginLeft: spacing.sm },
   list: { gap: spacing.xs },
+  swatch: {
+    width: 14,
+    height: 14,
+    borderRadius: radius.sm,
+    borderWidth: 1,
+  },
 });
