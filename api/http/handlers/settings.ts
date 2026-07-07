@@ -1,5 +1,5 @@
 import { type UserSettingsRecord } from '../../repositories/helpers/types';
-import deleteAccount from '../helpers/deleteAccount';
+import deleteAccount from '../helpers/delete-account';
 import { InternalError } from '../errors/internal-error';
 import { validate } from '../../validation/validate';
 import { settingsUpdateBodySchema } from '../../validation/schemas/user-settings';

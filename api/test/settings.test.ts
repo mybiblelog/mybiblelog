@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { requestApi, createTestUser, deleteTestUser } from './helpers';
-import { AUTH_COOKIE_NAME } from '../http/helpers/authCurrentUser';
+import { AUTH_COOKIE_NAME } from '../http/helpers/auth-current-user';
 
 describe('settings.test.js', () => {
   describe('GET /api/settings', () => {

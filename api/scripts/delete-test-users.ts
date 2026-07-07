@@ -1,5 +1,5 @@
 import useCollections, { closeConnection } from '../mongo/useCollections';
-import deleteAccount from '../http/helpers/deleteAccount';
+import deleteAccount from '../http/helpers/delete-account';
 
 // Main — intentionally left uninvoked; uncomment the `main()` call at the bottom to run.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

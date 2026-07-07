@@ -1,5 +1,5 @@
 import { TooManyRequestsError } from '../errors/http-errors';
-import checkTestBypass from '../helpers/checkTestBypass';
+import checkTestBypass from '../helpers/check-test-bypass';
 import { type RateLimitStore } from './store';
 
 /**

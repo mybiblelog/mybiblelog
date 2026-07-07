@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { shouldNotifyAdminsOfFeedback } from '../http/helpers/shouldNotifyAdminsOfFeedback';
+import { shouldNotifyAdminsOfFeedback } from '../http/helpers/should-notify-admins-of-feedback';
 
 describe('shouldNotifyAdminsOfFeedback', () => {
   it('returns true when there is no previous feedback', () => {

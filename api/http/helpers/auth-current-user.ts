@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { getConfig } from '../../config';
 import useRepositories from '../../repositories/useRepositories';
-import { parseCookieHeader } from './parseCookieHeader';
+import { parseCookieHeader } from './parse-cookie-header';
 import { AUTH_TOKEN_TTL_DAYS } from '../../repositories/helpers/user-auth';
 import { type UserRecord } from '../../repositories/helpers/types';
 import { UnauthenticatedError, UnauthorizedError } from '../errors/http-errors';

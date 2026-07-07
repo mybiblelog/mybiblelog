@@ -1,6 +1,6 @@
 import { validate } from '../../validation/validate';
 import { feedbackBodySchema } from '../../validation/schemas/feedback';
-import { shouldNotifyAdminsOfFeedback } from '../helpers/shouldNotifyAdminsOfFeedback';
+import { shouldNotifyAdminsOfFeedback } from '../helpers/should-notify-admins-of-feedback';
 import { type RouteHandler } from '../types';
 
 /**

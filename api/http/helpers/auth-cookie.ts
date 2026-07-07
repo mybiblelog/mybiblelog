@@ -1,4 +1,4 @@
-import { AUTH_COOKIE_NAME, AUTH_COOKIE_MAX_AGE } from './authCurrentUser';
+import { AUTH_COOKIE_NAME, AUTH_COOKIE_MAX_AGE } from './auth-current-user';
 import { type CookieInstruction } from '../types';
 
 /**
