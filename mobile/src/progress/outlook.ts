@@ -4,7 +4,7 @@ import { selectDateVerseCounts } from "@/src/stores/dateVerseCounts";
 
 /**
  * Pure computations for the Progress screen, ported from the web
- * `nuxt4/app/pages/progress.vue`. One divergence from the web page: the web
+ * `web/app/pages/progress.vue`. One divergence from the web page: the web
  * computes against `currentLogEntries` (already scoped to `date >=
  * lookBackDate`), whereas mobile's log-entry store returns all entries — so
  * these helpers take `lookBackDate` and filter internally.

@@ -13,8 +13,8 @@ Perform a thorough code review of changes in this repository, checking them agai
 ## Project Overview
 My Bible Log is a monorepo with three packages:
 - **`api/`** — Express 5 + TypeScript + Mongoose REST API. Framework-agnostic route tables, handlers, errors, and helpers live under `api/http/` (`api/http/routes/*.ts`, `api/http/handlers/*.ts`, `api/http/errors/`, `api/http/helpers/`); the Express wiring that mounts them lives in `api/express/router.ts`. Validation uses Zod. Errors use typed classes (`ValidationError`, `InvalidRequestError`, `UnauthorizedError`, `NotFoundError`). All endpoints return `ApiResponse` from `api/http/response.ts`.
-- **`nuxt/`** — Vue 2 + Nuxt 2 frontend with Nuxt Bridge enabled (moving toward full Vue 3 / Nuxt 3 / TypeScript adoption). Components are `.vue` SFCs using the Options API; new code should prefer Composition API (`setup()` or `<script setup lang="ts">`) where practical. State is managed exclusively via **Pinia** stores in `nuxt/stores/`. Styling uses global CSS classes (`mbl-*` prefix) and CSS custom properties — no SCSS modules.
-- **`shared/`** — `@mybiblelog/shared` package consumed by both `api/` and `nuxt/`. Contains domain utilities (`Bible`, `SimpleDate`, etc.).
+- **`web/`** — Vue 3 + Nuxt 4 frontend (TypeScript). Source lives under `web/app/`. Components are `.vue` SFCs using `<script setup lang="ts">` (Composition API). State is managed exclusively via **Pinia** stores in `web/app/stores/`. Styling uses global CSS classes (`mbl-*` prefix) and CSS custom properties — no SCSS modules.
+- **`shared/`** — `@mybiblelog/shared` package consumed by both `api/` and `web/`. Contains domain utilities (`Bible`, `SimpleDate`, etc.).
 
 ## Instructions
 
@@ -49,7 +49,7 @@ List the files you are about to review so the user can see the scope.
 Read every changed `.ts`, `.vue`, and `.css` file in full. Where a changed file is a Vue component, also read closely related files (e.g. the Pinia store it uses, or a parent page that composes it) to check the pattern as a whole.
 
 ### 3. Run the automated quality gates
-Run linting (covers both `api/` and `nuxt/`):
+Run linting (covers both `api/` and `web/`):
 ```
 npm run lint
 ```
@@ -78,7 +78,7 @@ For each finding, record:
 ### Architecture — Nuxt / Vue components
 
 - [ ] New Vue SFCs use `<script setup lang="ts">` (Composition API) rather than Options API where feasible, since the project is migrating toward full Vue 3. Existing Options API components are acceptable to leave as-is; flag only new Options API additions in new files as a P2.
-- [ ] Components have a single, clear responsibility. Pages in `nuxt/pages/` orchestrate data fetching and pass state down to components in `nuxt/components/`. Avoid mixing data-fetching logic deep inside leaf components.
+- [ ] Components have a single, clear responsibility. Pages in `web/app/pages/` orchestrate data fetching and pass state down to components in `web/app/components/`. Avoid mixing data-fetching logic deep inside leaf components.
 - [ ] Pinia store composables (`useXxxStore()`) are called at the top of `setup()` or in `data()`/`methods()`, not inside deeply nested callbacks or conditionally.
 - [ ] Components that import from Pinia stores use the typed composable (`useLogEntriesStore()`, etc.) — never import or mutate store state directly.
 - [ ] Modals and overlays use the shared `AppModal` / `useDialogStore` / `useActionSheetStore` patterns rather than ad-hoc visibility flags in parent components.
@@ -94,7 +94,7 @@ For each finding, record:
 
 ### Routing (Nuxt)
 
-- [ ] Navigation uses Nuxt's `<nuxt-link>` or `this.$router.push()` / `navigateTo()`. No bare `<a href>` tags for internal app routes.
+- [ ] Navigation uses Nuxt's `<NuxtLink>` or `navigateTo()`. No bare `<a href>` tags for internal app routes.
 - [ ] Route paths are not duplicated as magic strings — if a path appears in more than one place, it should be extracted to a shared constant.
 
 ### State management (Pinia)
@@ -120,17 +120,17 @@ For each finding, record:
 
 ### TypeScript
 
-- [ ] TypeScript strict mode is enabled (`"strict": true` in both `nuxt/tsconfig.json` and `api/tsconfig.json`). No `any` types unless genuinely unavoidable and annotated with a justifying comment (P1).
+- [ ] TypeScript strict mode is enabled (`"strict": true` in both `web/tsconfig.json` and `api/tsconfig.json`). No `any` types unless genuinely unavoidable and annotated with a justifying comment (P1).
 - [ ] No non-null assertions (`!`) on values that could realistically be `null` or `undefined` at runtime (P1).
 - [ ] Prop types in Vue components are declared with TypeScript interfaces or `PropType<T>` — not as untyped `Object` / `Array` props.
 - [ ] Async functions that can reject have error handling at the call site (`try/catch` or `.catch()`). Unhandled promise rejections are a P1.
 - [ ] Zod schemas in the API are used to infer TypeScript types (`z.infer<typeof schema>`) rather than defining parallel manual types.
-- [ ] Types shared between `api/` and `nuxt/` live in `shared/` or are duplicated with an explicit comment — they must not be imported cross-package directly.
+- [ ] Types shared between `api/` and `web/` live in `shared/` or are duplicated with an explicit comment — they must not be imported cross-package directly.
 
 ### Imports
 
-- [ ] Nuxt imports use `~/*` or `@/*` aliases (both map to the `nuxt/` root). No relative `../../` paths that cross directory boundaries.
-- [ ] API imports use relative paths or the TypeScript path aliases configured in `api/tsconfig.json`. Do not import from `nuxt/` in `api/` or vice versa — use `@mybiblelog/shared` for cross-package code.
+- [ ] Nuxt imports use `~/*` or `@/*` aliases (both map to the `web/app/` source root). No relative `../../` paths that cross directory boundaries.
+- [ ] API imports use relative paths or the TypeScript path aliases configured in `api/tsconfig.json`. Do not import from `web/` in `api/` or vice versa — use `@mybiblelog/shared` for cross-package code.
 - [ ] The `@mybiblelog/shared` package is always imported from its public index (`@mybiblelog/shared`), not from internal file paths.
 
 ### Tests
@@ -146,8 +146,8 @@ For each finding, record:
 - [ ] No `console.log` / `console.warn` / `console.error` left in production code (P1). Use the API's error middleware for server-side errors; surface errors in the UI via the toast/dialog stores.
 - [ ] No commented-out code blocks checked in (P2).
 - [ ] No TODO or FIXME comments introduced without a corresponding issue or clear explanation (P2).
-- [ ] No hardcoded API URLs, user IDs, or environment-specific strings outside of `.env` files or `nuxt/config/` / `api/config/`.
-- [ ] i18n: user-visible strings in `nuxt/` use `$t('key')` translation keys, not hardcoded English text — unless the string is genuinely internal (admin-only, dev-only).
+- [ ] No hardcoded API URLs, user IDs, or environment-specific strings outside of `.env` files or `web/nuxt.config.ts` runtime config / `api/config/`.
+- [ ] i18n: user-visible strings in `web/` use `$t('key')` translation keys, not hardcoded English text — unless the string is genuinely internal (admin-only, dev-only).
 
 ---
 

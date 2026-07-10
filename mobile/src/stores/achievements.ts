@@ -8,7 +8,7 @@ import {
 /**
  * Achievements store (Zustand).
  *
- * Mirrors `nuxt4/app/stores/achievements.ts`: holds the achievement currently
+ * Mirrors `web/app/stores/achievements.ts`: holds the achievement currently
  * being celebrated (book or whole-Bible completion), shown by the
  * `AchievementModal` rendered at the root layout. Achievements are ephemeral —
  * they fire when a log-entry mutation transitions a book/Bible from incomplete

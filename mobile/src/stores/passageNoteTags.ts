@@ -18,7 +18,7 @@ import { userSettingsActions, useUserSettingsStore } from "@/src/stores/userSett
 /**
  * Passage-note-tags store (Zustand).
  *
- * Mirrors `nuxt4/app/stores/passage-note-tags.ts`: the tag list is kept sorted
+ * Mirrors `web/app/stores/passage-note-tags.ts`: the tag list is kept sorted
  * client-side by the user's persisted sort order (a server-backed user
  * setting). Loaded lazily from the Notes/Tags screens' mount effects, not
  * `init.ts`. Unlike the web store, `create` returns the created tag so callers

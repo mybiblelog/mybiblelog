@@ -7,9 +7,7 @@ dotenv.config({
   quiet: true,
 });
 
-const isNuxt4 = process.env.E2E_TARGET === 'nuxt4';
-const defaultSitePort = isNuxt4 ? 'http://localhost:3001' : 'http://localhost:3000';
-const siteUrl = process.env.TEST_SITE_URL || defaultSitePort;
+const siteUrl = process.env.TEST_SITE_URL || 'http://localhost:3000';
 const apiUrl = process.env.TEST_API_URL || 'http://localhost:8080';
 
 /**
@@ -26,20 +24,17 @@ export default defineConfig({
   /*
    * CI runs serially. Locally the whole suite shares a single dev server + API,
    * so the Playwright default (~half the CPU cores) overwhelms on-demand route
-   * compilation and times out timing-sensitive specs (log/settings/notes). Cap
-   * to a level one dev server handles reliably; override with `--workers=N`.
-   * Nuxt4's Vite dev server compiles each route lazily on first hit (webpack's
-   * nuxt2 pipeline handles concurrent first-hits more gracefully), so it needs
-   * a lower cap to avoid contention on cold/uncompiled routes.
+   * compilation and times out timing-sensitive specs (log/settings/notes). The
+   * Vite dev server compiles each route lazily on first hit, so cap workers to
+   * a level one dev server handles reliably; override with `--workers=N`.
    */
-  workers: process.env.CI ? 1 : (isNuxt4 ? 2 : 3),
+  workers: process.env.CI ? 1 : 2,
   /*
-   * Give Nuxt4 more headroom per action: the same on-demand Vite compilation
-   * above can make a route's first hit exceed the default 30s action timeout
-   * even with fewer workers, causing flaky failures on whichever spec happens
-   * to hit an uncompiled route first (not a fixed/reproducible test).
+   * Give each action headroom: on-demand Vite compilation can make a route's
+   * first hit exceed the default 30s action timeout, causing flaky failures on
+   * whichever spec happens to hit an uncompiled route first.
    */
-  timeout: isNuxt4 ? 45_000 : 30_000,
+  timeout: 45_000,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [['html', { open: 'never' }], ['list']],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -67,7 +62,7 @@ export default defineConfig({
   ],
 
   /*
-   * Start the api + nuxt dev servers automatically (reused if already running).
+   * Start the api + web dev servers automatically (reused if already running).
    * Set E2E_NO_SERVER=1 to skip — e.g. when running the suite against a
    * deployed/migrated app via TEST_SITE_URL/TEST_API_URL.
    */
@@ -82,7 +77,7 @@ export default defineConfig({
         env: { REQUIRE_EMAIL_VERIFICATION: 'false' },
       },
       {
-        command: isNuxt4 ? 'npm run dev:nuxt4' : 'npm run dev:nuxt',
+        command: 'npm run dev:web',
         url: siteUrl,
         reuseExistingServer: !process.env.CI,
         timeout: 300_000,
