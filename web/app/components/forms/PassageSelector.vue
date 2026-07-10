@@ -157,8 +157,11 @@ import AppModal from '~/components/popups/AppModal.vue';
 import GridSelector from '~/components/forms/GridSelector.vue';
 import TapRangeSelector from '~/components/forms/TapRangeSelector.vue';
 
+// Seed the selector either empty or from an existing verse range.
+type PassageSeed = { empty: true } | { empty?: false; startVerseId: number; endVerseId: number };
+
 const props = withDefaults(defineProps<{
-  populateWith?: Record<string, unknown>;
+  populateWith?: PassageSeed;
 }>(), {
   populateWith: () => ({ empty: true }),
 });
@@ -274,7 +277,7 @@ defineExpose({ openSelectBook });
 
 onMounted(() => {
   if (!props.populateWith.empty) {
-    const { startVerseId, endVerseId } = props.populateWith as { startVerseId: number; endVerseId: number };
+    const { startVerseId, endVerseId } = props.populateWith;
     // Hydrate from the existing range without emitting a change.
     const { state, options } = PassageSelection.passageSelectionFromRange({ startVerseId, endVerseId });
     selected.value = state;

@@ -162,7 +162,7 @@ async function createImportedRows() {
   for (const row of importRows.value) {
     if (row.status === t('status_invalid') || row.startVerseId === null) { continue; }
     row.status = t('status_checking');
-    const existing = logEntriesStore.logEntries.find((e: Record<string, unknown>) =>
+    const existing = logEntriesStore.logEntries.find(e =>
       e.date === row.date && e.startVerseId === row.startVerseId && e.endVerseId === row.endVerseId,
     );
     if (row.date && (!earliestDate.value || row.date < earliestDate.value)) {

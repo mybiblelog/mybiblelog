@@ -10,7 +10,7 @@ export type AchievementType = (typeof ACHIEVEMENT)[keyof typeof ACHIEVEMENT];
 export type AchievementsState = {
   open: boolean;
   achievementType: AchievementType | null;
-  achievementData: unknown;
+  achievementData: number | null;
 };
 
 const emptyState: AchievementsState = {

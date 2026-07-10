@@ -171,16 +171,16 @@ export const usePassageNotesStore = defineStore('passage-notes', {
       }
     },
 
-    async createPassageNote(newPassageNote: Record<string, unknown>): Promise<unknown | null> {
+    async createPassageNote(newPassageNote: Record<string, unknown>): Promise<PassageNoteListItem | null> {
       const { $http } = useNuxtApp();
-      const { data } = await $http.post<unknown>('/api/passage-notes', newPassageNote);
+      const { data } = await $http.post<PassageNoteListItem>('/api/passage-notes', newPassageNote);
       return data || null;
     },
 
-    async updatePassageNote(passageNoteUpdate: Record<string, unknown> & { id: number | string }): Promise<unknown | null> {
+    async updatePassageNote(passageNoteUpdate: Record<string, unknown> & { id: number | string }): Promise<PassageNoteListItem | null> {
       const { $http } = useNuxtApp();
       const { id } = passageNoteUpdate;
-      const { data } = await $http.patch<unknown>(`/api/passage-notes/${id}`, passageNoteUpdate);
+      const { data } = await $http.patch<PassageNoteListItem>(`/api/passage-notes/${id}`, passageNoteUpdate);
       return data || null;
     },
 

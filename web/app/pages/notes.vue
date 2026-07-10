@@ -139,6 +139,7 @@ import { useUserSettingsStore } from '~/stores/user-settings';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { decodePassageNotesRouteQuery, encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
+import type { PassageNotesQuery } from '~/helpers/passage-notes-route-query';
 import type { PassageNoteListItem } from '~/stores/passage-notes';
 
 definePageMeta({ middleware: ['auth'] });
@@ -252,13 +253,13 @@ async function deleteNote(id: string | number) {
   }
 }
 
-function pushNotesQuery(nextQuery: Record<string, unknown>, { replace = false } = {}) {
-  const query = encodePassageNotesQueryToRoute(nextQuery as Parameters<typeof encodePassageNotesQueryToRoute>[0]);
+function pushNotesQuery(nextQuery: Partial<PassageNotesQuery>, { replace = false } = {}) {
+  const query = encodePassageNotesQueryToRoute(nextQuery);
   const nav = { path: '/notes', query };
   return replace ? router.replace(nav) : router.push(nav);
 }
 
-async function applyQueryManager(update: Record<string, unknown>) {
+async function applyQueryManager(update: Partial<PassageNotesQuery>) {
   closeQueryManagerModal();
   await pushNotesQuery({ ...passageNotesStore.query, ...update, offset: 0 });
 }
@@ -274,7 +275,7 @@ function onPageChanged(newPage: number) {
 const lastAppliedKey = ref<string | null>(null);
 
 watch(() => route.query, async (routeQuery) => {
-  const decoded = decodePassageNotesRouteQuery(routeQuery as Record<string, unknown>);
+  const decoded = decodePassageNotesRouteQuery(routeQuery);
   const key = JSON.stringify(decoded);
   if (key === lastAppliedKey.value) { return; }
   lastAppliedKey.value = key;

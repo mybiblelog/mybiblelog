@@ -38,6 +38,17 @@ export type UserSettingsUpdate = Partial<Pick<UserSettings,
   | 'locale'
 >>;
 
+// The `/api/settings` payload. Fields are validated at runtime below (the
+// server contract isn't guaranteed), so each is narrowed before use.
+type ServerSettingsResponse = {
+  lookBackDate?: string;
+  dailyVerseCountGoal?: number;
+  preferredBibleVersion?: string;
+  startPage?: string;
+  passageNoteTagSortOrder?: string;
+  locale?: string;
+};
+
 const defaultSettings: UserSettings = {
   lookBackDate: '',
   dailyVerseCountGoal: 0,
@@ -150,7 +161,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
 
     async loadServerSettings(): Promise<void> {
       const { $http } = useNuxtApp();
-      const { data } = await $http.get<Record<string, unknown>>('/api/settings');
+      const { data } = await $http.get<ServerSettingsResponse>('/api/settings');
       const {
         lookBackDate,
         dailyVerseCountGoal,
@@ -158,7 +169,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
         startPage,
         passageNoteTagSortOrder,
         locale,
-      } = (data || {}) as Record<string, unknown>;
+      } = data || {};
 
       this.applySettingsUpdate({
         lookBackDate: typeof lookBackDate === 'string' ? lookBackDate : undefined,

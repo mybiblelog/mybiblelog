@@ -289,7 +289,7 @@ async function handleSave() {
   formError.value = '';
   const result = await store.savePassageNote();
   if (!result) {
-    formError.value = String((store.errors as Record<string, unknown>)?._form ?? t('could_not_save'));
+    formError.value = String(store.errors?._form ?? t('could_not_save'));
   }
 }
 

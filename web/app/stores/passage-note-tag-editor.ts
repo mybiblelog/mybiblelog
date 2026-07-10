@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
+import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useDialogStore } from '~/stores/dialog';
 import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
+import type { PassageNoteTag } from '~/stores/passage-note-tags';
 
 export type PassageNoteTagModel = {
   id: number | string | null;
@@ -12,7 +14,7 @@ export type PassageNoteTagModel = {
   [key: string]: unknown;
 };
 
-export type PassageNoteTagEditorErrors = Record<string, unknown>;
+export type PassageNoteTagEditorErrors = Record<string, ApiErrorDetail>;
 
 export type PassageNoteTagEditorState = {
   open: boolean;
@@ -81,7 +83,7 @@ export const usePassageNoteTagEditorStore = defineStore('passage-note-tag-editor
       this.passageNoteTag = clone(passageNoteTag);
     },
 
-    async savePassageNoteTag(): Promise<unknown | null> {
+    async savePassageNoteTag(): Promise<PassageNoteTag | null> {
       if (this.submitting) {
         return null;
       }

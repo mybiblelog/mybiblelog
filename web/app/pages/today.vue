@@ -230,7 +230,7 @@ const dailyGoalPercentCompleteNew = computed(() => {
   return Math.min(100, Number(pct.toFixed(0)));
 });
 
-type LogEntryLike = { id: number | string; date: string; startVerseId: number; endVerseId: number; [key: string]: unknown };
+type LogEntryLike = { id: number | string; date: string; startVerseId: number; endVerseId: number };
 
 const addNewVerseCountToLogEntry = (logEntry: LogEntryLike) => {
   const today = dayjs().format('YYYY-MM-DD');

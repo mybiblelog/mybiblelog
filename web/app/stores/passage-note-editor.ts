@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
+import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useDialogStore } from '~/stores/dialog';
 import { usePassageNotesStore } from '~/stores/passage-notes';
+import type { PassageNoteListItem } from '~/stores/passage-notes';
 
 export type PassageRange = {
   startVerseId: number;
@@ -17,7 +19,7 @@ export type PassageNoteModel = {
   [key: string]: unknown;
 };
 
-export type PassageNoteEditorErrors = Record<string, unknown>;
+export type PassageNoteEditorErrors = Record<string, ApiErrorDetail>;
 
 export type PassageNoteEditorState = {
   open: boolean;
@@ -98,7 +100,7 @@ export const usePassageNoteEditorStore = defineStore('passage-note-editor', {
       this.isValid = Boolean(isValid);
     },
 
-    async savePassageNote(): Promise<unknown | null> {
+    async savePassageNote(): Promise<PassageNoteListItem | null> {
       if (this.submitting) {
         return null;
       }
@@ -106,12 +108,12 @@ export const usePassageNoteEditorStore = defineStore('passage-note-editor', {
       try {
         const passageNotesStore = usePassageNotesStore();
 
-        let savedPassageNote: unknown;
+        let savedPassageNote: PassageNoteListItem | null;
         if (this.passageNote.id) {
-          savedPassageNote = await passageNotesStore.updatePassageNote(this.passageNote as unknown as { id: number | string });
+          savedPassageNote = await passageNotesStore.updatePassageNote({ ...this.passageNote, id: this.passageNote.id });
         }
         else {
-          savedPassageNote = await passageNotesStore.createPassageNote(this.passageNote as unknown as Record<string, unknown>);
+          savedPassageNote = await passageNotesStore.createPassageNote(this.passageNote);
         }
 
         if (savedPassageNote) {

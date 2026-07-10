@@ -185,7 +185,6 @@ type LogEntryLike = {
   date: string;
   startVerseId: number;
   endVerseId: number;
-  [key: string]: unknown;
 };
 
 const logEntries = computed(() => logEntriesStore.logEntries as LogEntryLike[]);
@@ -475,7 +474,7 @@ function attachResultsBarObserver() {
 }
 
 watch(() => route.query, async (routeQuery) => {
-  const decoded = decodeLogEntriesRouteQuery(routeQuery as Record<string, unknown>);
+  const decoded = decodeLogEntriesRouteQuery(routeQuery);
   const key = JSON.stringify(decoded);
   if (key === lastAppliedLogRouteQueryKey.value) { return; }
   lastAppliedLogRouteQueryKey.value = key;

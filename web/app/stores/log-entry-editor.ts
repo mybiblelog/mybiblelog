@@ -6,6 +6,7 @@ import { useDialogStore } from '~/stores/dialog';
 import { ApiError } from '~/helpers/api-error';
 import type { ApiErrorDetail } from '~/helpers/api-error';
 import { useLogEntriesStore } from '~/stores/log-entries';
+import type { LogEntry } from '~/stores/log-entries';
 
 export type { LogEntryEditorModel };
 
@@ -120,13 +121,13 @@ export const useLogEntryEditorStore = defineStore('log-entry-editor', {
       this.updateLogEntry(LogEntryEditorMachine.updateDate(this.logEntry, date));
     },
 
-    async saveLogEntry(): Promise<unknown | null> {
+    async saveLogEntry(): Promise<LogEntry | null> {
       if (this.submitting) {
         return null;
       }
       this.submitting = true;
       try {
-        let savedLogEntry: unknown;
+        let savedLogEntry: LogEntry;
         if (this.logEntry.id) {
           savedLogEntry = await useLogEntriesStore().updateLogEntry({
             id: this.logEntry.id,

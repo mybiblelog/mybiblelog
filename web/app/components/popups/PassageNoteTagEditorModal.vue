@@ -92,7 +92,7 @@ async function handleEditorSave() {
   editorError.value = '';
   const result = await tagEditorStore.savePassageNoteTag();
   if (!result) {
-    editorError.value = String((tagEditorStore.errors as Record<string, unknown>)?._form ?? t('unknown_error'));
+    editorError.value = String(tagEditorStore.errors?._form ?? t('unknown_error'));
   }
 }
 

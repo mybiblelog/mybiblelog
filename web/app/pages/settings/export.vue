@@ -54,6 +54,8 @@ import { UnknownApiError } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntriesStore } from '~/stores/log-entries';
+import type { PassageNoteListItem } from '~/stores/passage-notes';
+import type { PassageNoteTag } from '~/stores/passage-note-tags';
 import { useAppInitStore } from '~/stores/app-init';
 
 definePageMeta({ middleware: ['auth'] });
@@ -94,9 +96,9 @@ function csvRow(values: string[]): string {
 
 function downloadLogEntriesCSV() {
   if (!logCsvCache) {
-    const rows = logEntriesStore.logEntries.map((entry: Record<string, unknown>) => [
+    const rows = logEntriesStore.logEntries.map(entry => [
       String(entry.date),
-      Bible.displayVerseRange(entry.startVerseId as number, entry.endVerseId as number, locale.value),
+      Bible.displayVerseRange(entry.startVerseId, entry.endVerseId, locale.value),
     ]);
     logCsvCache = rows.map(csvRow).join('\n') + '\n';
   }
@@ -104,11 +106,11 @@ function downloadLogEntriesCSV() {
   generateDownload(t('reading_log_filename', { today }), logCsvCache);
 }
 
-async function loadAllNotes() {
-  const allNotes: unknown[] = [];
+async function loadAllNotes(): Promise<PassageNoteListItem[]> {
+  const allNotes: PassageNoteListItem[] = [];
   let offset = 0;
   while (true) {
-    const res = await $fetch<{ data: unknown[]; meta: { pagination: { size: number } } }>(`/api/passage-notes?offset=${offset}`);
+    const res = await $fetch<{ data: PassageNoteListItem[]; meta: { pagination: { size: number } } }>(`/api/passage-notes?offset=${offset}`);
     allNotes.push(...res.data);
     if (allNotes.length >= res.meta.pagination.size) { break; }
     offset += 10;
@@ -120,12 +122,12 @@ async function downloadNotesTextFile() {
   const toastStore = useToastStore();
   if (!notesTextCache) {
     try {
-      const tags = (await $fetch<{ data: unknown[] }>('/api/passage-note-tags')).data;
-      const notes = await loadAllNotes() as Array<Record<string, unknown>>;
+      const tags = (await $fetch<{ data: PassageNoteTag[] }>('/api/passage-note-tags')).data;
+      const notes = await loadAllNotes();
       const NOTES_HEADING = t('notes_export_heading_notes');
       const TAGS_HEADING = t('notes_export_heading_tags');
-      const noteTexts = notes.map(note => generateNoteText(note, tags as Array<Record<string, unknown>>));
-      const tagTexts = (tags as Array<Record<string, unknown>>).map(generateTagText);
+      const noteTexts = notes.map(note => generateNoteText(note, tags));
+      const tagTexts = tags.map(generateTagText);
       notesTextCache = [
         t('notes_export_title'),
         `\n\n===========\n${NOTES_HEADING}\n===========\n\n`,
@@ -147,7 +149,7 @@ async function downloadNotesJsonFile() {
   const toastStore = useToastStore();
   if (!notesJsonCache) {
     try {
-      const tags = (await $fetch<{ data: unknown[] }>('/api/passage-note-tags')).data;
+      const tags = (await $fetch<{ data: PassageNoteTag[] }>('/api/passage-note-tags')).data;
       const notes = await loadAllNotes();
       notesJsonCache = JSON.stringify({ notes, tags });
     }
@@ -160,20 +162,20 @@ async function downloadNotesJsonFile() {
   generateDownload(t('notes_json_filename', { today }), notesJsonCache);
 }
 
-function generateNoteText(note: Record<string, unknown>, tags: Array<Record<string, unknown>>) {
+function generateNoteText(note: PassageNoteListItem, tags: PassageNoteTag[]) {
   const dateTimeFormat = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'long' } as Intl.DateTimeFormatOptions);
-  const noteDate = dateTimeFormat.format(new Date(note.createdAt as string));
+  const noteDate = dateTimeFormat.format(new Date(String(note.createdAt ?? '')));
   const PASSAGES_HEADING = t('notes_export_heading_passages');
   const TAGS_HEADING = t('notes_export_heading_tags');
   let result = noteDate;
-  if ((note.passages as unknown[]).length) {
+  if (note.passages?.length) {
     result += '\n\n' + `${PASSAGES_HEADING}:\n`;
-    const passages = (note.passages as Array<Record<string, unknown>>).map(p =>
-      Bible.displayVerseRange(p.startVerseId as number, p.endVerseId as number));
+    const passages = note.passages.map(p =>
+      Bible.displayVerseRange(p.startVerseId, p.endVerseId));
     result += passages.map(p => `* ${p}`).join('\n');
   }
-  if ((note.tags as unknown[]).length) {
-    const tagLabels = (note.tags as Array<string | number>)
+  if (note.tags?.length) {
+    const tagLabels = note.tags
       .map((tagId) => {
         const tag = tags.find(t => t.id === tagId || t._id === tagId);
         return tag ? tag.label : null;
@@ -184,13 +186,13 @@ function generateNoteText(note: Record<string, unknown>, tags: Array<Record<stri
       result += tagLabels.map(tag => `* ${tag}`).join('\n');
     }
   }
-  if ((note.content as string).length) {
+  if (note.content?.length) {
     result += '\n\n- - - - -\n\n' + note.content;
   }
   return result;
 }
 
-function generateTagText(tag: Record<string, unknown>) {
+function generateTagText(tag: PassageNoteTag) {
   let result = String(tag.label);
   if (tag.description) { result += '\n\n' + tag.description; }
   return result;

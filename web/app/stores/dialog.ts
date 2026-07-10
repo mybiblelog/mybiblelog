@@ -28,7 +28,7 @@ export type DialogState = {
   confirmButtonText: string;
   confirmButtonType: ButtonType;
   cancelButtonText: string;
-  resolvePromise?: (value?: unknown) => void;
+  resolvePromise?: (value?: boolean) => void;
 };
 
 const emptyState: Omit<DialogState, 'resolvePromise'> = {

@@ -160,7 +160,8 @@ const bookSortOrder = ref<'numerical' | 'alphabetical'>('numerical');
 const singleSelectionTarget = ref<SingleSelection>(null);
 const singleSelected = ref(PassageSelection.emptySingleVerseSelection());
 const passageSelectorKey = ref(0);
-const passageSelectorPopulateWith = ref<Record<string, unknown>>({ empty: true });
+type PassageSeed = { empty: true } | { empty?: false; startVerseId: number; endVerseId: number };
+const passageSelectorPopulateWith = ref<PassageSeed>({ empty: true });
 const passageSelectorRef = ref<{ openSelectBook:() => void } | null>(null);
 
 const valueRange = computed(() => coerceVerseRange(props.modelValue));

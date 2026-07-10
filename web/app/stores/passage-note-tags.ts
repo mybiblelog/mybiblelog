@@ -282,7 +282,7 @@ export const usePassageNoteTagsStore = defineStore('passage-note-tags', {
     },
 
     async createPassageNoteTag(
-      { label, color, description }: { label: unknown; color: unknown; description: unknown },
+      { label, color, description }: { label: string; color: string; description: string },
     ): Promise<PassageNoteTag> {
       const { $http } = useNuxtApp();
       const { data: result } = await $http.post<PassageNoteTag>('/api/passage-note-tags', { label, color, description });
@@ -291,7 +291,7 @@ export const usePassageNoteTagsStore = defineStore('passage-note-tags', {
     },
 
     async updatePassageNoteTag(
-      { id, label, color, description }: { id: number | string; label: unknown; color: unknown; description: unknown },
+      { id, label, color, description }: { id: number | string; label: string; color: string; description: string },
     ): Promise<PassageNoteTag | null> {
       const { $http } = useNuxtApp();
       const { data } = await $http.patch<PassageNoteTag | null>(`/api/passage-note-tags/${id}`, { id, label, color, description });

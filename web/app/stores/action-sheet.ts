@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 export type ActionSheetItem = {
   label: string;
   callback?: () => void;
-} & Record<string, unknown>;
+};
 
 export const useActionSheetStore = defineStore('action-sheet', {
   state: () => ({

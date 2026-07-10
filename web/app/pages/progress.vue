@@ -59,7 +59,7 @@
               </tr>
               <tr>
                 <td>{{ t('your_progress_so_far.percent_complete') }}</td>
-                <td>{{ n(Math.floor(uniqueVersesReadSinceLookBackDate / totalBibleVerseCount * 100).toFixed() as unknown as number / 100, 'percent') }}</td>
+                <td>{{ n(Math.floor(uniqueVersesReadSinceLookBackDate / totalBibleVerseCount * 100) / 100, 'percent') }}</td>
               </tr>
             </tbody>
           </table>
