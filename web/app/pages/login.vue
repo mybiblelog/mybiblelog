@@ -89,14 +89,19 @@ const { $http, $terr } = useNuxtApp() as {
   $terr: (error: unknown, props?: Record<string, unknown>) => string;
 };
 
-const googleOauth2Url = ref<string | null>(null);
-try {
-  const { data } = await $http.get<{ data: { url: string } }>('/api/auth/oauth2/google/url');
-  googleOauth2Url.value = (data as any)?.url ?? null;
-}
-catch {
-  // non-fatal: button simply won't render
-}
+// Fetch once on the server and transfer via the Nuxt payload so the client reuses
+// the same result. A plain top-level `await $http.get()` would re-run on hydration
+// and mint a fresh OAuth `state`, causing a hydration mismatch on the button href.
+const { data: googleOauth2Url } = await useAsyncData('google-oauth2-url', async () => {
+  try {
+    const { data } = await $http.get<{ data: { url: string } }>('/api/auth/oauth2/google/url');
+    return (data as any)?.url ?? null;
+  }
+  catch {
+    // non-fatal: button simply won't render
+    return null;
+  }
+});
 
 // Read DOM values BEFORE Vue's hydration overwrites them, so refs are initialized
 // with any values a test runner (Playwright) may have set pre-hydration.

@@ -305,13 +305,6 @@ watch(() => store.open, () => {
   showManageTagsModal.value = false;
   formError.value = '';
 });
-
-// Ensure the global tags list is available for rendering selected tag pills.
-onMounted(() => {
-  if (!passageNoteTagsStore.passageNoteTags?.length) {
-    passageNoteTagsStore.loadPassageNoteTags();
-  }
-});
 </script>
 
 <style scoped>
