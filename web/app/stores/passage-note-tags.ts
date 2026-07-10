@@ -33,13 +33,6 @@ export type PassageNoteTagsState = {
   sortOrder: PassageNoteTagSortOrder;
 };
 
-type Http = {
-  get: <T>(path: string) => Promise<{ data: T }>;
-  post: <T>(path: string, body?: unknown) => Promise<{ data: T }>;
-  patch: <T>(path: string, body?: unknown) => Promise<{ data: T }>;
-  delete: <T>(path: string) => Promise<{ data: T }>;
-};
-
 const passageNoteTagLabelCollator = new Intl.Collator(undefined, {
   usage: 'sort',
   sensitivity: 'base',
@@ -243,7 +236,7 @@ export const usePassageNoteTagsStore = defineStore('passage-note-tags', {
     },
 
     async loadPassageNoteTags(): Promise<void> {
-      const { $http } = useNuxtApp() as { $http: Http };
+      const { $http } = useNuxtApp();
       const sortOrder = useUserSettingsStore().settings.passageNoteTagSortOrder;
       if (sortOrder) {
         this.setPassageNoteTagSortOrder({ sortOrder, persist: false });
@@ -287,7 +280,7 @@ export const usePassageNoteTagsStore = defineStore('passage-note-tags', {
     async createPassageNoteTag(
       { label, color, description }: { label: unknown; color: unknown; description: unknown },
     ): Promise<PassageNoteTag> {
-      const { $http } = useNuxtApp() as { $http: Http };
+      const { $http } = useNuxtApp();
       const { data: result } = await $http.post<PassageNoteTag>('/api/passage-note-tags', { label, color, description });
       this.addPassageNoteTag(result);
       return result;
@@ -296,7 +289,7 @@ export const usePassageNoteTagsStore = defineStore('passage-note-tags', {
     async updatePassageNoteTag(
       { id, label, color, description }: { id: number | string; label: unknown; color: unknown; description: unknown },
     ): Promise<PassageNoteTag | null> {
-      const { $http } = useNuxtApp() as { $http: Http };
+      const { $http } = useNuxtApp();
       const { data } = await $http.patch<PassageNoteTag | null>(`/api/passage-note-tags/${id}`, { id, label, color, description });
       if (!data) { return null; }
       this.updatePassageNoteTagInState(data);
@@ -304,7 +297,7 @@ export const usePassageNoteTagsStore = defineStore('passage-note-tags', {
     },
 
     async deletePassageNoteTag(passageNoteTagId: number | string): Promise<boolean> {
-      const { $http } = useNuxtApp() as { $http: Http };
+      const { $http } = useNuxtApp();
       const { data } = await $http.delete<unknown>(`/api/passage-note-tags/${passageNoteTagId}`);
       if (data) {
         this.removePassageNoteTag(passageNoteTagId);

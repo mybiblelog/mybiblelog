@@ -7,10 +7,10 @@ const REDIRECT_MAP: Record<string, string> = {
 };
 
 export default defineNuxtRouteMiddleware(async () => {
-  const nuxtApp = useNuxtApp() as { $http: { get: <T>(path: string) => Promise<T> } };
+  const nuxtApp = useNuxtApp();
   const localePath = useLocalePath();
   try {
-    const { data } = await nuxtApp.$http.get<{ data: { startPage?: string } }>('/api/settings');
+    const { data } = await nuxtApp.$http.get<{ startPage?: string }>('/api/settings');
     const startPage = data?.startPage;
     if (startPage && startPage !== 'start') {
       const redirectPath = REDIRECT_MAP[startPage];

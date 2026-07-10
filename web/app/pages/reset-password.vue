@@ -50,6 +50,7 @@
 
 <script setup lang="ts">
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
+import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useAuthStore } from '~/stores/auth';
 
@@ -61,17 +62,14 @@ useHead({ title: () => t('reset_password'), meta: [{ name: 'robots', content: 'n
 const localePath = useLocalePath();
 const router = useRouter();
 const authStore = useAuthStore();
-const { $http, $terr } = useNuxtApp() as {
-  $http: { get: <T>(path: string) => Promise<T>; post: <T>(path: string, body?: unknown) => Promise<T> };
-  $terr: (error: unknown, props?: Record<string, unknown>) => string;
-};
+const { $http, $terr } = useNuxtApp();
 
 const passwordResetCode = ref<string | null>(null);
 const passwordResetCodeValid = ref(true);
 const checkedCode = ref(false);
 const newPassword = ref('');
 const confirmNewPassword = ref('');
-const errors = ref<Record<string, unknown>>({});
+const errors = ref<Record<string, string | ApiErrorDetail>>({});
 const mounted = ref(false);
 const submitting = ref(false);
 onMounted(() => { mounted.value = true; });
@@ -85,7 +83,7 @@ onMounted(async () => {
   passwordResetCode.value = code;
 
   try {
-    const { data } = await $http.get<{ data: { valid: boolean } }>(`/api/auth/password/reset/${code}/valid`);
+    const { data } = await $http.get<{ valid: boolean }>(`/api/auth/password/reset/${code}/valid`);
     passwordResetCodeValid.value = data.valid;
   }
   catch {

@@ -63,9 +63,7 @@ onMounted(() => { mounted.value = true; });
 
 const authStore = useAuthStore();
 const toastStore = useToastStore();
-const { $http } = useNuxtApp() as {
-  $http: { delete: <T>(path: string) => Promise<T> };
-};
+const { $http } = useNuxtApp();
 
 const formBusy = ref(false);
 const understand = reactive({

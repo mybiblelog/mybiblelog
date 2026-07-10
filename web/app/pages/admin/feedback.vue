@@ -244,18 +244,9 @@ async function loadFeedbacks() {
   try {
     const offset = (page.value - 1) * PAGE_LIMIT;
     const url = `/api/admin/feedback?offset=${offset}&limit=${PAGE_LIMIT}&status=${view.value}`;
-    const { data, meta } = await $http.get<{
-      data: Feedback[];
-      meta: {
-        pagination: {
-          offset: number;
-          limit: number;
-          size: number;
-        }
-      }
-    }>(url);
+    const { data, meta } = await $http.get<Feedback[]>(url);
     feedbacks.value = data;
-    const p = (meta && meta.pagination) || {};
+    const p = (meta as { pagination?: { offset?: number; limit?: number; size?: number } } | undefined)?.pagination || {};
     const limit = Number(p.limit || PAGE_LIMIT);
     const size = Number(p.size || 0);
     const resolvedOffset = Number(p.offset || 0);

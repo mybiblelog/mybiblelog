@@ -1,7 +1,7 @@
 import type { ApiErrorDetail } from '~/helpers/api-error';
 
-type TranslateApiError = string | ApiErrorDetail;
-type Terr = (error: TranslateApiError, componentProperties?: Record<string, unknown>) => string;
+export type TranslateApiError = string | ApiErrorDetail;
+export type Terr = (error: TranslateApiError, componentProperties?: Record<string, unknown>) => string;
 
 export default defineNuxtPlugin((nuxtApp) => {
   type I18nLike = { t: (key: string, params?: Record<string, unknown>) => string };

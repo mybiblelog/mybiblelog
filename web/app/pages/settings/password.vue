@@ -47,6 +47,7 @@
 
 <script setup lang="ts">
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
+import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useToastStore } from '~/stores/toast';
 
@@ -59,14 +60,11 @@ onMounted(() => { mounted.value = true; });
 const { t } = useI18n();
 const toastStore = useToastStore();
 
-const { $http, $terr } = useNuxtApp() as {
-  $http: { patch: <T>(path: string, body?: unknown) => Promise<T> };
-  $terr: (error: unknown, props?: Record<string, unknown>) => string;
-};
+const { $http, $terr } = useNuxtApp();
 
 const busy = ref(false);
 const model = reactive({ currentPassword: '', newPassword: '', confirmNewPassword: '' });
-const errors = reactive<Record<string, unknown>>({
+const errors = reactive<Record<string, string | ApiErrorDetail | null>>({
   _form: null,
   currentPassword: null,
   newPassword: null,

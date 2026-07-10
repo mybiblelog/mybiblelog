@@ -21,9 +21,7 @@ useHead({ title: () => t('page_title'), meta: [{ name: 'robots', content: 'noind
 const localePath = useLocalePath();
 const router = useRouter();
 const authStore = useAuthStore();
-const { $http } = useNuxtApp() as {
-  $http: { post: <T>(path: string, body?: unknown) => Promise<T> };
-};
+const { $http } = useNuxtApp();
 
 onMounted(async () => {
   const url = new URL(window.location.href);

@@ -80,13 +80,13 @@ async function onResend() {
   loading.value = true;
   lastResult.value = null;
   try {
-    const data = await $http.post<{ success?: boolean; secondsUntilCanRetry?: number }>(
+    const res = await $http.post<{ success?: boolean; secondsUntilCanRetry?: number }>(
       '/api/auth/verify-email/resend',
       { email: normalizedEmail.value, locale: i18nLocale.value },
     );
-    const secondsUntilCanRetry = Number((data as any)?.secondsUntilCanRetry) || 0;
+    const secondsUntilCanRetry = Number(res.data?.secondsUntilCanRetry) || 0;
     startCountdown(secondsUntilCanRetry);
-    lastResult.value = (data as any)?.success ? 'sent' : null;
+    lastResult.value = res.data?.success ? 'sent' : null;
   }
   catch (err) {
     const error = err instanceof ApiError ? err : new UnknownApiError();

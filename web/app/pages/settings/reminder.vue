@@ -40,11 +40,6 @@
 <script setup lang="ts">
 import { useToastStore } from '~/stores/toast';
 
-type Http = {
-  get: <T = unknown>(path: string) => Promise<T>;
-  patch: <T = unknown>(path: string, body?: unknown) => Promise<T>;
-};
-
 definePageMeta({ middleware: ['auth'] });
 const { t } = useI18n();
 useHead({ title: () => t('reminder'), meta: [{ name: 'robots', content: 'noindex' }] });
@@ -61,9 +56,9 @@ const reminderForm = reactive({
 });
 
 onMounted(async () => {
-  const { $http } = useNuxtApp() as unknown as { $http: Http };
+  const { $http } = useNuxtApp();
   try {
-    const { data } = await $http.get<{ data: { hour: number; minute: number; active: boolean } }>('/api/reminders/daily-reminder');
+    const { data } = await $http.get<{ hour: number; minute: number; active: boolean }>('/api/reminders/daily-reminder');
     const { hour, minute, active } = data;
     reminderForm.time = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
     reminderForm.active = active;
@@ -94,7 +89,7 @@ async function handleReminderSubmit() {
   const timezoneOffset = new Date().getTimezoneOffset();
 
   try {
-    const { $http } = useNuxtApp() as unknown as { $http: Http };
+    const { $http } = useNuxtApp();
     await $http.patch('/api/reminders/daily-reminder', {
       hour,
       minute,

@@ -28,10 +28,7 @@ useHead({ title: () => t('verify_email'), meta: [{ name: 'robots', content: 'noi
 const localePath = useLocalePath();
 const router = useRouter();
 const authStore = useAuthStore();
-const { $http, $terr } = useNuxtApp() as {
-  $http: { post: <T>(path: string, body?: unknown) => Promise<T> };
-  $terr: (error: unknown, props?: Record<string, unknown>) => string;
-};
+const { $http, $terr } = useNuxtApp();
 
 const error = ref<ApiErrorDetail | null>(null);
 

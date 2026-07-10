@@ -133,6 +133,7 @@
 <script setup lang="ts">
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
+import type { ApiErrorDetail } from '~/helpers/api-error';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { useAuthStore } from '~/stores/auth';
@@ -148,22 +149,15 @@ onMounted(() => { mounted.value = true; });
 const authStore = useAuthStore();
 const dialogStore = useDialogStore();
 const toastStore = useToastStore();
-const { $http, $terr } = useNuxtApp() as {
-  $http: {
-    get: <T>(path: string) => Promise<T>;
-    post: <T>(path: string, body?: unknown) => Promise<T>;
-    delete: <T>(path: string) => Promise<T>;
-  };
-  $terr: (error: unknown, props?: Record<string, unknown>) => string;
-};
+const { $http, $terr } = useNuxtApp();
 
 type ChangeEmailRequest = { newEmail: string; expires: number };
 
 const formBusy = ref(false);
 const changeEmailModel = reactive({ password: '', newEmail: '' });
-const changeEmailErrors = reactive<Record<string, unknown>>({ _form: '', password: '', newEmail: '' });
+const changeEmailErrors = reactive<Record<string, string | ApiErrorDetail>>({ _form: '', password: '', newEmail: '' });
 const setPasswordModel = reactive({ password: '', confirmPassword: '' });
-const setPasswordErrors = reactive<Record<string, unknown>>({ _form: '', password: '', confirmPassword: '' });
+const setPasswordErrors = reactive<Record<string, string | ApiErrorDetail>>({ _form: '', password: '', confirmPassword: '' });
 
 const checkingForEmailChangeRequest = ref(true);
 const currentChangeEmailRequest = ref<ChangeEmailRequest | null>(null);
@@ -178,7 +172,7 @@ function resetSetPasswordErrors() {
 
 async function checkChangeEmailRequestState() {
   try {
-    const { data } = await $http.get<{ data: ChangeEmailRequest | null }>('/api/auth/change-email');
+    const { data } = await $http.get<ChangeEmailRequest | null>('/api/auth/change-email');
     currentChangeEmailRequest.value = data?.newEmail ? data : null;
   }
   catch {
@@ -263,7 +257,7 @@ async function cancelChangeEmailRequest() {
   if (formBusy.value) { return; }
   formBusy.value = true;
   try {
-    const { data } = await $http.delete<{ data: boolean }>('/api/auth/change-email');
+    const { data } = await $http.delete<boolean>('/api/auth/change-email');
     if (data === true) {
       currentChangeEmailRequest.value = null;
       await dialogStore.alert({ message: t('your_request_was_cancelled') });

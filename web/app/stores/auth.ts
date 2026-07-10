@@ -15,11 +15,6 @@ export type AuthState = {
 
 export type LogoutReason = 'session_expired';
 
-type Http = {
-  get: <T>(path: string) => Promise<T>;
-  post: <T>(path: string, body?: unknown) => Promise<T>;
-};
-
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     loggedIn: false,
@@ -35,9 +30,9 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async login({ email, password }: { email: string; password: string }): Promise<void> {
-      const { $http } = useNuxtApp() as { $http: Http };
+      const { $http } = useNuxtApp();
       try {
-        const { data } = await $http.post<{ data: { user: AuthUser } }>('/api/auth/login', { email, password });
+        const { data } = await $http.post<{ user: AuthUser }>('/api/auth/login', { email, password });
         this.setUser(data?.user ?? null);
       }
       catch (error) {
@@ -47,13 +42,13 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async refreshUser(): Promise<void> {
-      const { $http } = useNuxtApp() as { $http: Http };
-      const { data } = await $http.get<{ data: { user: AuthUser | null } }>('/api/auth/user');
+      const { $http } = useNuxtApp();
+      const { data } = await $http.get<{ user: AuthUser | null }>('/api/auth/user');
       this.setUser(data?.user ?? null);
     },
 
     async logout(reason?: LogoutReason): Promise<void> {
-      const { $http } = useNuxtApp() as { $http: Http };
+      const { $http } = useNuxtApp();
       try {
         await $http.post('/api/auth/logout');
       }

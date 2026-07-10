@@ -48,11 +48,6 @@ const defaultSettings: UserSettings = {
   locale: 'en',
 };
 
-type Http = {
-  get: <T>(path: string) => Promise<T>;
-  patch: <T>(path: string, body?: unknown) => Promise<T>;
-};
-
 export const useUserSettingsStore = defineStore('user-settings', {
   state: () => ({
     settings: { ...defaultSettings } as UserSettings,
@@ -103,7 +98,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
     },
 
     async updateSettings(update: UserSettingsUpdate): Promise<boolean> {
-      const { $http } = useNuxtApp() as { $http: Http };
+      const { $http } = useNuxtApp();
       const {
         lookBackDate,
         dailyVerseCountGoal,
@@ -153,7 +148,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
     },
 
     async loadServerSettings(): Promise<void> {
-      const { $http } = useNuxtApp() as { $http: Http };
+      const { $http } = useNuxtApp();
       const { data } = await $http.get<Record<string, unknown>>('/api/settings');
       const {
         lookBackDate,

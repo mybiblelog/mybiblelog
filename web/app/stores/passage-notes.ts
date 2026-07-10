@@ -57,13 +57,6 @@ type ApiMetaPagination = {
   size?: number;
 };
 
-type Http = {
-  get: <T>(path: string) => Promise<{ data: T; meta?: unknown }>;
-  post: <T>(path: string, body?: unknown) => Promise<{ data: T }>;
-  patch: <T>(path: string, body?: unknown) => Promise<{ data: T }>;
-  delete: <T>(path: string) => Promise<{ data: T }>;
-};
-
 const buildQueryString = (query: PassageNotesQuery): string => {
   const params = new URLSearchParams();
 
@@ -151,7 +144,7 @@ export const usePassageNotesStore = defineStore('passage-notes', {
     },
 
     async loadPassageNotesPage(): Promise<void> {
-      const { $http } = useNuxtApp() as { $http: Http };
+      const { $http } = useNuxtApp();
       this.loading = true;
       try {
         const search = buildQueryString(this.query);
@@ -179,21 +172,21 @@ export const usePassageNotesStore = defineStore('passage-notes', {
     },
 
     async createPassageNote(newPassageNote: Record<string, unknown>): Promise<unknown | null> {
-      const { $http } = useNuxtApp() as { $http: Http };
-      const { data } = await $http.post('/api/passage-notes', newPassageNote);
+      const { $http } = useNuxtApp();
+      const { data } = await $http.post<unknown>('/api/passage-notes', newPassageNote);
       return data || null;
     },
 
     async updatePassageNote(passageNoteUpdate: Record<string, unknown> & { id: number | string }): Promise<unknown | null> {
-      const { $http } = useNuxtApp() as { $http: Http };
+      const { $http } = useNuxtApp();
       const { id } = passageNoteUpdate;
-      const { data } = await $http.patch(`/api/passage-notes/${id}`, passageNoteUpdate);
+      const { data } = await $http.patch<unknown>(`/api/passage-notes/${id}`, passageNoteUpdate);
       return data || null;
     },
 
     async deletePassageNote(passageNoteId: number | string): Promise<boolean> {
-      const { $http } = useNuxtApp() as { $http: Http };
-      const { data } = await $http.delete(`/api/passage-notes/${passageNoteId}`);
+      const { $http } = useNuxtApp();
+      const { data } = await $http.delete<unknown>(`/api/passage-notes/${passageNoteId}`);
       if (data) {
         await this.loadPassageNotesPage();
         return true;

@@ -8,7 +8,6 @@ import {
   postLogEntry,
   patchLogEntry,
   type CreateLogEntryInput,
-  type HttpClient,
   type LogEntry,
   type UpdateLogEntryInput,
 } from '@mybiblelog/shared';
@@ -65,14 +64,14 @@ export const useLogEntriesStore = defineStore('log-entries', {
   },
   actions: {
     async loadLogEntries(): Promise<LogEntry[]> {
-      const http = useNuxtApp().$http as unknown as HttpClient;
+      const http = useNuxtApp().$http;
       this.logEntries = await fetchLogEntries(http);
       this.isLoaded = true;
       return this.logEntries;
     },
 
     async createLogEntry(input: CreateLogEntryInput): Promise<LogEntry> {
-      const http = useNuxtApp().$http as unknown as HttpClient;
+      const http = useNuxtApp().$http;
       const before = this.currentLogEntries;
       const bookIndex = getBookIndexFromVerseId(input.startVerseId);
 
@@ -88,7 +87,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
     },
 
     async updateLogEntry(input: UpdateLogEntryInput): Promise<LogEntry> {
-      const http = useNuxtApp().$http as unknown as HttpClient;
+      const http = useNuxtApp().$http;
       const before = this.currentLogEntries;
       const bookIndex = getBookIndexFromVerseId(input.startVerseId);
 
@@ -111,7 +110,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
     },
 
     async deleteLogEntry(logEntryId: number | string): Promise<boolean> {
-      const http = useNuxtApp().$http as unknown as HttpClient;
+      const http = useNuxtApp().$http;
       const logEntry = this.logEntries.find(le => le.id === logEntryId);
       const date = logEntry?.date;
 

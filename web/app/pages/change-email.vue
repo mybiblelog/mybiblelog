@@ -34,13 +34,7 @@ useHead({ title: () => t('change_email'), meta: [{ name: 'robots', content: 'noi
 
 const localePath = useLocalePath();
 const router = useRouter();
-const { $http, $terr } = useNuxtApp() as {
-  $http: {
-    get: <T>(path: string) => Promise<T>;
-    post: <T>(path: string, body?: unknown) => Promise<T>;
-  };
-  $terr: (error: unknown, props?: Record<string, unknown>) => string;
-};
+const { $http, $terr } = useNuxtApp();
 
 const busy = ref(true);
 const codeExpired = ref(false);
@@ -55,7 +49,7 @@ onMounted(async () => {
 
   let changeEmailRequest: { newEmail: string; expires: number };
   try {
-    const { data } = await $http.get<{ data: { newEmail: string; expires: number } }>(`/api/auth/change-email/${code}`);
+    const { data } = await $http.get<{ newEmail: string; expires: number }>(`/api/auth/change-email/${code}`);
     changeEmailRequest = data;
   }
   catch {
@@ -76,7 +70,8 @@ onMounted(async () => {
   }
   catch (err) {
     const apiError = err instanceof ApiError ? err : new UnknownApiError();
-    serverError.value = apiError.errors?.length ? $terr(apiError.errors[0]) : $terr(mapFormErrors(apiError)._form);
+    const errorDetail = apiError.errors?.[0] ?? mapFormErrors(apiError)._form;
+    serverError.value = errorDetail ? $terr(errorDetail) : '';
     busy.value = false;
     return;
   }

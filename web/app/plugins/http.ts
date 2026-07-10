@@ -1,4 +1,5 @@
 import { FetchError } from 'ofetch';
+import type { ApiResponse, HttpClient } from '@mybiblelog/shared';
 import { ApiError } from '~/helpers/api-error';
 import type { ApiErrorPayload } from '~/helpers/api-error';
 
@@ -57,10 +58,14 @@ export default defineNuxtPlugin({
       throw error instanceof Error ? error : new Error(String(error));
     };
 
-    const http = {
-      async get<T = unknown>(path: string): Promise<T> {
+    // The client implements the shared `HttpClient` port: every method resolves
+    // to the API's `{ data, meta? }` envelope (`ApiResponse<T>`), where `T` is
+    // the endpoint's `data` payload. Nuxt infers `NuxtApp['$http']` from the
+    // `provide` below, so consumers use `useNuxtApp().$http` without re-typing it.
+    const http: HttpClient = {
+      async get<T = unknown>(path: string): Promise<ApiResponse<T>> {
         try {
-          const json = await $fetch<T>(path, { headers: buildHeaders(), credentials: 'include' });
+          const json = await $fetch<ApiResponse<T>>(path, { headers: buildHeaders(), credentials: 'include' });
           checkBody(json, path);
           return json;
         }
@@ -70,9 +75,9 @@ export default defineNuxtPlugin({
         }
       },
 
-      async post<T = unknown>(path: string, body: unknown = {}): Promise<T> {
+      async post<T = unknown>(path: string, body: unknown = {}): Promise<ApiResponse<T>> {
         try {
-          const json = await $fetch<T>(path, {
+          const json = await $fetch<ApiResponse<T>>(path, {
             method: 'POST',
             headers: buildHeaders(),
             body: JSON.stringify(body),
@@ -87,9 +92,9 @@ export default defineNuxtPlugin({
         }
       },
 
-      async patch<T = unknown>(path: string, body: unknown = {}): Promise<T> {
+      async patch<T = unknown>(path: string, body: unknown = {}): Promise<ApiResponse<T>> {
         try {
-          const json = await $fetch<T>(path, {
+          const json = await $fetch<ApiResponse<T>>(path, {
             method: 'PATCH',
             headers: buildHeaders(),
             body: JSON.stringify(body),
@@ -104,9 +109,9 @@ export default defineNuxtPlugin({
         }
       },
 
-      async delete<T = unknown>(path: string): Promise<T> {
+      async delete<T = unknown>(path: string): Promise<ApiResponse<T>> {
         try {
-          const json = await $fetch<T>(path, { method: 'DELETE', headers: buildHeaders(), credentials: 'include' });
+          const json = await $fetch<ApiResponse<T>>(path, { method: 'DELETE', headers: buildHeaders(), credentials: 'include' });
           checkBody(json, path);
           return json;
         }

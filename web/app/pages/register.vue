@@ -53,6 +53,7 @@
 <script setup lang="ts">
 import GoogleLoginButton from '~/components/forms/GoogleLoginButton.vue';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
+import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useAuthStore } from '~/stores/auth';
 
@@ -65,17 +66,14 @@ const localePath = useLocalePath();
 const router = useRouter();
 const authStore = useAuthStore();
 const config = useRuntimeConfig();
-const { $http, $terr } = useNuxtApp() as {
-  $http: { get: <T>(path: string) => Promise<T>; post: <T>(path: string, body?: unknown) => Promise<T> };
-  $terr: (error: unknown, props?: Record<string, unknown>) => string;
-};
+const { $http, $terr } = useNuxtApp();
 
 // Fetch once on the server and transfer via the Nuxt payload so the client reuses
 // the same result. A plain top-level `await $http.get()` would re-run on hydration
 // and mint a fresh OAuth `state`, causing a hydration mismatch on the button href.
 const { data: googleOauth2Url } = await useAsyncData('google-oauth2-url', async () => {
   try {
-    const { data } = await $http.get<{ data: { url: string } }>('/api/auth/oauth2/google/url');
+    const { data } = await $http.get<{ url: string }>('/api/auth/oauth2/google/url');
     return (data as any)?.url ?? null;
   }
   catch {
@@ -96,7 +94,7 @@ if (import.meta.client) {
 
 const email = ref(preFillEmail);
 const password = ref(preFillPassword);
-const errors = ref<Record<string, unknown>>({});
+const errors = ref<Record<string, string | ApiErrorDetail>>({});
 const formSubmitted = ref(false);
 const mounted = ref(false);
 const submitting = ref(false);
