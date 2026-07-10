@@ -22,7 +22,7 @@
         </div>
         <div class="mbl-control">
           <div class="mbl-select">
-            <select :value="passageNoteTagsStore.sortOrder" data-testid="tag-sort-order" @change="onSortOrderChange">
+            <select :value="passageNoteTagsStore.sortOrder" :disabled="!hydrated" data-testid="tag-sort-order" @change="onSortOrderChange">
               <option value="label:ascending">
                 {{ t('sort_az') }}
               </option>
@@ -68,14 +68,15 @@
               class="mbl-button mbl-button--sm"
               data-testid="tag-notes-count"
               :data-note-count="tag.noteCount ?? 0"
+              :disabled="!hydrated"
               @click="viewTagNotes(tag)"
             >
               {{ t('notes_count', { count: tag.noteCount ?? 0 }) }}
             </button>
-            <button class="mbl-button mbl-button--sm" data-testid="tag-edit" @click="openEditTagEditor(tag)">
+            <button class="mbl-button mbl-button--sm" :disabled="!hydrated" data-testid="tag-edit" @click="openEditTagEditor(tag)">
               {{ t('edit') }}
             </button>
-            <button class="mbl-button mbl-button--sm" data-testid="tag-delete" @click="deleteTag(tag.id)">
+            <button class="mbl-button mbl-button--sm" :disabled="!hydrated" data-testid="tag-delete" @click="deleteTag(tag.id)">
               {{ t('delete') }}
             </button>
           </div>

@@ -43,11 +43,15 @@ const newPassageNote: PassageNoteModel = {
   tags: [],
 };
 
+function clone<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T;
+}
+
 export const usePassageNoteEditorStore = defineStore('passage-note-editor', {
   state: (): PassageNoteEditorState => ({
     open: false,
     cleanFormValue: null,
-    passageNote: structuredClone(newPassageNote),
+    passageNote: clone(newPassageNote),
     errors: {},
     isValid: false,
     submitting: false,
@@ -55,10 +59,10 @@ export const usePassageNoteEditorStore = defineStore('passage-note-editor', {
   actions: {
     openEditor(passageNote: PassageNoteEditorOpenPayload = null): void {
       if (passageNote && typeof passageNote === 'object' && !('empty' in passageNote)) {
-        this.passageNote = structuredClone({ ...newPassageNote, ...passageNote });
+        this.passageNote = clone({ ...newPassageNote, ...passageNote });
       }
       else {
-        this.passageNote = structuredClone(newPassageNote);
+        this.passageNote = clone(newPassageNote);
       }
       this.cleanFormValue = JSON.stringify(this.passageNote);
       this.errors = {};
@@ -85,7 +89,7 @@ export const usePassageNoteEditorStore = defineStore('passage-note-editor', {
     },
 
     updatePassageNote(passageNote: PassageNoteModel): void {
-      this.passageNote = structuredClone(passageNote);
+      this.passageNote = clone(passageNote);
     },
 
     setErrors(errors: PassageNoteEditorErrors): void {

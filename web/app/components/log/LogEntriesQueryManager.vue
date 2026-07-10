@@ -185,7 +185,7 @@ async function confirmAndReset() {
   const confirmed = await dialogStore.confirm({ message: t('reset_confirm') });
   if (!confirmed) { return; }
 
-  const update = pickManagedQuery(structuredClone(DEFAULT_DRAFT));
+  const update = pickManagedQuery(JSON.parse(JSON.stringify(DEFAULT_DRAFT)));
   baseline.value = pickManagedQuery(update);
   draft.value = pickManagedQuery(update);
   emit('apply', update);

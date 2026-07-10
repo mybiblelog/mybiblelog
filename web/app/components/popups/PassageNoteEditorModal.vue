@@ -189,7 +189,7 @@ const editingPassageIsDirty = computed(() => {
 });
 
 function clone<T>(value: T): T {
-  return structuredClone(value) as T;
+  return JSON.parse(JSON.stringify(value)) as T;
 }
 
 function displayVerseRange(passage: { startVerseId?: number; endVerseId?: number; empty?: boolean }) {

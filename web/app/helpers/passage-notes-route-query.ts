@@ -135,5 +135,5 @@ export function encodePassageNotesQueryToRoute(query: Partial<PassageNotesQuery>
 }
 
 export function defaultPassageNotesQuery(): PassageNotesQuery {
-  return structuredClone(DEFAULT_PASSAGE_NOTES_QUERY) as PassageNotesQuery;
+  return JSON.parse(JSON.stringify(DEFAULT_PASSAGE_NOTES_QUERY)) as PassageNotesQuery;
 }

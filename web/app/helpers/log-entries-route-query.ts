@@ -103,5 +103,5 @@ export function encodeLogEntriesQueryToRoute(query: Partial<LogEntriesQuery> = {
 }
 
 export function defaultLogEntriesQuery(): LogEntriesQuery {
-  return structuredClone(DEFAULT_LOG_ENTRIES_QUERY) as LogEntriesQuery;
+  return JSON.parse(JSON.stringify(DEFAULT_LOG_ENTRIES_QUERY)) as LogEntriesQuery;
 }
