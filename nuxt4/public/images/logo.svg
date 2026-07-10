@@ -1,0 +1,19 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Define clipping path for the base shape -->
+  <defs>
+    <clipPath id="baseShapeClip">
+      <rect x="15" y="0" width="50" height="100" rx="5"/>
+      <ellipse cx="60" cy="25" rx="30" ry="25"/>
+      <ellipse cx="60" cy="70" rx="35" ry="30"/>
+    </clipPath>
+  </defs>
+  
+  <!-- Base shape with main color -->
+  <rect x="15" y="0" width="50" height="100" rx="5" fill="#00aaf9"/>
+  <ellipse cx="60" cy="25" rx="30" ry="25" fill="#00aaf9"/>
+  <ellipse cx="60" cy="70" rx="35" ry="30" fill="#00aaf9"/>
+  
+  <!-- Color overlays clipped to the base shape -->
+  <rect x="15" y="0" width="20" height="100" fill="#0965f7" clip-path="url(#baseShapeClip)"/>
+  <rect x="15" y="80" width="80" height="20" fill="#0965f7" clip-path="url(#baseShapeClip)"/>
+</svg>
