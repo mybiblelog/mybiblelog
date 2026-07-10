@@ -17,10 +17,10 @@ This file is intended to capture task-level guidance for Claude-style agents wor
 
 ## Repository context
 
-This repository contains a monorepo for a Bible journaling site with separate `api/`, `nuxt/`, `shared/`, `mobile/`, and `e2e/` folders.
+This repository contains a monorepo for a Bible journaling site with separate `api/`, `web/`, `shared/`, `mobile/`, and `e2e/` folders.
 
 - `api/` contains the backend server and tests.
-- `nuxt/` contains the frontend app and Nuxt configuration.
+- `web/` contains the frontend app (Nuxt 4) and its Nuxt configuration. Source lives under `web/app/`.
 - `shared/` contains shared TypeScript utilities and tests.
 - `e2e/` contains end-to-end tests.
 

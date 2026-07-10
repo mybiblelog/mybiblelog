@@ -6,7 +6,7 @@ Playwright tests that exercise the app as a user would, with the API and web app
 
 ```bash
 docker compose up -d        # MongoDB
-npm run test:e2e            # boots api + nuxt automatically, runs everything
+npm run test:e2e            # boots api + web automatically, runs everything
 npm run test:e2e:ui         # interactive UI mode
 npx playwright test --project=app      # authenticated functional tests only
 npx playwright test --project=public   # SEO/content/marketing tests only
@@ -33,28 +33,28 @@ E2E_NO_SERVER=1 TEST_SITE_URL=https://staging.example.com TEST_API_URL=https://s
 
 `E2E_NO_SERVER=1` skips the local webServer startup. The target must run with a `TEST_BYPASS_SECRET` and non-production `NODE_ENV` so test users can be created.
 
-### Running against a manually-started `nuxt4` server
+### Running against a manually-started `web` server
 
-The `nuxt4` dev server runs on port `3001` and proxies `/api/*` to the API. When you start it
+The `web` dev server runs on port `3000` and proxies `/api/*` to the API. When you start it
 yourself (instead of letting Playwright manage it), it must be launched with the same env the
 Playwright `webServer` config would inject, or the registration and SEO specs will fail:
 
 - `REQUIRE_EMAIL_VERIFICATION=false` — otherwise UI registration can't auto-login (`auth.spec.ts`).
-- `SITE_URL=http://localhost:3001` — otherwise canonical/hreflang URLs render **relative** and the
+- `SITE_URL=http://localhost:3000` — otherwise canonical/hreflang URLs render **relative** and the
   SEO specs throw `Invalid URL` (`useContentSeo` builds `${SITE_URL}${path}`).
 
 ```bash
-# start the nuxt4 server (port 3001) with the required env:
-SITE_URL=http://localhost:3001 REQUIRE_EMAIL_VERIFICATION=false npm run dev:nuxt4
+# start the web server (port 3000) with the required env:
+SITE_URL=http://localhost:3000 REQUIRE_EMAIL_VERIFICATION=false npm run dev:web
 
-# run the suite against it (point both URLs at 3001; EXPECTED_SITE_URL defaults to TEST_SITE_URL):
+# run the suite against it (EXPECTED_SITE_URL defaults to TEST_SITE_URL):
 E2E_NO_SERVER=1 \
-  TEST_SITE_URL=http://localhost:3001 \
-  TEST_API_URL=http://localhost:3001 \
+  TEST_SITE_URL=http://localhost:3000 \
+  TEST_API_URL=http://localhost:8080 \
   npm run test:e2e
 ```
 
-Alternatively, let Playwright start the servers (`E2E_TARGET=nuxt4 npm run test:e2e`); it sets
+Alternatively, let Playwright start the servers (`npm run test:e2e`); it sets
 `REQUIRE_EMAIL_VERIFICATION=false` automatically, and `SITE_URL` comes from your `.env`.
 
 > A single **dev** server can be overwhelmed by the default worker count (≈ CPU cores) while it
@@ -118,7 +118,7 @@ The suite (and its helpers) assume the following app behavior. A migrated app mu
 
 ### Fixed: SSR cross-request store pollution (June 2026)
 
-Concurrent SSR requests used to corrupt each other's state — settings hydrating as defaults, spurious "unauthenticated" error pages — because `setActivePinia` is a module-level global on the server and bare `useXStore()` calls *after an `await`* in server-run actions could resolve another request's stores. Fixed by resolving stores before the first `await` in `nuxt/stores/app-init.ts` (`serverInit`, `loadUserData`) and snapshotting `getActivePinia()` in `nuxt/stores/user-settings.ts` (`loadServerSettings`). **Rule for new server-executed store actions: never call a bare `useXStore()` after an `await` — capture store references (or the pinia instance) at action entry.** The parallel e2e suite is the regression test: before the fix, direct `/calendar` loads failed ~1 in 3 with parallel workers.
+Concurrent SSR requests used to corrupt each other's state — settings hydrating as defaults, spurious "unauthenticated" error pages — because `setActivePinia` is a module-level global on the server and bare `useXStore()` calls *after an `await`* in server-run actions could resolve another request's stores. Fixed by resolving stores before the first `await` in `web/app/stores/app-init.ts` (`serverInit`, `loadUserData`) and snapshotting `getActivePinia()` in `web/app/stores/user-settings.ts` (`loadServerSettings`). **Rule for new server-executed store actions: never call a bare `useXStore()` after an `await` — capture store references (or the pinia instance) at action entry.** The parallel e2e suite is the regression test: before the fix, direct `/calendar` loads failed ~1 in 3 with parallel workers.
 
 ## Email-based flows
 
