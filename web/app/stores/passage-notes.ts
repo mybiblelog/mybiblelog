@@ -33,8 +33,6 @@ const initialQuery: PassageNotesQuery = {
   filterPassageMatching: 'inclusive',
 };
 
-const clone = <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
-
 const emptyPagination: PassageNotesPagination = {
   limit: 10,
   page: 1,
@@ -99,7 +97,7 @@ export const usePassageNotesStore = defineStore('passage-notes', {
   state: (): PassageNotesState => ({
     loading: true,
     activePassageNote: null,
-    query: clone(initialQuery),
+    query: structuredClone(initialQuery),
     passageNotes: [],
     pagination: { ...emptyPagination },
     hasLoadedOnce: false,
@@ -131,7 +129,7 @@ export const usePassageNotesStore = defineStore('passage-notes', {
     },
 
     async resetQuery(queryOverride: Partial<PassageNotesQuery> | null = null): Promise<void> {
-      this.query = clone(initialQuery);
+      this.query = structuredClone(initialQuery);
       if (queryOverride) {
         this.applyQueryUpdate(queryOverride);
       }
