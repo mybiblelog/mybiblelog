@@ -480,7 +480,7 @@ async function savePngAndWebp(pngPath: string): Promise<void> {
 async function screenshotLocale(locale: Locale, page: Page): Promise<void> {
   console.log(`\n📸 Locale: ${locale}`);
 
-  const outDir = path.join('nuxt/static/screenshots', locale);
+  const outDir = path.join('web/public/screenshots', locale);
   await page.context().addCookies([
     {
       name: 'i18n_redirected',
@@ -556,7 +556,7 @@ async function main(): Promise<void> {
     await teardownUser();
   }
 
-  console.log('\n✅ Done. Screenshots saved to nuxt/static/screenshots/{locale}/');
+  console.log('\n✅ Done. Screenshots saved to web/public/screenshots/{locale}/');
 }
 
 main().catch((err) => {

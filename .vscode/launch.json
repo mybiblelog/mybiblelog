@@ -2,51 +2,45 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Nuxt Dev",
+      "name": "Debug Web Dev",
       "type": "node",
       "request": "launch",
-      "cwd": "${workspaceFolder}/nuxt",
-      "runtimeExecutable": "node",
-      "runtimeArgs": ["--inspect=9229"],
-      "program": "${workspaceFolder}/node_modules/nuxt/bin/nuxt.js",
-      "args": ["dev"],
+      "cwd": "${workspaceFolder}/web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
       "console": "integratedTerminal",
       "env": {
-        "PORT": "3000",
         "NODE_ENV": "development"
       },
       "internalConsoleOptions": "neverOpen",
       "restart": true,
       "autoAttachChildProcesses": true,
       "skipFiles": ["<node_internals>/**"],
-      "resolveSourceMapLocations": ["${workspaceFolder}/nuxt/**", "!**/node_modules/**"],
+      "resolveSourceMapLocations": ["${workspaceFolder}/web/**", "!**/node_modules/**"],
       "outFiles": [
-        "${workspaceFolder}/nuxt/.nuxt/**/*.js",
-        "${workspaceFolder}/nuxt/.nuxt/**/*.mjs"
+        "${workspaceFolder}/web/.nuxt/**/*.js",
+        "${workspaceFolder}/web/.nuxt/**/*.mjs"
       ]
     },
     {
-      "name": "Debug Nuxt Prod",
+      "name": "Debug Web Prod",
       "type": "node",
       "request": "launch",
-      "cwd": "${workspaceFolder}/nuxt",
+      "cwd": "${workspaceFolder}/web",
       "env": {
-        "PORT": "3000",
         "NODE_ENV": "production"
       },
-      "runtimeExecutable": "node",
-      "runtimeArgs": ["--inspect=9230"],
-      "program": "${workspaceFolder}/node_modules/nuxt/bin/nuxt.js",
-      "args": ["start"],
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "restart": false,
       "autoAttachChildProcesses": true,
       "skipFiles": ["<node_internals>/**"],
-      "resolveSourceMapLocations": ["${workspaceFolder}/nuxt/**", "!**/node_modules/**"],
+      "resolveSourceMapLocations": ["${workspaceFolder}/web/**", "!**/node_modules/**"],
       "outFiles": [
-        "${workspaceFolder}/nuxt/.nuxt/**/*.js",
-        "${workspaceFolder}/nuxt/.nuxt/**/*.mjs"
+        "${workspaceFolder}/web/.output/**/*.js",
+        "${workspaceFolder}/web/.output/**/*.mjs"
       ]
     },
     {
