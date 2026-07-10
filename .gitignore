@@ -101,10 +101,9 @@ sw.*
 # Debug
 _translate_debug/
 
-# Crowdin CLI bundles (npm run -w nuxt i18n:export-crowdin / crowdin download).
+# Crowdin CLI bundles (npm run -w web i18n:export-crowdin / crowdin download).
 # If you use a Git integration that must commit translations, remove this line or track only en.json.
-nuxt/locales/crowdin/
-nuxt4/i18n/locales/crowdin/
+web/i18n/locales/crowdin/
 
 # Nuxt 4 build output
 .output

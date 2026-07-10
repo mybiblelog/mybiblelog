@@ -21,7 +21,7 @@ import sharp from "sharp";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..", "..");
-const logoPath = path.join(repoRoot, "nuxt", "static", "images", "logo.svg");
+const logoPath = path.join(repoRoot, "web", "public", "images", "logo.svg");
 const outDir = path.join(scriptDir, "..", "assets", "images");
 
 const WHITE = { r: 255, g: 255, b: 255, alpha: 1 };

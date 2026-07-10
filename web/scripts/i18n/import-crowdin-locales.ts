@@ -1,6 +1,6 @@
 /**
- * Writes nuxt4/i18n/locales/locales.ts, api/services/email/locales/strings.json, and Vue <i18n> blocks
- * from nuxt4/i18n/locales/crowdin/<locale>.json
+ * Writes web/i18n/locales/locales.ts, api/services/email/locales/strings.json, and Vue <i18n> blocks
+ * from web/i18n/locales/crowdin/<locale>.json
  * (typically after `crowdin download`). To push local translation edits to Crowdin instead,
  * run `i18n:export-crowdin` then `crowdin upload translations` (and `upload sources` when English changed).
  *
@@ -9,7 +9,7 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-// nuxt4 is an ESM package ("type": "module"); @mybiblelog/shared is CJS that re-exports via
+// the web app is an ESM package ("type": "module"); @mybiblelog/shared is CJS that re-exports via
 // __exportStar, which Node's ESM named-export detection can't see. Import the default (module.exports).
 import shared from '@mybiblelog/shared';
 import {

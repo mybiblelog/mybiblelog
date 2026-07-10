@@ -1,10 +1,10 @@
 /**
  * Verifies that every non-English locale has the same dot-notation leaf keys as English for:
- * - Global messages in nuxt4/i18n/locales/locales.ts
+ * - Global messages in web/i18n/locales/locales.ts
  * - api/services/email/locales/strings.json (per locale)
  * - Each inline i18n JSON block in app/components, app/pages, and app/layouts (recursive .vue scan)
  *
- * Locales come from @mybiblelog/shared (same list as the app). Does not use nuxt4/i18n/locales/crowdin/
+ * Locales come from @mybiblelog/shared (same list as the app). Does not use web/i18n/locales/crowdin/
  * so CI works without running export-crowdin first.
  *
  * Usage: npm run i18n:verify-keys (runs via tsx)
@@ -13,7 +13,7 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-// nuxt4 is an ESM package ("type": "module"); @mybiblelog/shared is CJS that re-exports via
+// the web app is an ESM package ("type": "module"); @mybiblelog/shared is CJS that re-exports via
 // __exportStar, which Node's ESM named-export detection can't see. Import the default (module.exports).
 import shared from '@mybiblelog/shared';
 import globalLocales from '../../i18n/locales/locales';
@@ -132,7 +132,7 @@ async function main() {
 
   const enMessages = globalLocales[defaultLocale];
   if (!enMessages) {
-    console.error(`Missing default locale "${defaultLocale}" in nuxt4/i18n/locales/locales.ts`);
+    console.error(`Missing default locale "${defaultLocale}" in web/i18n/locales/locales.ts`);
     process.exitCode = 1;
     return;
   }
@@ -140,7 +140,7 @@ async function main() {
   for (const locale of otherLocales) {
     const otherMessages = globalLocales[locale as keyof typeof globalLocales];
     if (otherMessages === undefined) {
-      console.error(`\nMissing locale object for "${locale}" in nuxt4/i18n/locales/locales.ts`);
+      console.error(`\nMissing locale object for "${locale}" in web/i18n/locales/locales.ts`);
       ok = false;
       continue;
     }

@@ -4,12 +4,12 @@
     <div class="site-container">
       <slot />
     </div>
-    <!-- Expose runtime config for e2e tests (replaces window.$nuxt.$config from Nuxt 2).
-         v-if="hydrated" ensures this only appears after Vue mounts, so tests that
-         waitForFunction on this element are guaranteed to wait for full hydration. -->
+    <!-- Expose runtime config for e2e tests. v-if="hydrated" ensures this only
+         appears after Vue mounts, so tests that waitForFunction on this element
+         are guaranteed to wait for full hydration. -->
     <div
       v-if="hydrated"
-      data-testid="nuxt4-config"
+      data-testid="app-config"
       :data-require-email-verification="String(config.public.requireEmailVerification)"
       style="display:none"
     />

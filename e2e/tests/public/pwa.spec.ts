@@ -1,16 +1,11 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * PWA wiring for the nuxt4 app: the manifest declares icons and the correct
+ * PWA wiring for the web app: the manifest declares icons and the correct
  * standalone/theme metadata, the head links it, and the served service worker
  * is the real @vite-pwa/nuxt worker — not the self-destroying stray that used
  * to shadow /sw.js.
- *
- * PWA is only configured for nuxt4 (the reference app uses @nuxtjs/pwa with a
- * different manifest URL), and the shared suite runs against both targets, so
- * skip unless we're targeting nuxt4.
  */
-test.skip(process.env.E2E_TARGET !== 'nuxt4', 'PWA is only configured for the nuxt4 target');
 
 test.beforeEach(async ({ context, baseURL }) => {
   await context.addCookies([{ name: 'i18n_redirected', value: 'en', url: baseURL! }]);

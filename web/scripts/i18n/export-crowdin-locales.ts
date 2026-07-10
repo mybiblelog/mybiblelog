@@ -1,6 +1,6 @@
 /**
- * Builds one merged JSON per locale under nuxt4/i18n/locales/crowdin/ for Crowdin CLI uploads.
- * Sources: nuxt4/i18n/locales/locales.ts (global) + api/services/email/locales/strings.json (email) +
+ * Builds one merged JSON per locale under web/i18n/locales/crowdin/ for Crowdin CLI uploads.
+ * Sources: web/i18n/locales/locales.ts (global) + api/services/email/locales/strings.json (email) +
  * inline <i18n lang="json"> in app/components and app/pages.
  *
  * After editing strings in the repo, run this before:
@@ -12,7 +12,7 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-// nuxt4 is an ESM package ("type": "module"); @mybiblelog/shared is CJS that re-exports via
+// the web app is an ESM package ("type": "module"); @mybiblelog/shared is CJS that re-exports via
 // __exportStar, which Node's ESM named-export detection can't see. Import the default (module.exports).
 import shared from '@mybiblelog/shared';
 import globalLocales from '../../i18n/locales/locales';

@@ -16,7 +16,7 @@ export function emailLocaleStringsPath(nuxtRoot: string): string {
 /**
  * First inline block: no locale= and no src= (multi-locale JSON object).
  * The `(?![-\w])` guard keeps this from matching the vue-i18n v9 component tags
- * `<i18n-t>` / `<i18n-n>` / `<i18n-d>` used in nuxt4 templates.
+ * `<i18n-t>` / `<i18n-n>` / `<i18n-d>` used in the web app's Vue templates.
  */
 export const INLINE_I18N_RE =
   /<i18n(?![-\w])(?![^>]*\blocale=)(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/i18n>/m;

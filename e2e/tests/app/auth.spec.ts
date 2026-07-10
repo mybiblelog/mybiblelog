@@ -2,11 +2,6 @@ import { test as base, expect } from '@playwright/test';
 import { createTestUser, deleteTestUser, login, generateTestEmail, generateRandomString, type TestUser } from '../../helpers/api-client';
 import { env } from '../../helpers/env';
 
-/** The Nuxt runtime config exposed on `window.$nuxt` inside the browser (Nuxt 2/bridge). */
-type NuxtWindow = Window & {
-  $nuxt?: { $config?: { requireEmailVerification?: boolean } };
-};
-
 /**
  * True UI auth flows (registration, login, logout, password reset request).
  *
@@ -44,18 +39,13 @@ test.describe('Registration', () => {
     // verification enabled (e.g. a reused dev server started without
     // REQUIRE_EMAIL_VERIFICATION=false) — otherwise registration cannot
     // auto-login and the test would time out waiting for onboarding.
-    // Supports both Nuxt 4 (data-testid="nuxt4-config" DOM element) and
-    // Nuxt 2/bridge (window.$nuxt.$config).
+    // The `app-config` element exposes the runtime config once hydrated.
     await page.waitForFunction(() => {
-      const configEl = document.querySelector('[data-testid="nuxt4-config"]');
-      return Boolean(configEl || (window as NuxtWindow).$nuxt?.$config);
+      return document.querySelector('[data-testid="app-config"]') !== null;
     });
     const requireEmailVerification = await page.evaluate(() => {
-      const configEl = document.querySelector('[data-testid="nuxt4-config"]');
-      if (configEl) {
-        return configEl.getAttribute('data-require-email-verification') === 'true';
-      }
-      return (window as NuxtWindow).$nuxt?.$config?.requireEmailVerification;
+      const configEl = document.querySelector('[data-testid="app-config"]');
+      return configEl?.getAttribute('data-require-email-verification') === 'true';
     });
     if (requireEmailVerification) {
       throw new Error(

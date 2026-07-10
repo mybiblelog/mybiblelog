@@ -14,7 +14,7 @@ import { useNoteCountsStore } from "@/src/stores/passageNoteCounts";
 /**
  * Passage-notes store (Zustand).
  *
- * Mirrors the query semantics of `nuxt4/app/stores/passage-notes.ts`, but where
+ * Mirrors the query semantics of `web/app/stores/passage-notes.ts`, but where
  * the web pages through results with a pager, mobile appends pages for infinite
  * scroll (`loadMore`). Online-only (no offline queue): notes are loaded lazily
  * from the Notes screen's mount effect rather than `init.ts`, matching the web

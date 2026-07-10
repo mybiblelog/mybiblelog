@@ -38,7 +38,7 @@ export const getSitemap: RouteHandler = async () => {
   for (const locale of siteLocales) {
     const localePrefix = locale === 'en' ? '' : `/${locale}`;
 
-    const aboutDir = path.resolve(process.cwd(), '..', 'nuxt', 'content', locale, 'about');
+    const aboutDir = path.resolve(process.cwd(), '..', 'web', 'content', locale, 'about');
     const aboutPageFiles = fs.readdirSync(aboutDir);
     for (const file of aboutPageFiles) {
       const slug = file.replace('.md', '');

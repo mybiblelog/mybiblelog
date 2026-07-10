@@ -36,7 +36,7 @@ export type NoteInput = {
   tags: string[];
 };
 
-// Mirrors the web store's query serialization (nuxt4/app/stores/passage-notes.ts):
+// Mirrors the web store's query serialization (web/app/stores/passage-notes.ts):
 // filterTags repeats as multiple params, and the passage filter params are only
 // sent as a valid pair.
 export function buildNotesQueryString(query: NotesQuery): string {

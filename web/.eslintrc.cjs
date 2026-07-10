@@ -8,8 +8,8 @@ module.exports = {
     '.nuxt/**', // Nuxt build output
     '.output/**', // Nuxt build output
     '.data/**', // Local dev database
-    'content/**', // Symlink to ../nuxt/content
-    'public/**', // Symlink to ../nuxt/static
+    'content/**', // Markdown content pages (not linted)
+    'public/**', // Static assets (not linted)
   ],
   // Nuxt 4 auto-imports these at build time, so they are not explicitly
   // imported in source. Declare them as readonly globals so `no-undef`

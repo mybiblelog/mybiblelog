@@ -58,7 +58,7 @@ export default defineNuxtConfig({
   ],
 
   content: {
-    // Content directory at project root (nuxt4/content -> ../nuxt/content symlink)
+    // Content directory at project root (web/content)
     renderer: {
       anchorLinks: false,
     },

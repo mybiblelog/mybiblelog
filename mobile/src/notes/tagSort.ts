@@ -1,6 +1,6 @@
 import type { PassageNoteTag } from "@/src/api/tagsApi";
 
-// Port of the pure sort logic from nuxt4/app/stores/passage-note-tags.ts so
+// Port of the pure sort logic from web/app/stores/passage-note-tags.ts so
 // mobile tag ordering matches the web app for every sort order.
 
 export const TagSortOrders = [
