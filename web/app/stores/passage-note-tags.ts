@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import { BrowserCache } from '@mybiblelog/shared';
 import { useUserSettingsStore } from '~/stores/user-settings';
-import { useAuthStore } from '~/stores/auth';
 
 const PASSAGE_NOTE_TAGS_CACHE_KEY = 'passageNoteTags';
 const PASSAGE_NOTE_TAGS_CACHE_MINUTES = 10;

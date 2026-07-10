@@ -168,7 +168,7 @@ function getBookReport(bookIndex: number): BookReport {
   return { bookIndex, bookName, totalChapters, chaptersRead, percentage, complete, chapterReports };
 }
 
-async function getBookReports() {
+function getBookReports() {
   computeBusy.value = true;
 
   const cached = BrowserCache.get(CACHE_KEY);
