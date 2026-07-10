@@ -13,5 +13,13 @@ export const useAppInitStore = defineStore('app-init', {
       await userSettingsStore.loadSettings();
       await passageNoteTagsStore.loadPassageNoteTags();
     },
+
+    // Clear cached user data so the next loadUserData() pulls fresh from the API.
+    // Call this whenever the active user changes (login / logout).
+    resetUserData(): void {
+      useLogEntriesStore().$reset();
+      useUserSettingsStore().$reset();
+      usePassageNoteTagsStore().$reset();
+    },
   },
 });

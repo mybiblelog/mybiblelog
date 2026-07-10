@@ -88,7 +88,7 @@ export const usePassageNoteTagEditorStore = defineStore('passage-note-tag-editor
       this.submitting = true;
       try {
         const passageNoteTagsStore = usePassageNoteTagsStore();
-        let saved: unknown;
+        let saved: PassageNoteTag | null = null;
         if (this.passageNoteTag.id) {
           saved = await passageNoteTagsStore.updatePassageNoteTag({
             id: this.passageNoteTag.id,
@@ -106,7 +106,7 @@ export const usePassageNoteTagEditorStore = defineStore('passage-note-tag-editor
         }
         if (saved) {
           this.$reset();
-          await passageNoteTagsStore.loadPassageNoteTags();
+          await passageNoteTagsStore.loadPassageNoteTags({ force: true });
           return saved;
         }
         return null;

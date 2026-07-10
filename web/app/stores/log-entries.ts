@@ -64,6 +64,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
   },
   actions: {
     async loadLogEntries(): Promise<LogEntry[]> {
+      if (this.isLoaded) { return this.logEntries; }
       const http = useNuxtApp().$http;
       this.logEntries = await fetchLogEntries(http);
       this.isLoaded = true;

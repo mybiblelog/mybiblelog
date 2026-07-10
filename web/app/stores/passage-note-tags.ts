@@ -31,6 +31,7 @@ export type PassageNoteTag = {
 export type PassageNoteTagsState = {
   passageNoteTags: PassageNoteTag[];
   sortOrder: PassageNoteTagSortOrder;
+  isLoaded: boolean;
 };
 
 const passageNoteTagLabelCollator = new Intl.Collator(undefined, {
@@ -193,6 +194,7 @@ export const usePassageNoteTagsStore = defineStore('passage-note-tags', {
   state: (): PassageNoteTagsState => ({
     passageNoteTags: [],
     sortOrder: 'label:ascending',
+    isLoaded: false,
   }),
 
   getters: {
@@ -235,7 +237,8 @@ export const usePassageNoteTagsStore = defineStore('passage-note-tags', {
       this.passageNoteTags = this.passageNoteTags.filter(t => t.id !== passageNoteTagId);
     },
 
-    async loadPassageNoteTags(): Promise<void> {
+    async loadPassageNoteTags({ force = false }: { force?: boolean } = {}): Promise<void> {
+      if (this.isLoaded && !force) { return; }
       const { $http } = useNuxtApp();
       const sortOrder = useUserSettingsStore().settings.passageNoteTagSortOrder;
       if (sortOrder) {
@@ -275,6 +278,7 @@ export const usePassageNoteTagsStore = defineStore('passage-note-tags', {
       const { data } = await $http.get<PassageNoteTag[]>('/api/passage-note-tags');
       passageNoteTags = data;
       this.setPassageNoteTags(passageNoteTags);
+      this.isLoaded = true;
     },
 
     async createPassageNoteTag(

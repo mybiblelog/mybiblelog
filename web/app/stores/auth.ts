@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { useAppInitStore } from '~/stores/app-init';
 
 const DEFAULT_LOCALE = 'en';
 
@@ -34,6 +35,9 @@ export const useAuthStore = defineStore('auth', {
       try {
         const { data } = await $http.post<{ user: AuthUser }>('/api/auth/login', { email, password });
         this.setUser(data?.user ?? null);
+        // A fresh session may follow a previous user's; drop any stale cached
+        // data so the destination page's loadUserData() pulls this user's data.
+        useAppInitStore().resetUserData();
       }
       catch (error) {
         this.setUser(null);
@@ -57,6 +61,7 @@ export const useAuthStore = defineStore('auth', {
       }
 
       this.setUser(null);
+      useAppInitStore().resetUserData();
 
       if (import.meta.client) {
         sessionStorage.clear();

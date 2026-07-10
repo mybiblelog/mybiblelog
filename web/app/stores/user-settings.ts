@@ -144,6 +144,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
 
     async loadSettings(): Promise<void> {
       this.loadClientSettings();
+      if (this.isLoaded) { return; }
       await this.loadServerSettings();
     },
 

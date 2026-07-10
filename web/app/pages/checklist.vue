@@ -125,7 +125,7 @@ for (let i = 1; i <= bookCount; i++) {
 
 const busy = computed(() => Boolean(busyChapter.value || computeBusy.value));
 
-async function getReadChapters() {
+function getReadChapters() {
   const ranges = Bible.consolidateRanges(logEntriesStore.currentLogEntries);
   const result: Record<string, boolean> = {};
 
@@ -146,8 +146,6 @@ async function getReadChapters() {
         result[`${book}.${c}`] = true;
       }
     }
-
-    await new Promise(resolve => setTimeout(resolve, 0));
   }
 
   readChapters.value = result;
@@ -178,11 +176,10 @@ async function getBookReports() {
     bookReports.value = JSON.parse(cached) as BookReport[];
   }
 
-  await getReadChapters();
+  getReadChapters();
   const reports: BookReport[] = [];
   for (let i = 1; i <= bookCount; i++) {
     reports.push(getBookReport(i));
-    await new Promise(resolve => setTimeout(resolve, 0));
   }
 
   BrowserCache.set(CACHE_KEY, JSON.stringify(reports), CACHE_MINUTES);
