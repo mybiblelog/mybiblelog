@@ -111,7 +111,7 @@ const buildApp = (): express.Application => {
   });
 
   // Trust security claims of proxy in front of app
-  app.set('trust proxy', true);
+  app.set('trust proxy', 1);
 
   // Redirect insecure requests
   app.use((req, res, next) => {
