@@ -1,12 +1,12 @@
 // Main exports
 export { default as Bible } from './bible';
-export { default as BrowserCache } from './browser-cache';
+export { default as BrowserCache } from './platform/browser-cache';
 
 // Utility exports
-export * from './bible-apps';
-export * from './device';
-export * from './date-helpers';
-export { computeDateVerseCounts, type DateVerseCounts, type DateVerseCountsMap, type DateVerseCountLogEntry } from './date-verse-counts';
+export * from './bible/apps';
+export * from './platform/device';
+export * from './platform/date-helpers';
+export { computeDateVerseCounts, type DateVerseCounts, type DateVerseCountsMap, type DateVerseCountLogEntry } from './insights/date-verse-counts';
 export {
   filterEntriesByDateRange,
   getIntensityLevel,
@@ -24,7 +24,7 @@ export {
   type BookRecency,
   type BookFrequency,
   type DailyVersePoint,
-} from './insights';
+} from './insights/insights';
 
 // Framework-agnostic UI/domain logic (consumable from a React hook, a Pinia
 // store, or a plain component).
@@ -35,19 +35,19 @@ export {
   type Testament,
   type BookSortOrder,
   type FilterAndSortBookOptions,
-} from './book-options';
+} from './bible/options';
 export {
   parseVerseInput,
   coerceVerseRange,
   formatVerseRange,
   type ParseVerseInputOptions,
   type ParsedVerseInput,
-} from './verse-input';
+} from './log-entry/verse-input';
 export {
   buildMonthGrid,
   type MonthGridDay,
   type BuildMonthGridInput,
-} from './calendar';
+} from './insights/calendar';
 export {
   buildLineChartGeometry,
   DEFAULT_CHART_DIMENSIONS,
@@ -56,7 +56,7 @@ export {
   type ChartPoint,
   type ChartYTick,
   type LineChartGeometry,
-} from './charts';
+} from './insights/charts';
 export {
   getBookIndexFromVerseId,
   isBookComplete,
@@ -64,13 +64,13 @@ export {
   evaluateAchievement,
   type CompletionLogEntry,
   type AchievementEvent,
-} from './log-entry-rules';
+} from './log-entry/rules';
 export {
   computeBibleProgress,
   type BibleProgress,
   type BookProgress,
   type ChapterProgress,
-} from './bible-progress';
+} from './bible/progress';
 export {
   getRecentDates,
   getLastLogEntryPerBook,
@@ -89,7 +89,7 @@ export {
   type ReadingSuggestionLogEntry,
   type ReadingSuggestionContext,
   type ReadingSuggestion,
-} from './reading-suggestions';
+} from './insights/reading-suggestions';
 export {
   fetchLogEntries,
   postLogEntry,
@@ -98,15 +98,15 @@ export {
   type LogEntry,
   type CreateLogEntryInput,
   type UpdateLogEntryInput,
-} from './log-entries-api';
-export type { HttpClient, ApiResponse } from './http-client';
-export { identityTranslator, type Translator } from './translator';
+} from './log-entry/api';
+export type { HttpClient, ApiResponse } from './platform/http-client';
+export { identityTranslator, type Translator } from './platform/translator';
 
 // The passage and editor state machines share transition names (selectBook,
 // etc.), so they are exposed as namespaces rather than flattened.
-export * as PassageSelection from './passage-selection';
-export * as LogEntryEditorMachine from './log-entry-editor-machine';
-export type { LogEntryEditorModel } from './log-entry-editor-machine';
+export * as PassageSelection from './log-entry/passage-selection';
+export * as LogEntryEditorMachine from './log-entry/editor-machine';
+export type { LogEntryEditorModel } from './log-entry/editor-machine';
 export type {
   PassageSelectionState,
   PassageSelectionOptions,
@@ -114,10 +114,10 @@ export type {
   SingleVerseSelection,
   SingleSelectionStep,
   SingleSelectionResult,
-} from './passage-selection';
+} from './log-entry/passage-selection';
 
 // i18n exports
-export * from './i18n';
+export * from './platform/i18n';
 
 // Scripture passage types (provider-neutral)
 export type {
@@ -126,12 +126,12 @@ export type {
   PassageTranslation,
   PassageVerseSegment,
   ScripturePassageChunk,
-} from './scripture';
+} from './bible/scripture';
 
 // Static data exports
-export { default as bibleBooks } from './static/bible-books';
-export { default as chapterVerses } from './static/chapter-verses/nasb';
+export { default as bibleBooks } from './bible/static/bible-books';
+export { default as chapterVerses } from './bible/static/chapter-verses/nasb';
 
 // Type exports
-export type { BibleBook } from './static/bible-books';
+export type { BibleBook } from './bible/static/bible-books';
 export type { ParsedVerseId, Segment, VerseId, VerseRange } from './bible';

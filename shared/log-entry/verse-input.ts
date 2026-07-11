@@ -1,5 +1,5 @@
-import Bible from './bible';
-import type { VerseRange } from './bible';
+import Bible from '../bible';
+import type { VerseRange } from '../bible';
 
 export type ParseVerseInputOptions = {
   locale?: string;

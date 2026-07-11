@@ -1,4 +1,4 @@
-import { LocaleCode } from '@shared/dist/i18n';
+import { LocaleCode } from '@shared/dist/platform/i18n';
 import { getConfig } from '../../../config';
 
 export const getLocaleBaseUrl = (locale: LocaleCode) => {

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import Bible from './bible';
+import Bible from '../bible';
 
 export type DateVerseCounts = {
   total: number;

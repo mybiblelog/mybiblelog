@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
-import Bible from './bible';
-import { computeBibleProgress } from './bible-progress';
-import type { VerseRange } from './bible/encoding';
+import Bible from './index';
+import { computeBibleProgress } from './progress';
+import type { VerseRange } from './core/encoding';
 
 const range = (
   startBook: number,

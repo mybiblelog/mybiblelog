@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import Bible from './bible';
+import Bible from '../bible';
 import {
   evaluateAchievement,
   getBookIndexFromVerseId,
   isBibleComplete,
   isBookComplete,
-} from './log-entry-rules';
+} from './rules';
 
 const OBADIAH = 31; // single chapter, 21 verses — easiest book to complete
 

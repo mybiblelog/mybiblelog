@@ -1,6 +1,6 @@
-import Bible from './bible';
-import type { LocaleCode } from './i18n';
-import { getMobileOperatingSystem, isMobileOperatingSystem } from './device';
+import Bible from './index';
+import type { LocaleCode } from '../platform/i18n';
+import { getMobileOperatingSystem, isMobileOperatingSystem } from '../platform/device';
 
 /**
  * This is an enum of translations *internal* to My Bible Log.

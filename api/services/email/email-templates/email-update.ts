@@ -1,4 +1,4 @@
-import { LocaleCode } from '@shared/dist/i18n';
+import { LocaleCode } from '@shared/dist/platform/i18n';
 import locales from '../locales/content';
 import { substitute } from '../locales/substitute';
 import { getLocaleBaseUrl } from './helpers';

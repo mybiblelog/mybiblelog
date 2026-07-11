@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import type { LocaleCode } from '@mybiblelog/shared/i18n';
+import type { LocaleCode } from '@mybiblelog/shared/platform/i18n';
 import { useAuthStore } from '~/stores/auth';
 
 definePageMeta({ middleware: ['auth'], auth: 'guest' });
