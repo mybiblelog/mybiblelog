@@ -11,7 +11,12 @@ export default function LanguageSettings() {
 
   const options = [
     { value: "en" as const, label: t("language_english") },
+    { value: "de" as const, label: t("language_german") },
     { value: "es" as const, label: t("language_spanish") },
+    { value: "fr" as const, label: t("language_french") },
+    { value: "ko" as const, label: t("language_korean") },
+    { value: "pt" as const, label: t("language_portuguese") },
+    { value: "uk" as const, label: t("language_ukrainian") },
   ];
 
   return (

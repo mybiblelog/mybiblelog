@@ -181,7 +181,12 @@ export const es = {
   settings_title: "Ajustes",
   settings_language_label: "Idioma",
   language_english: "English",
+  language_german: "Deutsch",
   language_spanish: "Español",
+  language_french: "Français",
+  language_korean: "한국어",
+  language_portuguese: "Português",
+  language_ukrainian: "українська",
   settings_language_help: "Los cambios se aplican al instante.",
 
   settings_theme_label: "Tema",

@@ -17,7 +17,7 @@ import {
   mobileLocales,
 } from "@/src/i18n";
 
-/** Locales the app ships translations for (subset of shared product locales). */
+/** Locales the app ships translations for (mirrors shared product locales). */
 export type SupportedLocale = MobileLocale;
 
 const STORAGE_KEY = "locale.v1";
