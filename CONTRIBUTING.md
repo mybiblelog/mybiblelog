@@ -1,6 +1,6 @@
 # Contributing to My Bible Log
 
-Thank you for your interest in contributing to My Bible Log! This project is a Nuxt.js application for tracking personal Bible reading, and we welcome contributions from the community.
+Thank you for your interest in contributing to My Bible Log! This project is a monorepo for tracking personal Bible reading, with a Nuxt web app (`web/`), an Express API (`api/`), shared TypeScript utilities (`shared/`), an Expo/React Native mobile app (`mobile/`), and a Playwright end-to-end suite (`e2e/`). We welcome contributions from the community.
 
 ## Table of Contents
 
@@ -11,6 +11,7 @@ Thank you for your interest in contributing to My Bible Log! This project is a N
 - [Pull Request Process](#pull-request-process)
 - [Issue Reporting](#issue-reporting)
 - [Internationalization](#internationalization)
+- [Mobile](#mobile)
 - [Security](#security)
 - [Questions?](#questions)
 
@@ -20,30 +21,38 @@ This project and everyone participating in it is governed by our [Code of Conduc
 
 ## Getting Started
 
-See the **Getting Started** section of the [README](./README.md) for instructions on setting up the project and running a development server.
+See the [Web & API Development](docs/web-api.md) guide for instructions on setting up the `web` and `api` projects and running a development server.
+
+For the mobile app, see [Mobile](#mobile) below.
 
 ## Testing
 
-There is comprehensive testing in place for the API and core utility files.
-Please ensure all tests pass before submitting a pull request.
+There is comprehensive testing in place for the API (`/api`), core utility files (`/shared`), the frontend (`/web`), the mobile app (`/mobile`), and end-to-end UI flows (`/e2e`).
+Please ensure all relevant tests pass before submitting a pull request.
 
-Note that API tests that result in a value being incremented/decremented
-sometimes suffer from race conditions with other tests and fail with an off-by-one expected value.
+### API, Shared, and Web Tests (Vitest)
 
-All tests should consistently pass when run in isolation or serially.
-
-### API Tests (Jest)
+All three run on Vitest. The API tests are integration tests and require a running API instance — see [Web & API Development § Testing](docs/web-api.md#testing) for setup (including required `.env` vars) and how to run a single test file.
 
 ```bash
-# Run all API tests
+# Run all tests for a project
 npm run test:api
+npm run test:shared
+npm run test:web
 
-# Run tests in watch mode
+# Watch mode (run from within api/, shared/, or web/)
 npm run test:watch
-
-# Run a specific test file
-npx jest -- ./test/auth.test.js
 ```
+
+### Mobile Tests (Jest)
+
+```bash
+# From mobile/
+npm test
+npm run test:watch
+```
+
+See [Mobile](#mobile) for the mobile app's own lint/typecheck/e2e commands.
 
 ### End-to-End Tests (Playwright)
 
@@ -55,24 +64,28 @@ npm run test:e2e
 npm run test:e2e:ui
 ```
 
+See [`e2e/README.md`](e2e/README.md) for required `.env` vars and running against a deployed app.
+
 ### Test Requirements
 
 - All new features should include appropriate tests
 - Bug fixes should include tests that verify the fix
-- API endpoints should have corresponding Jest tests
+- API endpoints should have corresponding Vitest tests
 - Ideally, UI changes should have corresponding Playwright tests
 
 ## Code Style
 
-We use ESLint for code quality and consistency:
+We use ESLint for code quality and consistency in `api/`, `web/`, and `shared/`:
 
 ```bash
 # Check code style
 npm run lint
 
 # Fix auto-fixable issues
-npm run lint -- --fix
+npm run lint:fix
 ```
+
+`mobile/` has its own ESLint config and is excluded from the root lint run — see [Mobile](#mobile).
 
 ## Pull Request Process
 
@@ -93,11 +106,13 @@ npm run lint -- --fix
 3. **Test your changes**
 
    ```bash
-   npm run test # shared project
+   npm run test # shared and web projects
    npm run test:api
    npm run test:e2e
    npm run lint
    ```
+
+   If your change touches `mobile/`, also run its tests and lint from within that directory (see [Mobile](#mobile)).
 
 4. **Commit your changes**
 
@@ -136,23 +151,19 @@ Use one of the existing templates to structure your issue:
 
 My Bible Log supports multiple languages.
 
-Refer to the README for a checklist of how to add a new locale in the repository.
+Refer to [Adding a Locale](docs/i18n/adding-a-locale.md) for a checklist of how to add a new locale in the repository.
 
-We use [Crowdin](https://crowdin.com/) to collaborate on translation work.
+We use [Crowdin](https://crowdin.com/) to collaborate on translation work — see the [Crowdin workflow](docs/i18n/crowdin.md).
+
+## Mobile
+
+The mobile app is a separate Expo/React Native project under `mobile/`, with its own `package.json`, lint config, and test suite (not part of the root npm workspaces).
+
+See the [Mobile App guide](docs/mobile.md) for development phases (emulator → device → preview build → production), environment setup, and a full command reference.
 
 ## Security
 
-### Reporting Security Vulnerabilities
-
-**DO NOT** create public GitHub issues for security vulnerabilities.
-
-Instead, please:
-
-1. Email security concerns to: [mybiblelog.com@gmail.com](mailto:mybiblelog.com@gmail.com)
-2. Include detailed information about the vulnerability
-3. We will respond within 48 hours
-
-For more information, see our [Security Policy](SECURITY.md).
+**DO NOT** create public GitHub issues for security vulnerabilities. See the [Security Policy](SECURITY.md) for how to report one.
 
 ## Questions?
 

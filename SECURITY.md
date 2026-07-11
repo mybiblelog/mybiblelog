@@ -9,50 +9,6 @@ If you discover a security vulnerability in My Bible Log, please report it respo
 3. Include as much detail as possible about the vulnerability
 4. We will respond within 48 hours and work with you to resolve the issue
 
-## Security Best Practices for Deployment
-
-### Environment Variables
-
-- Use strong, unique JWT secrets (minimum 32 characters)
-- Never commit `.env` files to version control
-- Use different secrets for each environment
-- Regularly rotate secrets in production
-
-### HTTPS
-
-- Always use HTTPS in production
-- Configure proper SSL certificates
-- Enable HSTS headers
-- Redirect HTTP to HTTPS
-
-### Database Security
-
-- Use MongoDB authentication
-- Enable network encryption
-- Regular security updates
-- Backup encryption
-
-### Server Security
-
-- Keep dependencies updated
-- Use security scanning tools
-- Monitor for suspicious activity
-- Implement proper logging
-
-## Known Security Considerations
-
-### Auto-Login After Email Verification
-
-The application automatically logs users in after email verification. This is a design choice that balances security with user experience. If someone gains access to a user's email, they could potentially access the account. Consider your threat model when deploying.
-
-### Password Reset Flow
-
-Password reset links automatically log users in after successful password change. This is standard practice but means anyone with access to the reset email can take over the account.
-
-### Rate Limiting
-
-The current rate limiting implementation uses in-memory storage and only works with single server instances. For load-balanced deployments, implement Redis-based rate limiting.
-
 ## Security Updates
 
 We are committed to:
