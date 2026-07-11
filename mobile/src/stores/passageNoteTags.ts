@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { toApiErrorCode } from "@/src/api/apiError";
 import {
   type PassageNoteTag,
   type TagInput,
@@ -29,7 +30,7 @@ export type TagsState =
   | { status: "idle" }
   | { status: "loading" }
   | { status: "ready"; tags: PassageNoteTag[] }
-  | { status: "error"; message: string };
+  | { status: "error"; code: string };
 
 type TagsStore = {
   state: TagsState;
@@ -40,9 +41,6 @@ type TagsStore = {
   update: (input: TagInput & { id: string }) => Promise<PassageNoteTag | null>;
   remove: (id: string) => Promise<boolean>;
 };
-
-const errorMessage = (err: unknown): string =>
-  err instanceof Error ? err.message : "Unexpected error";
 
 function getPersistedSortOrder(): PassageNoteTagSortOrder | null {
   const settings = useUserSettingsStore.getState().state;
@@ -74,7 +72,7 @@ export const useTagsStore = create<TagsStore>((set, get) => ({
         reportHandledError(err, { op: "passageNoteTags.loadTags" });
         // Keep an already-loaded list on refresh failures.
         if (get().state.status !== "ready") {
-          set({ state: { status: "error", message: errorMessage(err) } });
+          set({ state: { status: "error", code: toApiErrorCode(err) } });
         }
       } finally {
         loadInFlight = null;

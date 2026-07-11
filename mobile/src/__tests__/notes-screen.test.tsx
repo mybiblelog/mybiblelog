@@ -76,10 +76,13 @@ describe("Notes screen", () => {
     expect(getByText("No notes found")).toBeTruthy();
   });
 
-  it("shows the error state with a retry action", () => {
-    useNotesStore.setState({ state: { status: "error", message: "boom" } });
+  it("shows the error state with a translated message and a retry action", () => {
+    useNotesStore.setState({ state: { status: "error", code: "network_error" } });
     const { getByText } = renderWithProviders(<Notes />);
     expect(getByText("Unable to load notes")).toBeTruthy();
+    expect(
+      getByText("Can't reach the server. Please check your connection and try again.")
+    ).toBeTruthy();
     expect(getByText("Retry")).toBeTruthy();
   });
 

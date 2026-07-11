@@ -16,6 +16,7 @@ import {
 } from "@/src/components";
 import { spacing, useTheme } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
+import { translateApiErrorCode } from "@/src/i18n/translateApiError";
 import { useIsUnauthenticated } from "@/src/stores/auth";
 import { useIsOnline } from "@/src/stores/connectivity";
 import {
@@ -139,7 +140,7 @@ export default function Notes() {
         {queryBar}
         <ErrorState
           title={t("notes_error_title")}
-          text={state.message}
+          text={translateApiErrorCode(t, state.code)}
           retryLabel={t("retry")}
           onRetry={() => void notesActions.loadFirstPage()}
         />

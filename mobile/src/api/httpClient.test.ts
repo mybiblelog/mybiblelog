@@ -66,6 +66,15 @@ describe("httpClient", () => {
     });
   });
 
+  it("wraps a rejected fetch (transport failure/timeout) as a network_error ApiError", async () => {
+    // Simulates the platform's raw native failure, e.g. Android's
+    // `java.io.IOException: unexpected end of stream`.
+    (global.fetch as jest.Mock).mockRejectedValueOnce(new TypeError("Network request failed"));
+    const err = await httpClient.get("/api/x").catch((e) => e);
+    expect(err).toBeInstanceOf(ApiError);
+    expect(err.code).toBe("network_error");
+  });
+
   it("throws unknown_error ApiError when a non-OK body is not JSON", async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,

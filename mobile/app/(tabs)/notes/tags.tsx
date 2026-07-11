@@ -19,6 +19,7 @@ import {
 } from "@/src/components";
 import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
+import { translateApiErrorCode } from "@/src/i18n/translateApiError";
 import { TagSortOrders, type PassageNoteTagSortOrder } from "@/src/notes/tagSort";
 import { notesActions } from "@/src/stores/passageNotes";
 import { tagActions, useTagsSortOrder, useTagsState } from "@/src/stores/passageNoteTags";
@@ -81,7 +82,7 @@ export default function Tags() {
       return (
         <ErrorState
           title={t("tags_error_title")}
-          text={state.message}
+          text={translateApiErrorCode(t, state.code)}
           retryLabel={t("retry")}
           onRetry={() => void tagActions.loadTags()}
         />
