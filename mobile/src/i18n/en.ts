@@ -175,7 +175,12 @@ export const en = {
   settings_title: "Settings",
   settings_language_label: "Language",
   language_english: "English",
+  language_german: "Deutsch",
   language_spanish: "Español",
+  language_french: "Français",
+  language_korean: "한국어",
+  language_portuguese: "Português",
+  language_ukrainian: "українська",
   settings_language_help: "Changes apply immediately.",
 
   settings_theme_label: "Theme",
