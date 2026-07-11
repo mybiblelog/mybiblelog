@@ -7,6 +7,7 @@ jest.mock("@/src/api/notesApi", () => ({
   fetchBookNoteCounts: jest.fn(),
 }));
 
+import { ApiError } from "@/src/api/apiError";
 import {
   createNote,
   deleteNote,
@@ -50,10 +51,18 @@ describe("loadFirstPage", () => {
     });
   });
 
-  it("enters the error state on failure", async () => {
+  it("enters the error state with a generic code for a non-API failure", async () => {
     (fetchNotesPage as jest.Mock).mockRejectedValue(new Error("boom"));
     await actions().loadFirstPage();
-    expect(useNotesStore.getState().state).toEqual({ status: "error", message: "boom" });
+    expect(useNotesStore.getState().state).toEqual({ status: "error", code: "unknown_error" });
+  });
+
+  it("carries the ApiError code into the error state", async () => {
+    (fetchNotesPage as jest.Mock).mockRejectedValue(
+      new ApiError({ code: "network_error", errors: [] })
+    );
+    await actions().loadFirstPage();
+    expect(useNotesStore.getState().state).toEqual({ status: "error", code: "network_error" });
   });
 });
 
@@ -98,6 +107,48 @@ describe("loadMore", () => {
     });
     await actions().loadMore();
     expect(fetchNotesPage).not.toHaveBeenCalled();
+  });
+
+  it("stops paging when a full page adds no new notes (stale/overcounted size)", async () => {
+    // A full page (== limit) whose rows are all already loaded: the server's
+    // `size` overcounts what it can return, so without clamping this would loop
+    // forever re-requesting the same offset.
+    const loaded = Array.from({ length: 10 }, (_, i) => note(`${i + 1}`));
+    (fetchNotesPage as jest.Mock).mockResolvedValue(page(loaded, 15, 10));
+    useNotesStore.setState({
+      state: { status: "ready", notes: loaded, totalSize: 15, isFetchingMore: false },
+    });
+
+    await actions().loadMore();
+
+    const state = useNotesStore.getState().state;
+    expect(state.status === "ready" && state.notes.length).toBe(10);
+    expect(state.status === "ready" && state.totalSize).toBe(10);
+
+    // A second trigger (e.g. onEndReached re-firing) must not fetch again.
+    await actions().loadMore();
+    expect(fetchNotesPage).toHaveBeenCalledTimes(1);
+  });
+
+  it("stops paging on a short page even if size claims there is more", async () => {
+    (fetchNotesPage as jest.Mock).mockResolvedValue(page([note("3")], 9, 2));
+    useNotesStore.setState({
+      state: {
+        status: "ready",
+        notes: [note("1"), note("2")],
+        totalSize: 9,
+        isFetchingMore: false,
+      },
+    });
+
+    await actions().loadMore();
+
+    const state = useNotesStore.getState().state;
+    expect(state.status === "ready" && state.notes.map((n) => n.id)).toEqual(["1", "2", "3"]);
+    expect(state.status === "ready" && state.totalSize).toBe(3);
+
+    await actions().loadMore();
+    expect(fetchNotesPage).toHaveBeenCalledTimes(1);
   });
 
   it("skips duplicates when the list shifted while fetching", async () => {

@@ -8,6 +8,7 @@ import {
   fetchNotesPage,
   updateNote,
 } from "@/src/api/notesApi";
+import { toApiErrorCode } from "@/src/api/apiError";
 import { reportHandledError } from "@/src/observability/sentry";
 import { useNoteCountsStore } from "@/src/stores/passageNoteCounts";
 
@@ -38,7 +39,7 @@ export type NotesState =
   | { status: "idle" }
   | { status: "loading" }
   | { status: "ready"; notes: PassageNote[]; totalSize: number; isFetchingMore: boolean }
-  | { status: "error"; message: string };
+  | { status: "error"; code: string };
 
 type NotesStore = {
   state: NotesState;
@@ -57,9 +58,6 @@ const cloneQuery = (query: NotesQuery): NotesQuery => ({
   filterTags: [...query.filterTags],
 });
 
-const errorMessage = (err: unknown): string =>
-  err instanceof Error ? err.message : "Unexpected error";
-
 export const useNotesStore = create<NotesStore>((set, get) => ({
   state: { status: "idle" },
   query: cloneQuery(initialNotesQuery),
@@ -72,7 +70,7 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
       set({ state: { status: "ready", notes, totalSize: meta.size, isFetchingMore: false } });
     } catch (err) {
       reportHandledError(err, { op: "passageNotes.loadFirstPage" });
-      set({ state: { status: "error", message: errorMessage(err) } });
+      set({ state: { status: "error", code: toApiErrorCode(err) } });
     }
   },
 
@@ -89,11 +87,20 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
       if (before.status !== "ready") return;
       // Guard against duplicates if the list changed while fetching.
       const known = new Set(before.notes.map((n) => n.id));
+      const fresh = notes.filter((n) => !known.has(n.id));
+      const merged = [...before.notes, ...fresh];
+      // Stop paging when the server can't move us forward. A short page (fewer
+      // rows than requested) is the normal end-of-list signal; a page that adds
+      // no new notes means a stale/overcounted `size` or an overlapping page,
+      // which would otherwise loop forever re-requesting the same offset. In
+      // both cases clamp the total to what we hold so the `length >= totalSize`
+      // guard trips and no further loadMore fires.
+      const reachedEnd = notes.length < query.limit || fresh.length === 0;
       set({
         state: {
           status: "ready",
-          notes: [...before.notes, ...notes.filter((n) => !known.has(n.id))],
-          totalSize: meta.size,
+          notes: merged,
+          totalSize: reachedEnd ? merged.length : meta.size,
           isFetchingMore: false,
         },
       });

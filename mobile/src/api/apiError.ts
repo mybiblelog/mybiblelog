@@ -43,6 +43,15 @@ export class ApiError extends Error {
 }
 
 /**
+ * Machine-readable code for any thrown value, for surfacing a translated
+ * message instead of a raw (possibly platform-native) error string. Returns the
+ * `ApiError` code when present, otherwise `unknown_error`.
+ */
+export function toApiErrorCode(err: unknown): string {
+  return err instanceof ApiError ? err.code : "unknown_error";
+}
+
+/**
  * Extracts an `ApiErrorPayload` from a parsed response body. Falls back to a
  * generic `unknown_error` payload when the body doesn't match the expected shape.
  */

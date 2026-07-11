@@ -46,3 +46,13 @@ export function translateApiError(t: TFn, detail: ApiErrorDetail): string | null
     ...(detail.properties ?? {}),
   });
 }
+
+/**
+ * Translates a bare API error `code` (e.g. from `toApiErrorCode`) to a
+ * user-facing message, falling back to the generic `unknown_error` message for
+ * codes without a specific one. Use for surfacing store error states in the UI
+ * so a raw error string is never shown.
+ */
+export function translateApiErrorCode(t: TFn, code: string): string {
+  return translateApiError(t, { field: null, code }) ?? t("api_error_unknown_error");
+}

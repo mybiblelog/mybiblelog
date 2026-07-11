@@ -22,11 +22,20 @@ async function request<T>(method: Method, path: string, body?: unknown): Promise
   if (token) headers.Authorization = `Bearer ${token}`;
   if (body !== undefined) headers["Content-Type"] = "application/json";
 
-  const res = await fetchWithTimeout(`${getApiOrigin()}${path}`, {
-    method,
-    headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-  });
+  let res: Response;
+  try {
+    res = await fetchWithTimeout(`${getApiOrigin()}${path}`, {
+      method,
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    // A rejected fetch means a transport-level failure (server unreachable,
+    // DNS, TLS) or a timeout (`AbortError`). The platform surfaces these as raw
+    // native exceptions (e.g. Android's `java.io.IOException`), which must never
+    // reach the UI — normalize them to a typed, translatable `network_error`.
+    throw new ApiError({ code: "network_error", errors: [] });
+  }
 
   const json = (await res.json().catch(() => undefined)) as
     { data?: unknown; meta?: unknown } | undefined;
