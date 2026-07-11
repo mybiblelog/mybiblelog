@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "commonjs",
+    "module": "nodenext",
     "lib": ["ES2020", "DOM"],
     "outDir": "./dist",
     "rootDir": "./",
@@ -17,14 +17,17 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "types": []
   },
   "include": [
     "*.ts",
-    "static/**/*.ts"
+    "bible/**/*.ts",
+    "log-entry/**/*.ts",
+    "insights/**/*.ts",
+    "platform/**/*.ts"
   ],
   "exclude": [
     "node_modules",

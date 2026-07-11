@@ -1,4 +1,4 @@
-import Bible from './bible';
+import Bible from '../bible';
 
 /**
  * Pure domain rules about log-entry completion and achievements. These were

@@ -1,18 +1,18 @@
-import { makeVerseId, type Segment, type VerseId, type VerseRange } from './bible/encoding';
+import { makeVerseId, type Segment, type VerseId, type VerseRange } from './core/encoding';
 import {
   getBookChapterCount,
   getBookCount,
   getBookVerseCount,
   getChapterVerseCount,
   getTotalVerseCount,
-} from './bible/metadata';
+} from './core/metadata';
 import {
   consolidateRanges,
   cropRangeToBookChapter,
   filterRangesByBookChapter,
-} from './bible/ranges';
-import { generateSegments } from './bible/segments';
-import { parseVerseId } from './bible/encoding';
+} from './core/ranges';
+import { generateSegments } from './core/segments';
+import { parseVerseId } from './core/encoding';
 
 /**
  * Precomputed reading-progress snapshot for the whole Bible.

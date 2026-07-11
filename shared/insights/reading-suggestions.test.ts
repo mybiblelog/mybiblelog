@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import dayjs from 'dayjs';
-import Bible from './bible';
+import Bible from '../bible';
 import {
   getRecentDates,
   getLastLogEntryPerBook,

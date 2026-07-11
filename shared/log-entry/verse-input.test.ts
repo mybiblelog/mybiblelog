@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import Bible from './bible';
+import Bible from '../bible';
 import { coerceVerseRange, formatVerseRange, parseVerseInput } from './verse-input';
 
 const john316 = Bible.makeVerseId(43, 3, 16);

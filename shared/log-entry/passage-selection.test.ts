@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import Bible from './bible';
+import Bible from '../bible';
 import {
   buildPassageOptions,
   computePassageRange,

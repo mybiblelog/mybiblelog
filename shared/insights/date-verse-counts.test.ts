@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import Bible from './bible';
+import Bible from '../bible';
 import { computeDateVerseCounts } from './date-verse-counts';
 
 test('returns empty counts when no log entries are provided', () => {

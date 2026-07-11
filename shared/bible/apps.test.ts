@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BibleApps, BibleVersions, getAppReadingUrl } from './bible-apps';
+import { BibleApps, BibleVersions, getAppReadingUrl } from './apps';
 
 describe('getAppReadingUrl - Logos (ref.ly)', () => {
   // Book indices: Romans = 45, 1 Corinthians = 46, Song of Songs = 22.

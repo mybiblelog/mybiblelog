@@ -1,4 +1,4 @@
-import { makeVerseId, parseVerseId } from './encoding';
+import { makeVerseId, parseVerseId } from './core/encoding';
 import {
   getBookBlbCode,
   getBookChapterCount,
@@ -11,7 +11,7 @@ import {
   getChapterVerseCount,
   getChapterVerses,
   getTotalVerseCount,
-} from './metadata';
+} from './core/metadata';
 import {
   getFirstBookChapterVerseId,
   getFirstBookVerseId,
@@ -19,8 +19,8 @@ import {
   getLastBookVerseId,
   getNextVerseId,
   getPreviousVerseId,
-} from './navigation';
-import { validateRange, verseExists } from './validation';
+} from './core/navigation';
+import { validateRange, verseExists } from './core/validation';
 import {
   checkRangeOverlap,
   compareRanges,
@@ -33,16 +33,16 @@ import {
   filterRangesByBook,
   filterRangesByBookChapter,
   getRangesBetweenVerseIds,
-} from './ranges';
+} from './core/ranges';
 import {
   generateBibleSegments,
   generateBookChapterSegments,
   generateBookSegments,
   generateSegments,
-} from './segments';
-import { displayVerseRange, parseVerseRange } from './display';
+} from './core/segments';
+import { displayVerseRange, parseVerseRange } from './core/display';
 
-export type { ParsedVerseId, Segment, VerseId, VerseRange } from './encoding';
+export type { ParsedVerseId, Segment, VerseId, VerseRange } from './core/encoding';
 
 const Bible = {
   makeVerseId,

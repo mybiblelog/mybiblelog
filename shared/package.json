@@ -8,6 +8,10 @@
   "files": [
     "dist"
   ],
+  "sideEffects": [
+    "./platform/date-helpers.ts",
+    "./dist/platform/date-helpers.js"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
