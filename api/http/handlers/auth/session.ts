@@ -36,15 +36,12 @@ export const login: RouteHandler = async (req, deps) => {
   }
 
   const { users } = deps.repositories;
-  const user = await users.findByEmail(email);
+  // verifyLogin always performs a bcrypt comparison — even for an unknown email
+  // or a password-less account — so an invalid email and an invalid password
+  // take the same time and cannot be told apart via response timing. The error
+  // is intentionally identical for both cases.
+  const user = await users.verifyLogin(email, password);
   if (!user) {
-    // definitely invalid email, but not giving that away
-    throw new UnauthorizedError([{ code: ApiErrorDetailCode.InvalidLogin, field: null }]);
-  }
-
-  const passwordValid = await users.verifyPassword(user.id, password);
-  if (!passwordValid) {
-    // definitely invalid password, but not giving that away
     throw new UnauthorizedError([{ code: ApiErrorDetailCode.InvalidLogin, field: null }]);
   }
 

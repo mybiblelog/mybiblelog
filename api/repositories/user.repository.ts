@@ -61,6 +61,17 @@ const toUserRecord = (user: UserDocument): UserRecord => {
 
 const generateVerificationCode = () => crypto.randomBytes(64).toString('hex');
 
+// A precomputed bcrypt hash used as a constant-time stand-in when an account
+// (or its local password) is absent. Comparing every credential check against a
+// real hash keeps the work — and therefore the response time — identical
+// whether or not the email exists, defeating timing-based user enumeration.
+const DUMMY_PASSWORD_HASH = bcrypt.hashSync('mybiblelog-timing-safe-dummy-password', 10);
+
+// Wraps bcrypt.compare in a boolean promise, treating any comparison error as a
+// non-match rather than surfacing it.
+const comparePassword = (plain: string, hash: string): Promise<boolean> =>
+  bcrypt.compare(plain, hash).then((isMatch) => isMatch, () => false);
+
 const emailInUseError = () =>
   new ValidationError([{ code: ApiErrorDetailCode.EmailInUse, field: 'email' }]);
 
@@ -162,25 +173,31 @@ export const createUserRepository = ({ users }: Collections) => {
     },
 
     /**
-     * Compares a plaintext password against the user's stored hash.
-     * Resolves false for users without a local password.
+     * Compares a plaintext password against the user's stored hash. Always runs
+     * a bcrypt comparison — against a dummy hash when there is no local password
+     * — so accounts without a local password take the same time as those with
+     * one, avoiding a timing oracle. Resolves false when the password does not
+     * match (including for users without a local password).
      */
     async verifyPassword(userId: string, password: string): Promise<boolean> {
       const user = await users.findOne({ _id: new ObjectId(userId) });
-      const userPassword = user?.password ?? '';
-      if (!userPassword) {
-        return false;
+      return comparePassword(password, user?.password || DUMMY_PASSWORD_HASH);
+    },
+
+    /**
+     * Authenticates an email + password pair for login. Always performs a
+     * bcrypt comparison — against a dummy hash when the email is unknown or the
+     * account has no local password — so every attempt does equivalent work and
+     * the response time cannot be used to enumerate which emails have accounts.
+     * Returns the user on success, or null when the credentials are invalid.
+     */
+    async verifyLogin(email: string, password: string): Promise<UserRecord | null> {
+      const user = await users.findOne({ email: email.toLowerCase() });
+      const passwordValid = await comparePassword(password, user?.password || DUMMY_PASSWORD_HASH);
+      if (!user || !passwordValid) {
+        return null;
       }
-      return new Promise((resolve) => {
-        bcrypt.compare(password, userPassword, function(err, isMatch) {
-          if (err) {
-            resolve(false);
-          }
-          else {
-            resolve(isMatch);
-          }
-        });
-      });
+      return toUserRecord(user);
     },
 
     async setPassword(userId: string, newPassword: string): Promise<void> {

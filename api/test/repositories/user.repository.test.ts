@@ -114,6 +114,28 @@ describe('user.repository', () => {
       expect(await users.verifyPassword(user.id, 'wrong-password')).toBe(false);
     });
 
+    it('verifyLogin returns the user for valid credentials and null otherwise', async () => {
+      const { users } = await getRepos();
+      const email = uniqueEmail();
+      const user = await createUser({ email });
+
+      expect((await users.verifyLogin(email, 'password123'))?.id).toBe(user.id);
+      expect(await users.verifyLogin(email, 'wrong-password')).toBeNull();
+    });
+
+    it('verifyLogin returns null (running a comparison) for an unknown email', async () => {
+      const { users } = await getRepos();
+      expect(await users.verifyLogin(uniqueEmail(), 'password123')).toBeNull();
+    });
+
+    it('verifyLogin returns null for an account with no local password', async () => {
+      const { users } = await getRepos();
+      const email = uniqueEmail();
+      await users.create({ email, googleId: 'google-789', emailVerificationCode: '', locale: 'en' });
+
+      expect(await users.verifyLogin(email, 'anything')).toBeNull();
+    });
+
     it('setPassword re-hashes, advances updatedAt, and keeps createdAt stable', async () => {
       const { users } = await getRepos();
       const created = await createUser();

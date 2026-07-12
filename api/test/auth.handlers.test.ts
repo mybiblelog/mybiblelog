@@ -129,20 +129,16 @@ describe('auth handlers (unit)', () => {
         .rejects.toBeInstanceOf(ValidationError);
     });
 
-    it('returns Unauthorized when the user does not exist', async () => {
-      const deps = makeDeps({ users: { findByEmail: async () => null } });
-      await expect(login(makeRequest({ body: { email: 'a@b.com', password: 'pw' } }), deps))
-        .rejects.toBeInstanceOf(UnauthorizedError);
-    });
-
-    it('returns Unauthorized when the password is wrong', async () => {
-      const deps = makeDeps({ users: { findByEmail: async () => verifiedUser, verifyPassword: async () => false } });
+    it('returns Unauthorized when the credentials are invalid', async () => {
+      // verifyLogin returns null for both an unknown email and a wrong password,
+      // keeping the two cases indistinguishable.
+      const deps = makeDeps({ users: { verifyLogin: async () => null } });
       await expect(login(makeRequest({ body: { email: 'a@b.com', password: 'pw' } }), deps))
         .rejects.toBeInstanceOf(UnauthorizedError);
     });
 
     it('returns a token and sets the auth cookie on success', async () => {
-      const deps = makeDeps({ users: { findByEmail: async () => verifiedUser, verifyPassword: async () => true } });
+      const deps = makeDeps({ users: { verifyLogin: async () => verifiedUser } });
       const result = await login(makeRequest({ body: { email: 'a@b.com', password: 'pw' } }), deps);
       expect(result.status).toBe(200);
       expect(typeof (result.body?.data as { token: string }).token).toBe('string');
@@ -161,7 +157,7 @@ describe('auth handlers (unit)', () => {
 
     it('rejects an unverified user when REQUIRE_EMAIL_VERIFICATION is on', async () => {
       withEnvConfig({ REQUIRE_EMAIL_VERIFICATION: 'true' });
-      const deps = makeDeps({ users: { findByEmail: async () => unverifiedUser, verifyPassword: async () => true } });
+      const deps = makeDeps({ users: { verifyLogin: async () => unverifiedUser } });
 
       const error = await login(makeRequest({ body: { email: 'a@b.com', password: 'pw' } }), deps)
         .catch((e: unknown) => e);
@@ -174,7 +170,7 @@ describe('auth handlers (unit)', () => {
 
     it('allows an unverified user to log in when REQUIRE_EMAIL_VERIFICATION is off', async () => {
       withEnvConfig({ REQUIRE_EMAIL_VERIFICATION: 'false' });
-      const deps = makeDeps({ users: { findByEmail: async () => unverifiedUser, verifyPassword: async () => true } });
+      const deps = makeDeps({ users: { verifyLogin: async () => unverifiedUser } });
 
       const result = await login(makeRequest({ body: { email: 'a@b.com', password: 'pw' } }), deps);
 
