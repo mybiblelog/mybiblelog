@@ -1,0 +1,22 @@
+# Fast preamble for flows after 01: reuse the warm, already-logged-in session
+# established by 01-login instead of paying a full cold start + login again.
+#
+# Foreground the running app (no process restart, no JS reload). If the app
+# isn't running — e.g. a flow run standalone — the tab bar is absent and we
+# fall through to the full cold login. `tab.today` is the tab-bar test id
+# (app/(tabs)/_layout.tsx), visible on every tab screen of the running app and
+# absent on the dev-launcher/dev-menu, so it reliably means "app is up (and,
+# mid-suite, logged in)" regardless of which tab a prior flow ended on.
+appId: com.mybiblelog.app
+---
+- launchApp:
+    stopApp: false
+- runFlow:
+    when:
+      notVisible:
+        id: "tab.today"
+    file: ./login.yaml
+- tapOn:
+    id: "tab.today"
+- assertVisible:
+    id: "today.add-entry"

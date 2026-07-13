@@ -55,6 +55,16 @@ run("adb", ["reverse", "tcp:8080", "tcp:8080"]);
 // Dev-client flows load the JS bundle from localhost:8081 via deep link.
 run("adb", ["reverse", "tcp:8081", "tcp:8081"]);
 
+// Kill emulator animations: every screen transition returns instantly and
+// `waitForAnimationToEnd` becomes a no-op. Cheap, universal speedup.
+for (const scale of [
+  "window_animation_scale",
+  "transition_animation_scale",
+  "animator_duration_scale",
+]) {
+  run("adb", ["shell", "settings", "put", "global", scale, "0"]);
+}
+
 // 2. Seed.
 const seedOutput = run(process.execPath, [path.join(mobileDir, "scripts/e2e/seed.mjs"), scenario]);
 const user = JSON.parse(seedOutput);

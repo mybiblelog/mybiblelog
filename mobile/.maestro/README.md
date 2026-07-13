@@ -26,9 +26,30 @@ npm run e2e:seed       # just create + seed a user, print its credentials
 ```
 
 `scripts/e2e/run.mjs` checks the adb device, runs `adb reverse tcp:8080`,
-seeds a throwaway user via the public API (`scripts/e2e/seed.mjs`, the same
-HTTP contract as `e2e/helpers/api-client.ts`), and passes the credentials to
-the flows as `E2E_EMAIL` / `E2E_PASSWORD`.
+disables emulator animations (so transitions and `waitForAnimationToEnd` are
+instant), seeds a throwaway user via the public API (`scripts/e2e/seed.mjs`,
+the same HTTP contract as `e2e/helpers/api-client.ts`), and passes the
+credentials to the flows as `E2E_EMAIL` / `E2E_PASSWORD`.
+
+### Warm-session reuse (why the suite is fast)
+
+The expensive part of each flow used to be the login preamble — a `clearState`
+cold start, the dev-launcher/dev-menu dance, a multi-second JS bundle load, and
+the Settings → Account → Login navigation. Paying that six times dominated
+wall-time. Instead:
+
+- `01-login` runs first and pays the **one** cold login (`common/login.yaml`),
+  establishing a warm, logged-in session.
+- `02`–`06` start with `common/resume.yaml`, which just foregrounds the running
+  app (`launchApp: { stopApp: false }` — no restart, no reload) and reuses that
+  session. It detects the session via the `tab.today` tab-bar id.
+- If a flow is run **standalone** (the app isn't running), `resume.yaml` sees no
+  tab bar and falls through to the full `common/login.yaml`, so every flow still
+  works on its own with the freshly-seeded credentials.
+
+This warm reuse is what makes single-emulator runs fast and is intentionally
+**not** combined with device sharding (`maestro test --shard-split`), which
+would need independent per-device sessions and multiple seeded emulators.
 
 Seed scenarios: `standard` (look-back window, one Genesis 1 entry yesterday,
 one tag, one note — works for every flow) and `empty`.

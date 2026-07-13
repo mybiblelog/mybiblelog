@@ -1,5 +1,5 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getDefaultBibleVersion } from "@mybiblelog/shared";
+import { appStorage } from "@/src/storage/keys";
 
 export type LocalUserSettings = {
   lookBackDate: string; // YYYY-MM-DD
@@ -14,8 +14,6 @@ export type LocalUserSettings = {
    */
   passageNoteTagSortOrder?: string;
 };
-
-const STORAGE_KEY = "userSettings.v1";
 
 export const DEFAULT_LOCAL_USER_SETTINGS: LocalUserSettings = {
   lookBackDate: new Date().toISOString().slice(0, 10),
@@ -40,21 +38,10 @@ function isLocalUserSettings(value: unknown): value is LocalUserSettings {
 }
 
 export async function loadLocalUserSettings(): Promise<LocalUserSettings> {
-  try {
-    const raw = await AsyncStorage.getItem(STORAGE_KEY);
-    if (!raw) return DEFAULT_LOCAL_USER_SETTINGS;
-    const parsed: unknown = JSON.parse(raw);
-    if (!isLocalUserSettings(parsed)) return DEFAULT_LOCAL_USER_SETTINGS;
-    return parsed;
-  } catch {
-    return DEFAULT_LOCAL_USER_SETTINGS;
-  }
+  const stored = await appStorage.get("userSettings");
+  return isLocalUserSettings(stored) ? stored : DEFAULT_LOCAL_USER_SETTINGS;
 }
 
 export async function saveLocalUserSettings(settings: LocalUserSettings): Promise<void> {
-  try {
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-  } catch {
-    // ignore
-  }
+  await appStorage.set("userSettings", settings);
 }

@@ -1,49 +1,26 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchAppSupportStatus, type AppSupportStatus } from "@/src/api/appSupportApi";
 import UpgradeRequiredScreen from "@/src/upgrade/UpgradeRequiredScreen";
+import { appStorage } from "@/src/storage/keys";
 import { type ReactNode, useEffect, useState } from "react";
 
-const STORAGE_KEY = "forceUpgradeStatus.v1";
-
-type Cached = {
+export type ForceUpgradeCache = {
   cachedAt: number;
   status: AppSupportStatus;
 };
 
-function parseCachedUnsupported(raw: string): AppSupportStatus | null {
-  const parsed: unknown = JSON.parse(raw);
-  if (!parsed || typeof parsed !== "object") return null;
-  const status = (parsed as { status?: unknown }).status;
-  if (!status || typeof status !== "object") return null;
-  const s = status as Partial<AppSupportStatus>;
-  return s.forceUpgrade === true ? (s as AppSupportStatus) : null;
-}
-
 async function loadCachedUnsupported(): Promise<AppSupportStatus | null> {
-  try {
-    const raw = await AsyncStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    return parseCachedUnsupported(raw);
-  } catch {
-    return null;
-  }
+  const cached = await appStorage.get("forceUpgradeStatus");
+  const status = cached?.status;
+  if (!status || typeof status !== "object") return null;
+  return status.forceUpgrade === true ? status : null;
 }
 
 async function saveCached(status: AppSupportStatus) {
-  try {
-    const payload: Cached = { cachedAt: Date.now(), status };
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-  } catch {
-    // ignore
-  }
+  await appStorage.set("forceUpgradeStatus", { cachedAt: Date.now(), status });
 }
 
 async function clearCached() {
-  try {
-    await AsyncStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // ignore
-  }
+  await appStorage.remove("forceUpgradeStatus");
 }
 
 type State = { status: "supported" } | { status: "unsupported"; support: AppSupportStatus };

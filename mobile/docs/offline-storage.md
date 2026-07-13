@@ -36,19 +36,9 @@ There is **no SQLite / Realm / WatermelonDB / MMKV**.
 
 ### Key catalog
 
-| Key | Owner module | Shape | Class |
-|---|---|---|---|
-| `logEntries.v1` | `src/storage/logEntries.ts` | `StoredLogEntry[]` | primary / durable |
-| `logEntries.mutations.v1` | `src/storage/logEntries.ts` | `PendingLogEntryMutation[]` | primary / durable (offline queue) |
-| `userSettings.v1` | `src/settings/userSettingsStorage.ts` | `LocalUserSettings` | durable pref |
-| `themeMode.v1` | `src/design/ThemeProvider.tsx` | `"light" \| "dark" \| "system"` | UI pref |
-| `locale.v1` | `src/i18n/LocaleProvider.tsx` | locale string | UI pref |
-| `forceUpgradeStatus.v1` | `src/upgrade/UpgradeGate.tsx` | upgrade-gate payload | UI pref |
-| `cache.dateVerseCounts` | `src/storage/dateVerseCountsCache.ts` | `{ value: DateVerseCountsMap, expiresAt }` | derived / disposable (24h TTL) |
-| `cache.bibleProgress` | `src/storage/dateVerseCountsCache.ts` | `{ value: BibleProgress, expiresAt }` | derived / disposable (24h TTL) |
-| `storage.schemaVersion` | `src/storage/schemaVersion.ts` | integer (as string) | version marker |
-| `auth.session.v1` | `src/auth/authStorage.ts` (**SecureStore**) | `{ token, user: { email } }` | secret |
-| `auth.lastLoggedInEmail.v1` | `src/auth/authStorage.ts` (**SecureStore**) | email string | secret |
+Every key lives in **one typed registry**, `src/storage/keys.ts` — read that file
+for the authoritative list of keys and their value types (a table here would just
+drift).
 
 **Passage notes and tags are online-only** — they are paginated from the API and
 never persisted on device.

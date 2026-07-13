@@ -32,37 +32,9 @@ Please ensure all relevant tests pass before submitting a pull request.
 
 ### API, Shared, and Web Tests (Vitest)
 
-All three run on Vitest. The API tests are integration tests and require a running API instance — see [Web & API Development § Testing](docs/web-api.md#testing) for setup (including required `.env` vars) and how to run a single test file.
+All tests should consistently pass when run in isolation or serially.
 
-```bash
-# Run all tests for a project
-npm run test:api
-npm run test:shared
-npm run test:web
-
-# Watch mode (run from within api/, shared/, or web/)
-npm run test:watch
-```
-
-### Mobile Tests (Jest)
-
-```bash
-# From mobile/
-npm test
-npm run test:watch
-```
-
-See [Mobile](#mobile) for the mobile app's own lint/typecheck/e2e commands.
-
-### End-to-End Tests (Playwright)
-
-```bash
-# Run E2E tests
-npm run test:e2e
-
-# Run E2E tests with UI
-npm run test:e2e:ui
-```
+See the **Testing** section of the [README](./README.md) for the Jest and Playwright commands.
 
 See [`e2e/README.md`](e2e/README.md) for required `.env` vars and running against a deployed app.
 

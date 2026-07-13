@@ -3,7 +3,7 @@ appId: com.mybiblelog.app
 tags:
   - smoke
 ---
-- runFlow: ../common/login.yaml
+- runFlow: ../common/resume.yaml
 - tapOn:
     id: "tab.settings"
 - tapOn:

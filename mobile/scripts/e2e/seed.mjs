@@ -4,12 +4,12 @@
  *
  * Re-implements the HTTP contract documented in `e2e/helpers/api-client.ts`
  * and `e2e/helpers/seed.ts` (those are Playwright-coupled):
- *   - POST /api/auth/register     { email, password, locale }   x-test-bypass-secret
- *   - POST /api/auth/login        { email, password }           x-test-bypass-secret
- *   - PUT  /api/settings          { settings: {...} }           Bearer token
- *   - POST /api/log-entries       { date, startVerseId, endVerseId }
- *   - POST /api/passage-note-tags { label, color, description? }
- *   - POST /api/passage-notes     { content, passages, tags? }
+ *   - POST   /api/auth/register     { email, password, locale }   x-test-bypass-secret
+ *   - POST   /api/auth/login        { email, password }           x-test-bypass-secret
+ *   - PATCH  /api/settings          { settings: {...} }           Bearer token
+ *   - POST   /api/log-entries       { date, startVerseId, endVerseId }
+ *   - POST   /api/passage-note-tags { label, color, description? }
+ *   - POST   /api/passage-notes     { content, passages, tags? }
  *
  * Usage: node scripts/e2e/seed.mjs [empty|standard]
  * Prints { email, password, token, scenario } as JSON on stdout.
@@ -88,7 +88,7 @@ async function createUser() {
 async function seedScenario(scenario, token) {
   if (scenario === "empty") return;
 
-  await api("PUT", "/api/settings", {
+  await api("PATCH", "/api/settings", {
     token,
     body: { settings: { lookBackDate: ymdDaysAgo(30), dailyVerseCountGoal: 86 } },
   });

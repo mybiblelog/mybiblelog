@@ -7,10 +7,7 @@ import {
   getDefaultBibleVersion,
 } from '@mybiblelog/shared';
 import { useDateVerseCountsStore } from '~/stores/date-verse-counts';
-
-const LocalStorageKeys = {
-  PREFERRED_BIBLE_APP: 'store:user-settings:preferredBibleApp',
-} as const;
+import { localStore, sessionStore } from '~/helpers/app-storage';
 
 const DEFAULT_BIBLE_APP = getDefaultBibleApp();
 const DEFAULT_BIBLE_VERSION = getDefaultBibleVersion();
@@ -121,8 +118,8 @@ export const useUserSettingsStore = defineStore('user-settings', {
       } = update;
 
       try {
-        if (preferredBibleApp && import.meta.client) {
-          localStorage.setItem(LocalStorageKeys.PREFERRED_BIBLE_APP, preferredBibleApp);
+        if (preferredBibleApp) {
+          localStore.set('preferredBibleApp', preferredBibleApp);
         }
 
         await $http.patch('/api/settings', {
@@ -189,22 +186,14 @@ export const useUserSettingsStore = defineStore('user-settings', {
     },
 
     loadClientSettings(): void {
-      let preferredBibleApp: PreferredBibleApp = DEFAULT_BIBLE_APP as PreferredBibleApp;
-      if (import.meta.client) {
-        const localStorageSetting = localStorage.getItem(LocalStorageKeys.PREFERRED_BIBLE_APP);
-        if (localStorageSetting && (BibleApps as Record<string, unknown>)[localStorageSetting]) {
-          preferredBibleApp = localStorageSetting as PreferredBibleApp;
-        }
-        this.readingTrackerResetDelayed = sessionStorage.getItem('readingTrackerResetDelayed') === 'true';
-      }
+      const preferredBibleApp = localStore.get('preferredBibleApp') ?? (DEFAULT_BIBLE_APP as PreferredBibleApp);
+      this.readingTrackerResetDelayed = sessionStore.get('readingTrackerResetDelayed') ?? false;
       this.applySettingsUpdate({ preferredBibleApp });
     },
 
     dismissReadingTrackerReset(): void {
       this.readingTrackerResetDelayed = true;
-      if (import.meta.client) {
-        sessionStorage.setItem('readingTrackerResetDelayed', 'true');
-      }
+      sessionStore.set('readingTrackerResetDelayed', true);
     },
   },
 });

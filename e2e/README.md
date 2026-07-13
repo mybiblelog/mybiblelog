@@ -62,24 +62,6 @@ Alternatively, let Playwright start the servers (`npm run test:e2e`); it sets
 > Add `--workers=3` for a stable local run, or run against a production build. CI already uses
 > 1 worker + 2 retries.
 
-## Structure
-
-```
-e2e/
-  fixtures.ts          # authenticated test fixtures (testUser, api, cookie-injected context)
-  helpers/
-    env.ts             # TEST_* env loading
-    api-client.ts      # user create/login/delete/getCurrentUser via the HTTP contract (standalone)
-    emails.ts          # reads the test-only email seam to recover one-time codes
-    seed.ts            # API seeding: log entries, notes, tags, settings
-    passages.ts        # verse ID helpers (wraps @mybiblelog/shared as a single seam)
-    dates.ts           # local-time date strings
-  test-data/           # CSV files for import tests
-  tests/
-    app/               # authenticated functional specs (project: app)
-    public/            # unauthenticated SEO/content specs (project: public)
-```
-
 ### How authentication works in tests
 
 - `auth.spec.ts` performs **true UI registration/login** (serial, with the bypass header injected into browser requests to dodge per-IP rate limits).
@@ -103,13 +85,7 @@ The suite (and its helpers) assume the following app behavior. A migrated app mu
   - `GET /api/test/emails?to=&subject=&limit=` (test-bypass header) → recent emails for a recipient, newest first
   - `GET /api/sitemap.xml`
 - **Locale cookie**: `i18n_redirected` pins the locale; English routes are unprefixed, other locales use a path prefix.
-- **`data-testid` attributes**: kebab-case, with state exposed via data attributes (`data-percentage`, `data-date`, `data-complete`, …) rather than CSS. Grep the app for `data-testid` for the full list; the major ones:
-  - entries/editor: `log-entry`, `log-entry-passage`, `log-entry-verse-count`, `log-entry-editor`, `log-entry-editor-submit`, `log-entry-editor-date`, `log-entry-editor-preview`
-  - menus/dialogs: `action-menu-toggle`, `action-menu-item`, `action-sheet-item`, `modal`, `modal-close`, `dialog-confirm`, `dialog-cancel`, `dialog-ok`
-  - progress: `double-progress-bar` (+ `data-primary-percentage`), `completion-bar`, `daily-goal-summary` (+ `data-verses-read`, `data-goal`), `bible-report-book` (+ `data-book-index`, `data-percentage`), `bible-report-progress` (+ `data-percentage`), `testament-toggle-all` / `testament-toggle-old` / `testament-toggle-new`, `book-report-chapter` (+ `data-verses-read`), `book-card` / `chapter-card` (+ `data-complete`), `calendar-day` (+ `data-date`, `data-goal-met`)
-  - notes/tags: `passage-note`, `passage-note-content`, `passage-note-passages`, `passage-note-tags`, `note-editor-*`, `notes-query-*`, `tag-line`, `tag-label`, `tag-new`, `tag-edit`, `tag-delete`, `tag-notes-count`, `tag-editor-*`, `tag-sort-order`
-  - settings: `settings-daily-goal-*`, `settings-bible-version-*`, `settings-start-page-*`, `password-*`, `import-file-input`, `import-row`, `import-row-status`, `export-*-button`
-  - feedback: `floating-feedback-button`, `feedback-form`, `feedback-message`, `feedback-kind`, `feedback-submit`
+- **`data-testid` attributes**: kebab-case, with state exposed via data attributes (`data-percentage`, `data-date`, `data-complete`, …) rather than CSS. Grep the app for `data-testid` for the full list.
 - **SEO invariants** (asserted with JavaScript disabled, i.e. on SSR output): title template `… | My Bible Log`, meta description, canonical with origin = `SITE_URL`, hreflang set for all 7 locales + `x-default`, `html[lang]`, `noindex` on auth/settings/policy pages, WebApplication JSON-LD on the homepage, `robots.txt` pointing at `/api/sitemap.xml`.
 
 ## Known issues

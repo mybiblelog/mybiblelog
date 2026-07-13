@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import type { LocaleCode } from '@mybiblelog/shared/platform/i18n';
+import { localStore } from '~/helpers/app-storage';
 import { useAuthStore } from '~/stores/auth';
 
 definePageMeta({ middleware: ['auth'], auth: 'guest' });
@@ -36,7 +36,7 @@ onMounted(async () => {
       // without changing the OAuth2 redirect URL.
       // Otherwise we would need to add a language prefix to the OAuth2 redirect URL,
       // as i18n will interpret the OAuth2 redirect URL as an intentional language switch.
-      const loginLocale = localStorage.getItem('login_language') as LocaleCode;
+      const loginLocale = localStore.get('loginLanguage');
       const userLocale = loginLocale || defaultLocale;
 
       await $http.post('/api/auth/oauth2/google/verify', {
