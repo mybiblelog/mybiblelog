@@ -11,23 +11,14 @@ import {
 import {
   type MobileLocale,
   type TranslationKey,
-  fallbackLocale,
+  getDevicePreferredLocale,
   i18n,
-  mobileLocales,
+  isSupportedLocale,
 } from "@/src/i18n";
 import { appStorage } from "@/src/storage/keys";
 
 /** Locales the app ships translations for (mirrors shared product locales). */
 export type SupportedLocale = MobileLocale;
-
-function isSupportedLocale(value: unknown): value is SupportedLocale {
-  return typeof value === "string" && (mobileLocales as readonly string[]).includes(value);
-}
-
-function getDevicePreferredLocale(): SupportedLocale {
-  const languageCode = Localization.getLocales()[0]?.languageCode;
-  return isSupportedLocale(languageCode) ? languageCode : fallbackLocale;
-}
 
 function normalizeLocale(value: unknown): SupportedLocale | null {
   return isSupportedLocale(value) ? value : null;

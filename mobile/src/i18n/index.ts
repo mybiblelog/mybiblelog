@@ -32,6 +32,20 @@ export type MobileLocale = (typeof mobileLocales)[number];
 
 export const fallbackLocale: MobileLocale = defaultLocale as MobileLocale;
 
+export function isSupportedLocale(value: unknown): value is MobileLocale {
+  return typeof value === "string" && (mobileLocales as readonly string[]).includes(value);
+}
+
+/**
+ * The device's preferred UI language, narrowed to a locale the app ships
+ * translations for (falling back to {@link fallbackLocale}). Matches on the
+ * base `languageCode` (e.g. `de`) rather than the full tag (e.g. `de-DE`).
+ */
+export function getDevicePreferredLocale(): MobileLocale {
+  const languageCode = Localization.getLocales()[0]?.languageCode;
+  return isSupportedLocale(languageCode) ? languageCode : fallbackLocale;
+}
+
 export const i18n = new I18n({
   en,
   de,
@@ -44,7 +58,7 @@ export const i18n = new I18n({
 
 i18n.enableFallback = true;
 i18n.defaultLocale = "en";
-i18n.locale = Localization.getLocales()[0]?.languageTag ?? "en";
+i18n.locale = getDevicePreferredLocale();
 
 export function t(key: TranslationKey, options?: Record<string, unknown>) {
   return i18n.t(key, options);
