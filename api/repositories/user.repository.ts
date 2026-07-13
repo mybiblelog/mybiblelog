@@ -47,6 +47,9 @@ const toUserRecord = (user: UserDocument): UserRecord => {
     emailVerificationCode: user.emailVerificationCode,
     emailVerificationExpires: user.emailVerificationExpires,
     emailVerificationCodeLastSentAt: user.emailVerificationCodeLastSentAt,
+    // Default legacy documents (created before this field existed) to the epoch
+    // so the notice cooldown treats them as "never sent".
+    existingAccountNoticeLastSentAt: user.existingAccountNoticeLastSentAt ?? new Date(0),
     newEmail: user.newEmail ?? null,
     newEmailVerificationCode: user.newEmailVerificationCode,
     newEmailVerificationExpires: user.newEmailVerificationExpires,
@@ -149,6 +152,7 @@ export const createUserRepository = ({ users }: Collections) => {
         emailVerificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         // Track when the initial verification email is sent so resend can enforce a cooldown.
         emailVerificationCodeLastSentAt: emailVerificationCode !== '' ? now : new Date(0),
+        existingAccountNoticeLastSentAt: new Date(0),
         newEmail: null,
         newEmailVerificationCode: '',
         newEmailVerificationExpires: new Date(0),
@@ -318,6 +322,14 @@ export const createUserRepository = ({ users }: Collections) => {
         emailVerificationCodeLastSentAt: user.emailVerificationCodeLastSentAt,
       });
       return toUserRecord(user);
+    },
+
+    async recordExistingAccountNotice(userId: string): Promise<void> {
+      const user = await requireDocById(userId);
+      user.existingAccountNoticeLastSentAt = new Date();
+      await persist(user, {
+        existingAccountNoticeLastSentAt: user.existingAccountNoticeLastSentAt,
+      });
     },
 
     async linkGoogleAccount(userId: string, googleId: string): Promise<void> {

@@ -28,6 +28,10 @@ export type Translation = {
     subject: string;
     click_to_reset: string;
   },
+  existing_account: {
+    subject: string;
+    body: string;
+  },
 };
 
 export type Locales = Record<LocaleCode, Translation>;

@@ -28,6 +28,9 @@ export interface UserDocument {
   emailVerificationCode: string;
   emailVerificationExpires: Date;
   emailVerificationCodeLastSentAt: Date;
+  // When the "you already have an account" notice was last sent to this address,
+  // used to cool down repeated notices when someone re-registers a taken email.
+  existingAccountNoticeLastSentAt: Date;
   newEmail: string | null;
   newEmailVerificationCode: string;
   newEmailVerificationExpires: Date;

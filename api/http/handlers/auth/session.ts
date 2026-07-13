@@ -11,6 +11,15 @@ import { authCookie, clearAuthCookie } from '../../helpers/auth-cookie';
 import { type RouteHandler } from '../../types';
 import { asRecord } from './shared';
 
+// At most one "you already have an account" notice per recipient in this window.
+const EXISTING_ACCOUNT_NOTICE_COOLDOWN_MS = 24 * 60 * 60 * 1000;
+
+// `users.create` throws a ValidationError carrying the `email_in_use` detail
+// code from two places (the uniqueness pre-check and the duplicate-key race).
+const isEmailInUseError = (error: unknown): boolean =>
+  error instanceof ValidationError
+  && (error.details ?? []).some((detail) => detail.code === ApiErrorDetailCode.EmailInUse);
+
 // GET /auth/user - Return the currently authenticated user (null when anonymous)
 export const getUser: RouteHandler = async (req, deps) => {
   const currentUser = await deps.authenticate(req, { optional: true });
@@ -74,10 +83,28 @@ export const register: RouteHandler = async (req, deps) => {
   const { email, password } = body;
   const input: UserCreateInput = { email, password, locale: locale as string | undefined };
 
-  const user = await users.create(input);
-
-  // Enqueue a verification email (returns immediately; send happens off-queue).
-  deps.emailService.queueUserEmailVerification(email, user.emailVerificationCode, locale as LocaleCode);
+  try {
+    const user = await users.create(input);
+    // Enqueue a verification email (returns immediately; send happens off-queue).
+    deps.emailService.queueUserEmailVerification(email, user.emailVerificationCode, locale as LocaleCode);
+  }
+  catch (error) {
+    if (!isEmailInUseError(error)) {
+      throw error;
+    }
+    // The email is already registered. Return the same generic success as a new
+    // signup to avoid account enumeration, and notify the existing account
+    // holder instead — localized with their stored locale.
+    const existing = await users.findByEmail(email);
+    // Cool down the notice per recipient account so repeated register attempts
+    // (the rate limiter is per-IP, not email) can't be used to flood a victim's inbox.
+    // Suppression is invisible to the caller: the response is unchanged either
+    // way, so this adds no enumeration signal.
+    if (existing && Date.now() - existing.existingAccountNoticeLastSentAt.getTime() >= EXISTING_ACCOUNT_NOTICE_COOLDOWN_MS) {
+      await users.recordExistingAccountNotice(existing.id);
+      deps.emailService.queueExistingAccountNotice(email, existing.settings.locale as LocaleCode);
+    }
+  }
 
   return { status: 200, body: { data: { success: true } } };
 };

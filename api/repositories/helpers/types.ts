@@ -26,6 +26,7 @@ export interface UserRecord {
   emailVerificationCode: string;
   emailVerificationExpires: Date;
   emailVerificationCodeLastSentAt: Date;
+  existingAccountNoticeLastSentAt: Date;
   newEmail: string | null;
   newEmailVerificationCode: string;
   newEmailVerificationExpires: Date;

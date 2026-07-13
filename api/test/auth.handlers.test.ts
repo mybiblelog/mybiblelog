@@ -39,6 +39,7 @@ import { type HttpRequest, type RouteDependencies } from '../http/types';
 import { type UserRecord } from '../repositories/helpers/types';
 import { AUTH_COOKIE_NAME } from '../http/helpers/auth-current-user';
 import { ValidationError } from '../http/errors/validation-errors';
+import { ApiErrorDetailCode } from '../http/errors/error-codes';
 import { UnauthorizedError, NotFoundError, InvalidRequestError } from '../http/errors/http-errors';
 import googleIdToken from '../http/helpers/google-id-token';
 
@@ -208,6 +209,68 @@ describe('auth handlers (unit)', () => {
       expect(result.body).toEqual({ data: { success: true } });
       expect(create).toHaveBeenCalledWith({ email: 'new@example.com', password: 'password123', locale: 'en' });
       expect(queueUserEmailVerification).toHaveBeenCalledWith('new@example.com', 'CODE123', 'en');
+    });
+
+    it('returns generic success and notifies the account holder when the email is already registered', async () => {
+      // `create` throws `email_in_use`; the handler must not leak that to the
+      // caller — it returns the same success as a new signup and instead emails
+      // the existing account holder (localized with their stored locale).
+      const create = vi.fn(async () => {
+        throw new ValidationError([{ code: ApiErrorDetailCode.EmailInUse, field: 'email' }]);
+      });
+      // No notice sent recently => the cooldown allows this one.
+      const existing = {
+        ...verifiedUser,
+        settings: { locale: 'de' },
+        existingAccountNoticeLastSentAt: new Date(0),
+      } as unknown as UserRecord;
+      const findByEmail = vi.fn(async () => existing);
+      const recordExistingAccountNotice = vi.fn(async () => {});
+      const queueUserEmailVerification = vi.fn();
+      const queueExistingAccountNotice = vi.fn();
+      const deps = makeDeps({
+        users: { create, findByEmail, recordExistingAccountNotice },
+        emailService: { queueUserEmailVerification, queueExistingAccountNotice },
+      });
+
+      const result = await register(
+        makeRequest({ body: { email: 'taken@example.com', password: 'password123', locale: 'en' } }),
+        deps,
+      );
+
+      expect(result.body).toEqual({ data: { success: true } });
+      expect(queueUserEmailVerification).not.toHaveBeenCalled();
+      expect(recordExistingAccountNotice).toHaveBeenCalledWith(verifiedUser.id);
+      expect(queueExistingAccountNotice).toHaveBeenCalledWith('taken@example.com', 'de');
+    });
+
+    it('suppresses the notice when one was recently sent, without changing the response', async () => {
+      // A notice inside the cooldown window must not re-send — this prevents a
+      // taken-email probe from flooding the victim's inbox — but the response is
+      // unchanged so no enumeration signal leaks.
+      const create = vi.fn(async () => {
+        throw new ValidationError([{ code: ApiErrorDetailCode.EmailInUse, field: 'email' }]);
+      });
+      const existing = {
+        ...verifiedUser,
+        settings: { locale: 'en' },
+        existingAccountNoticeLastSentAt: new Date(),
+      } as unknown as UserRecord;
+      const recordExistingAccountNotice = vi.fn(async () => {});
+      const queueExistingAccountNotice = vi.fn();
+      const deps = makeDeps({
+        users: { create, findByEmail: async () => existing, recordExistingAccountNotice },
+        emailService: { queueExistingAccountNotice },
+      });
+
+      const result = await register(
+        makeRequest({ body: { email: 'taken@example.com', password: 'password123', locale: 'en' } }),
+        deps,
+      );
+
+      expect(result.body).toEqual({ data: { success: true } });
+      expect(recordExistingAccountNotice).not.toHaveBeenCalled();
+      expect(queueExistingAccountNotice).not.toHaveBeenCalled();
     });
 
     it('rejects an invalid body via zod', async () => {
