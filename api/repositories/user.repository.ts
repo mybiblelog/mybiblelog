@@ -56,6 +56,9 @@ const toUserRecord = (user: UserDocument): UserRecord => {
     oldEmails: [...user.oldEmails],
     passwordResetCode: user.passwordResetCode,
     passwordResetExpires: user.passwordResetExpires,
+    // Default legacy documents (created before this field existed) to 0 so their
+    // still-valid tokens (which also carry no version) continue to match.
+    tokenVersion: user.tokenVersion ?? 0,
     settings: toUserSettingsRecord(user.settings),
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
@@ -159,6 +162,7 @@ export const createUserRepository = ({ users }: Collections) => {
         oldEmails: [],
         passwordResetCode: '',
         passwordResetExpires: new Date(0),
+        tokenVersion: 0,
         settings: buildDefaultUserSettings(input.locale),
         createdAt: now,
         updatedAt: now,
@@ -204,10 +208,33 @@ export const createUserRepository = ({ users }: Collections) => {
       return toUserRecord(user);
     },
 
-    async setPassword(userId: string, newPassword: string): Promise<void> {
+    /**
+     * Sets a new password hash and bumps tokenVersion in one write so any
+     * previously issued token is revoked. Returns the updated record so the
+     * caller can re-mint the acting session's token (keeping it signed in).
+     */
+    async setPassword(userId: string, newPassword: string): Promise<UserRecord> {
       const user = await requireDocById(userId);
       user.password = await hashPassword(newPassword);
-      await persist(user, { password: user.password });
+      await users.updateOne(
+        { _id: user._id },
+        { $set: { password: user.password, updatedAt: new Date() }, $inc: { tokenVersion: 1 } },
+      );
+      return toUserRecord(await requireDocById(userId));
+    },
+
+    /**
+     * Bumps tokenVersion, revoking every previously issued JWT for this user.
+     * Backs the "log out all sessions" action; the caller re-mints a token for
+     * the acting device so it stays signed in.
+     */
+    async incrementTokenVersion(userId: string): Promise<UserRecord> {
+      const user = await requireDocById(userId);
+      await users.updateOne(
+        { _id: user._id },
+        { $set: { updatedAt: new Date() }, $inc: { tokenVersion: 1 } },
+      );
+      return toUserRecord(await requireDocById(userId));
     },
 
     /** Grants or revokes admin privileges for a user. */
@@ -226,18 +253,26 @@ export const createUserRepository = ({ users }: Collections) => {
       return toUserRecord(user);
     },
 
-    /** Sets the new password and clears the password reset code in one save. */
+    /**
+     * Sets the new password, clears the reset code, and bumps tokenVersion (so
+     * any token stolen before the reset is revoked) in one write.
+     */
     async completePasswordReset(userId: string, newPassword: string): Promise<UserRecord> {
       const user = await requireDocById(userId);
       user.password = await hashPassword(newPassword);
-      user.passwordResetCode = '';
-      user.passwordResetExpires = new Date(0);
-      await persist(user, {
-        password: user.password,
-        passwordResetCode: user.passwordResetCode,
-        passwordResetExpires: user.passwordResetExpires,
-      });
-      return toUserRecord(user);
+      await users.updateOne(
+        { _id: user._id },
+        {
+          $set: {
+            password: user.password,
+            passwordResetCode: '',
+            passwordResetExpires: new Date(0),
+            updatedAt: new Date(),
+          },
+          $inc: { tokenVersion: 1 },
+        },
+      );
+      return toUserRecord(await requireDocById(userId));
     },
 
     /** Marks the user's email as verified by clearing the verification code. */

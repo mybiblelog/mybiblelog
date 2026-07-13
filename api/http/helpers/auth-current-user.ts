@@ -116,6 +116,17 @@ async function authCurrentUser(req: AuthRequest, { optional = false, adminOnly =
     // and the client will need to re-authenticate. (Or the account was deleted.)
     throw new UnauthenticatedError();
   }
+  // Enforce token revocation: a token minted before the user's tokenVersion was
+  // bumped (password change/reset, "log out all sessions") no longer matches and
+  // is rejected. Legacy tokens carry no version and are treated as 0.
+  const payloadVersion = (payload as { tokenVersion?: unknown }).tokenVersion;
+  const tokenVersion = typeof payloadVersion === 'number' ? payloadVersion : 0;
+  if (tokenVersion !== user.tokenVersion) {
+    if (!optional) {
+      throw new UnauthenticatedError();
+    }
+    return null;
+  }
   if (adminOnly && !user.isAdmin) {
     throw new UnauthorizedError();
   }

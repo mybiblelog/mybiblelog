@@ -93,6 +93,46 @@ describe('Auth routes', () => {
     await deleteTestUser(testUser);
   });
 
+  test('POST /api/auth/logout-all revokes previously issued tokens', async () => {
+    // Arrange
+    const testUser = await createTestUser();
+
+    // The old token works before revocation.
+    const before = await requestApi
+      .get('/api/auth/user')
+      .set('Authorization', `Bearer ${testUser.token}`);
+    expect(before.body.data.user.email).toBe(testUser.email);
+
+    // Act — log out all sessions using the current token.
+    const res = await requestApi
+      .post('/api/auth/logout-all')
+      .set('Authorization', `Bearer ${testUser.token}`);
+
+    // Assert — success and a fresh cookie for the acting device.
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data).toEqual({ success: true });
+    expect(res.headers['set-cookie']?.[0]).toContain(`${AUTH_COOKIE_NAME}=`);
+
+    // The old token is now revoked: an optional route resolves anonymous...
+    const after = await requestApi
+      .get('/api/auth/user')
+      .set('Authorization', `Bearer ${testUser.token}`);
+    expect(after.body.data.user).toBe(null);
+
+    // ...and a protected route rejects it outright.
+    const protectedRes = await requestApi
+      .post('/api/auth/logout')
+      .set('Authorization', `Bearer ${testUser.token}`);
+    expect(protectedRes.statusCode).toBe(401);
+
+    // Cleanup — the revoked token can't delete the account; re-login for a fresh one.
+    const relogin = await requestApi
+      .post('/api/auth/login')
+      .set('x-test-bypass-secret', TEST_BYPASS_SECRET!)
+      .send({ email: testUser.email, password: testUser.password });
+    await deleteTestUser({ token: relogin.body.data.token });
+  });
+
   test('GET /api/auth/user (unauthenticated)', async () => {
     // Act
     const res = await requestApi

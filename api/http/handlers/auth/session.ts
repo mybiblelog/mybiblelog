@@ -72,6 +72,16 @@ export const logout: RouteHandler = async (req, deps) => {
   return { status: 200, body: { data: true }, cookies: [clearAuthCookie()] };
 };
 
+// POST /auth/logout-all - Revoke every issued token for the user by bumping
+// tokenVersion, then re-mint a token for the acting device so it stays signed
+// in while all other sessions are logged out.
+export const logoutAllSessions: RouteHandler = async (req, deps) => {
+  const currentUser = await deps.authenticate(req);
+  const updatedUser = await deps.repositories.users.incrementTokenVersion(currentUser.id);
+  const token = generateUserJWT(updatedUser);
+  return { status: 200, body: { data: { success: true } }, cookies: [authCookie(token)] };
+};
+
 // POST /auth/register - Create a new local account and enqueue a verification email
 export const register: RouteHandler = async (req, deps) => {
   await deps.rateLimiter.check(req, { maxRequests: 5, windowMs: 60 * 1000 });

@@ -33,6 +33,8 @@ export interface UserRecord {
   oldEmails: string[];
   passwordResetCode: string;
   passwordResetExpires: Date;
+  /** Bumped to revoke all previously issued JWTs; embedded in and checked against each token. */
+  tokenVersion: number;
   settings: UserSettingsRecord;
   createdAt: Date;
   updatedAt: Date;

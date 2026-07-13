@@ -25,8 +25,11 @@ import {
   getUser,
   login,
   logout,
+  logoutAllSessions,
   register,
   verifyEmail,
+  changePassword,
+  setPassword,
   beginPasswordReset,
   completePasswordReset,
   beginEmailChange,
@@ -60,6 +63,7 @@ const verifiedUser = {
   email: 'user@example.com',
   isAdmin: false,
   hasLocalAccount: true,
+  tokenVersion: 0,
   emailVerificationCode: '', // '' => verified (see isEmailVerified)
 } as unknown as UserRecord;
 
@@ -188,6 +192,77 @@ describe('auth handlers (unit)', () => {
       expect(result.body).toEqual({ data: true });
       const cookie = result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME);
       expect(cookie?.value).toBeNull();
+    });
+  });
+
+  describe('logoutAllSessions', () => {
+    it('bumps tokenVersion and re-mints the current session cookie', async () => {
+      const incrementTokenVersion = vi.fn(async () => ({ ...verifiedUser, tokenVersion: 1 }) as UserRecord);
+      const deps = makeDeps({ users: { incrementTokenVersion } });
+
+      const result = await logoutAllSessions(makeRequest(), deps);
+
+      expect(incrementTokenVersion).toHaveBeenCalledWith(USER_ID);
+      expect(result.body).toEqual({ data: { success: true } });
+      // The acting device stays signed in: a fresh token/cookie is issued.
+      expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
+    });
+  });
+
+  describe('changePassword', () => {
+    it('rejects an incorrect current password without changing anything', async () => {
+      const setPasswordFn = vi.fn(async () => verifiedUser);
+      const deps = makeDeps({ users: { verifyPassword: async () => false, setPassword: setPasswordFn } });
+
+      await expect(
+        changePassword(makeRequest({ body: { currentPassword: 'wrong', newPassword: 'password123' } }), deps),
+      ).rejects.toBeInstanceOf(ValidationError);
+      expect(setPasswordFn).not.toHaveBeenCalled();
+    });
+
+    it('changes the password and re-mints the current session cookie', async () => {
+      const setPasswordFn = vi.fn(async () => ({ ...verifiedUser, tokenVersion: 1 }) as UserRecord);
+      const deps = makeDeps({ users: { verifyPassword: async () => true, setPassword: setPasswordFn } });
+
+      const result = await changePassword(
+        makeRequest({ body: { currentPassword: 'password123', newPassword: 'newpassword123' } }),
+        deps,
+      );
+
+      expect(setPasswordFn).toHaveBeenCalledWith(USER_ID, 'newpassword123');
+      expect(result.body).toEqual({ data: { success: true } });
+      // Bumping tokenVersion would log this device out too, so a fresh cookie is set.
+      expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
+    });
+  });
+
+  describe('setPassword', () => {
+    it('sets a first password for a Google-only account and re-mints the cookie', async () => {
+      const setPasswordFn = vi.fn(async () => ({ ...verifiedUser, hasLocalAccount: true, tokenVersion: 1 }) as UserRecord);
+      const googleOnlyUser = { ...verifiedUser, hasLocalAccount: false } as UserRecord;
+      const deps = makeDeps({
+        users: { setPassword: setPasswordFn },
+        authenticate: (async () => googleOnlyUser) as RouteDependencies['authenticate'],
+      });
+
+      const result = await setPassword(
+        makeRequest({ body: { password: 'password123', confirmPassword: 'password123' } }),
+        deps,
+      );
+
+      expect(setPasswordFn).toHaveBeenCalledWith(USER_ID, 'password123');
+      expect(result.body).toEqual({ data: { success: true } });
+      expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
+    });
+
+    it('rejects setting a password when the account already has one', async () => {
+      const setPasswordFn = vi.fn(async () => verifiedUser);
+      const deps = makeDeps({ users: { setPassword: setPasswordFn } });
+
+      await expect(
+        setPassword(makeRequest({ body: { password: 'password123', confirmPassword: 'password123' } }), deps),
+      ).rejects.toBeInstanceOf(ValidationError);
+      expect(setPasswordFn).not.toHaveBeenCalled();
     });
   });
 
