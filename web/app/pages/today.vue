@@ -165,9 +165,11 @@ import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
 import { useUserSettingsStore } from '~/stores/user-settings';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
+import { encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
 
 const { t } = useI18n();
 const localePath = useLocalePath();
+const router = useRouter();
 
 definePageMeta({ middleware: ['auth'] });
 useHead({ title: () => t('today') });
@@ -302,12 +304,19 @@ const trackPassage = (passage: Passage) => {
   });
 };
 
-const takeNoteOnPassage = (_passage: Passage) => {
-  // Phase 8: passage note editor
+const takeNoteOnPassage = (passage: Passage) => {
+  const { startVerseId, endVerseId } = passage;
+  passageNoteEditorStore.openEditor({ passages: [{ startVerseId, endVerseId }], content: '' });
 };
 
-const viewNotesForPassage = (_passage: Passage) => {
-  // Phase 8: notes page navigation
+const viewNotesForPassage = (passage: Passage) => {
+  const { startVerseId, endVerseId } = passage;
+  const q = encodePassageNotesQueryToRoute({
+    filterPassageStartVerseId: startVerseId,
+    filterPassageEndVerseId: endVerseId,
+    offset: 0,
+  });
+  router.push({ path: localePath('/notes'), query: q as Record<string, string | string[]> });
 };
 
 const openNewNoteEditor = () => {
