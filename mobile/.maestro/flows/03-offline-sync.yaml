@@ -12,7 +12,7 @@ tags:
 onFlowComplete:
   - setAirplaneMode: disabled
 ---
-- runFlow: ../common/login.yaml
+- runFlow: ../common/resume.yaml
 - setAirplaneMode: enabled
 - extendedWaitUntil:
     visible: "You.re offline.*"
@@ -33,14 +33,15 @@ onFlowComplete:
 - tapOn: "1"
 - tapOn:
     id: "entry-editor.end-verse"
-- scrollUntilVisible:
-    element: "17"
-    direction: DOWN
-- tapOn: "17"
+# Pick a verse near the top of the picker (no scroll): the options are a
+# FlatList inside a bottom-docked sheet, and Maestro's scroll gesture swipes
+# at screen-center — above the sheet — so it can't reach deep list items.
+- tapOn: "5"
 - tapOn:
     id: "entry-editor.save"
-# Local-first: the entry renders immediately while offline.
-- assertVisible: "Leviticus 1"
+# Local-first: the entry renders immediately while offline. Maestro anchors
+# assertVisible text, and a 1:1-5 range renders as "Leviticus 1:1-5".
+- assertVisible: "Leviticus 1:1-5"
 - setAirplaneMode: disabled
 - extendedWaitUntil:
     notVisible: "You.re offline.*"
@@ -54,5 +55,5 @@ onFlowComplete:
     start: 50%, 35%
     end: 50%, 75%
 - extendedWaitUntil:
-    visible: "Leviticus 1"
+    visible: "Leviticus 1:1-5"
     timeout: 15000

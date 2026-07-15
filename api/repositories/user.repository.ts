@@ -47,12 +47,18 @@ const toUserRecord = (user: UserDocument): UserRecord => {
     emailVerificationCode: user.emailVerificationCode,
     emailVerificationExpires: user.emailVerificationExpires,
     emailVerificationCodeLastSentAt: user.emailVerificationCodeLastSentAt,
+    // Default legacy documents (created before this field existed) to the epoch
+    // so the notice cooldown treats them as "never sent".
+    existingAccountNoticeLastSentAt: user.existingAccountNoticeLastSentAt ?? new Date(0),
     newEmail: user.newEmail ?? null,
     newEmailVerificationCode: user.newEmailVerificationCode,
     newEmailVerificationExpires: user.newEmailVerificationExpires,
     oldEmails: [...user.oldEmails],
     passwordResetCode: user.passwordResetCode,
     passwordResetExpires: user.passwordResetExpires,
+    // Default legacy documents (created before this field existed) to 0 so their
+    // still-valid tokens (which also carry no version) continue to match.
+    tokenVersion: user.tokenVersion ?? 0,
     settings: toUserSettingsRecord(user.settings),
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
@@ -60,6 +66,17 @@ const toUserRecord = (user: UserDocument): UserRecord => {
 };
 
 const generateVerificationCode = () => crypto.randomBytes(64).toString('hex');
+
+// A precomputed bcrypt hash used as a constant-time stand-in when an account
+// (or its local password) is absent. Comparing every credential check against a
+// real hash keeps the work — and therefore the response time — identical
+// whether or not the email exists, defeating timing-based user enumeration.
+const DUMMY_PASSWORD_HASH = bcrypt.hashSync('mybiblelog-timing-safe-dummy-password', 10);
+
+// Wraps bcrypt.compare in a boolean promise, treating any comparison error as a
+// non-match rather than surfacing it.
+const comparePassword = (plain: string, hash: string): Promise<boolean> =>
+  bcrypt.compare(plain, hash).then((isMatch) => isMatch, () => false);
 
 const emailInUseError = () =>
   new ValidationError([{ code: ApiErrorDetailCode.EmailInUse, field: 'email' }]);
@@ -138,12 +155,14 @@ export const createUserRepository = ({ users }: Collections) => {
         emailVerificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         // Track when the initial verification email is sent so resend can enforce a cooldown.
         emailVerificationCodeLastSentAt: emailVerificationCode !== '' ? now : new Date(0),
+        existingAccountNoticeLastSentAt: new Date(0),
         newEmail: null,
         newEmailVerificationCode: '',
         newEmailVerificationExpires: new Date(0),
         oldEmails: [],
         passwordResetCode: '',
         passwordResetExpires: new Date(0),
+        tokenVersion: 0,
         settings: buildDefaultUserSettings(input.locale),
         createdAt: now,
         updatedAt: now,
@@ -162,31 +181,60 @@ export const createUserRepository = ({ users }: Collections) => {
     },
 
     /**
-     * Compares a plaintext password against the user's stored hash.
-     * Resolves false for users without a local password.
+     * Compares a plaintext password against the user's stored hash. Always runs
+     * a bcrypt comparison — against a dummy hash when there is no local password
+     * — so accounts without a local password take the same time as those with
+     * one, avoiding a timing oracle. Resolves false when the password does not
+     * match (including for users without a local password).
      */
     async verifyPassword(userId: string, password: string): Promise<boolean> {
       const user = await users.findOne({ _id: new ObjectId(userId) });
-      const userPassword = user?.password ?? '';
-      if (!userPassword) {
-        return false;
-      }
-      return new Promise((resolve) => {
-        bcrypt.compare(password, userPassword, function(err, isMatch) {
-          if (err) {
-            resolve(false);
-          }
-          else {
-            resolve(isMatch);
-          }
-        });
-      });
+      return comparePassword(password, user?.password || DUMMY_PASSWORD_HASH);
     },
 
-    async setPassword(userId: string, newPassword: string): Promise<void> {
+    /**
+     * Authenticates an email + password pair for login. Always performs a
+     * bcrypt comparison — against a dummy hash when the email is unknown or the
+     * account has no local password — so every attempt does equivalent work and
+     * the response time cannot be used to enumerate which emails have accounts.
+     * Returns the user on success, or null when the credentials are invalid.
+     */
+    async verifyLogin(email: string, password: string): Promise<UserRecord | null> {
+      const user = await users.findOne({ email: email.toLowerCase() });
+      const passwordValid = await comparePassword(password, user?.password || DUMMY_PASSWORD_HASH);
+      if (!user || !passwordValid) {
+        return null;
+      }
+      return toUserRecord(user);
+    },
+
+    /**
+     * Sets a new password hash and bumps tokenVersion in one write so any
+     * previously issued token is revoked. Returns the updated record so the
+     * caller can re-mint the acting session's token (keeping it signed in).
+     */
+    async setPassword(userId: string, newPassword: string): Promise<UserRecord> {
       const user = await requireDocById(userId);
       user.password = await hashPassword(newPassword);
-      await persist(user, { password: user.password });
+      await users.updateOne(
+        { _id: user._id },
+        { $set: { password: user.password, updatedAt: new Date() }, $inc: { tokenVersion: 1 } },
+      );
+      return toUserRecord(await requireDocById(userId));
+    },
+
+    /**
+     * Bumps tokenVersion, revoking every previously issued JWT for this user.
+     * Backs the "log out all sessions" action; the caller re-mints a token for
+     * the acting device so it stays signed in.
+     */
+    async incrementTokenVersion(userId: string): Promise<UserRecord> {
+      const user = await requireDocById(userId);
+      await users.updateOne(
+        { _id: user._id },
+        { $set: { updatedAt: new Date() }, $inc: { tokenVersion: 1 } },
+      );
+      return toUserRecord(await requireDocById(userId));
     },
 
     /** Grants or revokes admin privileges for a user. */
@@ -205,18 +253,26 @@ export const createUserRepository = ({ users }: Collections) => {
       return toUserRecord(user);
     },
 
-    /** Sets the new password and clears the password reset code in one save. */
+    /**
+     * Sets the new password, clears the reset code, and bumps tokenVersion (so
+     * any token stolen before the reset is revoked) in one write.
+     */
     async completePasswordReset(userId: string, newPassword: string): Promise<UserRecord> {
       const user = await requireDocById(userId);
       user.password = await hashPassword(newPassword);
-      user.passwordResetCode = '';
-      user.passwordResetExpires = new Date(0);
-      await persist(user, {
-        password: user.password,
-        passwordResetCode: user.passwordResetCode,
-        passwordResetExpires: user.passwordResetExpires,
-      });
-      return toUserRecord(user);
+      await users.updateOne(
+        { _id: user._id },
+        {
+          $set: {
+            password: user.password,
+            passwordResetCode: '',
+            passwordResetExpires: new Date(0),
+            updatedAt: new Date(),
+          },
+          $inc: { tokenVersion: 1 },
+        },
+      );
+      return toUserRecord(await requireDocById(userId));
     },
 
     /** Marks the user's email as verified by clearing the verification code. */
@@ -301,6 +357,14 @@ export const createUserRepository = ({ users }: Collections) => {
         emailVerificationCodeLastSentAt: user.emailVerificationCodeLastSentAt,
       });
       return toUserRecord(user);
+    },
+
+    async recordExistingAccountNotice(userId: string): Promise<void> {
+      const user = await requireDocById(userId);
+      user.existingAccountNoticeLastSentAt = new Date();
+      await persist(user, {
+        existingAccountNoticeLastSentAt: user.existingAccountNoticeLastSentAt,
+      });
     },
 
     async linkGoogleAccount(userId: string, googleId: string): Promise<void> {

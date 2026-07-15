@@ -42,6 +42,7 @@ describe('user.repository', () => {
       expect(user.googleId).toBeNull();
       expect(user.settings.locale).toBe('en');
       expect(user.settings.dailyVerseCountGoal).toBe(86);
+      expect(user.tokenVersion).toBe(0);
       expect(user.createdAt).toBeInstanceOf(Date);
       expect(user.updatedAt).toBeInstanceOf(Date);
     });
@@ -114,19 +115,56 @@ describe('user.repository', () => {
       expect(await users.verifyPassword(user.id, 'wrong-password')).toBe(false);
     });
 
-    it('setPassword re-hashes, advances updatedAt, and keeps createdAt stable', async () => {
+    it('verifyLogin returns the user for valid credentials and null otherwise', async () => {
+      const { users } = await getRepos();
+      const email = uniqueEmail();
+      const user = await createUser({ email });
+
+      expect((await users.verifyLogin(email, 'password123'))?.id).toBe(user.id);
+      expect(await users.verifyLogin(email, 'wrong-password')).toBeNull();
+    });
+
+    it('verifyLogin returns null (running a comparison) for an unknown email', async () => {
+      const { users } = await getRepos();
+      expect(await users.verifyLogin(uniqueEmail(), 'password123')).toBeNull();
+    });
+
+    it('verifyLogin returns null for an account with no local password', async () => {
+      const { users } = await getRepos();
+      const email = uniqueEmail();
+      await users.create({ email, googleId: 'google-789', emailVerificationCode: '', locale: 'en' });
+
+      expect(await users.verifyLogin(email, 'anything')).toBeNull();
+    });
+
+    it('setPassword re-hashes, bumps tokenVersion, advances updatedAt, and keeps createdAt stable', async () => {
       const { users } = await getRepos();
       const created = await createUser();
 
       await sleep(10);
-      await users.setPassword(created.id, 'newpassword456');
+      const returned = await users.setPassword(created.id, 'newpassword456');
 
       expect(await users.verifyPassword(created.id, 'newpassword456')).toBe(true);
       expect(await users.verifyPassword(created.id, 'password123')).toBe(false);
 
+      // Returns the updated record with an advanced tokenVersion so the caller
+      // can re-mint the acting session's token.
+      expect(returned.tokenVersion).toBe(created.tokenVersion + 1);
+
       const updated = await users.findById(created.id);
+      expect(updated!.tokenVersion).toBe(created.tokenVersion + 1);
       expect(updated!.updatedAt.getTime()).toBeGreaterThan(created.updatedAt.getTime());
       expect(updated!.createdAt.getTime()).toBe(created.createdAt.getTime());
+    });
+
+    it('incrementTokenVersion bumps tokenVersion, revoking previously issued tokens', async () => {
+      const { users } = await getRepos();
+      const created = await createUser();
+
+      const returned = await users.incrementTokenVersion(created.id);
+
+      expect(returned.tokenVersion).toBe(created.tokenVersion + 1);
+      expect((await users.findById(created.id))!.tokenVersion).toBe(created.tokenVersion + 1);
     });
   });
 
@@ -161,6 +199,8 @@ describe('user.repository', () => {
 
       const completed = await users.completePasswordReset(created.id, 'newpassword456');
       expect(completed.passwordResetCode).toBe('');
+      // Bumps tokenVersion so any token stolen before the reset is revoked.
+      expect(completed.tokenVersion).toBe(created.tokenVersion + 1);
       expect(await users.verifyPassword(created.id, 'newpassword456')).toBe(true);
     });
   });

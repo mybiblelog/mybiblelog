@@ -1,4 +1,4 @@
-export { getUser, login, logout, register } from './session';
+export { getUser, login, logout, logoutAllSessions, register } from './session';
 export { getGoogleOauthUrl, verifyGoogleOauth, googleIdTokenLogin } from './oauth';
 export { verifyEmail, resendEmailVerification } from './email-verification';
 export {

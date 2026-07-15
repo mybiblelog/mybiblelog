@@ -74,6 +74,7 @@ import ResendVerificationEmail from '~/components/ui/ResendVerificationEmail.vue
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
+import { localStore } from '~/helpers/app-storage';
 import { useAuthStore } from '~/stores/auth';
 
 definePageMeta({ middleware: ['auth'], auth: 'guest' });
@@ -125,7 +126,7 @@ const showResendVerification = computed(() => (errors.value as any)?._form?.code
 // Persist the user's locale for the Google OAuth flow
 if (import.meta.client) {
   const { locale } = useI18n();
-  watch(locale, (val) => { localStorage.setItem('login_language', val); }, { immediate: true });
+  watch(locale, (val) => { localStore.set('loginLanguage', val); }, { immediate: true });
 }
 
 const onSubmit = async () => {

@@ -2,5 +2,16 @@
 # seeds a test user and passes E2E_EMAIL / E2E_PASSWORD to the flows.
 flows:
   - "flows/*.yaml"
+# Force order: the `flows/*.yaml` glob is NOT sorted, so without this Maestro
+# runs flows in an arbitrary order. Warm-session reuse (common/resume.yaml)
+# requires 01-login to run FIRST and establish the logged-in session that the
+# rest reuse; otherwise a later flow races and pays its own cold login.
 executionOrder:
   continueOnFailure: false
+  flowsOrder:
+    - 01-login
+    - 02-add-entry
+    - 03-offline-sync
+    - 04-notes-tags
+    - 05-bible-progress
+    - 06-insights

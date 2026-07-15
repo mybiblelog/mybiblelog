@@ -102,7 +102,7 @@ When the build finishes, download or share the APK from [expo.dev](https://expo.
 eas build --platform android --profile production
 ```
 
-Produces an `.aab` (Android App Bundle) for Play Store submission. See [`docs/play-store-checklist.md`](docs/play-store-checklist.md) for release requirements.
+Produces an `.aab` (Android App Bundle) for Play Store submission.
 
 ---
 
@@ -163,6 +163,27 @@ This deletes cookies, sessions, cache, and local storage instantly. Chrome resta
 
 ---
 
+## E2E tests (Maestro)
+
+End-to-end flows driven by [Maestro](https://maestro.mobile.dev) against a local Android emulator.
+
+Prerequisites:
+
+- Maestro CLI: `curl -Ls "https://get.maestro.mobile.dev" | bash`
+- An emulator running the dev build (Phase 1 or 2 above)
+- Root `.env` with `TEST_API_URL` and `TEST_BYPASS_SECRET` set
+
+```bash
+npm run e2e            # all flows (seeds a fresh user first)
+npm run e2e:smoke      # only flows tagged `smoke`
+npm run e2e -- .maestro/flows/03-offline-sync.yaml   # a single flow
+npm run e2e:seed       # just create + seed a user, print its credentials
+```
+
+See [`.maestro/README.md`](.maestro/README.md) for the flow list, dev-build quirks, and the `testID` convention.
+
+---
+
 ## Scripts reference
 
 | Task | Command |
@@ -175,6 +196,8 @@ This deletes cookies, sessions, cache, and local storage instantly. Chrome resta
 | Start Metro for dev build | `npx expo start --dev-client` |
 | Preview APK | `eas build --platform android --profile preview` |
 | Production AAB | `eas build --platform android --profile production` |
+| E2E tests (all / smoke only) | `npm run e2e` / `npm run e2e:smoke` |
+| E2E: seed a test user only | `npm run e2e:seed` |
 | Lint | `npm run lint` |
 | Clean build artifacts | `npm run clean` |
 

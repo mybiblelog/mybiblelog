@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Localization from "expo-localization";
 import {
   type ReactNode,
@@ -12,24 +11,14 @@ import {
 import {
   type MobileLocale,
   type TranslationKey,
-  fallbackLocale,
+  getDevicePreferredLocale,
   i18n,
-  mobileLocales,
+  isSupportedLocale,
 } from "@/src/i18n";
+import { appStorage } from "@/src/storage/keys";
 
 /** Locales the app ships translations for (mirrors shared product locales). */
 export type SupportedLocale = MobileLocale;
-
-const STORAGE_KEY = "locale.v1";
-
-function isSupportedLocale(value: unknown): value is SupportedLocale {
-  return typeof value === "string" && (mobileLocales as readonly string[]).includes(value);
-}
-
-function getDevicePreferredLocale(): SupportedLocale {
-  const languageCode = Localization.getLocales()[0]?.languageCode;
-  return isSupportedLocale(languageCode) ? languageCode : fallbackLocale;
-}
 
 function normalizeLocale(value: unknown): SupportedLocale | null {
   return isSupportedLocale(value) ? value : null;
@@ -56,8 +45,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     let isMounted = true;
     (async () => {
       try {
-        const stored = await AsyncStorage.getItem(STORAGE_KEY);
-        const normalized = normalizeLocale(stored);
+        const normalized = normalizeLocale(await appStorage.get("locale"));
         if (isMounted && normalized) {
           setLocaleState(normalized);
         }
@@ -72,7 +60,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     i18n.locale = locale;
-    void AsyncStorage.setItem(STORAGE_KEY, locale);
+    void appStorage.set("locale", locale);
   }, [locale]);
 
   const value = useMemo<LocaleContextValue>(

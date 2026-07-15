@@ -25,8 +25,11 @@ import {
   getUser,
   login,
   logout,
+  logoutAllSessions,
   register,
   verifyEmail,
+  changePassword,
+  setPassword,
   beginPasswordReset,
   completePasswordReset,
   beginEmailChange,
@@ -39,6 +42,7 @@ import { type HttpRequest, type RouteDependencies } from '../http/types';
 import { type UserRecord } from '../repositories/helpers/types';
 import { AUTH_COOKIE_NAME } from '../http/helpers/auth-current-user';
 import { ValidationError } from '../http/errors/validation-errors';
+import { ApiErrorDetailCode } from '../http/errors/error-codes';
 import { UnauthorizedError, NotFoundError, InvalidRequestError } from '../http/errors/http-errors';
 import googleIdToken from '../http/helpers/google-id-token';
 
@@ -59,6 +63,7 @@ const verifiedUser = {
   email: 'user@example.com',
   isAdmin: false,
   hasLocalAccount: true,
+  tokenVersion: 0,
   emailVerificationCode: '', // '' => verified (see isEmailVerified)
 } as unknown as UserRecord;
 
@@ -129,20 +134,16 @@ describe('auth handlers (unit)', () => {
         .rejects.toBeInstanceOf(ValidationError);
     });
 
-    it('returns Unauthorized when the user does not exist', async () => {
-      const deps = makeDeps({ users: { findByEmail: async () => null } });
-      await expect(login(makeRequest({ body: { email: 'a@b.com', password: 'pw' } }), deps))
-        .rejects.toBeInstanceOf(UnauthorizedError);
-    });
-
-    it('returns Unauthorized when the password is wrong', async () => {
-      const deps = makeDeps({ users: { findByEmail: async () => verifiedUser, verifyPassword: async () => false } });
+    it('returns Unauthorized when the credentials are invalid', async () => {
+      // verifyLogin returns null for both an unknown email and a wrong password,
+      // keeping the two cases indistinguishable.
+      const deps = makeDeps({ users: { verifyLogin: async () => null } });
       await expect(login(makeRequest({ body: { email: 'a@b.com', password: 'pw' } }), deps))
         .rejects.toBeInstanceOf(UnauthorizedError);
     });
 
     it('returns a token and sets the auth cookie on success', async () => {
-      const deps = makeDeps({ users: { findByEmail: async () => verifiedUser, verifyPassword: async () => true } });
+      const deps = makeDeps({ users: { verifyLogin: async () => verifiedUser } });
       const result = await login(makeRequest({ body: { email: 'a@b.com', password: 'pw' } }), deps);
       expect(result.status).toBe(200);
       expect(typeof (result.body?.data as { token: string }).token).toBe('string');
@@ -161,7 +162,7 @@ describe('auth handlers (unit)', () => {
 
     it('rejects an unverified user when REQUIRE_EMAIL_VERIFICATION is on', async () => {
       withEnvConfig({ REQUIRE_EMAIL_VERIFICATION: 'true' });
-      const deps = makeDeps({ users: { findByEmail: async () => unverifiedUser, verifyPassword: async () => true } });
+      const deps = makeDeps({ users: { verifyLogin: async () => unverifiedUser } });
 
       const error = await login(makeRequest({ body: { email: 'a@b.com', password: 'pw' } }), deps)
         .catch((e: unknown) => e);
@@ -174,7 +175,7 @@ describe('auth handlers (unit)', () => {
 
     it('allows an unverified user to log in when REQUIRE_EMAIL_VERIFICATION is off', async () => {
       withEnvConfig({ REQUIRE_EMAIL_VERIFICATION: 'false' });
-      const deps = makeDeps({ users: { findByEmail: async () => unverifiedUser, verifyPassword: async () => true } });
+      const deps = makeDeps({ users: { verifyLogin: async () => unverifiedUser } });
 
       const result = await login(makeRequest({ body: { email: 'a@b.com', password: 'pw' } }), deps);
 
@@ -191,6 +192,77 @@ describe('auth handlers (unit)', () => {
       expect(result.body).toEqual({ data: true });
       const cookie = result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME);
       expect(cookie?.value).toBeNull();
+    });
+  });
+
+  describe('logoutAllSessions', () => {
+    it('bumps tokenVersion and re-mints the current session cookie', async () => {
+      const incrementTokenVersion = vi.fn(async () => ({ ...verifiedUser, tokenVersion: 1 }) as UserRecord);
+      const deps = makeDeps({ users: { incrementTokenVersion } });
+
+      const result = await logoutAllSessions(makeRequest(), deps);
+
+      expect(incrementTokenVersion).toHaveBeenCalledWith(USER_ID);
+      expect(result.body).toEqual({ data: { success: true } });
+      // The acting device stays signed in: a fresh token/cookie is issued.
+      expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
+    });
+  });
+
+  describe('changePassword', () => {
+    it('rejects an incorrect current password without changing anything', async () => {
+      const setPasswordFn = vi.fn(async () => verifiedUser);
+      const deps = makeDeps({ users: { verifyPassword: async () => false, setPassword: setPasswordFn } });
+
+      await expect(
+        changePassword(makeRequest({ body: { currentPassword: 'wrong', newPassword: 'password123' } }), deps),
+      ).rejects.toBeInstanceOf(ValidationError);
+      expect(setPasswordFn).not.toHaveBeenCalled();
+    });
+
+    it('changes the password and re-mints the current session cookie', async () => {
+      const setPasswordFn = vi.fn(async () => ({ ...verifiedUser, tokenVersion: 1 }) as UserRecord);
+      const deps = makeDeps({ users: { verifyPassword: async () => true, setPassword: setPasswordFn } });
+
+      const result = await changePassword(
+        makeRequest({ body: { currentPassword: 'password123', newPassword: 'newpassword123' } }),
+        deps,
+      );
+
+      expect(setPasswordFn).toHaveBeenCalledWith(USER_ID, 'newpassword123');
+      expect(result.body).toEqual({ data: { success: true } });
+      // Bumping tokenVersion would log this device out too, so a fresh cookie is set.
+      expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
+    });
+  });
+
+  describe('setPassword', () => {
+    it('sets a first password for a Google-only account and re-mints the cookie', async () => {
+      const setPasswordFn = vi.fn(async () => ({ ...verifiedUser, hasLocalAccount: true, tokenVersion: 1 }) as UserRecord);
+      const googleOnlyUser = { ...verifiedUser, hasLocalAccount: false } as UserRecord;
+      const deps = makeDeps({
+        users: { setPassword: setPasswordFn },
+        authenticate: (async () => googleOnlyUser) as RouteDependencies['authenticate'],
+      });
+
+      const result = await setPassword(
+        makeRequest({ body: { password: 'password123', confirmPassword: 'password123' } }),
+        deps,
+      );
+
+      expect(setPasswordFn).toHaveBeenCalledWith(USER_ID, 'password123');
+      expect(result.body).toEqual({ data: { success: true } });
+      expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
+    });
+
+    it('rejects setting a password when the account already has one', async () => {
+      const setPasswordFn = vi.fn(async () => verifiedUser);
+      const deps = makeDeps({ users: { setPassword: setPasswordFn } });
+
+      await expect(
+        setPassword(makeRequest({ body: { password: 'password123', confirmPassword: 'password123' } }), deps),
+      ).rejects.toBeInstanceOf(ValidationError);
+      expect(setPasswordFn).not.toHaveBeenCalled();
     });
   });
 
@@ -212,6 +284,68 @@ describe('auth handlers (unit)', () => {
       expect(result.body).toEqual({ data: { success: true } });
       expect(create).toHaveBeenCalledWith({ email: 'new@example.com', password: 'password123', locale: 'en' });
       expect(queueUserEmailVerification).toHaveBeenCalledWith('new@example.com', 'CODE123', 'en');
+    });
+
+    it('returns generic success and notifies the account holder when the email is already registered', async () => {
+      // `create` throws `email_in_use`; the handler must not leak that to the
+      // caller — it returns the same success as a new signup and instead emails
+      // the existing account holder (localized with their stored locale).
+      const create = vi.fn(async () => {
+        throw new ValidationError([{ code: ApiErrorDetailCode.EmailInUse, field: 'email' }]);
+      });
+      // No notice sent recently => the cooldown allows this one.
+      const existing = {
+        ...verifiedUser,
+        settings: { locale: 'de' },
+        existingAccountNoticeLastSentAt: new Date(0),
+      } as unknown as UserRecord;
+      const findByEmail = vi.fn(async () => existing);
+      const recordExistingAccountNotice = vi.fn(async () => {});
+      const queueUserEmailVerification = vi.fn();
+      const queueExistingAccountNotice = vi.fn();
+      const deps = makeDeps({
+        users: { create, findByEmail, recordExistingAccountNotice },
+        emailService: { queueUserEmailVerification, queueExistingAccountNotice },
+      });
+
+      const result = await register(
+        makeRequest({ body: { email: 'taken@example.com', password: 'password123', locale: 'en' } }),
+        deps,
+      );
+
+      expect(result.body).toEqual({ data: { success: true } });
+      expect(queueUserEmailVerification).not.toHaveBeenCalled();
+      expect(recordExistingAccountNotice).toHaveBeenCalledWith(verifiedUser.id);
+      expect(queueExistingAccountNotice).toHaveBeenCalledWith('taken@example.com', 'de');
+    });
+
+    it('suppresses the notice when one was recently sent, without changing the response', async () => {
+      // A notice inside the cooldown window must not re-send — this prevents a
+      // taken-email probe from flooding the victim's inbox — but the response is
+      // unchanged so no enumeration signal leaks.
+      const create = vi.fn(async () => {
+        throw new ValidationError([{ code: ApiErrorDetailCode.EmailInUse, field: 'email' }]);
+      });
+      const existing = {
+        ...verifiedUser,
+        settings: { locale: 'en' },
+        existingAccountNoticeLastSentAt: new Date(),
+      } as unknown as UserRecord;
+      const recordExistingAccountNotice = vi.fn(async () => {});
+      const queueExistingAccountNotice = vi.fn();
+      const deps = makeDeps({
+        users: { create, findByEmail: async () => existing, recordExistingAccountNotice },
+        emailService: { queueExistingAccountNotice },
+      });
+
+      const result = await register(
+        makeRequest({ body: { email: 'taken@example.com', password: 'password123', locale: 'en' } }),
+        deps,
+      );
+
+      expect(result.body).toEqual({ data: { success: true } });
+      expect(recordExistingAccountNotice).not.toHaveBeenCalled();
+      expect(queueExistingAccountNotice).not.toHaveBeenCalled();
     });
 
     it('rejects an invalid body via zod', async () => {

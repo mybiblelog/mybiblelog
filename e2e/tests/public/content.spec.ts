@@ -25,6 +25,8 @@ test.describe('Content pages', () => {
     const firstSection = sections.first();
     await expect(firstSection.getByRole('heading', { name: 'Why My Bible Log?' })).toBeVisible();
     await expect(firstSection.locator('img')).toBeVisible();
+    // the list prop renders its items (guards the YAML array binding)
+    await expect(firstSection.getByText('No rigid schedules')).toBeVisible();
 
     // <content-page-footer> renders the footer nav
     await expect(page.locator('footer.page-footer')).toBeVisible();

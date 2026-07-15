@@ -4,7 +4,7 @@ appId: com.mybiblelog.app
 tags:
   - smoke
 ---
-- runFlow: ../common/login.yaml
+- runFlow: ../common/resume.yaml
 - tapOn:
     id: "tab.notes"
 
@@ -16,7 +16,9 @@ tags:
 - tapOn:
     id: "tag-editor.label"
 - inputText: "Focus"
-- hideKeyboard
+# No hideKeyboard: it presses Back, which the editor's RN Modal treats as a
+# dismiss (onRequestClose) and closes the sheet. Save lives in the sheet
+# header, above the keyboard, so tap it directly.
 - tapOn:
     id: "tag-editor.save"
 - assertVisible: "Focus"
@@ -28,7 +30,8 @@ tags:
 - tapOn:
     id: "note-editor.content"
 - inputText: "Maestro note"
-- hideKeyboard
+# Save is in the modal header (above the keyboard); no hideKeyboard (Back
+# would dismiss the modal).
 - tapOn:
     id: "note-editor.save"
 - assertVisible: "Maestro note"
@@ -39,7 +42,8 @@ tags:
 - tapOn:
     id: "notes-query.search"
 - inputText: "Maestro"
-- hideKeyboard
+# Apply is in the sheet header (above the keyboard); no hideKeyboard (Back
+# would dismiss the sheet).
 - tapOn:
     id: "notes-query.apply"
 - assertVisible: "Maestro note"

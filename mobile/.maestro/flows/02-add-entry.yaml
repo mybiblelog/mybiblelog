@@ -3,7 +3,7 @@ appId: com.mybiblelog.app
 tags:
   - smoke
 ---
-- runFlow: ../common/login.yaml
+- runFlow: ../common/resume.yaml
 - tapOn:
     id: "today.add-entry"
 - tapOn:
@@ -20,10 +20,12 @@ tags:
 - tapOn: "1"
 - tapOn:
     id: "entry-editor.end-verse"
-- scrollUntilVisible:
-    element: "22"
-    direction: DOWN
-- tapOn: "22"
+# Pick a verse near the top of the picker (no scroll): the options are a
+# FlatList inside a bottom-docked sheet, and Maestro's scroll gesture swipes
+# at screen-center — above the sheet — so it can't reach deep list items.
+- tapOn: "5"
 - tapOn:
     id: "entry-editor.save"
-- assertVisible: "Exodus 1"
+# Maestro anchors assertVisible text (full match), and a 1:1-5 range renders
+# as "Exodus 1:1-5" (a whole chapter would collapse to just "Exodus 1").
+- assertVisible: "Exodus 1:1-5"

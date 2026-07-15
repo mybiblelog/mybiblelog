@@ -13,6 +13,10 @@ import { authCookie } from '../../helpers/auth-cookie';
 import { type RouteHandler } from '../../types';
 import { asRecord } from './shared';
 
+// Setting a password bumps the user's tokenVersion (revoking any other session,
+// including a token stolen before the change), so we re-issue the acting device
+// a fresh token/cookie to keep it signed in.
+
 // PATCH /auth/password - Change the current user's password
 export const changePassword: RouteHandler = async (req, deps) => {
   await deps.rateLimiter.check(req, { maxRequests: 10, windowMs: 60 * 60 * 1000 });
@@ -28,8 +32,9 @@ export const changePassword: RouteHandler = async (req, deps) => {
   }
 
   // newPassword is already validated by zod above
-  await users.setPassword(currentUser.id, newPassword);
-  return { status: 200, body: { data: { success: true } } };
+  const updatedUser = await users.setPassword(currentUser.id, newPassword);
+  const token = generateUserJWT(updatedUser);
+  return { status: 200, body: { data: { success: true } }, cookies: [authCookie(token)] };
 };
 
 // POST /auth/password/set - Set a password for a Google-only (no local password) account
@@ -48,8 +53,9 @@ export const setPassword: RouteHandler = async (req, deps) => {
     throw new ValidationError([{ code: ApiErrorDetailCode.NotValid, field: 'confirmPassword' }]);
   }
 
-  await deps.repositories.users.setPassword(currentUser.id, body.password);
-  return { status: 200, body: { data: { success: true } } };
+  const updatedUser = await deps.repositories.users.setPassword(currentUser.id, body.password);
+  const token = generateUserJWT(updatedUser);
+  return { status: 200, body: { data: { success: true } }, cookies: [authCookie(token)] };
 };
 
 // POST /auth/password/reset - Begin a password reset and enqueue a reset email

@@ -24,7 +24,7 @@ export const hashPassword = (plain: string): Promise<string> => {
 // this so the cookie and the token it carries expire together.
 export const AUTH_TOKEN_TTL_DAYS = 30;
 
-export const generateUserJWT = (user: Pick<UserRecord, 'id' | 'isAdmin' | 'hasLocalAccount'>): string => {
+export const generateUserJWT = (user: Pick<UserRecord, 'id' | 'isAdmin' | 'hasLocalAccount' | 'tokenVersion'>): string => {
   const { jwtSecret, siteUrl } = getConfig();
   const issuer = new URL(siteUrl).origin;
   const today = new Date();
@@ -35,6 +35,10 @@ export const generateUserJWT = (user: Pick<UserRecord, 'id' | 'isAdmin' | 'hasLo
     id: user.id,
     hasLocalAccount: user.hasLocalAccount,
     isAdmin: user.isAdmin,
+    // Revocation marker: compared against the user's current tokenVersion on
+    // every request so bumping it (password change, "log out all sessions")
+    // invalidates this token.
+    tokenVersion: user.tokenVersion,
     exp: Math.round(exp.getTime() / 1000),
   }, jwtSecret, {
     algorithm: 'HS256',

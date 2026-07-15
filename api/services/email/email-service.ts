@@ -5,6 +5,7 @@ import { LocaleCode } from '@mybiblelog/shared';
 import renderEmailVerification from './email-templates/email-verification';
 import renderPasswordResetLink from './email-templates/password-reset-link';
 import renderEmailUpdate from './email-templates/email-update';
+import renderExistingAccountNotice from './email-templates/existing-account-notice';
 import renderNewFeedbackNotification from './email-templates/new-feedback-notification';
 import { brandLogoCid } from './email-templates/branded-wrapper';
 
@@ -23,6 +24,7 @@ export type EmailService = {
   queueUserEmailVerification: (email: string, emailVerificationCode: string, locale: LocaleCode) => void;
   queuePasswordResetLink: (email: string, passwordResetLink: string, locale: LocaleCode) => void;
   queueEmailUpdateLink: (currentEmail: string, newEmail: string, newEmailVerificationCode: string, locale: LocaleCode) => void;
+  queueExistingAccountNotice: (email: string, locale: LocaleCode) => void;
   queueNewFeedbackNotification: (adminEmail: string, feedback: { kind: string; email: string; message: string }) => void;
 };
 
@@ -142,6 +144,17 @@ const init = async () => {
     });
   };
 
+  const queueExistingAccountNotice = (email: string, locale: LocaleCode = 'en'): void => {
+    const { subject, html } = renderExistingAccountNotice({ locale });
+
+    queueEmail({
+      from: defaultFromEmailAddress,
+      to: email,
+      subject,
+      html,
+    });
+  };
+
   const queueNewFeedbackNotification = (adminEmail: string, feedback: { kind: string; email: string; message: string }): void => {
     const adminFeedbackUrl = new URL('/admin/feedback', siteUrl).toString();
     const { subject, html } = renderNewFeedbackNotification({ adminFeedbackUrl, ...feedback });
@@ -159,6 +172,7 @@ const init = async () => {
     queueUserEmailVerification,
     queuePasswordResetLink,
     queueEmailUpdateLink,
+    queueExistingAccountNotice,
     queueNewFeedbackNotification,
   };
 };

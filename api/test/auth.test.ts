@@ -93,6 +93,46 @@ describe('Auth routes', () => {
     await deleteTestUser(testUser);
   });
 
+  test('POST /api/auth/logout-all revokes previously issued tokens', async () => {
+    // Arrange
+    const testUser = await createTestUser();
+
+    // The old token works before revocation.
+    const before = await requestApi
+      .get('/api/auth/user')
+      .set('Authorization', `Bearer ${testUser.token}`);
+    expect(before.body.data.user.email).toBe(testUser.email);
+
+    // Act — log out all sessions using the current token.
+    const res = await requestApi
+      .post('/api/auth/logout-all')
+      .set('Authorization', `Bearer ${testUser.token}`);
+
+    // Assert — success and a fresh cookie for the acting device.
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data).toEqual({ success: true });
+    expect(res.headers['set-cookie']?.[0]).toContain(`${AUTH_COOKIE_NAME}=`);
+
+    // The old token is now revoked: an optional route resolves anonymous...
+    const after = await requestApi
+      .get('/api/auth/user')
+      .set('Authorization', `Bearer ${testUser.token}`);
+    expect(after.body.data.user).toBe(null);
+
+    // ...and a protected route rejects it outright.
+    const protectedRes = await requestApi
+      .post('/api/auth/logout')
+      .set('Authorization', `Bearer ${testUser.token}`);
+    expect(protectedRes.statusCode).toBe(401);
+
+    // Cleanup — the revoked token can't delete the account; re-login for a fresh one.
+    const relogin = await requestApi
+      .post('/api/auth/login')
+      .set('x-test-bypass-secret', TEST_BYPASS_SECRET!)
+      .send({ email: testUser.email, password: testUser.password });
+    await deleteTestUser({ token: relogin.body.data.token });
+  });
+
   test('GET /api/auth/user (unauthenticated)', async () => {
     // Act
     const res = await requestApi
@@ -151,12 +191,14 @@ describe('Auth routes', () => {
       });
     });
 
-    it('error if email already in use', async () => {
-      // Arrange
+    it('returns generic success, notifies the holder once, and cools down repeat notices', async () => {
+      // Registering with a taken email must be indistinguishable from a fresh
+      // signup (no `email_in_use` leak). Instead of erroring, the API notifies
+      // the existing account holder — but only once per cooldown window, so a
+      // repeated probe can't flood their inbox.
       const testUser = await createTestUser();
 
-      // Act
-      const response = await requestApi
+      const registerTaken = () => requestApi
         .post('/api/auth/register')
         // bypass rate limiting
         .set('x-test-bypass-secret', TEST_BYPASS_SECRET!)
@@ -166,14 +208,41 @@ describe('Auth routes', () => {
           locale: 'en',
         });
 
-      // Assert
-      expect(response.statusCode).toBe(400);
-      expect(response.body).toHaveProperty('error');
-      expect(response.body).not.toHaveProperty('data');
-      expect(response.body.error).toEqual({
-        code: 'validation_error',
-        errors: [{ field: 'email', code: 'email_in_use' }],
-      });
+      const countNotices = async (): Promise<number> => {
+        const emailsResponse = await requestApi
+          .get('/api/test/emails')
+          .query({ to: testUser.email, subject: 'You already have an account' })
+          .set('x-test-bypass-secret', TEST_BYPASS_SECRET!);
+        expect(emailsResponse.statusCode).toBe(200);
+        return emailsResponse.body.data.length;
+      };
+
+      // First attempt: same generic success as a new account, no error leak.
+      const response = await registerTaken();
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toEqual({ data: { success: true } });
+      expect(response.body).not.toHaveProperty('error');
+
+      // A privacy-preserving "you already have an account" notice was recorded
+      // for the existing holder (emails are recorded as `log_only` outside prod).
+      // Recording is enqueued off the request path, so poll the seam briefly.
+      let noticeCount = 0;
+      for (let attempt = 0; attempt < 10 && noticeCount === 0; attempt++) {
+        noticeCount = await countNotices();
+        if (noticeCount === 0) {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+      }
+      expect(noticeCount).toBe(1);
+
+      // Second attempt within the cooldown: still a generic success, but no new
+      // notice is sent to the victim.
+      const secondResponse = await registerTaken();
+      expect(secondResponse.statusCode).toBe(200);
+      expect(secondResponse.body).toEqual({ data: { success: true } });
+      // Give any (unwanted) enqueued email time to land before asserting.
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      expect(await countNotices()).toBe(1);
 
       // Cleanup
       await deleteTestUser(testUser);

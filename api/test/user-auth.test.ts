@@ -14,6 +14,7 @@ const user = {
   id: '507f1f77bcf86cd799439011',
   isAdmin: false,
   hasLocalAccount: true,
+  tokenVersion: 3,
 } as unknown as UserRecord;
 
 describe('generateUserJWT', () => {
@@ -47,5 +48,12 @@ describe('generateUserJWT', () => {
     expect(decoded.iss).toBe('https://example.test');
     expect(decoded.aud).toBe('https://example.test');
     expect(decoded.id).toBe(user.id);
+  });
+
+  it('embeds the user tokenVersion for revocation checks', () => {
+    withEnvConfig({ NODE_ENV: 'development' });
+    const decoded = jwt.verify(generateUserJWT(user), 'secret') as jwt.JwtPayload;
+
+    expect(decoded.tokenVersion).toBe(3);
   });
 });

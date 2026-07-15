@@ -1,11 +1,9 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { type ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useColorScheme } from "react-native";
+import { appStorage } from "@/src/storage/keys";
 import { type ColorSchemeName, colorsByScheme } from "./tokens/colors";
 
 export type ThemeMode = "system" | "light" | "dark";
-
-const STORAGE_KEY = "themeMode.v1";
 
 type ThemeContextValue = {
   mode: ThemeMode;
@@ -35,8 +33,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     let isMounted = true;
     (async () => {
       try {
-        const stored = await AsyncStorage.getItem(STORAGE_KEY);
-        const normalized = normalizeMode(stored);
+        const normalized = normalizeMode(await appStorage.get("themeMode"));
         if (isMounted && normalized) setModeState(normalized);
       } catch (err) {
         console.warn("Failed to load theme mode", err);
@@ -48,7 +45,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    void AsyncStorage.setItem(STORAGE_KEY, mode);
+    void appStorage.set("themeMode", mode);
   }, [mode]);
 
   const scheme = resolveScheme(mode, systemScheme);

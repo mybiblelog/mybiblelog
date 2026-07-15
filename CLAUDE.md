@@ -17,12 +17,11 @@ This file is intended to capture task-level guidance for Claude-style agents wor
 
 ## Repository context
 
-This repository contains a monorepo for a Bible journaling site with separate `api/`, `web/`, `shared/`, `mobile/`, and `e2e/` folders.
+This repository is a monorepo for a Bible journaling site: `api/`, `web/`, `shared/`, `mobile/`, and `e2e/` workspaces. Read the workspace tree directly rather than relying on a folder-by-folder description here — it changes independently of this file.
 
-- `api/` contains the backend server and tests.
-- `web/` contains the frontend app (Nuxt 4) and its Nuxt configuration. Source lives under `web/app/`.
-- `shared/` contains shared TypeScript utilities and tests.
-- `e2e/` contains end-to-end tests.
+## Documentation policy
+
+Do not document file/folder structure or anything easy to discern by reading the code — that kind of doc duplicates the code and goes stale the moment the code changes. Only document broad architectural decisions (the "why" behind a non-obvious choice), and only when the reasoning wouldn't otherwise be recoverable from the code itself.
 
 ## Task guidance
 

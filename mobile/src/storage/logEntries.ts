@@ -1,9 +1,6 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { LogEntry } from "@/src/types/log-entry";
 import { makeClientId } from "@/src/log-entries/sync";
-
-const STORAGE_KEY = "logEntries.v1";
-const MUTATIONS_KEY = "logEntries.mutations.v1";
+import { appStorage } from "@/src/storage/keys";
 
 function isLogEntry(value: unknown): value is LogEntry {
   if (!value || typeof value !== "object") return false;
@@ -29,34 +26,22 @@ function ensureClientIds(entries: LogEntry[]): StoredLogEntry[] {
 }
 
 export async function loadLogEntries(): Promise<StoredLogEntry[] | null> {
-  try {
-    const raw = await AsyncStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
+  const stored = await appStorage.get("logEntries");
+  if (!Array.isArray(stored)) return null;
 
-    const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return null;
+  const entries = stored.filter(isLogEntry);
+  const withClientIds = ensureClientIds(entries);
 
-    const entries = parsed.filter(isLogEntry);
-    const withClientIds = ensureClientIds(entries);
-
-    // If we had to migrate any entries, persist immediately.
-    const changed = withClientIds.some((e, i) => e.clientId !== entries[i]?.clientId);
-    if (changed) {
-      void saveLogEntries(withClientIds);
-    }
-    return withClientIds;
-  } catch (err) {
-    console.warn("Failed to load log entries", err);
-    return null;
+  // If we had to migrate any entries, persist immediately.
+  const changed = withClientIds.some((e, i) => e.clientId !== entries[i]?.clientId);
+  if (changed) {
+    void saveLogEntries(withClientIds);
   }
+  return withClientIds;
 }
 
 export async function saveLogEntries(entries: StoredLogEntry[]): Promise<void> {
-  try {
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-  } catch (err) {
-    console.warn("Failed to save log entries", err);
-  }
+  await appStorage.set("logEntries", entries);
 }
 
 export type PendingLogEntryMutation =
@@ -92,24 +77,13 @@ function isPendingMutation(value: unknown): value is PendingLogEntryMutation {
 }
 
 export async function loadPendingLogEntryMutations(): Promise<PendingLogEntryMutation[]> {
-  try {
-    const raw = await AsyncStorage.getItem(MUTATIONS_KEY);
-    if (!raw) return [];
-    const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter(isPendingMutation);
-  } catch (err) {
-    console.warn("Failed to load log entry mutations", err);
-    return [];
-  }
+  const stored = await appStorage.get("logEntryMutations");
+  if (!Array.isArray(stored)) return [];
+  return stored.filter(isPendingMutation);
 }
 
 export async function savePendingLogEntryMutations(
   mutations: PendingLogEntryMutation[]
 ): Promise<void> {
-  try {
-    await AsyncStorage.setItem(MUTATIONS_KEY, JSON.stringify(mutations));
-  } catch (err) {
-    console.warn("Failed to save log entry mutations", err);
-  }
+  await appStorage.set("logEntryMutations", mutations);
 }

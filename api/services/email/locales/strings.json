@@ -25,6 +25,10 @@
     "password_reset": {
       "subject": "Reset Password",
       "click_to_reset": "Click <a href=\"{{link}}\">this link</a> to reset your password."
+    },
+    "existing_account": {
+      "subject": "You already have an account",
+      "body": "Someone tried to create a My Bible Log account with this email address, but you already have one. If this was you, <a href=\"{{link}}\">sign in here</a> — you can reset your password from that page if you've forgotten it. If it wasn't you, you can safely ignore this email."
     }
   },
   "de": {
@@ -53,6 +57,10 @@
     "password_reset": {
       "subject": "Passwort zurücksetzen",
       "click_to_reset": "Klicken Sie auf <a href=\"{{link}}\">diesen Link</a>, um Ihr Passwort zurückzusetzen."
+    },
+    "existing_account": {
+      "subject": "Sie haben bereits ein Konto",
+      "body": "Jemand hat versucht, mit dieser E-Mail-Adresse ein My Bible Log-Konto zu erstellen, aber Sie haben bereits eines. Wenn Sie das waren, <a href=\"{{link}}\">melden Sie sich hier an</a> – auf dieser Seite können Sie Ihr Passwort zurücksetzen, falls Sie es vergessen haben. Wenn Sie das nicht waren, können Sie diese E-Mail einfach ignorieren."
     }
   },
   "es": {
@@ -81,6 +89,10 @@
     "password_reset": {
       "subject": "Restablecer la contraseña",
       "click_to_reset": "Haga clic en <a href=\"{{link}}\">este enlace</a> para restablecer su contraseña."
+    },
+    "existing_account": {
+      "subject": "Ya tienes una cuenta",
+      "body": "Alguien intentó crear una cuenta de My Bible Log con esta dirección de correo electrónico, pero ya tienes una. Si fuiste tú, <a href=\"{{link}}\">inicia sesión aquí</a>: desde esa página puedes restablecer tu contraseña si la has olvidado. Si no fuiste tú, puedes ignorar este mensaje con total tranquilidad."
     }
   },
   "fr": {
@@ -109,6 +121,10 @@
     "password_reset": {
       "subject": "Réinitialiser le mot de passe",
       "click_to_reset": "Cliquez sur <a href=\"{{link}}\">ce lien</a> pour réinitialiser votre mot de passe."
+    },
+    "existing_account": {
+      "subject": "Vous avez déjà un compte",
+      "body": "Quelqu'un a essayé de créer un compte My Bible Log avec cette adresse e-mail, mais vous en avez déjà un. Si c'était vous, <a href=\"{{link}}\">connectez-vous ici</a> — vous pouvez réinitialiser votre mot de passe depuis cette page si vous l'avez oublié. Si ce n'était pas vous, vous pouvez ignorer cet e-mail en toute sécurité."
     }
   },
   "ko": {
@@ -137,6 +153,10 @@
     "password_reset": {
       "subject": "비밀번호 재설정",
       "click_to_reset": "비밀번호를 재설정하려면 <a href=\"{{link}}\">이 링크</a>를 누르세요."
+    },
+    "existing_account": {
+      "subject": "이미 계정이 있습니다",
+      "body": "누군가 이 이메일 주소로 My Bible Log 계정을 만들려고 했지만, 이미 계정이 있습니다. 본인이 시도한 것이라면 <a href=\"{{link}}\">여기에서 로그인</a>하세요. 비밀번호를 잊으셨다면 해당 페이지에서 재설정할 수 있습니다. 본인이 아니라면 이 메일은 무시하셔도 됩니다."
     }
   },
   "pt": {
@@ -165,6 +185,10 @@
     "password_reset": {
       "subject": "Redefinir senha",
       "click_to_reset": "Clique em <a href=\"{{link}}\">este link</a> para redefinir sua senha."
+    },
+    "existing_account": {
+      "subject": "Você já tem uma conta",
+      "body": "Alguém tentou criar uma conta do My Bible Log com este endereço de email, mas você já tem uma. Se foi você, <a href=\"{{link}}\">entre aqui</a> — você pode redefinir sua senha nessa página, caso a tenha esquecido. Se não foi você, pode ignorar este email com segurança."
     }
   },
   "uk": {
@@ -193,6 +217,10 @@
     "password_reset": {
       "subject": "Скидання пароля",
       "click_to_reset": "Натисніть <a href=\"{{link}}\">це посилання</a>, щоб скинути свій пароль."
+    },
+    "existing_account": {
+      "subject": "У вас вже є обліковий запис",
+      "body": "Хтось спробував створити обліковий запис My Bible Log з цією адресою електронної пошти, але у вас він уже є. Якщо це були ви, <a href=\"{{link}}\">увійдіть тут</a> — на цій сторінці ви можете скинути пароль, якщо забули його. Якщо це були не ви, ви можете спокійно проігнорувати цей лист."
     }
   }
 }

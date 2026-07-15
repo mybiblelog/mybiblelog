@@ -1,5 +1,5 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { NoteInput, NotePassage } from "@/src/api/notesApi";
+import { appStorage } from "@/src/storage/keys";
 
 /**
  * Offline (local-only) passage-notes persistence.
@@ -15,9 +15,6 @@ import type { NoteInput, NotePassage } from "@/src/api/notesApi";
  * the normal paginated `/api/passage-notes` list). The optional `id` field exists
  * only for parity with the log-entry queue's update/delete paths.
  */
-
-const LOCAL_NOTES_KEY = "passageNotes.local.v1";
-const MUTATIONS_KEY = "passageNotes.mutations.v1";
 
 export type StoredLocalNote = {
   clientId: string;
@@ -58,24 +55,13 @@ function isStoredLocalNote(value: unknown): value is StoredLocalNote {
 }
 
 export async function loadLocalNotes(): Promise<StoredLocalNote[]> {
-  try {
-    const raw = await AsyncStorage.getItem(LOCAL_NOTES_KEY);
-    if (!raw) return [];
-    const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter(isStoredLocalNote);
-  } catch (err) {
-    console.warn("Failed to load local notes", err);
-    return [];
-  }
+  const stored = await appStorage.get("passageNotes");
+  if (!Array.isArray(stored)) return [];
+  return stored.filter(isStoredLocalNote);
 }
 
 export async function saveLocalNotes(notes: StoredLocalNote[]): Promise<void> {
-  try {
-    await AsyncStorage.setItem(LOCAL_NOTES_KEY, JSON.stringify(notes));
-  } catch (err) {
-    console.warn("Failed to save local notes", err);
-  }
+  await appStorage.set("passageNotes", notes);
 }
 
 function isNoteInput(value: unknown): value is NoteInput {
@@ -101,22 +87,11 @@ function isPendingNoteMutation(value: unknown): value is PendingNoteMutation {
 }
 
 export async function loadPendingNoteMutations(): Promise<PendingNoteMutation[]> {
-  try {
-    const raw = await AsyncStorage.getItem(MUTATIONS_KEY);
-    if (!raw) return [];
-    const parsed: unknown = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter(isPendingNoteMutation);
-  } catch (err) {
-    console.warn("Failed to load note mutations", err);
-    return [];
-  }
+  const stored = await appStorage.get("passageNoteMutations");
+  if (!Array.isArray(stored)) return [];
+  return stored.filter(isPendingNoteMutation);
 }
 
 export async function savePendingNoteMutations(mutations: PendingNoteMutation[]): Promise<void> {
-  try {
-    await AsyncStorage.setItem(MUTATIONS_KEY, JSON.stringify(mutations));
-  } catch (err) {
-    console.warn("Failed to save note mutations", err);
-  }
+  await appStorage.set("passageNoteMutations", mutations);
 }
