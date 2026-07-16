@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
+import { Bible } from '@mybiblelog/shared';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { ApiError } from '~/helpers/api-error';
@@ -68,6 +69,48 @@ describe('log-entry-editor store', () => {
     await expect(store.saveLogEntry()).rejects.toBeInstanceOf(ApiError);
     expect(store.errors.date).toEqual({ field: 'date', code: 'invalid' });
     expect(store.submitting).toBe(false);
+  });
+
+  it('setVerseRange sets the passage and recomputes validity', () => {
+    const store = useLogEntryEditorStore();
+    store.openEditor({ empty: true });
+    expect(store.isValid).toBe(false);
+
+    const range = {
+      startVerseId: Bible.makeVerseId(43, 3, 16),
+      endVerseId: Bible.makeVerseId(43, 3, 18),
+    };
+    store.setVerseRange(range);
+    expect(store.logEntry.startVerseId).toBe(range.startVerseId);
+    expect(store.logEntry.endVerseId).toBe(range.endVerseId);
+    expect(store.logEntry.book).toBe(43);
+    expect(store.isValid).toBe(true);
+
+    store.setVerseRange(null);
+    expect(store.logEntry.startVerseId).toBeNull();
+    expect(store.isValid).toBe(false);
+  });
+
+  it('an invalid passage input blocks validity until it recovers', () => {
+    const store = useLogEntryEditorStore();
+    store.openEditor({ empty: true });
+    store.setVerseRange({
+      startVerseId: Bible.makeVerseId(1, 1, 1),
+      endVerseId: Bible.makeVerseId(1, 1, 10),
+    });
+    expect(store.isValid).toBe(true);
+
+    // The user mangles the text: the input reports invalid and a null range.
+    store.setVerseRange(null);
+    store.setPassageInputValid(false);
+    expect(store.isValid).toBe(false);
+
+    store.setVerseRange({
+      startVerseId: Bible.makeVerseId(1, 1, 1),
+      endVerseId: Bible.makeVerseId(1, 1, 10),
+    });
+    store.setPassageInputValid(true);
+    expect(store.isValid).toBe(true);
   });
 
   it('allows a retry after a failed save', async () => {

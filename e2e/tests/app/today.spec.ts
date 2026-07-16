@@ -20,15 +20,11 @@ test.describe('Today page', () => {
     await expect(dialog).toBeVisible();
     await expect(page.getByTestId('log-entry-editor-submit')).toBeDisabled();
 
-    // Selects enable in a cascade as the passage takes shape
-    await expect(dialog.getByLabel('Start Chapter')).toBeDisabled();
-    await dialog.getByLabel('Book').selectOption('Genesis');
-    await expect(dialog.getByLabel('Start Chapter')).toBeEnabled();
-    await expect(dialog.getByLabel('Start Verse')).toBeDisabled();
-    await dialog.getByLabel('Start Chapter').selectOption('1');
-    await dialog.getByLabel('Start Verse').selectOption('1');
-    await dialog.getByLabel('End Chapter').selectOption('1');
-    await dialog.getByLabel('End Verse').selectOption('10');
+    // Typing a reference builds the passage, with book-name autocomplete
+    const passageInput = dialog.getByTestId('log-entry-editor-passage');
+    await passageInput.fill('Gen');
+    await expect(dialog.getByTestId('log-entry-editor-passage-suggestions')).toContainText('Genesis');
+    await passageInput.fill('Genesis 1:1-10');
 
     // Passage preview reflects the selection
     await expect(page.getByTestId('log-entry-editor-preview')).toHaveText(/Genesis 1:1-10/);
@@ -66,7 +62,9 @@ test.describe('Today page', () => {
 
     const dialog = page.getByRole('dialog');
     await expect(dialog.locator('.mbl-modal__title')).toHaveText('Edit Entry');
-    await dialog.getByLabel('End Verse').selectOption('15');
+    const passageInput = dialog.getByTestId('log-entry-editor-passage');
+    await expect(passageInput).toHaveValue('Genesis 1:1-10');
+    await passageInput.fill('Genesis 1:1-15');
     await page.getByTestId('log-entry-editor-submit').click();
 
     await expect(page.getByTestId('log-entries').getByTestId('log-entry-passage')).toHaveText(/Genesis 1:1-15/);

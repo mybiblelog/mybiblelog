@@ -77,7 +77,7 @@
 
     <div class="mbl-field">
       <label class="mbl-label">{{ t('passage') }}</label>
-      <verse-input v-model="passageRangeModel" :multi-verse="true" input-test-id="notes-query-passage" />
+      <passage-input v-model="passageRangeModel" :locale="locale" input-test-id="notes-query-passage" />
     </div>
 
     <div v-if="hasSelectedPassage" class="mbl-field">
@@ -166,7 +166,7 @@
 <script setup lang="ts">
 import AppModal from '~/components/popups/AppModal.vue';
 import PassageNoteTagSelector from '~/components/forms/PassageNoteTagSelector.vue';
-import VerseInput from '~/components/forms/VerseInput.vue';
+import PassageInput from '~/components/forms/PassageInput.vue';
 import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
 import type { PassageNotesQuery, PassageNotesSortDirection } from '~/helpers/passage-notes-route-query';
 
@@ -190,7 +190,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{ apply: [query: ManagedQuery]; cancel: [] }>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const passageNoteTagsStore = usePassageNoteTagsStore();
 
 const allTags = computed(() => props.passageNoteTags ?? passageNoteTagsStore.passageNoteTags ?? []);

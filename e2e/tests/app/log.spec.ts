@@ -54,7 +54,7 @@ test.describe('Log page', () => {
     await entry.getByTestId('action-menu-toggle').click();
     await page.getByTestId('action-menu-item').filter({ hasText: 'Edit' }).click();
     const dialog = page.getByRole('dialog');
-    await dialog.getByLabel('End Verse').selectOption('20');
+    await dialog.getByTestId('log-entry-editor-passage').fill('Genesis 1:1-20');
     await page.getByTestId('log-entry-editor-submit').click();
     await expect(page.getByTestId('log-entry-passage').filter({ hasText: 'Genesis 1:1-20' })).toBeVisible();
 
@@ -78,7 +78,7 @@ test.describe('Log page', () => {
     await entry.getByTestId('action-menu-toggle').click();
     await page.getByTestId('action-menu-item').filter({ hasText: 'Edit' }).click();
     const dialog = page.getByRole('dialog');
-    await dialog.getByLabel('End Verse').selectOption('20');
+    await dialog.getByTestId('log-entry-editor-passage').fill('Genesis 1:1-20');
     await page.getByTestId('log-entry-editor-submit').click();
 
     // Alert should appear because the entry date is before lookBackDate

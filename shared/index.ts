@@ -31,7 +31,10 @@ export {
 export {
   getBookOptions,
   filterAndSortBookOptions,
+  suggestBooks,
   type BookOption,
+  type BookSuggestion,
+  type SuggestBooksOptions,
   type Testament,
   type BookSortOrder,
   type FilterAndSortBookOptions,

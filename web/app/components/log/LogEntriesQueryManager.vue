@@ -29,7 +29,7 @@
 
       <div class="mbl-field">
         <label class="mbl-label">{{ t('passage') }}</label>
-        <verse-input v-model="passageRangeModel" :multi-verse="true" />
+        <passage-input v-model="passageRangeModel" :locale="locale" input-test-id="log-query-passage" />
       </div>
 
       <hr class="log-entries-query-manager__divider">
@@ -85,7 +85,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import VerseInput from '~/components/forms/VerseInput.vue';
+import PassageInput from '~/components/forms/PassageInput.vue';
 import { useDialogStore } from '~/stores/dialog';
 import type { LogEntriesSortDirection } from '~/helpers/log-entries-route-query';
 
@@ -111,7 +111,7 @@ const emit = defineEmits<{
   cancel: [];
 }>();
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const DEFAULT_DRAFT: ManagedDraft = {
   limit: 10,

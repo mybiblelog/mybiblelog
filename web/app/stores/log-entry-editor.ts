@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { defineStore } from 'pinia';
-import { LogEntryEditorMachine, type LogEntryEditorModel } from '@mybiblelog/shared';
+import { LogEntryEditorMachine, type LogEntryEditorModel, type VerseRange } from '@mybiblelog/shared';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useDialogStore } from '~/stores/dialog';
 import { ApiError } from '~/helpers/api-error';
@@ -24,6 +24,8 @@ export type LogEntryEditorState = {
   logEntry: LogEntryEditorModel;
   errors: LogEntryEditorErrors;
   isValid: boolean;
+  /** Whether the passage input's text is acceptable (empty or parseable). */
+  passageInputValid: boolean;
   submitting: boolean;
 };
 
@@ -43,6 +45,7 @@ export const useLogEntryEditorStore = defineStore('log-entry-editor', {
     logEntry: LogEntryEditorMachine.emptyLogEntryEditorModel(),
     errors: {},
     isValid: false,
+    passageInputValid: true,
     submitting: false,
   }),
   actions: {
@@ -62,6 +65,7 @@ export const useLogEntryEditorStore = defineStore('log-entry-editor', {
 
       this.cleanFormValue = JSON.stringify(this.logEntry);
       this.errors = {};
+      this.passageInputValid = true;
       this.isValid = LogEntryEditorMachine.isLogEntryEditorValid(this.logEntry);
       this.open = true;
     },
@@ -86,7 +90,7 @@ export const useLogEntryEditorStore = defineStore('log-entry-editor', {
 
     updateLogEntry(logEntry: LogEntryEditorModel): void {
       this.logEntry = { ...logEntry };
-      this.isValid = LogEntryEditorMachine.isLogEntryEditorValid(this.logEntry);
+      this.isValid = LogEntryEditorMachine.isLogEntryEditorValid(this.logEntry) && this.passageInputValid;
     },
 
     setErrors(errors: LogEntryEditorErrors): void {
@@ -97,24 +101,13 @@ export const useLogEntryEditorStore = defineStore('log-entry-editor', {
       this.isValid = Boolean(isValid);
     },
 
-    selectBook(bookIndex: number): void {
-      this.updateLogEntry(LogEntryEditorMachine.selectBook(this.logEntry, bookIndex));
+    setVerseRange(range: VerseRange | null): void {
+      this.updateLogEntry(LogEntryEditorMachine.setVerseRange(this.logEntry, range));
     },
 
-    selectStartChapter(chapterIndex: number): void {
-      this.updateLogEntry(LogEntryEditorMachine.selectStartChapter(this.logEntry, chapterIndex));
-    },
-
-    selectStartVerse(verseIndex: number): void {
-      this.updateLogEntry(LogEntryEditorMachine.selectStartVerse(this.logEntry, verseIndex));
-    },
-
-    selectEndChapter(chapterIndex: number): void {
-      this.updateLogEntry(LogEntryEditorMachine.selectEndChapter(this.logEntry, chapterIndex));
-    },
-
-    selectEndVerse(verseIndex: number): void {
-      this.updateLogEntry(LogEntryEditorMachine.selectEndVerse(this.logEntry, verseIndex));
+    setPassageInputValid(valid: boolean): void {
+      this.passageInputValid = Boolean(valid);
+      this.isValid = LogEntryEditorMachine.isLogEntryEditorValid(this.logEntry) && this.passageInputValid;
     },
 
     updateDate(date: string): void {
