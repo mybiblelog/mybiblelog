@@ -157,6 +157,7 @@ import LogEntry from '~/components/log/LogEntry.vue';
 import PassageNote from '~/components/notes/PassageNote.vue';
 import { useAppInitStore } from '~/stores/app-init';
 import { useLogEntriesStore } from '~/stores/log-entries';
+import { useDateVerseCountsStore } from '~/stores/date-verse-counts';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 import { useReadingSuggestionsStore } from '~/stores/reading-suggestions';
 import type { ReadingSuggestionPassage } from '~/stores/reading-suggestions';
@@ -176,6 +177,7 @@ useHead({ title: () => t('today') });
 
 const appInitStore = useAppInitStore();
 const logEntriesStore = useLogEntriesStore();
+const dateVerseCountsStore = useDateVerseCountsStore();
 const logEntryEditorStore = useLogEntryEditorStore();
 const readingSuggestionsStore = useReadingSuggestionsStore();
 const passageNotesStore = usePassageNotesStore();
@@ -214,12 +216,9 @@ const logEntriesForToday = computed(() => {
 
 const versesReadToday = computed(() => Bible.countUniqueRangeVerses(logEntriesForToday.value));
 
-const newVersesReadToday = computed(() => {
-  const today = dayjs().format('YYYY-MM-DD');
-  const throughYesterday = logEntries.value.filter(e => e.date < today);
-  const throughToday = logEntries.value.filter(e => e.date <= today);
-  return Bible.countUniqueRangeVerses(throughToday) - Bible.countUniqueRangeVerses(throughYesterday);
-});
+const newVersesReadToday = computed(() =>
+  dateVerseCountsStore.getDateVerseCounts(dayjs().format('YYYY-MM-DD')).unique,
+);
 
 const dailyGoalPercentComplete = computed(() => {
   if (!userSettings.value.dailyVerseCountGoal) { return 0; }
@@ -352,6 +351,9 @@ onMounted(async () => {
   finally {
     loadingLogEntries.value = false;
   }
+  setTimeout(() => {
+    dateVerseCountsStore.cacheDateVerseCounts();
+  }, 0);
   readingSuggestionsStore.refreshReadingSuggestions();
   loadingReadingSuggestions.value = false;
   await passageNotesStore.resetQuery({

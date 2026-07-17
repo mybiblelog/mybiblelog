@@ -74,9 +74,10 @@
 </template>
 
 <script setup lang="ts">
-import { Bible } from '@mybiblelog/shared';
-import type { LogEntry, Segment } from '@mybiblelog/shared';
+import { Bible, withSegmentPercentages } from '@mybiblelog/shared';
+import type { LogEntry } from '@mybiblelog/shared';
 import { encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
+import { usePassageNotesStore } from '~/stores/passage-notes';
 import SegmentBar from '~/components/bible/SegmentBar.vue';
 import StarIcon from '~/components/svg/StarIcon.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
@@ -93,6 +94,8 @@ const { t, n, locale } = useI18n();
 const localePath = useLocalePath();
 const router = useRouter();
 
+const passageNotesStore = usePassageNotesStore();
+
 const hydrated = ref(false);
 onMounted(() => { hydrated.value = true; });
 
@@ -106,8 +109,8 @@ function navigateToBook(bookIndex: number) {
   emit('view-book-report', bookIndex);
   router.push(localePath('/books/' + bookIndex));
 }
-const bookNotesCounts = ref<Record<number, number>>({});
-const anyBooksHaveNotes = ref(false);
+const bookNotesCounts = computed(() => passageNotesStore.bookNoteCounts);
+const anyBooksHaveNotes = computed(() => passageNotesStore.anyBooksHaveNotes);
 
 const visibleBookIndices = computed(() => {
   return Bible.getBooks()
@@ -135,21 +138,12 @@ const allBookReports = computed(() =>
   visibleBookIndices.value.map(bookIndex => bookReport(bookIndex)),
 );
 
-type SegmentWithPercentage = Segment & { percentage: number };
-
-function withPercentages(segments: Segment[], totalVerses: number): SegmentWithPercentage[] {
-  return segments.map(segment => ({
-    ...segment,
-    percentage: segment.verseCount * 100 / totalVerses,
-  }));
-}
-
 const bibleReadingSegments = computed(() => {
-  const segments: Segment[] = [];
+  const segments = [];
   for (const bookIndex of visibleBookIndices.value) {
     segments.push(...Bible.generateBookSegments(bookIndex, props.logEntries));
   }
-  return withPercentages(segments, totalVisibleVerses.value);
+  return withSegmentPercentages(segments, totalVisibleVerses.value);
 });
 
 function bookReport(bookIndex: number) {
@@ -164,7 +158,7 @@ function bookReport(bookIndex: number) {
 function bookReadingSegments(bookIndex: number) {
   const totalBookVerses = Bible.getBookVerseCount(bookIndex);
   const segments = Bible.generateBookSegments(bookIndex, props.logEntries);
-  return withPercentages(segments, totalBookVerses);
+  return withSegmentPercentages(segments, totalBookVerses);
 }
 
 function viewBookNotes(bookIndex: number) {
@@ -179,20 +173,8 @@ function viewBookNotes(bookIndex: number) {
   router.push({ path: localePath('/notes'), query });
 }
 
-onMounted(async () => {
-  try {
-    const data = await $fetch<Record<number, number>>('/api/passage-notes/count/books');
-    bookNotesCounts.value = data;
-    for (let i = 1, l = Bible.getBookCount(); i <= l; i++) {
-      if ((bookNotesCounts.value[i] ?? 0) > 0) {
-        anyBooksHaveNotes.value = true;
-        break;
-      }
-    }
-  }
-  catch {
-    // Leave bookNotesCounts as {} on error
-  }
+onMounted(() => {
+  passageNotesStore.loadBookNoteCounts();
 });
 </script>
 

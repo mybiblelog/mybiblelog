@@ -101,7 +101,7 @@
 </template>
 
 <script setup lang="ts">
-import { Bible } from '@mybiblelog/shared';
+import { Bible, PassageSelection } from '@mybiblelog/shared';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 
 const { t, locale } = useI18n();
@@ -140,51 +140,18 @@ const formEndVerse = computed(() => {
   return 0;
 });
 
-const startChapters = computed(() => {
-  const bookIndex = formBook.value;
-  if (bookIndex > 0) {
-    const count = Bible.getBookChapterCount(bookIndex);
-    return Array.from({ length: count }, (_, i) => i + 1);
-  }
-  return [];
-});
+const passageOptions = computed(() => PassageSelection.buildPassageOptions({
+  book: formBook.value,
+  startChapter: formStartChapter.value,
+  startVerse: formStartVerse.value,
+  endChapter: formEndChapter.value,
+  endVerse: formEndVerse.value,
+}));
 
-const startVerses = computed(() => {
-  const bookIndex = formBook.value;
-  const chapterIndex = formStartChapter.value;
-  if (bookIndex > 0 && chapterIndex > 0) {
-    const count = Bible.getChapterVerseCount(bookIndex, chapterIndex);
-    return Array.from({ length: count }, (_, i) => i + 1);
-  }
-  return [];
-});
-
-const endChapters = computed(() => {
-  const bookIndex = formBook.value;
-  const startChapter = formStartChapter.value;
-  if (bookIndex > 0 && startChapter > 0) {
-    const count = Bible.getBookChapterCount(bookIndex);
-    const chapters = [];
-    for (let i = startChapter; i <= count; i++) { chapters.push(i); }
-    return chapters;
-  }
-  return [];
-});
-
-const endVerses = computed(() => {
-  const bookIndex = formBook.value;
-  const endChapter = formEndChapter.value;
-  const startChapter = formStartChapter.value;
-  const startVerse = formStartVerse.value;
-  if (bookIndex > 0 && endChapter > 0) {
-    const count = Bible.getChapterVerseCount(bookIndex, endChapter);
-    const verses = [];
-    let i = startChapter === endChapter ? startVerse : 1;
-    for (; i <= count; i++) { verses.push(i); }
-    return verses;
-  }
-  return [];
-});
+const startChapters = computed(() => passageOptions.value.startChapters);
+const startVerses = computed(() => passageOptions.value.startVerses);
+const endChapters = computed(() => passageOptions.value.endChapters);
+const endVerses = computed(() => passageOptions.value.endVerses);
 
 const displayEditorVerseRange = computed(() => {
   if (logEntry.value?.startVerseId && logEntry.value?.endVerseId) {

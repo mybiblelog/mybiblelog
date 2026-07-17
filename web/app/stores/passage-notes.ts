@@ -49,6 +49,7 @@ export type PassageNotesState = {
   passageNotes: PassageNoteListItem[];
   pagination: PassageNotesPagination;
   hasLoadedOnce: boolean;
+  bookNoteCounts: Record<number, number>;
 };
 
 type ApiMetaPagination = {
@@ -103,8 +104,25 @@ export const usePassageNotesStore = defineStore('passage-notes', {
     passageNotes: [],
     pagination: { ...emptyPagination },
     hasLoadedOnce: false,
+    bookNoteCounts: {},
   }),
+  getters: {
+    anyBooksHaveNotes(state): boolean {
+      return Object.values(state.bookNoteCounts).some(count => count > 0);
+    },
+  },
   actions: {
+    async loadBookNoteCounts(): Promise<void> {
+      const { $http } = useNuxtApp();
+      try {
+        const { data } = await $http.get<Record<number, number>>('/api/passage-notes/count/books');
+        this.bookNoteCounts = data || {};
+      }
+      catch {
+        // Leave bookNoteCounts as-is (an empty map) on error.
+      }
+    },
+
     applyQueryUpdate(queryUpdate: Partial<PassageNotesQuery>): void {
       const managedKeys: Array<keyof PassageNotesQuery> = [
         'limit',

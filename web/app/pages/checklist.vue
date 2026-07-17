@@ -85,7 +85,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import { Bible, BrowserCache } from '@mybiblelog/shared';
+import { Bible, BrowserCache, computeBibleProgress } from '@mybiblelog/shared';
 import BusyBar from '~/components/ui/BusyBar.vue';
 import CompletionBar from '~/components/ui/CompletionBar.vue';
 import ReadingTrackerResetCard from '~/components/ui/ReadingTrackerResetCard.vue';
@@ -114,7 +114,6 @@ type BookReport = {
 const logEntriesStore = useLogEntriesStore();
 const computeBusy = ref(false);
 const busyChapter = ref<string | null>(null);
-const readChapters = ref<Record<string, boolean>>({});
 const bookReports = ref<BookReport[]>([]);
 
 const bookCount = Bible.getBookCount();
@@ -125,49 +124,10 @@ for (let i = 1; i <= bookCount; i++) {
 
 const busy = computed(() => Boolean(busyChapter.value || computeBusy.value));
 
-function getReadChapters() {
-  const ranges = Bible.consolidateRanges(logEntriesStore.currentLogEntries);
-  const result: Record<string, boolean> = {};
-
-  for (const range of ranges) {
-    const { book, chapter: startChapter, verse: startVerse } = Bible.parseVerseId(range.startVerseId);
-    const { chapter: endChapter, verse: endVerse } = Bible.parseVerseId(range.endVerseId);
-
-    if (startVerse === 1) {
-      if (endChapter > startChapter || Bible.getChapterVerseCount(book, startChapter) === endVerse) {
-        result[`${book}.${startChapter}`] = true;
-      }
-    }
-    if (endChapter > startChapter && Bible.getChapterVerseCount(book, endChapter) === endVerse) {
-      result[`${book}.${endChapter}`] = true;
-    }
-    if (endChapter > startChapter + 1) {
-      for (let c = startChapter + 1; c < endChapter; c++) {
-        result[`${book}.${c}`] = true;
-      }
-    }
-  }
-
-  readChapters.value = result;
-}
-
-function getBookReport(bookIndex: number): BookReport {
-  const bookName = Bible.getBookName(bookIndex, locale.value);
-  const totalChapters = Bible.getBookChapterCount(bookIndex);
-  const chapterReports: ChapterReport[] = [];
-  let chaptersRead = 0;
-
-  for (let chapterIndex = 1; chapterIndex <= totalChapters; chapterIndex++) {
-    const complete = readChapters.value[`${bookIndex}.${chapterIndex}`] === true;
-    if (complete) { chaptersRead++; }
-    chapterReports.push({ bookIndex, chapterIndex, complete });
-  }
-
-  const percentage = Math.floor(chaptersRead / totalChapters * 100);
-  const complete = chaptersRead === totalChapters;
-  return { bookIndex, bookName, totalChapters, chaptersRead, percentage, complete, chapterReports };
-}
-
+// Per-book/chapter completion comes straight from the shared progress snapshot
+// (a single consolidation of the log entries); the view only resolves book
+// names, which `computeBibleProgress` leaves out so its output stays
+// locale-independent.
 function getBookReports() {
   computeBusy.value = true;
 
@@ -176,11 +136,20 @@ function getBookReports() {
     bookReports.value = JSON.parse(cached) as BookReport[];
   }
 
-  getReadChapters();
-  const reports: BookReport[] = [];
-  for (let i = 1; i <= bookCount; i++) {
-    reports.push(getBookReport(i));
-  }
+  const progress = computeBibleProgress(logEntriesStore.currentLogEntries);
+  const reports: BookReport[] = progress.books.map(book => ({
+    bookIndex: book.bookIndex,
+    bookName: Bible.getBookName(book.bookIndex, locale.value),
+    totalChapters: book.totalChapters,
+    chaptersRead: book.chaptersRead,
+    percentage: book.percentage,
+    complete: book.complete,
+    chapterReports: book.chapters.map(chapter => ({
+      bookIndex: book.bookIndex,
+      chapterIndex: chapter.chapterIndex,
+      complete: chapter.complete,
+    })),
+  }));
 
   BrowserCache.set(CACHE_KEY, JSON.stringify(reports), CACHE_MINUTES);
   bookReports.value = reports;
@@ -200,7 +169,9 @@ async function toggleChapter(bookIndex: number, chapterIndex: number) {
   const startVerseId = Bible.makeVerseId(bookIndex, chapterIndex, 1);
   const endVerseId = Bible.makeVerseId(bookIndex, chapterIndex, Bible.getChapterVerseCount(bookIndex, chapterIndex));
 
-  const isComplete = readChapters.value[`${bookIndex}.${chapterIndex}`] === true;
+  const isComplete = bookReports.value
+    .find(report => report.bookIndex === bookIndex)?.chapterReports
+    .find(chapterReport => chapterReport.chapterIndex === chapterIndex)?.complete === true;
   if (isComplete) {
     const matchingLogEntry = logEntriesStore.currentLogEntries.find(logEntry =>
       logEntry.date === date &&

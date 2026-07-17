@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import { Bible } from '@mybiblelog/shared';
+import { Bible, withSegmentPercentages } from '@mybiblelog/shared';
 import { encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
 import { encodeLogEntriesQueryToRoute } from '~/helpers/log-entries-route-query';
 import ChapterReport from '~/components/bible/ChapterReport.vue';
@@ -61,7 +61,7 @@ import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
 import CaretLeftIcon from '~/components/svg/CaretLeftIcon.vue';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
-import type { LogEntry, Segment } from '@mybiblelog/shared';
+import type { LogEntry } from '@mybiblelog/shared';
 
 const props = withDefaults(defineProps<{
   logEntries?: Array<LogEntry>;
@@ -109,25 +109,16 @@ function buildChapterReport(chapterIndex: number) {
   return { totalVerses, versesRead, percentage, bookIndex: props.bookIndex, chapterIndex, segments };
 }
 
-type SegmentWithPercentage = Segment & { percentage: number };
-
-function withPercentages(segments: Segment[], totalVerses: number): SegmentWithPercentage[] {
-  return segments.map(segment => ({
-    ...segment,
-    percentage: segment.verseCount * 100 / totalVerses,
-  }));
-}
-
 function bookReadingSegments(bookIndex: number) {
   const totalVerses = Bible.getBookVerseCount(bookIndex);
   const segments = Bible.generateBookSegments(bookIndex, props.logEntries);
-  return withPercentages(segments, totalVerses);
+  return withSegmentPercentages(segments, totalVerses);
 }
 
 function chapterReadingSegments(bookIndex: number, chapterIndex: number) {
   const totalVerses = Bible.getChapterVerseCount(bookIndex, chapterIndex);
   const segments = Bible.generateBookChapterSegments(bookIndex, chapterIndex, props.logEntries);
-  return withPercentages(segments, totalVerses);
+  return withSegmentPercentages(segments, totalVerses);
 }
 
 function openAddEntryForm(bookIndex: number, chapterIndex: number) {

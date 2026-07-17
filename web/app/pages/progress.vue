@@ -251,12 +251,9 @@ const userSettings = computed(() => userSettingsStore.settings);
 
 const totalBibleVerseCount = Bible.getTotalVerseCount();
 
-const newVersesReadToday = computed(() => {
-  const today = dayjs().format('YYYY-MM-DD');
-  const throughYesterday = logEntries.value.filter(e => e.date < today);
-  const throughToday = logEntries.value.filter(e => e.date <= today);
-  return Bible.countUniqueRangeVerses(throughToday) - Bible.countUniqueRangeVerses(throughYesterday);
-});
+const newVersesReadToday = computed(() =>
+  dateVerseCountsStore.getDateVerseCounts(dayjs().format('YYYY-MM-DD')).unique,
+);
 
 const daysSinceLookBackDate = computed(() => {
   const today = dayjs();
