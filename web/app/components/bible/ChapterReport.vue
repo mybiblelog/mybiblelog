@@ -29,7 +29,6 @@ import type { Segment } from '@mybiblelog/shared';
 import SegmentBar from '~/components/bible/SegmentBar.vue';
 import StarIcon from '~/components/svg/StarIcon.vue';
 import { useActionSheetStore } from '~/stores/action-sheet';
-import { useUserSettingsStore } from '~/stores/user-settings';
 
 type SegmentWithPercentage = Segment & { percentage: number };
 
@@ -55,6 +54,7 @@ const emit = defineEmits<{
 }>();
 
 const { t, locale } = useI18n();
+const { openChapterInBible } = useOpenInBible();
 
 const sheetTitle = computed(() => {
   const bookName = Bible.getBookName(props.report.bookIndex, locale.value);
@@ -68,10 +68,7 @@ function openActionSheet() {
     actions: [
       {
         label: t('open_bible'),
-        callback: () => {
-          const url = useUserSettingsStore().getReadingUrl(props.report.bookIndex, props.report.chapterIndex);
-          window.open(url, '_blank');
-        },
+        callback: () => openChapterInBible(props.report.bookIndex, props.report.chapterIndex),
       },
       {
         label: t('log_reading'),

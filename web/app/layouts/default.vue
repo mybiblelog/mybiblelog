@@ -21,6 +21,7 @@
     <log-entry-editor-modal />
     <passage-note-editor-modal />
     <passage-note-tag-editor-modal />
+    <just-opened-modal />
     <action-sheet-modal />
   </div>
 </template>
@@ -35,6 +36,7 @@ import AppAchievements from '~/components/popups/AppAchievements.vue';
 import LogEntryEditorModal from '~/components/popups/LogEntryEditorModal.vue';
 import PassageNoteEditorModal from '~/components/popups/PassageNoteEditorModal.vue';
 import PassageNoteTagEditorModal from '~/components/popups/PassageNoteTagEditorModal.vue';
+import JustOpenedModal from '~/components/popups/JustOpenedModal.vue';
 import ActionSheetModal from '~/components/popups/ActionSheetModal.vue';
 import { useThemeStore } from '~/stores/theme';
 

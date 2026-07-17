@@ -152,7 +152,6 @@ import { useToastStore } from '~/stores/toast';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
-import { useUserSettingsStore } from '~/stores/user-settings';
 import { useAppInitStore } from '~/stores/app-init';
 
 definePageMeta({ middleware: ['auth'] });
@@ -168,7 +167,7 @@ const logEntriesStore = useLogEntriesStore();
 const dialogStore = useDialogStore();
 const toastStore = useToastStore();
 const logEntryEditorStore = useLogEntryEditorStore();
-const userSettingsStore = useUserSettingsStore();
+const { openPassageInBible } = useOpenInBible();
 
 const loading = ref(true);
 const showQueryManagerModal = ref(false);
@@ -402,12 +401,6 @@ function actionsForLogEntry(entry: LogEntryLike) {
     { label: t('edit'), callback: () => openEditEntryForm(entry.id) },
     { label: t('delete'), callback: () => deleteEntry(entry.id) },
   ];
-}
-
-function openPassageInBible(passage: LogEntryLike) {
-  const start = Bible.parseVerseId(passage.startVerseId);
-  const url = userSettingsStore.getReadingUrl(start.book, start.chapter);
-  window.open(url, '_blank');
 }
 
 function takeNoteOnPassage(passage: LogEntryLike) {

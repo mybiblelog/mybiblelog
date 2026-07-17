@@ -57,7 +57,9 @@ module.exports = {
     useSwitchLocalePath: 'readonly',
     // @nuxt/content
     queryCollection: 'readonly',
+    // Project composables (app/composables/)
     useContentSeo: 'readonly',
+    useOpenInBible: 'readonly',
   },
   extends: [
     '@nuxtjs/eslint-config-typescript',
