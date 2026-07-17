@@ -81,26 +81,26 @@ export const useUserSettingsStore = defineStore('user-settings', {
         locale,
       } = update;
 
-      if (lookBackDate) {
+      if (lookBackDate !== undefined) {
         this.settings.lookBackDate = lookBackDate;
         useDateVerseCountsStore().cacheDateVerseCounts();
       }
-      if (dailyVerseCountGoal) {
+      if (dailyVerseCountGoal !== undefined) {
         this.settings.dailyVerseCountGoal = dailyVerseCountGoal;
       }
-      if (preferredBibleApp) {
+      if (preferredBibleApp !== undefined) {
         this.settings.preferredBibleApp = preferredBibleApp;
       }
-      if (preferredBibleVersion) {
+      if (preferredBibleVersion !== undefined) {
         this.settings.preferredBibleVersion = preferredBibleVersion;
       }
-      if (startPage) {
+      if (startPage !== undefined) {
         this.settings.startPage = startPage;
       }
-      if (passageNoteTagSortOrder) {
+      if (passageNoteTagSortOrder !== undefined) {
         this.settings.passageNoteTagSortOrder = passageNoteTagSortOrder;
       }
-      if (locale) {
+      if (locale !== undefined) {
         this.settings.locale = locale;
       }
     },

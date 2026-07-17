@@ -5,7 +5,7 @@ import { useUserSettingsStore } from '~/stores/user-settings';
 beforeEach(() => setActivePinia(createPinia()));
 
 describe('user-settings store', () => {
-  it('applySettingsUpdate only applies provided truthy fields', () => {
+  it('applySettingsUpdate only applies provided fields', () => {
     const store = useUserSettingsStore();
     const before = { ...store.settings };
     store.applySettingsUpdate({ dailyVerseCountGoal: 25, startPage: 'today' });
@@ -13,6 +13,16 @@ describe('user-settings store', () => {
     expect(store.settings.startPage).toBe('today');
     // Untouched fields keep their defaults.
     expect(store.settings.preferredBibleVersion).toBe(before.preferredBibleVersion);
+  });
+
+  it('applySettingsUpdate persists legitimate falsy values instead of dropping them', () => {
+    const store = useUserSettingsStore();
+    store.applySettingsUpdate({ dailyVerseCountGoal: 25, lookBackDate: '2026-01-01' });
+
+    store.applySettingsUpdate({ dailyVerseCountGoal: 0, lookBackDate: '' });
+
+    expect(store.settings.dailyVerseCountGoal).toBe(0);
+    expect(store.settings.lookBackDate).toBe('');
   });
 
   it('updateSettings persists then applies and returns true on success', async () => {
