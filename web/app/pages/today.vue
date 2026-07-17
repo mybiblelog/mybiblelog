@@ -224,13 +224,13 @@ const newVersesReadToday = computed(() => {
 const dailyGoalPercentComplete = computed(() => {
   if (!userSettings.value.dailyVerseCountGoal) { return 0; }
   const pct = versesReadToday.value / userSettings.value.dailyVerseCountGoal * 100;
-  return Math.min(100, Number(pct.toFixed(0)));
+  return Number(pct.toFixed(0));
 });
 
 const dailyGoalPercentCompleteNew = computed(() => {
   if (!userSettings.value.dailyVerseCountGoal) { return 0; }
   const pct = newVersesReadToday.value / userSettings.value.dailyVerseCountGoal * 100;
-  return Math.min(100, Number(pct.toFixed(0)));
+  return Number(pct.toFixed(0));
 });
 
 type LogEntryLike = { id: number | string; date: string; startVerseId: number; endVerseId: number };
