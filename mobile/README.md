@@ -78,6 +78,47 @@ See [`docs/android-dev-build.md`](docs/android-dev-build.md) for full setup (OAu
 
 ---
 
+## Local release build (standalone APK, no EAS)
+
+A **release-variant** build bundles the JavaScript into the APK, so it runs completely standalone — no Metro bundler, no computer, no dev tools. Use it when you want a build you can just *use* on a device (or hand to someone) rather than iterate against. By contrast, a development build (the default debug variant) doesn't bundle JS and needs a running Metro server to work.
+
+Build and install to a connected device/emulator in one step:
+
+```bash
+npx expo run:android --variant release
+```
+
+Notes:
+
+- **No expiry.** Unlike iOS provisioning profiles, a sideloaded Android APK stays installed and functional indefinitely — there's no per-device registration and nothing to renew.
+- **Signing keystore required.** Release builds must be signed. `eas build` can generate and manage a keystore automatically; with the pure `expo run:android --variant release` route you may need to supply your own.
+- **Distributable APK file.** To get an APK you can copy around and `adb install` on any device, build locally through EAS instead — the `preview` profile in `eas.json` sets `"buildType": "apk"`:
+
+  ```bash
+  eas build --profile preview --platform android --local
+  ```
+
+  The `--local` flag keeps the build on your machine. The output is functionally identical to a shipped build, just signed with your own key rather than distributed through Play.
+
+### Troubleshooting
+
+**Build fails at `:app:createBundleReleaseJsAndAssets_SentryUpload…` with `error: An organization ID or slug is required (provide with --org)`.**
+Release builds try to upload source maps to Sentry, which requires `SENTRY_ORG`, `SENTRY_PROJECT`, and `SENTRY_AUTH_TOKEN`. Those are only configured in EAS (see the [Play Store publishing plan](docs/play-store-publishing-plan.md)) — locally, Sentry is optional. Skip the upload:
+
+```bash
+SENTRY_DISABLE_AUTO_UPLOAD=true npx expo run:android --variant release
+```
+
+**Install fails with `INSTALL_FAILED_INSUFFICIENT_STORAGE`.**
+The emulator's `/data` partition is full (check with `adb shell df -h /data`; the release APK needs roughly 2–3× its ~120MB size free to install). Quick fixes, in order:
+
+1. Uninstall the existing app (wipes its on-device data): `adb uninstall com.mybiblelog.app`
+2. Retry just the install without rebuilding:
+   `adb install -r -d android/app/build/outputs/apk/release/app-release.apk`
+3. If space stays tight — most of the partition is system/Play services, and `adb root` doesn't work on Play images — increase the AVD's internal storage for good: Android Studio → Device Manager → edit AVD → **Show Advanced Settings** → Internal Storage (e.g. 12GB), then wipe data and cold boot.
+
+---
+
 ## Phase 3: Preview APK (UAT / beta testers)
 
 A standalone APK — no Metro, no dev tools. Testers install it directly on their devices.
@@ -194,6 +235,8 @@ See [`.maestro/README.md`](.maestro/README.md) for the flow list, dev-build quir
 | Bridge emulator localhost ports | `adb reverse tcp:8080 tcp:8080 && adb reverse tcp:3000 tcp:3000` |
 | EAS dev build (Android) | `npm run eas:build:android:dev` |
 | Start Metro for dev build | `npx expo start --dev-client` |
+| Local release build (standalone) | `npx expo run:android --variant release` |
+| Local preview APK (distributable) | `eas build --profile preview --platform android --local` |
 | Preview APK | `eas build --platform android --profile preview` |
 | Production AAB | `eas build --platform android --profile production` |
 | E2E tests (all / smoke only) | `npm run e2e` / `npm run e2e:smoke` |
