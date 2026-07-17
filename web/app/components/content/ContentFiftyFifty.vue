@@ -31,6 +31,8 @@
 </template>
 
 <script setup lang="ts">
+// Rendered via v-html: these props must only come from trusted repo-authored
+// content (web/content/<locale>/*.md), never from translator/Crowdin-supplied strings.
 withDefaults(defineProps<{
   imageSrc: string;
   imageAlt?: string;
