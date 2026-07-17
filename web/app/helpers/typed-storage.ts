@@ -108,5 +108,8 @@ export function createWebStorage<S extends WebStorageSchema>(
     remove<K extends keyof S>(name: K): void {
       backend()?.removeItem(schema[name]!.key);
     },
+    clearAll(): void {
+      backend()?.clear();
+    },
   };
 }

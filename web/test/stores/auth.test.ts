@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
-import { useAuthStore } from '~/stores/auth';
+import { useAuthStore, purgePwaRuntimeCache } from '~/stores/auth';
 
 beforeEach(() => setActivePinia(createPinia()));
 
@@ -70,5 +70,22 @@ describe('auth store', () => {
     await store.logout();
     expect(store.loggedIn).toBe(false);
     expect(store.user).toBeNull();
+  });
+
+  // logout()'s cache purge lives behind `if (import.meta.client)`, which the
+  // test runner's server-only esbuild define compiles out (see theme.test.ts
+  // for the same limitation with other client-only store branches). Test the
+  // purge itself directly so a signed-out user's cached API responses are
+  // verified gone from Cache Storage, matching this suite's convention.
+  it('purgePwaRuntimeCache deletes the workbox runtime cache', async () => {
+    const deleteCache = vi.fn().mockResolvedValue(true);
+    vi.stubGlobal('caches', { delete: deleteCache });
+    await purgePwaRuntimeCache();
+    expect(deleteCache).toHaveBeenCalledWith('my-bible-log-cache');
+  });
+
+  it('purgePwaRuntimeCache is a no-op when the Cache Storage API is unavailable', async () => {
+    vi.stubGlobal('caches', undefined);
+    await expect(purgePwaRuntimeCache()).resolves.toBeUndefined();
   });
 });

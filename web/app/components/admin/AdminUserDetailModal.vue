@@ -84,6 +84,7 @@
 <script setup lang="ts">
 import { displayTimeSince } from '@mybiblelog/shared';
 import AppModal from '~/components/popups/AppModal.vue';
+import { sessionStore } from '~/helpers/app-storage';
 import { useDialogStore } from '~/stores/dialog';
 import { useAuthStore } from '~/stores/auth';
 
@@ -151,7 +152,7 @@ async function signInAsUser() {
   const confirmed = await dialogStore.confirm({ message: 'Are you sure you want to sign in as this user? You will be logged out of your own account.' });
   if (!confirmed) { return; }
   try {
-    sessionStorage.clear();
+    sessionStore.clearAll();
     await $http.get(`/api/admin/users/${props.user!.email}/login`);
     await authStore.refreshUser();
     emit('close');

@@ -120,6 +120,17 @@ export default defineNuxtConfig({
       navigateFallback: null,
       globPatterns: [],
       runtimeCaching: [
+        // Workbox matches these in order and stops at the first hit, so this
+        // must precede the catch-all below: API responses carry per-user data
+        // (auth/session, notes, settings) and must never land in Cache
+        // Storage, or a signed-out shared device could still read them.
+        // Same-origin RegExp routes are tested against the full `url.href`
+        // (unanchored), so this doesn't need a leading `^` — see
+        // workbox-routing's RegExpRoute.
+        {
+          urlPattern: /\/api\//,
+          handler: 'NetworkOnly',
+        },
         {
           urlPattern: /^https?:\/\/.*/i,
           handler: 'NetworkFirst',
