@@ -258,7 +258,7 @@ const actionsForTodayLogEntry = (entry: LogEntryLike) => [
 ];
 
 const actionsForReadingSuggestionPassage = (passage: Passage) => [
-  { label: t('open_bible'), callback: () => openAndTrackPassage(passage) },
+  { label: t('open_bible'), callback: () => openPassageInBible(passage) },
   { label: t('log_reading'), callback: () => trackPassage(passage) },
 ];
 
@@ -289,16 +289,11 @@ const deleteEntry = async (id: number | string) => {
   }
 };
 
-const openAndTrackPassage = (passage: Passage) => {
-  openPassageInBible(passage);
-  setTimeout(() => trackPassage(passage), 500);
-};
-
 const continueReadingPassage = (passage: { endVerseId: number }) => {
   const nextVerseId = Bible.getNextVerseId(passage.endVerseId, true);
   if (!nextVerseId) { return; }
   const { book, chapter } = Bible.parseVerseId(nextVerseId);
-  openAndTrackPassage({
+  openPassageInBible({
     startVerseId: nextVerseId,
     endVerseId: Bible.getLastBookChapterVerseId(book, chapter),
   });

@@ -66,7 +66,7 @@ useHead({ title: () => t('page_title') });
 const logEntriesStore = useLogEntriesStore();
 const userSettingsStore = useUserSettingsStore();
 const dateVerseCountsStore = useDateVerseCountsStore();
-const { openChapterInBible, openPassageInBible } = useOpenInBible();
+const { openPassageInBible } = useOpenInBible();
 
 const userSettings = computed(() => userSettingsStore.settings);
 const currentDate = ref<string | null>(null);
@@ -124,15 +124,10 @@ function continueReadingPassage(passage: { endVerseId: number }) {
   const nextVerseId = Bible.getNextVerseId(passage.endVerseId, true);
   if (!nextVerseId) { return; }
   const { book, chapter } = Bible.parseVerseId(nextVerseId);
-  openChapterInBible(book, chapter);
-  setTimeout(() => {
-    useLogEntryEditorStore().openEditor({
-      id: null,
-      date: dayjs().format('YYYY-MM-DD'),
-      startVerseId: nextVerseId,
-      endVerseId: Bible.getLastBookChapterVerseId(book, chapter),
-    });
-  }, 500);
+  openPassageInBible({
+    startVerseId: nextVerseId,
+    endVerseId: Bible.getLastBookChapterVerseId(book, chapter),
+  });
 }
 
 function takeNoteOnPassage(passage: { startVerseId: number; endVerseId: number }) {
