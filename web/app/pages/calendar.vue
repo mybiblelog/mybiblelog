@@ -66,6 +66,7 @@ useHead({ title: () => t('page_title') });
 const logEntriesStore = useLogEntriesStore();
 const userSettingsStore = useUserSettingsStore();
 const dateVerseCountsStore = useDateVerseCountsStore();
+const { openChapterInBible, openPassageInBible } = useOpenInBible();
 
 const userSettings = computed(() => userSettingsStore.settings);
 const currentDate = ref<string | null>(null);
@@ -87,6 +88,9 @@ const displayDateFormatted = computed(() => displayDate(currentDate.value ?? '',
 function actionsForLogEntry(entry: LogEntryModel) {
   return [
     { label: t('open_bible'), callback: () => openPassageInBible(entry) },
+    ...(Bible.getNextVerseId(entry.endVerseId, true)
+      ? [{ label: t('continue_reading'), callback: () => continueReadingPassage(entry) }]
+      : []),
     { label: t('take_note'), callback: () => takeNoteOnPassage(entry) },
     { label: t('edit'), callback: () => openEditEntryForm(entry.id) },
     { label: t('delete'), callback: () => deleteEntry(entry.id) },
@@ -116,10 +120,19 @@ function openEditEntryForm(id: number | string) {
   useLogEntryEditorStore().openEditor({ id, date, startVerseId, endVerseId });
 }
 
-function openPassageInBible(passage: { startVerseId: number }) {
-  const start = Bible.parseVerseId(passage.startVerseId);
-  const url = userSettingsStore.getReadingUrl(start.book, start.chapter);
-  window.open(url, '_blank');
+function continueReadingPassage(passage: { endVerseId: number }) {
+  const nextVerseId = Bible.getNextVerseId(passage.endVerseId, true);
+  if (!nextVerseId) { return; }
+  const { book, chapter } = Bible.parseVerseId(nextVerseId);
+  openChapterInBible(book, chapter);
+  setTimeout(() => {
+    useLogEntryEditorStore().openEditor({
+      id: null,
+      date: dayjs().format('YYYY-MM-DD'),
+      startVerseId: nextVerseId,
+      endVerseId: Bible.getLastBookChapterVerseId(book, chapter),
+    });
+  }, 500);
 }
 
 function takeNoteOnPassage(passage: { startVerseId: number; endVerseId: number }) {
@@ -160,6 +173,7 @@ onMounted(async () => {
     "page_title": "Calendar",
     "verse": "verse | verses",
     "open_bible": "Open Bible",
+    "continue_reading": "Continue Reading",
     "take_note": "Take Note",
     "edit": "Edit",
     "delete": "Delete",
@@ -172,6 +186,7 @@ onMounted(async () => {
     "page_title": "Kalender",
     "verse": "Vers | Verse",
     "open_bible": "Bibel öffnen",
+    "continue_reading": "Weiterlesen",
     "take_note": "Notiz hinzufügen",
     "edit": "Bearbeiten",
     "delete": "Löschen",
@@ -184,6 +199,7 @@ onMounted(async () => {
     "page_title": "Calendario",
     "verse": "versículo | versículos",
     "open_bible": "Abrir en la Biblia",
+    "continue_reading": "Seguir leyendo",
     "take_note": "Tomar nota",
     "edit": "Editar",
     "delete": "Borrar",
@@ -196,6 +212,7 @@ onMounted(async () => {
     "page_title": "Calendrier",
     "verse": "verset | versets",
     "open_bible": "Ouvrir dans la Bible",
+    "continue_reading": "Continuer la lecture",
     "take_note": "Prendre note",
     "edit": "Modifier",
     "delete": "Supprimer",
@@ -208,6 +225,7 @@ onMounted(async () => {
     "page_title": "달력",
     "verse": "절 | 절",
     "open_bible": "성경 열기",
+    "continue_reading": "이어서 읽기",
     "take_note": "노트 작성",
     "edit": "편집",
     "delete": "삭제",
@@ -220,6 +238,7 @@ onMounted(async () => {
     "page_title": "Calendário",
     "verse": "versículo | versículos",
     "open_bible": "Ler na Biblia",
+    "continue_reading": "Continuar lendo",
     "take_note": "Tomar nota",
     "edit": "Editar",
     "delete": "Apagar",
@@ -232,6 +251,7 @@ onMounted(async () => {
     "page_title": "Календар",
     "verse": "верс | віршів",
     "open_bible": "Читати в Біблії",
+    "continue_reading": "Продовжити читання",
     "take_note": "Записати",
     "edit": "Редагувати",
     "delete": "Видалити",

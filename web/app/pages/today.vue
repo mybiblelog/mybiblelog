@@ -183,6 +183,7 @@ const passageNoteEditorStore = usePassageNoteEditorStore();
 const userSettingsStore = useUserSettingsStore();
 const dialogStore = useDialogStore();
 const toastStore = useToastStore();
+const { openPassageInBible } = useOpenInBible();
 
 const hydrated = ref(false);
 const loadingLogEntries = ref(true);
@@ -246,7 +247,10 @@ const addNewVerseCountToLogEntry = (logEntry: LogEntryLike) => {
 type Passage = ReadingSuggestionPassage & { newVerseCount?: number };
 
 const actionsForTodayLogEntry = (entry: LogEntryLike) => [
-  { label: t('open_bible'), callback: () => openPassageInBible(entry, false) },
+  { label: t('open_bible'), callback: () => openPassageInBible(entry) },
+  ...(Bible.getNextVerseId(entry.endVerseId, true)
+    ? [{ label: t('continue_reading'), callback: () => continueReadingPassage(entry) }]
+    : []),
   { label: t('take_note'), callback: () => takeNoteOnPassage(entry) },
   { label: t('view_notes'), callback: () => viewNotesForPassage(entry) },
   { label: t('edit'), callback: () => openEditEntryForm(entry.id) },
@@ -254,7 +258,7 @@ const actionsForTodayLogEntry = (entry: LogEntryLike) => [
 ];
 
 const actionsForReadingSuggestionPassage = (passage: Passage) => [
-  { label: t('open_bible'), callback: () => openPassageInBible(passage, true) },
+  { label: t('open_bible'), callback: () => openAndTrackPassage(passage) },
   { label: t('log_reading'), callback: () => trackPassage(passage) },
 ];
 
@@ -285,14 +289,19 @@ const deleteEntry = async (id: number | string) => {
   }
 };
 
-const openPassageInBible = (passage: Passage, track: boolean) => {
-  const { startVerseId } = passage;
-  const start = Bible.parseVerseId(startVerseId);
-  const url = userSettingsStore.getReadingUrl(start.book, start.chapter);
-  window.open(url, '_blank');
-  if (track) {
-    setTimeout(() => trackPassage(passage), 500);
-  }
+const openAndTrackPassage = (passage: Passage) => {
+  openPassageInBible(passage);
+  setTimeout(() => trackPassage(passage), 500);
+};
+
+const continueReadingPassage = (passage: { endVerseId: number }) => {
+  const nextVerseId = Bible.getNextVerseId(passage.endVerseId, true);
+  if (!nextVerseId) { return; }
+  const { book, chapter } = Bible.parseVerseId(nextVerseId);
+  openAndTrackPassage({
+    startVerseId: nextVerseId,
+    endVerseId: Bible.getLastBookChapterVerseId(book, chapter),
+  });
 };
 
 const trackPassage = (passage: Passage) => {
@@ -385,6 +394,7 @@ onMounted(async () => {
     "view_all_reading": "View All Reading",
     "reading_suggestions": "Reading Suggestions",
     "open_bible": "Open Bible",
+    "continue_reading": "Continue Reading",
     "log_reading": "Log Reading",
     "no_suggestions": "No Suggestions",
     "are_you_sure_you_want_to_delete_this_entry": "Are you sure you want to delete this entry?",
@@ -409,6 +419,7 @@ onMounted(async () => {
     "view_all_reading": "Alle Lesungen ansehen",
     "reading_suggestions": "Lesevorschläge",
     "open_bible": "Bibel öffnen",
+    "continue_reading": "Weiterlesen",
     "log_reading": "Lesung hinzufügen",
     "no_suggestions": "Keine Vorschläge",
     "are_you_sure_you_want_to_delete_this_entry": "Sind Sie sicher, dass Sie diesen Eintrag löschen möchten?",
@@ -433,6 +444,7 @@ onMounted(async () => {
     "view_all_reading": "Ver toda la lectura",
     "reading_suggestions": "Sugerencias de Lectura",
     "open_bible": "Abrir en la Biblia",
+    "continue_reading": "Seguir leyendo",
     "log_reading": "Agregar lectura",
     "no_suggestions": "No hay sugerencias",
     "are_you_sure_you_want_to_delete_this_entry": "¿Estás seguro de que quieres borrar esta entrada?",
@@ -457,6 +469,7 @@ onMounted(async () => {
     "view_all_reading": "Voir toute la lecture",
     "reading_suggestions": "Suggestions de Lecture",
     "open_bible": "Ouvrir dans la Bible",
+    "continue_reading": "Continuer la lecture",
     "log_reading": "Ajouter une lecture",
     "no_suggestions": "Aucune suggestion",
     "are_you_sure_you_want_to_delete_this_entry": "Êtes-vous sûr de vouloir supprimer cette entrée?",
@@ -481,6 +494,7 @@ onMounted(async () => {
     "view_all_reading": "모든 기록 보기",
     "reading_suggestions": "읽기 제안",
     "open_bible": "성경 열기",
+    "continue_reading": "이어서 읽기",
     "log_reading": "기록 추가",
     "no_suggestions": "제안 없음",
     "are_you_sure_you_want_to_delete_this_entry": "해당 항목을 삭제할까요?",
@@ -505,6 +519,7 @@ onMounted(async () => {
     "view_all_reading": "Ver toda a leitura",
     "reading_suggestions": "Sugestões de Leitura",
     "open_bible": "Ler na Biblia",
+    "continue_reading": "Continuar lendo",
     "log_reading": "Adicionar uma leitura",
     "no_suggestions": "Sem sugestões",
     "are_you_sure_you_want_to_delete_this_entry": "Tem certeza de que deseja excluir esta entrada?",
@@ -529,6 +544,7 @@ onMounted(async () => {
     "view_all_reading": "Переглянути все читання",
     "reading_suggestions": "Рекомендації для Читання",
     "open_bible": "Читати в Біблії",
+    "continue_reading": "Продовжити читання",
     "log_reading": "Додати читання",
     "no_suggestions": "Немає рекомендацій",
     "are_you_sure_you_want_to_delete_this_entry": "Ви впевнені, що хочете видалити цей запис?",
