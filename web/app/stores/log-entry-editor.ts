@@ -1,10 +1,8 @@
 import dayjs from 'dayjs';
 import { defineStore } from 'pinia';
 import { LogEntryEditorMachine, type LogEntryEditorModel } from '@mybiblelog/shared';
-import mapFormErrors from '~/helpers/map-form-errors';
-import { useDialogStore } from '~/stores/dialog';
-import { ApiError } from '~/helpers/api-error';
-import type { ApiErrorDetail } from '~/helpers/api-error';
+import { createEditorStore } from '~/helpers/create-editor-store';
+import type { EditorErrors } from '~/helpers/create-editor-store';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import type { LogEntry } from '~/stores/log-entries';
 
@@ -16,16 +14,7 @@ export type LogEntryEditorOpenPayload =
   | null
   | undefined;
 
-export type LogEntryEditorErrors = Record<string, ApiErrorDetail>;
-
-export type LogEntryEditorState = {
-  open: boolean;
-  cleanFormValue: string | null;
-  logEntry: LogEntryEditorModel;
-  errors: LogEntryEditorErrors;
-  isValid: boolean;
-  submitting: boolean;
-};
+export type LogEntryEditorErrors = EditorErrors;
 
 function isEmptyOpenPayload(payload: LogEntryEditorOpenPayload): payload is { empty: true; date?: string | null } {
   return Boolean(
@@ -36,134 +25,80 @@ function isEmptyOpenPayload(payload: LogEntryEditorOpenPayload): payload is { em
   );
 }
 
-export const useLogEntryEditorStore = defineStore('log-entry-editor', {
-  state: (): LogEntryEditorState => ({
-    open: false,
-    cleanFormValue: null,
-    logEntry: LogEntryEditorMachine.emptyLogEntryEditorModel(),
-    errors: {},
-    isValid: false,
-    submitting: false,
-  }),
+const editor = createEditorStore<LogEntryEditorModel, LogEntry, LogEntryEditorOpenPayload>({
+  empty: () => LogEntryEditorMachine.emptyLogEntryEditorModel(),
+  build: (payload) => {
+    if (payload && !isEmptyOpenPayload(payload)) {
+      return LogEntryEditorMachine.initLogEntryEditorModel(payload);
+    }
+
+    const model = LogEntryEditorMachine.emptyLogEntryEditorModel();
+    model.date = isEmptyOpenPayload(payload) && payload.date
+      ? String(payload.date)
+      : dayjs().format('YYYY-MM-DD');
+    return model;
+  },
+  validate: model => LogEntryEditorMachine.isLogEntryEditorValid(model),
+  save: (model) => {
+    const logEntriesStore = useLogEntriesStore();
+    if (model.id) {
+      return logEntriesStore.updateLogEntry({
+        id: model.id,
+        date: String(model.date),
+        startVerseId: Number(model.startVerseId),
+        endVerseId: Number(model.endVerseId),
+      });
+    }
+    return logEntriesStore.createLogEntry({
+      date: String(model.date),
+      startVerseId: Number(model.startVerseId),
+      endVerseId: Number(model.endVerseId),
+    });
+  },
+});
+
+// Exported on a separate line (not `export const`) so Nuxt's auto-import
+// scanner doesn't misread the spread inside `actions` as a named export.
+const useLogEntryEditorStore = defineStore('log-entry-editor', {
+  state: editor.state,
+  getters: {
+    logEntry: (state): LogEntryEditorModel => state.model,
+  },
   actions: {
-    openEditor(payload: LogEntryEditorOpenPayload = null): void {
-      if (payload && !isEmptyOpenPayload(payload)) {
-        this.logEntry = LogEntryEditorMachine.initLogEntryEditorModel(payload);
-      }
-      else {
-        this.logEntry = LogEntryEditorMachine.emptyLogEntryEditorModel();
-        if (isEmptyOpenPayload(payload) && payload.date) {
-          this.logEntry.date = String(payload.date);
-        }
-        else {
-          this.logEntry.date = dayjs().format('YYYY-MM-DD');
-        }
-      }
-
-      this.cleanFormValue = JSON.stringify(this.logEntry);
-      this.errors = {};
-      this.isValid = LogEntryEditorMachine.isLogEntryEditorValid(this.logEntry);
-      this.open = true;
-    },
-
-    async closeEditor(options: { force?: boolean; confirmMessage?: string } = {}): Promise<boolean> {
-      const { force = false, confirmMessage } = options;
-      if (!force && this.cleanFormValue) {
-        const currentValue = JSON.stringify(this.logEntry);
-        const isDirty = currentValue !== this.cleanFormValue;
-        if (isDirty) {
-          const message = confirmMessage || 'Are you sure you want to close without saving?';
-          const confirmed = await useDialogStore().confirm({ message });
-          if (!confirmed) {
-            return false;
-          }
-        }
-      }
-
-      this.$reset();
-      return true;
-    },
+    ...editor.actions,
 
     updateLogEntry(logEntry: LogEntryEditorModel): void {
-      this.logEntry = { ...logEntry };
-      this.isValid = LogEntryEditorMachine.isLogEntryEditorValid(this.logEntry);
+      this.updateModel(logEntry);
     },
 
-    setErrors(errors: LogEntryEditorErrors): void {
-      this.errors = errors || {};
-    },
-
-    setValid(isValid: boolean): void {
-      this.isValid = Boolean(isValid);
+    saveLogEntry(): Promise<LogEntry | null> {
+      return this.save();
     },
 
     selectBook(bookIndex: number): void {
-      this.updateLogEntry(LogEntryEditorMachine.selectBook(this.logEntry, bookIndex));
+      this.updateModel(LogEntryEditorMachine.selectBook(this.model, bookIndex));
     },
 
     selectStartChapter(chapterIndex: number): void {
-      this.updateLogEntry(LogEntryEditorMachine.selectStartChapter(this.logEntry, chapterIndex));
+      this.updateModel(LogEntryEditorMachine.selectStartChapter(this.model, chapterIndex));
     },
 
     selectStartVerse(verseIndex: number): void {
-      this.updateLogEntry(LogEntryEditorMachine.selectStartVerse(this.logEntry, verseIndex));
+      this.updateModel(LogEntryEditorMachine.selectStartVerse(this.model, verseIndex));
     },
 
     selectEndChapter(chapterIndex: number): void {
-      this.updateLogEntry(LogEntryEditorMachine.selectEndChapter(this.logEntry, chapterIndex));
+      this.updateModel(LogEntryEditorMachine.selectEndChapter(this.model, chapterIndex));
     },
 
     selectEndVerse(verseIndex: number): void {
-      this.updateLogEntry(LogEntryEditorMachine.selectEndVerse(this.logEntry, verseIndex));
+      this.updateModel(LogEntryEditorMachine.selectEndVerse(this.model, verseIndex));
     },
 
     updateDate(date: string): void {
-      this.updateLogEntry(LogEntryEditorMachine.updateDate(this.logEntry, date));
-    },
-
-    async saveLogEntry(): Promise<LogEntry | null> {
-      if (this.submitting) {
-        return null;
-      }
-      this.submitting = true;
-      try {
-        let savedLogEntry: LogEntry;
-        if (this.logEntry.id) {
-          savedLogEntry = await useLogEntriesStore().updateLogEntry({
-            id: this.logEntry.id,
-            date: String(this.logEntry.date),
-            startVerseId: Number(this.logEntry.startVerseId),
-            endVerseId: Number(this.logEntry.endVerseId),
-          });
-        }
-        else {
-          savedLogEntry = await useLogEntriesStore().createLogEntry({
-            date: String(this.logEntry.date),
-            startVerseId: Number(this.logEntry.startVerseId),
-            endVerseId: Number(this.logEntry.endVerseId),
-          });
-        }
-
-        if (savedLogEntry) {
-          this.$reset();
-          return savedLogEntry;
-        }
-
-        return null;
-      }
-      catch (err: unknown) {
-        const unknownError: LogEntryEditorErrors = { _form: { field: null, code: 'unknown_error' } };
-        if (err instanceof ApiError) {
-          this.errors = mapFormErrors(err) || unknownError;
-        }
-        else {
-          this.errors = unknownError;
-        }
-        throw err;
-      }
-      finally {
-        this.submitting = false;
-      }
+      this.updateModel(LogEntryEditorMachine.updateDate(this.model, date));
     },
   },
 });
+
+export { useLogEntryEditorStore };

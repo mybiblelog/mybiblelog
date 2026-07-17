@@ -1,11 +1,15 @@
 import { defineStore } from 'pinia';
+import { createModalStore } from '~/helpers/create-modal-store';
 
-export const useFeedbackModalStore = defineStore('feedback-modal', {
-  state: () => ({
-    open: false,
-  }),
+const modal = createModalStore<Record<string, never>>({});
+
+// Exported on a separate line (not `export const`) so Nuxt's auto-import
+// scanner doesn't misread the spread inside `actions` as a named export.
+const useFeedbackModalStore = defineStore('feedback-modal', {
+  state: modal.state,
   actions: {
-    openModal() { this.open = true; },
-    closeModal() { this.open = false; },
+    ...modal.actions,
   },
 });
+
+export { useFeedbackModalStore };

@@ -88,6 +88,7 @@ import { useFeedbackModalStore } from '~/stores/feedback-modal';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
+import { confirmDiscardIfDirty } from '~/helpers/confirm-discard';
 
 const { t } = useI18n();
 const authStore = useAuthStore();
@@ -118,12 +119,8 @@ function openModal() {
 }
 
 async function close() {
-  if (isDirty.value) {
-    const confirmed = await dialogStore.confirm({
-      message: t('are_you_sure_close'),
-    });
-    if (!confirmed) { return; }
-  }
+  const proceed = await confirmDiscardIfDirty(isDirty.value, t('are_you_sure_close'));
+  if (!proceed) { return; }
   feedbackModalStore.closeModal();
 }
 

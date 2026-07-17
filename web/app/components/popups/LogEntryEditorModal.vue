@@ -43,7 +43,7 @@ const handleClose = () => {
 
 const handleSave = async () => {
   const entryDate = logEntryEditorStore.logEntry?.date;
-  const result = await logEntryEditorStore.saveLogEntry().catch(() => null);
+  const result = await logEntryEditorStore.saveLogEntry();
   if (result && entryDate) {
     const lookBackDate = userSettingsStore.settings.lookBackDate;
     if (lookBackDate && entryDate < lookBackDate) {
