@@ -64,6 +64,10 @@ function installNuxtDefaults() {
   vi.stubGlobal('defineNuxtRouteMiddleware', (fn: unknown) => fn);
   vi.stubGlobal('useAsyncData', vi.fn().mockResolvedValue({ data: Vue.ref(null), pending: Vue.ref(false), error: Vue.ref(null), refresh: vi.fn() }));
   vi.stubGlobal('useFetch', vi.fn().mockResolvedValue({ data: Vue.ref(null), pending: Vue.ref(false), error: Vue.ref(null), refresh: vi.fn() }));
+  vi.stubGlobal('useOpenInBible', () => ({
+    openChapterInBible: vi.fn(),
+    openPassageInBible: vi.fn(),
+  }));
 }
 
 installNuxtDefaults();
