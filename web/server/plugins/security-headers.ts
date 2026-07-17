@@ -30,8 +30,9 @@ export default defineNitroPlugin((nitroApp) => {
       response.body = injectScriptNonce(response.body, nonce);
     }
 
+    const analyticsEnabled = Boolean(useRuntimeConfig(event).public.googleAnalytics4MeasurementId);
     setResponseHeaders(event, {
-      'Content-Security-Policy': buildCsp(nonce),
+      'Content-Security-Policy': buildCsp(nonce, analyticsEnabled),
       'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
     });
   });

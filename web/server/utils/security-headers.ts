@@ -3,7 +3,10 @@
 // h3 auto-imports the plugin itself relies on aren't available under plain
 // vitest).
 
-export const buildCsp = (nonce: string): string => [
+// `analyticsEnabled` only adds the GA4 script/beacon hosts when
+// runtimeConfig.public.googleAnalytics4MeasurementId is actually set, so
+// deployments that never configure GA don't widen the CSP for nothing.
+export const buildCsp = (nonce: string, analyticsEnabled = false): string => [
   "default-src 'self'",
   // Vue's :style bindings and Nuxt's SSR critical-CSS block compile to
   // inline style attributes/tags at runtime — that content is never
@@ -12,10 +15,10 @@ export const buildCsp = (nonce: string): string => [
   "style-src 'self' 'unsafe-inline'",
   // The 'unsafe-inline' fallback is ignored by any browser that honors the
   // nonce; it only serves browsers old enough not to support CSP3 nonces.
-  `script-src 'self' 'nonce-${nonce}' 'unsafe-inline'`,
+  `script-src 'self' 'nonce-${nonce}' 'unsafe-inline'${analyticsEnabled ? ' https://www.googletagmanager.com' : ''}`,
   "img-src 'self' data:",
   "font-src 'self'",
-  "connect-src 'self'",
+  `connect-src 'self'${analyticsEnabled ? ' https://www.google-analytics.com https://www.googletagmanager.com' : ''}`,
   // Service worker registration (@vite-pwa/nuxt) falls back to default-src
   // per spec, but Safari/older browsers honor an explicit worker-src.
   "worker-src 'self'",

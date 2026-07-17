@@ -12,6 +12,18 @@ describe('buildCsp', () => {
     expect(csp).toContain("frame-ancestors 'none'");
     expect(csp).toContain("object-src 'none'");
   });
+
+  it('omits GA4 hosts when analytics is disabled', () => {
+    const csp = buildCsp('abc123');
+    expect(csp).not.toContain('googletagmanager.com');
+    expect(csp).not.toContain('google-analytics.com');
+  });
+
+  it('allows the GA4 script and beacon hosts when analytics is enabled', () => {
+    const csp = buildCsp('abc123', true);
+    expect(csp).toContain("script-src 'self' 'nonce-abc123' 'unsafe-inline' https://www.googletagmanager.com");
+    expect(csp).toContain('connect-src \'self\' https://www.google-analytics.com https://www.googletagmanager.com');
+  });
 });
 
 describe('injectScriptNonce', () => {
