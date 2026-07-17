@@ -60,11 +60,7 @@ test.describe('Calendar page', () => {
     // The date is pre-filled with the selected day
     await expect(page.getByTestId('log-entry-editor-date')).toHaveValue(firstOfMonth());
 
-    await dialog.getByLabel('Book').selectOption('Genesis');
-    await dialog.getByLabel('Start Chapter').selectOption('1');
-    await dialog.getByLabel('Start Verse').selectOption('1');
-    await dialog.getByLabel('End Chapter').selectOption('1');
-    await dialog.getByLabel('End Verse').selectOption('10');
+    await dialog.getByTestId('log-entry-editor-passage').fill('Genesis 1:1-10');
     await page.getByTestId('log-entry-editor-submit').click();
 
     const dayEntries = page.getByTestId('calendar-day-entries');

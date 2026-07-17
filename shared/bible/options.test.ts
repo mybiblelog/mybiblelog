@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import Bible from './index';
-import { filterAndSortBookOptions, getBookOptions } from './options';
+import { filterAndSortBookOptions, getBookOptions, suggestBooks } from './options';
 
 describe('getBookOptions', () => {
   it('returns one localized option per book in canonical order', () => {
@@ -43,5 +43,50 @@ describe('filterAndSortBookOptions', () => {
     const snapshot = options.map(o => ({ ...o }));
     filterAndSortBookOptions(options, { testament: 'new', sortOrder: 'alphabetical' });
     expect(options).toEqual(snapshot);
+  });
+});
+
+describe('suggestBooks', () => {
+  it('prefix-matches English book names', () => {
+    const suggestions = suggestBooks('gen', { locale: 'en' });
+    expect(suggestions[0]).toEqual({ book: 1, label: 'Genesis' });
+  });
+
+  it('matches books with leading ordinals, with or without a space', () => {
+    const spaced = suggestBooks('1 j', { locale: 'en' });
+    expect(spaced.map(s => s.label)).toContain('1 John');
+    const unspaced = suggestBooks('1joh', { locale: 'en' });
+    expect(unspaced.map(s => s.label)).toEqual(['1 John']);
+    const corinthians = suggestBooks('2 co', { locale: 'en' });
+    expect(corinthians.map(s => s.label)).toContain('2 Corinthians');
+  });
+
+  it('matches abbreviations, ranking name matches first', () => {
+    const suggestions = suggestBooks('gn', { locale: 'en' });
+    expect(suggestions.map(s => s.label)).toContain('Genesis');
+  });
+
+  it('is case- and diacritic-insensitive for localized names', () => {
+    const suggestions = suggestBooks('genesis', { locale: 'es' });
+    expect(suggestions.map(s => s.label)).toContain('Génesis');
+  });
+
+  it('suggests locale-specific book names', () => {
+    expect(suggestBooks('joh', { locale: 'de' }).map(s => s.label)).toContain('Johannes');
+    expect(suggestBooks('joh', { locale: 'en' }).map(s => s.label)).toContain('John');
+    expect(suggestBooks('창', { locale: 'ko' }).map(s => s.label)).toContain('창세기');
+  });
+
+  it('caps results at the limit', () => {
+    expect(suggestBooks('j', { locale: 'en', limit: 3 })).toHaveLength(3);
+    const defaultLimit = suggestBooks('1', { locale: 'en' });
+    expect(defaultLimit.length).toBeLessThanOrEqual(8);
+  });
+
+  it('returns nothing for empty or unmatched queries', () => {
+    expect(suggestBooks('', { locale: 'en' })).toEqual([]);
+    expect(suggestBooks('   ', { locale: 'en' })).toEqual([]);
+    expect(suggestBooks('xyz', { locale: 'en' })).toEqual([]);
+    expect(suggestBooks('Genesis 1', { locale: 'en' })).toEqual([]);
   });
 });

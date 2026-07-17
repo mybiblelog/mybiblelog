@@ -8,6 +8,7 @@ import {
   selectEndVerse,
   selectStartChapter,
   selectStartVerse,
+  setVerseRange,
   updateDate,
 } from './editor-machine';
 
@@ -81,6 +82,33 @@ describe('chapter and verse selection', () => {
     const model = initLogEntryEditorModel();
     expect(selectStartChapter(model, 3)).toBe(model);
     expect(selectStartVerse(model, 3)).toBe(model);
+  });
+});
+
+describe('setVerseRange', () => {
+  it('sets the range and derives the book from the start verse', () => {
+    const model = setVerseRange(initLogEntryEditorModel({ date: '2024-06-01' }), {
+      startVerseId: Bible.makeVerseId(JOHN, 3, 16),
+      endVerseId: Bible.makeVerseId(JOHN, 4, 2),
+    });
+    expect(model.book).toBe(JOHN);
+    expect(model.startVerseId).toBe(Bible.makeVerseId(JOHN, 3, 16));
+    expect(model.endVerseId).toBe(Bible.makeVerseId(JOHN, 4, 2));
+    expect(model.date).toBe('2024-06-01');
+  });
+
+  it('clears the passage when given null', () => {
+    let model = initLogEntryEditorModel({ id: 7, date: '2024-06-01' });
+    model = setVerseRange(model, {
+      startVerseId: Bible.makeVerseId(GENESIS, 1, 1),
+      endVerseId: Bible.makeVerseId(GENESIS, 1, 10),
+    });
+    model = setVerseRange(model, null);
+    expect(model.book).toBeNull();
+    expect(model.startVerseId).toBeNull();
+    expect(model.endVerseId).toBeNull();
+    expect(model.id).toBe(7);
+    expect(model.date).toBe('2024-06-01');
   });
 });
 

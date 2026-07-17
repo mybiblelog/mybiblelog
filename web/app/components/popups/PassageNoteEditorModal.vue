@@ -22,7 +22,12 @@
           <div v-for="(passage, index) in store.passageNote.passages" :key="index" class="passage-line">
             <div class="passage">
               <template v-if="editingPassage === index">
-                <passage-selector :populate-with="passage" @change="(updatedPassage) => passageSelectorChange(index, updatedPassage)" />
+                <passage-input
+                  :locale="locale"
+                  :model-value="rowRange(passage)"
+                  :input-test-id="`note-editor-passage-${index}`"
+                  @update:model-value="(range) => onRowRangeChange(index, range)"
+                />
               </template>
               <template v-else>
                 <button
@@ -139,9 +144,9 @@
 </template>
 
 <script setup lang="ts">
-import { Bible } from '@mybiblelog/shared';
+import { Bible, type VerseRange } from '@mybiblelog/shared';
 import AppModal from '~/components/popups/AppModal.vue';
-import PassageSelector from '~/components/forms/PassageSelector.vue';
+import PassageInput from '~/components/forms/PassageInput.vue';
 import PassageNoteTagPill from '~/components/notes/PassageNoteTagPill.vue';
 import PassageNoteManageTagsModal from '~/components/popups/PassageNoteManageTagsModal.vue';
 import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
@@ -182,10 +187,11 @@ const isValid = computed(() => {
 const editingPassageIsDirty = computed(() => {
   if (editingPassage.value === -1) { return false; }
   const passage = store.passageNote.passages[editingPassage.value] as { startVerseId?: number; endVerseId?: number };
+  const isValidRange = Bible.validateRange(passage?.startVerseId as number, passage?.endVerseId as number);
   if (editingNewPassage.value) {
-    return Bible.validateRange(passage?.startVerseId as number, passage?.endVerseId as number);
+    return isValidRange;
   }
-  return JSON.stringify(passage) !== editingPassageOriginalValue.value;
+  return isValidRange && JSON.stringify(passage) !== editingPassageOriginalValue.value;
 });
 
 function clone<T>(value: T): T {
@@ -197,9 +203,16 @@ function displayVerseRange(passage: { startVerseId?: number; endVerseId?: number
   return Bible.displayVerseRange(passage.startVerseId, passage.endVerseId, locale.value);
 }
 
-function passageSelectorChange(index: number, { startVerseId, endVerseId }: { startVerseId: number; endVerseId: number }) {
+function rowRange(passage: { startVerseId?: number; endVerseId?: number; empty?: boolean }): VerseRange | null {
+  if (!passage?.startVerseId || !passage?.endVerseId) { return null; }
+  return { startVerseId: passage.startVerseId, endVerseId: passage.endVerseId };
+}
+
+function onRowRangeChange(index: number, range: VerseRange | null) {
   const updated = clone(store.passageNote);
-  updated.passages.splice(index, 1, { startVerseId, endVerseId });
+  // An empty/invalid input reverts the row to a placeholder, which keeps the
+  // Done button disabled via `editingPassageIsDirty`'s range validation.
+  updated.passages.splice(index, 1, range ? { ...range } : { empty: true });
   store.updatePassageNote(updated);
 }
 
@@ -338,6 +351,8 @@ watch(() => store.open, () => {
 
 .passage-line .passage {
   margin: 0.25rem 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .passage-note-editor-tags {

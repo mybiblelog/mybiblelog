@@ -1,4 +1,5 @@
 import Bible from '../bible';
+import type { VerseRange } from '../bible';
 
 /**
  * Pure state machine for the log-entry editor form.
@@ -129,6 +130,28 @@ export const selectEndVerse = (
   }
   const updated = clone(model);
   updated.endVerseId = Bible.makeVerseId(bookIndex, endChapter, verseIndex);
+  return updated;
+};
+
+/**
+ * Sets or clears the passage as a whole range, deriving `book` from the start
+ * verse id. This is the transition for editors whose passage field is a single
+ * range-valued input rather than a cascade of book/chapter/verse selections.
+ */
+export const setVerseRange = (
+  model: LogEntryEditorModel,
+  range: VerseRange | null,
+): LogEntryEditorModel => {
+  const updated = clone(model);
+  if (!range) {
+    updated.book = null;
+    updated.startVerseId = null;
+    updated.endVerseId = null;
+    return updated;
+  }
+  updated.book = Bible.parseVerseId(range.startVerseId).book;
+  updated.startVerseId = range.startVerseId;
+  updated.endVerseId = range.endVerseId;
   return updated;
 };
 
