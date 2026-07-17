@@ -3,6 +3,8 @@ import { authRoutes } from './auth';
 import { logEntryRoutes } from './log-entries';
 import { passageNoteRoutes } from './passage-notes';
 import { passageNoteTagRoutes } from './passage-note-tags';
+import { readingPlanRoutes } from './reading-plans';
+import { planTrackerRoutes } from './plan-trackers';
 import { settingsRoutes } from './settings';
 import { reminderRoutes } from './reminders';
 import { feedbackRoutes } from './feedback';
@@ -26,6 +28,8 @@ export const documentedRoutes: Array<RouteDefinition | DocumentedRoute> = [
   ...logEntryRoutes,
   ...passageNoteRoutes,
   ...passageNoteTagRoutes,
+  ...readingPlanRoutes,
+  ...planTrackerRoutes,
   ...settingsRoutes,
   ...reminderRoutes,
   ...feedbackRoutes,

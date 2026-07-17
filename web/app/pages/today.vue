@@ -59,6 +59,24 @@
       </ClientOnly>
     </div>
     <br>
+    <div v-if="trackerSuggestions.length" data-testid="plan-tracker-suggestions-section">
+      <h3 class="mbl-title mbl-title--5">
+        {{ t('plan_suggestions') }}
+      </h3>
+      <div class="entry-container" role="list" data-testid="plan-tracker-suggestions">
+        <ClientOnly>
+          <log-entry
+            v-for="(passage, index) of trackerSuggestions"
+            :key="`tracker-${index}-${passage.startVerseId}-${passage.endVerseId}`"
+            role="listitem"
+            :message="passage.suggestionContext"
+            :passage="passage"
+            :actions="actionsForReadingSuggestionPassage(passage)"
+          />
+        </ClientOnly>
+      </div>
+    </div>
+    <br>
     <div data-testid="reading-suggestions-section">
       <h3 class="mbl-title mbl-title--5">
         {{ t('reading_suggestions') }}
@@ -148,7 +166,7 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import { Bible } from '@mybiblelog/shared';
+import { Bible, flattenPlanDays, getNextUnreadDay } from '@mybiblelog/shared';
 import BusyBar from '~/components/ui/BusyBar.vue';
 import DoubleProgressBar from '~/components/ui/DoubleProgressBar.vue';
 import ReadingTrackerResetCard from '~/components/ui/ReadingTrackerResetCard.vue';
@@ -160,6 +178,8 @@ import { useLogEntriesStore } from '~/stores/log-entries';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 import { useReadingSuggestionsStore } from '~/stores/reading-suggestions';
 import type { ReadingSuggestionPassage } from '~/stores/reading-suggestions';
+import { useReadingPlansStore } from '~/stores/reading-plans';
+import { usePlanTrackersStore } from '~/stores/plan-trackers';
 import { usePassageNotesStore, type PassageNoteListItem } from '~/stores/passage-notes';
 import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
 import { useUserSettingsStore } from '~/stores/user-settings';
@@ -178,6 +198,8 @@ const appInitStore = useAppInitStore();
 const logEntriesStore = useLogEntriesStore();
 const logEntryEditorStore = useLogEntryEditorStore();
 const readingSuggestionsStore = useReadingSuggestionsStore();
+const readingPlansStore = useReadingPlansStore();
+const planTrackersStore = usePlanTrackersStore();
 const passageNotesStore = usePassageNotesStore();
 const passageNoteEditorStore = usePassageNoteEditorStore();
 const userSettingsStore = useUserSettingsStore();
@@ -202,6 +224,26 @@ const readingSuggestions = computed(() => readingSuggestionsStore.passages);
 const readingSuggestionsWithNewVerseCounts = computed(() =>
   readingSuggestionsStore.passages.map(addNewVerseCountToReadingSuggestion),
 );
+
+// For each active plan tracker, suggest the unread passages of the plan's
+// first incomplete day.
+const trackerSuggestions = computed(() => {
+  const results: (Passage & { suggestionContext: string })[] = [];
+  for (const tracker of planTrackersStore.activeTrackers) {
+    const plan = readingPlansStore.getPlanById(tracker.planId);
+    if (!plan || !flattenPlanDays(plan.days).length) { continue; }
+    const qualifying = logEntriesStore.logEntries.filter(entry => entry.date >= tracker.startDate);
+    const next = getNextUnreadDay(plan.days, qualifying);
+    if (!next) { continue; }
+    for (const passage of next.passages) {
+      results.push({
+        ...addNewVerseCountToReadingSuggestion(passage),
+        suggestionContext: t('plan_day_next', { day: next.dayNumber, plan: plan.name }),
+      });
+    }
+  }
+  return results;
+});
 const recentNotes = computed(() => passageNotesStore.passageNotes.slice(0, 3));
 
 const logEntriesForToday = computed(() => {
@@ -384,6 +426,8 @@ onMounted(async () => {
     "no_entries": "No Entries",
     "view_all_reading": "View All Reading",
     "reading_suggestions": "Reading Suggestions",
+    "plan_suggestions": "From Your Plans",
+    "plan_day_next": "Day {day} of “{plan}”",
     "open_bible": "Open Bible",
     "log_reading": "Log Reading",
     "no_suggestions": "No Suggestions",
@@ -408,6 +452,8 @@ onMounted(async () => {
     "no_entries": "Keine Einträge",
     "view_all_reading": "Alle Lesungen ansehen",
     "reading_suggestions": "Lesevorschläge",
+    "plan_suggestions": "Aus Ihren Plänen",
+    "plan_day_next": "Tag {day} von „{plan}“",
     "open_bible": "Bibel öffnen",
     "log_reading": "Lesung hinzufügen",
     "no_suggestions": "Keine Vorschläge",
@@ -432,6 +478,8 @@ onMounted(async () => {
     "no_entries": "No hay entradas",
     "view_all_reading": "Ver toda la lectura",
     "reading_suggestions": "Sugerencias de Lectura",
+    "plan_suggestions": "De tus planes",
+    "plan_day_next": "Día {day} de «{plan}»",
     "open_bible": "Abrir en la Biblia",
     "log_reading": "Agregar lectura",
     "no_suggestions": "No hay sugerencias",
@@ -456,6 +504,8 @@ onMounted(async () => {
     "no_entries": "Pas d'entrées",
     "view_all_reading": "Voir toute la lecture",
     "reading_suggestions": "Suggestions de Lecture",
+    "plan_suggestions": "De vos plans",
+    "plan_day_next": "Jour {day} de « {plan} »",
     "open_bible": "Ouvrir dans la Bible",
     "log_reading": "Ajouter une lecture",
     "no_suggestions": "Aucune suggestion",
@@ -480,6 +530,8 @@ onMounted(async () => {
     "no_entries": "항목 없음",
     "view_all_reading": "모든 기록 보기",
     "reading_suggestions": "읽기 제안",
+    "plan_suggestions": "내 계획에서",
+    "plan_day_next": "“{plan}” {day}일차",
     "open_bible": "성경 열기",
     "log_reading": "기록 추가",
     "no_suggestions": "제안 없음",
@@ -504,6 +556,8 @@ onMounted(async () => {
     "no_entries": "Sem Entradas",
     "view_all_reading": "Ver toda a leitura",
     "reading_suggestions": "Sugestões de Leitura",
+    "plan_suggestions": "Dos seus planos",
+    "plan_day_next": "Dia {day} de “{plan}”",
     "open_bible": "Ler na Biblia",
     "log_reading": "Adicionar uma leitura",
     "no_suggestions": "Sem sugestões",
@@ -528,6 +582,8 @@ onMounted(async () => {
     "no_entries": "Немає записів",
     "view_all_reading": "Переглянути все читання",
     "reading_suggestions": "Рекомендації для Читання",
+    "plan_suggestions": "З ваших планів",
+    "plan_day_next": "День {day} у «{plan}»",
     "open_bible": "Читати в Біблії",
     "log_reading": "Додати читання",
     "no_suggestions": "Немає рекомендацій",

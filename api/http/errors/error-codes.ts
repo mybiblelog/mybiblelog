@@ -32,6 +32,7 @@ export const ApiErrorDetailCode = {
   Unique: 'unique',
   MinLength: 'min_length', // properties.minlength
   MaxLength: 'max_length', // properties.maxlength
+  LimitReached: 'limit_reached', // a per-user resource count limit was reached
   Review: 'review',
 
   // Custom Errors

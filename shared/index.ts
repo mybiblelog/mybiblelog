@@ -99,6 +99,49 @@ export {
   type CreateLogEntryInput,
   type UpdateLogEntryInput,
 } from './log-entry/api';
+export {
+  MAX_READING_PLANS_PER_USER,
+  MAX_DAYS_PER_PLAN,
+  MAX_PASSAGES_PER_PLAN,
+  flattenPlanDays,
+  countPlanTotalVerses,
+  countPlanUniqueVerses,
+  getRepeatedPassagePositions,
+  computeReadingPlanStats,
+  computePlanCoverage,
+  type PlanPassage,
+  type PlanDay,
+  type PlanPassagePosition,
+  type ReadingPlanStats,
+} from './reading-plan/plans';
+export {
+  getNextUnreadDay,
+  isPlanFullyRead,
+  evaluatePlanCompletion,
+  type TrackerPassage,
+  type TrackerDay,
+  type TrackerLogEntry,
+  type NextUnreadDay,
+  type PlanCompletionEvent,
+} from './reading-plan/tracker-progress';
+export {
+  fetchReadingPlans,
+  postReadingPlan,
+  patchReadingPlan,
+  deleteReadingPlanRequest,
+  fetchPlanTrackers,
+  postPlanTracker,
+  patchPlanTracker,
+  deletePlanTrackerRequest,
+  type ReadingPlan,
+  type ReadingPlanPassage,
+  type ReadingPlanDay,
+  type CreateReadingPlanInput,
+  type UpdateReadingPlanInput,
+  type PlanTracker,
+  type CreatePlanTrackerInput,
+  type UpdatePlanTrackerInput,
+} from './reading-plan/api';
 export type { HttpClient, ApiResponse } from './platform/http-client';
 export { identityTranslator, type Translator } from './platform/translator';
 

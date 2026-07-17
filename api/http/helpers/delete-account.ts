@@ -2,7 +2,7 @@ import useRepositories from '../../repositories/useRepositories';
 
 const deleteAccount = async (email: string): Promise<boolean> => {
   try {
-    const { users, logEntries, passageNotes, passageNoteTags, dailyReminders } = await useRepositories();
+    const { users, logEntries, passageNotes, passageNoteTags, readingPlans, planTrackers, dailyReminders } = await useRepositories();
     const user = await users.findByEmail(email);
     if (!user) {
       return false;
@@ -10,6 +10,8 @@ const deleteAccount = async (email: string): Promise<boolean> => {
     await logEntries.deleteAllByOwner(user.id);
     await passageNotes.deleteAllByOwner(user.id);
     await passageNoteTags.deleteAllByOwner(user.id);
+    await readingPlans.deleteAllByOwner(user.id);
+    await planTrackers.deleteAllByOwner(user.id);
     await dailyReminders.deleteAllByOwner(user.id);
     await users.deleteById(user.id);
     return true;

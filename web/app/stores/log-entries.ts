@@ -2,7 +2,9 @@ import { defineStore } from 'pinia';
 import {
   deleteLogEntryRequest,
   evaluateAchievement,
+  evaluatePlanCompletion,
   fetchLogEntries,
+  flattenPlanDays,
   getBookIndexFromVerseId,
   isBibleComplete,
   postLogEntry,
@@ -40,6 +42,37 @@ const applyAchievement = (
   }
 };
 
+/**
+ * Detects whether the just-logged reading completed any active plan tracker.
+ * A passage counts toward a tracker only when read on/after the tracker's start
+ * date, so `before`/`after` are filtered per-tracker. On a fresh completion the
+ * tracker is marked complete on `completedDate` (the finishing entry's date) and
+ * a celebration is shown.
+ */
+const applyPlanCompletions = async (
+  before: LogEntry[],
+  after: LogEntry[],
+  completedDate: string,
+): Promise<void> => {
+  const { usePlanTrackersStore } = await import('~/stores/plan-trackers');
+  const { useReadingPlansStore } = await import('~/stores/reading-plans');
+  const trackersStore = usePlanTrackersStore();
+  const plansStore = useReadingPlansStore();
+
+  for (const tracker of [...trackersStore.activeTrackers]) {
+    const plan = plansStore.getPlanById(tracker.planId);
+    if (!plan || !flattenPlanDays(plan.days).length) { continue; }
+
+    const beforeQualifying = before.filter(entry => entry.date >= tracker.startDate);
+    const afterQualifying = after.filter(entry => entry.date >= tracker.startDate);
+    const event = evaluatePlanCompletion(plan.days, beforeQualifying, afterQualifying);
+    if (event) {
+      await trackersStore.completePlanTracker(tracker.id, completedDate);
+      useAchievementsStore().showPlanCompleteAchievement(plan.name);
+    }
+  }
+};
+
 export const useLogEntriesStore = defineStore('log-entries', {
   state: () => ({
     logEntries: [] as LogEntry[],
@@ -74,12 +107,14 @@ export const useLogEntriesStore = defineStore('log-entries', {
     async createLogEntry(input: CreateLogEntryInput): Promise<LogEntry> {
       const http = useNuxtApp().$http;
       const before = this.currentLogEntries;
+      const planBefore = [...this.logEntries];
       const bookIndex = getBookIndexFromVerseId(input.startVerseId);
 
       const created = await postLogEntry(http, input);
       this.logEntries.push(created);
 
       applyAchievement(bookIndex, before, this.currentLogEntries);
+      await applyPlanCompletions(planBefore, this.logEntries, created.date);
 
       await refreshReadingSuggestions();
       refreshDateVerseCounts();
@@ -90,6 +125,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
     async updateLogEntry(input: UpdateLogEntryInput): Promise<LogEntry> {
       const http = useNuxtApp().$http;
       const before = this.currentLogEntries;
+      const planBefore = this.logEntries.map(le => ({ ...le }));
       const bookIndex = getBookIndexFromVerseId(input.startVerseId);
 
       const updated = await patchLogEntry(http, input);
@@ -103,6 +139,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
       }
 
       applyAchievement(bookIndex, before, this.currentLogEntries);
+      await applyPlanCompletions(planBefore, this.logEntries, updated.date);
 
       await refreshReadingSuggestions();
       refreshDateVerseCounts();

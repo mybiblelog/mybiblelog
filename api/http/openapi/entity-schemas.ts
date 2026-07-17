@@ -5,6 +5,8 @@ import { feedbackSchema } from '../../validation/schemas/feedback';
 import { logEntrySchema } from '../../validation/schemas/log-entry';
 import { passageNoteSchema, passageNoteSearchResultSchema } from '../../validation/schemas/passage-note';
 import { passageNoteTagSchema } from '../../validation/schemas/passage-note-tag';
+import { readingPlanSchema } from '../../validation/schemas/reading-plan';
+import { planTrackerSchema } from '../../validation/schemas/plan-tracker';
 import { dailyReminderSchema } from '../../validation/schemas/daily-reminder';
 import { clean } from './to-json-schema';
 
@@ -27,6 +29,8 @@ const entitySchemasById: Record<string, ZodType> = {
   PassageNote: passageNoteSchema,
   PassageNoteSearchResult: passageNoteSearchResultSchema,
   PassageNoteTag: passageNoteTagSchema,
+  ReadingPlan: readingPlanSchema,
+  PlanTracker: planTrackerSchema,
   DailyReminder: dailyReminderSchema,
 };
 

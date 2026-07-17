@@ -74,6 +74,34 @@ export interface PassageNoteDocument {
   updatedAt: Date;
 }
 
+/** A plan day carries no stored number — day N is simply position N (1-based). */
+export interface PlanDaySubdocument {
+  _id: ObjectId;
+  passages: PassageSubdocument[];
+}
+
+export interface ReadingPlanDocument {
+  _id: ObjectId;
+  owner: ObjectId;
+  name: string;
+  /** Ordered series of days that make up the plan. */
+  days: PlanDaySubdocument[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface PlanTrackerDocument {
+  _id: ObjectId;
+  owner: ObjectId;
+  planId: ObjectId;
+  /** `YYYY-MM-DD`. Only reading logged on/after this date counts toward the tracker. */
+  startDate: string;
+  /** `YYYY-MM-DD` when the plan was finished, or `null` while still in progress. */
+  completedDate: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface PassageNoteTagDocument {
   _id: ObjectId;
   owner: ObjectId;

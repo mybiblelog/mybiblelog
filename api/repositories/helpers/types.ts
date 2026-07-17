@@ -143,6 +143,49 @@ export interface PassageNoteSearchResultItem {
   updatedAt: Date;
 }
 
+/** A plan day carries no stored number — day N is simply position N (1-based). */
+export interface PlanDayRecord {
+  _id: string;
+  passages: PassageRecord[];
+}
+
+export interface PlanDayInput {
+  passages: PassageInput[];
+}
+
+export interface ReadingPlanRecord {
+  id: string;
+  ownerId: string;
+  name: string;
+  days: PlanDayRecord[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ReadingPlanInput {
+  name?: string;
+  days?: PlanDayInput[];
+}
+
+export interface PlanTrackerRecord {
+  id: string;
+  ownerId: string;
+  planId: string;
+  startDate: string;
+  completedDate: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface PlanTrackerCreateInput {
+  planId: string;
+  startDate: string;
+}
+
+export interface PlanTrackerPatch {
+  completedDate?: string | null;
+}
+
 export interface PassageNoteTagRecord {
   id: string;
   ownerId: string;
