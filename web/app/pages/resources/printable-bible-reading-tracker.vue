@@ -71,6 +71,7 @@ function print() {
 
 useContentSeo({
   path: '/resources/printable-bible-reading-tracker',
+  locale,
   seoTitle: t('meta.title'),
   seoDescription: t('meta.description'),
   ogTitle: t('meta.title'),

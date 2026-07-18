@@ -33,6 +33,7 @@ const ldJson = page.value?.ld_json as { name?: string; description?: string } | 
 
 useContentSeo({
   path: '',
+  locale,
   seoTitle: page.value?.seo?.title,
   seoDescription: page.value?.seo?.description,
   ogTitle: page.value?.og?.title || page.value?.seo?.title,

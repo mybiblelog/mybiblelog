@@ -20,13 +20,15 @@ test.describe('Today page', () => {
     await expect(dialog).toBeVisible();
     await expect(page.getByTestId('log-entry-editor-submit')).toBeDisabled();
 
-    // Selects enable in a cascade as the passage takes shape
+    // Selecting a book auto-fills the whole book as a valid starting passage
     await expect(dialog.getByLabel('Start Chapter')).toBeDisabled();
     await dialog.getByLabel('Book').selectOption('Genesis');
     await expect(dialog.getByLabel('Start Chapter')).toBeEnabled();
-    await expect(dialog.getByLabel('Start Verse')).toBeDisabled();
-    await dialog.getByLabel('Start Chapter').selectOption('1');
-    await dialog.getByLabel('Start Verse').selectOption('1');
+    await expect(dialog.getByLabel('Start Chapter')).toHaveValue('1');
+    await expect(dialog.getByLabel('Start Verse')).toHaveValue('1');
+    await expect(page.getByTestId('log-entry-editor-submit')).toBeEnabled();
+
+    // Narrow the range down to the desired passage
     await dialog.getByLabel('End Chapter').selectOption('1');
     await dialog.getByLabel('End Verse').selectOption('10');
 
