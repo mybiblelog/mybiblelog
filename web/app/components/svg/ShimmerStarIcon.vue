@@ -39,13 +39,14 @@ const starStyle = computed(() => ({
   -webkit-mask-size: contain;
 
   /* Animation */
-  animation: scrollGradient 2s linear infinite;
+  animation: scroll-gradient 2s linear infinite;
 }
 
-@keyframes scrollGradient {
+@keyframes scroll-gradient {
   0% {
     background-position: 0% 0%;
   }
+
   100% {
     background-position: -200% 0%;
   }

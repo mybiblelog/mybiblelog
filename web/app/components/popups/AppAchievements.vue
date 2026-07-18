@@ -172,6 +172,7 @@ const _close = () => {
     opacity: 1;
     transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(1);
   }
+
   100% {
     opacity: 0;
     transform: translate(-50%, -50%)
