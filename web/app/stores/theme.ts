@@ -39,8 +39,6 @@ export const useThemeStore = defineStore('theme', {
   state: () => ({
     mode: 'system' as ThemeMode,
     systemTheme: 'light' as ResolvedTheme,
-    _colorSchemeMediaQuery: null as MediaQueryList | null,
-    _onColorSchemeChange: null as ((event: MediaQueryListEvent) => void) | null,
   }),
   getters: {
     resolvedTheme(state): ResolvedTheme {
@@ -60,34 +58,19 @@ export const useThemeStore = defineStore('theme', {
       }
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       this.systemTheme = mediaQuery.matches ? 'dark' : 'light';
-      this._colorSchemeMediaQuery = mediaQuery;
-      this._onColorSchemeChange = (event: MediaQueryListEvent) => {
+      const onColorSchemeChange = (event: MediaQueryListEvent) => {
         this.systemTheme = event.matches ? 'dark' : 'light';
         if (this.mode === 'system') {
           this.applyThemeAttrs();
         }
       };
       if (mediaQuery.addEventListener) {
-        mediaQuery.addEventListener('change', this._onColorSchemeChange);
+        mediaQuery.addEventListener('change', onColorSchemeChange);
       }
       else if (mediaQuery.addListener) {
-        mediaQuery.addListener(this._onColorSchemeChange);
+        mediaQuery.addListener(onColorSchemeChange);
       }
       this.applyThemeAttrs();
-    },
-
-    destroyClient(): void {
-      const mediaQuery = this._colorSchemeMediaQuery;
-      const listener = this._onColorSchemeChange;
-      if (!mediaQuery || !listener) { return; }
-      if (mediaQuery.removeEventListener) {
-        mediaQuery.removeEventListener('change', listener);
-      }
-      else if (mediaQuery.removeListener) {
-        mediaQuery.removeListener(listener);
-      }
-      this._colorSchemeMediaQuery = null;
-      this._onColorSchemeChange = null;
     },
 
     setMode(mode: ThemeMode): void {

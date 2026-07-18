@@ -95,19 +95,24 @@
       </select>
     </div>
     <div v-if="errors._form" class="form-error">
-      {{ t(`api_error.${errors._form?.code ?? 'unknown_error'}`) }}
+      {{ formErrorMessage }}
     </div>
   </form>
 </template>
 
 <script setup lang="ts">
-import { Bible } from '@mybiblelog/shared';
+import { Bible, PassageSelection } from '@mybiblelog/shared';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 
-const { t, locale } = useI18n();
+const { t, te, locale } = useI18n();
 const logEntryEditorStore = useLogEntryEditorStore();
 const logEntry = computed(() => logEntryEditorStore.logEntry);
 const errors = computed(() => logEntryEditorStore.errors);
+
+const formErrorMessage = computed(() => {
+  const key = `api_error.${errors.value._form?.code ?? 'unknown_error'}`;
+  return te(key) ? t(key) : t('could_not_save');
+});
 
 const books = Bible.getBooks();
 const startChapterRef = ref<HTMLSelectElement | null>(null);
@@ -140,51 +145,18 @@ const formEndVerse = computed(() => {
   return 0;
 });
 
-const startChapters = computed(() => {
-  const bookIndex = formBook.value;
-  if (bookIndex > 0) {
-    const count = Bible.getBookChapterCount(bookIndex);
-    return Array.from({ length: count }, (_, i) => i + 1);
-  }
-  return [];
-});
+const passageOptions = computed(() => PassageSelection.buildPassageOptions({
+  book: formBook.value,
+  startChapter: formStartChapter.value,
+  startVerse: formStartVerse.value,
+  endChapter: formEndChapter.value,
+  endVerse: formEndVerse.value,
+}));
 
-const startVerses = computed(() => {
-  const bookIndex = formBook.value;
-  const chapterIndex = formStartChapter.value;
-  if (bookIndex > 0 && chapterIndex > 0) {
-    const count = Bible.getChapterVerseCount(bookIndex, chapterIndex);
-    return Array.from({ length: count }, (_, i) => i + 1);
-  }
-  return [];
-});
-
-const endChapters = computed(() => {
-  const bookIndex = formBook.value;
-  const startChapter = formStartChapter.value;
-  if (bookIndex > 0 && startChapter > 0) {
-    const count = Bible.getBookChapterCount(bookIndex);
-    const chapters = [];
-    for (let i = startChapter; i <= count; i++) { chapters.push(i); }
-    return chapters;
-  }
-  return [];
-});
-
-const endVerses = computed(() => {
-  const bookIndex = formBook.value;
-  const endChapter = formEndChapter.value;
-  const startChapter = formStartChapter.value;
-  const startVerse = formStartVerse.value;
-  if (bookIndex > 0 && endChapter > 0) {
-    const count = Bible.getChapterVerseCount(bookIndex, endChapter);
-    const verses = [];
-    let i = startChapter === endChapter ? startVerse : 1;
-    for (; i <= count; i++) { verses.push(i); }
-    return verses;
-  }
-  return [];
-});
+const startChapters = computed(() => passageOptions.value.startChapters);
+const startVerses = computed(() => passageOptions.value.startVerses);
+const endChapters = computed(() => passageOptions.value.endChapters);
+const endVerses = computed(() => passageOptions.value.endVerses);
 
 const displayEditorVerseRange = computed(() => {
   if (logEntry.value?.startVerseId && logEntry.value?.endVerseId) {
@@ -356,7 +328,8 @@ form select:not(:disabled) {
     "end_chapter": "End Chapter",
     "choose_end_chapter": "Choose End Chapter",
     "end_verse": "End Verse",
-    "choose_end_verse": "Choose End Verse"
+    "choose_end_verse": "Choose End Verse",
+    "could_not_save": "The entry could not be saved."
   },
   "de": {
     "preview_passage": "Passage Vorschau",
@@ -370,7 +343,8 @@ form select:not(:disabled) {
     "end_chapter": "Endkapitel",
     "choose_end_chapter": "Kapitel auswählen",
     "end_verse": "Endvers",
-    "choose_end_verse": "Vers auswählen"
+    "choose_end_verse": "Vers auswählen",
+    "could_not_save": "Der Eintrag konnte nicht gespeichert werden."
   },
   "es": {
     "preview_passage": "vista previa del pasaje",
@@ -384,7 +358,8 @@ form select:not(:disabled) {
     "end_chapter": "Capítulo final",
     "choose_end_chapter": "Elegir capítulo final",
     "end_verse": "Versículo final",
-    "choose_end_verse": "Elegir versículo final"
+    "choose_end_verse": "Elegir versículo final",
+    "could_not_save": "La entrada no se pudo guardar."
   },
   "fr": {
     "preview_passage": "Aperçu du passage",
@@ -398,7 +373,8 @@ form select:not(:disabled) {
     "end_chapter": "Chapitre de fin",
     "choose_end_chapter": "Chapitre de fin",
     "end_verse": "Verset de fin",
-    "choose_end_verse": "Verset de fin"
+    "choose_end_verse": "Verset de fin",
+    "could_not_save": "L'entrée n'a pas pu être enregistrée."
   },
   "ko": {
     "preview_passage": "구절 미리보기",
@@ -412,7 +388,8 @@ form select:not(:disabled) {
     "end_chapter": "끝 장",
     "choose_end_chapter": "끝 장 선택",
     "end_verse": "끝 절",
-    "choose_end_verse": "끝 절 선택"
+    "choose_end_verse": "끝 절 선택",
+    "could_not_save": "항목을 저장할 수 없습니다."
   },
   "pt": {
     "preview_passage": "visualização do trecho",
@@ -426,7 +403,8 @@ form select:not(:disabled) {
     "end_chapter": "Capítulo Final",
     "choose_end_chapter": "Escolher Capítulo",
     "end_verse": "Versículo Final",
-    "choose_end_verse": "Escolher Versículo"
+    "choose_end_verse": "Escolher Versículo",
+    "could_not_save": "A entrada não pôde ser salva."
   },
   "uk": {
     "preview_passage": "попередній перегляд пасажу",
@@ -440,7 +418,8 @@ form select:not(:disabled) {
     "end_chapter": "Закінчити розділ",
     "choose_end_chapter": "Виберіть",
     "end_verse": "Закінчити вірш",
-    "choose_end_verse": "Виберіть"
+    "choose_end_verse": "Виберіть",
+    "could_not_save": "Не вдалося зберегти запис."
   }
 }
 </i18n>

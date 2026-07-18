@@ -8,6 +8,7 @@ import { validate } from '../../../validation/validate';
 import { registerBodySchema } from '../../../validation/schemas/auth';
 import { LocaleCode } from '@mybiblelog/shared';
 import { authCookie, clearAuthCookie } from '../../helpers/auth-cookie';
+import { isWebClient } from '../../helpers/client-type';
 import { type RouteHandler } from '../../types';
 import { asRecord } from './shared';
 
@@ -61,7 +62,9 @@ export const login: RouteHandler = async (req, deps) => {
   const token = generateUserJWT(user);
   return {
     status: 200,
-    body: { data: { token, user: toAuthJSON(user) } },
+    // Web relies on the httpOnly cookie below; only non-web callers (the
+    // mobile app) get the token in the body. See `isWebClient`.
+    body: { data: { token: isWebClient(req) ? undefined : token, user: toAuthJSON(user) } },
     cookies: [authCookie(token)],
   };
 };

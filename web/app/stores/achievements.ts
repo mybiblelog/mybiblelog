@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { createModalStore } from '~/helpers/create-modal-store';
 
 export const ACHIEVEMENT = {
   BOOK_COMPLETE: 'BOOK_COMPLETE',
@@ -7,33 +8,35 @@ export const ACHIEVEMENT = {
 
 export type AchievementType = (typeof ACHIEVEMENT)[keyof typeof ACHIEVEMENT];
 
-export type AchievementsState = {
-  open: boolean;
+export type AchievementsPayload = {
   achievementType: AchievementType | null;
   achievementData: number | null;
 };
 
-const emptyState: AchievementsState = {
-  open: false,
+const modal = createModalStore<AchievementsPayload>({
   achievementType: null,
   achievementData: null,
-};
+});
 
-export const useAchievementsStore = defineStore('achievements', {
-  state: (): AchievementsState => ({ ...emptyState }),
+// Exported on a separate line (not `export const`) so Nuxt's auto-import
+// scanner doesn't misread the spread inside `actions` as a named export.
+const useAchievementsStore = defineStore('achievements', {
+  state: modal.state,
   actions: {
+    ...modal.actions,
+
     showBookCompleteAchievement(bookIndex: number): void {
-      this.achievementType = ACHIEVEMENT.BOOK_COMPLETE;
-      this.achievementData = bookIndex;
-      this.open = true;
+      this.openModal({ achievementType: ACHIEVEMENT.BOOK_COMPLETE, achievementData: bookIndex });
     },
+
     showBibleCompleteAchievement(): void {
-      this.achievementType = ACHIEVEMENT.BIBLE_COMPLETE;
-      this.achievementData = null;
-      this.open = true;
+      this.openModal({ achievementType: ACHIEVEMENT.BIBLE_COMPLETE, achievementData: null });
     },
+
     closeAchievement(): void {
-      this.$reset();
+      this.closeModal();
     },
   },
 });
+
+export { useAchievementsStore };

@@ -160,6 +160,17 @@ describe('auth handlers (unit)', () => {
         .rejects.toThrow('rate limited');
     });
 
+    it('omits the token from the body for web callers, but still sets the cookie', async () => {
+      const deps = makeDeps({ users: { verifyLogin: async () => verifiedUser } });
+      const result = await login(
+        makeRequest({ body: { email: 'a@b.com', password: 'pw' }, headers: { 'x-client': 'web' } }),
+        deps,
+      );
+      expect(result.status).toBe(200);
+      expect((result.body?.data as { token?: string })?.token).toBeUndefined();
+      expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
+    });
+
     it('rejects an unverified user when REQUIRE_EMAIL_VERIFICATION is on', async () => {
       withEnvConfig({ REQUIRE_EMAIL_VERIFICATION: 'true' });
       const deps = makeDeps({ users: { verifyLogin: async () => unverifiedUser } });
@@ -412,6 +423,26 @@ describe('auth handlers (unit)', () => {
       expect(typeof (result.body?.data as { token: string }).token).toBe('string');
       expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
+
+    it('omits the token from the body for web callers', async () => {
+      const pending = {
+        ...verifiedUser,
+        emailVerificationCode: 'GOOD',
+        emailVerificationExpires: new Date(Date.now() + 60_000),
+      } as UserRecord;
+      const deps = makeDeps({
+        users: {
+          findByEmailVerificationCode: async () => pending,
+          markEmailVerified: async () => verifiedUser,
+        },
+      });
+      const result = await verifyEmail(
+        makeRequest({ body: { code: 'GOOD' }, headers: { 'x-client': 'web' } }),
+        deps,
+      );
+      expect((result.body?.data as { token?: string })?.token).toBeUndefined();
+      expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
+    });
   });
 
   describe('beginPasswordReset', () => {
@@ -468,6 +499,30 @@ describe('auth handlers (unit)', () => {
       expect(typeof (result.body?.data as { token: string }).token).toBe('string');
       expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
+
+    it('omits the token from the body for web callers', async () => {
+      const pending = {
+        ...verifiedUser,
+        passwordResetCode: 'RESET',
+        passwordResetExpires: new Date(Date.now() + 60_000),
+      } as unknown as UserRecord;
+      const deps = makeDeps({
+        users: {
+          findByPasswordResetCode: async () => pending,
+          completePasswordReset: async () => verifiedUser,
+        },
+      });
+      const result = await completePasswordReset(
+        makeRequest({
+          params: { passwordResetCode: 'RESET' },
+          body: { newPassword: 'password123' },
+          headers: { 'x-client': 'web' },
+        }),
+        deps,
+      );
+      expect((result.body?.data as { token?: string })?.token).toBeUndefined();
+      expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
+    });
   });
 
   describe('beginEmailChange', () => {
@@ -522,6 +577,28 @@ describe('auth handlers (unit)', () => {
       expect(typeof (result.body?.data as { token: string }).token).toBe('string');
       expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
+
+    it('omits the token from the body for web callers', async () => {
+      const pending = {
+        ...verifiedUser,
+        newEmail: 'new@example.com',
+        newEmailVerificationCode: 'GOOD',
+        newEmailVerificationExpires: new Date(Date.now() + 60_000),
+      } as unknown as UserRecord;
+      const deps = makeDeps({
+        users: {
+          findByNewEmailVerificationCode: async () => pending,
+          findByEmail: async () => null,
+          completeEmailUpdate: async () => verifiedUser,
+        },
+      });
+      const result = await completeEmailChange(
+        makeRequest({ params: { newEmailVerificationCode: 'GOOD' }, headers: { 'x-client': 'web' } }),
+        deps,
+      );
+      expect((result.body?.data as { token?: string })?.token).toBeUndefined();
+      expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
+    });
   });
 
   describe('resendEmailVerification', () => {
@@ -564,6 +641,22 @@ describe('auth handlers (unit)', () => {
       await expect(
         verifyGoogleOauth(makeRequest({ body: { code: { $gt: '' }, state: 'ok', locale: 'en' } }), deps),
       ).rejects.toBeInstanceOf(InvalidRequestError);
+    });
+
+    it('omits the token from the body for web callers, but still sets the cookie', async () => {
+      // The mocked googleOauth2 helper (see top of file) always resolves the
+      // profile to email 'g@example.com'.
+      mockVerifyState.mockReturnValue(true);
+      const existing = { ...verifiedUser, email: 'g@example.com', googleId: 'already-linked' } as unknown as UserRecord;
+      const deps = makeDeps({ users: { findByEmail: async () => existing } });
+
+      const result = await verifyGoogleOauth(
+        makeRequest({ body: { code: 'c', state: 'ok', locale: 'en' }, headers: { 'x-client': 'web' } }),
+        deps,
+      );
+
+      expect((result.body?.data as { token?: string })?.token).toBeUndefined();
+      expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
   });
 
@@ -651,6 +744,24 @@ describe('auth handlers (unit)', () => {
         locale: 'en',
       });
       expect(typeof (result.body.data as { token: string }).token).toBe('string');
+      expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
+    });
+
+    it('omits the token from the body for web callers, but still sets the cookie', async () => {
+      mockedVerifyIdToken.mockResolvedValue({
+        googleUserId: 'g-sub-1',
+        email: 'user@example.com',
+        audience: 'aud',
+      });
+      const existing = { ...verifiedUser, googleId: 'already-linked' } as unknown as UserRecord;
+      const deps = makeDeps({ users: { findByEmail: async () => existing } });
+
+      const result = await googleIdTokenLogin(
+        makeRequest({ body: { idToken: 'good' }, headers: { 'x-client': 'web' } }),
+        deps,
+      );
+
+      expect((result.body.data as { token?: string }).token).toBeUndefined();
       expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
   });

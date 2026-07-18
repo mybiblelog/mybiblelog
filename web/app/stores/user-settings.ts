@@ -81,32 +81,32 @@ export const useUserSettingsStore = defineStore('user-settings', {
         locale,
       } = update;
 
-      if (lookBackDate) {
+      if (lookBackDate !== undefined) {
         this.settings.lookBackDate = lookBackDate;
         useDateVerseCountsStore().cacheDateVerseCounts();
       }
-      if (dailyVerseCountGoal) {
+      if (dailyVerseCountGoal !== undefined) {
         this.settings.dailyVerseCountGoal = dailyVerseCountGoal;
       }
-      if (preferredBibleApp) {
+      if (preferredBibleApp !== undefined) {
         this.settings.preferredBibleApp = preferredBibleApp;
       }
-      if (preferredBibleVersion) {
+      if (preferredBibleVersion !== undefined) {
         this.settings.preferredBibleVersion = preferredBibleVersion;
       }
-      if (startPage) {
+      if (startPage !== undefined) {
         this.settings.startPage = startPage;
       }
-      if (passageNoteTagSortOrder) {
+      if (passageNoteTagSortOrder !== undefined) {
         this.settings.passageNoteTagSortOrder = passageNoteTagSortOrder;
       }
-      if (locale) {
+      if (locale !== undefined) {
         this.settings.locale = locale;
       }
     },
 
     async updateSettings(update: UserSettingsUpdate): Promise<boolean> {
-      const { $http } = useNuxtApp();
+      const http = useHttp();
       const {
         lookBackDate,
         dailyVerseCountGoal,
@@ -122,7 +122,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
           localStore.set('preferredBibleApp', preferredBibleApp);
         }
 
-        await $http.patch('/api/settings', {
+        await http.patch('/api/settings', {
           settings: {
             lookBackDate,
             dailyVerseCountGoal,
@@ -157,8 +157,8 @@ export const useUserSettingsStore = defineStore('user-settings', {
     },
 
     async loadServerSettings(): Promise<void> {
-      const { $http } = useNuxtApp();
-      const { data } = await $http.get<ServerSettingsResponse>('/api/settings');
+      const http = useHttp();
+      const { data } = await http.get<ServerSettingsResponse>('/api/settings');
       const {
         lookBackDate,
         dailyVerseCountGoal,

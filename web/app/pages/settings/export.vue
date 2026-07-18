@@ -11,7 +11,7 @@
     </h2>
     <p>{{ t('reading_log_info_1') }}</p>
     <p>{{ t('reading_log_info_2') }}</p>
-    <button class="mbl-button mbl-button--primary" data-testid="export-log-csv-button" :disabled="!mounted" @click="downloadLogEntriesCSV">
+    <button class="mbl-button mbl-button--primary" data-testid="export-log-csv-button" :disabled="!hydrated" @click="downloadLogEntriesCSV">
       {{ t('reading_log_cta') }}
     </button>
     <hr>
@@ -30,7 +30,7 @@
     </h2>
     <p>{{ t('notes_text_info') }}</p>
     <p>
-      <button class="mbl-button mbl-button--primary" data-testid="export-notes-text-button" :disabled="!mounted" @click="downloadNotesTextFile">
+      <button class="mbl-button mbl-button--primary" data-testid="export-notes-text-button" :disabled="!hydrated" @click="downloadNotesTextFile">
         {{ t('notes_text_cta') }}
       </button>
     </p>
@@ -40,7 +40,7 @@
     </h2>
     <p>{{ t('notes_json_info') }}</p>
     <p>
-      <button class="mbl-button mbl-button--primary" data-testid="export-notes-json-button" :disabled="!mounted" @click="downloadNotesJsonFile">
+      <button class="mbl-button mbl-button--primary" data-testid="export-notes-json-button" :disabled="!hydrated" @click="downloadNotesJsonFile">
         {{ t('notes_json_cta') }}
       </button>
     </p>
@@ -68,10 +68,9 @@ let logCsvCache = '';
 let notesTextCache = '';
 let notesJsonCache = '';
 
-const mounted = ref(false);
+const hydrated = useHydrated();
 onMounted(async () => {
   await useAppInitStore().loadUserData();
-  mounted.value = true;
 });
 
 function generateDownload(filename: string, dataString: string) {

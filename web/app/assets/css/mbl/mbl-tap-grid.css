@@ -1,0 +1,17 @@
+/* Shared layout for grid-of-tappable-cells components (GridSelector, TapRangeSelector).
+   Component-specific styles (hover/selected states, borders, animations) stay scoped
+   in each component; only the identical container/cell layout lives here. */
+.mbl-tap-grid {
+  display: grid;
+  padding: 1px;
+  font-size: 0.8rem;
+  user-select: none;
+}
+
+.mbl-tap-grid--cell {
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  transition: 0.2s;
+}

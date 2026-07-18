@@ -170,7 +170,11 @@ function resetSetPasswordErrors() {
   Object.assign(setPasswordErrors, { _form: '', password: '', confirmPassword: '' });
 }
 
+let checkChangeEmailRequestInFlight = false;
+
 async function checkChangeEmailRequestState() {
+  if (checkChangeEmailRequestInFlight) { return; }
+  checkChangeEmailRequestInFlight = true;
   try {
     const { data } = await $http.get<ChangeEmailRequest | null>('/api/auth/change-email');
     currentChangeEmailRequest.value = data?.newEmail ? data : null;
@@ -180,6 +184,7 @@ async function checkChangeEmailRequestState() {
   }
   finally {
     checkingForEmailChangeRequest.value = false;
+    checkChangeEmailRequestInFlight = false;
   }
 }
 

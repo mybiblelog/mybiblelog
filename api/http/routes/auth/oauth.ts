@@ -32,7 +32,7 @@ export const authOauthRoutes: RouteDefinition[] = [
       request: { body: googleVerifyBodySchema },
       response: {
         description: 'Google OAuth2 verification successful',
-        schema: z.object({ token: z.string() }),
+        schema: z.object({ token: z.string().optional() }),
       },
       setsAuthCookie: true,
       errors: [400],
@@ -53,7 +53,7 @@ export const authOauthRoutes: RouteDefinition[] = [
       request: { body: googleIdTokenBodySchema },
       response: {
         description: 'Google login successful',
-        schema: z.object({ token: z.string(), user: userSchema }),
+        schema: z.object({ token: z.string().optional(), user: userSchema }),
       },
       setsAuthCookie: true,
       errors: [400],

@@ -10,6 +10,7 @@ import {
 } from '../../../validation/schemas/auth';
 import { LocaleCode } from '@mybiblelog/shared';
 import { authCookie } from '../../helpers/auth-cookie';
+import { isWebClient } from '../../helpers/client-type';
 import { type RouteHandler } from '../../types';
 import { asRecord } from './shared';
 
@@ -120,5 +121,9 @@ export const completePasswordReset: RouteHandler = async (req, deps) => {
   // newPassword is already validated by zod above
   const updatedUser = await users.completePasswordReset(user.id, newPassword);
   const token = generateUserJWT(updatedUser);
-  return { status: 200, body: { data: { token } }, cookies: [authCookie(token)] };
+  return {
+    status: 200,
+    body: { data: { token: isWebClient(req) ? undefined : token } },
+    cookies: [authCookie(token)],
+  };
 };

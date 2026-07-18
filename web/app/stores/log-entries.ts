@@ -13,6 +13,7 @@ import {
 } from '@mybiblelog/shared';
 import { useAchievementsStore } from '~/stores/achievements';
 import { useUserSettingsStore } from '~/stores/user-settings';
+import dayjs from 'dayjs';
 
 export type { CreateLogEntryInput, LogEntry, UpdateLogEntryInput };
 
@@ -57,22 +58,21 @@ export const useLogEntriesStore = defineStore('log-entries', {
       return isBibleComplete(this.currentLogEntries);
     },
     hasLogEntriesForToday(state): boolean {
-      const now = new Date();
-      const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      const today = dayjs().format('YYYY-MM-DD');
       return state.logEntries.some(entry => entry.date === today);
     },
   },
   actions: {
     async loadLogEntries(): Promise<LogEntry[]> {
       if (this.isLoaded) { return this.logEntries; }
-      const http = useNuxtApp().$http;
+      const http = useHttp();
       this.logEntries = await fetchLogEntries(http);
       this.isLoaded = true;
       return this.logEntries;
     },
 
     async createLogEntry(input: CreateLogEntryInput): Promise<LogEntry> {
-      const http = useNuxtApp().$http;
+      const http = useHttp();
       const before = this.currentLogEntries;
       const bookIndex = getBookIndexFromVerseId(input.startVerseId);
 
@@ -88,7 +88,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
     },
 
     async updateLogEntry(input: UpdateLogEntryInput): Promise<LogEntry> {
-      const http = useNuxtApp().$http;
+      const http = useHttp();
       const before = this.currentLogEntries;
       const bookIndex = getBookIndexFromVerseId(input.startVerseId);
 
@@ -111,7 +111,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
     },
 
     async deleteLogEntry(logEntryId: number | string): Promise<boolean> {
-      const http = useNuxtApp().$http;
+      const http = useHttp();
       const logEntry = this.logEntries.find(le => le.id === logEntryId);
       const date = logEntry?.date;
 

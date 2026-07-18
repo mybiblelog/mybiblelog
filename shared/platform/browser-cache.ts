@@ -21,15 +21,22 @@ const getBrowserCache = (key: string) => {
   if (!itemString) {
     return null;
   }
-  const item = JSON.parse(itemString);
-  const now = new Date();
-  // Compare the current time with the expiration time
-  if (now.getTime() > item.expiration) {
-    // If the item has expired, remove it from storage and return null
+  try {
+    const item = JSON.parse(itemString);
+    const now = new Date();
+    // Compare the current time with the expiration time
+    if (now.getTime() > item.expiration) {
+      // If the item has expired, remove it from storage and return null
+      sessionStorage.removeItem(key);
+      return null;
+    }
+    return item.value;
+  }
+  catch {
+    // Corrupted or foreign JSON (extensions, stale schema, tampering) — drop it
     sessionStorage.removeItem(key);
     return null;
   }
-  return item.value;
 };
 
 const deleteBrowserCache = (key: string) => {

@@ -35,6 +35,20 @@ describe('AppModal', () => {
     expect(wrapper.emitted('close')).toHaveLength(1);
   });
 
+  it('emits close when Escape is pressed while open', async () => {
+    const wrapper = mountModal({ open: true });
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    await wrapper.vm.$nextTick();
+    expect(wrapper.emitted('close')).toHaveLength(1);
+  });
+
+  it('does not emit close on Escape while closed', async () => {
+    const wrapper = mountModal({ open: false });
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    await wrapper.vm.$nextTick();
+    expect(wrapper.emitted('close')).toBeUndefined();
+  });
+
   it('renders the footer slot only when provided', () => {
     const withoutFooter = mountModal({ open: true });
     expect(withoutFooter.find('.mbl-modal__foot').exists()).toBe(false);

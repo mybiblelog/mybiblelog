@@ -140,14 +140,14 @@ import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { decodePassageNotesRouteQuery, encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
 import type { PassageNotesQuery } from '~/helpers/passage-notes-route-query';
+import { buildResultsSummary } from '~/helpers/results-summary';
 import type { PassageNoteListItem } from '~/stores/passage-notes';
 
 definePageMeta({ middleware: ['auth'] });
 const { t, n } = useI18n();
 useHead({ title: () => t('notes') });
 
-const hydrated = ref(false);
-onMounted(() => { hydrated.value = true; });
+const hydrated = useHydrated();
 
 const route = useRoute();
 const router = useRouter();
@@ -169,29 +169,29 @@ const pagerTotalPages = computed(() => Math.max(1, Number(passageNotesStore.pagi
 const querySummary = computed(() => {
   const pagination = passageNotesStore.pagination || {};
   const q = passageNotesStore.query || {};
-
-  const total = Number(pagination.size || 0);
-  const page = Number(pagination.page || 1);
   const limit = Number(pagination.limit || q.limit || 10);
-  const pageLength = passageNotesStore.passageNotes?.length || 0;
-
   const noun = hasAppliedViewOptions.value ? 'results' : 'notes';
 
-  if (!total) {
+  const summary = buildResultsSummary({
+    total: Number(pagination.size || 0),
+    offset: (Number(pagination.page || 1) - 1) * limit,
+    limit,
+    pageLength: passageNotesStore.passageNotes?.length || 0,
+  });
+
+  if (summary.kind === 'none') {
     return t(`query_summary.none.${noun}`);
   }
 
-  if (total <= limit) {
-    return t(`query_summary.showing_all.${noun}`, { total: n(total, 'grouped') }, total);
+  if (summary.kind === 'all') {
+    return t(`query_summary.showing_all.${noun}`, { total: n(summary.total, 'grouped') }, summary.total);
   }
 
-  const first = (page - 1) * limit + 1;
-  const last = Math.min(first + Math.max(pageLength, 1) - 1, total);
   return t(`query_summary.showing_range.${noun}`, {
-    first: n(first, 'grouped'),
-    last: n(last, 'grouped'),
-    total: n(total, 'grouped'),
-  }, total);
+    first: n(summary.first, 'grouped'),
+    last: n(summary.last, 'grouped'),
+    total: n(summary.total, 'grouped'),
+  }, summary.total);
 });
 
 const showQueryManagerModal = ref(false);

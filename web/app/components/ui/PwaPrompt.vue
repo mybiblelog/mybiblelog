@@ -3,7 +3,7 @@
     <div class="pwa-prompt no-print">
       <!-- Update available: a new service worker is waiting -->
       <div
-        v-if="pwa?.needRefresh"
+        v-if="promptKind === 'refresh'"
         class="mbl-notification mbl-notification--info pwa-prompt__card"
         role="alert"
         data-testid="pwa-refresh-prompt"
@@ -31,7 +31,7 @@
 
       <!-- Ready to work offline -->
       <div
-        v-else-if="pwa?.offlineReady"
+        v-else-if="promptKind === 'offline-ready'"
         class="mbl-notification mbl-notification--success pwa-prompt__card"
         role="status"
         data-testid="pwa-offline-ready"
@@ -48,7 +48,7 @@
 
       <!-- Install prompt available (not yet installed) -->
       <div
-        v-if="pwa?.showInstallPrompt && !pwa?.needRefresh && !pwa?.offlineReady"
+        v-else-if="promptKind === 'install'"
         class="mbl-notification pwa-prompt__card"
         role="status"
         data-testid="pwa-install-prompt"
@@ -84,6 +84,16 @@ const { t } = useI18n();
 // SSR and until the plugin runs, so every access is optional-chained.
 const { $pwa } = useNuxtApp();
 const pwa = $pwa;
+
+type PwaPromptKind = 'refresh' | 'offline-ready' | 'install' | null;
+
+// Single source of truth for which card is shown; precedence is refresh > offline-ready > install.
+const promptKind = computed<PwaPromptKind>(() => {
+  if (pwa?.needRefresh) { return 'refresh'; }
+  if (pwa?.offlineReady) { return 'offline-ready'; }
+  if (pwa?.showInstallPrompt) { return 'install'; }
+  return null;
+});
 </script>
 
 <style scoped>

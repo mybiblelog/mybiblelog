@@ -116,7 +116,7 @@ export const adminRoutes: RouteDefinition[] = [
       summary: 'Get a JWT to log in as a specific user',
       tags,
       request: { params: adminEmailParam },
-      response: { description: 'A JWT for the user', schema: z.object({ token: z.string() }) },
+      response: { description: 'A JWT for the user', schema: z.object({ token: z.string().optional() }) },
       setsAuthCookie: true,
       errors: [401, 403, 404],
     },

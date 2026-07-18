@@ -15,17 +15,17 @@
           min="1"
           max="1111"
           data-testid="settings-daily-goal-input"
-          :disabled="!mounted"
+          :disabled="!hydrated"
         >
       </div>
       <div class="mbl-control">
-        <button class="mbl-button mbl-button--primary" data-testid="settings-daily-goal-save" :disabled="!mounted || saving" @click="saveDailyVerseCountGoal">
+        <button class="mbl-button mbl-button--primary" data-testid="settings-daily-goal-save" :disabled="!hydrated || saving" @click="saveDailyVerseCountGoal">
           {{ t('save') }}
         </button>
       </div>
     </div>
-    <div v-if="errors.dailyVerseCountGoal" class="mbl-help mbl-help--danger">
-      {{ errors.dailyVerseCountGoal }}
+    <div v-if="dailyVerseCountGoalError" class="mbl-help mbl-help--danger">
+      {{ dailyVerseCountGoalError }}
     </div>
     <p>{{ t('daily_verse_count_goal.info.1') }}</p>
     <p>{{ t('daily_verse_count_goal.info.2', { dailyVerseCountGoal: form.dailyVerseCountGoal || 0, bibleReadingDays }) }}</p>
@@ -45,17 +45,17 @@
           class="mbl-input"
           type="date"
           data-testid="settings-look-back-date-input"
-          :disabled="!mounted"
+          :disabled="!hydrated"
         >
       </div>
       <div class="mbl-control">
-        <button class="mbl-button mbl-button--primary" data-testid="settings-look-back-date-save" :disabled="!mounted || saving" @click="saveLookBackDate">
+        <button class="mbl-button mbl-button--primary" data-testid="settings-look-back-date-save" :disabled="!hydrated || saving" @click="saveLookBackDate">
           {{ t('save') }}
         </button>
       </div>
     </div>
-    <div v-if="errors.lookBackDate" class="mbl-help mbl-help--danger">
-      {{ errors.lookBackDate }}
+    <div v-if="lookBackDateError" class="mbl-help mbl-help--danger">
+      {{ lookBackDateError }}
     </div>
     <p>
       {{ t('look_back_date.info.1') }}
@@ -70,7 +70,7 @@
     <div class="mbl-field mbl-field--addons">
       <div class="mbl-control">
         <div class="mbl-select">
-          <select v-model="form.preferredBibleVersion" data-testid="settings-bible-version-select" :disabled="!mounted">
+          <select v-model="form.preferredBibleVersion" data-testid="settings-bible-version-select" :disabled="!hydrated">
             <option value="" disabled>
               {{ t('select_an_option') }}
             </option>
@@ -81,13 +81,13 @@
         </div>
       </div>
       <div class="mbl-control">
-        <button class="mbl-button mbl-button--primary" data-testid="settings-bible-version-save" :disabled="!mounted || saving" @click="savePreferredBibleVersion">
+        <button class="mbl-button mbl-button--primary" data-testid="settings-bible-version-save" :disabled="!hydrated || saving" @click="savePreferredBibleVersion">
           {{ t('save') }}
         </button>
       </div>
     </div>
-    <div v-if="errors.preferredBibleVersion" class="mbl-help mbl-help--danger">
-      {{ errors.preferredBibleVersion }}
+    <div v-if="preferredBibleVersionError" class="mbl-help mbl-help--danger">
+      {{ preferredBibleVersionError }}
     </div>
     <p>{{ t('preferred_bible_version.info.1') }}</p>
     <hr>
@@ -97,7 +97,7 @@
     <div class="mbl-field mbl-field--addons">
       <div class="mbl-control">
         <div class="mbl-select">
-          <select v-model="form.preferredBibleApp" data-testid="settings-bible-app-select" :disabled="!mounted">
+          <select v-model="form.preferredBibleApp" data-testid="settings-bible-app-select" :disabled="!hydrated">
             <option value="" disabled>
               {{ t('select_an_option') }}
             </option>
@@ -108,13 +108,13 @@
         </div>
       </div>
       <div class="mbl-control">
-        <button class="mbl-button mbl-button--primary" data-testid="settings-bible-app-save" :disabled="!mounted || saving" @click="savePreferredBibleApp">
+        <button class="mbl-button mbl-button--primary" data-testid="settings-bible-app-save" :disabled="!hydrated || saving" @click="savePreferredBibleApp">
           {{ t('save') }}
         </button>
       </div>
     </div>
-    <div v-if="errors.preferredBibleApp" class="mbl-help mbl-help--danger">
-      {{ errors.preferredBibleApp }}
+    <div v-if="preferredBibleAppError" class="mbl-help mbl-help--danger">
+      {{ preferredBibleAppError }}
     </div>
     <p>{{ t('preferred_bible_app.info.1') }}</p>
     <div class="mbl-message">
@@ -130,21 +130,18 @@
 import { bibleVersionOptions as allBibleVersionOptions, bibleAppOptions, localeVersionGroups, displayDate } from '@mybiblelog/shared';
 import { useUserSettingsStore } from '~/stores/user-settings';
 import { useLogEntriesStore } from '~/stores/log-entries';
-import { useToastStore } from '~/stores/toast';
 
 const BIBLE_VERSE_COUNT = 31102;
 
 definePageMeta({ middleware: ['auth'] });
 useHead({ meta: [{ name: 'robots', content: 'noindex' }] });
 
-const mounted = ref(false);
+const hydrated = useHydrated();
 const saving = ref(false);
-onMounted(() => { mounted.value = true; });
 
 const { t, locale } = useI18n();
 const userSettingsStore = useUserSettingsStore();
 const logEntriesStore = useLogEntriesStore();
-const toastStore = useToastStore();
 
 const settings = computed(() => userSettingsStore.settings);
 
@@ -153,13 +150,6 @@ const form = reactive({
   lookBackDate: settings.value.lookBackDate,
   preferredBibleVersion: settings.value.preferredBibleVersion,
   preferredBibleApp: settings.value.preferredBibleApp,
-});
-
-const errors = reactive({
-  dailyVerseCountGoal: '',
-  lookBackDate: '',
-  preferredBibleVersion: '',
-  preferredBibleApp: '',
 });
 
 watch(settings, (s) => {
@@ -195,77 +185,33 @@ const showEarlyEntriesAlert = computed(() => {
   return Boolean(earliestLogEntryDate.value && lookBackDate && earliestLogEntryDate.value < lookBackDate);
 });
 
-async function saveDailyVerseCountGoal() {
-  if (saving.value) { return; }
-  saving.value = true;
-  errors.dailyVerseCountGoal = '';
-  try {
-    const success = await userSettingsStore.updateSettings({ dailyVerseCountGoal: form.dailyVerseCountGoal });
-    if (success) {
-      toastStore.add({ type: 'success', text: t('messaging.daily_verse_count_goal_saved_successfully') });
-    }
-    else {
-      errors.dailyVerseCountGoal = t('messaging.unable_to_save_daily_verse_count_goal');
-    }
-  }
-  finally {
-    saving.value = false;
-  }
-}
+const { error: dailyVerseCountGoalError, submit: saveDailyVerseCountGoal } = useSettingsWizardStep({
+  saving,
+  save: () => userSettingsStore.updateSettings({ dailyVerseCountGoal: form.dailyVerseCountGoal }),
+  successMessage: () => t('messaging.daily_verse_count_goal_saved_successfully'),
+  errorMessage: () => t('messaging.unable_to_save_daily_verse_count_goal'),
+});
 
-async function saveLookBackDate() {
-  if (saving.value) { return; }
-  saving.value = true;
-  errors.lookBackDate = '';
-  try {
-    const success = await userSettingsStore.updateSettings({ lookBackDate: form.lookBackDate });
-    if (success) {
-      toastStore.add({ type: 'success', text: t('messaging.look_back_date_saved_successfully') });
-    }
-    else {
-      errors.lookBackDate = t('messaging.unable_to_save_look_back_date');
-    }
-  }
-  finally {
-    saving.value = false;
-  }
-}
+const { error: lookBackDateError, submit: saveLookBackDate } = useSettingsWizardStep({
+  saving,
+  save: () => userSettingsStore.updateSettings({ lookBackDate: form.lookBackDate }),
+  successMessage: () => t('messaging.look_back_date_saved_successfully'),
+  errorMessage: () => t('messaging.unable_to_save_look_back_date'),
+});
 
-async function savePreferredBibleVersion() {
-  if (saving.value) { return; }
-  saving.value = true;
-  errors.preferredBibleVersion = '';
-  try {
-    const success = await userSettingsStore.updateSettings({ preferredBibleVersion: form.preferredBibleVersion as any });
-    if (success) {
-      toastStore.add({ type: 'success', text: t('messaging.preferred_bible_version_saved_successfully') });
-    }
-    else {
-      errors.preferredBibleVersion = t('messaging.unable_to_save_preferred_bible_version');
-    }
-  }
-  finally {
-    saving.value = false;
-  }
-}
+const { error: preferredBibleVersionError, submit: savePreferredBibleVersion } = useSettingsWizardStep({
+  saving,
+  save: () => userSettingsStore.updateSettings({ preferredBibleVersion: form.preferredBibleVersion as never }),
+  successMessage: () => t('messaging.preferred_bible_version_saved_successfully'),
+  errorMessage: () => t('messaging.unable_to_save_preferred_bible_version'),
+});
 
-async function savePreferredBibleApp() {
-  if (saving.value) { return; }
-  saving.value = true;
-  errors.preferredBibleApp = '';
-  try {
-    const success = await userSettingsStore.updateSettings({ preferredBibleApp: form.preferredBibleApp as any });
-    if (success) {
-      toastStore.add({ type: 'success', text: t('messaging.preferred_bible_app_saved_successfully') });
-    }
-    else {
-      errors.preferredBibleApp = t('messaging.unable_to_save_preferred_bible_app');
-    }
-  }
-  finally {
-    saving.value = false;
-  }
-}
+const { error: preferredBibleAppError, submit: savePreferredBibleApp } = useSettingsWizardStep({
+  saving,
+  save: () => userSettingsStore.updateSettings({ preferredBibleApp: form.preferredBibleApp as never }),
+  successMessage: () => t('messaging.preferred_bible_app_saved_successfully'),
+  errorMessage: () => t('messaging.unable_to_save_preferred_bible_app'),
+});
 </script>
 
 <style scoped>

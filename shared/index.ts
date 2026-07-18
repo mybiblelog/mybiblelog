@@ -72,6 +72,24 @@ export {
   type ChapterProgress,
 } from './bible/progress';
 export {
+  withSegmentPercentages,
+  type SegmentWithPercentage,
+} from './bible/segment-view';
+export {
+  TagSortOrders,
+  compareByLabelAsc,
+  getObjectIdCreatedMsOrNull,
+  getTagCreatedMsOrNull,
+  normalizeHexColor,
+  hexToRgb,
+  rgbToHue,
+  makeTagComparator,
+  normalizeSortOrder,
+  sortPassageNoteTags,
+  type PassageNoteTag,
+  type PassageNoteTagSortOrder,
+} from './passage-note-tags/sort';
+export {
   getRecentDates,
   getLastLogEntryPerBook,
   filterSuggestionsOverlappingPassages,

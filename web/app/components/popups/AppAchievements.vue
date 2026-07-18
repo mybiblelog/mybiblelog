@@ -1,8 +1,8 @@
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <div v-if="achievement.open" class="popup-modal" data-testid="achievements-modal">
-        <div class="window" role="dialog">
+      <div v-if="achievement.open" class="mbl-popup-modal" data-testid="achievements-modal">
+        <div class="mbl-popup-modal__card" role="dialog">
           <div class="star-container">
             <div class="star-wrapper" :class="{ 'star-stamped': starStamped }">
               <shimmer-star-icon width="64px" height="64px" />
@@ -46,6 +46,15 @@ const achievement = useAchievementsStore();
 
 const starStamped = ref(false);
 const particles = ref<Particle[]>([]);
+
+// Timing constants below must stay in sync with the CSS transition/animation
+// durations in the <style> block:
+// - MODAL_ENTER_MS matches `--transition-modal` (0.3s, tokens.css) used by the popup's fade-in
+// - PARTICLE_TRIGGER_MS is timed against `.star-wrapper`'s 0.5s transform transition
+// - PARTICLE_CLEANUP_MS covers the `particle-fly` keyframes' 1s duration plus their max ~100ms random delay, with buffer
+const MODAL_ENTER_MS = 300;
+const PARTICLE_TRIGGER_MS = 250; // ~halfway through the 0.5s star-stamp transform
+const PARTICLE_CLEANUP_MS = 1500;
 
 const achievementTitle = computed(() => {
   if (achievement.achievementType === ACHIEVEMENT.BOOK_COMPLETE) {
@@ -101,7 +110,7 @@ const createParticles = () => {
   // Clean up particles after animation completes
   setTimeout(() => {
     particles.value = [];
-  }, 1500);
+  }, PARTICLE_CLEANUP_MS);
 };
 
 watch(() => achievement.open, (isOpen) => {
@@ -110,15 +119,15 @@ watch(() => achievement.open, (isOpen) => {
     starStamped.value = false;
     particles.value = [];
 
-    // Wait for modal enter animation to complete (0.3s), then start star animation
+    // Wait for modal enter animation to complete, then start star animation
     setTimeout(() => {
       starStamped.value = true;
 
-      // After star stamp animation is far enough along (0.3s of 0.5s), trigger particles
+      // Trigger particles partway through the star-stamp transform
       setTimeout(() => {
         createParticles();
-      }, 250);
-    }, 300);
+      }, PARTICLE_TRIGGER_MS);
+    }, MODAL_ENTER_MS);
   }
   else {
     // Clean up when modal closes
@@ -133,49 +142,6 @@ const _close = () => {
 </script>
 
 <style scoped>
-.popup-modal {
-  background-color: var(--mbl-overlay-50);
-  position: fixed;
-  inset: 0;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  z-index: var(--z-index-popup);
-  user-select: none;
-}
-
-.popup-modal.fade-enter-active,
-.popup-modal.fade-leave-active {
-  transition: var(--transition-fade);
-}
-
-.popup-modal.fade-enter-active .window,
-.popup-modal.fade-leave-active .window {
-  transition: var(--transition-modal);
-}
-
-.popup-modal.fade-enter-from,
-.popup-modal.fade-leave-to {
-  opacity: 0;
-}
-
-.popup-modal.fade-enter-from .window,
-.popup-modal.fade-leave-to .window {
-  transform: var(--modal-scale);
-}
-
-.window {
-  background: var(--mbl-bg);
-  padding: 2rem;
-  border: 1px solid var(--mbl-border);
-  border-radius: var(--modal-card-border-radius);
-  box-shadow: 0 0 0.5rem var(--mbl-overlay-20);
-  max-width: 480px;
-  margin-left: auto;
-  margin-right: auto;
-  overflow: hidden;
-}
-
 .star-container {
   position: relative;
   display: flex;
@@ -191,6 +157,8 @@ const _close = () => {
   z-index: 2;
   transform: scale(2);
   opacity: 0;
+
+  /* 0.5s transform duration — PARTICLE_TRIGGER_MS in <script> depends on this */
   transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
               opacity 0.4s ease-out;
 }
@@ -210,11 +178,13 @@ const _close = () => {
   animation: particle-fly 1s var(--delay) ease-out forwards;
 }
 
+/* 1s duration + up to 100ms random delay — PARTICLE_CLEANUP_MS in <script> clears particles after this completes */
 @keyframes particle-fly {
   0% {
     opacity: 1;
     transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(1);
   }
+
   100% {
     opacity: 0;
     transform: translate(-50%, -50%)

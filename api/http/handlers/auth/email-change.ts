@@ -5,6 +5,7 @@ import { generateUserJWT, isCodeValid } from '../../../repositories/helpers/user
 import { emailString } from '../../../validation/primitives';
 import { LocaleCode } from '@mybiblelog/shared';
 import { authCookie } from '../../helpers/auth-cookie';
+import { isWebClient } from '../../helpers/client-type';
 import { type RouteHandler } from '../../types';
 import { asRecord } from './shared';
 
@@ -133,5 +134,9 @@ export const completeEmailChange: RouteHandler = async (req, deps) => {
 
   const updatedUser = await users.completeEmailUpdate(user.id);
   const token = generateUserJWT(updatedUser);
-  return { status: 200, body: { data: { token } }, cookies: [authCookie(token)] };
+  return {
+    status: 200,
+    body: { data: { token: isWebClient(req) ? undefined : token } },
+    cookies: [authCookie(token)],
+  };
 };

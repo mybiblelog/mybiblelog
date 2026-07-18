@@ -58,11 +58,14 @@ import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
 import { useDateVerseCountsStore } from '~/stores/date-verse-counts';
 import { useUserSettingsStore } from '~/stores/user-settings';
 import { useAppInitStore } from '~/stores/app-init';
+import { encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
 
 definePageMeta({ middleware: ['auth'] });
 const { t, locale } = useI18n();
 useHead({ title: () => t('page_title') });
 
+const localePath = useLocalePath();
+const router = useRouter();
 const logEntriesStore = useLogEntriesStore();
 const userSettingsStore = useUserSettingsStore();
 const dateVerseCountsStore = useDateVerseCountsStore();
@@ -85,17 +88,14 @@ const entryDate = computed(() => {
 
 const displayDateFormatted = computed(() => displayDate(currentDate.value ?? '', locale.value));
 
-function actionsForLogEntry(entry: LogEntryModel) {
-  return [
-    { label: t('open_bible'), callback: () => openPassageInBible(entry) },
-    ...(Bible.getNextVerseId(entry.endVerseId, true)
-      ? [{ label: t('continue_reading'), callback: () => continueReadingPassage(entry) }]
-      : []),
-    { label: t('take_note'), callback: () => takeNoteOnPassage(entry) },
-    { label: t('edit'), callback: () => openEditEntryForm(entry.id) },
-    { label: t('delete'), callback: () => deleteEntry(entry.id) },
-  ];
-}
+const { actionsForLogEntry } = useLogEntryActions<LogEntryModel>(t, {
+  openInBible: openPassageInBible,
+  continueReading: continueReadingPassage,
+  takeNote: takeNoteOnPassage,
+  viewNotes: viewNotesForPassage,
+  edit: openEditEntryForm,
+  remove: deleteEntry,
+});
 
 async function deleteEntry(id: number | string) {
   const confirmed = await useDialogStore().confirm({
@@ -137,6 +137,15 @@ function takeNoteOnPassage(passage: { startVerseId: number; endVerseId: number }
   });
 }
 
+function viewNotesForPassage(passage: { startVerseId: number; endVerseId: number }) {
+  const q = encodePassageNotesQueryToRoute({
+    filterPassageStartVerseId: passage.startVerseId,
+    filterPassageEndVerseId: passage.endVerseId,
+    offset: 0,
+  });
+  router.push({ path: localePath('/notes'), query: q as Record<string, string | string[]> });
+}
+
 function selectDate(date: string | null) {
   currentDate.value = date;
 }
@@ -170,6 +179,7 @@ onMounted(async () => {
     "open_bible": "Open Bible",
     "continue_reading": "Continue Reading",
     "take_note": "Take Note",
+    "view_notes": "View Notes",
     "edit": "Edit",
     "delete": "Delete",
     "no_entries": "No Entries",
@@ -183,6 +193,7 @@ onMounted(async () => {
     "open_bible": "Bibel öffnen",
     "continue_reading": "Weiterlesen",
     "take_note": "Notiz hinzufügen",
+    "view_notes": "Notizen ansehen",
     "edit": "Bearbeiten",
     "delete": "Löschen",
     "no_entries": "Keine Einträge",
@@ -196,6 +207,7 @@ onMounted(async () => {
     "open_bible": "Abrir en la Biblia",
     "continue_reading": "Seguir leyendo",
     "take_note": "Tomar nota",
+    "view_notes": "Ver notas",
     "edit": "Editar",
     "delete": "Borrar",
     "no_entries": "No hay entradas",
@@ -209,6 +221,7 @@ onMounted(async () => {
     "open_bible": "Ouvrir dans la Bible",
     "continue_reading": "Continuer la lecture",
     "take_note": "Prendre note",
+    "view_notes": "Voir les notes",
     "edit": "Modifier",
     "delete": "Supprimer",
     "no_entries": "Aucune entrée",
@@ -222,6 +235,7 @@ onMounted(async () => {
     "open_bible": "성경 열기",
     "continue_reading": "이어서 읽기",
     "take_note": "노트 작성",
+    "view_notes": "노트 보기",
     "edit": "편집",
     "delete": "삭제",
     "no_entries": "항목 없음",
@@ -235,6 +249,7 @@ onMounted(async () => {
     "open_bible": "Ler na Biblia",
     "continue_reading": "Continuar lendo",
     "take_note": "Tomar nota",
+    "view_notes": "Ver anotações",
     "edit": "Editar",
     "delete": "Apagar",
     "no_entries": "Nenhum registro",
@@ -248,6 +263,7 @@ onMounted(async () => {
     "open_bible": "Читати в Біблії",
     "continue_reading": "Продовжити читання",
     "take_note": "Записати",
+    "view_notes": "Переглянути нотатки",
     "edit": "Редагувати",
     "delete": "Видалити",
     "no_entries": "Немає записів",

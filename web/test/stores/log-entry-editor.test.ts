@@ -57,7 +57,7 @@ describe('log-entry-editor store', () => {
     expect(create).not.toHaveBeenCalled();
   });
 
-  it('maps ApiError field errors, clears submitting, and rethrows', async () => {
+  it('maps ApiError field errors, clears submitting, and returns null (never throws)', async () => {
     const entries = useLogEntriesStore();
     vi.spyOn(entries, 'createLogEntry').mockRejectedValue(
       new ApiError({ code: 'validation', errors: [{ field: 'date', code: 'invalid' }] }),
@@ -65,7 +65,9 @@ describe('log-entry-editor store', () => {
     const store = useLogEntryEditorStore();
     store.openEditor({ empty: true });
 
-    await expect(store.saveLogEntry()).rejects.toBeInstanceOf(ApiError);
+    const result = await store.saveLogEntry();
+
+    expect(result).toBeNull();
     expect(store.errors.date).toEqual({ field: 'date', code: 'invalid' });
     expect(store.submitting).toBe(false);
   });
@@ -78,7 +80,8 @@ describe('log-entry-editor store', () => {
     const store = useLogEntryEditorStore();
     store.openEditor({ empty: true });
 
-    await expect(store.saveLogEntry()).rejects.toBeInstanceOf(ApiError);
+    const failed = await store.saveLogEntry();
+    expect(failed).toBeNull();
     expect(store.submitting).toBe(false);
 
     const result = await store.saveLogEntry();

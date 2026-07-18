@@ -3,7 +3,7 @@
     <div class="passage-note--passages" data-testid="passage-note-passages">
       <ul>
         <li v-for="passage in note.passages" :key="`${passage.startVerseId}-${passage.endVerseId}`">
-          <a :href="readingUrl(passage)" target="_blank">
+          <a :href="readingUrl(passage)" target="_blank" rel="noopener noreferrer">
             <strong>{{ displayRange(passage.startVerseId, passage.endVerseId) }}</strong>
           </a>
         </li>
@@ -36,7 +36,6 @@
 <script setup lang="ts">
 import { Bible, displayTimeSince } from '@mybiblelog/shared';
 import PassageNoteTagPill from '~/components/notes/PassageNoteTagPill.vue';
-import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
 
 const props = defineProps<{
   note: {
@@ -51,7 +50,6 @@ const props = defineProps<{
 }>();
 
 const { locale } = useI18n();
-const passageNoteTagsStore = usePassageNoteTagsStore();
 
 function displayRange(startVerseId: number, endVerseId: number) {
   return Bible.displayVerseRange(startVerseId, endVerseId, locale.value);
@@ -71,16 +69,8 @@ const noteCreatedAtDisplayTime = computed(() => {
   return props.note.createdAt ? new Date(props.note.createdAt).toLocaleString(locale.value) : '';
 });
 
-const resolvedTags = computed(() => {
-  const tagIds = props.note.tags ?? [];
-  const allTags = passageNoteTagsStore.passageNoteTags;
-  if (!allTags || !allTags.length) {
-    return tagIds.map(id => ({ id, label: '…', color: 'var(--mbl-text-strong)' }));
-  }
-  return tagIds
-    .map(id => allTags.find(t => t.id === id))
-    .filter((t): t is NonNullable<typeof t> => Boolean(t))
-    .map(t => ({ id: t.id as string | number, label: t.label ?? '', color: t.color ?? 'var(--mbl-text-strong)' }));
+const resolvedTags = useResolvedPassageNoteTags(() => props.note.tags ?? [], {
+  placeholderLabel: () => '…',
 });
 </script>
 

@@ -161,16 +161,9 @@ const draftSelectedTagIds = ref<Array<string | number>>([]);
 
 const allTags = computed(() => passageNoteTagsStore.passageNoteTags ?? []);
 
-const selectedTags = computed(() => {
-  const tagIds = store.passageNote.tags ?? [];
-  const tags = allTags.value;
-  if (!tags.length) {
-    return tagIds.map(id => ({ id, label: t('loading'), color: 'var(--mbl-text-strong)' }));
-  }
-  return tagIds
-    .map(id => tags.find(tag => tag.id === id))
-    .filter((tag): tag is NonNullable<typeof tag> => Boolean(tag))
-    .map(tag => ({ id: tag.id as string | number, label: tag.label ?? '', color: tag.color ?? 'var(--mbl-text-strong)' }));
+const selectedTags = useResolvedPassageNoteTags(() => store.passageNote.tags ?? [], {
+  tags: allTags,
+  placeholderLabel: () => t('loading'),
 });
 
 const isValid = computed(() => {

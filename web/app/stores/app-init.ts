@@ -9,9 +9,11 @@ export const useAppInitStore = defineStore('app-init', {
       const logEntriesStore = useLogEntriesStore();
       const userSettingsStore = useUserSettingsStore();
       const passageNoteTagsStore = usePassageNoteTagsStore();
-      await logEntriesStore.loadLogEntries();
       await userSettingsStore.loadSettings();
-      await passageNoteTagsStore.loadPassageNoteTags();
+      await Promise.all([
+        logEntriesStore.loadLogEntries(),
+        passageNoteTagsStore.loadPassageNoteTags(),
+      ]);
     },
 
     // Clear cached user data so the next loadUserData() pulls fresh from the API.

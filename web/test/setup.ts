@@ -7,6 +7,10 @@
 // that individual tests can override with `vi.stubGlobal(...)`.
 import { beforeEach, vi } from 'vitest';
 import * as Vue from 'vue';
+import { useClickOutside } from '~/composables/useClickOutside';
+import { useEscapeKey } from '~/composables/useEscapeKey';
+import { useSlideDrawerTransition } from '~/composables/useSlideDrawerTransition';
+import { useHttp } from '~/composables/useHttp';
 
 // --- Vue reactivity / lifecycle / helpers (stable; set once) ---
 const vueGlobals = [
@@ -64,6 +68,19 @@ function installNuxtDefaults() {
   vi.stubGlobal('defineNuxtRouteMiddleware', (fn: unknown) => fn);
   vi.stubGlobal('useAsyncData', vi.fn().mockResolvedValue({ data: Vue.ref(null), pending: Vue.ref(false), error: Vue.ref(null), refresh: vi.fn() }));
   vi.stubGlobal('useFetch', vi.fn().mockResolvedValue({ data: Vue.ref(null), pending: Vue.ref(false), error: Vue.ref(null), refresh: vi.fn() }));
+  vi.stubGlobal('useOpenInBible', () => ({
+    openChapterInBible: vi.fn(),
+    openPassageInBible: vi.fn(),
+  }));
+
+  // Real implementations (not mocks): these are plain composables with no
+  // Nuxt-specific dependencies, so components under test get the genuine
+  // outside-click/escape-key/drawer-transition behavior, same as at runtime
+  // where Nuxt auto-imports them.
+  vi.stubGlobal('useClickOutside', useClickOutside);
+  vi.stubGlobal('useEscapeKey', useEscapeKey);
+  vi.stubGlobal('useSlideDrawerTransition', useSlideDrawerTransition);
+  vi.stubGlobal('useHttp', useHttp);
 }
 
 installNuxtDefaults();

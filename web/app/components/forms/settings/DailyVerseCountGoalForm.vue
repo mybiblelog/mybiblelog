@@ -121,7 +121,6 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import { useToastStore } from '~/stores/toast';
 import { useUserSettingsStore } from '~/stores/user-settings';
 
 const TOTAL_BIBLE_VERSES = 31102;
@@ -151,8 +150,20 @@ const { t, locale } = useI18n();
 const dailyVerseCountGoal = ref<number>(props.initialValue || 0);
 const goalFinishDate = ref('');
 const selectedOption = ref<GoalOption>('year');
-const error = ref('');
-const isSaving = ref(false);
+
+const { isSaving, error, submit: handleSubmit } = useSettingsWizardStep({
+  validate: () => Boolean(
+    dailyVerseCountGoal.value && dailyVerseCountGoal.value >= 1 && dailyVerseCountGoal.value <= 1111,
+  ),
+  save: () => useUserSettingsStore().updateSettings({ dailyVerseCountGoal: dailyVerseCountGoal.value }),
+  successMessage: () => t('messaging.daily_verse_count_goal_saved_successfully'),
+  errorMessage: () => t('messaging.unable_to_save_daily_verse_count_goal'),
+  showToast: () => props.showToast,
+  onSuccess: () => {
+    emit('saved', dailyVerseCountGoal.value);
+    emit('next');
+  },
+});
 
 const minDate = computed(() => dayjs().add(1, 'day').format('YYYY-MM-DD'));
 
@@ -279,32 +290,6 @@ onMounted(() => {
 
 function handlePrevious() {
   emit('previous');
-}
-
-async function handleSubmit() {
-  if (isSaving.value) { return; }
-  error.value = '';
-
-  if (!dailyVerseCountGoal.value || dailyVerseCountGoal.value < 1 || dailyVerseCountGoal.value > 1111) {
-    error.value = t('messaging.unable_to_save_daily_verse_count_goal');
-    return;
-  }
-
-  isSaving.value = true;
-  const success = await useUserSettingsStore().updateSettings({ dailyVerseCountGoal: dailyVerseCountGoal.value });
-
-  if (success) {
-    if (props.showToast) {
-      useToastStore().add({ type: 'success', text: t('messaging.daily_verse_count_goal_saved_successfully') });
-    }
-    emit('saved', dailyVerseCountGoal.value);
-    emit('next');
-  }
-  else {
-    error.value = t('messaging.unable_to_save_daily_verse_count_goal');
-  }
-
-  isSaving.value = false;
 }
 </script>
 

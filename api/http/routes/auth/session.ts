@@ -31,7 +31,7 @@ export const authSessionRoutes: RouteDefinition[] = [
       request: { body: loginBodySchema },
       response: {
         description: 'Login successful',
-        schema: z.object({ token: z.string(), user: userSchema }),
+        schema: z.object({ token: z.string().optional(), user: userSchema }),
       },
       setsAuthCookie: true,
       errors: [400],

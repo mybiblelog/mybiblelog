@@ -60,6 +60,16 @@ module.exports = {
     // Project composables (app/composables/)
     useContentSeo: 'readonly',
     useOpenInBible: 'readonly',
+    useClickOutside: 'readonly',
+    useEscapeKey: 'readonly',
+    useSlideDrawerTransition: 'readonly',
+    useDraftQuery: 'readonly',
+    usePassageRangeModel: 'readonly',
+    useResolvedPassageNoteTags: 'readonly',
+    useLogEntryActions: 'readonly',
+    useSettingsWizardStep: 'readonly',
+    useHydrated: 'readonly',
+    usePagedResource: 'readonly',
   },
   extends: [
     '@nuxtjs/eslint-config-typescript',

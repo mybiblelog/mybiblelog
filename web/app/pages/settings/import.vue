@@ -5,7 +5,7 @@
     </h2>
     <p>{{ t('you_can_import') }}</p>
     <div class="mbl-file-block">
-      <label v-if="mounted" class="mbl-file">
+      <label v-if="hydrated" class="mbl-file">
         <input class="mbl-file__input" type="file" multiple data-testid="import-file-input" @change="onFileChange">
         <span class="mbl-file__cta">
           <span class="mbl-file__text">{{ t('choose_a_file') }}</span>
@@ -74,6 +74,7 @@ import { useToastStore } from '~/stores/toast';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useUserSettingsStore } from '~/stores/user-settings';
 import { useAppInitStore } from '~/stores/app-init';
+import { runWithConcurrencyLimit } from '~/helpers/run-with-concurrency-limit';
 
 dayjs.extend(customParseFormat);
 
@@ -98,10 +99,12 @@ const earliestDate = ref<string | null>(null);
 const showLookBackReset = ref(false);
 const savingLookBackDate = ref(false);
 
-const mounted = ref(false);
+const MAX_IMPORT_ROWS = 1000;
+const IMPORT_CONCURRENCY = 4;
+
+const hydrated = useHydrated();
 onMounted(async () => {
   await useAppInitStore().loadUserData();
-  mounted.value = true;
 });
 
 function displayVerseRange(startVerseId: number, endVerseId: number) {
@@ -130,10 +133,14 @@ function parseCsvLine(line: string): string[] {
   return fields;
 }
 
+function splitCsvLines(csvText: string): string[] {
+  return csvText.trim().split('\n').filter(l => l.trim());
+}
+
 function parseCsvToRows(csvText: string): ImportRow[] {
   let rows: string[][];
   try {
-    rows = csvText.trim().split('\n').filter(l => l.trim()).map(parseCsvLine);
+    rows = splitCsvLines(csvText).map(parseCsvLine);
   }
   catch {
     return [];
@@ -159,28 +166,35 @@ function parseCsvToRows(csvText: string): ImportRow[] {
 }
 
 async function createImportedRows() {
-  for (const row of importRows.value) {
-    if (row.status === t('status_invalid') || row.startVerseId === null) { continue; }
+  const pendingKeys = new Set<string>();
+
+  await runWithConcurrencyLimit(importRows.value, IMPORT_CONCURRENCY, async (row) => {
+    if (row.status === t('status_invalid') || row.startVerseId === null) { return; }
     row.status = t('status_checking');
-    const existing = logEntriesStore.logEntries.find(e =>
+
+    const key = `${row.date}|${row.startVerseId}|${row.endVerseId}`;
+    const existing = pendingKeys.has(key) || logEntriesStore.logEntries.find(e =>
       e.date === row.date && e.startVerseId === row.startVerseId && e.endVerseId === row.endVerseId,
     );
+
     if (row.date && (!earliestDate.value || row.date < earliestDate.value)) {
       earliestDate.value = row.date;
     }
+
     if (existing) {
       row.status = t('status_already_exists');
+      return;
     }
-    else {
-      row.status = t('status_importing');
-      await logEntriesStore.createLogEntry({
-        date: row.date as string,
-        startVerseId: row.startVerseId as number,
-        endVerseId: row.endVerseId as number,
-      });
-      row.status = t('status_imported');
-    }
-  }
+
+    pendingKeys.add(key);
+    row.status = t('status_importing');
+    await logEntriesStore.createLogEntry({
+      date: row.date as string,
+      startVerseId: row.startVerseId as number,
+      endVerseId: row.endVerseId as number,
+    });
+    row.status = t('status_imported');
+  });
 }
 
 async function onFileChange(event: Event) {
@@ -188,8 +202,17 @@ async function onFileChange(event: Event) {
   if (!files?.length) { return; }
 
   importRows.value = [];
-  for (const file of Array.from(files)) {
-    const text = await readFile(file);
+  const fileEntries = await Promise.all(
+    Array.from(files).map(async file => ({ file, text: await readFile(file) })),
+  );
+
+  const totalRows = fileEntries.reduce((sum, { text }) => sum + splitCsvLines(text).length, 0);
+  if (totalRows > MAX_IMPORT_ROWS) {
+    toastStore.add({ type: 'error', text: t('too_many_rows', { count: totalRows, max: MAX_IMPORT_ROWS }) });
+    return;
+  }
+
+  for (const { file, text } of fileEntries) {
     const rows = parseCsvToRows(text);
     if (!rows.length) {
       toastStore.add({ type: 'error', text: t('unable_to_parse', { filename: file.name }) });
@@ -254,6 +277,7 @@ p { margin-bottom: 1rem; }
     "file_not_csv": "File {filename} is not in CSV format. It is {filetype}.",
     "unable_to_parse": "Unable to parse file {filename}. Make sure the format is correct.",
     "unable_to_parse_any": "Unable to parse any log entries from uploaded files.",
+    "too_many_rows": "Your file has {count} rows, which is more than the maximum of {max}. Please split it into smaller files and try again.",
     "success": "Successfully processed {count} log entries.",
     "error_creating": "There was a problem creating the log entries.",
     "look_back_message_1": "Your imported file includes log entries before your Look Back Date. Most pages will ignore these entries when showing your progress.",
@@ -280,6 +304,7 @@ p { margin-bottom: 1rem; }
     "file_not_csv": "Datei {filename} ist nicht CSV. Es ist {filetype}.",
     "unable_to_parse": "Datei {filename} kann nicht analysiert werden.",
     "unable_to_parse_any": "Keine Einträge gefunden.",
+    "too_many_rows": "Ihre Datei enthält {count} Zeilen, mehr als das Maximum von {max}. Bitte teilen Sie sie in kleinere Dateien auf und versuchen Sie es erneut.",
     "success": "{count} Einträge verarbeitet.",
     "error_creating": "Fehler beim Erstellen der Einträge.",
     "look_back_message_1": "Datei enthält Einträge vor dem Rückblickdatum.",
@@ -306,6 +331,7 @@ p { margin-bottom: 1rem; }
     "file_not_csv": "Archivo {filename} no es CSV.",
     "unable_to_parse": "No se puede analizar {filename}.",
     "unable_to_parse_any": "No se encontraron entradas.",
+    "too_many_rows": "Su archivo tiene {count} filas, más del máximo de {max}. Divídalo en archivos más pequeños e inténtelo de nuevo.",
     "success": "{count} entradas procesadas.",
     "error_creating": "Error al crear las entradas.",
     "look_back_message_1": "El archivo incluye entradas anteriores a su Fecha de Retroceso.",
@@ -332,6 +358,7 @@ p { margin-bottom: 1rem; }
     "file_not_csv": "Fichier {filename} n'est pas CSV.",
     "unable_to_parse": "Impossible d'analyser {filename}.",
     "unable_to_parse_any": "Aucune entrée trouvée.",
+    "too_many_rows": "Votre fichier contient {count} lignes, ce qui dépasse le maximum de {max}. Veuillez le diviser en fichiers plus petits et réessayer.",
     "success": "{count} entrées traitées.",
     "error_creating": "Problème lors de la création.",
     "look_back_message_1": "Le fichier contient des entrées avant votre Date de Rétrospection.",
@@ -358,6 +385,7 @@ p { margin-bottom: 1rem; }
     "file_not_csv": "{filename}은 CSV 형식이 아닙니다.",
     "unable_to_parse": "{filename}을 해석할 수 없습니다.",
     "unable_to_parse_any": "읽기 기록을 찾을 수 없습니다.",
+    "too_many_rows": "파일에 {count}개의 행이 있어 최대 {max}개를 초과합니다. 파일을 더 작게 나누어 다시 시도해 주세요.",
     "success": "{count}개 처리되었습니다.",
     "error_creating": "문제가 발생했습니다.",
     "look_back_message_1": "기준 시작일 이전 기록이 포함되어 있습니다.",
@@ -384,6 +412,7 @@ p { margin-bottom: 1rem; }
     "file_not_csv": "Arquivo {filename} não é CSV.",
     "unable_to_parse": "Não é possível analisar {filename}.",
     "unable_to_parse_any": "Nenhuma entrada encontrada.",
+    "too_many_rows": "Seu arquivo tem {count} linhas, mais do que o máximo de {max}. Divida-o em arquivos menores e tente novamente.",
     "success": "{count} entradas processadas.",
     "error_creating": "Houve um problema.",
     "look_back_message_1": "O arquivo inclui entradas antes da Data de Retrocesso.",
@@ -410,6 +439,7 @@ p { margin-bottom: 1rem; }
     "file_not_csv": "Файл {filename} не CSV.",
     "unable_to_parse": "Не вдалося проаналізувати {filename}.",
     "unable_to_parse_any": "Не вдалося знайти записи.",
+    "too_many_rows": "У вашому файлі {count} рядків, що перевищує максимум {max}. Розділіть його на менші файли та спробуйте ще раз.",
     "success": "Оброблено {count} записів.",
     "error_creating": "Виникла проблема.",
     "look_back_message_1": "Файл містить записи до Дати Огляду.",

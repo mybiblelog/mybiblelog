@@ -1045,5 +1045,23 @@ describe('admin.test.js', () => {
         await deleteTestUser(admin);
       }
     });
+
+    it('omits the token from the body for web callers, but still sets the cookie', async () => {
+      const admin = await createTestAdmin();
+      const testUser = await createTestUser();
+      try {
+        const response = await requestApi
+          .get(`/api/admin/users/${testUser.email}/login`)
+          .set('Authorization', `Bearer ${admin.token}`)
+          .set('X-Client', 'web');
+        expect(response.status).toBe(200);
+        expect(response.body.data).not.toHaveProperty('token');
+        expect(response.headers['set-cookie']?.[0]).toContain('auth_token=');
+      }
+      finally {
+        await deleteTestUser(testUser);
+        await deleteTestUser(admin);
+      }
+    });
   });
 });

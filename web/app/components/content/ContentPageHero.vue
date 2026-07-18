@@ -21,6 +21,8 @@
 </template>
 
 <script setup lang="ts">
+// `description` is rendered via v-html: must only come from trusted repo-authored
+// content (web/content/<locale>/*.md), never from translator/Crowdin-supplied strings.
 defineProps<{
   title: string;
   subtitle: string;

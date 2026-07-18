@@ -157,6 +157,7 @@ import LogEntry from '~/components/log/LogEntry.vue';
 import PassageNote from '~/components/notes/PassageNote.vue';
 import { useAppInitStore } from '~/stores/app-init';
 import { useLogEntriesStore } from '~/stores/log-entries';
+import { useDateVerseCountsStore } from '~/stores/date-verse-counts';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 import { useReadingSuggestionsStore } from '~/stores/reading-suggestions';
 import type { ReadingSuggestionPassage } from '~/stores/reading-suggestions';
@@ -176,6 +177,7 @@ useHead({ title: () => t('today') });
 
 const appInitStore = useAppInitStore();
 const logEntriesStore = useLogEntriesStore();
+const dateVerseCountsStore = useDateVerseCountsStore();
 const logEntryEditorStore = useLogEntryEditorStore();
 const readingSuggestionsStore = useReadingSuggestionsStore();
 const passageNotesStore = usePassageNotesStore();
@@ -185,7 +187,7 @@ const dialogStore = useDialogStore();
 const toastStore = useToastStore();
 const { openPassageInBible } = useOpenInBible();
 
-const hydrated = ref(false);
+const hydrated = useHydrated();
 const loadingLogEntries = ref(true);
 const loadingReadingSuggestions = ref(true);
 
@@ -214,12 +216,9 @@ const logEntriesForToday = computed(() => {
 
 const versesReadToday = computed(() => Bible.countUniqueRangeVerses(logEntriesForToday.value));
 
-const newVersesReadToday = computed(() => {
-  const today = dayjs().format('YYYY-MM-DD');
-  const throughYesterday = logEntries.value.filter(e => e.date < today);
-  const throughToday = logEntries.value.filter(e => e.date <= today);
-  return Bible.countUniqueRangeVerses(throughToday) - Bible.countUniqueRangeVerses(throughYesterday);
-});
+const newVersesReadToday = computed(() =>
+  dateVerseCountsStore.getDateVerseCounts(dayjs().format('YYYY-MM-DD')).unique,
+);
 
 const dailyGoalPercentComplete = computed(() => {
   if (!userSettings.value.dailyVerseCountGoal) { return 0; }
@@ -245,17 +244,6 @@ const addNewVerseCountToLogEntry = (logEntry: LogEntryLike) => {
 };
 
 type Passage = ReadingSuggestionPassage & { newVerseCount?: number };
-
-const actionsForTodayLogEntry = (entry: LogEntryLike) => [
-  { label: t('open_bible'), callback: () => openPassageInBible(entry) },
-  ...(Bible.getNextVerseId(entry.endVerseId, true)
-    ? [{ label: t('continue_reading'), callback: () => continueReadingPassage(entry) }]
-    : []),
-  { label: t('take_note'), callback: () => takeNoteOnPassage(entry) },
-  { label: t('view_notes'), callback: () => viewNotesForPassage(entry) },
-  { label: t('edit'), callback: () => openEditEntryForm(entry.id) },
-  { label: t('delete'), callback: () => deleteEntry(entry.id) },
-];
 
 const actionsForReadingSuggestionPassage = (passage: Passage) => [
   { label: t('open_bible'), callback: () => openPassageInBible(passage) },
@@ -323,6 +311,15 @@ const viewNotesForPassage = (passage: Passage) => {
   router.push({ path: localePath('/notes'), query: q as Record<string, string | string[]> });
 };
 
+const { actionsForLogEntry: actionsForTodayLogEntry } = useLogEntryActions<LogEntryLike>(t, {
+  openInBible: openPassageInBible,
+  continueReading: continueReadingPassage,
+  takeNote: takeNoteOnPassage,
+  viewNotes: viewNotesForPassage,
+  edit: openEditEntryForm,
+  remove: deleteEntry,
+});
+
 const openNewNoteEditor = () => {
   passageNoteEditorStore.openEditor();
 };
@@ -345,15 +342,21 @@ const deletePassageNote = async (id: number | string) => {
 };
 
 onMounted(async () => {
-  hydrated.value = true;
   try {
     await appInitStore.loadUserData();
   }
   finally {
     loadingLogEntries.value = false;
   }
-  readingSuggestionsStore.refreshReadingSuggestions();
-  loadingReadingSuggestions.value = false;
+  setTimeout(() => {
+    dateVerseCountsStore.cacheDateVerseCounts();
+  }, 0);
+  try {
+    await readingSuggestionsStore.refreshReadingSuggestions();
+  }
+  finally {
+    loadingReadingSuggestions.value = false;
+  }
   await passageNotesStore.resetQuery({
     limit: 3,
     offset: 0,

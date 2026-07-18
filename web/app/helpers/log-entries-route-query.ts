@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { clamp, parseIntOr, pickEnum, MAX_PAGE_SIZE } from './route-query-codec';
 
 export type LogEntriesSortDirection = 'ascending' | 'descending';
 
@@ -24,22 +25,6 @@ const DEFAULT_LOG_ENTRIES_QUERY: LogEntriesQuery = {
   filterPassageStartVerseId: 0,
   filterPassageEndVerseId: 0,
 };
-
-const MAX_PAGE_SIZE = 50;
-
-function clamp(n: number, min: number, max: number): number {
-  return Math.min(Math.max(n, min), max);
-}
-
-function parseIntOr(value: unknown, fallback: number): number {
-  const n = typeof value === 'number' ? value : parseInt(`${value}`, 10);
-  return Number.isFinite(n) ? n : fallback;
-}
-
-function pickEnum<T extends string>(value: unknown, allowed: readonly T[], fallback: T): T {
-  const v = `${value ?? ''}` as T;
-  return (allowed as readonly string[]).includes(v) ? v : fallback;
-}
 
 function normalizeDateString(value: unknown): string {
   const v = `${value ?? ''}`.trim();

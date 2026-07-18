@@ -1,5 +1,5 @@
 <template>
-  <div class="action-menu-wrapper">
+  <div ref="rootRef" class="action-menu-wrapper">
     <div v-if="isOpen" class="action-menu-overlay" @click="close" />
 
     <button
@@ -33,6 +33,7 @@ type Action = { label: string; callback?: () => void };
 
 withDefaults(defineProps<{ actions?: Action[] }>(), { actions: () => [] });
 const isOpen = ref(false);
+const rootRef = ref<HTMLElement | null>(null);
 
 const toggle = () => { isOpen.value = !isOpen.value; };
 const close = () => { isOpen.value = false; };
@@ -42,28 +43,12 @@ const handleAction = (action: Action) => {
   action.callback?.();
 };
 
-const handleDocumentClick = (event: Event) => {
-  const el = getCurrentInstance()?.proxy?.$el as HTMLElement | undefined;
-  if (isOpen.value && el && !el.contains(event.target as Node)) {
-    close();
-  }
-};
+useClickOutside(
+  computed(() => (isOpen.value ? rootRef.value : null)),
+  close,
+);
 
-const handleKeydown = (event: KeyboardEvent) => {
-  if (event.key === 'Escape' && isOpen.value) {
-    close();
-  }
-};
-
-onMounted(() => {
-  document.addEventListener('click', handleDocumentClick);
-  document.addEventListener('keydown', handleKeydown);
-});
-
-onBeforeUnmount(() => {
-  document.removeEventListener('click', handleDocumentClick);
-  document.removeEventListener('keydown', handleKeydown);
-});
+useEscapeKey(close, isOpen);
 </script>
 
 <style scoped>
