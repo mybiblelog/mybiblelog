@@ -140,6 +140,7 @@
 import { Bible, displayDate as sharedDisplayDate } from '@mybiblelog/shared';
 import { decodeLogEntriesRouteQuery, encodeLogEntriesQueryToRoute, defaultLogEntriesQuery } from '~/helpers/log-entries-route-query';
 import { encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
+import { buildResultsSummary } from '~/helpers/results-summary';
 import type { LogEntriesQuery } from '~/helpers/log-entries-route-query';
 import LogEntry from '~/components/log/LogEntry.vue';
 import LogEntriesQueryManager from '~/components/log/LogEntriesQueryManager.vue';
@@ -320,26 +321,27 @@ const pagedLogEntryGroups = computed(() => {
 });
 
 const querySummary = computed(() => {
-  const total = resultsSize.value;
-  const offset = effectiveOffset.value;
-  const pageLength = pagedLogEntries.value.length;
   const noun = hasAppliedFilters.value ? 'results' : 'entries';
+  const summary = buildResultsSummary({
+    total: resultsSize.value,
+    offset: effectiveOffset.value,
+    limit: effectiveLimit.value,
+    pageLength: pagedLogEntries.value.length,
+  });
 
-  if (!total) {
+  if (summary.kind === 'none') {
     return t(`query_summary.none.${noun}`);
   }
 
-  if (total <= effectiveLimit.value) {
-    return t(`query_summary.showing_all.${noun}`, { n: total, total: n(total, 'grouped') });
+  if (summary.kind === 'all') {
+    return t(`query_summary.showing_all.${noun}`, { n: summary.total, total: n(summary.total, 'grouped') });
   }
 
-  const first = offset + 1;
-  const last = offset + pageLength;
   return t(`query_summary.showing_range.${noun}`, {
-    n: total,
-    first: n(first, 'grouped'),
-    last: n(last, 'grouped'),
-    total: n(total, 'grouped'),
+    n: summary.total,
+    first: n(summary.first, 'grouped'),
+    last: n(summary.last, 'grouped'),
+    total: n(summary.total, 'grouped'),
   });
 });
 
@@ -393,15 +395,13 @@ function openAddEntryForm() {
   logEntryEditorStore.openEditor({ empty: true });
 }
 
-function actionsForLogEntry(entry: LogEntryLike) {
-  return [
-    { label: t('open_bible'), callback: () => openPassageInBible(entry) },
-    { label: t('take_note'), callback: () => takeNoteOnPassage(entry) },
-    { label: t('view_notes'), callback: () => viewNotesForPassage(entry) },
-    { label: t('edit'), callback: () => openEditEntryForm(entry.id) },
-    { label: t('delete'), callback: () => deleteEntry(entry.id) },
-  ];
-}
+const { actionsForLogEntry } = useLogEntryActions<LogEntryLike>(t, {
+  openInBible: openPassageInBible,
+  takeNote: takeNoteOnPassage,
+  viewNotes: viewNotesForPassage,
+  edit: openEditEntryForm,
+  remove: deleteEntry,
+});
 
 function takeNoteOnPassage(passage: LogEntryLike) {
   const { startVerseId, endVerseId } = passage;

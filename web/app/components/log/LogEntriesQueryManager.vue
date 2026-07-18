@@ -128,7 +128,7 @@ function normalizeDateString(value: unknown): string {
   return dayjs(v, 'YYYY-MM-DD', true).isValid() ? v : '';
 }
 
-function pickManagedQuery(query: AppliedQueryLike | null): ManagedDraft {
+function pickManagedQuery(query: AppliedQueryLike | null | undefined): ManagedDraft {
   const q = query || {};
   return {
     limit: Number(q.limit ?? DEFAULT_DRAFT.limit),
@@ -140,45 +140,13 @@ function pickManagedQuery(query: AppliedQueryLike | null): ManagedDraft {
   };
 }
 
-function deepEqualManaged(a: ManagedDraft, b: ManagedDraft): boolean {
-  return JSON.stringify(a) === JSON.stringify(b);
-}
+const { draft, isDirty, applyDraft, cancelDraft, setDraft, resetDraftToApplied } = useDraftQuery<ManagedDraft>(
+  () => props.appliedQuery,
+  pickManagedQuery,
+  emit,
+);
 
-const baseline = ref<ManagedDraft>(pickManagedQuery(props.appliedQuery));
-const draft = ref<ManagedDraft>(pickManagedQuery(props.appliedQuery));
-
-const isDirty = computed(() => !deepEqualManaged(draft.value, baseline.value));
-
-const passageRangeModel = computed({
-  get() {
-    const startVerseId = Number(draft.value.filterPassageStartVerseId || 0);
-    const endVerseId = Number(draft.value.filterPassageEndVerseId || 0);
-    if (!startVerseId || !endVerseId) { return null; }
-    return { startVerseId, endVerseId };
-  },
-  set(range: { startVerseId: number; endVerseId: number } | null) {
-    if (!range) {
-      draft.value = { ...draft.value, filterPassageStartVerseId: 0, filterPassageEndVerseId: 0 };
-      return;
-    }
-    draft.value = {
-      ...draft.value,
-      filterPassageStartVerseId: Number(range.startVerseId),
-      filterPassageEndVerseId: Number(range.endVerseId),
-    };
-  },
-});
-
-watch(() => props.appliedQuery, (nextAppliedQuery) => {
-  if (isDirty.value) { return; }
-  baseline.value = pickManagedQuery(nextAppliedQuery);
-  draft.value = pickManagedQuery(nextAppliedQuery);
-}, { deep: true });
-
-function resetDraftToApplied() {
-  baseline.value = pickManagedQuery(props.appliedQuery);
-  draft.value = pickManagedQuery(props.appliedQuery);
-}
+const passageRangeModel = usePassageRangeModel(draft, setDraft);
 
 async function confirmAndReset() {
   const dialogStore = useDialogStore();
@@ -186,21 +154,8 @@ async function confirmAndReset() {
   if (!confirmed) { return; }
 
   const update = pickManagedQuery(JSON.parse(JSON.stringify(DEFAULT_DRAFT)));
-  baseline.value = pickManagedQuery(update);
-  draft.value = pickManagedQuery(update);
-  emit('apply', update);
-}
-
-function applyDraft() {
-  const update = pickManagedQuery(draft.value);
-  baseline.value = pickManagedQuery(update);
-  draft.value = pickManagedQuery(update);
-  emit('apply', update);
-}
-
-function cancelDraft() {
-  resetDraftToApplied();
-  emit('cancel');
+  setDraft(update);
+  applyDraft();
 }
 
 defineExpose({ confirmAndReset, cancelDraft, resetDraftToApplied });

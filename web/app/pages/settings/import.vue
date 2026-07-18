@@ -5,7 +5,7 @@
     </h2>
     <p>{{ t('you_can_import') }}</p>
     <div class="mbl-file-block">
-      <label v-if="mounted" class="mbl-file">
+      <label v-if="hydrated" class="mbl-file">
         <input class="mbl-file__input" type="file" multiple data-testid="import-file-input" @change="onFileChange">
         <span class="mbl-file__cta">
           <span class="mbl-file__text">{{ t('choose_a_file') }}</span>
@@ -98,10 +98,9 @@ const earliestDate = ref<string | null>(null);
 const showLookBackReset = ref(false);
 const savingLookBackDate = ref(false);
 
-const mounted = ref(false);
+const hydrated = useHydrated();
 onMounted(async () => {
   await useAppInitStore().loadUserData();
-  mounted.value = true;
 });
 
 function displayVerseRange(startVerseId: number, endVerseId: number) {

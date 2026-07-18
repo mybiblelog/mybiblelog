@@ -70,7 +70,6 @@
 
 <script setup lang="ts">
 import { bibleVersionOptions as allBibleVersionOptions, bibleAppOptions, localeVersionGroups } from '@mybiblelog/shared';
-import { useToastStore } from '~/stores/toast';
 import { useUserSettingsStore } from '~/stores/user-settings';
 
 const props = withDefaults(defineProps<{
@@ -97,8 +96,21 @@ const { t, locale } = useI18n();
 
 const preferredBibleVersion = ref(props.initialValue || '');
 const preferredBibleApp = ref(props.initialBibleApp || '');
-const error = ref('');
-const isSaving = ref(false);
+
+const { isSaving, error, submit: handleSubmit } = useSettingsWizardStep({
+  validate: () => Boolean(preferredBibleVersion.value && preferredBibleApp.value),
+  save: () => useUserSettingsStore().updateSettings({
+    preferredBibleVersion: preferredBibleVersion.value as never,
+    preferredBibleApp: preferredBibleApp.value as never,
+  }),
+  successMessage: () => t('messaging.preferred_bible_settings_saved_successfully'),
+  errorMessage: () => t('messaging.unable_to_save_preferred_bible_settings'),
+  showToast: () => props.showToast,
+  onSuccess: () => {
+    emit('saved', { preferredBibleVersion: preferredBibleVersion.value, preferredBibleApp: preferredBibleApp.value });
+    emit('next');
+  },
+});
 
 const bibleVersionOptions = computed(() => {
   const group = (localeVersionGroups as Record<string, string[]>)[locale.value] || [];
@@ -119,35 +131,6 @@ watch(() => props.initialBibleApp, (newValue) => {
 
 function handlePrevious() {
   emit('previous');
-}
-
-async function handleSubmit() {
-  if (isSaving.value) { return; }
-  error.value = '';
-
-  if (!preferredBibleVersion.value || !preferredBibleApp.value) {
-    error.value = t('messaging.unable_to_save_preferred_bible_settings');
-    return;
-  }
-
-  isSaving.value = true;
-  const success = await useUserSettingsStore().updateSettings({
-    preferredBibleVersion: preferredBibleVersion.value as never,
-    preferredBibleApp: preferredBibleApp.value as never,
-  });
-
-  if (success) {
-    if (props.showToast) {
-      useToastStore().add({ type: 'success', text: t('messaging.preferred_bible_settings_saved_successfully') });
-    }
-    emit('saved', { preferredBibleVersion: preferredBibleVersion.value, preferredBibleApp: preferredBibleApp.value });
-    emit('next');
-  }
-  else {
-    error.value = t('messaging.unable_to_save_preferred_bible_settings');
-  }
-
-  isSaving.value = false;
 }
 </script>
 

@@ -207,7 +207,7 @@ const DEFAULT_DRAFT: ManagedQuery = {
   filterPassageMatching: 'inclusive',
 };
 
-function pickManagedQuery(query?: Partial<PassageNotesQuery>): ManagedQuery {
+function pickManagedQuery(query?: Partial<PassageNotesQuery> | null): ManagedQuery {
   const q = query || {};
   return {
     limit: q.limit ?? DEFAULT_DRAFT.limit,
@@ -222,50 +222,24 @@ function pickManagedQuery(query?: Partial<PassageNotesQuery>): ManagedQuery {
   };
 }
 
-function deepEqualManaged(a: ManagedQuery, b: ManagedQuery): boolean {
-  return JSON.stringify(pickManagedQuery(a)) === JSON.stringify(pickManagedQuery(b));
-}
-
-const baseline = ref<ManagedQuery>(pickManagedQuery(props.appliedQuery));
-const draft = ref<ManagedQuery>(pickManagedQuery(props.appliedQuery));
+const { draft, isDirty, applyDraft, cancelDraft, setDraft } = useDraftQuery<ManagedQuery>(
+  () => props.appliedQuery,
+  pickManagedQuery,
+  emit,
+);
 
 const showTagFilterModal = ref(false);
 
-const isDirty = computed(() => !deepEqualManaged(draft.value, baseline.value));
 const hasSelectedTags = computed(() => Array.isArray(draft.value.filterTags) && draft.value.filterTags.length > 0);
 const hasSelectedPassage = computed(() => Boolean(draft.value.filterPassageStartVerseId && draft.value.filterPassageEndVerseId));
 
-const selectedTags = computed(() => {
-  const selectedIds = draft.value.filterTags ?? [];
-  const byId = new Map(allTags.value.map(tag => [String(tag.id), tag]));
-  return selectedIds.map((id) => {
-    const tag = byId.get(String(id));
-    return {
-      id,
-      label: tag?.label || String(id),
-      color: tag?.color || 'var(--mbl-bg-disabled)',
-    };
-  });
+const selectedTags = useResolvedPassageNoteTags(() => draft.value.filterTags ?? [], {
+  tags: allTags,
+  keepUnknown: true,
+  defaultColor: 'var(--mbl-bg-disabled)',
 });
 
-const passageRangeModel = computed({
-  get(): { startVerseId: number; endVerseId: number } | null {
-    const startVerseId = Number(draft.value.filterPassageStartVerseId || 0);
-    const endVerseId = Number(draft.value.filterPassageEndVerseId || 0);
-    if (!startVerseId || !endVerseId) { return null; }
-    return { startVerseId, endVerseId };
-  },
-  set(range: { startVerseId: number; endVerseId: number } | null) {
-    if (!range) {
-      setDraft({ filterPassageStartVerseId: 0, filterPassageEndVerseId: 0 });
-      return;
-    }
-    setDraft({
-      filterPassageStartVerseId: Number(range.startVerseId),
-      filterPassageEndVerseId: Number(range.endVerseId),
-    });
-  },
-});
+const passageRangeModel = usePassageRangeModel(draft, setDraft);
 
 const onlyUntaggedNotes = computed({
   get(): boolean {
@@ -296,16 +270,6 @@ const draftSort = computed({
   },
 });
 
-watch(() => props.appliedQuery, (next) => {
-  if (isDirty.value) { return; }
-  baseline.value = pickManagedQuery(next);
-  draft.value = pickManagedQuery(next);
-}, { deep: true });
-
-function setDraft(update: Partial<ManagedQuery>) {
-  draft.value = { ...draft.value, ...update };
-}
-
 function openTagFilterModal() {
   showTagFilterModal.value = true;
 }
@@ -328,18 +292,6 @@ function onTagIdsChange(tagIds: Array<string | number>) {
   setDraft({ filterTags: nextTagIds });
 }
 
-function applyDraft() {
-  const update = pickManagedQuery(draft.value);
-  baseline.value = pickManagedQuery(update);
-  draft.value = pickManagedQuery(update);
-  emit('apply', update);
-}
-
-function cancelDraft() {
-  baseline.value = pickManagedQuery(props.appliedQuery);
-  draft.value = pickManagedQuery(props.appliedQuery);
-  emit('cancel');
-}
 </script>
 
 <style scoped>

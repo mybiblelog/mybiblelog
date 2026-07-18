@@ -195,31 +195,29 @@ interface Feedback {
   status: FeedbackStatus;
 }
 
-interface Pagination {
-  page: number;
-  limit: number;
-  size: number;
-  totalPages: number;
-}
-
 const { $http } = useNuxtApp();
 const dialogStore = useDialogStore();
 
 const view = ref<FeedbackStatus>('open');
 const feedbacks = ref<Feedback[]>([]);
 const loading = ref(false);
-const pagination = ref<Pagination>({ page: 1, limit: PAGE_LIMIT, size: 0, totalPages: 1 });
 const selectedUser = ref<{ email: string } | null>(null);
 
-const page = computed(() => pagination.value.page);
-const totalPages = computed(() => Math.max(1, pagination.value.totalPages));
+const { page, totalPages, offset, summary, applyServerMeta, goToPage: onPageChanged, reset: resetToFirstPage } = usePagedResource({
+  limit: PAGE_LIMIT,
+  load: loadFeedbacks,
+  scrollToTopOnPageChange: true,
+});
+
+function pluralize(count: number, singular: string, plural: string) {
+  return count === 1 ? singular : plural;
+}
+
 const resultsSummary = computed(() => {
-  const { size, page: p, limit } = pagination.value;
-  if (!size) { return 'No feedback'; }
-  if (size <= limit) { return `Showing all ${size}`; }
-  const first = (p - 1) * limit + 1;
-  const last = Math.min(first + feedbacks.value.length - 1, size);
-  return `Showing ${first}–${last} of ${size}`;
+  const s = summary.value;
+  if (s.kind === 'none') { return 'No feedback'; }
+  if (s.kind === 'all') { return `Showing all ${s.total} ${pluralize(s.total, 'item', 'items')}`; }
+  return `Showing ${s.first}–${s.last} of ${s.total} ${pluralize(s.total, 'item', 'items')}`;
 });
 const emptyMessage = computed(() => {
   if (view.value === 'resolved') { return 'There is no resolved feedback.'; }
@@ -242,20 +240,11 @@ function feedbackKindClass(kind: string) {
 async function loadFeedbacks() {
   loading.value = true;
   try {
-    const offset = (page.value - 1) * PAGE_LIMIT;
-    const url = `/api/admin/feedback?offset=${offset}&limit=${PAGE_LIMIT}&status=${view.value}`;
+    const url = `/api/admin/feedback?offset=${offset.value}&limit=${PAGE_LIMIT}&status=${view.value}`;
     const { data, meta } = await $http.get<Feedback[]>(url);
     feedbacks.value = data;
-    const p = (meta as { pagination?: { offset?: number; limit?: number; size?: number } } | undefined)?.pagination || {};
-    const limit = Number(p.limit || PAGE_LIMIT);
-    const size = Number(p.size || 0);
-    const resolvedOffset = Number(p.offset || 0);
-    pagination.value = {
-      limit,
-      size,
-      page: Math.floor(resolvedOffset / limit) + 1,
-      totalPages: Math.max(1, Math.ceil(size / limit)),
-    };
+    const p = (meta as { pagination?: { offset?: number; size?: number } } | undefined)?.pagination || {};
+    applyServerMeta(p, feedbacks.value.length);
   }
   catch {
     feedbacks.value = [];
@@ -276,16 +265,8 @@ function closeUserDetails() {
 function setView(newView: FeedbackStatus) {
   if (view.value === newView) { return; }
   view.value = newView;
-  pagination.value = { ...pagination.value, page: 1 };
+  resetToFirstPage();
   loadFeedbacks();
-}
-
-function onPageChanged(newPage: number) {
-  const clamped = Math.min(Math.max(newPage, 1), totalPages.value);
-  if (clamped === page.value) { return; }
-  pagination.value = { ...pagination.value, page: clamped };
-  loadFeedbacks();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 async function setStatus(feedback: Feedback, status: FeedbackStatus) {

@@ -187,7 +187,7 @@ const dialogStore = useDialogStore();
 const toastStore = useToastStore();
 const { openPassageInBible } = useOpenInBible();
 
-const hydrated = ref(false);
+const hydrated = useHydrated();
 const loadingLogEntries = ref(true);
 const loadingReadingSuggestions = ref(true);
 
@@ -244,17 +244,6 @@ const addNewVerseCountToLogEntry = (logEntry: LogEntryLike) => {
 };
 
 type Passage = ReadingSuggestionPassage & { newVerseCount?: number };
-
-const actionsForTodayLogEntry = (entry: LogEntryLike) => [
-  { label: t('open_bible'), callback: () => openPassageInBible(entry) },
-  ...(Bible.getNextVerseId(entry.endVerseId, true)
-    ? [{ label: t('continue_reading'), callback: () => continueReadingPassage(entry) }]
-    : []),
-  { label: t('take_note'), callback: () => takeNoteOnPassage(entry) },
-  { label: t('view_notes'), callback: () => viewNotesForPassage(entry) },
-  { label: t('edit'), callback: () => openEditEntryForm(entry.id) },
-  { label: t('delete'), callback: () => deleteEntry(entry.id) },
-];
 
 const actionsForReadingSuggestionPassage = (passage: Passage) => [
   { label: t('open_bible'), callback: () => openPassageInBible(passage) },
@@ -322,6 +311,15 @@ const viewNotesForPassage = (passage: Passage) => {
   router.push({ path: localePath('/notes'), query: q as Record<string, string | string[]> });
 };
 
+const { actionsForLogEntry: actionsForTodayLogEntry } = useLogEntryActions<LogEntryLike>(t, {
+  openInBible: openPassageInBible,
+  continueReading: continueReadingPassage,
+  takeNote: takeNoteOnPassage,
+  viewNotes: viewNotesForPassage,
+  edit: openEditEntryForm,
+  remove: deleteEntry,
+});
+
 const openNewNoteEditor = () => {
   passageNoteEditorStore.openEditor();
 };
@@ -344,7 +342,6 @@ const deletePassageNote = async (id: number | string) => {
 };
 
 onMounted(async () => {
-  hydrated.value = true;
   try {
     await appInitStore.loadUserData();
   }

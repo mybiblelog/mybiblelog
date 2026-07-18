@@ -109,11 +109,10 @@ const router = useRouter();
 const passageNoteTagsStore = usePassageNoteTagsStore();
 const tagEditorStore = usePassageNoteTagEditorStore();
 
-const hydrated = ref(false);
+const hydrated = useHydrated();
 const loading = ref(true);
 
 onMounted(async () => {
-  hydrated.value = true;
   try {
     await passageNoteTagsStore.loadPassageNoteTags();
   }
