@@ -112,7 +112,7 @@ SENTRY_DISABLE_AUTO_UPLOAD=true npx expo run:android --variant release
 **Install fails with `INSTALL_FAILED_INSUFFICIENT_STORAGE`.**
 The emulator's `/data` partition is full (check with `adb shell df -h /data`; the release APK needs roughly 2–3× its ~120MB size free to install). Quick fixes, in order:
 
-1. Uninstall the existing app (wipes its on-device data): `adb uninstall com.mybiblelog.app`
+1. Uninstall the existing app (wipes its on-device data): `adb uninstall com.mybiblelog.app`. For the debug/dev workflow, `npm run android:fresh` does this uninstall then rebuilds+installs in one step (debug variant).
 2. Retry just the install without rebuilding:
    `adb install -r -d android/app/build/outputs/apk/release/app-release.apk`
 3. If space stays tight — most of the partition is system/Play services, and `adb root` doesn't work on Play images — increase the AVD's internal storage for good: Android Studio → Device Manager → edit AVD → **Show Advanced Settings** → Internal Storage (e.g. 12GB), then wipe data and cold boot.
