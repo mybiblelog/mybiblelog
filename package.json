@@ -42,7 +42,13 @@
     "script:delete-stranded-data": "npm run -w api script:delete-stranded-data",
     "script:migrate": "npm run -w api script:migrate",
     "screenshots:web": "npx tsx scripts/take-web-screenshots.ts",
-    "screenshots:mobile": "npx tsx scripts/take-mobile-screenshots.ts"
+    "screenshots:mobile": "npx tsx scripts/take-mobile-screenshots.ts",
+    "loadtest:api": "cross-env K6_DNS=policy=preferIPv6 k6 run scripts/load-test/api.js",
+    "loadtest:api:proxied": "cross-env K6_DNS=policy=preferIPv6 k6 run -e BASE_URL=http://localhost:3000 scripts/load-test/api.js",
+    "loadtest:content": "cross-env K6_DNS=policy=preferIPv6 k6 run scripts/load-test/content.js",
+    "loadtest:rate-limit": "cross-env K6_DNS=policy=preferIPv6 k6 run scripts/load-test/rate-limit.js",
+    "loadtest:protected": "cross-env K6_DNS=policy=preferIPv6 k6 run scripts/load-test/protected.js",
+    "loadtest:protected:authenticated": "cross-env K6_DNS=policy=preferIPv6 k6 run -e AUTHENTICATED=true scripts/load-test/protected.js"
   },
   "dependencies": {
     "cross-env": "^7.0.3",

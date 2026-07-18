@@ -123,6 +123,29 @@ module.exports = {
   },
   overrides: [
     {
+      // k6 load-test scripts run in k6's own JS runtime, not Node: they use k6
+      // magic globals (__ENV/__VU/__ITER), import from `k6/*`, log to the k6
+      // console, and follow k6's `function () {}` idiom (space before parens on
+      // anonymous scenario functions).
+      files: ['scripts/load-test/**/*.js'],
+      globals: {
+        __ENV: 'readonly',
+        __VU: 'readonly',
+        __ITER: 'readonly',
+      },
+      rules: {
+        'no-console': 'off',
+        'space-before-function-paren': [
+          'error',
+          {
+            anonymous: 'always',
+            named: 'never',
+            asyncArrow: 'always',
+          },
+        ],
+      },
+    },
+    {
       files: ['**/*.ts'],
       parser: '@typescript-eslint/parser',
       plugins: ['@typescript-eslint'],
