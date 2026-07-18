@@ -57,8 +57,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
       return isBibleComplete(this.currentLogEntries);
     },
     hasLogEntriesForToday(state): boolean {
-      const now = new Date();
-      const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      const today = dayjs().format('YYYY-MM-DD');
       return state.logEntries.some(entry => entry.date === today);
     },
   },
