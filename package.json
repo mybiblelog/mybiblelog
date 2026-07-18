@@ -41,7 +41,7 @@
     "script:delete-test-users": "npm run -w api script:delete-test-users",
     "script:delete-stranded-data": "npm run -w api script:delete-stranded-data",
     "script:migrate": "npm run -w api script:migrate",
-    "screenshots": "npx tsx scripts/take-screenshots.ts",
+    "screenshots:web": "npx tsx scripts/take-web-screenshots.ts",
     "screenshots:mobile": "npx tsx scripts/take-mobile-screenshots.ts"
   },
   "dependencies": {

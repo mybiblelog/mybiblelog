@@ -1,7 +1,7 @@
 /**
  * Play Store screenshot generator (mobile / Android).
  *
- * The mobile counterpart of `take-screenshots.ts`. Seeds the same demo dataset
+ * The mobile counterpart of `take-web-screenshots.ts`. Seeds the same demo dataset
  * (shared `./lib/screenshot-seed`), then drives the release-build Android app
  * through the Maestro flow `.maestro/screenshots/capture.yaml` once per locale,
  * saving PNGs (Play Store requires PNG/JPEG) to `mobile/screenshots/<locale>/`.

@@ -1,7 +1,7 @@
 /**
  * Shared seed logic for the marketing screenshot generators.
  *
- * Both the web script (`scripts/take-screenshots.ts`, Playwright) and the mobile
+ * Both the web script (`scripts/take-web-screenshots.ts`, Playwright) and the mobile
  * script (`scripts/take-mobile-screenshots.ts`, Maestro/Android) drive the app
  * against an identical demo dataset: a screenshot user with a 30-day reading
  * history plus locale-translated notes and tags. This module owns the DB side of
