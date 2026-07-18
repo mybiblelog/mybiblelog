@@ -5,12 +5,13 @@ export type { PassageNotesQuery };
 
 export type PassageNoteListItem = {
   id: number | string;
+  // Present on list/search results; omitted from the single-note create/update/get
+  // responses (see `toPassageNoteJSON` on the API side).
   createdAt?: string;
   updatedAt?: string;
-  passages?: Array<{ startVerseId: number; endVerseId: number }>;
-  tags?: Array<number | string>;
-  content?: string;
-  [key: string]: unknown;
+  passages: Array<{ startVerseId: number; endVerseId: number; _id?: string }>;
+  tags: Array<number | string>;
+  content: string;
 };
 
 export type PassageNotesPagination = {
@@ -113,9 +114,9 @@ export const usePassageNotesStore = defineStore('passage-notes', {
   },
   actions: {
     async loadBookNoteCounts(): Promise<void> {
-      const { $http } = useNuxtApp();
+      const http = useHttp();
       try {
-        const { data } = await $http.get<Record<number, number>>('/api/passage-notes/count/books');
+        const { data } = await http.get<Record<number, number>>('/api/passage-notes/count/books');
         this.bookNoteCounts = data || {};
       }
       catch {
@@ -162,11 +163,11 @@ export const usePassageNotesStore = defineStore('passage-notes', {
     },
 
     async loadPassageNotesPage(): Promise<void> {
-      const { $http } = useNuxtApp();
+      const http = useHttp();
       this.loading = true;
       try {
         const search = buildQueryString(this.query);
-        const result = await $http.get<PassageNoteListItem[]>(`/api/passage-notes${search}`);
+        const result = await http.get<PassageNoteListItem[]>(`/api/passage-notes${search}`);
         const results = result.data;
         const meta = result.meta;
 
@@ -189,22 +190,33 @@ export const usePassageNotesStore = defineStore('passage-notes', {
       }
     },
 
+    // Notes are a server-sorted/filtered/paginated view (unlike log-entries or
+    // passage-note-tags, which hold their full dataset locally), so refreshing
+    // in place after a write means reloading the current page rather than
+    // optimistically splicing the result into `passageNotes` — a local merge
+    // can't reproduce the server's sort position or the page's total count.
     async createPassageNote(newPassageNote: Record<string, unknown>): Promise<PassageNoteListItem | null> {
-      const { $http } = useNuxtApp();
-      const { data } = await $http.post<PassageNoteListItem>('/api/passage-notes', newPassageNote);
+      const http = useHttp();
+      const { data } = await http.post<PassageNoteListItem>('/api/passage-notes', newPassageNote);
+      if (data && this.hasLoadedOnce) {
+        await this.loadPassageNotesPage();
+      }
       return data || null;
     },
 
     async updatePassageNote(passageNoteUpdate: Record<string, unknown> & { id: number | string }): Promise<PassageNoteListItem | null> {
-      const { $http } = useNuxtApp();
+      const http = useHttp();
       const { id } = passageNoteUpdate;
-      const { data } = await $http.patch<PassageNoteListItem>(`/api/passage-notes/${id}`, passageNoteUpdate);
+      const { data } = await http.patch<PassageNoteListItem>(`/api/passage-notes/${id}`, passageNoteUpdate);
+      if (data && this.hasLoadedOnce) {
+        await this.loadPassageNotesPage();
+      }
       return data || null;
     },
 
     async deletePassageNote(passageNoteId: number | string): Promise<boolean> {
-      const { $http } = useNuxtApp();
-      const { data } = await $http.delete<unknown>(`/api/passage-notes/${passageNoteId}`);
+      const http = useHttp();
+      const { data } = await http.delete<unknown>(`/api/passage-notes/${passageNoteId}`);
       if (data) {
         await this.loadPassageNotesPage();
         return true;

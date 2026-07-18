@@ -43,9 +43,9 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async login({ email, password }: { email: string; password: string }): Promise<void> {
-      const { $http } = useNuxtApp();
+      const http = useHttp();
       try {
-        const { data } = await $http.post<{ user: AuthUser }>('/api/auth/login', { email, password });
+        const { data } = await http.post<{ user: AuthUser }>('/api/auth/login', { email, password });
         this.setUser(data?.user ?? null);
         // A fresh session may follow a previous user's; drop any stale cached
         // data so the destination page's loadUserData() pulls this user's data.
@@ -58,15 +58,15 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async refreshUser(): Promise<void> {
-      const { $http } = useNuxtApp();
-      const { data } = await $http.get<{ user: AuthUser | null }>('/api/auth/user');
+      const http = useHttp();
+      const { data } = await http.get<{ user: AuthUser | null }>('/api/auth/user');
       this.setUser(data?.user ?? null);
     },
 
     async logout(reason?: LogoutReason): Promise<void> {
-      const { $http } = useNuxtApp();
+      const http = useHttp();
       try {
-        await $http.post('/api/auth/logout');
+        await http.post('/api/auth/logout');
       }
       catch {
         // Expected to fail after account deletion

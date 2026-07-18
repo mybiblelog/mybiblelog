@@ -106,7 +106,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
     },
 
     async updateSettings(update: UserSettingsUpdate): Promise<boolean> {
-      const { $http } = useNuxtApp();
+      const http = useHttp();
       const {
         lookBackDate,
         dailyVerseCountGoal,
@@ -122,7 +122,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
           localStore.set('preferredBibleApp', preferredBibleApp);
         }
 
-        await $http.patch('/api/settings', {
+        await http.patch('/api/settings', {
           settings: {
             lookBackDate,
             dailyVerseCountGoal,
@@ -157,8 +157,8 @@ export const useUserSettingsStore = defineStore('user-settings', {
     },
 
     async loadServerSettings(): Promise<void> {
-      const { $http } = useNuxtApp();
-      const { data } = await $http.get<ServerSettingsResponse>('/api/settings');
+      const http = useHttp();
+      const { data } = await http.get<ServerSettingsResponse>('/api/settings');
       const {
         lookBackDate,
         dailyVerseCountGoal,

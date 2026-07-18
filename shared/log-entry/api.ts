@@ -15,7 +15,6 @@ export type LogEntry = {
   date: string; // YYYY-MM-DD
   startVerseId: number;
   endVerseId: number;
-  [key: string]: unknown;
 };
 
 export type CreateLogEntryInput = {

@@ -14,7 +14,6 @@ export type PassageNoteModel = {
   passages: Array<PassageRange | { empty: true }>;
   content: string;
   tags: Array<number | string>;
-  [key: string]: unknown;
 };
 
 export type PassageNoteEditorErrors = EditorErrors;
@@ -42,14 +41,9 @@ const editor = createEditorStore<PassageNoteModel, PassageNoteListItem, PassageN
   },
   save: async (model) => {
     const passageNotesStore = usePassageNotesStore();
-    const saved = model.id
+    return model.id
       ? await passageNotesStore.updatePassageNote({ ...model, id: model.id })
       : await passageNotesStore.createPassageNote(model);
-
-    if (saved && passageNotesStore.hasLoadedOnce) {
-      await passageNotesStore.loadPassageNotesPage();
-    }
-    return saved;
   },
 });
 

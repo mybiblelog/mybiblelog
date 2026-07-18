@@ -74,7 +74,7 @@ const { $http, $terr } = useNuxtApp();
 const { data: googleOauth2Url } = await useAsyncData('google-oauth2-url', async () => {
   try {
     const { data } = await $http.get<{ url: string }>('/api/auth/oauth2/google/url');
-    return (data as any)?.url ?? null;
+    return data?.url ?? null;
   }
   catch {
     // non-fatal: button simply won't render

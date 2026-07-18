@@ -10,6 +10,7 @@ import * as Vue from 'vue';
 import { useClickOutside } from '~/composables/useClickOutside';
 import { useEscapeKey } from '~/composables/useEscapeKey';
 import { useSlideDrawerTransition } from '~/composables/useSlideDrawerTransition';
+import { useHttp } from '~/composables/useHttp';
 
 // --- Vue reactivity / lifecycle / helpers (stable; set once) ---
 const vueGlobals = [
@@ -79,6 +80,7 @@ function installNuxtDefaults() {
   vi.stubGlobal('useClickOutside', useClickOutside);
   vi.stubGlobal('useEscapeKey', useEscapeKey);
   vi.stubGlobal('useSlideDrawerTransition', useSlideDrawerTransition);
+  vi.stubGlobal('useHttp', useHttp);
 }
 
 installNuxtDefaults();

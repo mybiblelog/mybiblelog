@@ -9,7 +9,6 @@ export type PassageNoteTagModel = {
   label: string;
   color: string;
   description: string;
-  [key: string]: unknown;
 };
 
 export type PassageNoteTagEditorErrors = EditorErrors;
