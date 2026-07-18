@@ -27,6 +27,7 @@ if (!page.value) {
 
 useContentSeo({
   path: `/${slug}`,
+  locale,
   seoTitle: page.value?.seo?.title,
   seoDescription: page.value?.seo?.description,
   ogTitle: (page.value?.og as { title?: string })?.title || page.value?.seo?.title,

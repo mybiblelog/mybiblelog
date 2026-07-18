@@ -4,6 +4,7 @@
  */
 export function useContentSeo(options: {
   path: string; // canonical path segment e.g. '' or '/about/overview' or '/faq'
+  locale: Ref<string> | ComputedRef<string>;
   seoTitle?: string | null;
   seoDescription?: string | null;
   ogTitle?: string | null;
@@ -12,7 +13,7 @@ export function useContentSeo(options: {
   structuredData?: Record<string, unknown> | null;
 }) {
   const config = useRuntimeConfig();
-  const { locale } = useI18n();
+  const { locale } = options;
 
   const siteUrl = config.public.siteUrl as string;
   const siteLocales = config.public.locales as string[];
