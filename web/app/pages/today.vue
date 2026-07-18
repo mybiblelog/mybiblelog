@@ -351,8 +351,12 @@ onMounted(async () => {
   setTimeout(() => {
     dateVerseCountsStore.cacheDateVerseCounts();
   }, 0);
-  readingSuggestionsStore.refreshReadingSuggestions();
-  loadingReadingSuggestions.value = false;
+  try {
+    await readingSuggestionsStore.refreshReadingSuggestions();
+  }
+  finally {
+    loadingReadingSuggestions.value = false;
+  }
   await passageNotesStore.resetQuery({
     limit: 3,
     offset: 0,

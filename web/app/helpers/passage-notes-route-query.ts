@@ -1,3 +1,5 @@
+import { clamp, parseIntOr, pickEnum, MAX_PAGE_SIZE } from './route-query-codec';
+
 export type PassageNotesSortDirection = 'ascending' | 'descending';
 export type PassageNotesTagMatching = 'any' | 'all' | 'exact';
 export type PassageNotesPassageMatching = 'inclusive' | 'exclusive';
@@ -31,27 +33,11 @@ const DEFAULT_PASSAGE_NOTES_QUERY: PassageNotesQuery = {
   filterPassageMatching: 'inclusive',
 };
 
-const MAX_PAGE_SIZE = 50;
-
 function asStringArray(value: unknown): string[] {
   if (value === null || value === undefined) { return []; }
   if (Array.isArray(value)) { return value.map(v => `${v}`); }
   if (`${value}`.trim() === '') { return []; }
   return [`${value}`];
-}
-
-function clamp(n: number, min: number, max: number): number {
-  return Math.min(Math.max(n, min), max);
-}
-
-function parseIntOr(value: unknown, fallback: number): number {
-  const n = typeof value === 'number' ? value : parseInt(`${value}`, 10);
-  return Number.isFinite(n) ? n : fallback;
-}
-
-function pickEnum<T extends string>(value: unknown, allowed: readonly T[], fallback: T): T {
-  const v = `${value ?? ''}` as T;
-  return (allowed as readonly string[]).includes(v) ? v : fallback;
 }
 
 export function decodePassageNotesRouteQuery(routeQuery: RouteQueryLike = {}): PassageNotesQuery {
