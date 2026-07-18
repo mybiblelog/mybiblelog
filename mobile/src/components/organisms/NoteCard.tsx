@@ -30,9 +30,9 @@ export function NoteCard({ note, onPressMenu, testID }: Props) {
     .map((id) => tags.find((tag) => tag.id === id))
     .filter((tag): tag is NonNullable<typeof tag> => tag !== undefined);
 
-  const handleOpenPassage = (startVerseId: number) => {
+  const handleOpenPassage = (startVerseId: number, endVerseId: number) => {
     void (async () => {
-      const ok = await openPassageInBible(startVerseId, {
+      const ok = await openPassageInBible(startVerseId, endVerseId, {
         preferredBibleApp: settings?.preferredBibleApp,
         preferredBibleVersion: settings?.preferredBibleVersion,
       });
@@ -59,7 +59,7 @@ export function NoteCard({ note, onPressMenu, testID }: Props) {
                     key={`${passage.startVerseId}-${passage.endVerseId}-${index}`}
                     accessibilityRole="link"
                     accessibilityLabel={label}
-                    onPress={() => handleOpenPassage(passage.startVerseId)}
+                    onPress={() => handleOpenPassage(passage.startVerseId, passage.endVerseId)}
                     style={({ pressed }) => pressed && styles.pressed}
                   >
                     <Text variant="bodyStrong" color="primary">

@@ -8,6 +8,7 @@ export { ChapterMenu } from "./ChapterMenu";
 export { ConfirmDialog } from "./ConfirmDialog";
 export { DailyVersesChart } from "./DailyVersesChart";
 export { DatePickerSheet } from "./DatePickerSheet";
+export { JustOpenedModal } from "./JustOpenedModal";
 export { LogEntryEditorModal } from "./LogEntryEditorModal";
 export { LogEntryMenu } from "./LogEntryMenu";
 export { useLogEntryOverlays } from "./LogEntryOverlays";

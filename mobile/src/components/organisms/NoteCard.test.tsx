@@ -30,6 +30,7 @@ describe("NoteCard", () => {
     await waitFor(() =>
       expect(openPassageInBible).toHaveBeenCalledWith(
         Bible.makeVerseId(1, 1, 1),
+        Bible.makeVerseId(1, 1, 5),
         expect.any(Object)
       )
     );

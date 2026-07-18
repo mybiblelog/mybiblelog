@@ -8,6 +8,7 @@ import {
   getDefaultBibleVersion,
   isBibleVersionKey,
 } from "@mybiblelog/shared";
+import { justOpenedActions } from "@/src/stores/justOpened";
 
 export type OpenInBiblePrefs = {
   preferredBibleApp?: string;
@@ -35,8 +36,17 @@ function normalizeBibleVersion(version?: string): keyof typeof BibleVersions {
   return getDefaultBibleVersion();
 }
 
+/**
+ * Opens the user's preferred Bible app/site to the passage's starting chapter,
+ * then raises the "Just Opened" prompt (via the just-opened store) so the user
+ * can log the reading when they return — mirroring web's `useOpenInBible`.
+ * `endVerseId` is only carried into that prompt; the reading link itself always
+ * targets the start chapter. Returns `false` (without prompting) if nothing
+ * could be opened.
+ */
 export async function openPassageInBible(
   startVerseId: number,
+  endVerseId: number,
   prefs: OpenInBiblePrefs
 ): Promise<boolean> {
   const start = Bible.parseVerseId(startVerseId);
@@ -53,10 +63,12 @@ export async function openPassageInBible(
 
   try {
     await Linking.openURL(primaryUrl);
+    justOpenedActions.openPrompt(startVerseId, endVerseId);
     return true;
   } catch {
     try {
       await Linking.openURL(fallbackUrl);
+      justOpenedActions.openPrompt(startVerseId, endVerseId);
       return true;
     } catch {
       return false;
