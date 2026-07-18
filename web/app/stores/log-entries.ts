@@ -13,6 +13,7 @@ import {
 } from '@mybiblelog/shared';
 import { useAchievementsStore } from '~/stores/achievements';
 import { useUserSettingsStore } from '~/stores/user-settings';
+import dayjs from 'dayjs';
 
 export type { CreateLogEntryInput, LogEntry, UpdateLogEntryInput };
 
