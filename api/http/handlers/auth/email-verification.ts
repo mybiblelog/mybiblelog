@@ -5,6 +5,7 @@ import { NotFoundError } from '../../errors/http-errors';
 import { generateUserJWT, isCodeValid } from '../../../repositories/helpers/user-auth';
 import { LocaleCode } from '@mybiblelog/shared';
 import { authCookie } from '../../helpers/auth-cookie';
+import { isWebClient } from '../../helpers/client-type';
 import { type RouteHandler } from '../../types';
 import { asRecord } from './shared';
 
@@ -34,7 +35,11 @@ export const verifyEmail: RouteHandler = async (req, deps) => {
 
   const verifiedUser = await users.markEmailVerified(user.id);
   const token = generateUserJWT(verifiedUser);
-  return { status: 200, body: { data: { token } }, cookies: [authCookie(token)] };
+  return {
+    status: 200,
+    body: { data: { token: isWebClient(req) ? undefined : token } },
+    cookies: [authCookie(token)],
+  };
 };
 
 // POST /auth/verify-email/resend - Re-enqueue a verification email (with cooldown)

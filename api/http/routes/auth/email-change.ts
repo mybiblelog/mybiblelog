@@ -84,7 +84,7 @@ export const authEmailChangeRoutes: RouteDefinition[] = [
       request: { params: codeParam },
       response: {
         description: 'Email change completed',
-        schema: z.object({ token: z.string() }),
+        schema: z.object({ token: z.string().optional() }),
       },
       setsAuthCookie: true,
       errors: [400, 404],

@@ -92,7 +92,7 @@ export const authPasswordRoutes: RouteDefinition[] = [
       request: { params: resetCodeParam, body: resetPasswordBodySchema },
       response: {
         description: 'Password reset successful',
-        schema: z.object({ token: z.string() }),
+        schema: z.object({ token: z.string().optional() }),
       },
       setsAuthCookie: true,
       errors: [400],

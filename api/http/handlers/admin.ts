@@ -7,6 +7,7 @@ import deleteAccount from '../helpers/delete-account';
 import { InvalidRequestError, NotFoundError } from '../errors/http-errors';
 import { ApiErrorDetailCode } from '../errors/error-codes';
 import { authCookie } from '../helpers/auth-cookie';
+import { isWebClient } from '../helpers/client-type';
 import { validate } from '../../validation/validate';
 import { adminFeedbackIdParam, adminFeedbackPatchSchema } from '../../validation/schemas/admin';
 import { type RouteHandler } from '../types';
@@ -203,7 +204,11 @@ export const loginAsUser: RouteHandler = async (req, deps) => {
   }
 
   const token = generateUserJWT(user);
-  return { status: 200, body: { data: { token } }, cookies: [authCookie(token)] };
+  return {
+    status: 200,
+    body: { data: { token: isWebClient(req) ? undefined : token } },
+    cookies: [authCookie(token)],
+  };
 };
 
 // GET /admin/users/:email/stats - Activity stats for a user

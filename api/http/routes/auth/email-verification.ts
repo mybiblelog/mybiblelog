@@ -17,7 +17,7 @@ export const authEmailVerificationRoutes: RouteDefinition[] = [
       request: { body: verifyEmailBodySchema },
       response: {
         description: 'Email verified successfully',
-        schema: z.object({ token: z.string() }),
+        schema: z.object({ token: z.string().optional() }),
       },
       setsAuthCookie: true,
       errors: [400, 404],

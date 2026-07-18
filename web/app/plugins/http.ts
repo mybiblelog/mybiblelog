@@ -18,7 +18,11 @@ export default defineNuxtPlugin({
     };
 
     const buildHeaders = (): Record<string, string> => {
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      // Identifies this request as coming from the web app rather than the
+      // mobile app or a bare API client — auth endpoints use it to omit the
+      // session token from the JSON body, since the browser only needs the
+      // httpOnly cookie (see `api/http/helpers/client-type.ts`).
+      const headers: Record<string, string> = { 'Content-Type': 'application/json', 'X-Client': 'web' };
       const token = getAuthToken();
       if (token) { headers.Authorization = `Bearer ${token}`; }
       return headers;

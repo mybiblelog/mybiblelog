@@ -5,6 +5,7 @@ import { generateUserJWT, toAuthJSON } from '../../../repositories/helpers/user-
 import googleOauth2 from '../../helpers/google-oauth2';
 import googleIdToken from '../../helpers/google-id-token';
 import { authCookie } from '../../helpers/auth-cookie';
+import { isWebClient } from '../../helpers/client-type';
 import { type RouteHandler } from '../../types';
 import { asRecord } from './shared';
 
@@ -52,7 +53,11 @@ export const verifyGoogleOauth: RouteHandler = async (req, deps) => {
     }
 
     const token = generateUserJWT(existingUser);
-    return { status: 200, body: { data: { token } }, cookies: [authCookie(token)] };
+    return {
+      status: 200,
+      body: { data: { token: isWebClient(req) ? undefined : token } },
+      cookies: [authCookie(token)],
+    };
   }
 
   // Create new user account
@@ -65,7 +70,11 @@ export const verifyGoogleOauth: RouteHandler = async (req, deps) => {
   });
 
   const token = generateUserJWT(user);
-  return { status: 200, body: { data: { token } }, cookies: [authCookie(token)] };
+  return {
+    status: 200,
+    body: { data: { token: isWebClient(req) ? undefined : token } },
+    cookies: [authCookie(token)],
+  };
 };
 
 // POST /auth/oauth2/google/id-token - Exchange a native Google id_token for a session
@@ -104,7 +113,7 @@ export const googleIdTokenLogin: RouteHandler = async (req, deps) => {
     const token = generateUserJWT(existingUser);
     return {
       status: 200,
-      body: { data: { token, user: toAuthJSON(existingUser) } },
+      body: { data: { token: isWebClient(req) ? undefined : token, user: toAuthJSON(existingUser) } },
       cookies: [authCookie(token)],
     };
   }
@@ -121,7 +130,7 @@ export const googleIdTokenLogin: RouteHandler = async (req, deps) => {
   const token = generateUserJWT(user);
   return {
     status: 200,
-    body: { data: { token, user: toAuthJSON(user) } },
+    body: { data: { token: isWebClient(req) ? undefined : token, user: toAuthJSON(user) } },
     cookies: [authCookie(token)],
   };
 };
