@@ -33,14 +33,17 @@ describe('isLogEntryEditorValid', () => {
 });
 
 describe('selectBook', () => {
-  it('clears the previous verse selection', () => {
+  it('replaces the previous selection with the whole newly chosen book', () => {
     const model = selectBook(initLogEntryEditorModel({
       startVerseId: Bible.makeVerseId(JOHN, 3, 16),
       endVerseId: Bible.makeVerseId(JOHN, 3, 18),
     }), GENESIS);
+    const lastChapter = Bible.getBookChapterCount(GENESIS);
     expect(model.book).toBe(GENESIS);
-    expect(model.startVerseId).toBeNull();
-    expect(model.endVerseId).toBeNull();
+    expect(model.startVerseId).toBe(Bible.makeVerseId(GENESIS, 1, 1));
+    expect(model.endVerseId).toBe(
+      Bible.makeVerseId(GENESIS, lastChapter, Bible.getChapterVerseCount(GENESIS, lastChapter)),
+    );
   });
 
   it('auto-selects the whole chapter for single-chapter books', () => {
