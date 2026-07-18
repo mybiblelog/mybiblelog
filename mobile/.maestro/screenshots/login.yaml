@@ -1,0 +1,35 @@
+# Release-build login preamble for the screenshot capture flow.
+#
+# Deliberately NOT the same as common/login.yaml: that one is dev-client
+# specific (Expo launcher deep link, dev-menu dismissal, gear-button swipe) and
+# assumes a cleared state. This one runs against a release build and assumes it
+# is invoked *while already on the Settings -> Account screen* with the login
+# button visible (capture.yaml calls it conditionally on `settings.login`).
+#
+# Expects E2E_EMAIL / E2E_PASSWORD env vars.
+appId: com.mybiblelog.app
+---
+- tapOn:
+    id: "settings.login"
+- extendedWaitUntil:
+    visible:
+      id: "login.email"
+    timeout: 15000
+- tapOn:
+    id: "login.email"
+- inputText: ${E2E_EMAIL}
+- hideKeyboard
+- tapOn:
+    id: "login.password"
+- inputText: ${E2E_PASSWORD}
+- hideKeyboard
+- tapOn:
+    id: "login.submit"
+# Successful login pops back to the Account screen, where the login button is
+# replaced by the logout button. `settings.logout` is the locale-independent
+# "authenticated" signal (never visible on the login screen itself, so no
+# mid-transition false positive).
+- extendedWaitUntil:
+    visible:
+      id: "settings.logout"
+    timeout: 30000

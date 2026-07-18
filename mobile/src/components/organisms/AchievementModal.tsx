@@ -151,7 +151,7 @@ export function AchievementModal() {
         {message}
       </Text>
       <View style={styles.footer}>
-        <Button label={t("ok")} onPress={achievementActions.close} />
+        <Button label={t("ok")} testID="achievement.close" onPress={achievementActions.close} />
       </View>
     </BottomSheet>
   );

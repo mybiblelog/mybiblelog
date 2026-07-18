@@ -32,6 +32,7 @@ export default function LanguageSettings() {
               {i > 0 ? <View style={[styles.divider, { backgroundColor: colors.border }]} /> : null}
               <ListItem
                 title={opt.label}
+                testID={`language.option-${opt.value}`}
                 bordered={false}
                 style={styles.row}
                 onPress={() => setLocale(opt.value)}

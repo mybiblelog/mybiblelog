@@ -52,6 +52,7 @@ export default function SettingsIndex() {
           subtitle={t("settings_section_account_subtitle")}
           onPress={() => router.push("/settings/account")}
           alert={showSignInAlert}
+          testID="settings.account-link"
         />
         <SectionRow
           icon="bookmarks-outline"
@@ -77,6 +78,7 @@ export default function SettingsIndex() {
           title={t("settings_section_language")}
           subtitle={t("settings_section_language_subtitle")}
           onPress={() => router.push("/settings/language")}
+          testID="settings.language-link"
         />
         <SectionRow
           icon="information-circle-outline"

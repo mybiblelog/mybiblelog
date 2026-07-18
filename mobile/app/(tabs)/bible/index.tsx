@@ -48,6 +48,7 @@ const BookRow = memo(function BookRow({
   const t = useT();
   return (
     <Pressable
+      testID={`bible.book-${book.bookIndex}`}
       style={({ pressed }) => [
         styles.card,
         { backgroundColor: colors.surfaceAlt },

@@ -52,6 +52,7 @@ export default function AccountSettings() {
               </View>
               <Button
                 label={t("auth_logout")}
+                testID="settings.logout"
                 variant="destructive"
                 size="sm"
                 onPress={() => void logout()}

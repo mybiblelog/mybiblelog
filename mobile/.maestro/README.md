@@ -97,6 +97,73 @@ Verified so far (dev build, Android emulator): `01-login` and
 failures were dev-client interference (gear button, airplane-mode leak,
 launcher discovery), each now worked around but not yet re-verified green.
 
+## Play Store screenshots (`.maestro/screenshots/`)
+
+`.maestro/screenshots/capture.yaml` + `login.yaml` drive the app to produce
+localized Play Store listing assets. They are **not** part of `npm run e2e`:
+`config.yaml` globs only `flows/*.yaml`, so these are reached only by explicit
+path (the orchestrator invokes `capture.yaml`).
+
+Run from the repo root:
+
+```bash
+npm run screenshots:mobile
+```
+
+The orchestrator (`scripts/take-mobile-screenshots.ts`) seeds the same demo
+dataset as the web `npm run screenshots` (shared `scripts/lib/screenshot-seed.ts`),
+then runs `capture.yaml` once per locale, writing PNGs to
+`mobile/screenshots/<locale>/`. Prerequisites:
+
+- **Release build on the emulator** (not a dev-client build, which shows the
+  floating dev-menu button and needs Metro):
+  ```bash
+  SENTRY_DISABLE_AUTO_UPLOAD=true \
+    EXPO_PUBLIC_API_BASE_URL=http://localhost:8080 \
+    npx expo run:android --variant release
+  ```
+  `SENTRY_DISABLE_AUTO_UPLOAD=true` is required locally: release builds run
+  Sentry's source-map upload, which fails without the org/project/token that
+  only EAS production builds have (`sentry-cli: An organization ID or slug is
+  required`). The flag skips just the upload; production/EAS uploads are
+  unaffected.
+- **`npm run dev` at the repo root** (API on :8080; the orchestrator runs
+  `adb reverse tcp:8080 tcp:8080`).
+- **`SCREENSHOT_EMAIL` / `SCREENSHOT_PASSWORD`** in the repo-root `.env`
+  (defaults `demo@example.com` / `password`), plus the Mongo connection the web
+  script uses.
+
+The orchestrator also zeroes animation scales and enables SystemUI demo mode
+(fixed 09:00 clock, full battery, full wifi, no notifications) for a clean
+status bar, then restores both and deletes the demo user on exit. The capture
+flow logs in on the first locale only (conditional on `settings.login`), switches
+language via `settings.language-link`, and pull-to-refreshes Notes so each
+locale's freshly seeded notes/tags appear.
+
+### Troubleshooting
+
+**`INSTALL_FAILED_INSUFFICIENT_STORAGE` on install.** The release APK is ~120 MB
+and Expo installs with `adb install -r -d`, which stages the new APK *alongside*
+the old one — so a near-full emulator `/data` partition can't fit both even when
+the app is already installed.
+
+- **Quick fix** — uninstall first so there's no overlapping copy, then re-run the
+  build:
+  ```bash
+  adb uninstall com.mybiblelog.app
+  ```
+  Safe here: every screenshot run seeds a fresh demo user, so on-device data is
+  disposable.
+- **Durable fix** — give the AVD a bigger userdata partition. The default Expo/
+  Studio AVDs ship ~6 GB (`disk.dataPartition.size=6G`), which fills up fast with
+  a 120 MB app plus system data. In Android Studio → Device Manager → Edit device
+  → Show Advanced Settings → **Internal Storage**, raise it (e.g. 16 GB), or edit
+  `~/.android/avd/<name>.avd/config.ini` (`disk.dataPartition.size=16G`). Either
+  way the change only takes effect after a data wipe:
+  ```bash
+  emulator -avd <name> -wipe-data   # e.g. Medium_Phone_API_36.1; erases the emulator
+  ```
+
 ## testID convention
 
 Stable selectors use dot-scoped `screen.element` literals set via `testID`

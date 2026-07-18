@@ -1,4 +1,5 @@
 import type { ExpoConfig } from 'expo/config';
+import { AndroidConfig, withAndroidManifest, type ConfigPlugin } from '@expo/config-plugins';
 
 // This file is evaluated by `expo config` (run by EAS before uploading, and
 // locally) where `.env` is NOT auto-loaded. So we don't validate or require env
@@ -26,7 +27,22 @@ function toIosUrlScheme(iosClientId: string | undefined): string | undefined {
 
 const iosUrlScheme = toIosUrlScheme(googleIosClientId);
 
-export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
+// Android release builds disable cleartext (HTTP) traffic by default
+// (targetSdk >= 28), while the debug build permits it — which is why a release
+// build pointed at a local `http://localhost:8080` API fails with "Can't reach
+// the server" (e.g. the screenshot build). Permit cleartext only when the API
+// base URL is itself cleartext http://; production (https) is untouched, so this
+// never weakens real builds.
+const needsCleartextTraffic = apiBaseUrl?.startsWith('http://') ?? false;
+
+const withCleartextTraffic: ConfigPlugin = (config) =>
+  withAndroidManifest(config, (cfg) => {
+    const app = AndroidConfig.Manifest.getMainApplicationOrThrow(cfg.modResults);
+    app.$['android:usesCleartextTraffic'] = 'true';
+    return cfg;
+  });
+
+const baseConfig = ({ config }: { config: ExpoConfig }): ExpoConfig => ({
   ...config,
   plugins: [
     ...(config.plugins ?? []),
@@ -48,3 +64,10 @@ export default ({ config }: { config: ExpoConfig }): ExpoConfig => ({
     googleIosClientId,
   },
 });
+
+// Function config plugins can't sit in the typed `plugins` array (it only
+// accepts names/tuples), so apply the cleartext mod to the resolved config.
+export default (params: { config: ExpoConfig }): ExpoConfig => {
+  const resolved = baseConfig(params);
+  return needsCleartextTraffic ? withCleartextTraffic(resolved) : resolved;
+};

@@ -1,0 +1,221 @@
+# Play Store screenshot capture — one parameterized run per locale.
+#
+# Invoked by scripts/take-mobile-screenshots.ts once per locale with:
+#   -e LOCALE=<en|de|...> -e OUTPUT_DIR=<absolute dir> \
+#   -e E2E_EMAIL=<demo email> -e E2E_PASSWORD=<demo password>
+#
+# It is NOT part of `npm run e2e`: .maestro/config.yaml globs only flows/*.yaml,
+# so this file is reached only by explicit path. Screenshots land at
+# ${OUTPUT_DIR}/<slug>.png (Maestro appends the extension). An absolute
+# OUTPUT_DIR avoids any cwd ambiguity.
+#
+# Resumes the already-running release build (no clearState). The seeded reading
+# history + notes/tags come from the orchestrator's shared DB seed; only the
+# per-locale notes/tags need a pull-to-refresh to appear.
+appId: com.mybiblelog.app
+---
+- launchApp:
+    stopApp: false
+# Resumes on whatever tab the previous locale's run left (a fresh install opens
+# on Today) — both show the tab bar, so wait for that rather than a Today-only
+# element.
+- extendedWaitUntil:
+    visible:
+      id: "tab.settings"
+    timeout: 90000
+
+# --- Auth: log in on the first locale (skipped on later locales) -------------
+- tapOn:
+    id: "tab.settings"
+- tapOn:
+    id: "settings.account-link"
+# Let the auth card resolve out of its brief "loading" state before deciding
+# whether to log in (otherwise neither login nor logout button is visible yet).
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    when:
+      visible:
+        id: "settings.login"
+    file: login.yaml
+# Back out of Account to the Settings root for the language switch.
+- back
+
+# --- Switch language (all later steps are testID-only, text is now localized) -
+- tapOn:
+    id: "settings.language-link"
+- tapOn:
+    id: "language.option-${LOCALE}"
+
+# --- Notes (sc10) + Tags (sc11) ---------------------------------------------
+- tapOn:
+    id: "tab.notes"
+- assertVisible:
+    id: "notes.tags"
+# Pull-to-refresh so this locale's freshly seeded notes/tags load from the API.
+- swipe:
+    start: 50%, 30%
+    end: 50%, 90%
+- waitForAnimationToEnd:
+    timeout: 4000
+- takeScreenshot: ${OUTPUT_DIR}/sc10-notes
+- tapOn:
+    id: "notes.tags"
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${OUTPUT_DIR}/sc11-note-tags
+- back
+
+# --- Today: reading suggestion menu (sc1) + log-entry editor (sc14) ----------
+- tapOn:
+    id: "tab.today"
+- tapOn:
+    id: "today.suggestion"
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${OUTPUT_DIR}/sc1-reading-suggestions
+- back
+- tapOn:
+    id: "today.add-entry"
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${OUTPUT_DIR}/sc14-log-entry-editor
+- back
+
+# --- Bible: whole-Bible progress (sc7), book grid (sc6), progress page (sc13) -
+- tapOn:
+    id: "tab.bible"
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${OUTPUT_DIR}/sc7-bible-progress
+- tapOn:
+    id: "bible.book-1"
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${OUTPUT_DIR}/sc6-book-chapter-progress
+- back
+- tapOn:
+    id: "bible.progress-link"
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${OUTPUT_DIR}/sc13-progress
+- back
+
+# --- Calendar (sc9) ----------------------------------------------------------
+- tapOn:
+    id: "tab.calendar"
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${OUTPUT_DIR}/sc9-calendar
+
+# --- Checklist: Exodus expanded (sc12), then complete Exo 27-29 (110 verses) --
+- tapOn:
+    id: "tab.checklist"
+# The checklist tab stays mounted, so a prior locale's run can leave it scrolled
+# to the bottom; scroll back up until Exodus (book 2) is reachable.
+- repeat:
+    times: 20
+    while:
+      notVisible:
+        id: "checklist.book-2"
+    commands:
+      - swipe:
+          start: 50%, 30%
+          end: 50%, 80%
+- tapOn:
+    id: "checklist.book-2"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: "checklist.chapter-2-27"
+- takeScreenshot: ${OUTPUT_DIR}/sc12-checklist
+# Mark three chapters through the app so the offline store + server stay in
+# sync. Each tap sets a busy spinner and the handler ignores taps while busy,
+# so wait for each to settle before the next.
+- tapOn:
+    id: "checklist.chapter-2-27"
+- waitForAnimationToEnd:
+    timeout: 2500
+- tapOn:
+    id: "checklist.chapter-2-28"
+- waitForAnimationToEnd:
+    timeout: 2500
+- tapOn:
+    id: "checklist.chapter-2-29"
+- waitForAnimationToEnd:
+    timeout: 2500
+
+# --- Today: daily goal at 100% (sc4) -----------------------------------------
+- tapOn:
+    id: "tab.today"
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${OUTPUT_DIR}/sc4-daily-goal
+
+# --- Checklist: undo the daily-goal chapters, then trigger the achievement ---
+- tapOn:
+    id: "tab.checklist"
+# Scroll back to the top (see above), then re-expand Exodus (accordions collapse
+# on tab blur) to reach its chapters.
+- repeat:
+    times: 20
+    while:
+      notVisible:
+        id: "checklist.book-2"
+    commands:
+      - swipe:
+          start: 50%, 30%
+          end: 50%, 80%
+- tapOn:
+    id: "checklist.book-2"
+- tapOn:
+    id: "checklist.chapter-2-29"
+- waitForAnimationToEnd:
+    timeout: 2500
+- tapOn:
+    id: "checklist.chapter-2-28"
+- waitForAnimationToEnd:
+    timeout: 2500
+- tapOn:
+    id: "checklist.chapter-2-27"
+- waitForAnimationToEnd:
+    timeout: 2500
+# Collapse Exodus so the list is short one-line rows, then scroll down to Jude
+# (book 65, near the bottom). `scrollUntilVisible` stalls partway on a list this
+# long (New Arch), and tapOn's built-in auto-scroll can't span it either —
+# explicit swipes are reliable.
+- tapOn:
+    id: "checklist.book-2"
+# Scroll to the very bottom (until Revelation, book 66, shows). Stopping as soon
+# as Jude merely peeks would leave it at the bottom edge, where expanding it
+# pushes its single chapter off-screen behind the tab bar; going one row further
+# leaves Jude with room so chapter-65-1 lands on-screen.
+- repeat:
+    times: 20
+    while:
+      notVisible:
+        id: "checklist.book-66"
+    commands:
+      - swipe:
+          start: 50%, 75%
+          end: 50%, 30%
+# Complete Jude (a single-chapter book) to fire the book-completion modal.
+- tapOn:
+    id: "checklist.book-65"
+- tapOn:
+    id: "checklist.chapter-65-1"
+- assertVisible:
+    id: "achievement.close"
+# Reanimated drives the star "stamp" (~300ms) then particles (~1s); adb
+# animation-scale zeroing doesn't touch Reanimated, so wait it out.
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${OUTPUT_DIR}/sc2-achievements
+- tapOn:
+    id: "achievement.close"
+# Un-mark Jude so the local cache + server match the reset the orchestrator
+# does between locales (and so the modal re-fires next locale).
+- tapOn:
+    id: "checklist.chapter-65-1"
+- waitForAnimationToEnd:
+    timeout: 2500
