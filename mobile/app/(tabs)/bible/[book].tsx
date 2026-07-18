@@ -203,9 +203,9 @@ export default function BibleBookScreen() {
         onClose={() => setSelectedChapterIndex(null)}
         onOpenInBible={() => {
           if (!selectedChapter) return;
-          const { startVerseId } = selectedChapter;
+          const { startVerseId, endVerseId } = selectedChapter;
           void (async () => {
-            const ok = await openPassageInBible(startVerseId, {
+            const ok = await openPassageInBible(startVerseId, endVerseId, {
               preferredBibleApp: settings.preferredBibleApp,
               preferredBibleVersion: settings.preferredBibleVersion,
             });

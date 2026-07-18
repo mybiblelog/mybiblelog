@@ -75,7 +75,7 @@ function Particle({ spec }: { spec: ParticleSpec }) {
 
   return (
     <Animated.View pointerEvents="none" style={[styles.particle, style]}>
-      <Icon name="star" size={32} color="starGold" />
+      <Icon name="star" size={32} color="starParticle" />
     </Animated.View>
   );
 }
@@ -137,12 +137,12 @@ export function AchievementModal() {
   return (
     <BottomSheet visible={visible} variant="center" onClose={achievementActions.close}>
       <View style={styles.starContainer}>
-        <Animated.View style={starStyle}>
-          <Icon name="star" size={64} color="starGold" />
-        </Animated.View>
         {particles.map((particle) => (
           <Particle key={particle.id} spec={particle} />
         ))}
+        <Animated.View style={starStyle}>
+          <Icon name="star" size={64} color="starGold" />
+        </Animated.View>
       </View>
       <Text variant="heading" style={styles.centered}>
         {title}

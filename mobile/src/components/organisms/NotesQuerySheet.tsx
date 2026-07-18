@@ -235,17 +235,6 @@ export function NotesQuerySheet({ visible, appliedQuery, onApply, onClose }: Pro
             value={draft.sortDirection}
             onChange={(sortDirection) => setDraft((prev) => ({ ...prev, sortDirection }))}
           />
-
-          <SegmentedControl
-            label={t("query_page_size")}
-            options={[
-              { value: 10, label: "10" },
-              { value: 20, label: "20" },
-              { value: 50, label: "50" },
-            ]}
-            value={draft.limit}
-            onChange={(limit) => setDraft((prev) => ({ ...prev, limit }))}
-          />
         </ScrollView>
 
         <View style={styles.footer}>

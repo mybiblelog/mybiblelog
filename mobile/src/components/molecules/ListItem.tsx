@@ -7,8 +7,9 @@ import { Icon, type IconName } from "../atoms/Icon";
 import { Text } from "../atoms/Text";
 
 export type ListItemProps = {
-  title: string;
-  /** Semantic color for the title (e.g. `destructive` for a delete row). */
+  /** Plain string (styled as `bodyStrong`) or a custom node (e.g. a colored pill). */
+  title: ReactNode;
+  /** Semantic color for the title (ignored when `title` is a node). */
   titleColor?: keyof ThemeColors;
   subtitle?: string;
   meta?: string;
@@ -48,9 +49,13 @@ export function ListItem({
     <>
       {leading ?? (leadingIcon ? <Icon name={leadingIcon} size={20} color="mutedText" /> : null)}
       <View style={styles.body}>
-        <Text variant="bodyStrong" color={titleColor}>
-          {title}
-        </Text>
+        {typeof title === "string" ? (
+          <Text variant="bodyStrong" color={titleColor}>
+            {title}
+          </Text>
+        ) : (
+          title
+        )}
         {!!subtitle && (
           <Text variant="subtitle" color="mutedText" style={styles.subtitle}>
             {subtitle}

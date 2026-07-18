@@ -1,4 +1,5 @@
 import { type ReactNode, useCallback, useState } from "react";
+import { Bible } from "@mybiblelog/shared";
 import type { StoredLogEntry } from "@/src/storage/logEntries";
 import { openPassageInBible } from "@/src/bible/openInBible";
 import { useT } from "@/src/i18n/LocaleProvider";
@@ -63,11 +64,9 @@ export function useLogEntryOverlays({
   const openAdd = useCallback(() => setIsAddOpen(true), []);
   const openMenu = useCallback((entry: StoredLogEntry) => setMenuClientId(entry.clientId), []);
 
-  const handleOpenInBible = () => {
-    if (!menuEntry) return;
-    const { startVerseId } = menuEntry;
+  const openInBible = (startVerseId: number, endVerseId: number) => {
     void (async () => {
-      const ok = await openPassageInBible(startVerseId, {
+      const ok = await openPassageInBible(startVerseId, endVerseId, {
         preferredBibleApp: settings?.preferredBibleApp,
         preferredBibleVersion: settings?.preferredBibleVersion,
       });
@@ -75,6 +74,21 @@ export function useLogEntryOverlays({
         showToast({ type: "error", message: t("calendar_open_bible_failed") });
       }
     })();
+  };
+
+  const handleOpenInBible = () => {
+    if (!menuEntry) return;
+    openInBible(menuEntry.startVerseId, menuEntry.endVerseId);
+  };
+
+  // Continue reading from the verse after this entry's end, through the end of
+  // that chapter (matches web `today.vue`). Only offered when a next verse
+  // exists (i.e. not the final verse of Revelation).
+  const nextVerseId = menuEntry ? Bible.getNextVerseId(menuEntry.endVerseId, true) : 0;
+  const handleContinueReading = () => {
+    if (!nextVerseId) return;
+    const { book, chapter } = Bible.parseVerseId(nextVerseId);
+    openInBible(nextVerseId, Bible.getLastBookChapterVerseId(book, chapter));
   };
 
   const overlays = (
@@ -110,6 +124,7 @@ export function useLogEntryOverlays({
         visible={menuEntry !== undefined}
         onClose={() => setMenuClientId(null)}
         onOpenInBible={handleOpenInBible}
+        onContinueReading={nextVerseId ? handleContinueReading : undefined}
         onEdit={() => setEditingClientId(menuClientId)}
         onDelete={() => setDeletingClientId(menuClientId)}
       />

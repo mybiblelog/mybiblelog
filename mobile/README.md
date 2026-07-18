@@ -112,7 +112,7 @@ SENTRY_DISABLE_AUTO_UPLOAD=true npx expo run:android --variant release
 **Install fails with `INSTALL_FAILED_INSUFFICIENT_STORAGE`.**
 The emulator's `/data` partition is full (check with `adb shell df -h /data`; the release APK needs roughly 2–3× its ~120MB size free to install). Quick fixes, in order:
 
-1. Uninstall the existing app (wipes its on-device data): `adb uninstall com.mybiblelog.app`
+1. Uninstall the existing app (wipes its on-device data): `adb uninstall com.mybiblelog.app`. For the debug/dev workflow, `npm run android:fresh` does this uninstall then rebuilds+installs in one step (debug variant).
 2. Retry just the install without rebuilding:
    `adb install -r -d android/app/build/outputs/apk/release/app-release.apk`
 3. If space stays tight — most of the partition is system/Play services, and `adb root` doesn't work on Play images — increase the AVD's internal storage for good: Android Studio → Device Manager → edit AVD → **Show Advanced Settings** → Internal Storage (e.g. 12GB), then wipe data and cold boot.
@@ -177,6 +177,33 @@ The app uses **native Google Sign-In** ([`react-native-nitro-google-signin`](htt
 This works in all four development phases. It does **not** work in Expo Go or in web mode.
 
 The `id_token`'s audience is the **web** client ID (`EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID`), so the API must list that ID in its `GOOGLE_ALLOWED_CLIENT_IDS`. See [`docs/android-dev-build.md`](docs/android-dev-build.md) for OAuth client setup details.
+
+---
+
+## App icons & splash screen
+
+The app icon, adaptive icon layers, splash icon, and favicon are all generated from one source — `web/public/images/logo.svg` — by `scripts/generate-brand-assets.mjs`. After changing the SVG, regenerate everything:
+
+```bash
+node scripts/generate-brand-assets.mjs
+```
+
+This overwrites the PNGs under `assets/images/` referenced by `app.json`. Don't hand-edit those PNGs directly (e.g. to recenter or resize the logo) — tune the box-size constants in the script instead, so the fix survives the next SVG change instead of being silently lost on the next regeneration.
+
+### Why editing the source image alone doesn't show up on the emulator
+
+`android/` is gitignored — it's regenerated from `app.json` by Expo's Continuous Native Generation (CNG), and the actual launcher/splash icon files the OS reads (`android/app/src/main/res/mipmap-*/ic_launcher_foreground.webp`, `drawable-*/splashscreen_logo.png`) are baked in **at prebuild time**, not read live. Running `npx expo run:android` when `android/` already exists does **not** re-sync those from your updated source images — it just rebuilds the existing native project. So after regenerating the PNGs, re-run prebuild before rebuilding:
+
+```bash
+npx expo prebuild -p android --clean   # regenerate android/ from app.json + assets/images
+npm run android:fresh                  # uninstall + rebuild + reinstall
+```
+
+The uninstall in `android:fresh` matters on its own: Android's package manager/launcher caches the icon bitmap per package, and installing an update over an existing install sometimes doesn't refresh it. If the emulator still shows a stale icon after all that, it's launcher-level caching — restart the emulator, or long-press the icon on the home screen and re-add it.
+
+### Adaptive icon & splash safe zone
+
+`android-icon-foreground.png`, `android-icon-monochrome.png`, and `splash-icon.png` all get circle-masked by Android at render time — the adaptive icon system on the home screen, and (for the splash icon) Android 12+'s System SplashScreen API before your JS even loads. The script renders the logo at ~44% of each canvas's height, well inside Android's documented 66% adaptive-icon safe-zone minimum, and trims the SVG's own transparent margin before centering it — `logo.svg`'s viewBox isn't itself centered on the glyph, so skipping that trim step centers the empty space instead of the logo. If the logo shape changes significantly, sanity-check the regenerated PNGs by eye (or re-measure with `sharp(...).trim()`) before assuming the ratio still looks right.
 
 ---
 

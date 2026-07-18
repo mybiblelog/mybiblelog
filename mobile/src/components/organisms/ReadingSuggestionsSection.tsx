@@ -34,7 +34,7 @@ export function ReadingSuggestionsSection({ suggestions, today }: Props) {
 
   const handleOpenInBible = (suggestion: DisplayReadingSuggestion) => {
     void (async () => {
-      const ok = await openPassageInBible(suggestion.startVerseId, {
+      const ok = await openPassageInBible(suggestion.startVerseId, suggestion.endVerseId, {
         preferredBibleApp: settings?.preferredBibleApp,
         preferredBibleVersion: settings?.preferredBibleVersion,
       });

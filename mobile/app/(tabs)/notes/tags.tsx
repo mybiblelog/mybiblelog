@@ -98,13 +98,11 @@ export default function Tags() {
         keyExtractor={(item: PassageNoteTag) => item.id}
         renderItem={({ item }) => (
           <ListItem
-            title={item.label}
-            leading={<TagPill label={item.label} color={item.color} />}
+            title={<TagPill label={item.label} color={item.color} />}
             subtitle={item.description || undefined}
             meta={t("tag_notes_count", { count: item.noteCount })}
             chevron
             onPress={() => setMenuTag(item)}
-            style={styles.tagRow}
           />
         )}
         ItemSeparatorComponent={Separator}
@@ -214,7 +212,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: spacing.lg,
   },
-  tagRow: { alignItems: "flex-start" },
   listContent: { paddingBottom: spacing.listBottom },
   listContentEmpty: { flexGrow: 1 },
   separator: { height: spacing.md },

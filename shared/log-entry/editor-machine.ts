@@ -46,18 +46,20 @@ export const initLogEntryEditorModel = (
   return model;
 };
 
-/** Selects a book, clearing any previous verse selection. Single-chapter books
- * auto-select their only chapter. */
+/**
+ * Selects a book, replacing any previous selection with the whole book: the
+ * first chapter becomes the start and the last chapter the end, so a freshly
+ * chosen book is immediately a valid passage the user can then narrow down.
+ * (Single-chapter books collapse to that one chapter naturally.)
+ */
 export const selectBook = (model: LogEntryEditorModel, bookIndex: number): LogEntryEditorModel => {
   const updated = clone(model);
   updated.book = bookIndex;
   updated.startVerseId = null;
   updated.endVerseId = null;
 
-  if (Bible.getBookChapterCount(bookIndex) === 1) {
-    return selectStartChapter(updated, 1);
-  }
-  return updated;
+  const lastChapter = Bible.getBookChapterCount(bookIndex);
+  return selectEndChapter(selectStartChapter(updated, 1), lastChapter);
 };
 
 /** Selects a start chapter, defaulting the range to that whole chapter. */

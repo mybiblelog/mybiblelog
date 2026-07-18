@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { AchievementModal } from "@/src/components";
+import { AchievementModal, JustOpenedModal } from "@/src/components";
 import { LocaleProvider, useT } from "@/src/i18n/LocaleProvider";
 import { ThemeProvider, modalTransition, stackTransition, useTheme } from "@/src/design";
 import { initStores } from "@/src/stores/init";
@@ -32,6 +32,7 @@ function RootLayout() {
             <UpgradeGate>
               <RootStack />
               <AchievementModal />
+              <JustOpenedModal />
             </UpgradeGate>
           </ToastProvider>
         </ThemeProvider>

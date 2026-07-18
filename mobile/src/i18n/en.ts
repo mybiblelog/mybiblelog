@@ -158,9 +158,15 @@ export const en = {
   menu_edit: "Edit",
   menu_delete: "Delete",
   menu_open_in_bible: "Open in Bible",
+  menu_continue_reading: "Continue Reading",
   menu_log_reading: "Log reading",
   menu_take_note: "Take note",
   menu_view_notes: "View notes",
+
+  just_opened_title: "Just Opened",
+  just_opened_message: "You opened %{passage} to read.",
+  just_opened_log_reading: "Log Reading",
+  just_opened_dismiss: "Dismiss",
 
   delete_confirm_title: "Delete log entry?",
   delete_confirm_message: "This cannot be undone.",
@@ -396,7 +402,6 @@ export const en = {
   query_sort: "Sort",
   query_sort_newest: "Newest First",
   query_sort_oldest: "Oldest First",
-  query_page_size: "Notes Per Load",
 
   tags_title: "Tags",
   tags_loading: "Loading tags…",

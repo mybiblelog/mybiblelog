@@ -44,7 +44,11 @@ describe("ReadingSuggestionsSection", () => {
     fireEvent.press(getByText("Open in Bible"));
 
     await waitFor(() =>
-      expect(openPassageInBible).toHaveBeenCalledWith(suggestion.startVerseId, expect.any(Object))
+      expect(openPassageInBible).toHaveBeenCalledWith(
+        suggestion.startVerseId,
+        suggestion.endVerseId,
+        expect.any(Object)
+      )
     );
   });
 
