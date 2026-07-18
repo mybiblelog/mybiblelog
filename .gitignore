@@ -108,3 +108,6 @@ web/i18n/locales/crowdin/
 # Nuxt 4 build output
 .output
 .data
+
+# Mobile screenshots for store listing
+mobile/screenshots

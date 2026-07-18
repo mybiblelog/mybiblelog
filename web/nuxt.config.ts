@@ -160,6 +160,7 @@ export default defineNuxtConfig({
     // Pre-bundle CJS deps discovered at runtime to avoid dev-server page reloads
     optimizeDeps: {
       include: [
+        '@vue/devtools-core',
         '@vue/devtools-kit',
         'dayjs',
         'dayjs/locale/de',
@@ -171,6 +172,7 @@ export default defineNuxtConfig({
         'dayjs/plugin/duration',
         'dayjs/plugin/relativeTime',
         'dayjs/plugin/weekday',
+        'workbox-window',
       ],
     },
     build: {

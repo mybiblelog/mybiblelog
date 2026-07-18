@@ -35,6 +35,7 @@ const ChapterCell = memo(function ChapterCell({
   const t = useT();
   return (
     <Pressable
+      testID={`checklist.chapter-${bookIndex}-${chapter.chapterIndex}`}
       onPress={() => onPress(bookIndex, chapter.chapterIndex)}
       accessibilityRole="button"
       accessibilityLabel={t(chapter.complete ? "chapter_read_a11y" : "chapter_unread_a11y", {
@@ -88,6 +89,7 @@ const BookCard = memo(function BookCard({
   return (
     <Card padded style={styles.bookCard}>
       <Pressable
+        testID={`checklist.book-${book.bookIndex}`}
         onPress={() => onToggleBook(book.bookIndex)}
         accessibilityRole="button"
         accessibilityLabel={bookName}
@@ -243,6 +245,9 @@ export default function Checklist() {
       ) : (
         <AnimatedList
           data={progress.books}
+          // Rows expand/collapse in place; the item layout animation leaves
+          // sibling books overlapping the expanded chapter grid, so opt out.
+          animateItemLayout={false}
           keyExtractor={(b: BookProgress) => String(b.bookIndex)}
           // Fixed-size list (66 books): render it all up front instead of
           // FlatList's default incremental backfill, so the page doesn't

@@ -59,6 +59,7 @@ export function ReadingSuggestionsSection({ suggestions, today }: Props) {
           {suggestions.map((suggestion) => (
             <ListItem
               key={`${suggestion.startVerseId}-${suggestion.endVerseId}`}
+              testID="today.suggestion"
               title={suggestion.passageLabel}
               subtitle={suggestion.contextMessage}
               meta={t("today_suggestion_meta", { count: suggestion.newVerseCount })}
