@@ -402,7 +402,6 @@ export const en = {
   query_sort: "Sort",
   query_sort_newest: "Newest First",
   query_sort_oldest: "Oldest First",
-  query_page_size: "Notes Per Load",
 
   tags_title: "Tags",
   tags_loading: "Loading tags…",

@@ -403,7 +403,6 @@ export const ko = {
   query_sort: "정렬",
   query_sort_newest: "최신순",
   query_sort_oldest: "오래된 순",
-  query_page_size: "한 번에 불러올 노트 수",
 
   tags_title: "태그",
   tags_loading: "태그를 불러오는 중…",

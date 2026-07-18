@@ -414,7 +414,6 @@ export const pt = {
   query_sort: "Ordenar",
   query_sort_newest: "Mais recentes primeiro",
   query_sort_oldest: "Mais antigas primeiro",
-  query_page_size: "Notas por carregamento",
 
   tags_title: "Tags",
   tags_loading: "Carregando tags…",

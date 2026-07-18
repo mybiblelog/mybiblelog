@@ -414,7 +414,6 @@ export const es = {
   query_sort: "Ordenar",
   query_sort_newest: "Más recientes primero",
   query_sort_oldest: "Más antiguas primero",
-  query_page_size: "Notas por carga",
 
   tags_title: "Etiquetas",
   tags_loading: "Cargando etiquetas…",

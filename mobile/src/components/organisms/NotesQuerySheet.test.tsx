@@ -52,11 +52,4 @@ describe("NotesQuerySheet", () => {
     fireEvent.press(getByLabelText("Apply"));
     expect(onApply).toHaveBeenCalledWith(expect.objectContaining({ sortDirection: "ascending" }));
   });
-
-  it("applies page size changes", () => {
-    const { getByText, getByLabelText, onApply } = renderSheet();
-    fireEvent.press(getByText("50"));
-    fireEvent.press(getByLabelText("Apply"));
-    expect(onApply).toHaveBeenCalledWith(expect.objectContaining({ limit: 50 }));
-  });
 });

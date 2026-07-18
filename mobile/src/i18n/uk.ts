@@ -413,7 +413,6 @@ export const uk = {
   query_sort: "Сортування",
   query_sort_newest: "Спочатку нові",
   query_sort_oldest: "Спочатку старі",
-  query_page_size: "Нотаток за одне завантаження",
 
   tags_title: "Теги",
   tags_loading: "Завантаження тегів…",

@@ -418,7 +418,6 @@ export const de = {
   query_sort: "Sortieren",
   query_sort_newest: "Neueste zuerst",
   query_sort_oldest: "Älteste zuerst",
-  query_page_size: "Notizen pro Ladevorgang",
 
   tags_title: "Tags",
   tags_loading: "Tags werden geladen…",
