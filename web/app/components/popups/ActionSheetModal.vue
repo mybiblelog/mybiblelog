@@ -39,15 +39,9 @@ function handleAction(action: ActionSheetItem) {
   action.callback?.();
 }
 
-function handleKeydown(event: KeyboardEvent) {
-  if (event.key === 'Escape' && store.open) {
-    store.closeSheet();
-  }
-}
+useEscapeKey(() => store.closeSheet(), computed(() => store.open));
 
-onMounted(() => { document.addEventListener('keydown', handleKeydown); });
 onUnmounted(() => {
-  document.removeEventListener('keydown', handleKeydown);
   document.body.style.overflow = '';
 });
 </script>

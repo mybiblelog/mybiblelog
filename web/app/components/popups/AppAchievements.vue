@@ -1,8 +1,8 @@
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <div v-if="achievement.open" class="popup-modal" data-testid="achievements-modal">
-        <div class="window" role="dialog">
+      <div v-if="achievement.open" class="mbl-popup-modal" data-testid="achievements-modal">
+        <div class="mbl-popup-modal__card" role="dialog">
           <div class="star-container">
             <div class="star-wrapper" :class="{ 'star-stamped': starStamped }">
               <shimmer-star-icon width="64px" height="64px" />
@@ -133,49 +133,6 @@ const _close = () => {
 </script>
 
 <style scoped>
-.popup-modal {
-  background-color: var(--mbl-overlay-50);
-  position: fixed;
-  inset: 0;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  z-index: var(--z-index-popup);
-  user-select: none;
-}
-
-.popup-modal.fade-enter-active,
-.popup-modal.fade-leave-active {
-  transition: var(--transition-fade);
-}
-
-.popup-modal.fade-enter-active .window,
-.popup-modal.fade-leave-active .window {
-  transition: var(--transition-modal);
-}
-
-.popup-modal.fade-enter-from,
-.popup-modal.fade-leave-to {
-  opacity: 0;
-}
-
-.popup-modal.fade-enter-from .window,
-.popup-modal.fade-leave-to .window {
-  transform: var(--modal-scale);
-}
-
-.window {
-  background: var(--mbl-bg);
-  padding: 2rem;
-  border: 1px solid var(--mbl-border);
-  border-radius: var(--modal-card-border-radius);
-  box-shadow: 0 0 0.5rem var(--mbl-overlay-20);
-  max-width: 480px;
-  margin-left: auto;
-  margin-right: auto;
-  overflow: hidden;
-}
-
 .star-container {
   position: relative;
   display: flex;

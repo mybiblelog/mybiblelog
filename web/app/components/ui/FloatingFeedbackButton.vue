@@ -11,76 +11,72 @@
       <feedback-icon fill="var(--mbl-on-accent)" width="28px" height="28px" />
     </button>
 
-    <div v-if="feedbackModalStore.open" class="mbl-modal mbl-modal--active" role="dialog" data-testid="modal">
-      <div class="mbl-modal__backdrop" @click="close" />
-      <div class="mbl-modal__card">
-        <header class="mbl-modal__head">
-          <p class="mbl-modal__title">
-            {{ t('feedback_form') }}
-          </p>
-          <button class="mbl-delete" type="button" aria-label="close" data-testid="modal-close" @click.prevent="close" />
-        </header>
-        <section class="mbl-modal__body">
-          <div class="mbl-content">
-            <p>{{ t('intro_p1') }}</p>
-            <p>{{ t('intro_p2') }}</p>
+    <app-modal
+      :open="feedbackModalStore.open"
+      :title="t('feedback_form')"
+      @close="close"
+    >
+      <template #content>
+        <div class="mbl-content">
+          <p>{{ t('intro_p1') }}</p>
+          <p>{{ t('intro_p2') }}</p>
+        </div>
+        <form data-testid="feedback-form" @submit.prevent="submitFeedback">
+          <div v-if="errors._form" class="mbl-help mbl-help--danger">
+            {{ $terr(errors._form) }}
           </div>
-          <form data-testid="feedback-form" @submit.prevent="submitFeedback">
-            <div v-if="errors._form" class="mbl-help mbl-help--danger">
-              {{ $terr(errors._form) }}
+          <div class="mbl-field">
+            <label class="mbl-label">{{ t('your_email') }}</label>
+            <div class="mbl-control">
+              <input
+                v-model="form.email"
+                class="mbl-input"
+                type="email"
+                data-testid="feedback-email"
+                :placeholder="t('your_email')"
+                :disabled="authStore.loggedIn"
+              >
             </div>
-            <div class="mbl-field">
-              <label class="mbl-label">{{ t('your_email') }}</label>
-              <div class="mbl-control">
-                <input
-                  v-model="form.email"
-                  class="mbl-input"
-                  type="email"
-                  data-testid="feedback-email"
-                  :placeholder="t('your_email')"
-                  :disabled="authStore.loggedIn"
-                >
+          </div>
+          <div class="mbl-field">
+            <label class="mbl-label">{{ t('what_kind') }}</label>
+            <div class="mbl-control">
+              <div class="mbl-select">
+                <select v-model="form.kind" data-testid="feedback-kind">
+                  <option value="bug">
+                    {{ t('bug_report') }}
+                  </option>
+                  <option value="feature">
+                    {{ t('feature_request') }}
+                  </option>
+                  <option value="comment">
+                    {{ t('general_comment') }}
+                  </option>
+                </select>
               </div>
             </div>
-            <div class="mbl-field">
-              <label class="mbl-label">{{ t('what_kind') }}</label>
-              <div class="mbl-control">
-                <div class="mbl-select">
-                  <select v-model="form.kind" data-testid="feedback-kind">
-                    <option value="bug">
-                      {{ t('bug_report') }}
-                    </option>
-                    <option value="feature">
-                      {{ t('feature_request') }}
-                    </option>
-                    <option value="comment">
-                      {{ t('general_comment') }}
-                    </option>
-                  </select>
-                </div>
-              </div>
+          </div>
+          <div class="mbl-field">
+            <label class="mbl-label">{{ t('feedback_details') }}</label>
+            <div class="mbl-control">
+              <textarea v-model="form.message" class="mbl-textarea" data-testid="feedback-message" :placeholder="t('feedback_details')" />
             </div>
-            <div class="mbl-field">
-              <label class="mbl-label">{{ t('feedback_details') }}</label>
-              <div class="mbl-control">
-                <textarea v-model="form.message" class="mbl-textarea" data-testid="feedback-message" :placeholder="t('feedback_details')" />
-              </div>
+          </div>
+          <div class="mbl-field">
+            <div class="mbl-control">
+              <button class="mbl-button mbl-button--primary" type="submit" data-testid="feedback-submit" :disabled="submitting">
+                {{ t('submit_feedback') }}
+              </button>
             </div>
-            <div class="mbl-field">
-              <div class="mbl-control">
-                <button class="mbl-button mbl-button--primary" type="submit" data-testid="feedback-submit" :disabled="submitting">
-                  {{ t('submit_feedback') }}
-                </button>
-              </div>
-            </div>
-          </form>
-        </section>
-      </div>
-    </div>
+          </div>
+        </form>
+      </template>
+    </app-modal>
   </div>
 </template>
 
 <script setup lang="ts">
+import AppModal from '~/components/popups/AppModal.vue';
 import FeedbackIcon from '~/components/svg/FeedbackIcon.vue';
 import { useAuthStore } from '~/stores/auth';
 import { useDialogStore } from '~/stores/dialog';

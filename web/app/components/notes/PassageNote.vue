@@ -3,7 +3,7 @@
     <div class="passage-note--passages" data-testid="passage-note-passages">
       <ul>
         <li v-for="passage in note.passages" :key="`${passage.startVerseId}-${passage.endVerseId}`">
-          <a :href="readingUrl(passage)" target="_blank">
+          <a :href="readingUrl(passage)" target="_blank" rel="noopener noreferrer">
             <strong>{{ displayRange(passage.startVerseId, passage.endVerseId) }}</strong>
           </a>
         </li>

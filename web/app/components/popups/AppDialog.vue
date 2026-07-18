@@ -1,8 +1,8 @@
 <template>
   <Teleport to="body">
     <Transition name="fade">
-      <div v-if="dialog.open" class="popup-modal">
-        <div class="window" role="dialog">
+      <div v-if="dialog.open" class="mbl-popup-modal">
+        <div class="mbl-popup-modal__card" role="dialog">
           <div v-if="dialog.title" class="mbl-title mbl-title--4">
             {{ dialog.title }}
           </div>
@@ -14,7 +14,7 @@
               {{ dialog.buttonText || t('ok') }}
             </button>
           </div>
-          <div v-if="dialog.type === 'confirm'" class="mbl-button-group popup-modal__actions">
+          <div v-if="dialog.type === 'confirm'" class="mbl-button-group app-dialog__actions">
             <button class="mbl-button" :class="confirmButtonClass" data-testid="dialog-confirm" @click="dialog.acceptConfirm()">
               {{ dialog.confirmButtonText || t('confirm') }}
             </button>
@@ -45,50 +45,7 @@ const confirmButtonClass = computed(() => buttonTypeToClass(dialog.confirmButton
 </script>
 
 <style scoped>
-.popup-modal {
-  background-color: var(--mbl-overlay-50);
-  position: fixed;
-  inset: 0;
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  z-index: var(--z-index-popup);
-  user-select: none;
-}
-
-.popup-modal.fade-enter-active,
-.popup-modal.fade-leave-active {
-  transition: var(--transition-fade);
-}
-
-.popup-modal.fade-enter-active .window,
-.popup-modal.fade-leave-active .window {
-  transition: var(--transition-modal);
-}
-
-.popup-modal.fade-enter-from,
-.popup-modal.fade-leave-to {
-  opacity: 0;
-}
-
-.popup-modal.fade-enter-from .window,
-.popup-modal.fade-leave-to .window {
-  transform: var(--modal-scale);
-}
-
-.window {
-  background: var(--mbl-bg);
-  padding: 2rem;
-  border: 1px solid var(--mbl-border);
-  border-radius: var(--modal-card-border-radius);
-  box-shadow: 0 0 0.5rem var(--mbl-overlay-20);
-  max-width: 480px;
-  margin-left: auto;
-  margin-right: auto;
-  overflow: hidden;
-}
-
-.popup-modal__actions {
+.app-dialog__actions {
   margin-top: 1.25rem;
 }
 </style>

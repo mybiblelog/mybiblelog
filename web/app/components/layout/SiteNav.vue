@@ -242,6 +242,7 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '~/stores/auth';
+import { filterVisibleNavItems, isAdminNavVisible } from '~/helpers/site-nav-visibility';
 
 const { t } = useI18n();
 
@@ -273,18 +274,9 @@ const accountDropdownOpen = ref(false);
 const adminNavRef = ref<HTMLElement | null>(null);
 const accountNavRef = ref<HTMLElement | null>(null);
 
-const visibleRouteNavItems = computed(() =>
-  ORDERED_ROUTE_NAV.filter(
-    (item) => {
-      const loggedIn = authStore.loggedIn;
-      const authOnly = 'authOnly' in item ? item.authOnly : false;
-      const guestOnly = 'guestOnly' in item ? (item as { guestOnly?: boolean }).guestOnly : false;
-      return (!authOnly || loggedIn) && (!guestOnly || !loggedIn);
-    },
-  ),
-);
+const visibleRouteNavItems = computed(() => filterVisibleNavItems(ORDERED_ROUTE_NAV, authStore.loggedIn));
 
-const showAdminNav = computed(() => Boolean(authStore.loggedIn && authStore.user?.isAdmin));
+const showAdminNav = computed(() => isAdminNavVisible(authStore.loggedIn, authStore.user?.isAdmin));
 
 watch(() => route.fullPath, () => {
   navOpen.value = false;
@@ -297,73 +289,30 @@ watch(navOpen, (open) => {
   document.body.classList.toggle('site-nav-drawer-open', open);
 });
 
-let onAdminOutsideClick: ((e: MouseEvent) => void) | null = null;
-let adminOutsideListenTimer: ReturnType<typeof setTimeout> | null = null;
+useClickOutside(
+  computed(() => (adminDropdownOpen.value ? adminNavRef.value : null)),
+  () => { adminDropdownOpen.value = false; },
+);
 
-watch(adminDropdownOpen, (open) => {
-  if (typeof document === 'undefined') { return; }
-  if (onAdminOutsideClick) {
-    document.removeEventListener('click', onAdminOutsideClick, true);
-  }
-  if (adminOutsideListenTimer !== null) {
-    clearTimeout(adminOutsideListenTimer);
-    adminOutsideListenTimer = null;
-  }
-  if (open) {
-    adminOutsideListenTimer = setTimeout(() => {
-      adminOutsideListenTimer = null;
-      onAdminOutsideClick = (e: MouseEvent) => {
-        if (!adminDropdownOpen.value) { return; }
-        const root = adminNavRef.value;
-        if (root && !root.contains(e.target as Node)) {
-          adminDropdownOpen.value = false;
-        }
-      };
-      document.addEventListener('click', onAdminOutsideClick, true);
-    }, 0);
-  }
-});
+useClickOutside(
+  computed(() => (accountDropdownOpen.value ? accountNavRef.value : null)),
+  () => { accountDropdownOpen.value = false; },
+);
 
-let onAccountOutsideClick: ((e: MouseEvent) => void) | null = null;
-let accountOutsideListenTimer: ReturnType<typeof setTimeout> | null = null;
+const anyDropdownOrDrawerOpen = computed(() =>
+  adminDropdownOpen.value || accountDropdownOpen.value || navOpen.value,
+);
 
-watch(accountDropdownOpen, (open) => {
-  if (typeof document === 'undefined') { return; }
-  if (onAccountOutsideClick) {
-    document.removeEventListener('click', onAccountOutsideClick, true);
-  }
-  if (accountOutsideListenTimer !== null) {
-    clearTimeout(accountOutsideListenTimer);
-    accountOutsideListenTimer = null;
-  }
-  if (open) {
-    accountOutsideListenTimer = setTimeout(() => {
-      accountOutsideListenTimer = null;
-      onAccountOutsideClick = (e: MouseEvent) => {
-        if (!accountDropdownOpen.value) { return; }
-        const root = accountNavRef.value;
-        if (root && !root.contains(e.target as Node)) {
-          accountDropdownOpen.value = false;
-        }
-      };
-      document.addEventListener('click', onAccountOutsideClick, true);
-    }, 0);
-  }
-});
+useEscapeKey(() => {
+  if (adminDropdownOpen.value) { adminDropdownOpen.value = false; }
+  if (accountDropdownOpen.value) { accountDropdownOpen.value = false; }
+  if (navOpen.value) { closeNav(); }
+}, anyDropdownOrDrawerOpen);
 
-let onEscape: ((e: KeyboardEvent) => void) | null = null;
 let desktopMq: MediaQueryList | null = null;
 let onDesktopMq: (() => void) | null = null;
 
 onMounted(() => {
-  onEscape = (e: KeyboardEvent) => {
-    if (e.key !== 'Escape') { return; }
-    if (adminDropdownOpen.value) { adminDropdownOpen.value = false; }
-    if (accountDropdownOpen.value) { accountDropdownOpen.value = false; }
-    if (navOpen.value) { closeNav(); }
-  };
-  document.addEventListener('keydown', onEscape);
-
   if (window.matchMedia) {
     desktopMq = window.matchMedia('(min-width: 1024px)');
     onDesktopMq = () => {
@@ -379,11 +328,6 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  if (onEscape) { document.removeEventListener('keydown', onEscape); }
-  if (onAdminOutsideClick) { document.removeEventListener('click', onAdminOutsideClick, true); }
-  if (onAccountOutsideClick) { document.removeEventListener('click', onAccountOutsideClick, true); }
-  if (adminOutsideListenTimer !== null) { clearTimeout(adminOutsideListenTimer); }
-  if (accountOutsideListenTimer !== null) { clearTimeout(accountOutsideListenTimer); }
   if (desktopMq && onDesktopMq) {
     if (desktopMq.removeEventListener) {
       desktopMq.removeEventListener('change', onDesktopMq);
@@ -412,71 +356,17 @@ const logout = async () => {
   await authStore.logout();
 };
 
-const clearDrawerTransitionInlineStyles = (el: Element) => {
-  const drawer = el.querySelector('.site-nav__drawer') as HTMLElement | null;
-  const backdrop = el.querySelector('.site-nav__backdrop') as HTMLElement | null;
-  if (drawer) { drawer.style.transition = ''; drawer.style.transform = ''; }
-  if (backdrop) { backdrop.style.transition = ''; backdrop.style.opacity = ''; }
-};
-
-const onDrawerBeforeEnter = (el: Element) => {
-  const drawer = el.querySelector('.site-nav__drawer') as HTMLElement | null;
-  const backdrop = el.querySelector('.site-nav__backdrop') as HTMLElement | null;
-  if (drawer) { drawer.style.transition = 'none'; drawer.style.transform = 'translateX(100%)'; }
-  if (backdrop) { backdrop.style.transition = 'none'; backdrop.style.opacity = '0'; }
-};
-
-const onDrawerEnter = (el: Element, done: () => void) => {
-  const drawer = el.querySelector('.site-nav__drawer') as HTMLElement | null;
-  const backdrop = el.querySelector('.site-nav__backdrop') as HTMLElement | null;
-  if (!drawer || !backdrop) { done(); return; }
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      drawer.style.transition = `transform ${SITE_NAV_DRAWER_MS}ms ease`;
-      backdrop.style.transition = `opacity ${SITE_NAV_DRAWER_MS}ms ease`;
-      drawer.style.transform = 'translateX(0)';
-      backdrop.style.opacity = '1';
-      const finish = (e: TransitionEvent) => {
-        if (!e || e.target !== drawer || e.propertyName !== 'transform') { return; }
-        drawer.removeEventListener('transitionend', finish);
-        clearTimeout(fallback);
-        done();
-      };
-      drawer.addEventListener('transitionend', finish);
-      const fallback = setTimeout(() => {
-        drawer.removeEventListener('transitionend', finish);
-        done();
-      }, SITE_NAV_DRAWER_MS + 100);
-    });
-  });
-};
-
-const onDrawerAfterEnter = (el: Element) => { clearDrawerTransitionInlineStyles(el); };
-
-const onDrawerLeave = (el: Element, done: () => void) => {
-  const drawer = el.querySelector('.site-nav__drawer') as HTMLElement | null;
-  const backdrop = el.querySelector('.site-nav__backdrop') as HTMLElement | null;
-  if (!drawer || !backdrop) { done(); return; }
-  drawer.style.transition = `transform ${SITE_NAV_DRAWER_MS}ms ease`;
-  backdrop.style.transition = `opacity ${SITE_NAV_DRAWER_MS}ms ease`;
-  requestAnimationFrame(() => {
-    drawer.style.transform = 'translateX(100%)';
-    backdrop.style.opacity = '0';
-    const finish = (e: TransitionEvent) => {
-      if (!e || e.target !== drawer || e.propertyName !== 'transform') { return; }
-      drawer.removeEventListener('transitionend', finish);
-      clearTimeout(fallback);
-      done();
-    };
-    drawer.addEventListener('transitionend', finish);
-    const fallback = setTimeout(() => {
-      drawer.removeEventListener('transitionend', finish);
-      done();
-    }, SITE_NAV_DRAWER_MS + 100);
-  });
-};
-
-const onDrawerAfterLeave = (el: Element) => { clearDrawerTransitionInlineStyles(el); };
+const {
+  onBeforeEnter: onDrawerBeforeEnter,
+  onEnter: onDrawerEnter,
+  onAfterEnter: onDrawerAfterEnter,
+  onLeave: onDrawerLeave,
+  onAfterLeave: onDrawerAfterLeave,
+} = useSlideDrawerTransition({
+  drawerSelector: '.site-nav__drawer',
+  backdropSelector: '.site-nav__backdrop',
+  durationMs: SITE_NAV_DRAWER_MS,
+});
 </script>
 
 <style scoped>

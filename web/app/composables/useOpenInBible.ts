@@ -12,7 +12,7 @@ export function useOpenInBible() {
 
   function openReadingUrl(bookIndex: number, chapterIndex: number) {
     const url = userSettingsStore.getReadingUrl(bookIndex, chapterIndex);
-    window.open(url, '_blank');
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   function openChapterInBible(bookIndex: number, chapterIndex: number) {
