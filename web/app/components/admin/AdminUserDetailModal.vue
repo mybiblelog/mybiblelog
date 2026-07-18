@@ -128,23 +128,32 @@ const stats = ref<UserStats | null>(null);
 const statsLoading = ref(false);
 const statsError = ref(false);
 
+// Bumped on every load/close so a stale response from a rapid reopen (or user switch)
+// can't overwrite state from a request that's since been superseded.
+let statsRequestId = 0;
+
 function daysAgo(dateStr: string) {
   return displayTimeSince(dateStr, locale.value);
 }
 
 async function loadStats() {
+  const requestId = ++statsRequestId;
   stats.value = null;
   statsError.value = false;
   statsLoading.value = true;
   try {
     const { data } = await $http.get<UserStats>(`/api/admin/users/${props.user!.email}/stats`);
+    if (requestId !== statsRequestId) { return; }
     stats.value = data;
   }
   catch {
+    if (requestId !== statsRequestId) { return; }
     statsError.value = true;
   }
   finally {
-    statsLoading.value = false;
+    if (requestId === statsRequestId) {
+      statsLoading.value = false;
+    }
   }
 }
 
@@ -192,6 +201,7 @@ watch(() => props.open, (isOpen) => {
     loadStats();
   }
   else {
+    statsRequestId += 1;
     stats.value = null;
     statsLoading.value = false;
     statsError.value = false;

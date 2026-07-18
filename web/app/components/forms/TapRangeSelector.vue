@@ -1,9 +1,9 @@
 <template>
-  <div class="tap-range-selector" :style="rangeSelectorStyle">
+  <div class="tap-range-selector mbl-tap-grid" :style="rangeSelectorStyle">
     <div
       v-for="(option, index) in options"
       :key="index"
-      class="tap-range-selector--option"
+      class="tap-range-selector--option mbl-tap-grid--cell"
       :class="tapRangeSelectorOptionClass(option)"
       @click="handleClick(option)"
     >
@@ -83,21 +83,9 @@ function handleClick(value: number) {
 </script>
 
 <style scoped>
-.tap-range-selector {
-  display: grid;
-  padding: 1px;
-  font-size: 0.8rem;
-  user-select: none;
-}
-
 .tap-range-selector--option {
-  cursor: pointer;
-  display: flex;
   justify-content: center;
-  align-items: center;
   padding: 1rem 0;
-  position: relative;
-  transition: 0.2s;
   border: 2px solid transparent;
   border-radius: 5px;
 }

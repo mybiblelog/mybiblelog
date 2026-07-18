@@ -1,9 +1,9 @@
 <template>
-  <div class="grid-selector" :style="gridSelectorStyle">
+  <div class="grid-selector mbl-tap-grid" :style="gridSelectorStyle">
     <div
       v-for="option in options"
       :key="option.value"
-      class="grid-selector--option"
+      class="grid-selector--option mbl-tap-grid--cell"
       @click="emit('selection', option.value)"
     >
       {{ option.label }}
@@ -30,21 +30,12 @@ const gridSelectorStyle = computed(() => ({
 
 <style scoped>
 .grid-selector {
-  display: grid;
-  padding: 1px;
-  font-size: 0.8rem;
-  user-select: none;
   grid-auto-flow: column;
 }
 
 .grid-selector--option {
-  cursor: pointer;
-  position: relative;
-  display: flex;
   justify-content: flex-start;
-  align-items: center;
   padding: 1rem;
-  transition: 0.2s;
 }
 
 .grid-selector--option::before {

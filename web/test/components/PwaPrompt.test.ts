@@ -85,4 +85,12 @@ describe('PwaPrompt', () => {
     await wrapper.find('[data-testid="pwa-offline-dismiss"]').trigger('click');
     expect(pwa.cancelPrompt).toHaveBeenCalledOnce();
   });
+
+  it('prioritizes the offline-ready notice over the install prompt', () => {
+    const pwa = makePwa({ offlineReady: true, showInstallPrompt: true });
+    const wrapper = mountPrompt(pwa);
+
+    expect(wrapper.find('[data-testid="pwa-offline-ready"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="pwa-install-prompt"]').exists()).toBe(false);
+  });
 });

@@ -95,7 +95,7 @@
       </select>
     </div>
     <div v-if="errors._form" class="form-error">
-      {{ t(`api_error.${errors._form?.code ?? 'unknown_error'}`) }}
+      {{ formErrorMessage }}
     </div>
   </form>
 </template>
@@ -104,10 +104,15 @@
 import { Bible, PassageSelection } from '@mybiblelog/shared';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 
-const { t, locale } = useI18n();
+const { t, te, locale } = useI18n();
 const logEntryEditorStore = useLogEntryEditorStore();
 const logEntry = computed(() => logEntryEditorStore.logEntry);
 const errors = computed(() => logEntryEditorStore.errors);
+
+const formErrorMessage = computed(() => {
+  const key = `api_error.${errors.value._form?.code ?? 'unknown_error'}`;
+  return te(key) ? t(key) : t('could_not_save');
+});
 
 const books = Bible.getBooks();
 const startChapterRef = ref<HTMLSelectElement | null>(null);
@@ -323,7 +328,8 @@ form select:not(:disabled) {
     "end_chapter": "End Chapter",
     "choose_end_chapter": "Choose End Chapter",
     "end_verse": "End Verse",
-    "choose_end_verse": "Choose End Verse"
+    "choose_end_verse": "Choose End Verse",
+    "could_not_save": "The entry could not be saved."
   },
   "de": {
     "preview_passage": "Passage Vorschau",
@@ -337,7 +343,8 @@ form select:not(:disabled) {
     "end_chapter": "Endkapitel",
     "choose_end_chapter": "Kapitel auswählen",
     "end_verse": "Endvers",
-    "choose_end_verse": "Vers auswählen"
+    "choose_end_verse": "Vers auswählen",
+    "could_not_save": "Der Eintrag konnte nicht gespeichert werden."
   },
   "es": {
     "preview_passage": "vista previa del pasaje",
@@ -351,7 +358,8 @@ form select:not(:disabled) {
     "end_chapter": "Capítulo final",
     "choose_end_chapter": "Elegir capítulo final",
     "end_verse": "Versículo final",
-    "choose_end_verse": "Elegir versículo final"
+    "choose_end_verse": "Elegir versículo final",
+    "could_not_save": "La entrada no se pudo guardar."
   },
   "fr": {
     "preview_passage": "Aperçu du passage",
@@ -365,7 +373,8 @@ form select:not(:disabled) {
     "end_chapter": "Chapitre de fin",
     "choose_end_chapter": "Chapitre de fin",
     "end_verse": "Verset de fin",
-    "choose_end_verse": "Verset de fin"
+    "choose_end_verse": "Verset de fin",
+    "could_not_save": "L'entrée n'a pas pu être enregistrée."
   },
   "ko": {
     "preview_passage": "구절 미리보기",
@@ -379,7 +388,8 @@ form select:not(:disabled) {
     "end_chapter": "끝 장",
     "choose_end_chapter": "끝 장 선택",
     "end_verse": "끝 절",
-    "choose_end_verse": "끝 절 선택"
+    "choose_end_verse": "끝 절 선택",
+    "could_not_save": "항목을 저장할 수 없습니다."
   },
   "pt": {
     "preview_passage": "visualização do trecho",
@@ -393,7 +403,8 @@ form select:not(:disabled) {
     "end_chapter": "Capítulo Final",
     "choose_end_chapter": "Escolher Capítulo",
     "end_verse": "Versículo Final",
-    "choose_end_verse": "Escolher Versículo"
+    "choose_end_verse": "Escolher Versículo",
+    "could_not_save": "A entrada não pôde ser salva."
   },
   "uk": {
     "preview_passage": "попередній перегляд пасажу",
@@ -407,7 +418,8 @@ form select:not(:disabled) {
     "end_chapter": "Закінчити розділ",
     "choose_end_chapter": "Виберіть",
     "end_verse": "Закінчити вірш",
-    "choose_end_verse": "Виберіть"
+    "choose_end_verse": "Виберіть",
+    "could_not_save": "Не вдалося зберегти запис."
   }
 }
 </i18n>
