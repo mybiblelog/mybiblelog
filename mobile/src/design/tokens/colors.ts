@@ -36,6 +36,8 @@ export type ThemeColors = {
   skeleton: string;
   /** Decorative gold used for "fully read" stars (same in both schemes). */
   starGold: string;
+  /** Decorative gray/blue used for the achievement-modal particle stars (mirrors web `--mbl-message-info-accent`). */
+  starParticle: string;
 };
 
 export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
@@ -57,6 +59,7 @@ export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
     placeholder: "rgba(0,0,0,0.45)",
     skeleton: "rgba(0,0,0,0.08)",
     starGold: "#ffd700",
+    starParticle: "#7ab8e8",
   },
   dark: {
     background: "#0b0b0f",
@@ -76,6 +79,7 @@ export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
     placeholder: "rgba(245,245,247,0.45)",
     skeleton: "rgba(245,245,247,0.10)",
     starGold: "#ffd700",
+    starParticle: "#5b8db8",
   },
 };
 
