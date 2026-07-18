@@ -32,7 +32,6 @@ export default defineNuxtConfig({
     public: {
       siteUrl: process.env.SITE_URL || '',
       requireEmailVerification: process.env.REQUIRE_EMAIL_VERIFICATION !== 'false',
-      googleAnalytics4MeasurementId: process.env.GA_MEASUREMENT_ID || '',
       locales: ['en', 'de', 'es', 'fr', 'ko', 'pt', 'uk'],
     },
   },
@@ -55,12 +54,24 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@nuxt/content',
     '@vite-pwa/nuxt',
+    'nuxt-gtag',
   ],
 
   content: {
     // Content directory at project root (web/content)
     renderer: {
       anchorLinks: false,
+    },
+  },
+
+  // Empty id no-ops (no script injected, no CSP widening needed) — see
+  // server/utils/security-headers.ts's `analyticsEnabled` flag, which reads
+  // this same id off runtimeConfig.public.gtag.
+  gtag: {
+    id: process.env.GA_MEASUREMENT_ID || '',
+    // Page views are sent manually — see app/plugins/analytics.client.ts.
+    config: {
+      send_page_view: false,
     },
   },
 
