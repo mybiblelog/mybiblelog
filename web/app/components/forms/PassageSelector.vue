@@ -162,8 +162,14 @@ type PassageSeed = { empty: true } | { empty?: false; startVerseId: number; endV
 
 const props = withDefaults(defineProps<{
   populateWith?: PassageSeed;
+  // When true the modal chains directly to the next step (book → chapters →
+  // start/end verse) instead of closing after each selection. Used when the
+  // selector is driven purely through its modal (e.g. the hidden picker inside
+  // VerseInput) and its inline "part" chips are not visible to continue the flow.
+  autoAdvance?: boolean;
 }>(), {
   populateWith: () => ({ empty: true }),
+  autoAdvance: false,
 });
 
 const emit = defineEmits<{ change: [value: { startVerseId: number; endVerseId: number }] }>();
@@ -243,34 +249,49 @@ function openSelectStartVerse() { selectionTarget.value = SELECTION.START_VERSE;
 function openSelectEndVerse() { selectionTarget.value = SELECTION.END_VERSE; }
 function endSelection() { selectionTarget.value = null; }
 
+// Determines the next selection step when auto-advancing, following the same
+// book → chapters → verse(s) cascade the inline chips expose. Returns null once
+// the passage is fully resolved so the modal can close.
+function nextAutoStep(state: PassageSelection.PassageSelectionState): SelectionTarget {
+  if (!state.book) { return SELECTION.BOOK; }
+  if (!state.startChapter) { return SELECTION.CHAPTERS; }
+  if (state.startChapter === state.endChapter) {
+    return state.startVerse && state.endVerse ? null : SELECTION.VERSES;
+  }
+  if (!state.startVerse) { return SELECTION.START_VERSE; }
+  if (!state.endVerse) { return SELECTION.END_VERSE; }
+  return null;
+}
+
+// Applies a selection result and either chains to the next step (auto-advance)
+// or closes the modal so the inline chips drive the remaining steps.
+function advanceAfter(result: PassageSelection.PassageSelectionResult) {
+  applyResult(result);
+  selectionTarget.value = props.autoAdvance ? nextAutoStep(result.state) : null;
+}
+
 function selectBook(bookIndex: number) {
-  applyResult(PassageSelection.selectBook(bookIndex));
-  selectionTarget.value = null;
+  advanceAfter(PassageSelection.selectBook(bookIndex));
 }
 
 function selectChapters({ from, to }: { from: number; to: number }) {
-  applyResult(PassageSelection.selectChapters(selected.value, { from, to }));
-  selectionTarget.value = null;
+  advanceAfter(PassageSelection.selectChapters(selected.value, { from, to }));
 }
 
 function selectEndChapter({ from, to }: { from: number; to: number }) {
-  applyResult(PassageSelection.selectEndChapter(selected.value, to || from));
-  selectionTarget.value = null;
+  advanceAfter(PassageSelection.selectEndChapter(selected.value, to || from));
 }
 
 function selectVerses({ from, to }: { from: number; to: number }) {
-  applyResult(PassageSelection.selectVerses(selected.value, { from, to }));
-  selectionTarget.value = null;
+  advanceAfter(PassageSelection.selectVerses(selected.value, { from, to }));
 }
 
 function selectStartVerse({ from, to }: { from: number; to: number }) {
-  applyResult(PassageSelection.selectStartVerse(selected.value, from || to));
-  selectionTarget.value = null;
+  advanceAfter(PassageSelection.selectStartVerse(selected.value, from || to));
 }
 
 function selectEndVerse({ from, to }: { from: number; to: number }) {
-  applyResult(PassageSelection.selectEndVerse(selected.value, to || from));
-  selectionTarget.value = null;
+  advanceAfter(PassageSelection.selectEndVerse(selected.value, to || from));
 }
 
 defineExpose({ openSelectBook });
