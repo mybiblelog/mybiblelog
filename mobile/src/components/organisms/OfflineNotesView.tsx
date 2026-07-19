@@ -87,6 +87,7 @@ export function OfflineNotesView() {
 
       <AnimatedList
         data={notes}
+        animateItemLayout={false}
         contentContainerStyle={[styles.listContent, notes.length === 0 && styles.listContentEmpty]}
         keyExtractor={(item: StoredLocalNote) => item.clientId}
         renderItem={({ item }: { item: StoredLocalNote }) => (
