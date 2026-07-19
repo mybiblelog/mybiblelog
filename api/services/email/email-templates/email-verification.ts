@@ -1,7 +1,7 @@
 import { LocaleCode } from '@shared/dist/platform/i18n';
 import locales from '../locales/content';
 import { substitute } from '../locales/substitute';
-import { getLocaleBaseUrl } from './helpers';
+import { getLocaleBaseUrl, emailParagraphStyle, renderCodeBlock } from './helpers';
 import renderBrandedEmail from './branded-wrapper';
 
 type RenderEmailVerificationParams = {
@@ -18,9 +18,11 @@ const render = ({ locale, email, emailVerificationCode }: RenderEmailVerificatio
   const link = getLocaleBaseUrl(locale)
     + '/verify-email?code=' + emailVerificationCode
     + '&email=' + encodeURIComponent(email);
+  const p = (html: string) => `<p style="${emailParagraphStyle}">${html}</p>`;
   const contentHtml = [
-    `<p>${substitute(t.click_to_verify, { link })}</p>`,
-    `<p>${substitute(t.enter_code, { code: emailVerificationCode })}</p>`,
+    p(t.code_intro),
+    renderCodeBlock(emailVerificationCode),
+    p(substitute(t.click_to_verify, { link })),
   ].join('');
 
   return {

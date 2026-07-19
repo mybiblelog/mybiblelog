@@ -2,10 +2,20 @@
   <app-modal :open="store.isOpen" :title="title" @close="close">
     <template #content>
       <div class="auth-code-modal">
-        <p class="mbl-content auth-code-modal__instructions">
+        <p
+          v-if="!verified"
+          class="mbl-content auth-code-modal__instructions"
+        >
           {{ t('instructions') }}
         </p>
-        <p v-if="store.email" class="auth-code-modal__email">
+        <p
+          v-else
+          class="mbl-content auth-code-modal__verified"
+          data-testid="auth-code-verified"
+        >
+          {{ verifiedMessage }}
+        </p>
+        <p v-if="store.email && !verified" class="auth-code-modal__email">
           <strong>{{ store.email }}</strong>
         </p>
         <div v-if="formError" class="mbl-help mbl-help--danger" data-testid="auth-code-error">
@@ -13,7 +23,7 @@
         </div>
 
         <!-- Step 1: enter the emailed code (all flows) -->
-        <div v-if="!showPasswordStep" class="mbl-field">
+        <div v-if="!verified" class="mbl-field">
           <label class="mbl-label" for="authCode">{{ t('code_label') }}</label>
           <div class="mbl-control">
             <input
@@ -76,7 +86,7 @@
         {{ t('submit') }}
       </button>
       <button
-        v-else
+        v-else-if="!verified"
         class="mbl-button mbl-button--primary"
         :disabled="submitting || code.length !== CODE_LENGTH"
         data-testid="auth-code-submit"
@@ -105,6 +115,10 @@ import { onAuthEvent, postAuthEvent } from '~/composables/auth-channel';
 // constant so the web app doesn't import from the API package.
 const CODE_LENGTH = 6;
 
+// How long the "Code verified…" confirmation lingers before the verify-email and
+// change-email flows finish and close/redirect, so the user sees it register.
+const VERIFIED_NOTICE_MS = 900;
+
 const { t } = useI18n();
 const store = useAuthCodeStore();
 const authStore = useAuthStore();
@@ -116,20 +130,31 @@ const { $http } = useNuxtApp();
 const code = ref('');
 const newPassword = ref('');
 const confirmNewPassword = ref('');
-const step = ref<'code' | 'password'>('code');
+// True once the emailed code has been accepted, for every flow. It swaps the
+// helper text for a confirmation and (for reset-password) reveals the password
+// step; verify-email/change-email briefly show the notice, then complete.
+const verified = ref(false);
 const submitting = ref(false);
 const formError = ref<ApiErrorDetail | string | null>(null);
 
 const codeInput = ref<HTMLInputElement | null>(null);
 const passwordInput = ref<HTMLInputElement | null>(null);
 
-const showPasswordStep = computed(() => store.flow === 'reset-password' && step.value === 'password');
+const showPasswordStep = computed(() => store.flow === 'reset-password' && verified.value);
+
+const verifiedMessage = computed(() => {
+  switch (store.flow) {
+  case 'reset-password': return t('verified_reset');
+  case 'change-email': return t('verified_change');
+  default: return t('verified_verify');
+  }
+});
 
 const title = computed(() => {
   switch (store.flow) {
-    case 'reset-password': return t('title_reset_password');
-    case 'change-email': return t('title_change_email');
-    default: return t('title_verify_email');
+  case 'reset-password': return t('title_reset_password');
+  case 'change-email': return t('title_change_email');
+  default: return t('title_verify_email');
   }
 });
 
@@ -137,7 +162,7 @@ function resetLocalState() {
   code.value = '';
   newPassword.value = '';
   confirmNewPassword.value = '';
-  step.value = 'code';
+  verified.value = false;
   submitting.value = false;
   formError.value = null;
 }
@@ -165,13 +190,22 @@ async function completeSignedIn() {
   await router.push(localePath('/start'));
 }
 
+// Briefly hold the "Code verified…" notice so it registers before a flow that
+// otherwise completes and closes/redirects instantly.
+function showVerifiedNotice() {
+  verified.value = true;
+  return new Promise(resolve => setTimeout(resolve, VERIFIED_NOTICE_MS));
+}
+
 async function submitVerify() {
   await $http.post('/api/auth/verify-email', { email: store.email, code: code.value });
+  await showVerifiedNotice();
   await completeSignedIn();
 }
 
 async function submitChangeEmail() {
   await $http.post('/api/auth/change-email/complete', { email: store.email, code: code.value });
+  await showVerifiedNotice();
   await authStore.refreshUser();
   postAuthEvent({ type: 'completed', flow: store.flow, email: store.email });
   toastStore.add({ type: 'success', text: t('change_email_success') });
@@ -189,7 +223,7 @@ async function validateResetCode() {
     focusCode();
     return;
   }
-  step.value = 'password';
+  verified.value = true;
   nextTick(() => passwordInput.value?.focus());
 }
 
@@ -243,7 +277,7 @@ function close() {
 
 // Auto-submit as soon as a full code is entered (code step only).
 watch(code, (value) => {
-  if (value.length === CODE_LENGTH && !submitting.value && step.value === 'code' && store.isOpen) {
+  if (value.length === CODE_LENGTH && !submitting.value && !verified.value && store.isOpen) {
     submitCode();
   }
 });
@@ -260,7 +294,7 @@ watch(() => store.isOpen, (isOpen) => {
 // switched to their email app to read the code.
 function onWindowFocus() {
   if (import.meta.client && document.visibilityState === 'hidden') { return; }
-  if (store.isOpen && step.value === 'code') { focusCode(); }
+  if (store.isOpen && !verified.value) { focusCode(); }
 }
 
 let unsubscribeAuthEvent: (() => void) | null = null;
@@ -309,6 +343,9 @@ onUnmounted(() => {
     "title_reset_password": "Reset your password",
     "title_change_email": "Confirm your new email",
     "instructions": "Enter the code from your email, or click the link in the email to verify instantly.",
+    "verified_reset": "Code verified. Choose your new password.",
+    "verified_verify": "Code verified. Signing you in…",
+    "verified_change": "Code verified. Updating your email…",
     "code_label": "Verification code",
     "verifying": "Verifying…",
     "continue": "Continue",
@@ -325,6 +362,9 @@ onUnmounted(() => {
     "title_reset_password": "Passwort zurücksetzen",
     "title_change_email": "Bestätigen Sie Ihre neue E-Mail",
     "instructions": "Geben Sie den Code aus Ihrer E-Mail ein oder klicken Sie auf den Link in der E-Mail, um sich sofort zu verifizieren.",
+    "verified_reset": "Code bestätigt. Wählen Sie Ihr neues Passwort.",
+    "verified_verify": "Code bestätigt. Sie werden angemeldet…",
+    "verified_change": "Code bestätigt. Ihre E-Mail wird aktualisiert…",
     "code_label": "Bestätigungscode",
     "verifying": "Wird überprüft…",
     "continue": "Weiter",
@@ -341,6 +381,9 @@ onUnmounted(() => {
     "title_reset_password": "Restablece tu contraseña",
     "title_change_email": "Confirma tu nuevo correo electrónico",
     "instructions": "Introduce el código de tu correo electrónico, o haz clic en el enlace del correo para verificar al instante.",
+    "verified_reset": "Código verificado. Elige tu nueva contraseña.",
+    "verified_verify": "Código verificado. Iniciando sesión…",
+    "verified_change": "Código verificado. Actualizando tu correo electrónico…",
     "code_label": "Código de verificación",
     "verifying": "Verificando…",
     "continue": "Continuar",
@@ -357,6 +400,9 @@ onUnmounted(() => {
     "title_reset_password": "Réinitialisez votre mot de passe",
     "title_change_email": "Confirmez votre nouvel e-mail",
     "instructions": "Saisissez le code reçu par e-mail, ou cliquez sur le lien dans l'e-mail pour vérifier instantanément.",
+    "verified_reset": "Code vérifié. Choisissez votre nouveau mot de passe.",
+    "verified_verify": "Code vérifié. Connexion en cours…",
+    "verified_change": "Code vérifié. Mise à jour de votre e-mail…",
     "code_label": "Code de vérification",
     "verifying": "Vérification…",
     "continue": "Continuer",
@@ -373,6 +419,9 @@ onUnmounted(() => {
     "title_reset_password": "비밀번호 재설정",
     "title_change_email": "새 이메일 확인",
     "instructions": "이메일에 있는 코드를 입력하거나, 이메일의 링크를 클릭하면 즉시 인증됩니다.",
+    "verified_reset": "코드가 확인되었습니다. 새 비밀번호를 입력하세요.",
+    "verified_verify": "코드가 확인되었습니다. 로그인 중…",
+    "verified_change": "코드가 확인되었습니다. 이메일을 업데이트하는 중…",
     "code_label": "인증 코드",
     "verifying": "인증 중…",
     "continue": "계속",
@@ -389,6 +438,9 @@ onUnmounted(() => {
     "title_reset_password": "Redefina sua senha",
     "title_change_email": "Confirme seu novo e-mail",
     "instructions": "Insira o código do seu e-mail ou clique no link no e-mail para verificar instantaneamente.",
+    "verified_reset": "Código verificado. Escolha sua nova senha.",
+    "verified_verify": "Código verificado. Entrando…",
+    "verified_change": "Código verificado. Atualizando seu e-mail…",
     "code_label": "Código de verificação",
     "verifying": "Verificando…",
     "continue": "Continuar",
@@ -405,6 +457,9 @@ onUnmounted(() => {
     "title_reset_password": "Скиньте свій пароль",
     "title_change_email": "Підтвердіть свою нову електронну пошту",
     "instructions": "Введіть код із вашого листа або натисніть посилання в листі, щоб миттєво підтвердити.",
+    "verified_reset": "Код підтверджено. Виберіть новий пароль.",
+    "verified_verify": "Код підтверджено. Вхід у систему…",
+    "verified_change": "Код підтверджено. Оновлення вашої електронної пошти…",
     "code_label": "Код підтвердження",
     "verifying": "Перевірка…",
     "continue": "Продовжити",
