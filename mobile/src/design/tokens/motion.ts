@@ -23,6 +23,8 @@ export const easings = {
   standard: Easing.bezier(0.2, 0, 0, 1),
   decelerate: Easing.out(Easing.cubic),
   accelerate: Easing.in(Easing.cubic),
+  /** Constant-rate motion for continuous loops (e.g. a spinner's rotation). */
+  linear: Easing.linear,
 } as const;
 
 /**

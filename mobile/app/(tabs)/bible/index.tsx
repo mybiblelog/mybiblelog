@@ -202,6 +202,7 @@ export default function BibleIndex() {
       </Card>
 
       <AnimatedList
+        key={testament}
         data={filtered.books}
         keyExtractor={(item) => String(item.bookIndex)}
         // Fixed-size list (66 books): render it all up front instead of

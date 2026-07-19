@@ -162,6 +162,7 @@ export default function Notes() {
 
       <AnimatedList
         data={notes}
+        animateItemLayout={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         contentContainerStyle={[styles.listContent, notes.length === 0 && styles.listContentEmpty]}
         keyExtractor={(item: PassageNote) => item.id}

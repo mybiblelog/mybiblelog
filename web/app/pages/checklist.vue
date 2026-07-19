@@ -229,6 +229,10 @@ onMounted(async () => {
   margin: 0.5rem 0;
   font-size: 0.8rem;
   font-weight: bold;
+
+  position: sticky;
+  top: var(--site-nav-height);
+  z-index: 1;
 }
 .book-card--completion-indicator { grid-area: 1 / 1 / 3 / 2; width: 1.5rem; margin-right: 0.5rem; display: flex; }
 .book-card--book-name { grid-area: 1 / 2 / 2 / 3; }

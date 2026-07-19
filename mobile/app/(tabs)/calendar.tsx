@@ -236,11 +236,6 @@ export default function Calendar() {
                       style={[
                         styles.dayNumberCircle,
                         {
-                          // The radius must live in the same inline object as the
-                          // changing background: Android drops the registered
-                          // style's borderRadius when only backgroundColor
-                          // changes across re-renders (selection square bug).
-                          borderRadius: 999,
                           backgroundColor: isSelected
                             ? colors.primary
                             : isToday
@@ -362,6 +357,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
+    overflow: "hidden",
   },
   dayStar: {
     position: "absolute",
