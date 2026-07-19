@@ -93,7 +93,7 @@ test.describe('Password reset (code modal)', () => {
     await page.goto('/login');
     await waitForHydration(page);
     await page.getByRole('textbox', { name: 'Email' }).fill(user.email);
-    await page.getByRole('button', { name: 'Forgot your password? Reset it via email.' }).click();
+    await page.getByRole('button', { name: 'I forgot my password' }).click();
     await expect(page.getByTestId('auth-code-input')).toBeVisible();
 
     // A wrong code is rejected inline and clears the field (per-code attempt cap
@@ -182,7 +182,7 @@ test.describe('Cross-tab completion', () => {
     await page.goto('/login');
     await waitForHydration(page);
     await page.getByRole('textbox', { name: 'Email' }).fill(user.email);
-    await page.getByRole('button', { name: 'Forgot your password? Reset it via email.' }).click();
+    await page.getByRole('button', { name: 'I forgot my password' }).click();
     await expect(page.getByTestId('auth-code-input')).toBeVisible();
 
     const email = await waitForEmail({ to: user.email, subject: 'Reset Password', since: requestedAt });

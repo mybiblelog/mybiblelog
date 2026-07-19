@@ -126,11 +126,12 @@ test.describe('Login', () => {
     await expect(page.getByText('Email or password is incorrect')).toBeVisible();
   });
 
-  test('password reset request shows confirmation (up to email send)', async ({ page }) => {
+  test('password reset request opens the code modal (up to email send)', async ({ page }) => {
     await page.goto('/login');
     await page.getByRole('textbox', { name: 'Email' }).fill(testUser.email);
-    await page.getByRole('button', { name: 'Forgot your password? Reset it via email.' }).click();
-    await expect(page.getByText('A password reset link has been sent to your email address.')).toBeVisible();
+    await page.getByRole('button', { name: 'I forgot my password' }).click();
+    // The reset flow now runs in the code modal, leaving the login form intact.
+    await expect(page.getByTestId('auth-code-input')).toBeVisible();
   });
 });
 

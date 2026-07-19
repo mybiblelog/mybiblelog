@@ -198,6 +198,13 @@ onUnmounted(() => {
   window.removeEventListener('focus', checkChangeEmailRequestState);
 });
 
+// When the code modal closes (the change completed, or the user dismissed it),
+// re-fetch so the now-stale "in progress" request info reflects reality instead
+// of waiting for the next window-focus.
+watch(() => authCodeStore.isOpen, (isOpen, wasOpen) => {
+  if (wasOpen && !isOpen) { checkChangeEmailRequestState(); }
+});
+
 async function submitChangeEmail() {
   if (formBusy.value) { return; }
   formBusy.value = true;
