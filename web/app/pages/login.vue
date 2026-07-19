@@ -50,7 +50,7 @@
             :disabled="!mounted || submitting"
             class="mbl-button"
             :class="{ 'mbl-button--text': !failedLoginAttempt, 'mbl-button--primary': failedLoginAttempt }"
-            @click.prevent="sendPasswordReset"
+            @click.prevent="openPasswordReset"
           >
             {{ t('forgot_your_password') }}
           </button>
@@ -145,25 +145,11 @@ const onSubmit = async () => {
   await router.push(localePath('/start'));
 };
 
-const sendPasswordReset = async () => {
-  if (submitting.value) { return; }
-  if (!email.value) {
-    errors.value = { email: t('your_email_address_is_required') };
-    return;
-  }
-  submitting.value = true;
-  try {
-    await $http.post('/api/auth/password/reset', { email: email.value });
-    // Hand the whole reset off to the code modal (the emailed link still works
-    // too). The login form stays intact underneath rather than being replaced.
-    authCodeStore.open({ flow: 'reset-password', email: email.value });
-  }
-  catch (err) {
-    errors.value = (err instanceof ApiError ? mapFormErrors(err) : null) ?? mapFormErrors(new UnknownApiError());
-  }
-  finally {
-    submitting.value = false;
-  }
+const openPasswordReset = () => {
+  // The reset modal owns the whole flow (email → code → new password). Hand it
+  // whatever's already typed in the login form so its email step is pre-filled;
+  // the login page stays intact underneath rather than being replaced.
+  authCodeStore.open({ flow: 'reset-password', email: email.value });
 };
 </script>
 
@@ -176,7 +162,6 @@ const sendPasswordReset = async () => {
 <i18n lang="json">
 {
   "en": {
-    "your_email_address_is_required": "Your email address is required.",
     "sign_in": "Sign In",
     "need_an_account": "Need an account?",
     "email": "Email",
@@ -185,7 +170,6 @@ const sendPasswordReset = async () => {
     "session_expired": "Your session has expired. Please sign in again."
   },
   "de": {
-    "your_email_address_is_required": "Ihre E-Mail-Adresse ist erforderlich.",
     "sign_in": "Anmelden",
     "need_an_account": "Benötigen Sie ein Konto?",
     "email": "E-Mail",
@@ -194,7 +178,6 @@ const sendPasswordReset = async () => {
     "session_expired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an."
   },
   "es": {
-    "your_email_address_is_required": "Su dirección de correo electrónico es obligatoria.",
     "sign_in": "Iniciar sesión",
     "need_an_account": "¿Necesitas una cuenta?",
     "email": "Correo electrónico",
@@ -203,7 +186,6 @@ const sendPasswordReset = async () => {
     "session_expired": "Tu sesión ha expirado. Por favor, inicia sesión de nuevo."
   },
   "fr": {
-    "your_email_address_is_required": "Votre adresse e-mail est requise.",
     "sign_in": "Se connecter",
     "need_an_account": "Besoin d'un compte?",
     "email": "Email",
@@ -212,7 +194,6 @@ const sendPasswordReset = async () => {
     "session_expired": "Votre session a expiré. Veuillez vous reconnecter."
   },
   "ko": {
-    "your_email_address_is_required": "이메일 주소를 입력해 주세요.",
     "sign_in": "로그인",
     "need_an_account": "계정이 없으신가요?",
     "email": "이메일",
@@ -221,7 +202,6 @@ const sendPasswordReset = async () => {
     "session_expired": "세션이 만료되었습니다. 다시 로그인해 주세요."
   },
   "pt": {
-    "your_email_address_is_required": "Seu endereço de e-mail é obrigatório.",
     "sign_in": "Entrar",
     "need_an_account": "Precisa de uma conta?",
     "email": "E-mail",
@@ -230,7 +210,6 @@ const sendPasswordReset = async () => {
     "session_expired": "Sua sessão expirou. Por favor, faça login novamente."
   },
   "uk": {
-    "your_email_address_is_required": "Ваша електронна адреса обов'язкова.",
     "sign_in": "Увійти",
     "need_an_account": "Потрібен обліковий запис?",
     "email": "Електронна пошта",

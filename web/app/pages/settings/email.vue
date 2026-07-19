@@ -224,7 +224,13 @@ async function submitChangeEmail() {
     changeEmailModel.newEmail = '';
     resetChangeEmailErrors();
     // Open the code modal to finish the change (the emailed link still works too).
-    authCodeStore.open({ flow: 'change-email', email: authStore.user?.email ?? '' });
+    // `email` stays the current address (the completion endpoint is keyed on it),
+    // while `sentToEmail` is the new address the code was actually delivered to.
+    authCodeStore.open({
+      flow: 'change-email',
+      email: authStore.user?.email ?? '',
+      sentToEmail: newEmail,
+    });
   }
   catch (err) {
     Object.assign(changeEmailErrors, mapFormErrors(err instanceof ApiError ? err : new UnknownApiError()));

@@ -3,7 +3,13 @@
     <template #content>
       <div class="auth-code-modal">
         <p
-          v-if="!verified"
+          v-if="showEmailStep"
+          class="mbl-content auth-code-modal__instructions"
+        >
+          {{ t('reset_email_prompt') }}
+        </p>
+        <p
+          v-else-if="!verified"
           class="mbl-content auth-code-modal__instructions"
         >
           {{ t('instructions') }}
@@ -15,15 +21,33 @@
         >
           {{ verifiedMessage }}
         </p>
-        <p v-if="store.email && !verified" class="auth-code-modal__email">
-          <strong>{{ store.email }}</strong>
+        <p v-if="displayEmail && !verified && !showEmailStep" class="auth-code-modal__email">
+          <strong>{{ displayEmail }}</strong>
         </p>
         <div v-if="formError" class="mbl-help mbl-help--danger" data-testid="auth-code-error">
           {{ $terr(formError) }}
         </div>
 
+        <!-- Step 0 (reset-password only): enter the account email to receive a code -->
+        <div v-if="showEmailStep" class="mbl-field">
+          <label class="mbl-label" for="authEmail">{{ t('email_label') }}</label>
+          <div class="mbl-control">
+            <input
+              id="authEmail"
+              ref="emailInput"
+              v-model="emailModel"
+              class="mbl-input"
+              type="email"
+              autocomplete="email"
+              :disabled="submitting"
+              data-testid="auth-code-email"
+              @keyup.enter="submitEmailRequest"
+            >
+          </div>
+        </div>
+
         <!-- Step 1: enter the emailed code (all flows) -->
-        <div v-if="!verified" class="mbl-field">
+        <div v-else-if="!verified" class="mbl-field">
           <label class="mbl-label" for="authCode">{{ t('code_label') }}</label>
           <div class="mbl-control">
             <input
@@ -44,7 +68,7 @@
         </div>
 
         <!-- Step 2 (reset-password only): choose a new password once the code is valid -->
-        <form v-else @submit.prevent="submitResetComplete">
+        <form v-else-if="showPasswordStep" @submit.prevent="submitResetComplete">
           <div class="mbl-field">
             <label class="mbl-label" for="authNewPassword">{{ t('new_password') }}</label>
             <div class="mbl-control">
@@ -77,7 +101,16 @@
     </template>
     <template #footer>
       <button
-        v-if="showPasswordStep"
+        v-if="showEmailStep"
+        class="mbl-button mbl-button--primary"
+        :disabled="submitting"
+        data-testid="auth-code-send-code"
+        @click="submitEmailRequest"
+      >
+        {{ t('send_code') }}
+      </button>
+      <button
+        v-else-if="showPasswordStep"
         class="mbl-button mbl-button--primary"
         :disabled="submitting"
         data-testid="auth-code-password-submit"
@@ -130,6 +163,11 @@ const { $http } = useNuxtApp();
 const code = ref('');
 const newPassword = ref('');
 const confirmNewPassword = ref('');
+// reset-password owns its own email step: the flow opens here (email pre-filled
+// from the login form when available), sends the reset request itself, then
+// advances to the code step. `requestSent` marks that transition.
+const emailModel = ref('');
+const requestSent = ref(false);
 // True once the emailed code has been accepted, for every flow. It swaps the
 // helper text for a confirmation and (for reset-password) reveals the password
 // step; verify-email/change-email briefly show the notice, then complete.
@@ -137,9 +175,16 @@ const verified = ref(false);
 const submitting = ref(false);
 const formError = ref<ApiErrorDetail | string | null>(null);
 
+const emailInput = ref<HTMLInputElement | null>(null);
 const codeInput = ref<HTMLInputElement | null>(null);
 const passwordInput = ref<HTMLInputElement | null>(null);
 
+// The address the code was sent to (change-email delivers to the new address,
+// so it differs from `store.email`, which stays the current/lookup address).
+const displayEmail = computed(() => store.sentToEmail || store.email);
+
+// Only reset-password shows the email step, and only until its request is sent.
+const showEmailStep = computed(() => store.flow === 'reset-password' && !requestSent.value);
 const showPasswordStep = computed(() => store.flow === 'reset-password' && verified.value);
 
 const verifiedMessage = computed(() => {
@@ -162,6 +207,9 @@ function resetLocalState() {
   code.value = '';
   newPassword.value = '';
   confirmNewPassword.value = '';
+  // Pre-fill the email step from whatever the opener passed (e.g. the login form).
+  emailModel.value = store.email;
+  requestSent.value = false;
   verified.value = false;
   submitting.value = false;
   formError.value = null;
@@ -169,6 +217,11 @@ function resetLocalState() {
 
 function focusCode() {
   nextTick(() => codeInput.value?.focus());
+}
+
+// Focus the input for whichever step the modal opens on.
+function focusInitial() {
+  nextTick(() => (showEmailStep.value ? emailInput.value : codeInput.value)?.focus());
 }
 
 function onCodeInput(event: Event) {
@@ -210,6 +263,32 @@ async function submitChangeEmail() {
   postAuthEvent({ type: 'completed', flow: store.flow, email: store.email });
   toastStore.add({ type: 'success', text: t('change_email_success') });
   close();
+}
+
+// reset-password email step: send the reset request, then move to code entry.
+// The endpoint intentionally succeeds even for unknown emails (no enumeration),
+// so we advance whenever the request itself doesn't error.
+async function submitEmailRequest() {
+  if (submitting.value) { return; }
+  const email = emailModel.value.trim();
+  if (!email) {
+    formError.value = t('email_required');
+    return;
+  }
+  submitting.value = true;
+  formError.value = null;
+  try {
+    await $http.post('/api/auth/password/reset', { email });
+    store.email = email;
+    requestSent.value = true;
+    focusCode();
+  }
+  catch (err) {
+    setError(err);
+  }
+  finally {
+    submitting.value = false;
+  }
 }
 
 async function validateResetCode() {
@@ -286,15 +365,16 @@ watch(code, (value) => {
 watch(() => store.isOpen, (isOpen) => {
   if (isOpen) {
     resetLocalState();
-    focusCode();
+    focusInitial();
   }
 });
 
-// Re-focus the code input when the tab regains focus — the user has usually just
-// switched to their email app to read the code.
+// Re-focus the active step's input when the tab regains focus — the user has
+// usually just switched to their email app to read the code.
 function onWindowFocus() {
   if (import.meta.client && document.visibilityState === 'hidden') { return; }
-  if (store.isOpen && !verified.value) { focusCode(); }
+  if (!store.isOpen || verified.value) { return; }
+  focusInitial();
 }
 
 let unsubscribeAuthEvent: (() => void) | null = null;
@@ -346,6 +426,10 @@ onUnmounted(() => {
     "verified_reset": "Code verified. Choose your new password.",
     "verified_verify": "Code verified. Signing you in…",
     "verified_change": "Code verified. Updating your email…",
+    "reset_email_prompt": "Enter your account email and we'll send a code to reset your password.",
+    "email_label": "Email",
+    "email_required": "Your email address is required.",
+    "send_code": "Send code",
     "code_label": "Verification code",
     "verifying": "Verifying…",
     "continue": "Continue",
@@ -365,6 +449,10 @@ onUnmounted(() => {
     "verified_reset": "Code bestätigt. Wählen Sie Ihr neues Passwort.",
     "verified_verify": "Code bestätigt. Sie werden angemeldet…",
     "verified_change": "Code bestätigt. Ihre E-Mail wird aktualisiert…",
+    "reset_email_prompt": "Geben Sie Ihre Konto-E-Mail-Adresse ein, und wir senden Ihnen einen Code zum Zurücksetzen Ihres Passworts.",
+    "email_label": "E-Mail",
+    "email_required": "Ihre E-Mail-Adresse ist erforderlich.",
+    "send_code": "Code senden",
     "code_label": "Bestätigungscode",
     "verifying": "Wird überprüft…",
     "continue": "Weiter",
@@ -384,6 +472,10 @@ onUnmounted(() => {
     "verified_reset": "Código verificado. Elige tu nueva contraseña.",
     "verified_verify": "Código verificado. Iniciando sesión…",
     "verified_change": "Código verificado. Actualizando tu correo electrónico…",
+    "reset_email_prompt": "Introduce el correo de tu cuenta y te enviaremos un código para restablecer tu contraseña.",
+    "email_label": "Correo electrónico",
+    "email_required": "Su dirección de correo electrónico es obligatoria.",
+    "send_code": "Enviar código",
     "code_label": "Código de verificación",
     "verifying": "Verificando…",
     "continue": "Continuar",
@@ -403,6 +495,10 @@ onUnmounted(() => {
     "verified_reset": "Code vérifié. Choisissez votre nouveau mot de passe.",
     "verified_verify": "Code vérifié. Connexion en cours…",
     "verified_change": "Code vérifié. Mise à jour de votre e-mail…",
+    "reset_email_prompt": "Saisissez l'e-mail de votre compte et nous vous enverrons un code pour réinitialiser votre mot de passe.",
+    "email_label": "Email",
+    "email_required": "Votre adresse e-mail est requise.",
+    "send_code": "Envoyer le code",
     "code_label": "Code de vérification",
     "verifying": "Vérification…",
     "continue": "Continuer",
@@ -422,6 +518,10 @@ onUnmounted(() => {
     "verified_reset": "코드가 확인되었습니다. 새 비밀번호를 입력하세요.",
     "verified_verify": "코드가 확인되었습니다. 로그인 중…",
     "verified_change": "코드가 확인되었습니다. 이메일을 업데이트하는 중…",
+    "reset_email_prompt": "계정 이메일을 입력하시면 비밀번호 재설정 코드를 보내드립니다.",
+    "email_label": "이메일",
+    "email_required": "이메일 주소를 입력해 주세요.",
+    "send_code": "코드 보내기",
     "code_label": "인증 코드",
     "verifying": "인증 중…",
     "continue": "계속",
@@ -441,6 +541,10 @@ onUnmounted(() => {
     "verified_reset": "Código verificado. Escolha sua nova senha.",
     "verified_verify": "Código verificado. Entrando…",
     "verified_change": "Código verificado. Atualizando seu e-mail…",
+    "reset_email_prompt": "Digite o e-mail da sua conta e enviaremos um código para redefinir sua senha.",
+    "email_label": "E-mail",
+    "email_required": "Seu endereço de e-mail é obrigatório.",
+    "send_code": "Enviar código",
     "code_label": "Código de verificação",
     "verifying": "Verificando…",
     "continue": "Continuar",
@@ -460,6 +564,10 @@ onUnmounted(() => {
     "verified_reset": "Код підтверджено. Виберіть новий пароль.",
     "verified_verify": "Код підтверджено. Вхід у систему…",
     "verified_change": "Код підтверджено. Оновлення вашої електронної пошти…",
+    "reset_email_prompt": "Введіть електронну адресу облікового запису, і ми надішлемо код для скидання пароля.",
+    "email_label": "Електронна пошта",
+    "email_required": "Ваша електронна адреса обов'язкова.",
+    "send_code": "Надіслати код",
     "code_label": "Код підтвердження",
     "verifying": "Перевірка…",
     "continue": "Продовжити",

@@ -89,11 +89,15 @@ test.describe('Password reset (code modal)', () => {
   test('user resets their password by typing the emailed code into the modal', async ({ page }) => {
     const requestedAt = new Date();
 
-    // Request the reset from the login page; the code-entry modal opens.
+    // Open the reset modal from the login page. The modal owns the whole flow:
+    // it opens on an email step (pre-filled from the login form). Sending the
+    // request advances to the code step.
     await page.goto('/login');
     await waitForHydration(page);
     await page.getByRole('textbox', { name: 'Email' }).fill(user.email);
     await page.getByRole('button', { name: 'I forgot my password' }).click();
+    await expect(page.getByTestId('auth-code-email')).toHaveValue(user.email);
+    await page.getByTestId('auth-code-send-code').click();
     await expect(page.getByTestId('auth-code-input')).toBeVisible();
 
     // A wrong code is rejected inline and clears the field (per-code attempt cap
@@ -149,6 +153,8 @@ test.describe('Email change (code modal)', () => {
     await page.locator('input[name="password"]').fill(user.password);
     await page.getByRole('button', { name: 'Change Email' }).click();
     await expect(page.getByTestId('auth-code-input')).toBeVisible();
+    // The modal shows the NEW address (where the code was sent), not the current one.
+    await expect(page.getByText(newEmail)).toBeVisible();
 
     // The confirmation email goes to the NEW address; redeem its code in the modal
     // (the modal validates against the account's CURRENT email under the hood).
@@ -178,11 +184,13 @@ test.describe('Cross-tab completion', () => {
   test('completing the flow via the link in another tab closes the waiting modal', async ({ page, context }) => {
     const requestedAt = new Date();
 
-    // Tab A: open the reset-password modal and leave it waiting for a code.
+    // Tab A: open the reset-password modal, send the request, and leave it
+    // waiting for a code.
     await page.goto('/login');
     await waitForHydration(page);
     await page.getByRole('textbox', { name: 'Email' }).fill(user.email);
     await page.getByRole('button', { name: 'I forgot my password' }).click();
+    await page.getByTestId('auth-code-send-code').click();
     await expect(page.getByTestId('auth-code-input')).toBeVisible();
 
     const email = await waitForEmail({ to: user.email, subject: 'Reset Password', since: requestedAt });
