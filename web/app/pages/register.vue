@@ -56,6 +56,7 @@ import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useAuthStore } from '~/stores/auth';
+import { useAuthCodeStore } from '~/stores/auth-code';
 
 definePageMeta({ middleware: ['auth'], auth: 'guest' });
 
@@ -65,6 +66,7 @@ useHead({ title: () => t('sign_up'), meta: [{ name: 'robots', content: 'noindex'
 const localePath = useLocalePath();
 const router = useRouter();
 const authStore = useAuthStore();
+const authCodeStore = useAuthCodeStore();
 const config = useRuntimeConfig();
 const { $http, $terr } = useNuxtApp();
 
@@ -126,7 +128,11 @@ const onSubmit = async () => {
       return;
     }
     await router.push(localePath('/start'));
+    return;
   }
+
+  // Verification required: open the code modal (the emailed link still works too).
+  authCodeStore.open({ flow: 'verify-email', email: email.value });
 };
 </script>
 

@@ -26,13 +26,19 @@ export interface UserRecord {
   emailVerificationCode: string;
   emailVerificationExpires: Date;
   emailVerificationCodeLastSentAt: Date;
+  /** Failed submissions against the current email verification code. */
+  emailVerificationAttempts: number;
   existingAccountNoticeLastSentAt: Date;
   newEmail: string | null;
   newEmailVerificationCode: string;
   newEmailVerificationExpires: Date;
+  /** Failed submissions against the current new-email verification code. */
+  newEmailVerificationAttempts: number;
   oldEmails: string[];
   passwordResetCode: string;
   passwordResetExpires: Date;
+  /** Failed submissions against the current password reset code. */
+  passwordResetAttempts: number;
   /** Bumped to revoke all previously issued JWTs; embedded in and checked against each token. */
   tokenVersion: number;
   settings: UserSettingsRecord;

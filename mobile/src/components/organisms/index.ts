@@ -1,5 +1,7 @@
 export { AchievementModal } from "./AchievementModal";
 export { ActivityHeatmap } from "./ActivityHeatmap";
+export { AuthCodeForm } from "./AuthCodeForm";
+export type { AuthCodeFlow } from "./AuthCodeForm";
 export { AnimatedList } from "./AnimatedList";
 export { BookFrequencyChart } from "./BookFrequencyChart";
 export { BookRecencyList } from "./BookRecencyList";

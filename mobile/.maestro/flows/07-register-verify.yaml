@@ -1,0 +1,62 @@
+# Register a new account and (when verification is required) confirm it by typing
+# the emailed code into the app. Tolerant of REQUIRE_EMAIL_VERIFICATION being off:
+# in that case registration auto-logs-in and no code step appears.
+appId: com.mybiblelog.app
+tags:
+  - email-code
+---
+- runFlow: ../common/open-app.yaml
+- runScript:
+    file: ../scripts/gen-email.js
+- tapOn:
+    id: "tab.settings"
+- tapOn: "Account"
+- tapOn:
+    id: "settings.login"
+- extendedWaitUntil:
+    visible:
+      id: "login.register"
+    timeout: 15000
+- tapOn:
+    id: "login.register"
+- extendedWaitUntil:
+    visible:
+      id: "register.email"
+    timeout: 15000
+- tapOn:
+    id: "register.email"
+- inputText: ${output.newEmail}
+- hideKeyboard
+- tapOn:
+    id: "register.password"
+- inputText: "password123"
+- hideKeyboard
+- tapOn:
+    id: "register.submit"
+# Give the register -> login round-trip time to either reveal the code step
+# (verification on) or auto-login (verification off).
+- extendedWaitUntil:
+    optional: true
+    visible:
+      id: "register.code.code"
+    timeout: 10000
+- runFlow:
+    when:
+      visible:
+        id: "register.code.code"
+    commands:
+      - runScript:
+          file: ../scripts/fetch-email-code.js
+          env:
+            EMAIL_TO: ${output.newEmail}
+            EMAIL_SUBJECT: "Email Verification"
+      - assertTrue: ${output.code != null}
+      - tapOn:
+          id: "register.code.code"
+      - inputText: ${output.code}
+      - hideKeyboard
+# Either path lands on Today, signed in.
+- extendedWaitUntil:
+    visible:
+      id: "today.add-entry"
+    timeout: 30000

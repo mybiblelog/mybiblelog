@@ -1,7 +1,6 @@
 import { getConfig } from '../../../config';
 import { ApiErrorDetailCode } from '../../errors/error-codes';
 import { ValidationError } from '../../errors/validation-errors';
-import { NotFoundError } from '../../errors/http-errors';
 import { generateUserJWT, isCodeValid } from '../../../repositories/helpers/user-auth';
 import { LocaleCode } from '@mybiblelog/shared';
 import { authCookie } from '../../helpers/auth-cookie';
@@ -9,27 +8,40 @@ import { isWebClient } from '../../helpers/client-type';
 import { type RouteHandler } from '../../types';
 import { asRecord } from './shared';
 
-// POST /auth/verify-email - Verify an email via code, set the auth cookie for auto-login
-export const verifyEmail: RouteHandler = async (req, deps) => {
-  await deps.rateLimiter.check(req, { maxRequests: 20, windowMs: 60 * 60 * 1000 });
+const HOUR_MS = 60 * 60 * 1000;
 
-  const { code: emailVerificationCode } = asRecord(req.body);
-  // Require a string to prevent NoSQL operator injection
-  if (typeof emailVerificationCode !== 'string') {
-    throw new NotFoundError();
+// POST /auth/verify-email - Verify an email via {email, code}, set the auth cookie for auto-login.
+// The account is looked up by email (a short code is not globally unique) and the
+// code compared against it; both the typed code and the magic link (which embeds
+// email + code) hit this same endpoint.
+export const verifyEmail: RouteHandler = async (req, deps) => {
+  await deps.rateLimiter.check(req, { maxRequests: 20, windowMs: HOUR_MS });
+
+  const { email: rawEmail, code } = asRecord(req.body);
+  // Require strings to prevent NoSQL operator injection
+  if (typeof rawEmail !== 'string' || typeof code !== 'string') {
+    throw new ValidationError([{ code: ApiErrorDetailCode.VerificationCodeExpired, field: null }]);
   }
+  const email = rawEmail.trim().toLowerCase();
+
+  // Rate limit by email too, so guessing a short code cannot be parallelized
+  // across IPs against one account.
+  await deps.rateLimiter.check(req, { maxRequests: 20, windowMs: HOUR_MS, keyFn: () => `email:${email}` });
 
   const { users } = deps.repositories;
-  const user = await users.findByEmailVerificationCode(emailVerificationCode);
-  if (!user) {
-    throw new NotFoundError();
-  }
+  const user = await users.findByEmail(email);
 
-  if (!isCodeValid({
-    code: emailVerificationCode,
+  if (!user || !isCodeValid({
+    code,
     expectedCode: user.emailVerificationCode,
     expiresAt: user.emailVerificationExpires,
+    attempts: user.emailVerificationAttempts,
   })) {
+    // Spend an attempt when the account exists, capping brute-force guesses.
+    // The error is uniform whether or not the account exists.
+    if (user) {
+      await users.recordEmailVerificationAttempt(user.id);
+    }
     throw new ValidationError([{ code: ApiErrorDetailCode.VerificationCodeExpired, field: null }]);
   }
 

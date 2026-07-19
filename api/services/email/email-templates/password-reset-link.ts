@@ -6,17 +6,24 @@ import renderBrandedEmail from './branded-wrapper';
 
 type RenderPasswordResetLinkParams = {
   locale: LocaleCode;
-  passwordResetLink: string;
+  email: string;
+  passwordResetCode: string;
 };
 
 const render = ({
   locale,
-  passwordResetLink,
+  email,
+  passwordResetCode,
 }: RenderPasswordResetLinkParams) => {
   const t = locales[locale].password_reset;
   const subject = t.subject;
-  const link = getLocaleBaseUrl(locale) + '/reset-password?code=' + passwordResetLink;
-  const contentHtml = substitute(t.click_to_reset, { link });
+  const link = getLocaleBaseUrl(locale)
+    + '/reset-password?code=' + passwordResetCode
+    + '&email=' + encodeURIComponent(email);
+  const contentHtml = [
+    `<p>${substitute(t.click_to_reset, { link })}</p>`,
+    `<p>${substitute(t.enter_code, { code: passwordResetCode })}</p>`,
+  ].join('');
 
   return {
     subject,

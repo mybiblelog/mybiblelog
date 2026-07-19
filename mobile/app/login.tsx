@@ -4,7 +4,7 @@ import { signInWithGoogle } from "@/src/auth/googleSignIn";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { translateApiError } from "@/src/i18n/translateApiError";
 import { spacing, useTheme } from "@/src/design";
-import { Button, InputField, Text } from "@/src/components";
+import { AuthCodeForm, Button, InputField, Text } from "@/src/components";
 import { router } from "expo-router";
 import { useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native";
@@ -23,6 +23,13 @@ export default function Login() {
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [needsVerify, setNeedsVerify] = useState(false);
+
+  function goAfterAuth() {
+    // Deep links can land here with no back stack.
+    if (router.canGoBack()) router.back();
+    else router.replace("/");
+  }
 
   async function onEmailLogin() {
     if (isSubmitting) return;
@@ -47,15 +54,20 @@ export default function Login() {
       const result = await loginWithEmailPassword(trimmedEmail, password);
       setIsSubmitting(false);
       if (result.ok) {
-        // Deep links can land here with no back stack.
-        if (router.canGoBack()) router.back();
-        else router.replace("/");
+        goAfterAuth();
         return;
       }
 
       // Mirror the web app: surface top-level (_form) and field-level errors from
       // the API. Only fall back to a generic message if nothing is translatable.
       const fieldMap = mapFormErrors(result.error);
+
+      // An unverified account can verify inline via the code flow.
+      if (fieldMap._form?.code === "verify_email") {
+        setNeedsVerify(true);
+        return;
+      }
+
       const formMessage = fieldMap._form ? translateApiError(t, fieldMap._form) : null;
       const emailMessage = fieldMap.email ? translateApiError(t, fieldMap.email) : null;
       const passwordMessage = fieldMap.password ? translateApiError(t, fieldMap.password) : null;
@@ -95,8 +107,7 @@ export default function Login() {
       const login = await finishGoogleLogin(result.idToken, locale);
       setIsSubmitting(false);
       if (login.ok) {
-        if (router.canGoBack()) router.back();
-        else router.replace("/");
+        goAfterAuth();
         return;
       }
       setError(t("auth_generic_error"));
@@ -116,69 +127,103 @@ export default function Login() {
           {t("login_title")}
         </Text>
         <Text variant="body" color="mutedText" style={styles.subtitle}>
-          {lastEmail ? t("login_sign_in_again_as", { email: lastEmail }) : t("auth_login_hint")}
+          {needsVerify
+            ? t("auth_verify_needed_hint")
+            : lastEmail
+              ? t("login_sign_in_again_as", { email: lastEmail })
+              : t("auth_login_hint")}
         </Text>
 
-        {!!error && (
-          <Text variant="bodyStrong" color="destructive" style={styles.error}>
-            {error}
-          </Text>
+        {needsVerify ? (
+          <AuthCodeForm
+            flow="verify-email"
+            email={email.trim()}
+            onDone={goAfterAuth}
+            testIDPrefix="login.verify"
+          />
+        ) : (
+          <>
+            {!!error && (
+              <Text variant="bodyStrong" color="destructive" style={styles.error}>
+                {error}
+              </Text>
+            )}
+
+            <View style={styles.form}>
+              <InputField
+                label={t("auth_email")}
+                testID="login.email"
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+                autoComplete="email"
+                autoCorrect={false}
+                keyboardType="email-address"
+                textContentType="emailAddress"
+                editable={!isSubmitting}
+                error={emailError ?? undefined}
+              />
+              <InputField
+                label={t("auth_password")}
+                testID="login.password"
+                value={password}
+                onChangeText={setPassword}
+                autoCapitalize="none"
+                autoComplete="password"
+                autoCorrect={false}
+                secureTextEntry
+                textContentType="password"
+                editable={!isSubmitting}
+                onSubmitEditing={onEmailLogin}
+                returnKeyType="go"
+                error={passwordError ?? undefined}
+              />
+            </View>
+
+            <Button
+              label={t("login_with_email")}
+              testID="login.submit"
+              onPress={onEmailLogin}
+              loading={isSubmitting}
+              fullWidth
+            />
+
+            <View style={styles.divider}>
+              <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+              <Text variant="caption" color="mutedText" style={styles.dividerText}>
+                {t("login_divider_or")}
+              </Text>
+              <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+            </View>
+
+            <Button
+              label={t("login_with_google")}
+              variant="secondary"
+              onPress={onGoogleLogin}
+              disabled={isSubmitting}
+              fullWidth
+            />
+
+            <View style={styles.links}>
+              <Button
+                label={t("login_forgot_password")}
+                testID="login.forgot-password"
+                variant="ghost"
+                size="sm"
+                disabled={isSubmitting}
+                onPress={() => router.push("/forgot-password")}
+              />
+              <Button
+                label={t("login_create_account")}
+                testID="login.register"
+                variant="ghost"
+                size="sm"
+                disabled={isSubmitting}
+                onPress={() => router.push("/register")}
+              />
+            </View>
+          </>
         )}
-
-        <View style={styles.form}>
-          <InputField
-            label={t("auth_email")}
-            testID="login.email"
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-            autoComplete="email"
-            autoCorrect={false}
-            keyboardType="email-address"
-            textContentType="emailAddress"
-            editable={!isSubmitting}
-            error={emailError ?? undefined}
-          />
-          <InputField
-            label={t("auth_password")}
-            testID="login.password"
-            value={password}
-            onChangeText={setPassword}
-            autoCapitalize="none"
-            autoComplete="password"
-            autoCorrect={false}
-            secureTextEntry
-            textContentType="password"
-            editable={!isSubmitting}
-            onSubmitEditing={onEmailLogin}
-            returnKeyType="go"
-            error={passwordError ?? undefined}
-          />
-        </View>
-
-        <Button
-          label={t("login_with_email")}
-          testID="login.submit"
-          onPress={onEmailLogin}
-          loading={isSubmitting}
-          fullWidth
-        />
-
-        <View style={styles.divider}>
-          <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
-          <Text variant="caption" color="mutedText" style={styles.dividerText}>
-            {t("login_divider_or")}
-          </Text>
-          <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
-        </View>
-
-        <Button
-          label={t("login_with_google")}
-          variant="secondary"
-          onPress={onGoogleLogin}
-          disabled={isSubmitting}
-          fullWidth
-        />
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -202,4 +247,10 @@ const styles = StyleSheet.create({
   },
   dividerLine: { flex: 1, height: StyleSheet.hairlineWidth },
   dividerText: { marginHorizontal: spacing.lg },
+  links: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: spacing.lg,
+  },
 });

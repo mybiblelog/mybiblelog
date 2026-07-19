@@ -16,15 +16,18 @@
       "subject": "Confirm New Email Address",
       "email_update_requested": "The My Bible Log account with email address <strong>{{currentEmail}}</strong> has requested to change their email address to <strong>{{newEmail}}</strong>.",
       "click_to_confirm": "Click <a href=\"{{link}}\">this link</a> to confirm <strong>{{newEmail}}</strong> as the new email address for this account.",
-      "if_you_did_not_request": "If you did not request to change your My Bible Log email address, you can ignore this message."
+      "if_you_did_not_request": "If you did not request to change your My Bible Log email address, you can ignore this message.",
+      "enter_code": "Or enter this code: <strong>{{code}}</strong>"
     },
     "email_verification": {
       "subject": "Email Verification",
-      "click_to_verify": "Click <a href=\"{{link}}\">this link</a> to verify your email."
+      "click_to_verify": "Click <a href=\"{{link}}\">this link</a> to verify your email.",
+      "enter_code": "Or enter this code: <strong>{{code}}</strong>"
     },
     "password_reset": {
       "subject": "Reset Password",
-      "click_to_reset": "Click <a href=\"{{link}}\">this link</a> to reset your password."
+      "click_to_reset": "Click <a href=\"{{link}}\">this link</a> to reset your password.",
+      "enter_code": "Or enter this code: <strong>{{code}}</strong>"
     },
     "existing_account": {
       "subject": "You already have an account",
@@ -48,15 +51,18 @@
       "subject": "Neue E-Mail-Adresse bestätigen",
       "email_update_requested": "Die My Bible Log-Konto mit der E-Mail-Adresse <strong>{{currentEmail}}</strong> hat eine Anfrage gestellt, ihre E-Mail-Adresse zu ändern zu <strong>{{newEmail}}</strong>.",
       "click_to_confirm": "Klicken Sie auf <a href=\"{{link}}\">diesen Link</a>, um <strong>{{newEmail}}</strong> als neue E-Mail-Adresse für dieses Konto zu bestätigen.",
-      "if_you_did_not_request": "Wenn Sie nicht angefragt haben, Ihre E-Mail-Adresse von My Bible Log zu ändern, können Sie diese Nachricht ignorieren."
+      "if_you_did_not_request": "Wenn Sie nicht angefragt haben, Ihre E-Mail-Adresse von My Bible Log zu ändern, können Sie diese Nachricht ignorieren.",
+      "enter_code": "Oder geben Sie diesen Code ein: <strong>{{code}}</strong>"
     },
     "email_verification": {
       "subject": "Email-Verifizierung",
-      "click_to_verify": "Klicken Sie auf <a href=\"{{link}}\">diesen Link</a>, um Ihre E-Mail zu bestätigen."
+      "click_to_verify": "Klicken Sie auf <a href=\"{{link}}\">diesen Link</a>, um Ihre E-Mail zu bestätigen.",
+      "enter_code": "Oder geben Sie diesen Code ein: <strong>{{code}}</strong>"
     },
     "password_reset": {
       "subject": "Passwort zurücksetzen",
-      "click_to_reset": "Klicken Sie auf <a href=\"{{link}}\">diesen Link</a>, um Ihr Passwort zurückzusetzen."
+      "click_to_reset": "Klicken Sie auf <a href=\"{{link}}\">diesen Link</a>, um Ihr Passwort zurückzusetzen.",
+      "enter_code": "Oder geben Sie diesen Code ein: <strong>{{code}}</strong>"
     },
     "existing_account": {
       "subject": "Sie haben bereits ein Konto",
@@ -80,15 +86,18 @@
       "subject": "Confirmar nueva dirección de correo electrónico",
       "email_update_requested": "La cuenta de My Bible Log con la dirección de correo electrónico <strong>{{currentEmail}}</strong> ha solicitado cambiar su dirección de correo electrónico a <strong>{{newEmail}}</strong>.",
       "click_to_confirm": "Haga clic en <a href=\"{{link}}\">este enlace</a> para confirmar <strong>{{newEmail}}</strong> como la nueva dirección de correo electrónico para esta cuenta.",
-      "if_you_did_not_request": "Si no solicitó cambiar su dirección de correo electrónico de My Bible Log, puede ignorar este mensaje."
+      "if_you_did_not_request": "Si no solicitó cambiar su dirección de correo electrónico de My Bible Log, puede ignorar este mensaje.",
+      "enter_code": "O introduce este código: <strong>{{code}}</strong>"
     },
     "email_verification": {
       "subject": "Verificación de correo electrónico",
-      "click_to_verify": "Haga clic en <a href=\"{{link}}\">este enlace</a> para verificar su correo electrónico."
+      "click_to_verify": "Haga clic en <a href=\"{{link}}\">este enlace</a> para verificar su correo electrónico.",
+      "enter_code": "O introduce este código: <strong>{{code}}</strong>"
     },
     "password_reset": {
       "subject": "Restablecer la contraseña",
-      "click_to_reset": "Haga clic en <a href=\"{{link}}\">este enlace</a> para restablecer su contraseña."
+      "click_to_reset": "Haga clic en <a href=\"{{link}}\">este enlace</a> para restablecer su contraseña.",
+      "enter_code": "O introduce este código: <strong>{{code}}</strong>"
     },
     "existing_account": {
       "subject": "Ya tienes una cuenta",
@@ -112,15 +121,18 @@
       "subject": "Confirmer la nouvelle adresse e-mail",
       "email_update_requested": "Le compte My Bible Log avec l'adresse e-mail <strong>{{currentEmail}}</strong> a demandé à changer son adresse e-mail en <strong>{{newEmail}}</strong>.",
       "click_to_confirm": "Cliquez sur <a href=\"{{link}}\">ce lien</a> pour confirmer <strong>{{newEmail}}</strong> comme la nouvelle adresse e-mail de ce compte.",
-      "if_you_did_not_request": "Si vous n'avez pas demandé à changer votre adresse e-mail My Bible Log, vous pouvez ignorer ce message."
+      "if_you_did_not_request": "Si vous n'avez pas demandé à changer votre adresse e-mail My Bible Log, vous pouvez ignorer ce message.",
+      "enter_code": "Ou saisissez ce code : <strong>{{code}}</strong>"
     },
     "email_verification": {
       "subject": "Vérification de l'adresse e-mail",
-      "click_to_verify": "Cliquez sur <a href=\"{{link}}\">ce lien</a> pour vérifier votre adresse e-mail."
+      "click_to_verify": "Cliquez sur <a href=\"{{link}}\">ce lien</a> pour vérifier votre adresse e-mail.",
+      "enter_code": "Ou saisissez ce code : <strong>{{code}}</strong>"
     },
     "password_reset": {
       "subject": "Réinitialiser le mot de passe",
-      "click_to_reset": "Cliquez sur <a href=\"{{link}}\">ce lien</a> pour réinitialiser votre mot de passe."
+      "click_to_reset": "Cliquez sur <a href=\"{{link}}\">ce lien</a> pour réinitialiser votre mot de passe.",
+      "enter_code": "Ou saisissez ce code : <strong>{{code}}</strong>"
     },
     "existing_account": {
       "subject": "Vous avez déjà un compte",
@@ -144,15 +156,18 @@
       "subject": "새 이메일 주소 확인",
       "email_update_requested": "<strong>{{currentEmail}}</strong> 이메일 주소로 등록된 My Bible Log 계정에서 <strong>{{newEmail}}</strong>(으)로 이메일 주소 변경이 요청되었습니다.",
       "click_to_confirm": "<strong>{{newEmail}}</strong>을(를) 해당 계정의 새 이메일 주소로 확인하려면 <a href=\"{{link}}\">이 링크</a>를 클릭하세요.",
-      "if_you_did_not_request": "My Bible Log에 등록된 이메일 주소 변경을 요청하지 않았다면 이 메일은 무시하셔도 됩니다."
+      "if_you_did_not_request": "My Bible Log에 등록된 이메일 주소 변경을 요청하지 않았다면 이 메일은 무시하셔도 됩니다.",
+      "enter_code": "또는 이 코드를 입력하세요: <strong>{{code}}</strong>"
     },
     "email_verification": {
       "subject": "이메일 인증",
-      "click_to_verify": "<a href=\"{{link}}\">이 링크</a>를 눌러 이메일을 인증하세요."
+      "click_to_verify": "<a href=\"{{link}}\">이 링크</a>를 눌러 이메일을 인증하세요.",
+      "enter_code": "또는 이 코드를 입력하세요: <strong>{{code}}</strong>"
     },
     "password_reset": {
       "subject": "비밀번호 재설정",
-      "click_to_reset": "비밀번호를 재설정하려면 <a href=\"{{link}}\">이 링크</a>를 누르세요."
+      "click_to_reset": "비밀번호를 재설정하려면 <a href=\"{{link}}\">이 링크</a>를 누르세요.",
+      "enter_code": "또는 이 코드를 입력하세요: <strong>{{code}}</strong>"
     },
     "existing_account": {
       "subject": "이미 계정이 있습니다",
@@ -176,15 +191,18 @@
       "subject": "Confirmar nova endereço de email",
       "email_update_requested": "A conta do My Bible Log com o endereço de email <strong>{{currentEmail}}</strong> solicitou a alteração do seu endereço de email para <strong>{{newEmail}}</strong>.",
       "click_to_confirm": "Clique em <a href=\"{{link}}\">este link</a> para confirmar <strong>{{newEmail}}</strong> como o novo endereço de email para esta conta.",
-      "if_you_did_not_request": "Se você não solicitou a alteração do seu endereço de email do My Bible Log, você pode ignorar esta mensagem."
+      "if_you_did_not_request": "Se você não solicitou a alteração do seu endereço de email do My Bible Log, você pode ignorar esta mensagem.",
+      "enter_code": "Ou insira este código: <strong>{{code}}</strong>"
     },
     "email_verification": {
       "subject": "Verificação de email",
-      "click_to_verify": "Clique em <a href=\"{{link}}\">este link</a> para verificar seu email."
+      "click_to_verify": "Clique em <a href=\"{{link}}\">este link</a> para verificar seu email.",
+      "enter_code": "Ou insira este código: <strong>{{code}}</strong>"
     },
     "password_reset": {
       "subject": "Redefinir senha",
-      "click_to_reset": "Clique em <a href=\"{{link}}\">este link</a> para redefinir sua senha."
+      "click_to_reset": "Clique em <a href=\"{{link}}\">este link</a> para redefinir sua senha.",
+      "enter_code": "Ou insira este código: <strong>{{code}}</strong>"
     },
     "existing_account": {
       "subject": "Você já tem uma conta",
@@ -208,15 +226,18 @@
       "subject": "Підтвердіть нову адресу електронної пошти",
       "email_update_requested": "Обліковий запис My Bible Log з електронною адресою <strong>{{currentEmail}}</strong> запросив змінити свою електронну адресу на <strong>{{newEmail}}</strong>.",
       "click_to_confirm": "Натисніть <a href=\"{{link}}\">це посилання</a>, щоб підтвердити <strong>{{newEmail}}</strong> як нову адресу електронної пошти для цього облікового запису.",
-      "if_you_did_not_request": "Якщо ви не просили змінити свою адресу електронної пошти My Bible Log, ви можете проігнорувати це повідомлення."
+      "if_you_did_not_request": "Якщо ви не просили змінити свою адресу електронної пошти My Bible Log, ви можете проігнорувати це повідомлення.",
+      "enter_code": "Або введіть цей код: <strong>{{code}}</strong>"
     },
     "email_verification": {
       "subject": "Підтвердження електронної пошти",
-      "click_to_verify": "Натисніть <a href=\"{{link}}\">це посилання</a>, щоб підтвердити свою електронну пошту."
+      "click_to_verify": "Натисніть <a href=\"{{link}}\">це посилання</a>, щоб підтвердити свою електронну пошту.",
+      "enter_code": "Або введіть цей код: <strong>{{code}}</strong>"
     },
     "password_reset": {
       "subject": "Скидання пароля",
-      "click_to_reset": "Натисніть <a href=\"{{link}}\">це посилання</a>, щоб скинути свій пароль."
+      "click_to_reset": "Натисніть <a href=\"{{link}}\">це посилання</a>, щоб скинути свій пароль.",
+      "enter_code": "Або введіть цей код: <strong>{{code}}</strong>"
     },
     "existing_account": {
       "subject": "У вас вже є обліковий запис",

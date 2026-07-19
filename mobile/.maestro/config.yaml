@@ -15,3 +15,8 @@ executionOrder:
     - 04-notes-tags
     - 05-bible-progress
     - 06-insights
+    # Email-code flows run last: they clear state / re-authenticate, so keeping
+    # them after the warm-session suite avoids disrupting 02–06's session reuse.
+    - 07-register-verify
+    - 08-reset-password
+    - 09-change-email

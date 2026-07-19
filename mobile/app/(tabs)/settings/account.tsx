@@ -51,6 +51,15 @@ export default function AccountSettings() {
                 </View>
               </View>
               <Button
+                label={t("account_change_email")}
+                testID="settings.change-email"
+                variant="secondary"
+                size="sm"
+                leftIcon="mail-outline"
+                onPress={() => router.push("/settings/change-email")}
+                style={styles.authActionButtonSpacing}
+              />
+              <Button
                 label={t("auth_logout")}
                 testID="settings.logout"
                 variant="destructive"

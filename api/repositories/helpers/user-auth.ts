@@ -1,8 +1,10 @@
+import crypto from 'node:crypto';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { getConfig } from '../../config';
 import { UserRecord } from './types';
 import { type UserJSON } from '../../validation/schemas/auth';
+import { MAX_CODE_ATTEMPTS } from './verification-codes';
 
 /**
  * Pure authentication helpers operating on UserRecord domain objects.
@@ -60,15 +62,40 @@ export const isEmailVerified = (user: Pick<UserRecord, 'emailVerificationCode'>)
 };
 
 /**
- * Validates a verification code against its expected value and expiration.
- * Replaces the verify*Code instance methods on the User schema.
+ * Constant-time string equality. Returns false immediately when the lengths
+ * differ (which is not itself secret — codes are fixed length); otherwise uses
+ * `crypto.timingSafeEqual` so the comparison time does not leak how many leading
+ * characters matched, defeating timing-based guessing of a short numeric code.
  */
-export const isCodeValid = ({ code, expectedCode, expiresAt }: {
+const constantTimeEqual = (a: string, b: string): boolean => {
+  const aBuf = Buffer.from(a);
+  const bBuf = Buffer.from(b);
+  if (aBuf.length !== bBuf.length) {
+    return false;
+  }
+  return crypto.timingSafeEqual(aBuf, bBuf);
+};
+
+/**
+ * Validates a verification code against its expected value, expiration, and
+ * per-code attempt cap. An empty `expectedCode` means "no code outstanding" and
+ * never matches. `attempts` is the number of failed submissions already recorded
+ * against this code; once it reaches MAX_CODE_ATTEMPTS the code is spent and the
+ * user must request a new one. Comparison is constant-time.
+ */
+export const isCodeValid = ({ code, expectedCode, expiresAt, attempts = 0 }: {
   code: string;
   expectedCode: string;
   expiresAt: Date;
+  attempts?: number;
 }): boolean => {
-  if (code !== expectedCode) {
+  if (expectedCode === '') {
+    return false;
+  }
+  if (attempts >= MAX_CODE_ATTEMPTS) {
+    return false;
+  }
+  if (!constantTimeEqual(code, expectedCode)) {
     return false;
   }
   if (new Date().getTime() > expiresAt.getTime()) {

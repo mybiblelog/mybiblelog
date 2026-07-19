@@ -468,4 +468,35 @@ export const fr = {
     "Ce chapitre a été enregistré avant aujourd'hui. Vous pouvez modifier les entrées précédentes sur la page Calendrier.",
   unable_to_mark_complete: "Impossible de marquer le chapitre comme terminé.",
   unable_to_mark_incomplete: "Impossible de marquer le chapitre comme non terminé.",
+  login_forgot_password: "Mot de passe oublié ?",
+  login_create_account: "Créer un compte",
+  auth_verify_needed_hint:
+    "Saisissez le code que nous vous avons envoyé par e-mail pour vérifier votre compte, ou appuyez sur le lien dans cet e-mail.",
+  auth_code_instructions:
+    "Saisissez le code reçu par e-mail, ou appuyez sur le lien dans l'e-mail pour vérifier instantanément.",
+  auth_code_label: "Code de vérification",
+  auth_code_continue: "Continuer",
+  auth_code_submit: "Soumettre",
+  auth_code_invalid:
+    "Ce code est invalide ou expiré. Veuillez vérifier votre e-mail ou demander un nouveau code.",
+  auth_new_password: "Nouveau mot de passe",
+  auth_confirm_new_password: "Confirmer le nouveau mot de passe",
+  auth_passwords_must_match: "Les mots de passe doivent correspondre.",
+  register_title: "S'inscrire",
+  register_hint: "Créez un compte avec votre e-mail et un mot de passe.",
+  register_submit: "S'inscrire",
+  register_have_account: "Vous avez déjà un compte ? Se connecter",
+  forgot_password_title: "Réinitialiser le mot de passe",
+  forgot_password_hint:
+    "Saisissez votre e-mail et nous vous enverrons un code pour réinitialiser votre mot de passe.",
+  forgot_password_submit: "Envoyer le code",
+  account_change_email: "Changer l'e-mail",
+  change_email_hint:
+    "Saisissez votre nouvel e-mail et votre mot de passe actuel. Nous enverrons un code à la nouvelle adresse.",
+  change_email_current: "E-mail actuel :",
+  change_email_new_label: "Nouvel e-mail",
+  change_email_password_label: "Mot de passe actuel",
+  change_email_submit: "Changer l'e-mail",
+  change_email_new_required: "Saisissez votre nouvel e-mail.",
+  change_email_password_required: "Saisissez votre mot de passe actuel.",
 } as const satisfies Record<keyof typeof en, string>;

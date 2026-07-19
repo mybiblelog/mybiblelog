@@ -19,11 +19,16 @@ const render = ({
 }: RenderEmailUpdateParams) => {
   const t = locales[locale].email_update;
   const subject = t.subject;
-  const link = getLocaleBaseUrl(locale) + '/change-email?code=' + newEmailVerificationCode;
+  // Completion looks the account up by its CURRENT email (which holds the
+  // pending code), so the link embeds currentEmail — not the new address.
+  const link = getLocaleBaseUrl(locale)
+    + '/change-email?code=' + newEmailVerificationCode
+    + '&email=' + encodeURIComponent(currentEmail);
   const contentHtml = [
     `<p>${substitute(t.email_update_requested, { currentEmail, newEmail })}</p>`,
     '<br>',
     `<p>${substitute(t.click_to_confirm, { link, newEmail })}</p>`,
+    `<p>${substitute(t.enter_code, { code: newEmailVerificationCode })}</p>`,
     `<p>${substitute(t.if_you_did_not_request, {})}</p>`,
   ].join('');
 

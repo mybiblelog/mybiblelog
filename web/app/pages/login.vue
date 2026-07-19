@@ -76,6 +76,7 @@ import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { localStore } from '~/helpers/app-storage';
 import { useAuthStore } from '~/stores/auth';
+import { useAuthCodeStore } from '~/stores/auth-code';
 
 definePageMeta({ middleware: ['auth'], auth: 'guest' });
 
@@ -86,6 +87,7 @@ const localePath = useLocalePath();
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const authCodeStore = useAuthCodeStore();
 const { $http, $terr } = useNuxtApp();
 
 // Fetch once on the server and transfer via the Nuxt payload so the client reuses
@@ -158,7 +160,10 @@ const sendPasswordReset = async () => {
   submitting.value = true;
   try {
     await $http.post('/api/auth/password/reset', { email: email.value });
+    // Open the code modal (the emailed reset link still works too). The
+    // "reset link sent" message stays as a fallback behind the modal.
     passwordResetSubmitted.value = true;
+    authCodeStore.open({ flow: 'reset-password', email: email.value });
   }
   catch (err) {
     errors.value = (err instanceof ApiError ? mapFormErrors(err) : null) ?? mapFormErrors(new UnknownApiError());

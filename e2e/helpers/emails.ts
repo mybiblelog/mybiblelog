@@ -85,9 +85,11 @@ export const waitForEmail = async ({
   }
 };
 
-// The verify/reset/change links all carry the one-time code as `?code=<hex>`
-// (see api/services/email/email-templates/*), so one pattern covers every flow.
-const CODE_PATTERN = /[?&]code=([0-9a-f]+)/i;
+// The verify/reset/change links all carry the short numeric one-time code as
+// `?code=<digits>&email=<addr>` (see api/services/email/email-templates/*), so
+// one pattern covers every flow. The email body also prints the same code
+// standalone ("Or enter this code: <strong>123456</strong>").
+const CODE_PATTERN = /[?&]code=(\d{4,8})/i;
 
 /** Extracts the one-time `code` value from an email body (html preferred, then text). */
 export const extractCode = (email: TestEmail): string => {

@@ -6,14 +6,22 @@ import renderBrandedEmail from './branded-wrapper';
 
 type RenderEmailVerificationParams = {
   locale: LocaleCode;
+  email: string;
   emailVerificationCode: string;
 };
 
-const render = ({ locale, emailVerificationCode }: RenderEmailVerificationParams) => {
+const render = ({ locale, email, emailVerificationCode }: RenderEmailVerificationParams) => {
   const t = locales[locale].email_verification;
   const subject = t.subject;
-  const link = getLocaleBaseUrl(locale) + '/verify-email?code=' + emailVerificationCode;
-  const contentHtml = substitute(t.click_to_verify, { link });
+  // The link carries both the code and the account email so the same
+  // email-scoped endpoint validates it, exactly as the typed code does.
+  const link = getLocaleBaseUrl(locale)
+    + '/verify-email?code=' + emailVerificationCode
+    + '&email=' + encodeURIComponent(email);
+  const contentHtml = [
+    `<p>${substitute(t.click_to_verify, { link })}</p>`,
+    `<p>${substitute(t.enter_code, { code: emailVerificationCode })}</p>`,
+  ].join('');
 
   return {
     subject,

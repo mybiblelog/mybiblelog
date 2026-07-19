@@ -19,6 +19,7 @@ import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useAuthStore } from '~/stores/auth';
+import { postAuthEvent } from '~/composables/auth-channel';
 
 definePageMeta({ middleware: ['auth'], auth: 'guest' });
 
@@ -33,16 +34,22 @@ const { $http, $terr } = useNuxtApp();
 const error = ref<ApiErrorDetail | null>(null);
 
 onMounted(async () => {
-  const emailVerificationCode = new URL(window.location.href).searchParams.get('code');
-  if (!emailVerificationCode) {
+  const params = new URL(window.location.href).searchParams;
+  const code = params.get('code');
+  const email = params.get('email');
+  // The link now carries both the code and the account email (a short code is
+  // not globally unique). Missing either means it isn't a usable link.
+  if (!code || !email) {
     await router.push(localePath('/login'));
     return;
   }
 
   try {
-    await $http.post('/api/auth/verify-email', { code: emailVerificationCode });
+    await $http.post('/api/auth/verify-email', { email, code });
     // If successful, automatically log the user in
     await authStore.refreshUser();
+    // Notify any tab waiting on the code modal for this flow.
+    postAuthEvent({ type: 'completed', flow: 'verify-email', email });
     await router.push(localePath('/start'));
   }
   catch (err) {

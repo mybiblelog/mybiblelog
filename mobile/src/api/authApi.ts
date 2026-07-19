@@ -102,3 +102,125 @@ export async function emailPasswordLogin(
   }
   return { ok: true, token, email: resolvedEmail };
 }
+
+/**
+ * Shared shapes + helpers for the code-based email-auth flows (register, verify
+ * email, reset password, change email). These mirror the web app and the API:
+ * the account is identified by email, and a short numeric code — typed by the
+ * user or embedded in the emailed magic link — completes each flow.
+ */
+const JSON_HEADERS = { Accept: "application/json", "Content-Type": "application/json" };
+
+export type AuthOkResult = { ok: true } | { ok: false; error: ApiErrorPayload };
+export type AuthTokenResult = { ok: true; token: string } | { ok: false; error: ApiErrorPayload };
+
+type AuthRequest = { res: Response; body: unknown } | { networkError: true };
+
+async function postAuth(path: string, body: unknown, token?: string): Promise<AuthRequest> {
+  try {
+    const headers: Record<string, string> = { ...JSON_HEADERS };
+    if (token) headers.Authorization = `Bearer ${token}`;
+    const res = await fetchWithTimeout(`${getApiBaseUrl()}${path}`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+    });
+    const json = await res.json().catch(() => undefined);
+    return { res, body: json };
+  } catch {
+    return { networkError: true };
+  }
+}
+
+const NETWORK_ERROR: ApiErrorPayload = { code: "network_error", errors: [] };
+const UNKNOWN_ERROR: ApiErrorPayload = { code: "unknown_error", errors: [] };
+
+function tokenFrom(body: unknown): string | undefined {
+  const token = (body as { data?: { token?: unknown } } | undefined)?.data?.token;
+  return typeof token === "string" && token.length > 0 ? token : undefined;
+}
+
+/** Registers a new account. Verification (if required) is completed via the code flow. */
+export async function register(
+  email: string,
+  password: string,
+  locale?: string
+): Promise<AuthOkResult> {
+  const r = await postAuth("/auth/register", { email, password, locale });
+  if ("networkError" in r) return { ok: false, error: NETWORK_ERROR };
+  if (!r.res.ok) return { ok: false, error: parseApiErrorBody(r.body) };
+  return { ok: true };
+}
+
+/** Completes email verification with the emailed code; returns a session token. */
+export async function verifyEmailCode(email: string, code: string): Promise<AuthTokenResult> {
+  const r = await postAuth("/auth/verify-email", { email, code });
+  if ("networkError" in r) return { ok: false, error: NETWORK_ERROR };
+  if (!r.res.ok) return { ok: false, error: parseApiErrorBody(r.body) };
+  const token = tokenFrom(r.body);
+  return token ? { ok: true, token } : { ok: false, error: UNKNOWN_ERROR };
+}
+
+/** Re-sends the verification email (subject to a server-side cooldown). Always fail-soft ok. */
+export async function resendVerification(email: string, locale?: string): Promise<AuthOkResult> {
+  const r = await postAuth("/auth/verify-email/resend", { email, locale });
+  if ("networkError" in r) return { ok: false, error: NETWORK_ERROR };
+  return { ok: true };
+}
+
+/** Begins a password reset; the API always reports success (anti-enumeration). */
+export async function beginPasswordReset(email: string): Promise<AuthOkResult> {
+  const r = await postAuth("/auth/password/reset", { email });
+  if ("networkError" in r) return { ok: false, error: NETWORK_ERROR };
+  return { ok: true };
+}
+
+/** Checks a reset code before revealing the new-password fields. */
+export async function validatePasswordResetCode(
+  email: string,
+  code: string
+): Promise<{ ok: true; valid: boolean } | { ok: false; error: ApiErrorPayload }> {
+  const r = await postAuth("/auth/password/reset/validate", { email, code });
+  if ("networkError" in r) return { ok: false, error: NETWORK_ERROR };
+  if (!r.res.ok) return { ok: false, error: parseApiErrorBody(r.body) };
+  const valid = Boolean((r.body as { data?: { valid?: unknown } } | undefined)?.data?.valid);
+  return { ok: true, valid };
+}
+
+/** Completes a password reset with the emailed code; returns a session token. */
+export async function completePasswordReset(
+  email: string,
+  code: string,
+  newPassword: string
+): Promise<AuthTokenResult> {
+  const r = await postAuth("/auth/password/reset/complete", { email, code, newPassword });
+  if ("networkError" in r) return { ok: false, error: NETWORK_ERROR };
+  if (!r.res.ok) return { ok: false, error: parseApiErrorBody(r.body) };
+  const token = tokenFrom(r.body);
+  return token ? { ok: true, token } : { ok: false, error: UNKNOWN_ERROR };
+}
+
+/** Begins an email change (requires the current session + password). */
+export async function beginEmailChange(
+  token: string,
+  newEmail: string,
+  password: string
+): Promise<AuthOkResult> {
+  const r = await postAuth("/auth/change-email", { newEmail, password }, token);
+  if ("networkError" in r) return { ok: false, error: NETWORK_ERROR };
+  if (!r.res.ok) return { ok: false, error: parseApiErrorBody(r.body) };
+  return { ok: true };
+}
+
+/**
+ * Completes an email change with the emailed code. `email` is the account's
+ * CURRENT address (which holds the pending code); returns a fresh session token
+ * for the account, now on its new address.
+ */
+export async function completeEmailChange(email: string, code: string): Promise<AuthTokenResult> {
+  const r = await postAuth("/auth/change-email/complete", { email, code });
+  if ("networkError" in r) return { ok: false, error: NETWORK_ERROR };
+  if (!r.res.ok) return { ok: false, error: parseApiErrorBody(r.body) };
+  const token = tokenFrom(r.body);
+  return token ? { ok: true, token } : { ok: false, error: UNKNOWN_ERROR };
+}

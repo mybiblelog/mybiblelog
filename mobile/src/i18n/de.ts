@@ -468,4 +468,35 @@ export const de = {
     "Dieses Kapitel wurde vor heute eingetragen. Sie können frühere Einträge auf der Kalenderseite bearbeiten.",
   unable_to_mark_complete: "Das Kapitel konnte nicht als abgeschlossen markiert werden.",
   unable_to_mark_incomplete: "Das Kapitel konnte nicht als unvollständig markiert werden.",
+  login_forgot_password: "Passwort vergessen?",
+  login_create_account: "Konto erstellen",
+  auth_verify_needed_hint:
+    "Geben Sie den Code ein, den wir Ihnen per E-Mail gesendet haben, oder tippen Sie auf den Link in der E-Mail.",
+  auth_code_instructions:
+    "Geben Sie den Code aus Ihrer E-Mail ein oder tippen Sie auf den Link in der E-Mail, um sich sofort zu verifizieren.",
+  auth_code_label: "Bestätigungscode",
+  auth_code_continue: "Weiter",
+  auth_code_submit: "Absenden",
+  auth_code_invalid:
+    "Dieser Code ist ungültig oder abgelaufen. Bitte überprüfen Sie Ihre E-Mail oder fordern Sie einen neuen Code an.",
+  auth_new_password: "Neues Passwort",
+  auth_confirm_new_password: "Neues Passwort bestätigen",
+  auth_passwords_must_match: "Passwörter müssen übereinstimmen.",
+  register_title: "Registrieren",
+  register_hint: "Erstellen Sie ein Konto mit Ihrer E-Mail und einem Passwort.",
+  register_submit: "Registrieren",
+  register_have_account: "Haben Sie bereits ein Konto? Anmelden",
+  forgot_password_title: "Passwort zurücksetzen",
+  forgot_password_hint:
+    "Geben Sie Ihre E-Mail ein und wir senden Ihnen einen Code zum Zurücksetzen Ihres Passworts.",
+  forgot_password_submit: "Code senden",
+  account_change_email: "E-Mail ändern",
+  change_email_hint:
+    "Geben Sie Ihre neue E-Mail und Ihr aktuelles Passwort ein. Wir senden einen Code an die neue Adresse.",
+  change_email_current: "Aktuelle E-Mail:",
+  change_email_new_label: "Neue E-Mail",
+  change_email_password_label: "Aktuelles Passwort",
+  change_email_submit: "E-Mail ändern",
+  change_email_new_required: "Geben Sie Ihre neue E-Mail ein.",
+  change_email_password_required: "Geben Sie Ihr aktuelles Passwort ein.",
 } as const satisfies Record<keyof typeof en, string>;

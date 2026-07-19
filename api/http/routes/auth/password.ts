@@ -5,18 +5,17 @@ import {
   setPasswordBodySchema,
   resetPasswordInitBodySchema,
   resetPasswordBodySchema,
+  validateResetCodeBodySchema,
 } from '../../../validation/schemas/auth';
 import {
   changePassword,
   setPassword,
   beginPasswordReset,
-  checkPasswordResetCode,
+  validatePasswordResetCode,
   completePasswordReset,
 } from '../../handlers/auth/password';
 
 const tags = ['Authentication'];
-
-const resetCodeParam = z.object({ passwordResetCode: z.string() });
 
 export const authPasswordRoutes: RouteDefinition[] = [
   {
@@ -66,14 +65,14 @@ export const authPasswordRoutes: RouteDefinition[] = [
     },
   },
   {
-    method: 'GET',
-    path: '/auth/password/reset/:passwordResetCode/valid',
-    handler: checkPasswordResetCode,
+    method: 'POST',
+    path: '/auth/password/reset/validate',
+    handler: validatePasswordResetCode,
     docs: {
-      summary: 'Check if a password reset code is valid',
+      summary: 'Check if a password reset code is valid for an email',
       tags,
       public: true,
-      request: { params: resetCodeParam },
+      request: { body: validateResetCodeBodySchema },
       response: {
         description: 'Whether the password reset code is valid',
         schema: z.object({ valid: z.boolean() }),
@@ -83,13 +82,13 @@ export const authPasswordRoutes: RouteDefinition[] = [
   },
   {
     method: 'POST',
-    path: '/auth/password/reset/:passwordResetCode',
+    path: '/auth/password/reset/complete',
     handler: completePasswordReset,
     docs: {
-      summary: 'Reset password using a reset code',
+      summary: 'Reset password using an email and reset code',
       tags,
       public: true,
-      request: { params: resetCodeParam, body: resetPasswordBodySchema },
+      request: { body: resetPasswordBodySchema },
       response: {
         description: 'Password reset successful',
         schema: z.object({ token: z.string().optional() }),

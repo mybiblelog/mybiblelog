@@ -137,6 +137,7 @@ import type { ApiErrorDetail } from '~/helpers/api-error';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { useAuthStore } from '~/stores/auth';
+import { useAuthCodeStore } from '~/stores/auth-code';
 
 definePageMeta({ middleware: ['auth'] });
 
@@ -149,6 +150,7 @@ onMounted(() => { mounted.value = true; });
 const authStore = useAuthStore();
 const dialogStore = useDialogStore();
 const toastStore = useToastStore();
+const authCodeStore = useAuthCodeStore();
 const { $http, $terr } = useNuxtApp();
 
 type ChangeEmailRequest = { newEmail: string; expires: number };
@@ -214,7 +216,8 @@ async function submitChangeEmail() {
     changeEmailModel.password = '';
     changeEmailModel.newEmail = '';
     resetChangeEmailErrors();
-    toastStore.add({ type: 'success', text: t('confirmation_link_sent') });
+    // Open the code modal to finish the change (the emailed link still works too).
+    authCodeStore.open({ flow: 'change-email', email: authStore.user?.email ?? '' });
   }
   catch (err) {
     Object.assign(changeEmailErrors, mapFormErrors(err instanceof ApiError ? err : new UnknownApiError()));

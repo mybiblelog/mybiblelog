@@ -1,0 +1,34 @@
+# Reusable bootstrap: cold-start the dev-client with cleared state and reach the
+# Today screen (logged out). Mirrors the launch sequence in common/login.yaml but
+# stops before signing in, so flows that drive register / forgot-password can
+# start from a clean, logged-out app.
+appId: com.mybiblelog.app
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    optional: true
+    visible: "DEVELOPMENT SERVERS"
+    timeout: 20000
+- openLink: "biblelog://expo-development-client/?url=http%3A%2F%2F127.0.0.1%3A8081"
+- extendedWaitUntil:
+    optional: true
+    visible: "This is the developer menu.*"
+    timeout: 45000
+- runFlow:
+    when:
+      visible: "This is the developer menu.*"
+    commands:
+      - tapOn: "Continue"
+      - extendedWaitUntil:
+          visible: "Reload"
+          timeout: 10000
+      - back
+- extendedWaitUntil:
+    visible:
+      id: "today.add-entry"
+    timeout: 90000
+# Drag the dev-client's floating gear button out of the top-right tap targets.
+- swipe:
+    start: 90%, 7%
+    end: 90%, 65%

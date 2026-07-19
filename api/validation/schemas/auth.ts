@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { verificationCodeString } from '../primitives';
 
 // bcrypt only uses the first 72 bytes of a password; longer values would be
 // silently truncated, so we reject them at validation time.
@@ -28,7 +29,13 @@ export const changePasswordBodySchema = z.object({
   newPassword: passwordSchema,
 });
 
+// Completing a password reset now identifies the account by email (the short
+// code is not globally unique) and carries the typed/linked code plus the new
+// password. `code` stays a loose string so an invalid one surfaces the friendly
+// "reset link expired" error from the handler rather than a schema error.
 export const resetPasswordBodySchema = z.object({
+  email: z.string(),
+  code: z.string(),
   newPassword: passwordSchema,
 });
 
@@ -69,7 +76,8 @@ export const googleIdTokenBodySchema = z.object({
 });
 
 export const verifyEmailBodySchema = z.object({
-  code: z.string(),
+  email: z.string(),
+  code: verificationCodeString,
 });
 
 export const resendEmailVerificationBodySchema = z.object({
@@ -82,8 +90,23 @@ export const changeEmailBodySchema = z.object({
   password: z.string(),
 });
 
+// Completing a change identifies the account by its current email plus the code
+// sent to the new address; either the modal (logged in) or the magic link
+// (which embeds the current email) supplies both.
+export const completeEmailChangeBodySchema = z.object({
+  email: z.string(),
+  code: verificationCodeString,
+});
+
 export const resetPasswordInitBodySchema = z.object({
   email: z.string(),
+});
+
+// Step 1 of the reset modal: check a code before revealing the new-password
+// fields. Also used to record a failed attempt against the code.
+export const validateResetCodeBodySchema = z.object({
+  email: z.string(),
+  code: verificationCodeString,
 });
 
 export const setPasswordBodySchema = z.object({
