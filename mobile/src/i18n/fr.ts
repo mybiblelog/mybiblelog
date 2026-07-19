@@ -212,6 +212,7 @@ export const fr = {
     "Vos données hors ligne sur cet appareil ne seront pas synchronisées avec votre compte tant que vous n'êtes pas en ligne et connecté.",
   auth_login_requires_connection: "La connexion nécessite une connexion internet.",
   auth_login: "Connexion",
+  auth_create_account: "Créer un compte",
   auth_logout: "Déconnexion",
 
   login_title: "Connexion",

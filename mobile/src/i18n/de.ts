@@ -211,6 +211,7 @@ export const de = {
     "Ihre Offline-Daten auf diesem Gerät werden erst mit Ihrem Konto synchronisiert, wenn Sie online und angemeldet sind.",
   auth_login_requires_connection: "Für die Anmeldung ist eine Internetverbindung erforderlich.",
   auth_login: "Anmelden",
+  auth_create_account: "Konto erstellen",
   auth_logout: "Abmelden",
 
   login_title: "Anmelden",

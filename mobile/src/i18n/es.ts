@@ -209,6 +209,7 @@ export const es = {
     "Tus datos sin conexión en este dispositivo no se sincronizarán con tu cuenta hasta que estés en línea y hayas iniciado sesión.",
   auth_login_requires_connection: "Para iniciar sesión necesitas conexión a internet.",
   auth_login: "Iniciar sesión",
+  auth_create_account: "Crear cuenta",
   auth_logout: "Cerrar sesión",
 
   login_title: "Iniciar sesión",

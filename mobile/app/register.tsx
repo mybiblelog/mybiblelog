@@ -1,6 +1,7 @@
 import { mapFormErrors } from "@/src/api/apiError";
 import { register } from "@/src/api/authApi";
 import { useAuth } from "@/src/stores/auth";
+import { signInWithGoogle } from "@/src/auth/googleSignIn";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { translateApiError } from "@/src/i18n/translateApiError";
 import { spacing, useTheme } from "@/src/design";
@@ -13,7 +14,7 @@ export default function Register() {
   const t = useT();
   const { locale } = useLocale();
   const { colors } = useTheme();
-  const { loginWithEmailPassword } = useAuth();
+  const { loginWithEmailPassword, finishGoogleLogin } = useAuth();
 
   const [step, setStep] = useState<"form" | "verify">("form");
   const [email, setEmail] = useState("");
@@ -25,6 +26,40 @@ export default function Register() {
 
   function goHome() {
     router.replace("/");
+  }
+
+  // Signing up with Google creates the account on first sign-in, so the same
+  // flow serves both new and returning users (mirrors the login screen).
+  async function onGoogleLogin() {
+    if (isSubmitting) return;
+    setError(null);
+    setEmailError(null);
+    setPasswordError(null);
+    setIsSubmitting(true);
+    try {
+      const result = await signInWithGoogle();
+      if (result.ok === "cancelled") {
+        // User dismissed the Google sheet — stay quiet, no error.
+        setIsSubmitting(false);
+        return;
+      }
+      if (!result.ok) {
+        setIsSubmitting(false);
+        setError(t("auth_generic_error"));
+        return;
+      }
+
+      const login = await finishGoogleLogin(result.idToken, locale);
+      setIsSubmitting(false);
+      if (login.ok) {
+        goHome();
+        return;
+      }
+      setError(t("auth_generic_error"));
+    } catch {
+      setIsSubmitting(false);
+      setError(t("auth_generic_error"));
+    }
   }
 
   async function onRegister() {
@@ -137,6 +172,23 @@ export default function Register() {
               fullWidth
             />
 
+            <View style={styles.divider}>
+              <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+              <Text variant="caption" color="mutedText" style={styles.dividerText}>
+                {t("login_divider_or")}
+              </Text>
+              <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+            </View>
+
+            <Button
+              label={t("login_with_google")}
+              testID="register.google"
+              variant="secondary"
+              onPress={onGoogleLogin}
+              disabled={isSubmitting}
+              fullWidth
+            />
+
             <Button
               label={t("register_have_account")}
               variant="ghost"
@@ -164,5 +216,12 @@ const styles = StyleSheet.create({
   subtitle: { marginBottom: spacing.lg },
   error: { marginBottom: spacing.md },
   form: { gap: spacing.lg, marginBottom: spacing.lg },
+  divider: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: spacing.xl,
+  },
+  dividerLine: { flex: 1, height: StyleSheet.hairlineWidth },
+  dividerText: { marginHorizontal: spacing.lg },
   secondaryButton: { marginTop: spacing.md },
 });

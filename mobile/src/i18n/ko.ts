@@ -207,6 +207,7 @@ export const ko = {
     "온라인 상태로 로그인하기 전까지는 이 기기의 오프라인 데이터가 계정과 동기화되지 않습니다.",
   auth_login_requires_connection: "로그인하려면 인터넷 연결이 필요합니다.",
   auth_login: "로그인",
+  auth_create_account: "계정 만들기",
   auth_logout: "로그아웃",
 
   login_title: "로그인",

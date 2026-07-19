@@ -210,6 +210,7 @@ export const pt = {
     "Seus dados offline neste dispositivo não serão sincronizados com sua conta até que você esteja online e conectado.",
   auth_login_requires_connection: "Fazer login requer uma conexão com a internet.",
   auth_login: "Entrar",
+  auth_create_account: "Criar conta",
   auth_logout: "Sair",
 
   login_title: "Entrar",

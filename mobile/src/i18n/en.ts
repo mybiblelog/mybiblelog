@@ -204,6 +204,7 @@ export const en = {
     "Your offline data on this device will not sync to your account until you are online and logged in.",
   auth_login_requires_connection: "Logging in requires an internet connection.",
   auth_login: "Login",
+  auth_create_account: "Create account",
   auth_logout: "Logout",
 
   login_title: "Login",

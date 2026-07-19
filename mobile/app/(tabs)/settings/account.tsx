@@ -89,14 +89,27 @@ export default function AccountSettings() {
                   </Text>
                 </View>
               ) : (
-                <Button
-                  label={t("auth_login")}
-                  testID="settings.login"
-                  leftIcon="log-in-outline"
-                  fullWidth
-                  onPress={() => router.push("/login")}
-                  style={styles.authActionButtonSpacing}
-                />
+                <>
+                  <Button
+                    label={t("auth_login")}
+                    testID="settings.login"
+                    leftIcon="log-in-outline"
+                    fullWidth
+                    onPress={() => router.push("/login")}
+                    style={styles.authActionButtonSpacing}
+                  />
+                  {/* Make clear an account can be created here, not only used —
+                      a Login-only card implies you must already have one. */}
+                  <Button
+                    label={t("auth_create_account")}
+                    testID="settings.register"
+                    variant="secondary"
+                    leftIcon="person-add-outline"
+                    fullWidth
+                    onPress={() => router.push("/register")}
+                    style={styles.authActionButtonSpacing}
+                  />
+                </>
               )}
             </>
           )}
