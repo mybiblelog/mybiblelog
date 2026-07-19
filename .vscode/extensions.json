@@ -5,10 +5,7 @@
     "eamodio.gitlens",
 
     // Vue Tooling
-    "octref.vetur",
-
-    // Vue "peek" and "goto definition"
-    "dariofuzinato.vue-peek",
+    "vue.volar",
 
     // JS Linting
     "dbaeumer.vscode-eslint",
@@ -18,12 +15,6 @@
 
     // .env Support
     "mikestead.dotenv",
-
-    // SVG Editor
-    "jock.svg",
-
-    // SVG Previewer
-    "cssho.vscode-svgviewer",
 
     // TODO: and FIXME: Highlighter
     "wayou.vscode-todo-highlight",
