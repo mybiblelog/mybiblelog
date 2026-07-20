@@ -146,6 +146,17 @@ module.exports = {
       },
     },
     {
+      // Server launcher scripts: ESM with top-level await (needs 2022), and
+      // console logging is their only output channel.
+      files: ['scripts/*.mjs'],
+      parserOptions: {
+        ecmaVersion: 2022,
+      },
+      rules: {
+        'no-console': 'off',
+      },
+    },
+    {
       files: ['**/*.ts'],
       parser: '@typescript-eslint/parser',
       plugins: ['@typescript-eslint'],

@@ -10,7 +10,7 @@
     "dev": "nuxt dev --port 3000",
     "build": "nuxt build",
     "preview": "nuxt preview --port 3000",
-    "start": "node ./.output/server/index.mjs",
+    "start": "node ../scripts/start-web-standalone.mjs",
     "clean": "rm -rf node_modules .nuxt .output .data",
     "pretest": "node test/ensure-nuxt-tsconfig.mjs",
     "test": "vitest run",

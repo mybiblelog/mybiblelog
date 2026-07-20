@@ -4,11 +4,7 @@ import http from 'node:http';
 import debug from 'debug';
 
 import { getConfig } from './config';
-import { ensureIndexes } from './mongo/useCollections';
-import useRepositories from './repositories/useRepositories';
-import initReminderService from './services/reminder.service';
-import buildApp from './app';
-import useEmailService from './services/email/email-service';
+import bootApi from './bootstrap';
 
 // Normalize a port into a number, string, or false.
 const normalizePort = (val: string) => {
@@ -58,14 +54,8 @@ const startServer = async () => {
       throw error;
     }
   };
-  // make sure the database connection is established
-  await useRepositories();
-  // Build the unique/text indexes the data layer relies on. Mongoose used to
-  // create these automatically on connection; the native driver does not.
-  await ensureIndexes();
-  const emailService = await useEmailService();
-  await initReminderService({ emailService });
-  const app = buildApp();
+
+  const app = await bootApi();
 
   app.set('port', port);
 

@@ -168,8 +168,9 @@ const init = async ({ emailService }: { emailService: EmailService }) => {
     }
   };
 
-  // Check for reminders to send every minute
-  setInterval(triggerReminders, 60 * 1000);
+  // Check for reminders to send every minute. unref() so the interval never
+  // holds the process open once the HTTP server has shut down.
+  setInterval(triggerReminders, 60 * 1000).unref();
   console.log('Reminder Service Started');
 
   return {}; // No public API
