@@ -184,11 +184,18 @@ Additionally, the API server has its own production HTTPS redirect middleware in
 
 ## Deployment (Heroku)
 
+In production the API and the Nuxt app run in a **single Node process**: the Procfile runs `scripts/start-single-process.mjs`, which boots the Express API (Mongo connection, indexes, email + reminder services), imports the Nitro request handler (built with the `node-listener` preset, which exports a handler instead of self-listening), and serves both from one HTTP server on `$PORT` — `/api` requests go straight to Express, everything else to Nitro. This exists because the 512MB dyno was running two Node processes (duplicated V8 baseline plus an npm/npm-run-all wrapper tree) and every `/api` request paid a proxy hop through Nitro; one process cuts memory roughly in half and removes the hop for browser traffic.
+
+The launcher also keeps a **loopback-only Express listener on `API_PORT` (default 8080)**: SSR-internal fetches of `/api/**` route through Nitro's internal router and hit the baked `/api/**` proxy routeRule targeting `localhost:8080`, so that port must answer even in single-process mode. Only SSR-initiated API calls pay this loopback hop — the same hop they paid in the two-process topology.
+
+In development the two-process topology remains (`npm run dev`): Nuxt dev server on 3000 proxying `/api` to the Express dev server on 8080. Because the proxy routeRule is kept in production builds, the same build artifact also works in the legacy two-process topology, so rollback is just a script flip: `npm run start:legacy` (or point the Procfile at it).
+
 For deployment to Heroku, ensure these env vars are set before pushing:
 
 ```bash
-$ heroku config:set HOST=0.0.0.0
 $ heroku config:set NODE_ENV=production
+# Cap the V8 heap below the 512MB dyno limit so GC runs before the dyno hits R14
+$ heroku config:set NODE_OPTIONS=--max-old-space-size=320
 ```
 
-Set the rest of the [environment variables](#environment-variables) in Heroku as well. For the Google OAuth2 redirect URLs that must be registered for each host, see the [OAuth guide](oauth.md).
+`API_BASE_URL` and `API_PORT` are no longer needed on Heroku (the launcher serves everything on `$PORT`; they still matter for local dev and the legacy topology). Set the rest of the [environment variables](#environment-variables) in Heroku as well. For the Google OAuth2 redirect URLs that must be registered for each host, see the [OAuth guide](oauth.md).

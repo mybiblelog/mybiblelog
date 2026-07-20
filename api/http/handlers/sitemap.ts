@@ -16,6 +16,14 @@ import { type RouteHandler } from '../types';
 
 const siteLocales = locales.map((locale) => locale.code);
 
+// Resolve the repo root from __dirname rather than process.cwd(): the API can
+// be started with cwd api/ (standalone server.ts) or the repo root (the
+// single-process launcher). Same src-vs-dist distinction as api/config/index.ts
+// — compiled output lives one level deeper (api/dist/http/handlers).
+const repoRoot = __dirname.includes('dist') ?
+  path.resolve(__dirname, '../../../..') :
+  path.resolve(__dirname, '../../..');
+
 // GET /sitemap.xml - Localized sitemap in XML format
 export const getSitemap: RouteHandler = async () => {
   const relativeUrls: string[] = [];
@@ -38,7 +46,7 @@ export const getSitemap: RouteHandler = async () => {
   for (const locale of siteLocales) {
     const localePrefix = locale === 'en' ? '' : `/${locale}`;
 
-    const aboutDir = path.resolve(process.cwd(), '..', 'web', 'content', locale, 'about');
+    const aboutDir = path.resolve(repoRoot, 'web', 'content', locale, 'about');
     const aboutPageFiles = fs.readdirSync(aboutDir);
     for (const file of aboutPageFiles) {
       const slug = file.replace('.md', '');

@@ -36,12 +36,30 @@ export default defineNuxtConfig({
     },
   },
 
-  // API proxy: forward /api/* to the Express backend
+  // API proxy: forward /api/* to the Express backend. External /api requests
+  // never reach Nitro in the single-process production topology (the launcher
+  // dispatches them straight to the Express app), but SSR-internal fetches of
+  // '/api/**' route through Nitro's internal router and DO hit this rule — the
+  // launcher keeps a loopback Express listener on API_PORT as its target. The
+  // same rule also serves the legacy two-process topology
+  // (`npm run start:legacy`), so rollback is just a script flip.
   nitro: {
     routeRules: {
       '/api/**': {
         proxy: `${process.env.API_BASE_URL || 'http://localhost:8080'}/api/**`,
       },
+    },
+  },
+
+  // Production builds export a request handler (node-listener) instead of a
+  // self-listening server, so the launcher can serve web + api on one port.
+  // node-listener doesn't enable static asset serving (unlike node-server,
+  // which sets it in the preset) — without serveStatic, /_nuxt/* falls through
+  // to the SSR renderer and 404s.
+  $production: {
+    nitro: {
+      preset: 'node-listener',
+      serveStatic: true,
     },
   },
 
