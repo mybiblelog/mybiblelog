@@ -194,8 +194,8 @@ For deployment to Heroku, ensure these env vars are set before pushing:
 
 ```bash
 $ heroku config:set NODE_ENV=production
-# Cap the V8 heap below the 512MB dyno limit so GC runs before the dyno hits R14
-$ heroku config:set NODE_OPTIONS=--max-old-space-size=320
 ```
+
+The V8 heap cap (`--max-old-space-size=320`, so GC runs before the dyno hits R14 at 512MB) lives in the Procfile command, NOT in a `NODE_OPTIONS` config var — config vars apply at build time too, and a 320MB heap OOM-kills the Vite client build. Do not set `NODE_OPTIONS` on the app.
 
 `API_BASE_URL` and `API_PORT` are no longer needed on Heroku (the launcher serves everything on `$PORT`; they still matter for local dev and the legacy topology). Set the rest of the [environment variables](#environment-variables) in Heroku as well. For the Google OAuth2 redirect URLs that must be registered for each host, see the [OAuth guide](oauth.md).
