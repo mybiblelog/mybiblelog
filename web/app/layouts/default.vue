@@ -23,6 +23,7 @@
     <passage-note-tag-editor-modal />
     <just-opened-modal />
     <action-sheet-modal />
+    <auth-code-modal />
   </div>
 </template>
 
@@ -38,6 +39,7 @@ import PassageNoteEditorModal from '~/components/popups/PassageNoteEditorModal.v
 import PassageNoteTagEditorModal from '~/components/popups/PassageNoteTagEditorModal.vue';
 import JustOpenedModal from '~/components/popups/JustOpenedModal.vue';
 import ActionSheetModal from '~/components/popups/ActionSheetModal.vue';
+import AuthCodeModal from '~/components/popups/AuthCodeModal.vue';
 import { useThemeStore } from '~/stores/theme';
 
 const config = useRuntimeConfig();

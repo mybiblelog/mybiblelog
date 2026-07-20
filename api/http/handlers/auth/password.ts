@@ -1,6 +1,5 @@
 import { ApiErrorDetailCode } from '../../errors/error-codes';
 import { ValidationError } from '../../errors/validation-errors';
-import { NotFoundError } from '../../errors/http-errors';
 import { generateUserJWT, isCodeValid } from '../../../repositories/helpers/user-auth';
 import { validate } from '../../../validation/validate';
 import {
@@ -13,6 +12,8 @@ import { authCookie } from '../../helpers/auth-cookie';
 import { isWebClient } from '../../helpers/client-type';
 import { type RouteHandler } from '../../types';
 import { asRecord } from './shared';
+
+const HOUR_MS = 60 * 60 * 1000;
 
 // Setting a password bumps the user's tokenVersion (revoking any other session,
 // including a token stolen before the change), so we re-issue the acting device
@@ -86,35 +87,59 @@ export const beginPasswordReset: RouteHandler = async (req, deps) => {
   return { status: 200, body: { data: { success: true } } };
 };
 
-// GET /auth/password/reset/:passwordResetCode/valid - Check whether a reset code is valid
-export const checkPasswordResetCode: RouteHandler = async (req, deps) => {
-  await deps.rateLimiter.check(req, { maxRequests: 20, windowMs: 60 * 60 * 1000 });
+// POST /auth/password/reset/validate - Check a {email, code} reset code without
+// consuming it, so the modal can reveal the new-password fields only once the
+// code is confirmed. A failed check spends an attempt so this endpoint cannot be
+// used to brute-force the code without hitting the per-code cap.
+export const validatePasswordResetCode: RouteHandler = async (req, deps) => {
+  await deps.rateLimiter.check(req, { maxRequests: 20, windowMs: HOUR_MS });
 
-  const passwordResetCode = req.params.passwordResetCode ?? '';
-  const { users } = deps.repositories;
-  const user = await users.findByPasswordResetCode(passwordResetCode);
-  return { status: 200, body: { data: { valid: Boolean(user) } } };
-};
+  const { email: rawEmail, code } = asRecord(req.body);
+  if (typeof rawEmail !== 'string' || typeof code !== 'string') {
+    return { status: 200, body: { data: { valid: false } } };
+  }
+  const email = rawEmail.trim().toLowerCase();
 
-// POST /auth/password/reset/:passwordResetCode - Complete a password reset, set the auth cookie
-export const completePasswordReset: RouteHandler = async (req, deps) => {
-  await deps.rateLimiter.check(req, { maxRequests: 5, windowMs: 60 * 60 * 1000 });
-
-  const passwordResetCode = req.params.passwordResetCode ?? '';
-  const { body } = validate(req, { body: resetPasswordBodySchema });
-  const { newPassword } = body;
+  await deps.rateLimiter.check(req, { maxRequests: 20, windowMs: HOUR_MS, keyFn: () => `email:${email}` });
 
   const { users } = deps.repositories;
-  const user = await users.findByPasswordResetCode(passwordResetCode);
-  if (!user) {
-    throw new NotFoundError();
+  const user = await users.findByEmail(email);
+  const valid = Boolean(user) && isCodeValid({
+    code,
+    expectedCode: user!.passwordResetCode,
+    expiresAt: user!.passwordResetExpires,
+    attempts: user!.passwordResetAttempts,
+  });
+
+  if (!valid && user) {
+    await users.recordPasswordResetAttempt(user.id);
   }
 
-  if (!isCodeValid({
-    code: passwordResetCode,
+  return { status: 200, body: { data: { valid } } };
+};
+
+// POST /auth/password/reset - Complete a password reset via {email, code, newPassword}, set the auth cookie
+export const completePasswordReset: RouteHandler = async (req, deps) => {
+  await deps.rateLimiter.check(req, { maxRequests: 5, windowMs: HOUR_MS });
+
+  const { body } = validate(req, { body: resetPasswordBodySchema });
+  const { code, newPassword } = body;
+  const email = body.email.trim().toLowerCase();
+
+  await deps.rateLimiter.check(req, { maxRequests: 5, windowMs: HOUR_MS, keyFn: () => `email:${email}` });
+
+  const { users } = deps.repositories;
+  const user = await users.findByEmail(email);
+
+  if (!user || !isCodeValid({
+    code,
     expectedCode: user.passwordResetCode,
     expiresAt: user.passwordResetExpires,
+    attempts: user.passwordResetAttempts,
   })) {
+    if (user) {
+      await users.recordPasswordResetAttempt(user.id);
+    }
     throw new ValidationError([{ code: ApiErrorDetailCode.PasswordResetLinkExpired, field: null }]);
   }
 

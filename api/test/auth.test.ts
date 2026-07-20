@@ -352,11 +352,11 @@ describe('Auth routes', () => {
   });
 
   describe('POST /api/auth/verify-email', () => {
-    it('returns 404 for invalid verification code', async () => {
+    it('returns 400 for an invalid {email, code}', async () => {
       const res = await requestApi
         .post('/api/auth/verify-email')
-        .send({ code: 'invalid-code-12345' });
-      expect(res.statusCode).toBe(404);
+        .send({ email: 'unknown_user@example.com', code: '000000' });
+      expect(res.statusCode).toBe(400);
     });
 
     // The valid-code flow (token + auth cookie on success) is covered by the
@@ -443,21 +443,30 @@ describe('Auth routes', () => {
     // (`requireEmailVerification`) and is covered at the handler level.
   });
 
-  describe('POST /api/auth/password/reset/:passwordResetCode', () => {
-    it('returns 404 for invalid reset code', async () => {
+  describe('POST /api/auth/password/reset/complete', () => {
+    it('returns 400 for an invalid {email, code}', async () => {
       const res = await requestApi
-        .post('/api/auth/password/reset/invalid-code-12345')
-        .send({ newPassword: 'newpassword123' });
-      expect(res.statusCode).toBe(404);
+        .post('/api/auth/password/reset/complete')
+        .send({ email: 'unknown_user@example.com', code: '000000', newPassword: 'newpassword123' });
+      expect(res.statusCode).toBe(400);
       expect(res.body).toHaveProperty('error');
       expect(res.body).not.toHaveProperty('data');
-      expect(res.body.error).toEqual({
-        code: 'not_found',
-      });
+      expect(res.body.error.code).toBe('validation_error');
+      expect(res.body.error.errors).toEqual([{ field: null, code: 'password_reset_link_expired' }]);
     });
 
     // The valid-code flow (token + auth cookie on success) is covered by the
     // `completePasswordReset` handler unit test.
+  });
+
+  describe('POST /api/auth/password/reset/validate', () => {
+    it('returns { valid: false } for an unknown {email, code}', async () => {
+      const res = await requestApi
+        .post('/api/auth/password/reset/validate')
+        .send({ email: 'unknown_user@example.com', code: '000000' });
+      expect(res.statusCode).toBe(200);
+      expect(res.body.data).toEqual({ valid: false });
+    });
   });
 
   describe('POST /api/auth/oauth2/google/verify', () => {
@@ -514,14 +523,15 @@ describe('Auth routes', () => {
     });
   });
 
-  describe('POST /api/auth/change-email/:newEmailVerificationCode', () => {
+  describe('POST /api/auth/change-email/complete', () => {
     // The completion flow (token + auth cookie on success) is covered by the
     // `completeEmailChange` handler unit test, which no longer needs the bypass
     // to inject a known verification code.
-    it('returns 404 for invalid verification code', async () => {
+    it('returns 400 for an invalid {email, code}', async () => {
       const res = await requestApi
-        .post('/api/auth/change-email/invalid-code-12345');
-      expect(res.statusCode).toBe(404);
+        .post('/api/auth/change-email/complete')
+        .send({ email: 'unknown_user@example.com', code: '000000' });
+      expect(res.statusCode).toBe(400);
     });
   });
 });

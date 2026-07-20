@@ -5,13 +5,12 @@ export {
   changePassword,
   setPassword,
   beginPasswordReset,
-  checkPasswordResetCode,
+  validatePasswordResetCode,
   completePasswordReset,
 } from './password';
 export {
   beginEmailChange,
   getEmailChange,
-  getEmailChangeByCode,
   cancelEmailChange,
   completeEmailChange,
 } from './email-change';

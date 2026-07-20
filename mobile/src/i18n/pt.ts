@@ -210,6 +210,7 @@ export const pt = {
     "Seus dados offline neste dispositivo não serão sincronizados com sua conta até que você esteja online e conectado.",
   auth_login_requires_connection: "Fazer login requer uma conexão com a internet.",
   auth_login: "Entrar",
+  auth_create_account: "Criar conta",
   auth_logout: "Sair",
 
   login_title: "Entrar",
@@ -463,4 +464,34 @@ export const pt = {
     "Este capítulo foi registrado antes de hoje. Você pode editar registros anteriores na página do Calendário.",
   unable_to_mark_complete: "Não foi possível marcar o capítulo como concluído.",
   unable_to_mark_incomplete: "Não foi possível marcar o capítulo como incompleto.",
+  login_forgot_password: "Esqueceu a senha?",
+  login_create_account: "Criar conta",
+  auth_verify_needed_hint:
+    "Insira o código que enviamos por e-mail para verificar sua conta, ou toque no link desse e-mail.",
+  auth_code_instructions:
+    "Insira o código do seu e-mail ou toque no link no e-mail para verificar instantaneamente.",
+  auth_code_label: "Código de verificação",
+  auth_code_continue: "Continuar",
+  auth_code_submit: "Enviar",
+  auth_code_invalid:
+    "Esse código é inválido ou expirou. Verifique seu e-mail ou solicite um novo código.",
+  auth_new_password: "Nova Senha",
+  auth_confirm_new_password: "Confirmar Nova Senha",
+  auth_passwords_must_match: "As senhas devem coincidir.",
+  register_title: "Inscrever-se",
+  register_hint: "Crie uma conta com seu e-mail e uma senha.",
+  register_submit: "Inscrever-se",
+  register_have_account: "Já tem uma conta? Entrar",
+  forgot_password_title: "Redefinir Senha",
+  forgot_password_hint: "Insira seu e-mail e enviaremos um código para redefinir sua senha.",
+  forgot_password_submit: "Enviar código",
+  account_change_email: "Alterar e-mail",
+  change_email_hint:
+    "Insira seu novo e-mail e a senha atual. Enviaremos um código para o novo endereço.",
+  change_email_current: "E-mail atual:",
+  change_email_new_label: "Novo E-mail",
+  change_email_password_label: "Senha Atual",
+  change_email_submit: "Alterar E-mail",
+  change_email_new_required: "Insira seu novo e-mail.",
+  change_email_password_required: "Insira sua senha atual.",
 } as const satisfies Record<keyof typeof en, string>;

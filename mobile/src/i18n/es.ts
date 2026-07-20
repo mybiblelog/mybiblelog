@@ -209,6 +209,7 @@ export const es = {
     "Tus datos sin conexión en este dispositivo no se sincronizarán con tu cuenta hasta que estés en línea y hayas iniciado sesión.",
   auth_login_requires_connection: "Para iniciar sesión necesitas conexión a internet.",
   auth_login: "Iniciar sesión",
+  auth_create_account: "Crear cuenta",
   auth_logout: "Cerrar sesión",
 
   login_title: "Iniciar sesión",
@@ -465,4 +466,35 @@ export const es = {
     "Este capítulo se registró antes de hoy. Puedes editar entradas anteriores en la página del Calendario.",
   unable_to_mark_complete: "No se puede marcar el capítulo como completo.",
   unable_to_mark_incomplete: "No se puede marcar el capítulo como incompleto.",
+  login_forgot_password: "¿Olvidaste tu contraseña?",
+  login_create_account: "Crear cuenta",
+  auth_verify_needed_hint:
+    "Introduce el código que te enviamos por correo para verificar tu cuenta, o toca el enlace de ese correo.",
+  auth_code_instructions:
+    "Introduce el código de tu correo electrónico, o toca el enlace del correo para verificar al instante.",
+  auth_code_label: "Código de verificación",
+  auth_code_continue: "Continuar",
+  auth_code_submit: "Enviar",
+  auth_code_invalid:
+    "Ese código no es válido o ha caducado. Revisa tu correo electrónico o solicita un código nuevo.",
+  auth_new_password: "Nueva contraseña",
+  auth_confirm_new_password: "Confirmar nueva contraseña",
+  auth_passwords_must_match: "Las contraseñas deben coincidir.",
+  register_title: "Registrarse",
+  register_hint: "Crea una cuenta con tu correo electrónico y una contraseña.",
+  register_submit: "Registrarse",
+  register_have_account: "¿Ya tienes una cuenta? Inicia sesión",
+  forgot_password_title: "Restablecer la contraseña",
+  forgot_password_hint:
+    "Introduce tu correo y te enviaremos un código para restablecer tu contraseña.",
+  forgot_password_submit: "Enviar código",
+  account_change_email: "Cambiar correo",
+  change_email_hint:
+    "Introduce tu nuevo correo y tu contraseña actual. Enviaremos un código a la nueva dirección.",
+  change_email_current: "Correo actual:",
+  change_email_new_label: "Nuevo correo",
+  change_email_password_label: "Contraseña actual",
+  change_email_submit: "Cambiar correo",
+  change_email_new_required: "Introduce tu nuevo correo.",
+  change_email_password_required: "Introduce tu contraseña actual.",
 } as const satisfies Record<keyof typeof en, string>;

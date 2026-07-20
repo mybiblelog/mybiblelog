@@ -31,6 +31,7 @@ import {
   changePassword,
   setPassword,
   beginPasswordReset,
+  validatePasswordResetCode,
   completePasswordReset,
   beginEmailChange,
   completeEmailChange,
@@ -43,7 +44,8 @@ import { type UserRecord } from '../repositories/helpers/types';
 import { AUTH_COOKIE_NAME } from '../http/helpers/auth-current-user';
 import { ValidationError } from '../http/errors/validation-errors';
 import { ApiErrorDetailCode } from '../http/errors/error-codes';
-import { UnauthorizedError, NotFoundError, InvalidRequestError } from '../http/errors/http-errors';
+import { UnauthorizedError, InvalidRequestError } from '../http/errors/http-errors';
+import { MAX_CODE_ATTEMPTS } from '../repositories/helpers/verification-codes';
 import googleIdToken from '../http/helpers/google-id-token';
 
 const mockedVerifyIdToken = vi.mocked(googleIdToken.verifyGoogleIdToken);
@@ -401,43 +403,63 @@ describe('auth handlers (unit)', () => {
   });
 
   describe('verifyEmail', () => {
-    it('throws NotFound when the code matches no user', async () => {
-      const deps = makeDeps({ users: { findByEmailVerificationCode: async () => null } });
-      await expect(verifyEmail(makeRequest({ body: { code: 'nope' } }), deps))
-        .rejects.toBeInstanceOf(NotFoundError);
+    // Codes are looked up email-scoped now: findByEmail(email) then compare the
+    // short code against the account (a short code is not globally unique).
+    const pendingVerify = () => ({
+      ...verifiedUser,
+      emailVerificationCode: '123456',
+      emailVerificationExpires: new Date(Date.now() + 60_000),
+      emailVerificationAttempts: 0,
+    } as unknown as UserRecord);
+
+    it('throws a ValidationError when no account matches the email', async () => {
+      const deps = makeDeps({ users: { findByEmail: async () => null } });
+      await expect(verifyEmail(makeRequest({ body: { email: 'ghost@example.com', code: '123456' } }), deps))
+        .rejects.toBeInstanceOf(ValidationError);
+    });
+
+    it('records a failed attempt and rejects a wrong code', async () => {
+      const recordEmailVerificationAttempt = vi.fn(async () => 1);
+      const markEmailVerified = vi.fn();
+      const deps = makeDeps({
+        users: { findByEmail: async () => pendingVerify(), recordEmailVerificationAttempt, markEmailVerified },
+      });
+      await expect(verifyEmail(makeRequest({ body: { email: 'user@example.com', code: '000000' } }), deps))
+        .rejects.toBeInstanceOf(ValidationError);
+      expect(recordEmailVerificationAttempt).toHaveBeenCalledWith(USER_ID);
+      expect(markEmailVerified).not.toHaveBeenCalled();
+    });
+
+    it('rejects even the correct code once the attempt cap is reached', async () => {
+      const spent = { ...pendingVerify(), emailVerificationAttempts: MAX_CODE_ATTEMPTS } as UserRecord;
+      const markEmailVerified = vi.fn();
+      const deps = makeDeps({
+        users: {
+          findByEmail: async () => spent,
+          recordEmailVerificationAttempt: async () => MAX_CODE_ATTEMPTS + 1,
+          markEmailVerified,
+        },
+      });
+      await expect(verifyEmail(makeRequest({ body: { email: 'user@example.com', code: '123456' } }), deps))
+        .rejects.toBeInstanceOf(ValidationError);
+      expect(markEmailVerified).not.toHaveBeenCalled();
     });
 
     it('returns a token and cookie on success', async () => {
-      const pending = {
-        ...verifiedUser,
-        emailVerificationCode: 'GOOD',
-        emailVerificationExpires: new Date(Date.now() + 60_000),
-      } as UserRecord;
       const deps = makeDeps({
-        users: {
-          findByEmailVerificationCode: async () => pending,
-          markEmailVerified: async () => verifiedUser,
-        },
+        users: { findByEmail: async () => pendingVerify(), markEmailVerified: async () => verifiedUser },
       });
-      const result = await verifyEmail(makeRequest({ body: { code: 'GOOD' } }), deps);
+      const result = await verifyEmail(makeRequest({ body: { email: 'user@example.com', code: '123456' } }), deps);
       expect(typeof (result.body?.data as { token: string }).token).toBe('string');
       expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
 
     it('omits the token from the body for web callers', async () => {
-      const pending = {
-        ...verifiedUser,
-        emailVerificationCode: 'GOOD',
-        emailVerificationExpires: new Date(Date.now() + 60_000),
-      } as UserRecord;
       const deps = makeDeps({
-        users: {
-          findByEmailVerificationCode: async () => pending,
-          markEmailVerified: async () => verifiedUser,
-        },
+        users: { findByEmail: async () => pendingVerify(), markEmailVerified: async () => verifiedUser },
       });
       const result = await verifyEmail(
-        makeRequest({ body: { code: 'GOOD' }, headers: { 'x-client': 'web' } }),
+        makeRequest({ body: { email: 'user@example.com', code: '123456' }, headers: { 'x-client': 'web' } }),
         deps,
       );
       expect((result.body?.data as { token?: string })?.token).toBeUndefined();
@@ -470,29 +492,78 @@ describe('auth handlers (unit)', () => {
     });
   });
 
+  describe('validatePasswordResetCode', () => {
+    const pendingReset = () => ({
+      ...verifiedUser,
+      passwordResetCode: '123456',
+      passwordResetExpires: new Date(Date.now() + 60_000),
+      passwordResetAttempts: 0,
+    } as unknown as UserRecord);
+
+    it('returns { valid: false } and records an attempt for a wrong code', async () => {
+      const recordPasswordResetAttempt = vi.fn(async () => 1);
+      const deps = makeDeps({ users: { findByEmail: async () => pendingReset(), recordPasswordResetAttempt } });
+      const result = await validatePasswordResetCode(
+        makeRequest({ body: { email: 'user@example.com', code: '000000' } }),
+        deps,
+      );
+      expect(result.body).toEqual({ data: { valid: false } });
+      expect(recordPasswordResetAttempt).toHaveBeenCalledWith(USER_ID);
+    });
+
+    it('returns { valid: true } for a correct code without recording an attempt', async () => {
+      const recordPasswordResetAttempt = vi.fn();
+      const deps = makeDeps({ users: { findByEmail: async () => pendingReset(), recordPasswordResetAttempt } });
+      const result = await validatePasswordResetCode(
+        makeRequest({ body: { email: 'user@example.com', code: '123456' } }),
+        deps,
+      );
+      expect(result.body).toEqual({ data: { valid: true } });
+      expect(recordPasswordResetAttempt).not.toHaveBeenCalled();
+    });
+  });
+
   describe('completePasswordReset', () => {
-    it('throws NotFound for an unknown reset code', async () => {
-      const deps = makeDeps({ users: { findByPasswordResetCode: async () => null } });
+    const pendingReset = () => ({
+      ...verifiedUser,
+      passwordResetCode: '123456',
+      passwordResetExpires: new Date(Date.now() + 60_000),
+      passwordResetAttempts: 0,
+    } as unknown as UserRecord);
+
+    it('rejects an unknown email/code with a ValidationError', async () => {
+      const deps = makeDeps({ users: { findByEmail: async () => null } });
       await expect(
-        completePasswordReset(makeRequest({ params: { passwordResetCode: 'x' }, body: { newPassword: 'password123' } }), deps),
-      ).rejects.toBeInstanceOf(NotFoundError);
+        completePasswordReset(
+          makeRequest({ body: { email: 'ghost@example.com', code: '123456', newPassword: 'password123' } }),
+          deps,
+        ),
+      ).rejects.toBeInstanceOf(ValidationError);
+    });
+
+    it('records an attempt and rejects a wrong code', async () => {
+      const recordPasswordResetAttempt = vi.fn(async () => 1);
+      const completePasswordResetFn = vi.fn();
+      const deps = makeDeps({
+        users: { findByEmail: async () => pendingReset(), recordPasswordResetAttempt, completePasswordReset: completePasswordResetFn },
+      });
+      await expect(
+        completePasswordReset(
+          makeRequest({ body: { email: 'user@example.com', code: '000000', newPassword: 'password123' } }),
+          deps,
+        ),
+      ).rejects.toBeInstanceOf(ValidationError);
+      expect(recordPasswordResetAttempt).toHaveBeenCalledWith(USER_ID);
+      expect(completePasswordResetFn).not.toHaveBeenCalled();
     });
 
     it('sets a new password and returns a token + cookie', async () => {
-      const pending = {
-        ...verifiedUser,
-        passwordResetCode: 'RESET',
-        passwordResetExpires: new Date(Date.now() + 60_000),
-      } as unknown as UserRecord;
       const completePasswordResetFn = vi.fn(async () => verifiedUser);
       const deps = makeDeps({
-        users: {
-          findByPasswordResetCode: async () => pending,
-          completePasswordReset: completePasswordResetFn,
-        },
+        users: { findByEmail: async () => pendingReset(), completePasswordReset: completePasswordResetFn },
       });
       const result = await completePasswordReset(
-        makeRequest({ params: { passwordResetCode: 'RESET' }, body: { newPassword: 'password123' } }),
+        makeRequest({ body: { email: 'user@example.com', code: '123456', newPassword: 'password123' } }),
         deps,
       );
       expect(completePasswordResetFn).toHaveBeenCalledWith(USER_ID, 'password123');
@@ -501,21 +572,12 @@ describe('auth handlers (unit)', () => {
     });
 
     it('omits the token from the body for web callers', async () => {
-      const pending = {
-        ...verifiedUser,
-        passwordResetCode: 'RESET',
-        passwordResetExpires: new Date(Date.now() + 60_000),
-      } as unknown as UserRecord;
       const deps = makeDeps({
-        users: {
-          findByPasswordResetCode: async () => pending,
-          completePasswordReset: async () => verifiedUser,
-        },
+        users: { findByEmail: async () => pendingReset(), completePasswordReset: async () => verifiedUser },
       });
       const result = await completePasswordReset(
         makeRequest({
-          params: { passwordResetCode: 'RESET' },
-          body: { newPassword: 'password123' },
+          body: { email: 'user@example.com', code: '123456', newPassword: 'password123' },
           headers: { 'x-client': 'web' },
         }),
         deps,
@@ -552,48 +614,65 @@ describe('auth handlers (unit)', () => {
   });
 
   describe('completeEmailChange', () => {
-    it('throws NotFound for an unknown code', async () => {
-      const deps = makeDeps({ users: { findByNewEmailVerificationCode: async () => null } });
+    // The account is found by its CURRENT email (which holds the pending code);
+    // findByEmail is then called again with the new address for the uniqueness
+    // check, so the stub returns the pending user only for the current email.
+    const pendingChange = () => ({
+      ...verifiedUser,
+      newEmail: 'new@example.com',
+      newEmailVerificationCode: '123456',
+      newEmailVerificationExpires: new Date(Date.now() + 60_000),
+      newEmailVerificationAttempts: 0,
+    } as unknown as UserRecord);
+
+    const findByEmailStub = (pending: UserRecord | null) => async (email: string) =>
+      email === 'user@example.com' ? pending : null;
+
+    it('rejects an unknown email/code with a ValidationError', async () => {
+      const deps = makeDeps({ users: { findByEmail: async () => null } });
       await expect(
-        completeEmailChange(makeRequest({ params: { newEmailVerificationCode: 'x' } }), deps),
-      ).rejects.toBeInstanceOf(NotFoundError);
+        completeEmailChange(makeRequest({ body: { email: 'user@example.com', code: '123456' } }), deps),
+      ).rejects.toBeInstanceOf(ValidationError);
+    });
+
+    it('records a failed attempt and rejects a wrong code', async () => {
+      const recordNewEmailVerificationAttempt = vi.fn(async () => 1);
+      const completeEmailUpdate = vi.fn();
+      const deps = makeDeps({
+        users: {
+          findByEmail: findByEmailStub(pendingChange()),
+          recordNewEmailVerificationAttempt,
+          completeEmailUpdate,
+        },
+      });
+      await expect(
+        completeEmailChange(makeRequest({ body: { email: 'user@example.com', code: '000000' } }), deps),
+      ).rejects.toBeInstanceOf(ValidationError);
+      expect(recordNewEmailVerificationAttempt).toHaveBeenCalledWith(USER_ID);
+      expect(completeEmailUpdate).not.toHaveBeenCalled();
     });
 
     it('completes the change and returns a token + cookie', async () => {
-      const pending = {
-        ...verifiedUser,
-        newEmail: 'new@example.com',
-        newEmailVerificationCode: 'GOOD',
-        newEmailVerificationExpires: new Date(Date.now() + 60_000),
-      } as unknown as UserRecord;
       const deps = makeDeps({
         users: {
-          findByNewEmailVerificationCode: async () => pending,
-          findByEmail: async () => null, // new address not in use
+          findByEmail: findByEmailStub(pendingChange()),
           completeEmailUpdate: async () => verifiedUser,
         },
       });
-      const result = await completeEmailChange(makeRequest({ params: { newEmailVerificationCode: 'GOOD' } }), deps);
+      const result = await completeEmailChange(makeRequest({ body: { email: 'user@example.com', code: '123456' } }), deps);
       expect(typeof (result.body?.data as { token: string }).token).toBe('string');
       expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
 
     it('omits the token from the body for web callers', async () => {
-      const pending = {
-        ...verifiedUser,
-        newEmail: 'new@example.com',
-        newEmailVerificationCode: 'GOOD',
-        newEmailVerificationExpires: new Date(Date.now() + 60_000),
-      } as unknown as UserRecord;
       const deps = makeDeps({
         users: {
-          findByNewEmailVerificationCode: async () => pending,
-          findByEmail: async () => null,
+          findByEmail: findByEmailStub(pendingChange()),
           completeEmailUpdate: async () => verifiedUser,
         },
       });
       const result = await completeEmailChange(
-        makeRequest({ params: { newEmailVerificationCode: 'GOOD' }, headers: { 'x-client': 'web' } }),
+        makeRequest({ body: { email: 'user@example.com', code: '123456' }, headers: { 'x-client': 'web' } }),
         deps,
       );
       expect((result.body?.data as { token?: string })?.token).toBeUndefined();

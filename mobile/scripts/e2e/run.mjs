@@ -15,10 +15,29 @@
  *   node scripts/e2e/run.mjs --scenario empty .maestro/flows/02-add-entry.yaml
  */
 import { execFileSync, spawnSync } from "node:child_process";
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const mobileDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+const repoRoot = path.resolve(mobileDir, "..");
+
+// The email-code flows (07–09) recover one-time codes from the API test seam via
+// a Maestro runScript, so they need the API URL + bypass secret. Load them from
+// the repo-root .env (process env wins) and pass them through to Maestro.
+function loadRootEnv() {
+  const envPath = path.join(repoRoot, ".env");
+  if (!fs.existsSync(envPath)) return {};
+  const parsed = {};
+  for (const line of fs.readFileSync(envPath, "utf8").split("\n")) {
+    const match = line.match(/^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)\s*$/);
+    if (match) parsed[match[1]] = match[2].replace(/^["']|["']$/g, "");
+  }
+  return parsed;
+}
+const rootEnv = loadRootEnv();
+const apiUrl = process.env.TEST_API_URL ?? rootEnv.TEST_API_URL ?? "http://localhost:8080";
+const bypassSecret = process.env.TEST_BYPASS_SECRET ?? rootEnv.TEST_BYPASS_SECRET ?? "";
 
 const args = process.argv.slice(2);
 let scenario = "standard";
@@ -73,7 +92,18 @@ console.log(`Seeded ${user.scenario} user ${user.email}`);
 // 3. Maestro.
 const result = spawnSync(
   "maestro",
-  ["test", ...maestroArgs, "-e", `E2E_EMAIL=${user.email}`, "-e", `E2E_PASSWORD=${user.password}`],
+  [
+    "test",
+    ...maestroArgs,
+    "-e",
+    `E2E_EMAIL=${user.email}`,
+    "-e",
+    `E2E_PASSWORD=${user.password}`,
+    "-e",
+    `E2E_API_URL=${apiUrl}`,
+    "-e",
+    `E2E_BYPASS_SECRET=${bypassSecret}`,
+  ],
   { cwd: mobileDir, stdio: "inherit" }
 );
 if (result.error) {

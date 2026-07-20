@@ -64,6 +64,28 @@ function RootStack() {
           ...modalTransition,
         }}
       />
+      <Stack.Screen
+        name="register"
+        options={{
+          headerShown: true,
+          title: t("register_title"),
+          headerStyle: { backgroundColor: colors.surface },
+          headerTintColor: colors.text,
+          headerShadowVisible: false,
+          ...modalTransition,
+        }}
+      />
+      <Stack.Screen
+        name="forgot-password"
+        options={{
+          headerShown: true,
+          title: t("forgot_password_title"),
+          headerStyle: { backgroundColor: colors.surface },
+          headerTintColor: colors.text,
+          headerShadowVisible: false,
+          ...modalTransition,
+        }}
+      />
     </Stack>
   );
 }

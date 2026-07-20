@@ -1,17 +1,14 @@
 import { z } from 'zod';
 import { type RouteDefinition } from '../../types';
-import { changeEmailBodySchema } from '../../../validation/schemas/auth';
+import { changeEmailBodySchema, completeEmailChangeBodySchema } from '../../../validation/schemas/auth';
 import {
   beginEmailChange,
   getEmailChange,
-  getEmailChangeByCode,
   cancelEmailChange,
   completeEmailChange,
 } from '../../handlers/auth/email-change';
 
 const tags = ['Authentication'];
-
-const codeParam = z.object({ newEmailVerificationCode: z.string() });
 
 export const authEmailChangeRoutes: RouteDefinition[] = [
   {
@@ -44,22 +41,6 @@ export const authEmailChangeRoutes: RouteDefinition[] = [
     },
   },
   {
-    method: 'GET',
-    path: '/auth/change-email/:newEmailVerificationCode',
-    handler: getEmailChangeByCode,
-    docs: {
-      summary: 'Get an email change request by verification code',
-      tags,
-      public: true,
-      request: { params: codeParam },
-      response: {
-        description: 'Email change request data (null if not found)',
-        schema: z.object({ newEmail: z.string(), expires: z.string() }),
-      },
-      errors: [],
-    },
-  },
-  {
     method: 'DELETE',
     path: '/auth/change-email',
     handler: cancelEmailChange,
@@ -75,13 +56,13 @@ export const authEmailChangeRoutes: RouteDefinition[] = [
   },
   {
     method: 'POST',
-    path: '/auth/change-email/:newEmailVerificationCode',
+    path: '/auth/change-email/complete',
     handler: completeEmailChange,
     docs: {
-      summary: 'Complete email change process using verification code',
+      summary: 'Complete email change process using email and verification code',
       tags,
       public: true,
-      request: { params: codeParam },
+      request: { body: completeEmailChangeBodySchema },
       response: {
         description: 'Email change completed',
         schema: z.object({ token: z.string().optional() }),

@@ -1,6 +1,5 @@
 import { ApiErrorDetailCode } from '../../errors/error-codes';
 import { ValidationError } from '../../errors/validation-errors';
-import { NotFoundError } from '../../errors/http-errors';
 import { generateUserJWT, isCodeValid } from '../../../repositories/helpers/user-auth';
 import { emailString } from '../../../validation/primitives';
 import { LocaleCode } from '@mybiblelog/shared';
@@ -67,24 +66,6 @@ export const getEmailChange: RouteHandler = async (req, deps) => {
   return { status: 200, body: { data: { newEmail: null, expires: null } } };
 };
 
-// GET /auth/change-email/:newEmailVerificationCode - Look up an email change by code
-export const getEmailChangeByCode: RouteHandler = async (req, deps) => {
-  await deps.rateLimiter.check(req, { maxRequests: 20, windowMs: 60 * 60 * 1000 });
-
-  const newEmailVerificationCode = req.params.newEmailVerificationCode ?? '';
-  const { users } = deps.repositories;
-  const user = await users.findByNewEmailVerificationCode(newEmailVerificationCode);
-
-  if (user) {
-    return {
-      status: 200,
-      body: { data: { newEmail: user.newEmail, expires: user.newEmailVerificationExpires } },
-    };
-  }
-
-  return { status: 200, body: { data: null } };
-};
-
 // DELETE /auth/change-email - Cancel any in-progress email change
 export const cancelEmailChange: RouteHandler = async (req, deps) => {
   try {
@@ -103,22 +84,33 @@ export const cancelEmailChange: RouteHandler = async (req, deps) => {
   }
 };
 
-// POST /auth/change-email/:newEmailVerificationCode - Complete an email change, set the auth cookie
+// POST /auth/change-email - Complete an email change via {email, code}, set the auth cookie.
+// `email` is the account's CURRENT address (the record holding newEmailVerificationCode
+// is keyed by it); the modal knows it from the session and the magic link embeds it.
+// Unauthenticated so the link works whether or not the user is signed in.
 export const completeEmailChange: RouteHandler = async (req, deps) => {
   await deps.rateLimiter.check(req, { maxRequests: 5, windowMs: 60 * 60 * 1000 });
 
-  const newEmailVerificationCode = req.params.newEmailVerificationCode ?? '';
-  const { users } = deps.repositories;
-  const user = await users.findByNewEmailVerificationCode(newEmailVerificationCode);
-  if (!user) {
-    throw new NotFoundError();
+  const { email: rawEmail, code } = asRecord(req.body);
+  if (typeof rawEmail !== 'string' || typeof code !== 'string') {
+    throw new ValidationError([{ code: ApiErrorDetailCode.VerificationCodeExpired, field: null }]);
   }
+  const email = rawEmail.trim().toLowerCase();
 
-  if (!isCodeValid({
-    code: newEmailVerificationCode,
+  await deps.rateLimiter.check(req, { maxRequests: 5, windowMs: 60 * 60 * 1000, keyFn: () => `email:${email}` });
+
+  const { users } = deps.repositories;
+  const user = await users.findByEmail(email);
+
+  if (!user || !isCodeValid({
+    code,
     expectedCode: user.newEmailVerificationCode,
     expiresAt: user.newEmailVerificationExpires,
+    attempts: user.newEmailVerificationAttempts,
   })) {
+    if (user) {
+      await users.recordNewEmailVerificationAttempt(user.id);
+    }
     throw new ValidationError([{ code: ApiErrorDetailCode.VerificationCodeExpired, field: null }]);
   }
 

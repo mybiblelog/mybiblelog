@@ -3,6 +3,7 @@
 import dayjs from 'dayjs';
 import { Collection, Document } from 'mongodb';
 import useCollections, { closeConnection } from '../mongo/useCollections';
+import { CODE_LENGTH } from '../repositories/helpers/verification-codes';
 
 // Main — intentionally left uninvoked; uncomment the `main()` call at the bottom to run.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -131,6 +132,38 @@ const main = async (): Promise<void> => {
       { $set: { emailsSentSinceLastEngagement: 0 }, $unset: { lastEmailEngagementAt: '' } },
     );
     console.log(`DailyReminder engagement migration complete (matched ${result.matchedCount}, modified ${result.modifiedCount}).`);
+  }
+
+  // Short numeric verification codes: default the new per-code attempt counters
+  // to 0 on legacy documents.
+  const attemptFields = ['emailVerificationAttempts', 'newEmailVerificationAttempts', 'passwordResetAttempts'];
+  for (const field of attemptFields) {
+    const result = await users.updateMany({ [field]: { $exists: false } }, { $set: { [field]: 0 } });
+    if (result.modifiedCount > 0) {
+      console.log(`Set ${field}=0 on ${result.modifiedCount} user(s).`);
+    }
+  }
+
+  // Clear any in-flight legacy long (128-char hex) verification codes. Those were
+  // only ever delivered as links WITHOUT the `&email=` the new email-scoped
+  // endpoints require, so they can no longer be redeemed; clearing them forces a
+  // (cheap) re-request. Freshly issued short codes match /^\d{CODE_LENGTH}$/ and
+  // are left untouched.
+  const shortCode = new RegExp(`^\\d{${CODE_LENGTH}}$`);
+  const codeFieldGroups = [
+    { code: 'emailVerificationCode', expires: 'emailVerificationExpires', attempts: 'emailVerificationAttempts' },
+    { code: 'newEmailVerificationCode', expires: 'newEmailVerificationExpires', attempts: 'newEmailVerificationAttempts' },
+    { code: 'passwordResetCode', expires: 'passwordResetExpires', attempts: 'passwordResetAttempts' },
+  ];
+  for (const { code, expires, attempts } of codeFieldGroups) {
+    const legacy = await users.find({ [code]: { $nin: ['', null], $not: shortCode } }).toArray();
+    for (const user of legacy) {
+      console.log(`Clearing legacy ${code} for user ${user.email}...`);
+      await users.updateOne(
+        { _id: user._id },
+        { $set: { [code]: '', [expires]: new Date(0), [attempts]: 0 } },
+      );
+    }
   }
 
   // close connection

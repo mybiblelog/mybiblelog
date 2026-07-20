@@ -51,6 +51,15 @@ export default function AccountSettings() {
                 </View>
               </View>
               <Button
+                label={t("account_change_email")}
+                testID="settings.change-email"
+                variant="secondary"
+                size="sm"
+                leftIcon="mail-outline"
+                onPress={() => router.push("/settings/change-email")}
+                style={styles.authActionButtonSpacing}
+              />
+              <Button
                 label={t("auth_logout")}
                 testID="settings.logout"
                 variant="destructive"
@@ -80,14 +89,27 @@ export default function AccountSettings() {
                   </Text>
                 </View>
               ) : (
-                <Button
-                  label={t("auth_login")}
-                  testID="settings.login"
-                  leftIcon="log-in-outline"
-                  fullWidth
-                  onPress={() => router.push("/login")}
-                  style={styles.authActionButtonSpacing}
-                />
+                <>
+                  <Button
+                    label={t("auth_login")}
+                    testID="settings.login"
+                    leftIcon="log-in-outline"
+                    fullWidth
+                    onPress={() => router.push("/login")}
+                    style={styles.authActionButtonSpacing}
+                  />
+                  {/* Make clear an account can be created here, not only used —
+                      a Login-only card implies you must already have one. */}
+                  <Button
+                    label={t("auth_create_account")}
+                    testID="settings.register"
+                    variant="secondary"
+                    leftIcon="person-add-outline"
+                    fullWidth
+                    onPress={() => router.push("/register")}
+                    style={styles.authActionButtonSpacing}
+                  />
+                </>
               )}
             </>
           )}

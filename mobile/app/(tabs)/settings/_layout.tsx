@@ -15,6 +15,7 @@ export default function SettingsLayout() {
     >
       <Stack.Screen name="index" options={{ title: "Settings" }} />
       <Stack.Screen name="account" options={{ title: "Account" }} />
+      <Stack.Screen name="change-email" options={{ title: "Change Email" }} />
       <Stack.Screen name="reading" options={{ title: "Reading" }} />
       <Stack.Screen name="insights" options={{ title: "Insights" }} />
       <Stack.Screen name="appearance" options={{ title: "Appearance" }} />

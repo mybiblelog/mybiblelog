@@ -22,7 +22,7 @@ export type EmailService = {
   // actual send happens off the queue (see `createQueue`/`sendFn`). They are
   // intentionally not async — callers do not wait for delivery.
   queueUserEmailVerification: (email: string, emailVerificationCode: string, locale: LocaleCode) => void;
-  queuePasswordResetLink: (email: string, passwordResetLink: string, locale: LocaleCode) => void;
+  queuePasswordResetLink: (email: string, passwordResetCode: string, locale: LocaleCode) => void;
   queueEmailUpdateLink: (currentEmail: string, newEmail: string, newEmailVerificationCode: string, locale: LocaleCode) => void;
   queueExistingAccountNotice: (email: string, locale: LocaleCode) => void;
   queueNewFeedbackNotification: (adminEmail: string, feedback: { kind: string; email: string; message: string }) => void;
@@ -111,7 +111,7 @@ const init = async () => {
   };
 
   const queueUserEmailVerification = (email: string, emailVerificationCode: string, locale: LocaleCode = 'en'): void => {
-    const { subject, html } = renderEmailVerification({ locale, emailVerificationCode });
+    const { subject, html } = renderEmailVerification({ locale, email, emailVerificationCode });
 
     queueEmail({
       from: defaultFromEmailAddress,
@@ -121,8 +121,8 @@ const init = async () => {
     });
   };
 
-  const queuePasswordResetLink = (email: string, passwordResetLink: string, locale: LocaleCode = 'en'): void => {
-    const { subject, html } = renderPasswordResetLink({ locale, passwordResetLink });
+  const queuePasswordResetLink = (email: string, passwordResetCode: string, locale: LocaleCode = 'en'): void => {
+    const { subject, html } = renderPasswordResetLink({ locale, email, passwordResetCode });
 
     queueEmail({
       from: defaultFromEmailAddress,

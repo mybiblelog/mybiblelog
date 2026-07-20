@@ -17,15 +17,18 @@ export type Translation = {
   email_update: {
     subject: string;
     email_update_requested: string;
+    code_intro: string;
     click_to_confirm: string;
     if_you_did_not_request: string;
   },
   email_verification: {
     subject: string;
+    code_intro: string;
     click_to_verify: string;
   },
   password_reset: {
     subject: string;
+    code_intro: string;
     click_to_reset: string;
   },
   existing_account: {

@@ -13,7 +13,7 @@ beforeEach(() => {
 });
 
 describe("Account settings screen", () => {
-  it("clarifies the signed-out state and offers a single Login action", () => {
+  it("clarifies the signed-out state and offers both Login and Create account", () => {
     useAuthStore.setState({ state: { status: "unauthenticated" } });
     const { getByText, getByTestId, queryAllByText } = renderWithProviders(<AccountSettings />);
 
@@ -23,7 +23,9 @@ describe("Account settings screen", () => {
         "Your offline data on this device will not sync to your account until you are online and logged in."
       )
     ).toBeTruthy();
+    // Both paths are offered so it's clear you don't need an account already.
     expect(getByTestId("settings.login")).toBeTruthy();
+    expect(getByTestId("settings.register")).toBeTruthy();
     // Only the button says "Login" now — no redundant inline copy beside it.
     expect(queryAllByText("Login")).toHaveLength(1);
   });
@@ -44,6 +46,7 @@ describe("Account settings screen", () => {
     const { getByText, queryByTestId } = renderWithProviders(<AccountSettings />);
 
     expect(queryByTestId("settings.login")).toBeNull();
+    expect(queryByTestId("settings.register")).toBeNull();
     expect(getByText("Logging in requires an internet connection.")).toBeTruthy();
   });
 

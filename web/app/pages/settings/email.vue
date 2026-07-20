@@ -137,6 +137,7 @@ import type { ApiErrorDetail } from '~/helpers/api-error';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { useAuthStore } from '~/stores/auth';
+import { useAuthCodeStore } from '~/stores/auth-code';
 
 definePageMeta({ middleware: ['auth'] });
 
@@ -149,6 +150,7 @@ onMounted(() => { mounted.value = true; });
 const authStore = useAuthStore();
 const dialogStore = useDialogStore();
 const toastStore = useToastStore();
+const authCodeStore = useAuthCodeStore();
 const { $http, $terr } = useNuxtApp();
 
 type ChangeEmailRequest = { newEmail: string; expires: number };
@@ -196,6 +198,13 @@ onUnmounted(() => {
   window.removeEventListener('focus', checkChangeEmailRequestState);
 });
 
+// When the code modal closes (the change completed, or the user dismissed it),
+// re-fetch so the now-stale "in progress" request info reflects reality instead
+// of waiting for the next window-focus.
+watch(() => authCodeStore.isOpen, (isOpen, wasOpen) => {
+  if (wasOpen && !isOpen) { checkChangeEmailRequestState(); }
+});
+
 async function submitChangeEmail() {
   if (formBusy.value) { return; }
   formBusy.value = true;
@@ -214,7 +223,14 @@ async function submitChangeEmail() {
     changeEmailModel.password = '';
     changeEmailModel.newEmail = '';
     resetChangeEmailErrors();
-    toastStore.add({ type: 'success', text: t('confirmation_link_sent') });
+    // Open the code modal to finish the change (the emailed link still works too).
+    // `email` stays the current address (the completion endpoint is keyed on it),
+    // while `sentToEmail` is the new address the code was actually delivered to.
+    authCodeStore.open({
+      flow: 'change-email',
+      email: authStore.user?.email ?? '',
+      sentToEmail: newEmail,
+    });
   }
   catch (err) {
     Object.assign(changeEmailErrors, mapFormErrors(err instanceof ApiError ? err : new UnknownApiError()));

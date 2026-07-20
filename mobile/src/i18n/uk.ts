@@ -210,6 +210,7 @@ export const uk = {
     "Ваші офлайн-дані на цьому пристрої не синхронізуються з вашим обліковим записом, доки ви не будете онлайн і не увійдете в систему.",
   auth_login_requires_connection: "Для входу потрібне підключення до інтернету.",
   auth_login: "Увійти",
+  auth_create_account: "Створити обліковий запис",
   auth_logout: "Вийти",
 
   login_title: "Вхід",
@@ -462,4 +463,35 @@ export const uk = {
     "Цей розділ було записано до сьогодні. Ви можете редагувати попередні записи на сторінці Календаря.",
   unable_to_mark_complete: "Не вдалося позначити розділ як завершений.",
   unable_to_mark_incomplete: "Не вдалося позначити розділ як незавершений.",
+  login_forgot_password: "Забули пароль?",
+  login_create_account: "Створити обліковий запис",
+  auth_verify_needed_hint:
+    "Введіть код, який ми надіслали вам електронною поштою, щоб підтвердити обліковий запис, або натисніть посилання в тому листі.",
+  auth_code_instructions:
+    "Введіть код із вашого листа або натисніть посилання в листі, щоб миттєво підтвердити.",
+  auth_code_label: "Код підтвердження",
+  auth_code_continue: "Продовжити",
+  auth_code_submit: "Надіслати",
+  auth_code_invalid:
+    "Цей код недійсний або застарів. Перевірте свою електронну пошту або запросіть новий код.",
+  auth_new_password: "Новий пароль",
+  auth_confirm_new_password: "Підтвердіть новий пароль",
+  auth_passwords_must_match: "Паролі повинні збігатися.",
+  register_title: "Зареєструватися",
+  register_hint: "Створіть обліковий запис за допомогою електронної пошти та пароля.",
+  register_submit: "Зареєструватися",
+  register_have_account: "Вже маєте обліковий запис? Увійти",
+  forgot_password_title: "Скинути пароль",
+  forgot_password_hint:
+    "Введіть свою електронну пошту, і ми надішлемо вам код для скидання пароля.",
+  forgot_password_submit: "Надіслати код",
+  account_change_email: "Змінити електронну пошту",
+  change_email_hint:
+    "Введіть свою нову електронну пошту та поточний пароль. Ми надішлемо код на нову адресу.",
+  change_email_current: "Поточна електронна пошта:",
+  change_email_new_label: "Нова електронна пошта",
+  change_email_password_label: "Поточний пароль",
+  change_email_submit: "Змінити електронну пошту",
+  change_email_new_required: "Введіть свою нову електронну пошту.",
+  change_email_password_required: "Введіть свій поточний пароль.",
 } as const satisfies Record<keyof typeof en, string>;

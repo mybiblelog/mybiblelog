@@ -25,6 +25,7 @@ import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useToastStore } from '~/stores/toast';
 import { useAuthStore } from '~/stores/auth';
+import { postAuthEvent } from '~/composables/auth-channel';
 
 // NO auth middleware -- this page must be reachable via email link for both
 // authenticated and unauthenticated users.
@@ -41,37 +42,29 @@ const codeExpired = ref(false);
 const serverError = ref('');
 
 onMounted(async () => {
-  const code = new URL(window.location.href).searchParams.get('code');
-  if (!code) {
+  const params = new URL(window.location.href).searchParams;
+  const code = params.get('code');
+  // The link embeds the account's CURRENT email (which holds the pending code).
+  const email = params.get('email');
+  if (!code || !email) {
     await router.push(localePath('/settings/email'));
     return;
   }
 
-  let changeEmailRequest: { newEmail: string; expires: number };
   try {
-    const { data } = await $http.get<{ newEmail: string; expires: number }>(`/api/auth/change-email/${code}`);
-    changeEmailRequest = data;
-  }
-  catch {
-    // No open email change request (404) -- redirect to settings, which
-    // shows the user's current email address.
-    await router.push(localePath('/settings'));
-    return;
-  }
-
-  if (Date.now() > changeEmailRequest.expires) {
-    codeExpired.value = true;
-    busy.value = false;
-    return;
-  }
-
-  try {
-    await $http.post(`/api/auth/change-email/${code}`);
+    await $http.post('/api/auth/change-email/complete', { email, code });
   }
   catch (err) {
     const apiError = err instanceof ApiError ? err : new UnknownApiError();
     const errorDetail = apiError.errors?.[0] ?? mapFormErrors(apiError)._form;
-    serverError.value = errorDetail ? $terr(errorDetail) : '';
+    // An expired/invalid code surfaces the dedicated "expired" copy; anything
+    // else shows the generic error message.
+    if (errorDetail?.code === 'verification_code_expired') {
+      codeExpired.value = true;
+    }
+    else {
+      serverError.value = errorDetail ? $terr(errorDetail) : '';
+    }
     busy.value = false;
     return;
   }
@@ -80,6 +73,8 @@ onMounted(async () => {
 
   // Reload user now that the auth cookie should reflect the new email.
   await useAuthStore().refreshUser();
+  // Notify any tab waiting on the code modal for this flow.
+  postAuthEvent({ type: 'completed', flow: 'change-email', email });
 
   await router.push(localePath('/settings'));
 });

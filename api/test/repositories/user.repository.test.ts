@@ -83,7 +83,7 @@ describe('user.repository', () => {
     it('generates a verification code and records the send time when not verified', async () => {
       const user = await createUser();
 
-      expect(user.emailVerificationCode).toHaveLength(128); // 64 random bytes, hex-encoded
+      expect(user.emailVerificationCode).toMatch(/^\d{6}$/); // short numeric code
       expect(user.emailVerificationCodeLastSentAt.getTime()).toBeGreaterThan(0);
     });
 
@@ -215,14 +215,27 @@ describe('user.repository', () => {
       expect(verified.emailVerificationCode).toBe('');
     });
 
-    it('resendEmailVerification issues a fresh code and stamps the send time', async () => {
+    it('resendEmailVerification issues a fresh short numeric code and stamps the send time', async () => {
       const { users } = await getRepos();
       const created = await createUser({ emailVerificationCode: '' });
 
       const resent = await users.resendEmailVerification(created.id);
-      expect(resent.emailVerificationCode).toHaveLength(128);
+      expect(resent.emailVerificationCode).toMatch(/^\d{6}$/);
+      expect(resent.emailVerificationAttempts).toBe(0);
       expect(resent.emailVerificationCodeLastSentAt.getTime()).toBeGreaterThan(0);
       expect(resent.emailVerificationExpires.getTime()).toBeGreaterThan(Date.now());
+    });
+
+    it('records failed verification attempts and resets the counter on resend', async () => {
+      const { users } = await getRepos();
+      const created = await createUser();
+
+      expect(await users.recordEmailVerificationAttempt(created.id)).toBe(1);
+      expect(await users.recordEmailVerificationAttempt(created.id)).toBe(2);
+      expect((await users.findById(created.id))!.emailVerificationAttempts).toBe(2);
+
+      const resent = await users.resendEmailVerification(created.id);
+      expect(resent.emailVerificationAttempts).toBe(0);
     });
 
     it('completes an email update: archives the old email and promotes the new one', async () => {

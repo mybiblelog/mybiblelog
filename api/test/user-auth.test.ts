@@ -1,7 +1,8 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import jwt from 'jsonwebtoken';
-import { generateUserJWT } from '../repositories/helpers/user-auth';
+import { generateUserJWT, isCodeValid } from '../repositories/helpers/user-auth';
 import { type UserRecord } from '../repositories/helpers/types';
+import { MAX_CODE_ATTEMPTS } from '../repositories/helpers/verification-codes';
 import { withEnvConfig, restoreEnvConfig } from './config-helpers';
 
 /**
@@ -55,5 +56,38 @@ describe('generateUserJWT', () => {
     const decoded = jwt.verify(generateUserJWT(user), 'secret') as jwt.JwtPayload;
 
     expect(decoded.tokenVersion).toBe(3);
+  });
+});
+
+describe('isCodeValid', () => {
+  const future = new Date(Date.now() + 60_000);
+  const past = new Date(Date.now() - 60_000);
+
+  it('accepts a matching, unexpired code within the attempt cap', () => {
+    expect(isCodeValid({ code: '123456', expectedCode: '123456', expiresAt: future, attempts: 0 })).toBe(true);
+  });
+
+  it('rejects a non-matching code', () => {
+    expect(isCodeValid({ code: '000000', expectedCode: '123456', expiresAt: future, attempts: 0 })).toBe(false);
+  });
+
+  it('rejects an expired code', () => {
+    expect(isCodeValid({ code: '123456', expectedCode: '123456', expiresAt: past, attempts: 0 })).toBe(false);
+  });
+
+  it('rejects when the expected code is empty (no code outstanding)', () => {
+    expect(isCodeValid({ code: '', expectedCode: '', expiresAt: future, attempts: 0 })).toBe(false);
+  });
+
+  it('rejects once the attempt cap is reached, even for the correct code', () => {
+    expect(isCodeValid({ code: '123456', expectedCode: '123456', expiresAt: future, attempts: MAX_CODE_ATTEMPTS })).toBe(false);
+  });
+
+  it('rejects a length mismatch without throwing (constant-time guard)', () => {
+    expect(isCodeValid({ code: '12345', expectedCode: '123456', expiresAt: future, attempts: 0 })).toBe(false);
+  });
+
+  it('defaults attempts to 0 when omitted', () => {
+    expect(isCodeValid({ code: '123456', expectedCode: '123456', expiresAt: future })).toBe(true);
   });
 });

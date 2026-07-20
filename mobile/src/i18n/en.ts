@@ -204,6 +204,7 @@ export const en = {
     "Your offline data on this device will not sync to your account until you are online and logged in.",
   auth_login_requires_connection: "Logging in requires an internet connection.",
   auth_login: "Login",
+  auth_create_account: "Create account",
   auth_logout: "Logout",
 
   login_title: "Login",
@@ -219,6 +220,41 @@ export const en = {
   login_with_email: "Sign in",
   login_divider_or: "or",
   login_with_google: "Continue with Google",
+  login_forgot_password: "Forgot password?",
+  login_create_account: "Create account",
+
+  // Code-based email-auth flows (register, verify, reset, change email)
+  auth_verify_needed_hint:
+    "Enter the code we emailed you to verify your account, or tap the link in that email.",
+  auth_code_instructions:
+    "Enter the code from your email, or tap the link in the email to verify instantly.",
+  auth_code_label: "Verification code",
+  auth_code_continue: "Continue",
+  auth_code_submit: "Submit",
+  auth_code_invalid:
+    "That code is invalid or has expired. Please check your email or request a new code.",
+  auth_new_password: "New Password",
+  auth_confirm_new_password: "Confirm New Password",
+  auth_passwords_must_match: "Passwords must match.",
+
+  register_title: "Sign Up",
+  register_hint: "Create an account with your email and a password.",
+  register_submit: "Sign Up",
+  register_have_account: "Already have an account? Sign in",
+
+  forgot_password_title: "Reset Password",
+  forgot_password_hint: "Enter your email and we'll send you a code to reset your password.",
+  forgot_password_submit: "Send reset code",
+
+  account_change_email: "Change email",
+  change_email_hint:
+    "Enter your new email and current password. We'll send a code to the new address.",
+  change_email_current: "Current email:",
+  change_email_new_label: "New Email",
+  change_email_password_label: "Current Password",
+  change_email_submit: "Change Email",
+  change_email_new_required: "Enter your new email.",
+  change_email_password_required: "Enter your current password.",
 
   // API error messages (mirrors Nuxt `api_error.*`; keyed by error code)
   api_error_unknown_error: "An unknown error occurred",

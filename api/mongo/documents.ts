@@ -28,15 +28,23 @@ export interface UserDocument {
   emailVerificationCode: string;
   emailVerificationExpires: Date;
   emailVerificationCodeLastSentAt: Date;
+  // Failed submissions against the current emailVerificationCode. Reset to 0
+  // whenever a new code is issued; once it exceeds MAX_CODE_ATTEMPTS the code is
+  // treated as invalid, capping brute-force guessing of the short numeric code.
+  emailVerificationAttempts: number;
   // When the "you already have an account" notice was last sent to this address,
   // used to cool down repeated notices when someone re-registers a taken email.
   existingAccountNoticeLastSentAt: Date;
   newEmail: string | null;
   newEmailVerificationCode: string;
   newEmailVerificationExpires: Date;
+  // Failed submissions against the current newEmailVerificationCode (see above).
+  newEmailVerificationAttempts: number;
   oldEmails: string[];
   passwordResetCode: string;
   passwordResetExpires: Date;
+  // Failed submissions against the current passwordResetCode (see above).
+  passwordResetAttempts: number;
   // Bumped whenever every previously issued JWT should be invalidated (password
   // change/reset/set, or an explicit "log out all sessions"). The value is
   // embedded in each JWT and compared on every request, giving us revocation

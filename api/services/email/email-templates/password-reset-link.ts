@@ -1,22 +1,31 @@
 import { LocaleCode } from '@shared/dist/platform/i18n';
 import locales from '../locales/content';
 import { substitute } from '../locales/substitute';
-import { getLocaleBaseUrl } from './helpers';
+import { getLocaleBaseUrl, emailParagraphStyle, renderCodeBlock } from './helpers';
 import renderBrandedEmail from './branded-wrapper';
 
 type RenderPasswordResetLinkParams = {
   locale: LocaleCode;
-  passwordResetLink: string;
+  email: string;
+  passwordResetCode: string;
 };
 
 const render = ({
   locale,
-  passwordResetLink,
+  email,
+  passwordResetCode,
 }: RenderPasswordResetLinkParams) => {
   const t = locales[locale].password_reset;
   const subject = t.subject;
-  const link = getLocaleBaseUrl(locale) + '/reset-password?code=' + passwordResetLink;
-  const contentHtml = substitute(t.click_to_reset, { link });
+  const link = getLocaleBaseUrl(locale)
+    + '/reset-password?code=' + passwordResetCode
+    + '&email=' + encodeURIComponent(email);
+  const p = (html: string) => `<p style="${emailParagraphStyle}">${html}</p>`;
+  const contentHtml = [
+    p(t.code_intro),
+    renderCodeBlock(passwordResetCode),
+    p(substitute(t.click_to_reset, { link })),
+  ].join('');
 
   return {
     subject,

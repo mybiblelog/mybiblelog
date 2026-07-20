@@ -36,6 +36,12 @@ type AuthStore = {
     email: string,
     password: string
   ) => Promise<{ ok: true } | { ok: false; error: ApiErrorPayload }>;
+  /**
+   * Persists a session from a token + email obtained by the code-based flows
+   * (verify email, reset password, change email), which return a native token
+   * directly rather than going through the login endpoint.
+   */
+  establishSession: (token: string, email: string) => Promise<void>;
   logout: () => Promise<void>;
 };
 
@@ -77,6 +83,13 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     await saveAuthSession(session);
     set({ state: { status: "authenticated", session } });
     return { ok: true };
+  },
+
+  establishSession: async (token, email) => {
+    const session: AuthSession = { token, user: { email } };
+    await clearLastLoggedInEmail();
+    await saveAuthSession(session);
+    set({ state: { status: "authenticated", session } });
   },
 
   logout: async () => {

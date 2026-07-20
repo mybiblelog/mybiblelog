@@ -14,14 +14,17 @@ import { env } from '../../helpers/env';
 
 /**
  * End-to-end coverage of the email-based flows: verify-email, reset-password and
- * change-email. The one-time codes are normally delivered only by email, so each
- * test recovers the code from the test-only email seam (`GET /api/test/emails`,
- * see e2e/helpers/emails.ts) and then drives the redemption in the browser.
+ * change-email. Each flow now emails a short numeric code AND a magic link that
+ * embeds the same code + the account email. The reset and change flows are driven
+ * through the new code-entry modal (the primary path); verify-email is driven
+ * through the magic-link landing page (its modal only opens when the app runs
+ * with REQUIRE_EMAIL_VERIFICATION=true, which the e2e web server does not).
  *
- * The auth endpoints are rate limited per IP unless the request carries the test
- * bypass header, so — like auth.spec — this file runs serially and injects
- * `x-test-bypass-secret` into every browser request. The API only honors it in
- * non-production.
+ * The one-time codes are recovered from the test-only email seam
+ * (`GET /api/test/emails`, see e2e/helpers/emails.ts). Like auth.spec, this file
+ * runs serially and injects `x-test-bypass-secret` into every browser request so
+ * the per-IP/email rate limits don't trip on repeated local runs (the per-code
+ * attempt cap is independent of that bypass).
  */
 const test = base.extend({
   context: async ({ context }, use) => {
@@ -43,7 +46,12 @@ const authenticateBrowser = async (context: BrowserContext, user: TestUser) => {
   ]);
 };
 
-test.describe('Email verification', () => {
+const verifyLink = (code: string, email: string) =>
+  `/verify-email?code=${code}&email=${encodeURIComponent(email)}`;
+const resetLink = (code: string, email: string) =>
+  `/reset-password?code=${code}&email=${encodeURIComponent(email)}`;
+
+test.describe('Email verification (magic link)', () => {
   let user: TestUser;
 
   test.beforeAll(async () => {
@@ -56,22 +64,18 @@ test.describe('Email verification', () => {
     if (user) { await deleteTestUser(user); }
   });
 
-  test('user can confirm their email via the emailed code', async ({ page, context }) => {
-    await authenticateBrowser(context, user);
+  test('user can confirm their email via the emailed code + email link', async ({ page }) => {
+    const emailMessage = await waitForEmail({ to: user.email, subject: 'Email Verification' });
+    const code = extractCode(emailMessage);
 
-    const email = await waitForEmail({ to: user.email, subject: 'Email Verification' });
-    const code = extractCode(email);
-
-    await page.goto(`/verify-email?code=${code}`);
-
-    // On success the page verifies the code, logs the user in, and routes to the
-    // onboarding wizard at /start. A bad/expired code would keep us on
-    // /verify-email and render an error instead.
+    // The link now carries both the code and the account email; the landing page
+    // redeems it against the email-scoped endpoint, logs in, and routes to /start.
+    await page.goto(verifyLink(code, user.email));
     await expect(page).toHaveURL(/\/start/);
   });
 });
 
-test.describe('Password reset', () => {
+test.describe('Password reset (code modal)', () => {
   let user: TestUser;
 
   test.beforeAll(async () => {
@@ -82,33 +86,38 @@ test.describe('Password reset', () => {
     if (user) { await deleteTestUser(user); }
   });
 
-  test('user can reset their password via the emailed link', async ({ page }) => {
+  test('user resets their password by typing the emailed code into the modal', async ({ page }) => {
     const requestedAt = new Date();
 
-    // Request the reset from the login page UI. Interacting before hydration
-    // silently loses the fill (the reactive model stays empty and the API
-    // reports success for unknown emails), so gate on hydration first and
-    // assert the request actually carried the address.
+    // Open the reset modal from the login page. The modal owns the whole flow:
+    // it opens on an email step (pre-filled from the login form). Sending the
+    // request advances to the code step.
     await page.goto('/login');
     await waitForHydration(page);
     await page.getByRole('textbox', { name: 'Email' }).fill(user.email);
-    const resetRequestPromise = page.waitForRequest(
-      (request) => request.method() === 'POST' && request.url().includes('/api/auth/password/reset'),
-    );
-    await page.getByRole('button', { name: 'Forgot your password? Reset it via email.' }).click();
-    expect((await resetRequestPromise).postDataJSON()).toMatchObject({ email: user.email });
-    await expect(page.getByText('A password reset link has been sent to your email address.')).toBeVisible();
+    await page.getByRole('button', { name: 'I forgot my password' }).click();
+    await expect(page.getByTestId('auth-code-email')).toHaveValue(user.email);
+    await page.getByTestId('auth-code-send-code').click();
+    await expect(page.getByTestId('auth-code-input')).toBeVisible();
 
-    // Recover the code from the emailed link and set a new password.
+    // A wrong code is rejected inline and clears the field (per-code attempt cap
+    // territory) without advancing to the password step.
+    await page.getByTestId('auth-code-input').fill('000000');
+    await expect(page.getByTestId('auth-code-error')).toBeVisible();
+    await expect(page.getByTestId('auth-code-input')).toHaveValue('');
+    await expect(page.getByTestId('auth-code-new-password')).toHaveCount(0);
+
+    // Recover the real code and type it — the modal auto-submits and reveals the
+    // new-password step.
     const email = await waitForEmail({ to: user.email, subject: 'Reset Password', since: requestedAt });
     const code = extractCode(email);
     const newPassword = generateRandomString(10);
 
-    await page.goto(`/reset-password?code=${code}`);
-    await waitForHydration(page);
-    await page.locator('input[name="newPassword"]').fill(newPassword);
-    await page.locator('input[name="confirmNewPassword"]').fill(newPassword);
-    await page.getByRole('button', { name: 'Submit' }).click();
+    await page.getByTestId('auth-code-input').fill(code);
+    await expect(page.getByTestId('auth-code-new-password')).toBeVisible();
+    await page.getByTestId('auth-code-new-password').fill(newPassword);
+    await page.getByTestId('auth-code-confirm-password').fill(newPassword);
+    await page.getByTestId('auth-code-password-submit').click();
 
     // On success the user is auto-logged-in and routed to the onboarding wizard.
     await expect(page).toHaveURL(/\/start/);
@@ -120,7 +129,7 @@ test.describe('Password reset', () => {
   });
 });
 
-test.describe('Email change', () => {
+test.describe('Email change (code modal)', () => {
   let user: TestUser;
 
   test.beforeAll(async () => {
@@ -131,11 +140,11 @@ test.describe('Email change', () => {
     if (user) { await deleteTestUser(user); }
   });
 
-  test('user can change their email via the emailed code', async ({ page, context }) => {
+  test('user changes their email by typing the emailed code into the modal', async ({ page, context }) => {
     await authenticateBrowser(context, user);
     const newEmail = generateTestEmail();
 
-    // Request the change from the email settings page.
+    // Request the change from the email settings page; the modal opens.
     await page.goto('/settings/email');
     await waitForHydration(page);
     const newEmailInput = page.locator('input[name="newEmail"]');
@@ -143,21 +152,63 @@ test.describe('Email change', () => {
     await newEmailInput.fill(newEmail);
     await page.locator('input[name="password"]').fill(user.password);
     await page.getByRole('button', { name: 'Change Email' }).click();
-    await expect(
-      page.getByText('A confirmation link has been sent to your new email address. Click the link to finish changing your email.'),
-    ).toBeVisible();
+    await expect(page.getByTestId('auth-code-input')).toBeVisible();
+    // The modal shows the NEW address (where the code was sent), not the current one.
+    await expect(page.getByText(newEmail)).toBeVisible();
 
-    // The confirmation email goes to the NEW address; redeem its code.
+    // The confirmation email goes to the NEW address; redeem its code in the modal
+    // (the modal validates against the account's CURRENT email under the hood).
     const email = await waitForEmail({ to: newEmail, subject: 'Confirm New Email Address' });
     const code = extractCode(email);
+    await page.getByTestId('auth-code-input').fill(code);
 
-    await page.goto(`/change-email?code=${code}`);
-
-    // The account's primary email is now the new address (the JWT still resolves
-    // to the same user id, so the original token reflects the updated email).
+    // The account's primary email is now the new address.
     await expect.poll(async () => (await getCurrentUser(user.token))?.email, { timeout: 10000 }).toBe(newEmail);
 
     // Keep `user.email` accurate so afterAll cleanup targets the right account.
     user.email = newEmail;
+  });
+});
+
+test.describe('Cross-tab completion', () => {
+  let user: TestUser;
+
+  test.beforeAll(async () => {
+    user = await createTestUser();
+  });
+
+  test.afterAll(async () => {
+    if (user) { await deleteTestUser(user); }
+  });
+
+  test('completing the flow via the link in another tab closes the waiting modal', async ({ page, context }) => {
+    const requestedAt = new Date();
+
+    // Tab A: open the reset-password modal, send the request, and leave it
+    // waiting for a code.
+    await page.goto('/login');
+    await waitForHydration(page);
+    await page.getByRole('textbox', { name: 'Email' }).fill(user.email);
+    await page.getByRole('button', { name: 'I forgot my password' }).click();
+    await page.getByTestId('auth-code-send-code').click();
+    await expect(page.getByTestId('auth-code-input')).toBeVisible();
+
+    const email = await waitForEmail({ to: user.email, subject: 'Reset Password', since: requestedAt });
+    const code = extractCode(email);
+    const newPassword = generateRandomString(10);
+
+    // Tab B (same browser context → shares the BroadcastChannel): complete the
+    // reset via the magic-link landing page.
+    const tabB = await context.newPage();
+    await tabB.goto(resetLink(code, user.email));
+    await waitForHydration(tabB);
+    await tabB.locator('input[name="newPassword"]').fill(newPassword);
+    await tabB.locator('input[name="confirmNewPassword"]').fill(newPassword);
+    await tabB.getByRole('button', { name: 'Submit' }).click();
+    await expect(tabB).toHaveURL(/\/start/);
+
+    // Tab A observes the broadcast, closes the modal, and moves the user on.
+    await expect(page).toHaveURL(/\/start/, { timeout: 15000 });
+    await tabB.close();
   });
 });

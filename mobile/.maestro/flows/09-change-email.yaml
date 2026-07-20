@@ -1,0 +1,54 @@
+# Change the signed-in account's email by typing the emailed code into the app.
+# Reuses the warm login from common/login.yaml. Independent of verification mode.
+appId: com.mybiblelog.app
+tags:
+  - email-code
+---
+- runFlow: ../common/login.yaml
+- runScript:
+    file: ../scripts/gen-email.js
+- tapOn:
+    id: "tab.settings"
+- tapOn: "Account"
+- extendedWaitUntil:
+    visible:
+      id: "settings.change-email"
+    timeout: 15000
+- tapOn:
+    id: "settings.change-email"
+- extendedWaitUntil:
+    visible:
+      id: "change-email.new-email"
+    timeout: 15000
+- tapOn:
+    id: "change-email.new-email"
+- inputText: ${output.newEmail}
+- hideKeyboard
+- tapOn:
+    id: "change-email.password"
+- inputText: ${E2E_PASSWORD}
+- hideKeyboard
+- tapOn:
+    id: "change-email.submit"
+- extendedWaitUntil:
+    visible:
+      id: "change-email.code.code"
+    timeout: 15000
+# The confirmation email goes to the NEW address; the code validates against the
+# account's current email under the hood.
+- runScript:
+    file: ../scripts/fetch-email-code.js
+    env:
+      EMAIL_TO: ${output.newEmail}
+      EMAIL_SUBJECT: "Confirm New Email Address"
+- assertTrue: ${output.code != null}
+- tapOn:
+    id: "change-email.code.code"
+# Typing the full code auto-submits; the app returns to the Account screen.
+- inputText: ${output.code}
+- hideKeyboard
+- extendedWaitUntil:
+    visible: "Logout"
+    timeout: 20000
+# The Account screen now shows the new address.
+- assertVisible: ${output.newEmail}

@@ -1,4 +1,3 @@
-import crypto from 'node:crypto';
 import bcrypt from 'bcrypt';
 import { ObjectId } from 'mongodb';
 import type { Collections } from '../mongo/useCollections';
@@ -9,6 +8,7 @@ import { ValidationError } from '../http/errors/validation-errors';
 import { isDuplicateKeyError } from './helpers/duplicate-key-error';
 import { hashPassword } from './helpers/user-auth';
 import { buildDefaultUserSettings } from './helpers/user-settings';
+import { CODE_TTL_MS, generateVerificationCode } from './helpers/verification-codes';
 import {
   AdminUserListItem,
   AdminUserListQuery,
@@ -47,15 +47,20 @@ const toUserRecord = (user: UserDocument): UserRecord => {
     emailVerificationCode: user.emailVerificationCode,
     emailVerificationExpires: user.emailVerificationExpires,
     emailVerificationCodeLastSentAt: user.emailVerificationCodeLastSentAt,
+    // Default legacy documents (created before the attempt counters existed) to
+    // 0 so their outstanding codes are still redeemable.
+    emailVerificationAttempts: user.emailVerificationAttempts ?? 0,
     // Default legacy documents (created before this field existed) to the epoch
     // so the notice cooldown treats them as "never sent".
     existingAccountNoticeLastSentAt: user.existingAccountNoticeLastSentAt ?? new Date(0),
     newEmail: user.newEmail ?? null,
     newEmailVerificationCode: user.newEmailVerificationCode,
     newEmailVerificationExpires: user.newEmailVerificationExpires,
+    newEmailVerificationAttempts: user.newEmailVerificationAttempts ?? 0,
     oldEmails: [...user.oldEmails],
     passwordResetCode: user.passwordResetCode,
     passwordResetExpires: user.passwordResetExpires,
+    passwordResetAttempts: user.passwordResetAttempts ?? 0,
     // Default legacy documents (created before this field existed) to 0 so their
     // still-valid tokens (which also carry no version) continue to match.
     tokenVersion: user.tokenVersion ?? 0,
@@ -64,8 +69,6 @@ const toUserRecord = (user: UserDocument): UserRecord => {
     updatedAt: user.updatedAt,
   };
 };
-
-const generateVerificationCode = () => crypto.randomBytes(64).toString('hex');
 
 // A precomputed bcrypt hash used as a constant-time stand-in when an account
 // (or its local password) is absent. Comparing every credential check against a
@@ -152,16 +155,19 @@ export const createUserRepository = ({ users }: Collections) => {
         password,
         googleId: input.googleId ?? null,
         emailVerificationCode,
-        emailVerificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        emailVerificationExpires: new Date(Date.now() + CODE_TTL_MS),
         // Track when the initial verification email is sent so resend can enforce a cooldown.
         emailVerificationCodeLastSentAt: emailVerificationCode !== '' ? now : new Date(0),
+        emailVerificationAttempts: 0,
         existingAccountNoticeLastSentAt: new Date(0),
         newEmail: null,
         newEmailVerificationCode: '',
         newEmailVerificationExpires: new Date(0),
+        newEmailVerificationAttempts: 0,
         oldEmails: [],
         passwordResetCode: '',
         passwordResetExpires: new Date(0),
+        passwordResetAttempts: 0,
         tokenVersion: 0,
         settings: buildDefaultUserSettings(input.locale),
         createdAt: now,
@@ -248,9 +254,27 @@ export const createUserRepository = ({ users }: Collections) => {
     async beginPasswordReset(userId: string): Promise<UserRecord> {
       const user = await requireDocById(userId);
       user.passwordResetCode = generateVerificationCode();
-      user.passwordResetExpires = new Date(Date.now() + (60 * 60 * 1000)); // in 1 hour
-      await persist(user, { passwordResetCode: user.passwordResetCode, passwordResetExpires: user.passwordResetExpires });
+      user.passwordResetExpires = new Date(Date.now() + CODE_TTL_MS);
+      user.passwordResetAttempts = 0;
+      await persist(user, {
+        passwordResetCode: user.passwordResetCode,
+        passwordResetExpires: user.passwordResetExpires,
+        passwordResetAttempts: user.passwordResetAttempts,
+      });
       return toUserRecord(user);
+    },
+
+    /**
+     * Records a failed password-reset code submission and returns the new count.
+     * The route uses this to spend a code after MAX_CODE_ATTEMPTS bad guesses.
+     */
+    async recordPasswordResetAttempt(userId: string): Promise<number> {
+      const result = await users.findOneAndUpdate(
+        { _id: new ObjectId(userId) },
+        { $inc: { passwordResetAttempts: 1 }, $set: { updatedAt: new Date() } },
+        { returnDocument: 'after', projection: { passwordResetAttempts: 1 } },
+      );
+      return result?.passwordResetAttempts ?? 0;
     },
 
     /**
@@ -267,6 +291,7 @@ export const createUserRepository = ({ users }: Collections) => {
             password: user.password,
             passwordResetCode: '',
             passwordResetExpires: new Date(0),
+            passwordResetAttempts: 0,
             updatedAt: new Date(),
           },
           $inc: { tokenVersion: 1 },
@@ -280,8 +305,23 @@ export const createUserRepository = ({ users }: Collections) => {
       const user = await requireDocById(userId);
       user.emailVerificationCode = '';
       user.emailVerificationExpires = new Date(0);
-      await persist(user, { emailVerificationCode: user.emailVerificationCode, emailVerificationExpires: user.emailVerificationExpires });
+      user.emailVerificationAttempts = 0;
+      await persist(user, {
+        emailVerificationCode: user.emailVerificationCode,
+        emailVerificationExpires: user.emailVerificationExpires,
+        emailVerificationAttempts: user.emailVerificationAttempts,
+      });
       return toUserRecord(user);
+    },
+
+    /** Records a failed email-verification code submission; returns the new count. */
+    async recordEmailVerificationAttempt(userId: string): Promise<number> {
+      const result = await users.findOneAndUpdate(
+        { _id: new ObjectId(userId) },
+        { $inc: { emailVerificationAttempts: 1 }, $set: { updatedAt: new Date() } },
+        { returnDocument: 'after', projection: { emailVerificationAttempts: 1 } },
+      );
+      return result?.emailVerificationAttempts ?? 0;
     },
 
     async beginEmailUpdate(userId: string, newEmail: string): Promise<UserRecord> {
@@ -291,13 +331,25 @@ export const createUserRepository = ({ users }: Collections) => {
       // they simply won't be able to take control of it.
       user.newEmail = newEmail.toLowerCase();
       user.newEmailVerificationCode = generateVerificationCode();
-      user.newEmailVerificationExpires = new Date(Date.now() + (60 * 60 * 1000)); // in 1 hour
+      user.newEmailVerificationExpires = new Date(Date.now() + CODE_TTL_MS);
+      user.newEmailVerificationAttempts = 0;
       await persist(user, {
         newEmail: user.newEmail,
         newEmailVerificationCode: user.newEmailVerificationCode,
         newEmailVerificationExpires: user.newEmailVerificationExpires,
+        newEmailVerificationAttempts: user.newEmailVerificationAttempts,
       });
       return toUserRecord(user);
+    },
+
+    /** Records a failed change-email code submission; returns the new count. */
+    async recordNewEmailVerificationAttempt(userId: string): Promise<number> {
+      const result = await users.findOneAndUpdate(
+        { _id: new ObjectId(userId) },
+        { $inc: { newEmailVerificationAttempts: 1 }, $set: { updatedAt: new Date() } },
+        { returnDocument: 'after', projection: { newEmailVerificationAttempts: 1 } },
+      );
+      return result?.newEmailVerificationAttempts ?? 0;
     },
 
     async cancelEmailUpdate(userId: string): Promise<void> {
@@ -305,10 +357,12 @@ export const createUserRepository = ({ users }: Collections) => {
       user.newEmail = null;
       user.newEmailVerificationCode = '';
       user.newEmailVerificationExpires = new Date(0);
+      user.newEmailVerificationAttempts = 0;
       await persist(user, {
         newEmail: user.newEmail,
         newEmailVerificationCode: user.newEmailVerificationCode,
         newEmailVerificationExpires: user.newEmailVerificationExpires,
+        newEmailVerificationAttempts: user.newEmailVerificationAttempts,
       });
     },
 
@@ -323,6 +377,7 @@ export const createUserRepository = ({ users }: Collections) => {
       user.newEmail = null;
       user.newEmailVerificationCode = '';
       user.newEmailVerificationExpires = new Date(0);
+      user.newEmailVerificationAttempts = 0;
       user.googleId = null;
       try {
         await persist(user, {
@@ -331,6 +386,7 @@ export const createUserRepository = ({ users }: Collections) => {
           newEmail: user.newEmail,
           newEmailVerificationCode: user.newEmailVerificationCode,
           newEmailVerificationExpires: user.newEmailVerificationExpires,
+          newEmailVerificationAttempts: user.newEmailVerificationAttempts,
           googleId: user.googleId,
         });
       }
@@ -349,12 +405,14 @@ export const createUserRepository = ({ users }: Collections) => {
     async resendEmailVerification(userId: string): Promise<UserRecord> {
       const user = await requireDocById(userId);
       user.emailVerificationCode = generateVerificationCode();
-      user.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      user.emailVerificationExpires = new Date(Date.now() + CODE_TTL_MS);
       user.emailVerificationCodeLastSentAt = new Date();
+      user.emailVerificationAttempts = 0;
       await persist(user, {
         emailVerificationCode: user.emailVerificationCode,
         emailVerificationExpires: user.emailVerificationExpires,
         emailVerificationCodeLastSentAt: user.emailVerificationCodeLastSentAt,
+        emailVerificationAttempts: user.emailVerificationAttempts,
       });
       return toUserRecord(user);
     },

@@ -53,6 +53,7 @@ import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useAuthStore } from '~/stores/auth';
+import { postAuthEvent } from '~/composables/auth-channel';
 
 definePageMeta({ middleware: ['auth'], auth: 'guest' });
 
@@ -65,6 +66,7 @@ const authStore = useAuthStore();
 const { $http, $terr } = useNuxtApp();
 
 const passwordResetCode = ref<string | null>(null);
+const passwordResetEmail = ref<string | null>(null);
 const passwordResetCodeValid = ref(true);
 const checkedCode = ref(false);
 const newPassword = ref('');
@@ -75,15 +77,21 @@ const submitting = ref(false);
 onMounted(() => { mounted.value = true; });
 
 onMounted(async () => {
-  const code = new URL(window.location.href).searchParams.get('code');
-  if (!code) {
+  const params = new URL(window.location.href).searchParams;
+  const code = params.get('code');
+  const email = params.get('email');
+  if (!code || !email) {
     await router.push(localePath('/login'));
     return;
   }
   passwordResetCode.value = code;
+  passwordResetEmail.value = email;
 
   try {
-    const { data } = await $http.get<{ valid: boolean }>(`/api/auth/password/reset/${code}/valid`);
+    const { data } = await $http.post<{ valid: boolean }>(
+      '/api/auth/password/reset/validate',
+      { email, code },
+    );
     passwordResetCodeValid.value = data.valid;
   }
   catch {
@@ -106,8 +114,13 @@ const submitChangePassword = async () => {
   }
 
   try {
-    await $http.post(`/api/auth/password/reset/${passwordResetCode.value}`, { newPassword: newPassword.value });
+    await $http.post('/api/auth/password/reset/complete', {
+      email: passwordResetEmail.value,
+      code: passwordResetCode.value,
+      newPassword: newPassword.value,
+    });
     await authStore.refreshUser();
+    postAuthEvent({ type: 'completed', flow: 'reset-password', email: passwordResetEmail.value ?? '' });
     await router.push(localePath('/start'));
   }
   catch (err) {
