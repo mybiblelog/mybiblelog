@@ -2,7 +2,6 @@ import { z } from 'zod';
 import dayjs from 'dayjs';
 import { Bible } from '@mybiblelog/shared';
 import { isValidObjectId } from '../repositories/helpers/ids';
-import { CODE_LENGTH } from '../repositories/helpers/verification-codes';
 
 /** A well-formed MongoDB ObjectId string. */
 export const objectId = z.string().refine((id) => isValidObjectId(id));
@@ -18,6 +17,3 @@ export const verseId = z.number().int().refine((value) => Bible.verseExists(valu
 
 /** An email address (matching the same loose pattern the schemas used). */
 export const emailString = z.string().regex(/^\S+@\S+\.\S+$/);
-
-/** A short numeric email verification code (exactly CODE_LENGTH digits). */
-export const verificationCodeString = z.string().regex(new RegExp(`^\\d{${CODE_LENGTH}}$`));

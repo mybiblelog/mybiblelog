@@ -372,7 +372,8 @@ watch(() => store.isOpen, (isOpen) => {
 // Re-focus the active step's input when the tab regains focus — the user has
 // usually just switched to their email app to read the code.
 function onWindowFocus() {
-  if (import.meta.client && document.visibilityState === 'hidden') { return; }
+  // Registered only in onMounted (client), so `document` is always available.
+  if (document.visibilityState === 'hidden') { return; }
   if (!store.isOpen || verified.value) { return; }
   focusInitial();
 }

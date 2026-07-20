@@ -55,9 +55,9 @@ export const onAuthEvent = (handler: (event: AuthChannelEvent) => void): (() => 
   if (!import.meta.client) { return () => {}; }
 
   const isAuthEvent = (value: unknown): value is AuthChannelEvent =>
-    Boolean(value) && typeof value === 'object'
-    && (value as AuthChannelEvent).type === 'completed'
-    && typeof (value as AuthChannelEvent).email === 'string';
+    Boolean(value) && typeof value === 'object' &&
+    (value as AuthChannelEvent).type === 'completed' &&
+    typeof (value as AuthChannelEvent).email === 'string';
 
   if (supportsBroadcastChannel()) {
     const channel = new BroadcastChannel(CHANNEL_NAME);

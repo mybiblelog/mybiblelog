@@ -1,5 +1,10 @@
 import { z } from 'zod';
-import { verificationCodeString } from '../primitives';
+
+// The code-based auth flows keep `code` a loose string in every body schema: an
+// invalid/malformed code surfaces the friendly "expired" error from the handler
+// (which looks the account up by email and compares the code) rather than a raw
+// schema error. See resetPasswordBodySchema below and the handlers in
+// api/http/handlers/auth/.
 
 // bcrypt only uses the first 72 bytes of a password; longer values would be
 // silently truncated, so we reject them at validation time.
@@ -77,7 +82,7 @@ export const googleIdTokenBodySchema = z.object({
 
 export const verifyEmailBodySchema = z.object({
   email: z.string(),
-  code: verificationCodeString,
+  code: z.string(),
 });
 
 export const resendEmailVerificationBodySchema = z.object({
@@ -95,7 +100,7 @@ export const changeEmailBodySchema = z.object({
 // (which embeds the current email) supplies both.
 export const completeEmailChangeBodySchema = z.object({
   email: z.string(),
-  code: verificationCodeString,
+  code: z.string(),
 });
 
 export const resetPasswordInitBodySchema = z.object({
@@ -106,7 +111,7 @@ export const resetPasswordInitBodySchema = z.object({
 // fields. Also used to record a failed attempt against the code.
 export const validateResetCodeBodySchema = z.object({
   email: z.string(),
-  code: verificationCodeString,
+  code: z.string(),
 });
 
 export const setPasswordBodySchema = z.object({
