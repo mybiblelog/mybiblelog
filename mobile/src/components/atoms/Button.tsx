@@ -50,7 +50,13 @@ export function Button({
     destructive: { bg: colors.destructive, fg: "onDestructive" },
     ghost: { bg: "transparent", fg: "primary" },
   };
-  const { bg, fg } = palette[variant];
+  // A disabled button drops its accent color for a neutral, muted look so it
+  // reads as inactive — not just a dimmed version of the live control. Loading
+  // keeps the variant color (the spinner still signals an active action).
+  const showDisabled = disabled && !loading;
+  const { bg, fg } = showDisabled
+    ? { bg: variant === "ghost" ? "transparent" : colors.surfaceAlt, fg: "mutedText" as const }
+    : palette[variant];
 
   return (
     <AnimatedPressable
@@ -69,7 +75,7 @@ export function Button({
         { backgroundColor: bg },
         fullWidth && styles.fullWidth,
         press.animatedStyle,
-        disabled && styles.disabled,
+        showDisabled && variant === "ghost" && styles.disabled,
         style,
       ]}
     >
