@@ -11,7 +11,8 @@ import { useAuth } from "@/src/stores/auth";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { translateApiError } from "@/src/i18n/translateApiError";
 import { spacing } from "@/src/design";
-import { Button, InputField, Text } from "@/src/components";
+import { Button, Text } from "@/src/components/atoms";
+import { InputField } from "@/src/components/molecules";
 
 const CODE_LENGTH = 6;
 
