@@ -42,4 +42,16 @@ describe("JustOpenedModal", () => {
     await waitFor(() => expect(getByText("Add Log Entry")).toBeTruthy());
     expect(queryByText("Just Opened")).toBeNull();
   });
+
+  it("hands off to the note editor from Take Note", async () => {
+    const { getByText, queryByText } = renderWithProviders(<JustOpenedModal />);
+    act(() => justOpenedActions.openPrompt(startVerseId, endVerseId));
+
+    fireEvent.press(getByText("Take Note"));
+
+    // The prompt closes and the prefilled note editor opens.
+    expect(useJustOpenedStore.getState().open).toBe(false);
+    await waitFor(() => expect(getByText("New Note")).toBeTruthy());
+    expect(queryByText("Just Opened")).toBeNull();
+  });
 });

@@ -168,6 +168,7 @@ export const uk = {
   just_opened_title: "Щойно відкрито",
   just_opened_message: "Ви відкрили %{passage} для читання.",
   just_opened_log_reading: "Додати читання до журналу",
+  just_opened_take_note: "Зробити нотатку",
   just_opened_dismiss: "Закрити",
   menu_log_reading: "Записати читання",
   menu_take_note: "Зробити нотатку",
