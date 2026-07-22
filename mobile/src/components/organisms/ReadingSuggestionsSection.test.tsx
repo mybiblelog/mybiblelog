@@ -52,13 +52,13 @@ describe("ReadingSuggestionsSection", () => {
     );
   });
 
-  it("opens the log-entry editor prefilled from Log reading", () => {
+  it("opens the log-entry editor prefilled from Log Reading", () => {
     const { getByText, getAllByText } = renderWithProviders(
       <ReadingSuggestionsSection suggestions={[suggestion]} today="2026-07-03" />
     );
 
     fireEvent.press(getByText("Matthew 1"));
-    fireEvent.press(getByText("Log reading"));
+    fireEvent.press(getByText("Log Reading"));
 
     expect(getByText("Add Log Entry")).toBeTruthy();
     // The editor is seeded with the suggestion's passage: the full-chapter

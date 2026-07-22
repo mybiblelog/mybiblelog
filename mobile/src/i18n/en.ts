@@ -159,9 +159,9 @@ export const en = {
   menu_delete: "Delete",
   menu_open_in_bible: "Open in Bible",
   menu_continue_reading: "Continue Reading",
-  menu_log_reading: "Log reading",
-  menu_take_note: "Take note",
-  menu_view_notes: "View notes",
+  menu_log_reading: "Log Reading",
+  menu_take_note: "Take Note",
+  menu_view_notes: "View Notes",
 
   just_opened_title: "Just Opened",
   just_opened_message: "You opened %{passage} to read.",
