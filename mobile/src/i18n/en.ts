@@ -166,6 +166,7 @@ export const en = {
   just_opened_title: "Just Opened",
   just_opened_message: "You opened %{passage} to read.",
   just_opened_log_reading: "Log Reading",
+  just_opened_take_note: "Take Note",
   just_opened_dismiss: "Dismiss",
 
   delete_confirm_title: "Delete log entry?",

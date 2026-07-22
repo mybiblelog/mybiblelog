@@ -168,6 +168,7 @@ export const pt = {
   just_opened_title: "Aberto agora",
   just_opened_message: "Você abriu %{passage} para ler.",
   just_opened_log_reading: "Adicionar leitura a registro",
+  just_opened_take_note: "Fazer anotação",
   just_opened_dismiss: "Dispensar",
   menu_log_reading: "Registrar leitura",
   menu_take_note: "Fazer anotação",
