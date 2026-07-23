@@ -2,6 +2,12 @@ export type BibleBook = {
   testamentOrder: number;
   bibleOrder: number;
   newTestament: boolean;
+  /** True for deuterocanonical/apocryphal books not in the 66-book Protestant canon. */
+  deuterocanonical: boolean;
+  /** Display position (1-based) when deuterocanonical books are interleaved,
+   * following the NRSVUE full-canon order. Unique across all books; used to sort
+   * book lists so DC books slot in between the Protestant books they neighbour. */
+  dcBookOrder: number;
   chapterCount: number;
   /** Paratext/USFM-style book code used by YouVersion and Bible.com (e.g. "GEN", "1SA"). */
   usfmCode: string;
@@ -19,6 +25,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 1,
     bibleOrder: 1,
+    deuterocanonical: false,
+    dcBookOrder: 1,
     newTestament: false,
     chapterCount: 50,
     usfmCode: 'GEN',
@@ -77,6 +85,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 2,
     bibleOrder: 2,
+    deuterocanonical: false,
+    dcBookOrder: 2,
     newTestament: false,
     chapterCount: 40,
     usfmCode: 'EXO',
@@ -134,6 +144,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 3,
     bibleOrder: 3,
+    deuterocanonical: false,
+    dcBookOrder: 3,
     newTestament: false,
     chapterCount: 27,
     usfmCode: 'LEV',
@@ -191,6 +203,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 4,
     bibleOrder: 4,
+    deuterocanonical: false,
+    dcBookOrder: 4,
     newTestament: false,
     chapterCount: 36,
     usfmCode: 'NUM',
@@ -250,6 +264,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 5,
     bibleOrder: 5,
+    deuterocanonical: false,
+    dcBookOrder: 5,
     newTestament: false,
     chapterCount: 34,
     usfmCode: 'DEU',
@@ -308,6 +324,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 6,
     bibleOrder: 6,
+    deuterocanonical: false,
+    dcBookOrder: 6,
     newTestament: false,
     chapterCount: 24,
     usfmCode: 'JOS',
@@ -366,6 +384,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 7,
     bibleOrder: 7,
+    deuterocanonical: false,
+    dcBookOrder: 7,
     newTestament: false,
     chapterCount: 21,
     usfmCode: 'JDG',
@@ -425,6 +445,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 8,
     bibleOrder: 8,
+    deuterocanonical: false,
+    dcBookOrder: 8,
     newTestament: false,
     chapterCount: 4,
     usfmCode: 'RUT',
@@ -481,6 +503,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 9,
     bibleOrder: 9,
+    deuterocanonical: false,
+    dcBookOrder: 9,
     newTestament: false,
     chapterCount: 31,
     usfmCode: '1SA',
@@ -541,6 +565,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 10,
     bibleOrder: 10,
+    deuterocanonical: false,
+    dcBookOrder: 10,
     newTestament: false,
     chapterCount: 24,
     usfmCode: '2SA',
@@ -601,6 +627,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 11,
     bibleOrder: 11,
+    deuterocanonical: false,
+    dcBookOrder: 11,
     newTestament: false,
     chapterCount: 22,
     usfmCode: '1KI',
@@ -660,6 +688,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 12,
     bibleOrder: 12,
+    deuterocanonical: false,
+    dcBookOrder: 12,
     newTestament: false,
     chapterCount: 25,
     usfmCode: '2KI',
@@ -719,6 +749,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 13,
     bibleOrder: 13,
+    deuterocanonical: false,
+    dcBookOrder: 13,
     newTestament: false,
     chapterCount: 29,
     usfmCode: '1CH',
@@ -777,6 +809,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 14,
     bibleOrder: 14,
+    deuterocanonical: false,
+    dcBookOrder: 14,
     newTestament: false,
     chapterCount: 36,
     usfmCode: '2CH',
@@ -835,6 +869,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 15,
     bibleOrder: 15,
+    deuterocanonical: false,
+    dcBookOrder: 15,
     newTestament: false,
     chapterCount: 10,
     usfmCode: 'EZR',
@@ -890,6 +926,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 16,
     bibleOrder: 16,
+    deuterocanonical: false,
+    dcBookOrder: 16,
     newTestament: false,
     chapterCount: 13,
     usfmCode: 'NEH',
@@ -947,6 +985,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 17,
     bibleOrder: 17,
+    deuterocanonical: false,
+    dcBookOrder: 19,
     newTestament: false,
     chapterCount: 10,
     usfmCode: 'EST',
@@ -1004,6 +1044,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 18,
     bibleOrder: 18,
+    deuterocanonical: false,
+    dcBookOrder: 22,
     newTestament: false,
     chapterCount: 42,
     usfmCode: 'JOB',
@@ -1059,6 +1101,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 19,
     bibleOrder: 19,
+    deuterocanonical: false,
+    dcBookOrder: 23,
     newTestament: false,
     chapterCount: 150,
     usfmCode: 'PSA',
@@ -1119,6 +1163,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 20,
     bibleOrder: 20,
+    deuterocanonical: false,
+    dcBookOrder: 24,
     newTestament: false,
     chapterCount: 31,
     usfmCode: 'PRO',
@@ -1178,6 +1224,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 21,
     bibleOrder: 21,
+    deuterocanonical: false,
+    dcBookOrder: 25,
     newTestament: false,
     chapterCount: 12,
     usfmCode: 'ECC',
@@ -1239,6 +1287,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 22,
     bibleOrder: 22,
+    deuterocanonical: false,
+    dcBookOrder: 26,
     newTestament: false,
     chapterCount: 8,
     usfmCode: 'SNG',
@@ -1295,6 +1345,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 23,
     bibleOrder: 23,
+    deuterocanonical: false,
+    dcBookOrder: 29,
     newTestament: false,
     chapterCount: 66,
     usfmCode: 'ISA',
@@ -1351,6 +1403,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 24,
     bibleOrder: 24,
+    deuterocanonical: false,
+    dcBookOrder: 30,
     newTestament: false,
     chapterCount: 52,
     usfmCode: 'JER',
@@ -1409,6 +1463,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 25,
     bibleOrder: 25,
+    deuterocanonical: false,
+    dcBookOrder: 31,
     newTestament: false,
     chapterCount: 5,
     usfmCode: 'LAM',
@@ -1466,6 +1522,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 26,
     bibleOrder: 26,
+    deuterocanonical: false,
+    dcBookOrder: 33,
     newTestament: false,
     chapterCount: 48,
     usfmCode: 'EZK',
@@ -1524,6 +1582,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 27,
     bibleOrder: 27,
+    deuterocanonical: false,
+    dcBookOrder: 34,
     newTestament: false,
     chapterCount: 12,
     usfmCode: 'DAN',
@@ -1582,6 +1642,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 28,
     bibleOrder: 28,
+    deuterocanonical: false,
+    dcBookOrder: 35,
     newTestament: false,
     chapterCount: 14,
     usfmCode: 'HOS',
@@ -1639,6 +1701,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 29,
     bibleOrder: 29,
+    deuterocanonical: false,
+    dcBookOrder: 36,
     newTestament: false,
     chapterCount: 3,
     usfmCode: 'JOL',
@@ -1694,6 +1758,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 30,
     bibleOrder: 30,
+    deuterocanonical: false,
+    dcBookOrder: 37,
     newTestament: false,
     chapterCount: 9,
     usfmCode: 'AMO',
@@ -1748,6 +1814,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 31,
     bibleOrder: 31,
+    deuterocanonical: false,
+    dcBookOrder: 38,
     newTestament: false,
     chapterCount: 1,
     usfmCode: 'OBA',
@@ -1803,6 +1871,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 32,
     bibleOrder: 32,
+    deuterocanonical: false,
+    dcBookOrder: 39,
     newTestament: false,
     chapterCount: 4,
     usfmCode: 'JON',
@@ -1858,6 +1928,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 33,
     bibleOrder: 33,
+    deuterocanonical: false,
+    dcBookOrder: 40,
     newTestament: false,
     chapterCount: 7,
     usfmCode: 'MIC',
@@ -1915,6 +1987,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 34,
     bibleOrder: 34,
+    deuterocanonical: false,
+    dcBookOrder: 41,
     newTestament: false,
     chapterCount: 3,
     usfmCode: 'NAM',
@@ -1972,6 +2046,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 35,
     bibleOrder: 35,
+    deuterocanonical: false,
+    dcBookOrder: 42,
     newTestament: false,
     chapterCount: 3,
     usfmCode: 'HAB',
@@ -2029,6 +2105,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 36,
     bibleOrder: 36,
+    deuterocanonical: false,
+    dcBookOrder: 43,
     newTestament: false,
     chapterCount: 3,
     usfmCode: 'ZEP',
@@ -2087,6 +2165,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 37,
     bibleOrder: 37,
+    deuterocanonical: false,
+    dcBookOrder: 44,
     newTestament: false,
     chapterCount: 2,
     usfmCode: 'HAG',
@@ -2143,6 +2223,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 38,
     bibleOrder: 38,
+    deuterocanonical: false,
+    dcBookOrder: 45,
     newTestament: false,
     chapterCount: 14,
     usfmCode: 'ZEC',
@@ -2201,6 +2283,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 39,
     bibleOrder: 39,
+    deuterocanonical: false,
+    dcBookOrder: 46,
     newTestament: false,
     chapterCount: 4,
     usfmCode: 'MAL',
@@ -2258,6 +2342,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 1,
     bibleOrder: 40,
+    deuterocanonical: false,
+    dcBookOrder: 47,
     newTestament: true,
     chapterCount: 28,
     usfmCode: 'MAT',
@@ -2314,6 +2400,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 2,
     bibleOrder: 41,
+    deuterocanonical: false,
+    dcBookOrder: 48,
     newTestament: true,
     chapterCount: 16,
     usfmCode: 'MRK',
@@ -2370,6 +2458,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 3,
     bibleOrder: 42,
+    deuterocanonical: false,
+    dcBookOrder: 49,
     newTestament: true,
     chapterCount: 24,
     usfmCode: 'LUK',
@@ -2426,6 +2516,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 4,
     bibleOrder: 43,
+    deuterocanonical: false,
+    dcBookOrder: 50,
     newTestament: true,
     chapterCount: 21,
     usfmCode: 'JHN',
@@ -2482,6 +2574,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 5,
     bibleOrder: 44,
+    deuterocanonical: false,
+    dcBookOrder: 51,
     newTestament: true,
     chapterCount: 28,
     usfmCode: 'ACT',
@@ -2535,6 +2629,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 6,
     bibleOrder: 45,
+    deuterocanonical: false,
+    dcBookOrder: 52,
     newTestament: true,
     chapterCount: 16,
     usfmCode: 'ROM',
@@ -2593,6 +2689,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 7,
     bibleOrder: 46,
+    deuterocanonical: false,
+    dcBookOrder: 53,
     newTestament: true,
     chapterCount: 16,
     usfmCode: '1CO',
@@ -2650,6 +2748,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 8,
     bibleOrder: 47,
+    deuterocanonical: false,
+    dcBookOrder: 54,
     newTestament: true,
     chapterCount: 13,
     usfmCode: '2CO',
@@ -2707,6 +2807,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 9,
     bibleOrder: 48,
+    deuterocanonical: false,
+    dcBookOrder: 55,
     newTestament: true,
     chapterCount: 6,
     usfmCode: 'GAL',
@@ -2764,6 +2866,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 10,
     bibleOrder: 49,
+    deuterocanonical: false,
+    dcBookOrder: 56,
     newTestament: true,
     chapterCount: 6,
     usfmCode: 'EPH',
@@ -2820,6 +2924,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 11,
     bibleOrder: 50,
+    deuterocanonical: false,
+    dcBookOrder: 57,
     newTestament: true,
     chapterCount: 4,
     usfmCode: 'PHP',
@@ -2878,6 +2984,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 12,
     bibleOrder: 51,
+    deuterocanonical: false,
+    dcBookOrder: 58,
     newTestament: true,
     chapterCount: 4,
     usfmCode: 'COL',
@@ -2934,6 +3042,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 13,
     bibleOrder: 52,
+    deuterocanonical: false,
+    dcBookOrder: 59,
     newTestament: true,
     chapterCount: 5,
     usfmCode: '1TH',
@@ -2992,6 +3102,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 14,
     bibleOrder: 53,
+    deuterocanonical: false,
+    dcBookOrder: 60,
     newTestament: true,
     chapterCount: 3,
     usfmCode: '2TH',
@@ -3050,6 +3162,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 15,
     bibleOrder: 54,
+    deuterocanonical: false,
+    dcBookOrder: 61,
     newTestament: true,
     chapterCount: 6,
     usfmCode: '1TI',
@@ -3107,6 +3221,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 16,
     bibleOrder: 55,
+    deuterocanonical: false,
+    dcBookOrder: 62,
     newTestament: true,
     chapterCount: 4,
     usfmCode: '2TI',
@@ -3164,6 +3280,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 17,
     bibleOrder: 56,
+    deuterocanonical: false,
+    dcBookOrder: 63,
     newTestament: true,
     chapterCount: 3,
     usfmCode: 'TIT',
@@ -3220,6 +3338,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 18,
     bibleOrder: 57,
+    deuterocanonical: false,
+    dcBookOrder: 64,
     newTestament: true,
     chapterCount: 1,
     usfmCode: 'PHM',
@@ -3278,6 +3398,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 19,
     bibleOrder: 58,
+    deuterocanonical: false,
+    dcBookOrder: 65,
     newTestament: true,
     chapterCount: 13,
     usfmCode: 'HEB',
@@ -3333,6 +3455,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 20,
     bibleOrder: 59,
+    deuterocanonical: false,
+    dcBookOrder: 66,
     newTestament: true,
     chapterCount: 5,
     usfmCode: 'JAS',
@@ -3390,6 +3514,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 21,
     bibleOrder: 60,
+    deuterocanonical: false,
+    dcBookOrder: 67,
     newTestament: true,
     chapterCount: 5,
     usfmCode: '1PE',
@@ -3449,6 +3575,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 22,
     bibleOrder: 61,
+    deuterocanonical: false,
+    dcBookOrder: 68,
     newTestament: true,
     chapterCount: 3,
     usfmCode: '2PE',
@@ -3508,6 +3636,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 23,
     bibleOrder: 62,
+    deuterocanonical: false,
+    dcBookOrder: 69,
     newTestament: true,
     chapterCount: 5,
     usfmCode: '1JN',
@@ -3566,6 +3696,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 24,
     bibleOrder: 63,
+    deuterocanonical: false,
+    dcBookOrder: 70,
     newTestament: true,
     chapterCount: 1,
     usfmCode: '2JN',
@@ -3624,6 +3756,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 25,
     bibleOrder: 64,
+    deuterocanonical: false,
+    dcBookOrder: 71,
     newTestament: true,
     chapterCount: 1,
     usfmCode: '3JN',
@@ -3682,6 +3816,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 26,
     bibleOrder: 65,
+    deuterocanonical: false,
+    dcBookOrder: 72,
     newTestament: true,
     chapterCount: 1,
     usfmCode: 'JUD',
@@ -3738,6 +3874,8 @@ const bibleBooks: BibleBook[] = [
   {
     testamentOrder: 27,
     bibleOrder: 66,
+    deuterocanonical: false,
+    dcBookOrder: 73,
     newTestament: true,
     chapterCount: 22,
     usfmCode: 'REV',
@@ -3788,6 +3926,395 @@ const bibleBooks: BibleBook[] = [
         abbreviations: [
           "Об'яв.",
           'Об.',
+        ],
+      },
+    },
+  },
+  {
+    testamentOrder: 17,
+    bibleOrder: 67,
+    newTestament: false,
+    deuterocanonical: true,
+    dcBookOrder: 17,
+    chapterCount: 14,
+    usfmCode: 'TOB',
+    blbCode: 'Tob',
+    locales: {
+      de: {
+        name: 'Tobit',
+        abbreviations: [
+          'Tob',
+        ],
+      },
+      en: {
+        name: 'Tobit',
+        abbreviations: [
+          'Tob',
+          'Tb',
+        ],
+      },
+      es: {
+        name: 'Tobías',
+        abbreviations: [
+          'Tob',
+          'Tb',
+        ],
+      },
+      fr: {
+        name: 'Tobie',
+        abbreviations: [
+          'Tb',
+        ],
+      },
+      pt: {
+        name: 'Tobias',
+        abbreviations: [
+          'Tb',
+        ],
+      },
+      ko: {
+        name: '토빗기',
+        abbreviations: [
+          '토빗',
+        ],
+      },
+      uk: {
+        name: 'Товит',
+        abbreviations: [
+          'Тов.',
+        ],
+      },
+    },
+  },
+  {
+    testamentOrder: 18,
+    bibleOrder: 68,
+    newTestament: false,
+    deuterocanonical: true,
+    dcBookOrder: 18,
+    chapterCount: 16,
+    usfmCode: 'JDT',
+    blbCode: 'Jdt',
+    locales: {
+      de: {
+        name: 'Judit',
+        abbreviations: [
+          'Jdt',
+        ],
+      },
+      en: {
+        name: 'Judith',
+        abbreviations: [
+          'Jdt',
+          'Jth',
+        ],
+      },
+      es: {
+        name: 'Judit',
+        abbreviations: [
+          'Jdt',
+        ],
+      },
+      fr: {
+        name: 'Judith',
+        abbreviations: [
+          'Jdt',
+        ],
+      },
+      pt: {
+        name: 'Judite',
+        abbreviations: [
+          'Jt',
+        ],
+      },
+      ko: {
+        name: '유딧기',
+        abbreviations: [
+          '유딧',
+        ],
+      },
+      uk: {
+        name: 'Юдита',
+        abbreviations: [
+          'Юдт.',
+        ],
+      },
+    },
+  },
+  {
+    testamentOrder: 20,
+    bibleOrder: 69,
+    newTestament: false,
+    deuterocanonical: true,
+    dcBookOrder: 20,
+    chapterCount: 16,
+    usfmCode: '1MA',
+    blbCode: '1Ma',
+    locales: {
+      de: {
+        name: '1. Makkabäer',
+        abbreviations: [
+          '1. Makk',
+        ],
+      },
+      en: {
+        name: '1 Maccabees',
+        abbreviations: [
+          '1 Macc',
+          '1 Mac',
+          '1 Ma',
+        ],
+      },
+      es: {
+        name: '1 Macabeos',
+        abbreviations: [
+          '1 Mac',
+        ],
+      },
+      fr: {
+        name: '1 Maccabées',
+        abbreviations: [
+          '1 M',
+        ],
+      },
+      pt: {
+        name: '1 Macabeus',
+        abbreviations: [
+          '1 Mac',
+        ],
+      },
+      ko: {
+        name: '마카베오상',
+        abbreviations: [
+          '1마카',
+        ],
+      },
+      uk: {
+        name: '1 Маккавеїв',
+        abbreviations: [
+          '1 Мак.',
+        ],
+      },
+    },
+  },
+  {
+    testamentOrder: 21,
+    bibleOrder: 70,
+    newTestament: false,
+    deuterocanonical: true,
+    dcBookOrder: 21,
+    chapterCount: 15,
+    usfmCode: '2MA',
+    blbCode: '2Ma',
+    locales: {
+      de: {
+        name: '2. Makkabäer',
+        abbreviations: [
+          '2. Makk',
+        ],
+      },
+      en: {
+        name: '2 Maccabees',
+        abbreviations: [
+          '2 Macc',
+          '2 Mac',
+          '2 Ma',
+        ],
+      },
+      es: {
+        name: '2 Macabeos',
+        abbreviations: [
+          '2 Mac',
+        ],
+      },
+      fr: {
+        name: '2 Maccabées',
+        abbreviations: [
+          '2 M',
+        ],
+      },
+      pt: {
+        name: '2 Macabeus',
+        abbreviations: [
+          '2 Mac',
+        ],
+      },
+      ko: {
+        name: '마카베오하',
+        abbreviations: [
+          '2마카',
+        ],
+      },
+      uk: {
+        name: '2 Маккавеїв',
+        abbreviations: [
+          '2 Мак.',
+        ],
+      },
+    },
+  },
+  {
+    testamentOrder: 27,
+    bibleOrder: 71,
+    newTestament: false,
+    deuterocanonical: true,
+    dcBookOrder: 27,
+    chapterCount: 19,
+    usfmCode: 'WIS',
+    blbCode: 'Wis',
+    locales: {
+      de: {
+        name: 'Weisheit',
+        abbreviations: [
+          'Weish',
+        ],
+      },
+      en: {
+        name: 'Wisdom',
+        abbreviations: [
+          'Wis',
+          'Wisd of Sol',
+        ],
+      },
+      es: {
+        name: 'Sabiduría',
+        abbreviations: [
+          'Sab',
+        ],
+      },
+      fr: {
+        name: 'Sagesse',
+        abbreviations: [
+          'Sg',
+        ],
+      },
+      pt: {
+        name: 'Sabedoria',
+        abbreviations: [
+          'Sb',
+        ],
+      },
+      ko: {
+        name: '지혜서',
+        abbreviations: [
+          '지혜',
+        ],
+      },
+      uk: {
+        name: 'Премудрість Соломона',
+        abbreviations: [
+          'Прем.',
+        ],
+      },
+    },
+  },
+  {
+    testamentOrder: 28,
+    bibleOrder: 72,
+    newTestament: false,
+    deuterocanonical: true,
+    dcBookOrder: 28,
+    chapterCount: 51,
+    usfmCode: 'SIR',
+    blbCode: 'Sir',
+    locales: {
+      de: {
+        name: 'Jesus Sirach',
+        abbreviations: [
+          'Sir',
+        ],
+      },
+      en: {
+        name: 'Sirach',
+        abbreviations: [
+          'Sir',
+          'Ecclus',
+        ],
+      },
+      es: {
+        name: 'Eclesiástico',
+        abbreviations: [
+          'Eclo',
+          'Sir',
+        ],
+      },
+      fr: {
+        name: 'Siracide',
+        abbreviations: [
+          'Si',
+        ],
+      },
+      pt: {
+        name: 'Eclesiástico',
+        abbreviations: [
+          'Eclo',
+          'Sir',
+        ],
+      },
+      ko: {
+        name: '집회서',
+        abbreviations: [
+          '집회',
+        ],
+      },
+      uk: {
+        name: 'Сирах',
+        abbreviations: [
+          'Сир.',
+        ],
+      },
+    },
+  },
+  {
+    testamentOrder: 32,
+    bibleOrder: 73,
+    newTestament: false,
+    deuterocanonical: true,
+    dcBookOrder: 32,
+    chapterCount: 6,
+    usfmCode: 'BAR',
+    blbCode: 'Bar',
+    locales: {
+      de: {
+        name: 'Baruch',
+        abbreviations: [
+          'Bar',
+        ],
+      },
+      en: {
+        name: 'Baruch',
+        abbreviations: [
+          'Bar',
+        ],
+      },
+      es: {
+        name: 'Baruc',
+        abbreviations: [
+          'Bar',
+        ],
+      },
+      fr: {
+        name: 'Baruch',
+        abbreviations: [
+          'Ba',
+        ],
+      },
+      pt: {
+        name: 'Baruque',
+        abbreviations: [
+          'Br',
+        ],
+      },
+      ko: {
+        name: '바룩서',
+        abbreviations: [
+          '바룩',
+        ],
+      },
+      uk: {
+        name: 'Варух',
+        abbreviations: [
+          'Вар.',
         ],
       },
     },

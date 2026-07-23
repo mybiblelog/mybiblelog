@@ -19,12 +19,14 @@ export type FilterAndSortBookOptions = {
 };
 
 /**
- * Builds the full, localized list of book options in canonical bible order.
+ * Builds the localized list of book options for a reader's canon, in display
+ * order. Deuterocanonical books are opt-in and, when included, are interleaved
+ * between the Protestant books following the NRSVUE full-canon order.
  * Pure: depends only on the shared `Bible` data, so it can back a React hook,
  * a Pinia store, or a plain component identically.
  */
-export const getBookOptions = (locale = 'en'): BookOption[] =>
-  Bible.getBooks().map(book => ({
+export const getBookOptions = (locale = 'en', includeDeuterocanonical = false): BookOption[] =>
+  Bible.getBooksForCanon(includeDeuterocanonical).map(book => ({
     label: Bible.getBookName(book.bibleOrder, locale),
     value: book.bibleOrder,
   }));
@@ -33,8 +35,17 @@ const stripLeadingNumbers = (str: string): string => str.replace(/^\d+\s*/, '').
 
 const newTestamentByBook = (): Map<number, boolean> => {
   const map = new Map<number, boolean>();
-  for (const book of Bible.getBooks()) {
+  for (const book of Bible.getAllBooks()) {
     map.set(book.bibleOrder, book.newTestament);
+  }
+  return map;
+};
+
+/** Maps each book's `bibleOrder` to its full-canon display position (`dcBookOrder`). */
+const dcBookOrderByBook = (): Map<number, number> => {
+  const map = new Map<number, number>();
+  for (const book of Bible.getAllBooks()) {
+    map.set(book.bibleOrder, book.dcBookOrder);
   }
   return map;
 };
@@ -65,7 +76,13 @@ export const filterAndSortBookOptions = (
     );
   }
   else {
-    filtered = [...filtered].sort((a, b) => a.value - b.value);
+    // Numerical order follows the full-canon display order so deuterocanonical
+    // books slot in between their Protestant neighbours rather than after them.
+    // For the Protestant-only canon this is identical to sorting by bibleOrder.
+    const dcOrder = dcBookOrderByBook();
+    filtered = [...filtered].sort(
+      (a, b) => (dcOrder.get(a.value) ?? a.value) - (dcOrder.get(b.value) ?? b.value),
+    );
   }
 
   return filtered;

@@ -103,6 +103,7 @@
 <script setup lang="ts">
 import { Bible, PassageSelection } from '@mybiblelog/shared';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
+import { useUserSettingsStore } from '~/stores/user-settings';
 
 const { t, te, locale } = useI18n();
 const logEntryEditorStore = useLogEntryEditorStore();
@@ -114,7 +115,10 @@ const formErrorMessage = computed(() => {
   return te(key) ? t(key) : t('could_not_save');
 });
 
-const books = Bible.getBooks();
+const userSettingsStore = useUserSettingsStore();
+const books = computed(() =>
+  Bible.getBooksForCanon(userSettingsStore.settings.includeDeuterocanonical),
+);
 const startChapterRef = ref<HTMLSelectElement | null>(null);
 const endChapterRef = ref<HTMLSelectElement | null>(null);
 const endVerseRef = ref<HTMLSelectElement | null>(null);

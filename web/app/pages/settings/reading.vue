@@ -4,6 +4,33 @@
       {{ t('reading') }}
     </h2>
     <h3 class="mbl-title mbl-title--5">
+      {{ t('canon.title') }}
+    </h3>
+    <div class="mbl-field mbl-field--addons">
+      <div class="mbl-control">
+        <div class="mbl-select">
+          <select v-model="form.canon" data-testid="settings-canon-select" :disabled="!hydrated">
+            <option value="protestant">
+              {{ t('canon.option.protestant') }}
+            </option>
+            <option value="deuterocanonical">
+              {{ t('canon.option.deuterocanonical') }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="mbl-control">
+        <button class="mbl-button mbl-button--primary" data-testid="settings-canon-save" :disabled="!hydrated || saving" @click="saveCanon">
+          {{ t('save') }}
+        </button>
+      </div>
+    </div>
+    <div v-if="canonError" class="mbl-help mbl-help--danger">
+      {{ canonError }}
+    </div>
+    <p>{{ t('canon.info.1') }}</p>
+    <hr>
+    <h3 class="mbl-title mbl-title--5">
       {{ t('daily_verse_count_goal.title') }}
     </h3>
     <div class="mbl-field mbl-field--addons">
@@ -127,11 +154,9 @@
 </template>
 
 <script setup lang="ts">
-import { bibleVersionOptions as allBibleVersionOptions, bibleAppOptions, localeVersionGroups, displayDate } from '@mybiblelog/shared';
+import { Bible, bibleVersionOptions as allBibleVersionOptions, bibleAppOptions, localeVersionGroups, displayDate } from '@mybiblelog/shared';
 import { useUserSettingsStore } from '~/stores/user-settings';
 import { useLogEntriesStore } from '~/stores/log-entries';
-
-const BIBLE_VERSE_COUNT = 31102;
 
 definePageMeta({ middleware: ['auth'] });
 useHead({ meta: [{ name: 'robots', content: 'noindex' }] });
@@ -145,11 +170,16 @@ const logEntriesStore = useLogEntriesStore();
 
 const settings = computed(() => userSettingsStore.settings);
 
+type Canon = 'protestant' | 'deuterocanonical';
+const toCanon = (includeDeuterocanonical: boolean): Canon =>
+  includeDeuterocanonical ? 'deuterocanonical' : 'protestant';
+
 const form = reactive({
   dailyVerseCountGoal: settings.value.dailyVerseCountGoal,
   lookBackDate: settings.value.lookBackDate,
   preferredBibleVersion: settings.value.preferredBibleVersion,
   preferredBibleApp: settings.value.preferredBibleApp,
+  canon: toCanon(settings.value.includeDeuterocanonical) as Canon,
 });
 
 watch(settings, (s) => {
@@ -157,6 +187,7 @@ watch(settings, (s) => {
   form.lookBackDate = s.lookBackDate;
   form.preferredBibleVersion = s.preferredBibleVersion;
   form.preferredBibleApp = s.preferredBibleApp;
+  form.canon = toCanon(s.includeDeuterocanonical);
 }, { immediate: true });
 
 const sortedBibleVersionOptions = computed(() => {
@@ -171,7 +202,8 @@ const sortedBibleVersionOptions = computed(() => {
 
 const bibleReadingDays = computed(() => {
   if (!form.dailyVerseCountGoal) { return '?'; }
-  return Math.ceil(BIBLE_VERSE_COUNT / form.dailyVerseCountGoal);
+  const totalVerses = Bible.getTotalVerseCount(settings.value.includeDeuterocanonical);
+  return Math.ceil(totalVerses / form.dailyVerseCountGoal);
 });
 
 const earliestLogEntryDate = computed(() => {
@@ -190,6 +222,13 @@ const { error: dailyVerseCountGoalError, submit: saveDailyVerseCountGoal } = use
   save: () => userSettingsStore.updateSettings({ dailyVerseCountGoal: form.dailyVerseCountGoal }),
   successMessage: () => t('messaging.daily_verse_count_goal_saved_successfully'),
   errorMessage: () => t('messaging.unable_to_save_daily_verse_count_goal'),
+});
+
+const { error: canonError, submit: saveCanon } = useSettingsWizardStep({
+  saving,
+  save: () => userSettingsStore.updateSettings({ includeDeuterocanonical: form.canon === 'deuterocanonical' }),
+  successMessage: () => t('messaging.canon_saved_successfully'),
+  errorMessage: () => t('messaging.unable_to_save_canon'),
 });
 
 const { error: lookBackDateError, submit: saveLookBackDate } = useSettingsWizardStep({
@@ -230,6 +269,16 @@ select {
     "reading": "Reading",
     "save": "Save",
     "select_an_option": "Select an Option",
+    "canon": {
+      "title": "Canon",
+      "option": {
+        "protestant": "Protestant (66 books)",
+        "deuterocanonical": "Include deuterocanonical books"
+      },
+      "info": {
+        "1": "Choose which books to track. Deuterocanonical (apocryphal) books are added among the Old Testament books, following the NRSVUE order, and are counted in your reading progress."
+      }
+    },
     "daily_verse_count_goal": {
       "title": "Daily Verse Count Goal",
       "info": {
@@ -264,6 +313,8 @@ select {
       }
     },
     "messaging": {
+      "canon_saved_successfully": "Canon saved successfully.",
+      "unable_to_save_canon": "Unable to save.",
       "daily_verse_count_goal_saved_successfully": "Daily verse count goal saved successfully.",
       "unable_to_save_daily_verse_count_goal": "Unable to save. Please enter a number between 1 and 1111.",
       "look_back_date_saved_successfully": "Tracker start date saved successfully.",
@@ -278,6 +329,16 @@ select {
     "reading": "Lesen",
     "save": "Speichern",
     "select_an_option": "Eine Option auswählen",
+    "canon": {
+      "title": "Kanon",
+      "option": {
+        "protestant": "Protestantisch (66 Bücher)",
+        "deuterocanonical": "Deuterokanonische Bücher einschließen"
+      },
+      "info": {
+        "1": "Wählen Sie, welche Bücher verfolgt werden. Deuterokanonische (apokryphe) Bücher werden gemäß der NRSVUE-Reihenfolge zwischen die Bücher des Alten Testaments eingefügt und in Ihrem Lesefortschritt gezählt."
+      }
+    },
     "daily_verse_count_goal": {
       "title": "Tägliche Verszahl Ziel",
       "info": {
@@ -312,6 +373,8 @@ select {
       }
     },
     "messaging": {
+      "canon_saved_successfully": "Kanon erfolgreich gespeichert.",
+      "unable_to_save_canon": "Nicht gespeichert.",
       "daily_verse_count_goal_saved_successfully": "Tägliche Verszahl Ziel erfolgreich gespeichert.",
       "unable_to_save_daily_verse_count_goal": "Nicht gespeichert. Bitte geben Sie eine Zahl zwischen 1 und 1111 ein.",
       "look_back_date_saved_successfully": "Tracker-Startdatum erfolgreich gespeichert.",
@@ -326,6 +389,16 @@ select {
     "reading": "Lectura",
     "save": "Guardar",
     "select_an_option": "Seleccionar una opción",
+    "canon": {
+      "title": "Canon",
+      "option": {
+        "protestant": "Protestante (66 libros)",
+        "deuterocanonical": "Incluir libros deuterocanónicos"
+      },
+      "info": {
+        "1": "Elija qué libros seguir. Los libros deuterocanónicos (apócrifos) se agregan entre los libros del Antiguo Testamento, siguiendo el orden de la NRSVUE, y se cuentan en su progreso de lectura."
+      }
+    },
     "daily_verse_count_goal": {
       "title": "Meta de Versículos Diarios",
       "info": {
@@ -360,6 +433,8 @@ select {
       }
     },
     "messaging": {
+      "canon_saved_successfully": "Canon guardado con éxito.",
+      "unable_to_save_canon": "No se puede guardar.",
       "daily_verse_count_goal_saved_successfully": "Meta de versículos diarios guardada con éxito.",
       "unable_to_save_daily_verse_count_goal": "No se puede guardar. Por favor ingrese un número entre 1 y 1111.",
       "look_back_date_saved_successfully": "Fecha de inicio del rastreador guardada con éxito.",
@@ -374,6 +449,16 @@ select {
     "reading": "Lecture",
     "save": "Enregistrer",
     "select_an_option": "Sélectionner une option",
+    "canon": {
+      "title": "Canon",
+      "option": {
+        "protestant": "Protestant (66 livres)",
+        "deuterocanonical": "Inclure les livres deutérocanoniques"
+      },
+      "info": {
+        "1": "Choisissez les livres à suivre. Les livres deutérocanoniques (apocryphes) sont ajoutés parmi les livres de l'Ancien Testament, selon l'ordre de la NRSVUE, et sont comptés dans votre progression de lecture."
+      }
+    },
     "daily_verse_count_goal": {
       "title": "Objectif de nombre de versets quotidiens",
       "info": {
@@ -408,6 +493,8 @@ select {
       }
     },
     "messaging": {
+      "canon_saved_successfully": "Canon enregistré avec succès.",
+      "unable_to_save_canon": "Impossible d'enregistrer.",
       "daily_verse_count_goal_saved_successfully": "Objectif de nombre de versets quotidiens enregistré avec succès.",
       "unable_to_save_daily_verse_count_goal": "Impossible d'enregistrer. Veuillez entrer un nombre entre 1 et 1111.",
       "look_back_date_saved_successfully": "Date de début du suivi enregistrée avec succès.",
@@ -422,6 +509,16 @@ select {
     "reading": "읽기",
     "save": "저장",
     "select_an_option": "옵션 선택",
+    "canon": {
+      "title": "정경",
+      "option": {
+        "protestant": "개신교 (66권)",
+        "deuterocanonical": "제2경전 포함"
+      },
+      "info": {
+        "1": "추적할 책을 선택하세요. 제2경전(외경)은 NRSVUE 순서에 따라 구약 책들 사이에 추가되며 읽기 진도에 포함됩니다."
+      }
+    },
     "daily_verse_count_goal": {
       "title": "일일 구절 목표",
       "info": {
@@ -456,6 +553,8 @@ select {
       }
     },
     "messaging": {
+      "canon_saved_successfully": "정경이 저장되었습니다.",
+      "unable_to_save_canon": "저장할 수 없습니다.",
       "daily_verse_count_goal_saved_successfully": "일일 구절 수 목표가 저장되었습니다.",
       "unable_to_save_daily_verse_count_goal": "저장할 수 없습니다. 1~1111 사이의 숫자를 입력해 주세요.",
       "look_back_date_saved_successfully": "추적기 시작일이 저장되었습니다.",
@@ -470,6 +569,16 @@ select {
     "reading": "Leitura",
     "save": "Salvar",
     "select_an_option": "Selecionar uma Opção",
+    "canon": {
+      "title": "Cânon",
+      "option": {
+        "protestant": "Protestante (66 livros)",
+        "deuterocanonical": "Incluir livros deuterocanônicos"
+      },
+      "info": {
+        "1": "Escolha quais livros acompanhar. Os livros deuterocanônicos (apócrifos) são adicionados entre os livros do Antigo Testamento, seguindo a ordem da NRSVUE, e são contados no seu progresso de leitura."
+      }
+    },
     "daily_verse_count_goal": {
       "title": "Meta Diária de Versículos",
       "info": {
@@ -504,6 +613,8 @@ select {
       }
     },
     "messaging": {
+      "canon_saved_successfully": "Cânon salvo com sucesso.",
+      "unable_to_save_canon": "Não foi possível salvar.",
       "daily_verse_count_goal_saved_successfully": "Meta de versículos diários salva com sucesso.",
       "unable_to_save_daily_verse_count_goal": "Não foi possível salvar. Por favor, insira um número entre 1 e 1111.",
       "look_back_date_saved_successfully": "Data de início do rastreador salva com sucesso.",
@@ -518,6 +629,16 @@ select {
     "reading": "Читання",
     "save": "Зберегти",
     "select_an_option": "Вибрати опцію",
+    "canon": {
+      "title": "Канон",
+      "option": {
+        "protestant": "Протестантський (66 книг)",
+        "deuterocanonical": "Включити второканонічні книги"
+      },
+      "info": {
+        "1": "Виберіть, які книги відстежувати. Второканонічні (апокрифічні) книги додаються серед книг Старого Завіту за порядком NRSVUE та враховуються у вашому прогресі читання."
+      }
+    },
     "daily_verse_count_goal": {
       "title": "Мета щоденної кількості віршів",
       "info": {
@@ -552,6 +673,8 @@ select {
       }
     },
     "messaging": {
+      "canon_saved_successfully": "Канон успішно збережено.",
+      "unable_to_save_canon": "Не вдалося зберегти.",
       "daily_verse_count_goal_saved_successfully": "Мету щоденної кількості віршів успішно збережено.",
       "unable_to_save_daily_verse_count_goal": "Не вдалося зберегти. Будь ласка, введіть число від 1 до 1111.",
       "look_back_date_saved_successfully": "Дата початку відстеження успішно збережена.",

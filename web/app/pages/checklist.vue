@@ -92,12 +92,12 @@ import ReadingTrackerResetCard from '~/components/ui/ReadingTrackerResetCard.vue
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useAppInitStore } from '~/stores/app-init';
 import { useToastStore } from '~/stores/toast';
+import { useUserSettingsStore } from '~/stores/user-settings';
 
 definePageMeta({ middleware: ['auth'] });
 const { t, locale } = useI18n();
 useHead({ title: () => t('chapter_checklist') });
 
-const CACHE_KEY = 'chapterChecklist';
 const CACHE_MINUTES = 60;
 
 type ChapterReport = { bookIndex: number; chapterIndex: number; complete: boolean };
@@ -112,15 +112,19 @@ type BookReport = {
 };
 
 const logEntriesStore = useLogEntriesStore();
+const userSettingsStore = useUserSettingsStore();
 const computeBusy = ref(false);
 const busyChapter = ref<string | null>(null);
 const bookReports = ref<BookReport[]>([]);
 
-const bookCount = Bible.getBookCount();
+// Reader's selected canon; drives which books are listed and how progress is
+// computed (Protestant 66 vs. the full canon including deuterocanonical books).
+const includeDeuterocanonical = computed(() => userSettingsStore.settings.includeDeuterocanonical);
+const cacheKey = computed(() =>
+  includeDeuterocanonical.value ? 'chapterChecklist:dc' : 'chapterChecklist',
+);
+
 const expandedBooks = ref<Record<number, boolean>>({});
-for (let i = 1; i <= bookCount; i++) {
-  expandedBooks.value[i] = false;
-}
 
 const busy = computed(() => Boolean(busyChapter.value || computeBusy.value));
 
@@ -131,12 +135,14 @@ const busy = computed(() => Boolean(busyChapter.value || computeBusy.value));
 function getBookReports() {
   computeBusy.value = true;
 
-  const cached = BrowserCache.get(CACHE_KEY);
+  const cached = BrowserCache.get(cacheKey.value);
   if (cached) {
     bookReports.value = JSON.parse(cached) as BookReport[];
   }
 
-  const progress = computeBibleProgress(logEntriesStore.currentLogEntries);
+  const progress = computeBibleProgress(logEntriesStore.currentLogEntries, {
+    includeDeuterocanonical: includeDeuterocanonical.value,
+  });
   const reports: BookReport[] = progress.books.map(book => ({
     bookIndex: book.bookIndex,
     bookName: Bible.getBookName(book.bookIndex, locale.value),
@@ -151,7 +157,7 @@ function getBookReports() {
     })),
   }));
 
-  BrowserCache.set(CACHE_KEY, JSON.stringify(reports), CACHE_MINUTES);
+  BrowserCache.set(cacheKey.value, JSON.stringify(reports), CACHE_MINUTES);
   bookReports.value = reports;
   computeBusy.value = false;
 }
@@ -206,6 +212,12 @@ async function toggleChapter(bookIndex: number, chapterIndex: number) {
 onMounted(async () => {
   await useAppInitStore().loadUserData();
   getBookReports();
+});
+
+// Recompute when the reader switches canon so the checklist reflects the new
+// book set immediately.
+watch(includeDeuterocanonical, () => {
+  if (logEntriesStore.currentLogEntries) { getBookReports(); }
 });
 </script>
 

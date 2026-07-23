@@ -1,8 +1,44 @@
 import bibleBooks, { type BibleBook } from '../static/bible-books';
-import chapterVerses from '../static/chapter-verses/nasb';
+import protestantChapterVerses from '../static/chapter-verses/nasb';
+import deuterocanonicalChapterVerses from '../static/chapter-verses/deuterocanonical';
 import { makeVerseId } from './encoding';
 
-export const getBooks = (): BibleBook[] => bibleBooks;
+/**
+ * Chapter verse counts for every supported book. The Protestant canon comes from
+ * the NASB structure; the deuterocanonical books are merged in on top. Their
+ * book indices (67-73) never collide with the 1-66 keys, so the merge is safe.
+ */
+const chapterVerses: { [key: number]: number } = {
+  ...protestantChapterVerses,
+  ...deuterocanonicalChapterVerses,
+};
+
+/** Books of the 66-book Protestant canon, in canonical (bibleOrder) order. */
+const protestantBooks = bibleBooks
+  .filter((book) => !book.deuterocanonical)
+  .sort((a, b) => a.bibleOrder - b.bibleOrder);
+
+/**
+ * The default book list is the Protestant canon. Deuterocanonical books are
+ * opt-in via `getBooksForCanon`, so every existing caller (and the core
+ * traversal helpers that walk `1..getBookCount()`) keeps its 66-book behaviour.
+ */
+export const getBooks = (): BibleBook[] => protestantBooks;
+
+/** Every supported book, including deuterocanonical ones, in bibleOrder. */
+export const getAllBooks = (): BibleBook[] =>
+  [...bibleBooks].sort((a, b) => a.bibleOrder - b.bibleOrder);
+
+/**
+ * The books that make up a reader's selected canon, sorted into display order.
+ * When deuterocanonical books are included they are interleaved between the
+ * Protestant books following the NRSVUE full-canon order (via `dcBookOrder`);
+ * otherwise this is exactly the 66-book Protestant canon.
+ */
+export const getBooksForCanon = (includeDeuterocanonical = false): BibleBook[] => {
+  const books = includeDeuterocanonical ? bibleBooks : protestantBooks;
+  return [...books].sort((a, b) => a.dcBookOrder - b.dcBookOrder);
+};
 
 export const getChapterVerses = () => chapterVerses;
 
@@ -67,11 +103,16 @@ export const getBookVerseCount = (bookIndex: number): number => {
   return totalVerses;
 };
 
-export const getTotalVerseCount = (): number => {
-  const books = getBooks();
+/**
+ * Total verse count for a reader's canon. Defaults to the Protestant canon so
+ * existing callers are unaffected; pass `true` to include the deuterocanonical
+ * books when computing progress against the full canon.
+ */
+export const getTotalVerseCount = (includeDeuterocanonical = false): number => {
+  const books = getBooksForCanon(includeDeuterocanonical);
   let totalVerses = 0;
-  for (let b = 1, l = books.length; b <= l; b++) {
-    totalVerses += getBookVerseCount(b);
+  for (const book of books) {
+    totalVerses += getBookVerseCount(book.bibleOrder);
   }
   return totalVerses;
 };

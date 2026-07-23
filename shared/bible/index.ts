@@ -1,5 +1,6 @@
 import { makeVerseId, parseVerseId } from './core/encoding';
 import {
+  getAllBooks,
   getBookBlbCode,
   getBookChapterCount,
   getBookCount,
@@ -8,6 +9,7 @@ import {
   getBookUsfmCode,
   getBookVerseCount,
   getBooks,
+  getBooksForCanon,
   getChapterVerseCount,
   getChapterVerses,
   getTotalVerseCount,
@@ -48,6 +50,8 @@ const Bible = {
   makeVerseId,
   parseVerseId,
   getBooks,
+  getAllBooks,
+  getBooksForCanon,
   getChapterVerses,
   getBookCount,
   getBookChapterCount,

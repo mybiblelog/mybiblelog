@@ -16,6 +16,8 @@ export interface UserSettingsDocument {
   startPage: string;
   passageNoteTagSortOrder: string;
   locale: string;
+  /** When true, the reader's canon includes the deuterocanonical books. */
+  includeDeuterocanonical: boolean;
 }
 
 export interface UserDocument {

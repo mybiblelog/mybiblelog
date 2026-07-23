@@ -13,6 +13,7 @@ export const userSettingsBaseSchema = z.object({
   startPage: z.string().refine((value) => (StartPages as readonly string[]).includes(value)),
   passageNoteTagSortOrder: z.string().refine((value) => (PassageNoteTagSortOrders as readonly string[]).includes(value)),
   locale: z.string().refine((value) => (localeCodes as readonly string[]).includes(value)),
+  includeDeuterocanonical: z.boolean(),
 });
 
 /** Settings updates accept any subset of the settings fields. */

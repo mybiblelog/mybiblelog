@@ -156,6 +156,7 @@ import {
 import AppModal from '~/components/popups/AppModal.vue';
 import GridSelector from '~/components/forms/GridSelector.vue';
 import TapRangeSelector from '~/components/forms/TapRangeSelector.vue';
+import { useUserSettingsStore } from '~/stores/user-settings';
 
 // Seed the selector either empty or from an existing verse range.
 type PassageSeed = { empty: true } | { empty?: false; startVerseId: number; endVerseId: number };
@@ -209,11 +210,14 @@ const modalTitle = computed(() => {
   }
 });
 
-const filteredBookOptions = computed(() => filterAndSortBookOptions(getBookOptions(locale.value), {
-  testament: selectedTestament.value,
-  sortOrder: bookSortOrder.value,
-  locale: locale.value,
-}));
+const includeDeuterocanonical = computed(() => useUserSettingsStore().settings.includeDeuterocanonical);
+
+const filteredBookOptions = computed(() => filterAndSortBookOptions(
+  getBookOptions(locale.value, includeDeuterocanonical.value), {
+    testament: selectedTestament.value,
+    sortOrder: bookSortOrder.value,
+    locale: locale.value,
+  }));
 
 function applyOptions(options: PassageSelection.PassageSelectionOptions) {
   startChapters.value = options.startChapters;

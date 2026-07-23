@@ -78,6 +78,7 @@ import { Bible, withSegmentPercentages } from '@mybiblelog/shared';
 import type { LogEntry } from '@mybiblelog/shared';
 import { encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
 import { usePassageNotesStore } from '~/stores/passage-notes';
+import { useUserSettingsStore } from '~/stores/user-settings';
 import SegmentBar from '~/components/bible/SegmentBar.vue';
 import StarIcon from '~/components/svg/StarIcon.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
@@ -95,6 +96,7 @@ const localePath = useLocalePath();
 const router = useRouter();
 
 const passageNotesStore = usePassageNotesStore();
+const userSettingsStore = useUserSettingsStore();
 
 const hydrated = ref(false);
 onMounted(() => { hydrated.value = true; });
@@ -112,8 +114,12 @@ function navigateToBook(bookIndex: number) {
 const bookNotesCounts = computed(() => passageNotesStore.bookNoteCounts);
 const anyBooksHaveNotes = computed(() => passageNotesStore.anyBooksHaveNotes);
 
+const includeDeuterocanonical = computed(() => userSettingsStore.settings.includeDeuterocanonical);
+
 const visibleBookIndices = computed(() => {
-  return Bible.getBooks()
+  // Books of the reader's canon, in NRSVUE display order (deuterocanonical books
+  // interleaved when included). Deuterocanonical books count as Old Testament.
+  return Bible.getBooksForCanon(includeDeuterocanonical.value)
     .filter((book) => {
       if (testamentFilter.value === 'old') { return !book.newTestament; }
       if (testamentFilter.value === 'new') { return book.newTestament; }

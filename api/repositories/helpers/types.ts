@@ -13,6 +13,7 @@ export interface UserSettingsRecord {
   startPage: string;
   passageNoteTagSortOrder: string;
   locale: string;
+  includeDeuterocanonical: boolean;
 }
 
 export interface UserRecord {

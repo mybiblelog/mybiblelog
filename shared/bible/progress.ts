@@ -1,8 +1,8 @@
 import { makeVerseId, type Segment, type VerseId, type VerseRange } from './core/encoding';
 import {
   getBookChapterCount,
-  getBookCount,
   getBookVerseCount,
+  getBooksForCanon,
   getChapterVerseCount,
   getTotalVerseCount,
 } from './core/metadata';
@@ -76,16 +76,34 @@ function countReadVerses(segments: ReadonlyArray<Readonly<Segment>>): number {
   return total;
 }
 
-export const computeBibleProgress = (ranges: ReadonlyArray<Readonly<VerseRange>>): BibleProgress => {
+export type ComputeBibleProgressOptions = {
+  /** Include the deuterocanonical books, computing progress against the full
+   * canon instead of just the 66-book Protestant canon. Defaults to `false`. */
+  includeDeuterocanonical?: boolean;
+};
+
+export const computeBibleProgress = (
+  ranges: ReadonlyArray<Readonly<VerseRange>>,
+  { includeDeuterocanonical = false }: ComputeBibleProgressOptions = {},
+): BibleProgress => {
+  // The reader's canon, in NRSVUE display order. We walk it in ascending
+  // bibleOrder for the single-pointer range scan, then return the per-book
+  // results in display order below.
+  const canonBooks = getBooksForCanon(includeDeuterocanonical);
+  const canonBookIndexes = new Set(canonBooks.map((book) => book.bibleOrder));
+  const ascendingBookIndexes = [...canonBookIndexes].sort((a, b) => a - b);
+
   // One consolidation for the whole input; ranges never span books, and the
   // result is sorted in Bible order so we can walk it with a single pointer.
-  const consolidatedRanges = consolidateRanges(ranges);
+  // Ranges outside the canon are dropped so they can't stall the pointer.
+  const consolidatedRanges = consolidateRanges(ranges).filter((range) =>
+    canonBookIndexes.has(parseVerseId(range.startVerseId).book),
+  );
 
-  const bookCount = getBookCount();
-  const books: BookProgress[] = [];
+  const booksByIndex = new Map<number, BookProgress>();
   let rangeIndex = 0;
 
-  for (let bookIndex = 1; bookIndex <= bookCount; bookIndex++) {
+  for (const bookIndex of ascendingBookIndexes) {
     const totalChapters = getBookChapterCount(bookIndex);
     const lastChapterVerseCount = getChapterVerseCount(bookIndex, totalChapters);
     const bookFirstVerseId = makeVerseId(bookIndex, 1, 1);
@@ -133,7 +151,7 @@ export const computeBibleProgress = (ranges: ReadonlyArray<Readonly<VerseRange>>
       });
     }
 
-    books.push({
+    booksByIndex.set(bookIndex, {
       bookIndex,
       totalVerses: bookTotalVerses,
       versesRead: bookVersesRead,
@@ -146,7 +164,11 @@ export const computeBibleProgress = (ranges: ReadonlyArray<Readonly<VerseRange>>
     });
   }
 
-  const totalVerses = getTotalVerseCount();
+  // Return per-book results in the canon's display order (deuterocanonical books
+  // interleaved with their Protestant neighbours).
+  const books = canonBooks.map((book) => booksByIndex.get(book.bibleOrder)!);
+
+  const totalVerses = getTotalVerseCount(includeDeuterocanonical);
   const versesRead = books.reduce((sum, book) => sum + book.versesRead, 0);
   const segments = books.flatMap((book) => book.segments);
 

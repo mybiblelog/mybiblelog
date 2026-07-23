@@ -45,10 +45,11 @@ test('can get book names', () => {
 
 test('should get empty string for nonexistant book names', () => {
   const bookName0 = Bible.getBookName(0);
-  const bookName67 = Bible.getBookName(67);
+  // 74 is beyond the last deuterocanonical book (Baruch = 73).
+  const bookName74 = Bible.getBookName(74);
 
   expect(bookName0).toBe('');
-  expect(bookName67).toBe('');
+  expect(bookName74).toBe('');
 });
 
 test('can get book index from book name', () => {
@@ -76,7 +77,8 @@ test('can get book index without case sensitivity', () => {
 });
 
 test('should fail verse validation if book invalid', () => {
-  const valid = Bible.verseExists(167001001);
+  // 74 is beyond the last deuterocanonical book (Baruch = 73).
+  const valid = Bible.verseExists(174001001);
   expect(valid).toBe(false);
 });
 
@@ -125,10 +127,11 @@ test('should get book chapter counts', () => {
 
 test('should get zero for nonexistant book chapter counts', () => {
   const bookChapterCount0 = Bible.getBookChapterCount(0);
-  const bookChapterCount67 = Bible.getBookChapterCount(67);
+  // 74 is beyond the last deuterocanonical book (Baruch = 73).
+  const bookChapterCount74 = Bible.getBookChapterCount(74);
 
   expect(bookChapterCount0).toBe(0);
-  expect(bookChapterCount67).toBe(0);
+  expect(bookChapterCount74).toBe(0);
 });
 
 test('should get chapter verse counts', () => {
@@ -145,8 +148,8 @@ test('should get zero for nonexistant chapter verse counts', () => {
   // chapter < count
   const nonChapterVerses2 = Bible.getChapterVerseCount(1, 0);
 
-  // book > count
-  const nonChapterVerses3 = Bible.getChapterVerseCount(67, 1);
+  // book > count (74 is beyond the last deuterocanonical book, Baruch = 73)
+  const nonChapterVerses3 = Bible.getChapterVerseCount(74, 1);
 
   // chapter > count
   const nonChapterVerses4 = Bible.getChapterVerseCount(66, 23);

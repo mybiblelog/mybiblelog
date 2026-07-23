@@ -1,5 +1,5 @@
 import { makeVerseId, parseVerseId, type VerseId, type VerseRange } from './encoding';
-import { getBookChapterCount, getBookCount, getBookVerseCount, getChapterVerseCount } from './metadata';
+import { getAllBooks, getBookChapterCount, getBookVerseCount, getChapterVerseCount } from './metadata';
 import { getFirstBookVerseId, getLastBookVerseId, getNextVerseId, getPreviousVerseId } from './navigation';
 
 /**
@@ -191,17 +191,23 @@ export const consolidateRanges = (ranges: ReadonlyArray<Readonly<VerseRange>>): 
   const sortedIndices = createSortedIndices(ranges, compareRanges);
   const result: VerseRange[] = [];
 
-  // Sort ranges into constituent books
+  // Sort ranges into constituent books. This walks every known book
+  // (including the deuterocanonical ones) in ascending bibleOrder so the
+  // consolidated result stays sorted by verse id.
+  const bookIndexes = getAllBooks()
+    .map((book) => book.bibleOrder)
+    .sort((a, b) => a - b);
   const allBookRanges: { [index: number]: VerseRange[] } = {};
-  for (let i = 1, l = getBookCount(); i <= l; i++) {
-    allBookRanges[i] = [];
+  for (const bookIndex of bookIndexes) {
+    allBookRanges[bookIndex] = [];
   }
   for (const index of sortedIndices) {
     const range = ranges[index]!;
     const { book } = parseVerseId(range.startVerseId);
-    allBookRanges[book]!.push({ ...range });
+    // Skip ranges for unknown book indices rather than crashing.
+    allBookRanges[book]?.push({ ...range });
   }
-  for (let bookIndex = 1, l = getBookCount(); bookIndex <= l; bookIndex++) {
+  for (const bookIndex of bookIndexes) {
     const bookRanges = allBookRanges[bookIndex]!;
     const consolidatedBookRanges: VerseRange[] = [];
     let holdingRange: VerseRange | null = null;

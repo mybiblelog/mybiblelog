@@ -128,6 +128,7 @@ import AppModal from '~/components/popups/AppModal.vue';
 import GridSelector from '~/components/forms/GridSelector.vue';
 import TapRangeSelector from '~/components/forms/TapRangeSelector.vue';
 import PassageSelector from '~/components/forms/PassageSelector.vue';
+import { useUserSettingsStore } from '~/stores/user-settings';
 
 const props = withDefaults(defineProps<{
   modelValue?: { startVerseId: number; endVerseId: number } | null;
@@ -217,11 +218,14 @@ const singleModalTitle = computed(() => {
   }
 });
 
-const filteredBookOptions = computed(() => filterAndSortBookOptions(getBookOptions(locale.value), {
-  testament: selectedTestament.value,
-  sortOrder: bookSortOrder.value,
-  locale: locale.value,
-}));
+const includeDeuterocanonical = computed(() => useUserSettingsStore().settings.includeDeuterocanonical);
+
+const filteredBookOptions = computed(() => filterAndSortBookOptions(
+  getBookOptions(locale.value, includeDeuterocanonical.value), {
+    testament: selectedTestament.value,
+    sortOrder: bookSortOrder.value,
+    locale: locale.value,
+  }));
 
 const singleChapterMax = computed(() => {
   if (!singleSelected.value.book) { return 1; }
