@@ -6,7 +6,7 @@ import { makeVerseId } from './encoding';
 /**
  * Chapter verse counts for every supported book. The Protestant canon comes from
  * the NASB structure; the deuterocanonical books are merged in on top. Their
- * book indices (67-73) never collide with the 1-66 keys, so the merge is safe.
+ * book indices (67-77) never collide with the 1-66 keys, so the merge is safe.
  */
 const chapterVerses: { [key: number]: number } = {
   ...protestantChapterVerses,

@@ -1,12 +1,17 @@
 /**
  * Per-chapter verse counts for the deuterocanonical (apocryphal) books, keyed by
  * the same chapter verse-id encoding used for the Protestant canon
- * (`makeVerseId(book, chapter)`), with book indices 67-73.
+ * (`makeVerseId(book, chapter)`), with book indices 67-77.
  *
- * Counts follow the public-domain KJV-1611 Apocrypha versification, which mirrors
- * the RSV/NRSV deuterocanonical structure. Baruch chapter 6 is the Letter of
- * Jeremiah, matching the NRSV six-chapter Baruch. These are merged into the main
- * chapter-verse map in `core/metadata` so all metadata helpers resolve DC books.
+ * Counts for the standalone books follow the public-domain KJV-1611 Apocrypha
+ * versification, which mirrors the RSV/NRSV deuterocanonical structure. Baruch
+ * chapter 6 is the Letter of Jeremiah, matching the NRSV six-chapter Baruch. The
+ * Greek additions that a Catholic Bible folds into Esther and Daniel are modelled
+ * here as separate books (as the NRSVUE lists them), so Esther and Daniel keep
+ * their Protestant verse counts: Susanna, Bel and the Dragon and the Prayer of
+ * Azariah are single-chapter books, and the Additions to Esther are the six
+ * conventional additions (A-F). Merged into the main chapter-verse map in
+ * `core/metadata` so all metadata helpers resolve DC books.
  */
 const deuterocanonicalChapterVerseCounts: { [key: number]: number } = {
   // Tobit (book 67)
@@ -153,6 +158,19 @@ const deuterocanonicalChapterVerseCounts: { [key: number]: number } = {
   173004000: 37,
   173005000: 9,
   173006000: 73,
+  // Additions to Esther (book 74)
+  174001000: 17,
+  174002000: 7,
+  174003000: 30,
+  174004000: 16,
+  174005000: 24,
+  174006000: 11,
+  // Prayer of Azariah and the Song of the Three Jews (book 75)
+  175001000: 67,
+  // Susanna (book 76)
+  176001000: 64,
+  // Bel and the Dragon (book 77)
+  177001000: 42,
 };
 
 export default deuterocanonicalChapterVerseCounts;
