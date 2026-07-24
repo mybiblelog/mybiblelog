@@ -2,11 +2,13 @@ import type { ExpoConfig } from 'expo/config';
 import { AndroidConfig, withAndroidManifest, type ConfigPlugin } from '@expo/config-plugins';
 
 // This file is evaluated by `expo config` (run by EAS before uploading, and
-// locally) where `.env` is NOT auto-loaded. So we don't validate or require env
-// vars here — we just pass through whatever is set into `extra`. Validation of
-// the required values lives in `src/config.ts`, which only runs in the actual
-// app, the only place the values are needed. (Expo/Metro does load `.env` for
-// `expo start` / builds, so `EXPO_PUBLIC_*` are populated there.)
+// locally). It only passes env through into `extra` — it never throws on a
+// missing value, because eas-cli evaluates it once with just the profile's
+// `env` before it has fetched the EAS environment, so a hard failure here would
+// reject correctly-configured builds. It warns instead. The gates that do fail
+// a build are `scripts/check-build-env.mjs` (before `eas build` uploads, and
+// again via `eas-build-pre-install` on the builder); `src/config.ts` is the
+// last-resort runtime check.
 //
 // Google OAuth web client ID — the audience of the id_token the app sends to the
 // API (`POST /auth/oauth2/google/id-token`). The API must list this ID in
@@ -26,6 +28,22 @@ function toIosUrlScheme(iosClientId: string | undefined): string | undefined {
 }
 
 const iosUrlScheme = toIosUrlScheme(googleIosClientId);
+
+// Advisory only — see the note above on why this can't throw. During `eas build`
+// this prints against the resolved EAS environment, so a missing value is
+// visible in the CLI output before the upload.
+const missingEnv = Object.entries({
+  EXPO_PUBLIC_API_BASE_URL: apiBaseUrl,
+  EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID: googleWebClientId,
+})
+  .filter(([, value]) => !value?.trim())
+  .map(([name]) => name);
+
+if (missingEnv.length > 0) {
+  console.warn(
+    `[app.config] Missing ${missingEnv.join(", ")} — a build made with this config will crash on launch.`
+  );
+}
 
 // Android release builds disable cleartext (HTTP) traffic by default
 // (targetSdk >= 28), while the debug build permits it — which is why a release

@@ -1,5 +1,7 @@
 import Constants from "expo-constants";
 
+import envRequirements from "../env-requirements.json";
+
 export type EnvConfig = {
   apiBaseUrl: string;
   googleWebClientId: string;
@@ -7,13 +9,9 @@ export type EnvConfig = {
 };
 
 // Required config keys, mapped to the env var that feeds them in app.config.ts.
-// Validation lives here (runtime) rather than in app.config.ts so that
-// `expo config` (run by EAS before upload, and locally) doesn't require a `.env`
-// to evaluate the config — the env vars are only ever needed by the running app.
-const REQUIRED_KEYS: Record<"apiBaseUrl" | "googleWebClientId", string> = {
-  apiBaseUrl: "EXPO_PUBLIC_API_BASE_URL",
-  googleWebClientId: "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID",
-};
+// The map is shared with `scripts/check-build-env.mjs`, which gates builds on
+// the same list so a build can't be produced that only fails here, at launch.
+const REQUIRED_KEYS: Record<"apiBaseUrl" | "googleWebClientId", string> = envRequirements.required;
 
 function getConfig(): EnvConfig {
   const expoExtra = (Constants.expoConfig?.extra ?? {}) as Partial<EnvConfig>;
