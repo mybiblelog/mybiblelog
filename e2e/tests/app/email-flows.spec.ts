@@ -154,7 +154,9 @@ test.describe('Email change (code modal)', () => {
     await page.getByRole('button', { name: 'Change Email' }).click();
     await expect(page.getByTestId('auth-code-input')).toBeVisible();
     // The modal shows the NEW address (where the code was sent), not the current one.
-    await expect(page.getByText(newEmail)).toBeVisible();
+    // Scope to the modal: the settings page underneath also renders the requested
+    // address in its "change in progress" block, so an unscoped match is ambiguous.
+    await expect(page.getByTestId('modal').getByText(newEmail)).toBeVisible();
 
     // The confirmation email goes to the NEW address; redeem its code in the modal
     // (the modal validates against the account's CURRENT email under the hood).
