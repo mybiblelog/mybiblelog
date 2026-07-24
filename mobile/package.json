@@ -23,6 +23,7 @@
     "e2e:smoke": "node scripts/e2e/run.mjs --include-tags smoke",
     "e2e:seed": "node scripts/e2e/seed.mjs",
     "eas:build:android:dev": "eas build --platform android --profile development",
+    "eas-build-pre-install": "npm --prefix ../shared install",
     "clean": "rm -rf node_modules .expo .expo-shared .turbo dist build coverage android ios"
   },
   "dependencies": {
