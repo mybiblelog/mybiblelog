@@ -17,16 +17,16 @@ describe("ChapterMenu", () => {
   it("offers the four chapter actions in web order", () => {
     const { getByText } = setup();
     expect(getByText("Open in Bible")).toBeTruthy();
-    expect(getByText("Log reading")).toBeTruthy();
-    expect(getByText("Take note")).toBeTruthy();
-    expect(getByText("View notes")).toBeTruthy();
+    expect(getByText("Log Reading")).toBeTruthy();
+    expect(getByText("Take Note")).toBeTruthy();
+    expect(getByText("View Notes")).toBeTruthy();
   });
 
   it("fires the take-note and view-notes callbacks", () => {
     const { handlers, getByText } = setup();
-    fireEvent.press(getByText("Take note"));
+    fireEvent.press(getByText("Take Note"));
     expect(handlers.onTakeNote).toHaveBeenCalledTimes(1);
-    fireEvent.press(getByText("View notes"));
+    fireEvent.press(getByText("View Notes"));
     expect(handlers.onViewNotes).toHaveBeenCalledTimes(1);
   });
 });

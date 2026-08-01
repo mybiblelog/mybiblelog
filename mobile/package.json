@@ -22,7 +22,11 @@
     "e2e": "node scripts/e2e/run.mjs",
     "e2e:smoke": "node scripts/e2e/run.mjs --include-tags smoke",
     "e2e:seed": "node scripts/e2e/seed.mjs",
-    "eas:build:android:dev": "eas build --platform android --profile development",
+    "check:build-env": "node scripts/check-build-env.mjs",
+    "eas:build:android:dev": "node scripts/check-build-env.mjs --profile development && eas build --platform android --profile development",
+    "eas:build:android:preview": "node scripts/check-build-env.mjs --profile preview && eas build --platform android --profile preview",
+    "eas:build:android:production": "node scripts/check-build-env.mjs --profile production && eas build --platform android --profile production",
+    "eas-build-pre-install": "node scripts/check-build-env.mjs --assert && npm --prefix ../shared install",
     "clean": "rm -rf node_modules .expo .expo-shared .turbo dist build coverage android ios"
   },
   "dependencies": {

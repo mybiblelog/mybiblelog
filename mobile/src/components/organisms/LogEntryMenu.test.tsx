@@ -6,6 +6,7 @@ function setup(overrides: Partial<Parameters<typeof LogEntryMenu>[0]> = {}) {
     onClose: jest.fn(),
     onOpenInBible: jest.fn(),
     onContinueReading: jest.fn(),
+    onTakeNote: jest.fn(),
     onEdit: jest.fn(),
     onDelete: jest.fn(),
   };
@@ -25,5 +26,11 @@ describe("LogEntryMenu", () => {
   it("omits Continue Reading when no handler is given (final verse)", () => {
     const { queryByText } = setup({ onContinueReading: undefined });
     expect(queryByText("Continue Reading")).toBeNull();
+  });
+
+  it("offers Take Note above Edit", () => {
+    const { handlers, getByText } = setup();
+    fireEvent.press(getByText("Take Note"));
+    expect(handlers.onTakeNote).toHaveBeenCalledTimes(1);
   });
 });

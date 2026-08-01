@@ -7,6 +7,7 @@ export { BookFrequencyChart } from "./BookFrequencyChart";
 export { BookRecencyList } from "./BookRecencyList";
 export { BottomSheet } from "./BottomSheet";
 export { ChapterMenu } from "./ChapterMenu";
+export { ConfigErrorScreen } from "./ConfigErrorScreen";
 export { ConfirmDialog } from "./ConfirmDialog";
 export { DailyVersesChart } from "./DailyVersesChart";
 export { DatePickerSheet } from "./DatePickerSheet";

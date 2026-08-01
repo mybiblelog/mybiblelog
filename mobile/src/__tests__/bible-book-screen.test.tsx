@@ -63,15 +63,15 @@ describe("Bible book screen", () => {
   it("offers take-note and view-notes on a chapter", () => {
     const utils = renderWithProviders(<BibleBookScreen />);
     openChapterMenu(utils);
-    expect(utils.getByText("Take note")).toBeTruthy();
-    expect(utils.getByText("View notes")).toBeTruthy();
+    expect(utils.getByText("Take Note")).toBeTruthy();
+    expect(utils.getByText("View Notes")).toBeTruthy();
   });
 
   it("take note on a chapter opens the editor prefilled with the chapter passage", () => {
     const utils = renderWithProviders(<BibleBookScreen />);
     openChapterMenu(utils);
 
-    fireEvent.press(utils.getByText("Take note"));
+    fireEvent.press(utils.getByText("Take Note"));
 
     expect(utils.getByText("New Note")).toBeTruthy();
     const start = Bible.makeVerseId(BOOK_INDEX, 1, 1);
@@ -83,7 +83,7 @@ describe("Bible book screen", () => {
     const utils = renderWithProviders(<BibleBookScreen />);
     openChapterMenu(utils);
 
-    fireEvent.press(utils.getByText("View notes"));
+    fireEvent.press(utils.getByText("View Notes"));
 
     const query = useNotesStore.getState().query;
     expect(query.filterPassageStartVerseId).toBe(Bible.makeVerseId(BOOK_INDEX, 1, 1));
@@ -95,7 +95,7 @@ describe("Bible book screen", () => {
     const utils = renderWithProviders(<BibleBookScreen />);
     fireEvent.press(utils.getByLabelText("Book actions"));
 
-    fireEvent.press(utils.getByText("View notes"));
+    fireEvent.press(utils.getByText("View Notes"));
 
     const query = useNotesStore.getState().query;
     expect(query.filterPassageStartVerseId).toBe(Bible.getFirstBookVerseId(BOOK_INDEX));
@@ -108,7 +108,7 @@ describe("Bible book screen", () => {
     const utils = renderWithProviders(<BibleBookScreen />);
     fireEvent.press(utils.getByLabelText("Book actions"));
 
-    fireEvent.press(utils.getByText("Take note"));
+    fireEvent.press(utils.getByText("Take Note"));
 
     expect(utils.getByText("New Note")).toBeTruthy();
     expect(

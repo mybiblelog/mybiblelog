@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { AchievementModal, JustOpenedModal } from "@/src/components";
+import { AchievementModal, ConfigErrorScreen, JustOpenedModal } from "@/src/components";
+import { MISSING_CONFIG } from "@/src/config";
 import { LocaleProvider, useT } from "@/src/i18n/LocaleProvider";
 import { ThemeProvider, modalTransition, stackTransition, useTheme } from "@/src/design";
 import { initStores } from "@/src/stores/init";
@@ -13,16 +14,28 @@ import { Sentry, initCrashReporting } from "@/src/observability/sentry";
 // Initialize crash reporting as early as possible (no-op unless a DSN is set).
 initCrashReporting();
 
-// Configure native Google Sign-In once, before any login attempt.
-configureGoogleSignIn();
+// Configure native Google Sign-In once, before any login attempt. Skipped when
+// the build is misconfigured — it reads the (absent) client ID at call time, and
+// this runs at module scope where a throw would kill the app before
+// ConfigErrorScreen could explain why.
+if (MISSING_CONFIG.length === 0) {
+  configureGoogleSignIn();
+}
 
 function RootLayout() {
   // Hydrate the Zustand domain stores (connectivity, auth, log entries,
   // settings) once on mount — idempotent, and kept out of module scope so
   // importing this file (e.g. in tests) has no side effects.
   useEffect(() => {
+    if (MISSING_CONFIG.length > 0) return;
     initStores();
   }, []);
+
+  // A build missing required env vars can't reach the API or sign in, so stop
+  // here and name the missing vars rather than failing obscurely deeper in.
+  if (MISSING_CONFIG.length > 0) {
+    return <ConfigErrorScreen missing={MISSING_CONFIG} />;
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

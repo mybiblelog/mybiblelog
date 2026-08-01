@@ -1,14 +1,18 @@
 import { type ReactNode, useCallback, useState } from "react";
 import { Bible } from "@mybiblelog/shared";
+import type { NotePassage } from "@/src/api/notesApi";
 import type { StoredLogEntry } from "@/src/storage/logEntries";
 import { openPassageInBible } from "@/src/bible/openInBible";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { logEntryActions } from "@/src/stores/logEntries";
+import { notesActions } from "@/src/stores/passageNotes";
+import { tagActions } from "@/src/stores/passageNoteTags";
 import { useSettingsValue } from "@/src/stores/userSettings";
 import { useToast } from "@/src/toast/ToastProvider";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { LogEntryEditorModal } from "./LogEntryEditorModal";
 import { LogEntryMenu } from "./LogEntryMenu";
+import { NoteEditorModal } from "./NoteEditorModal";
 
 type Options = {
   /** The entries the overlays act on (usually the screen's visible list). */
@@ -53,6 +57,8 @@ export function useLogEntryOverlays({
   const [menuClientId, setMenuClientId] = useState<string | null>(null);
   const [editingClientId, setEditingClientId] = useState<string | null>(null);
   const [deletingClientId, setDeletingClientId] = useState<string | null>(null);
+  // Passages to pre-fill the note editor with; non-null while the editor is open.
+  const [notePassages, setNotePassages] = useState<NotePassage[] | null>(null);
 
   const findEntry = (clientId: string | null) =>
     clientId === null ? undefined : entries.find((e) => e.clientId === clientId);
@@ -91,6 +97,14 @@ export function useLogEntryOverlays({
     openInBible(nextVerseId, Bible.getLastBookChapterVerseId(book, chapter));
   };
 
+  const handleTakeNote = () => {
+    if (!menuEntry) return;
+    // Tags normally load from the Notes screens; the editor's tag selector
+    // needs them when the editor opens from here instead.
+    void tagActions.loadTags();
+    setNotePassages([{ startVerseId: menuEntry.startVerseId, endVerseId: menuEntry.endVerseId }]);
+  };
+
   const overlays = (
     <>
       <LogEntryEditorModal
@@ -125,6 +139,7 @@ export function useLogEntryOverlays({
         onClose={() => setMenuClientId(null)}
         onOpenInBible={handleOpenInBible}
         onContinueReading={nextVerseId ? handleContinueReading : undefined}
+        onTakeNote={handleTakeNote}
         onEdit={() => setEditingClientId(menuClientId)}
         onDelete={() => setDeletingClientId(menuClientId)}
       />
@@ -139,6 +154,18 @@ export function useLogEntryOverlays({
         onConfirm={() => {
           if (deletingEntry) void logEntryActions.deleteEntry(deletingEntry.clientId);
           setDeletingClientId(null);
+        }}
+      />
+
+      <NoteEditorModal
+        visible={notePassages !== null}
+        initialPassages={notePassages ?? undefined}
+        onClose={() => setNotePassages(null)}
+        onSubmit={(input) => {
+          void notesActions.create(input).then((created) => {
+            if (!created) showToast({ type: "error", message: t("note_could_not_save") });
+          });
+          setNotePassages(null);
         }}
       />
     </>

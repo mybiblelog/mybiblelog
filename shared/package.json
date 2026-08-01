@@ -34,10 +34,8 @@
     "@types/node": "^24.9.1",
     "vitest": "^3.2.6"
   },
-  "peerDependencies": {
-    "dayjs": "^1.10.4"
-  },
   "dependencies": {
+    "dayjs": "^1.11.13",
     "typescript": "^5.9.3"
   }
 }
