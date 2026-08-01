@@ -25,22 +25,23 @@
   },
   "dependencies": {
     "@mybiblelog/shared": "*",
-    "@nuxt/content": "^3.14.0",
-    "@nuxtjs/i18n": "^10.4.0",
-    "@pinia/nuxt": "^0.11.3",
+    "@nuxt/content": "^3.15.2",
+    "@nuxtjs/i18n": "^10.5.0",
+    "@pinia/nuxt": "^1.0.1",
     "@vite-pwa/nuxt": "^1.1.1",
     "better-sqlite3": "^12.11.1",
     "dayjs": "^1.11.13",
     "dotenv": "^17.4.2",
-    "nuxt": "^4.4.8",
+    "nuxt": "~4.4.8",
     "nuxt-gtag": "^4.1.0",
-    "pinia": "^3.0.4"
+    "pinia": "^4.0.2"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
-    "@pinia/testing": "^1.0.2",
+    "@pinia/testing": "^2.0.1",
     "@vite-pwa/assets-generator": "^1.0.2",
     "@vitejs/plugin-vue": "^6.0.7",
+    "@vue/devtools-api": "^8.2.1",
     "@vue/server-renderer": "^3.5.38",
     "@vue/test-utils": "^2.4.6",
     "happy-dom": "^15.11.7",
@@ -50,6 +51,6 @@
     "tsx": "^4.22.3",
     "typescript": "^5.9.3",
     "vitest": "^3.2.6",
-    "vue-tsc": "^3.3.5"
+    "vue-tsc": "^3.3.8"
   }
 }
