@@ -106,9 +106,11 @@
     <!-- Multi-verse picker (PassageSelector) -->
     <passage-selector
       v-if="multiVerse"
+      :key="passageSelectorKey"
       ref="passageSelectorRef"
       class="verse-input__hidden-passage-selector"
       :populate-with="passageSelectorPopulateWith"
+      :auto-advance="true"
       @change="onPassageSelectorChange"
     />
   </div>
