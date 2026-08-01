@@ -9,6 +9,9 @@ loadEnv({
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-01-01',
+  future: {
+    compatibilityVersion: 5,
+  },
 
   // All app source files live in app/
   srcDir: 'app/',
@@ -203,11 +206,34 @@ export default defineNuxtConfig({
   // Disable telemetry
   telemetry: false,
 
-  // Enable AsyncLocalStorage for SSR context propagation across concurrent requests.
-  // Without this, useNuxtApp() calls inside async store actions fail when multiple
-  // requests run concurrently (Playwright fullyParallel) because the synchronous
-  // unctx context stack is a shared global that gets corrupted across async boundaries.
+  // Held at Nuxt 4.4.x deliberately: 4.5.x cannot produce a working production
+  // build for this app. `experimental.externalVue` defaults to true in 4.5, but
+  // the Nitro trace only copies the `vue/server-renderer` subpath — the bare
+  // `vue` import in the renderer chunk resolves to an uncopied `vue/index.mjs`,
+  // so every SSR route 500s with ERR_MODULE_NOT_FOUND. Setting externalVue:false
+  // fixes that and trades into a second 500 (`nuxtApp.$pinia` is undefined in
+  // @pinia/nuxt's `app:rendered` hook). Both reproduce on the node-server preset
+  // and are independent of the Pinia major and of `asyncContext`; `nuxt dev` is
+  // unaffected, so only the built server shows it. Re-test on the next 4.5.x.
+  //
+  // Two 4.5 features are also settled as "no", independent of the above:
+  //
+  // `experimental.ssrStreaming` — streaming commits status and headers with the
+  // first byte, which breaks server/plugins/security-headers.ts: it generates the
+  // CSP nonce and rewrites `response.body` in `beforeResponse`, long after those
+  // bytes are gone. Un-nonced hydration scripts would then be blocked outright,
+  // since nonce-aware browsers ignore the `'unsafe-inline'` fallback. Content
+  // pages also redirect (index.vue) and throw 404s ([slug].vue) after an await,
+  // neither of which can reach the client mid-stream — and crawlers, the audience
+  // those pages exist for, are excluded from streaming anyway.
+  //
+  // `builder: 'rspack'` — @vite-pwa/nuxt wraps vite-plugin-pwa and is Vite-only,
+  // so switching builders silently drops the manifest and service worker.
   experimental: {
+    // Enable AsyncLocalStorage for SSR context propagation across concurrent requests.
+    // Without this, useNuxtApp() calls inside async store actions fail when multiple
+    // requests run concurrently (Playwright fullyParallel) because the synchronous
+    // unctx context stack is a shared global that gets corrupted across async boundaries.
     asyncContext: true,
   },
 });
