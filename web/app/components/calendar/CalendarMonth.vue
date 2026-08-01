@@ -98,5 +98,7 @@ function selectDay(date: string | null) {
   background-color: var(--mbl-calendar-grid-inner);
   gap: 1px;
   border: solid 1px var(--mbl-calendar-grid-outer);
+  border-radius: 5px;
+  overflow: hidden;
 }
 </style>

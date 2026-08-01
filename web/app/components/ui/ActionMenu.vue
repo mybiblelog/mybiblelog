@@ -108,7 +108,7 @@ useEscapeKey(close, isOpen);
   margin-top: 0;
   background: var(--mbl-bg);
   border: 1px solid var(--mbl-menu-border, var(--mbl-overlay-20));
-  border-radius: 0.25rem;
+  border-radius: 1rem;
   box-shadow: 0 2px 8px var(--mbl-overlay-25);
   min-width: 150px;
   z-index: 39;

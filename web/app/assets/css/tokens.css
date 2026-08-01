@@ -59,7 +59,7 @@
    * - Component styles should consume semantic tokens only (no theme logic).
    */
   --mbl-radius: 4px;
-  --mbl-radius-button: 4px;
+  --mbl-radius-button: 24px;
   --mbl-radius-card: var(--modal-card-border-radius);
 
   --mbl-text: var(--neutral-700);

@@ -46,6 +46,13 @@
   margin-right: -1px;
 }
 
+/* Inputs sitting next to a button take the button's radius so joined edges align.
+   Declared before the addon corner rules so those still flatten the inner seams. */
+.mbl-field:has(.mbl-button) .mbl-input,
+.mbl-field:has(.mbl-button) .mbl-select select {
+  border-radius: var(--mbl-radius-button);
+}
+
 .mbl-field--addons .mbl-control:first-child .mbl-button,
 .mbl-field--addons .mbl-control:first-child .mbl-input,
 .mbl-field--addons .mbl-control:first-child .mbl-select select {

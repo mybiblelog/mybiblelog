@@ -69,16 +69,14 @@ const displayVerseCountMessage = (passage: Passage) => {
 .log-entry {
   display: flex;
   flex-direction: column;
-  padding: 1em 0.5em;
-  border-radius: 0.25rem;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
   background: var(--mbl-bg-elevated);
   box-shadow: var(--mbl-card-shadow);
   margin: 0.5rem 0;
 }
 
 .log-entry .log-entry-header-message {
-  position: relative;
-  top: -0.5rem;
   border-top-left-radius: 0.25rem;
   border-top-right-radius: 0.25rem;
   color: var(--mbl-link-muted);
