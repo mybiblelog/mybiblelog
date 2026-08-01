@@ -1,4 +1,3 @@
-import * as Localization from "expo-localization";
 import {
   type ReactNode,
   createContext,

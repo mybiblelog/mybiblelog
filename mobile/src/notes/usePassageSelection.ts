@@ -55,9 +55,7 @@ export function usePassageSelection(initialRange?: NotePassage | null) {
     const { book, startChapter, startVerse, endChapter } = state;
 
     const startChapters =
-      book > 0
-        ? Array.from({ length: Bible.getBookChapterCount(book) }, (_, i) => i + 1)
-        : [];
+      book > 0 ? Array.from({ length: Bible.getBookChapterCount(book) }, (_, i) => i + 1) : [];
 
     const startVerses =
       book > 0 && startChapter > 0
