@@ -10,36 +10,39 @@
       </NuxtLink>
     </header>
     <div class="testament-toggle">
-      <button
-        type="button"
-        class="testament-toggle--button"
-        :class="{ active: testamentFilter === 'all' }"
-        :disabled="!hydrated"
-        data-testid="testament-toggle-all"
-        @click="setTestamentFilter('all')"
-      >
-        {{ t('whole_bible') }}
-      </button>
-      <button
-        type="button"
-        class="testament-toggle--button"
-        :class="{ active: testamentFilter === 'old' }"
-        :disabled="!hydrated"
-        data-testid="testament-toggle-old"
-        @click="setTestamentFilter('old')"
-      >
-        {{ t('old_testament_short') }}
-      </button>
-      <button
-        type="button"
-        class="testament-toggle--button"
-        :class="{ active: testamentFilter === 'new' }"
-        :disabled="!hydrated"
-        data-testid="testament-toggle-new"
-        @click="setTestamentFilter('new')"
-      >
-        {{ t('new_testament_short') }}
-      </button>
+      <div class="testament-toggle--track" :data-active="testamentFilter">
+        <span class="testament-toggle--thumb" aria-hidden="true" />
+        <button
+          type="button"
+          class="testament-toggle--button"
+          :class="{ active: testamentFilter === 'all' }"
+          :disabled="!hydrated"
+          data-testid="testament-toggle-all"
+          @click="setTestamentFilter('all')"
+        >
+          {{ t('whole_bible') }}
+        </button>
+        <button
+          type="button"
+          class="testament-toggle--button"
+          :class="{ active: testamentFilter === 'old' }"
+          :disabled="!hydrated"
+          data-testid="testament-toggle-old"
+          @click="setTestamentFilter('old')"
+        >
+          {{ t('old_testament_short') }}
+        </button>
+        <button
+          type="button"
+          class="testament-toggle--button"
+          :class="{ active: testamentFilter === 'new' }"
+          :disabled="!hydrated"
+          data-testid="testament-toggle-new"
+          @click="setTestamentFilter('new')"
+        >
+          {{ t('new_testament_short') }}
+        </button>
+      </div>
     </div>
     <div class="plaque" data-testid="bible-report-progress" :data-percentage="percentageRead">
       <p><span>{{ n(percentageRead / 100, 'percent') }}</span></p>
@@ -185,40 +188,68 @@ onMounted(() => {
 
 .bible-report .testament-toggle {
   display: flex;
+  justify-content: center;
   margin-bottom: 1rem;
 }
 
-.bible-report .testament-toggle--button {
-  padding: 0.5rem 1rem;
+.bible-report .testament-toggle--track {
+  position: relative;
+  display: flex;
+  padding: 0.25rem;
   border: 1px solid var(--mbl-border-strong);
-  background: var(--mbl-bg);
+  border-radius: 999px;
+  background: var(--mbl-bg-muted);
+}
+
+/* Sliding indicator: one third of the track's inner width, moved a full slot per position. */
+.bible-report .testament-toggle--thumb {
+  position: absolute;
+  top: 0.25rem;
+  bottom: 0.25rem;
+  left: 0.25rem;
+  width: calc((100% - 0.5rem) / 3);
+  border-radius: 999px;
+  background: var(--mbl-link-bright);
+  box-shadow: var(--mbl-shadow-soft);
+  pointer-events: none;
+  transition: transform 0.2s ease;
+}
+
+.bible-report .testament-toggle--track[data-active="old"] .testament-toggle--thumb {
+  transform: translateX(100%);
+}
+
+.bible-report .testament-toggle--track[data-active="new"] .testament-toggle--thumb {
+  transform: translateX(200%);
+}
+
+.bible-report .testament-toggle--button {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 5rem;
+  padding: 0.4rem 1rem;
+  border: none;
+  border-radius: 999px;
+  background: none;
+  color: var(--mbl-text-subtle);
   cursor: pointer;
-  transition: 0.2s;
+  transition: color 0.2s;
   font-size: 0.9rem;
   white-space: nowrap;
 }
 
 .bible-report .testament-toggle--button:hover {
-  border-color: var(--mbl-link-bright);
-  background: var(--mbl-message-info-bg);
+  color: var(--mbl-text);
 }
 
 .bible-report .testament-toggle--button.active {
-  background: var(--mbl-link-bright);
   color: var(--mbl-on-accent);
-  border-color: var(--mbl-link-bright);
 }
 
-.bible-report .testament-toggle--button:first-child {
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  border-right: none;
-}
-
-.bible-report .testament-toggle--button:last-child {
-  border-left: none;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
+@media (prefers-reduced-motion: reduce) {
+  .bible-report .testament-toggle--thumb {
+    transition: none;
+  }
 }
 
 .plaque {
