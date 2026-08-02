@@ -316,7 +316,7 @@ onMounted(() => {
   width: 0.5rem;
   height: 0.5rem;
   margin-left: 0.35rem;
-  border-radius: 999px;
+  border-radius: var(--mbl-radius-pill);
   background: var(--mbl-success-bright);
   vertical-align: middle;
 }

@@ -305,7 +305,7 @@ function handlePrevious() {
   display: flex;
   align-items: flex-start;
   border: 2px solid var(--mbl-border);
-  border-radius: 4px;
+  border-radius: var(--mbl-radius-sm);
   padding: 1rem;
   cursor: pointer;
   transition: border-color 0.2s, background-color 0.2s;

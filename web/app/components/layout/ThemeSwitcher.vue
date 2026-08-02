@@ -95,7 +95,7 @@ const setMode = (mode: ThemeMode) => {
   height: 2.75rem;
   padding: 0 0.6rem;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--mbl-radius-md);
   background: transparent;
   color: var(--mbl-text-strong);
   line-height: 0;
@@ -139,7 +139,7 @@ const setMode = (mode: ThemeMode) => {
   padding: 0.85rem 1rem;
   margin: 0;
   border: 1px solid var(--neutral-200);
-  border-radius: 8px;
+  border-radius: var(--mbl-radius-lg);
   background: var(--mbl-bg);
   font-size: 1rem;
   font-family: inherit;
@@ -192,7 +192,7 @@ const setMode = (mode: ThemeMode) => {
   min-height: 2.5rem;
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--neutral-200);
-  border-radius: 6px;
+  border-radius: var(--mbl-radius-md);
   background: var(--mbl-bg);
   font-size: 0.9375rem;
   font-family: inherit;

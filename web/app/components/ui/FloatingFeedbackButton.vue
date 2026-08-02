@@ -149,7 +149,7 @@ async function submitFeedback() {
   right: 2rem;
   width: 56px;
   height: 56px;
-  border-radius: 50%;
+  border-radius: var(--mbl-radius-circle);
   background-color: var(--secondary-color);
   color: var(--mbl-on-accent);
   display: flex;

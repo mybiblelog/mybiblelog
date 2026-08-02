@@ -231,7 +231,7 @@ form {
   margin-bottom: 0.5rem;
   color: var(--mbl-on-accent);
   background: var(--mbl-link-bright);
-  border-radius: 3px;
+  border-radius: var(--mbl-radius-sm);
   font-weight: bold;
 }
 
@@ -248,7 +248,7 @@ form label {
   color: var(--mbl-link-bright);
   background-color: var(--mbl-bg);
   padding: 0 0.25rem;
-  border-radius: var(--mbl-radius);
+  border-radius: var(--mbl-radius-sm);
   z-index: 1;
   pointer-events: none;
 }
@@ -260,7 +260,7 @@ form input {
   padding-top: 1.125rem;
   border: 2px solid var(--mbl-border-strong);
   width: unset;
-  border-radius: var(--mbl-radius);
+  border-radius: var(--mbl-radius-sm);
   box-sizing: border-box;
   color: var(--mbl-text);
 }
@@ -272,7 +272,7 @@ form select {
   padding-top: 1.125rem;
   border: 2px solid var(--mbl-border-strong);
   width: unset;
-  border-radius: var(--mbl-radius);
+  border-radius: var(--mbl-radius-sm);
   box-sizing: border-box;
   color: var(--mbl-text);
   appearance: none;

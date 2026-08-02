@@ -65,8 +65,8 @@ onUnmounted(() => {
   overflow-y: auto;
   max-height: 80vh;
   bottom: 0;
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
+  border-top-left-radius: var(--mbl-radius-sheet);
+  border-top-right-radius: var(--mbl-radius-sheet);
 }
 
 @media (min-width: 800px) {
@@ -76,7 +76,7 @@ onUnmounted(() => {
     width: auto;
     min-width: 300px;
     max-width: 500px;
-    border-radius: 0.5rem;
+    border-radius: var(--mbl-radius-lg);
     max-height: 70vh;
   }
 }
@@ -88,14 +88,14 @@ onUnmounted(() => {
   color: var(--mbl-text-strong);
   border-bottom: 1px solid var(--mbl-overlay-15);
   background-color: var(--mbl-bg-subtle);
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
+  border-top-left-radius: var(--mbl-radius-sheet);
+  border-top-right-radius: var(--mbl-radius-sheet);
 }
 
 @media (min-width: 800px) {
   .action-sheet-title {
-    border-top-left-radius: 0.5rem;
-    border-top-right-radius: 0.5rem;
+    border-top-left-radius: var(--mbl-radius-lg);
+    border-top-right-radius: var(--mbl-radius-lg);
   }
 }
 

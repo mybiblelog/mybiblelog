@@ -157,14 +157,14 @@ const rows = computed(() => {
 .frequency__track {
   height: 0.9rem;
   background: var(--mbl-progress-track-bg);
-  border-radius: 4px;
+  border-radius: var(--mbl-radius-sm);
   overflow: hidden;
 }
 
 .frequency__fill {
   height: 100%;
   background: var(--mbl-success);
-  border-radius: 4px;
+  border-radius: var(--mbl-radius-sm);
   transition: width 0.3s ease;
 }
 

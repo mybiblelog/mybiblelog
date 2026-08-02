@@ -197,7 +197,7 @@ const rows = computed(() => {
 .recency__swatch {
   width: 0.85rem;
   height: 0.85rem;
-  border-radius: 3px;
+  border-radius: var(--mbl-radius-sm);
   border: 1px solid var(--mbl-recency-swatch-border);
   background: var(--mbl-recency-0);
   flex: none;

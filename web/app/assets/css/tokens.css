@@ -39,8 +39,6 @@
   --transition-modal: transform 0.3s ease-out;
   --modal-scale: scale(0.9);
 
-  --modal-card-border-radius: 6px;
-
   /* Brand */
   --primary-color: #00aaf9;
   --primary-color-hover: #0096db;
@@ -58,9 +56,21 @@
    *   @media (prefers-color-scheme: dark) for :root:not([data-theme]).
    * - Component styles should consume semantic tokens only (no theme logic).
    */
-  --mbl-radius: 4px;
-  --mbl-radius-button: 24px;
-  --mbl-radius-card: var(--modal-card-border-radius);
+  /* Corner radius scale */
+  --mbl-radius-xs: 2px;
+  --mbl-radius-sm: 4px;
+  --mbl-radius-md: 6px;
+  --mbl-radius-lg: 8px;
+  --mbl-radius-xl: 12px;
+  --mbl-radius-2xl: 16px;
+  --mbl-radius-3xl: 24px;
+  --mbl-radius-pill: 999px;
+  --mbl-radius-circle: 50%;
+
+  /* Semantic aliases — prefer these in component CSS when the role is clear */
+  --mbl-radius-card: var(--mbl-radius-md);
+  --mbl-radius-button: var(--mbl-radius-pill);
+  --mbl-radius-sheet: var(--mbl-radius-2xl);
 
   --mbl-text: var(--neutral-700);
   --mbl-text-85: rgba(54, 54, 54, 0.85);

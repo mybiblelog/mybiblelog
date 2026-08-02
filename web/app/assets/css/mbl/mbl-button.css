@@ -84,7 +84,7 @@
 }
 
 .mbl-button--sm {
-  border-radius: 0.5rem;
+  border-radius: var(--mbl-radius-lg);
   font-size: 0.75rem;
 }
 
@@ -131,7 +131,7 @@
   -webkit-touch-callout: none;
   background-color: var(--mbl-overlay-soft);
   border: none;
-  border-radius: 50%;
+  border-radius: var(--mbl-radius-circle);
   cursor: pointer;
   display: inline-block;
   flex-grow: 0;

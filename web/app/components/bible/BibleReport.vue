@@ -197,7 +197,7 @@ onMounted(() => {
   display: flex;
   padding: 0.25rem;
   border: 1px solid var(--mbl-border-strong);
-  border-radius: 999px;
+  border-radius: var(--mbl-radius-pill);
   background: var(--mbl-bg-muted);
 }
 
@@ -208,7 +208,7 @@ onMounted(() => {
   bottom: 0.25rem;
   left: 0.25rem;
   width: calc((100% - 0.5rem) / 3);
-  border-radius: 999px;
+  border-radius: var(--mbl-radius-pill);
   background: var(--mbl-link-bright);
   box-shadow: var(--mbl-shadow-soft);
   pointer-events: none;
@@ -229,7 +229,7 @@ onMounted(() => {
   min-width: 5rem;
   padding: 0.4rem 1rem;
   border: none;
-  border-radius: 999px;
+  border-radius: var(--mbl-radius-pill);
   background: none;
   color: var(--mbl-text-subtle);
   cursor: pointer;
@@ -266,7 +266,7 @@ onMounted(() => {
   margin: 0.5rem 0;
   padding: 0.5rem;
   background: var(--mbl-bg-elevated);
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-sm);
   box-shadow: var(--mbl-shadow-elev-1);
   display: grid;
   grid-template:
@@ -308,7 +308,7 @@ onMounted(() => {
   background: var(--mbl-bg-hover-strong);
   margin-left: 1em;
   padding: 0 0.5em;
-  border-radius: 0.5em;
+  border-radius: var(--mbl-radius-pill);
   font-weight: normal;
   transition: 0.2s ease-in-out;
 }

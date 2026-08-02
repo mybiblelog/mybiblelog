@@ -38,7 +38,7 @@ const localePath = useLocalePath();
 .hero-section {
   padding: 4rem 1.5rem;
   background: linear-gradient(135deg, var(--mbl-primary-soft) 0%, var(--mbl-secondary-soft) 50%, var(--mbl-tertiary-soft) 100%);
-  border-radius: 12px;
+  border-radius: var(--mbl-radius-xl);
   margin: 0 0 2rem;
   text-align: center;
 }

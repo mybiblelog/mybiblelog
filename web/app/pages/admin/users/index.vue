@@ -288,7 +288,7 @@ onMounted(() => { loadUsers(); });
   grid-template-rows: auto auto;
   gap: 0.4rem 1rem;
   border: 1px solid var(--mbl-border);
-  border-radius: 0.5rem;
+  border-radius: var(--mbl-radius-lg);
   padding: 0.875rem 1rem;
 }
 

@@ -247,7 +247,7 @@ watch(() => props.open, (isOpen) => {
 .admin-user-detail__login-badge {
   display: inline-block;
   padding: 0.125rem 0.5rem;
-  border-radius: 999px;
+  border-radius: var(--mbl-radius-pill);
   font-size: 0.8125rem;
   font-weight: 500;
   background: var(--mbl-surface-2, #e9ecef);

@@ -322,7 +322,7 @@ function onTagIdsChange(tagIds: Array<string | number>) {
   font-size: 0.85rem;
   line-height: 1.2;
   padding: 0.15rem 0.5rem 0.15rem 0.45rem;
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-sm);
   color: var(--mbl-text);
   background: var(--mbl-tag-option-bg);
   border: 1px solid var(--mbl-tag-option-border);
@@ -335,7 +335,7 @@ function onTagIdsChange(tagIds: Array<string | number>) {
   content: '';
   width: 0.45rem;
   height: 0.8rem;
-  border-radius: 999px;
+  border-radius: var(--mbl-radius-pill);
   background: var(--tag-color);
   flex: 0 0 auto;
 }

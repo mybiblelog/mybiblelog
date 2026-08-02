@@ -850,7 +850,7 @@ onBeforeUnmount(() => {
   right: 0.35rem;
   width: 0.5rem;
   height: 0.5rem;
-  border-radius: 999px;
+  border-radius: var(--mbl-radius-pill);
   background: var(--primary-color);
   box-shadow: 0 0 0 2px var(--mbl-bg);
 }

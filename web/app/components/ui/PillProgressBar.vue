@@ -26,7 +26,7 @@ defineProps<{
 .pill {
   flex: 1;
   height: 0.5rem;
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-sm);
   background-color: var(--mbl-progress-track-bg);
   transition: background-color 0.3s ease;
 }

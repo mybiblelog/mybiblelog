@@ -1,5 +1,6 @@
 /** Corner-radius scale. `pill` is for fully-rounded controls. */
 export const radius = {
+  xs: 2,
   sm: 10,
   md: 12,
   lg: 14,

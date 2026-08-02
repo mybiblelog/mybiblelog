@@ -30,7 +30,7 @@
 }
 
 .mbl-modal__card {
-  border-radius: var(--modal-card-border-radius);
+  border-radius: var(--mbl-radius-card);
   border: 1px solid var(--mbl-border);
   display: flex;
   flex-direction: column;
@@ -124,7 +124,7 @@
   background: var(--mbl-bg);
   padding: 2rem;
   border: 1px solid var(--mbl-border);
-  border-radius: var(--modal-card-border-radius);
+  border-radius: var(--mbl-radius-card);
   box-shadow: 0 0 0.5rem var(--mbl-overlay-20);
   max-width: 480px;
   margin-left: auto;

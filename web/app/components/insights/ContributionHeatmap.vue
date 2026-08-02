@@ -192,7 +192,7 @@ function hideTooltip(): void {
   transform: translate(-50%, calc(-100% - 6px));
   z-index: 10;
   padding: 0.3rem 0.5rem;
-  border-radius: 4px;
+  border-radius: var(--mbl-radius-sm);
   background: var(--mbl-bg-elevated);
   border: 1px solid var(--mbl-border);
   box-shadow: var(--mbl-card-shadow);
@@ -287,7 +287,7 @@ function hideTooltip(): void {
   box-sizing: border-box;
   width: 100%;
   height: var(--heat-cell-size);
-  border-radius: 2px;
+  border-radius: var(--mbl-radius-xs);
   background: var(--mbl-heat-0);
   border: 1px solid var(--mbl-heat-empty-border);
 }

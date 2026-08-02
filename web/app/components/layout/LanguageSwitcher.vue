@@ -83,7 +83,7 @@ const selectLocale = async (code: LocaleCode) => {
   height: 2.75rem;
   padding: 0;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--mbl-radius-md);
   background: transparent;
   color: var(--mbl-text-strong);
   cursor: pointer;
@@ -119,7 +119,7 @@ const selectLocale = async (code: LocaleCode) => {
   padding: 0.85rem 1rem;
   margin: 0;
   border: 1px solid var(--neutral-200);
-  border-radius: 8px;
+  border-radius: var(--mbl-radius-lg);
   background: var(--mbl-bg);
   font-size: 1rem;
   font-family: inherit;
@@ -171,7 +171,7 @@ const selectLocale = async (code: LocaleCode) => {
   min-height: 2.5rem;
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--neutral-200);
-  border-radius: 6px;
+  border-radius: var(--mbl-radius-md);
   background: var(--mbl-bg);
   font-size: 0.9375rem;
   font-family: inherit;

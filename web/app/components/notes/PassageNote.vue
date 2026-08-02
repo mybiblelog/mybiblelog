@@ -78,7 +78,7 @@ const resolvedTags = useResolvedPassageNoteTags(() => props.note.tags ?? [], {
 .passage-note {
   padding: 0.5rem 1rem;
   margin: 1rem 0;
-  border-radius: 1rem;
+  border-radius: var(--mbl-radius-2xl);
   background: var(--mbl-bg-elevated);
   box-shadow: var(--mbl-card-shadow);
   display: grid;

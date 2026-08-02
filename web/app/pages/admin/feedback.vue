@@ -325,7 +325,7 @@ onMounted(() => { loadFeedbacks(); });
   grid-template-columns: 1fr 1fr;
   gap: 0.4rem 1rem;
   border: 1px solid var(--mbl-border);
-  border-radius: 0.5rem;
+  border-radius: var(--mbl-radius-lg);
   padding: 0.875rem 1rem;
 }
 
@@ -395,7 +395,7 @@ onMounted(() => { loadFeedbacks(); });
   font-weight: 600;
   line-height: 1;
   padding: 0.2em 0.45em;
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-sm);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   flex-shrink: 0;

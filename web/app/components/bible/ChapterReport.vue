@@ -98,7 +98,7 @@ function openActionSheet() {
   cursor: pointer;
   margin: 0.5rem;
   padding: 0.5rem;
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-sm);
   box-shadow: var(--mbl-shadow-elev-1);
   flex-basis: calc(25% - 1rem);
   position: relative;

@@ -172,7 +172,7 @@ async function deleteTag(id: string | number) {
   padding: 0.5rem 1rem;
   margin: 1rem -0.5rem;
   background: var(--mbl-bg);
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-sm);
   box-shadow: var(--mbl-card-shadow);
 }
 
@@ -186,7 +186,7 @@ async function deleteTag(id: string | number) {
   color: var(--mbl-on-accent);
   text-shadow: 0 0 2px var(--mbl-text-stronger);
   padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-sm);
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

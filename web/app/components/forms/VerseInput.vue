@@ -500,14 +500,14 @@ function onPassageSelectorChange({ startVerseId, endVerseId }: { startVerseId: n
 }
 
 .button-group--button.button-group--button-left {
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  border-top-left-radius: var(--mbl-radius-sm);
+  border-bottom-left-radius: var(--mbl-radius-sm);
   border-right: none;
 }
 
 .button-group--button.button-group--button-right {
   border-left: none;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-top-right-radius: var(--mbl-radius-sm);
+  border-bottom-right-radius: var(--mbl-radius-sm);
 }
 </style>

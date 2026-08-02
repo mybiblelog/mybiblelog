@@ -70,15 +70,15 @@ const displayVerseCountMessage = (passage: Passage) => {
   display: flex;
   flex-direction: column;
   padding: 0.5rem 1rem;
-  border-radius: 1rem;
+  border-radius: var(--mbl-radius-2xl);
   background: var(--mbl-bg-elevated);
   box-shadow: var(--mbl-card-shadow);
   margin: 0.5rem 0;
 }
 
 .log-entry .log-entry-header-message {
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
+  border-top-left-radius: var(--mbl-radius-sm);
+  border-top-right-radius: var(--mbl-radius-sm);
   color: var(--mbl-link-muted);
   font-size: 0.8em;
   letter-spacing: 0.05cap;

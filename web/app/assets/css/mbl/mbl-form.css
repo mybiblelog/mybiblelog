@@ -114,7 +114,7 @@
   align-items: center;
   background-color: var(--mbl-bg);
   border: 1px solid var(--mbl-border);
-  border-radius: var(--mbl-radius);
+  border-radius: var(--mbl-radius-sm);
   box-shadow: var(--mbl-inset-well);
   color: var(--mbl-text);
   display: inline-flex;
@@ -178,7 +178,7 @@
   appearance: none;
   background-color: var(--mbl-bg);
   border: 1px solid var(--mbl-border);
-  border-radius: var(--mbl-radius);
+  border-radius: var(--mbl-radius-sm);
   color: var(--mbl-text);
   cursor: pointer;
   display: block;
@@ -262,7 +262,7 @@
   align-items: center;
   background-color: var(--mbl-bg-muted);
   border: 1px solid var(--mbl-border);
-  border-radius: var(--mbl-radius);
+  border-radius: var(--mbl-radius-sm);
   color: var(--mbl-text);
   cursor: pointer;
   display: inline-flex;

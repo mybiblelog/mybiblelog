@@ -103,7 +103,7 @@ function toggle(tagId: string | number) {
   background: var(--mbl-tag-option-bg);
   border: 1px solid var(--mbl-tag-option-border);
   padding: 0.25rem 0.6rem 0.25rem 0.5rem;
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-sm);
   -webkit-user-select: none;
   user-select: none;
 }
@@ -116,7 +116,7 @@ function toggle(tagId: string | number) {
   content: '';
   width: 0.45rem;
   height: 0.85rem;
-  border-radius: 999px;
+  border-radius: var(--mbl-radius-pill);
   background: var(--tag-color);
   flex: 0 0 auto;
 }

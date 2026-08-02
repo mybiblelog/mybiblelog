@@ -55,7 +55,7 @@ withDefaults(defineProps<{
 
 <style scoped>
 .skeleton-loader__card {
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-sm);
   background: var(--mbl-bg-elevated);
   box-shadow: var(--mbl-card-shadow);
 }
@@ -93,7 +93,7 @@ withDefaults(defineProps<{
 
 .skeleton-loader__bar {
   background: var(--mbl-border-soft);
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-sm);
   animation: skeleton-loader-pulse 1.4s ease-in-out infinite;
 }
 
@@ -135,7 +135,7 @@ withDefaults(defineProps<{
 .skeleton-loader__bar--pill {
   width: 4rem;
   height: 1.4rem;
-  border-radius: 999px;
+  border-radius: var(--mbl-radius-pill);
 }
 
 .skeleton-loader__bar--buttons {

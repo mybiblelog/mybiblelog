@@ -212,7 +212,7 @@ onMounted(async () => {
 <style scoped>
 .loading-card {
   padding: 1rem 2rem;
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-sm);
   box-shadow: var(--mbl-shadow-elev-1);
   margin: 0.5rem 0;
 }
@@ -224,12 +224,11 @@ onMounted(async () => {
   grid-template-rows: auto auto;
   padding: 0.5rem;
   background: var(--mbl-bg);
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-sm);
   box-shadow: var(--mbl-shadow-elev-1);
   margin: 0.5rem 0;
   font-size: 0.8rem;
   font-weight: bold;
-
   position: sticky;
   top: var(--site-nav-height);
   z-index: 1;
@@ -258,7 +257,7 @@ onMounted(async () => {
 .chapter-card {
   padding: 0.5rem;
   background: var(--mbl-bg);
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-sm);
   box-shadow: var(--mbl-shadow-elev-1);
   position: relative;
   cursor: pointer;

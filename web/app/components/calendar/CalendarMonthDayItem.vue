@@ -80,7 +80,7 @@ function onClick() {
   position: absolute;
   left: 5%;
   top: 5%;
-  border-radius: 50%;
+  border-radius: var(--mbl-radius-circle);
   width: 2rem;
   height: 2rem;
   display: flex;
@@ -104,7 +104,7 @@ function onClick() {
   right: 2px;
   height: 5px;
   background: var(--mbl-progress-track-bg);
-  border-radius: 3px;
+  border-radius: var(--mbl-radius-sm);
   overflow: hidden;
 }
 

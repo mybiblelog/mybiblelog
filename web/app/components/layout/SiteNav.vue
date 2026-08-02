@@ -473,7 +473,7 @@ const {
 .site-nav__brand-text:focus-visible {
   outline: 2px solid var(--secondary-color);
   outline-offset: 3px;
-  border-radius: 4px;
+  border-radius: var(--mbl-radius-sm);
 }
 
 .site-nav__link-row {
@@ -513,7 +513,7 @@ const {
   right: 0.65rem;
   bottom: 0.2rem;
   height: 2px;
-  border-radius: 1px;
+  border-radius: var(--mbl-radius-pill);
   background: linear-gradient(90deg, var(--secondary-color), var(--tertiary-color));
   transform: scaleX(0);
   transform-origin: left center;
@@ -553,7 +553,7 @@ const {
   padding: 0.35rem 0;
   background: var(--mbl-bg);
   border: 1px solid var(--mbl-border);
-  border-radius: 6px;
+  border-radius: var(--mbl-radius-md);
   box-shadow: 0 4px 12px var(--mbl-overlay-08);
 }
 
@@ -608,7 +608,7 @@ const {
   margin-bottom: -0.25rem;
   padding: 0;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--mbl-radius-md);
   background: transparent;
   color: var(--mbl-text-strong);
   cursor: pointer;
@@ -643,7 +643,7 @@ const {
   display: block;
   height: 2px;
   background: currentcolor;
-  border-radius: 1px;
+  border-radius: var(--mbl-radius-pill);
 }
 
 .site-nav__overlay {

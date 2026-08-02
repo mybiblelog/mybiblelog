@@ -354,7 +354,7 @@ const styles = StyleSheet.create({
   dayNumberCircle: {
     width: 28,
     height: 28,
-    borderRadius: 14,
+    borderRadius: radius.pill,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
     right: 2,
     bottom: 2,
     height: 5,
-    borderRadius: 3,
+    borderRadius: radius.pill,
     overflow: "hidden",
   },
   dayProgressFill: {
