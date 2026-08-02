@@ -189,7 +189,6 @@ onMounted(() => {
 .bible-report .testament-toggle {
   display: flex;
   justify-content: center;
-  margin-bottom: 1rem;
 }
 
 .bible-report .testament-toggle--track {

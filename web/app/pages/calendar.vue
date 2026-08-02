@@ -33,7 +33,7 @@
             </button>
           </div>
           <log-entry v-for="entry of entryDate.entries" :key="entry.id" :passage="entry" :actions="actionsForLogEntry(entry)" />
-          <div v-if="!entryDate.entries.length" class="calendar-page__no-entries">
+          <div v-if="!entryDate.entries.length" class="calendar-page__no-entries mbl-card mbl-card--list-item">
             {{ t('no_entries') }}
           </div>
         </div>
@@ -159,7 +159,6 @@ onMounted(async () => {
 
 <style scoped>
 .entry-date {
-  border-bottom: 2px solid var(--mbl-link-bright);
   padding: 1rem 0.5rem 0;
   display: flex;
   justify-content: space-between;
@@ -167,7 +166,7 @@ onMounted(async () => {
 .entry-date .date { display: flex; flex-direction: column; font-weight: bold; }
 .entry-date .verse-count { font-size: 0.8em; }
 .calendar-page__add-entry-button { align-self: center; }
-.calendar-page__no-entries { padding: 0.5rem; }
+.calendar-page__no-entries { margin: 0.5rem 0; }
 .calendar-page__tracker-start-alert { margin-top: 0.75rem; }
 </style>
 
