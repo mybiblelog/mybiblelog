@@ -68,7 +68,7 @@
   --mbl-radius-circle: 50%;
 
   /* Semantic aliases — prefer these in component CSS when the role is clear */
-  --mbl-radius-card: var(--mbl-radius-md);
+  --mbl-radius-card: var(--mbl-radius-2xl);
   --mbl-radius-button: var(--mbl-radius-pill);
   --mbl-radius-sheet: var(--mbl-radius-2xl);
 

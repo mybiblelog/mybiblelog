@@ -1,5 +1,5 @@
 <template>
-  <div class="log-entry" data-testid="log-entry">
+  <div class="log-entry mbl-card mbl-card--list-item" data-testid="log-entry">
     <div v-if="message && passage" class="log-entry-header">
       <div class="log-entry-header-message">
         {{ message }}
@@ -69,10 +69,6 @@ const displayVerseCountMessage = (passage: Passage) => {
 .log-entry {
   display: flex;
   flex-direction: column;
-  padding: 0.5rem 1rem;
-  border-radius: var(--mbl-radius-2xl);
-  background: var(--mbl-bg-elevated);
-  box-shadow: var(--mbl-card-shadow);
   margin: 0.5rem 0;
 }
 

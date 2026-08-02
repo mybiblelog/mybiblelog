@@ -1,0 +1,21 @@
+.mbl-card {
+  background-color: var(--mbl-bg-elevated);
+  border-radius: var(--mbl-radius-card);
+  box-shadow: var(--mbl-card-shadow);
+  color: var(--mbl-text-body);
+  max-width: 100%;
+  position: relative;
+}
+
+/* Card used as a row in a list (log entries, notes, tags): tighter than __content */
+.mbl-card--list-item {
+  padding: 0.5rem 1rem;
+}
+
+.mbl-card__content {
+  padding: 1.5rem;
+}
+
+.mbl-card__content .mbl-field:last-child {
+  margin-bottom: 0;
+}

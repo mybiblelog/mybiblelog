@@ -51,7 +51,7 @@
       <div
         v-for="tag in passageNoteTagsStore.passageNoteTags"
         :key="tag.id"
-        class="tag-line"
+        class="tag-line mbl-card mbl-card--list-item"
         data-testid="tag-line"
       >
         <div>
@@ -83,7 +83,7 @@
         </div>
       </div>
       <skeleton-loader v-if="loading && !passageNoteTagsStore.passageNoteTags.length" variant="tag" :count="3" />
-      <div v-if="!loading && !passageNoteTagsStore.passageNoteTags.length" class="tag-line">
+      <div v-if="!loading && !passageNoteTagsStore.passageNoteTags.length" class="tag-line mbl-card mbl-card--list-item">
         <div class="mbl-text-center">
           {{ t('no_tags') }}
         </div>
@@ -169,11 +169,7 @@ async function deleteTag(id: string | number) {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
-  margin: 1rem -0.5rem;
-  background: var(--mbl-bg);
-  border-radius: var(--mbl-radius-sm);
-  box-shadow: var(--mbl-card-shadow);
+  margin: 1rem 0;
 }
 
 .tag-footer {
@@ -186,7 +182,7 @@ async function deleteTag(id: string | number) {
   color: var(--mbl-on-accent);
   text-shadow: 0 0 2px var(--mbl-text-stronger);
   padding: 0.25rem 0.5rem;
-  border-radius: var(--mbl-radius-sm);
+  border-radius: var(--mbl-radius-lg);
   overflow-x: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

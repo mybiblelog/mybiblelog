@@ -3,7 +3,7 @@
     <div
       v-for="n in count"
       :key="n"
-      class="skeleton-loader__card"
+      class="skeleton-loader__card mbl-card mbl-card--list-item"
       :class="`skeleton-loader__card--${variant}`"
       aria-hidden="true"
     >
@@ -54,29 +54,19 @@ withDefaults(defineProps<{
 </script>
 
 <style scoped>
-.skeleton-loader__card {
-  border-radius: var(--mbl-radius-sm);
-  background: var(--mbl-bg-elevated);
-  box-shadow: var(--mbl-card-shadow);
-}
-
 /* matches .log-entry dimensions */
 .skeleton-loader__card--log-entry {
-  padding: 1em 0.5em;
   margin: 0.5rem 0;
 }
 
 /* matches .passage-note dimensions */
 .skeleton-loader__card--note {
-  padding: 0.5rem 1rem;
   margin: 1rem 0;
 }
 
 /* matches .tag-line dimensions */
 .skeleton-loader__card--tag {
-  padding: 0.5rem 1rem;
-  margin: 1rem -0.5rem;
-  background: var(--mbl-bg);
+  margin: 1rem 0;
 }
 
 .skeleton-loader__row {
