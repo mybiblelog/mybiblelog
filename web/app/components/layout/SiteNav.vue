@@ -26,7 +26,11 @@
             :aria-label="t('open_menu')"
             @click="toggleNav"
           >
-            <span class="site-nav__menu-icon" aria-hidden="true">
+            <span
+              class="site-nav__menu-icon"
+              :class="{ 'site-nav__menu-icon--open': navOpen }"
+              aria-hidden="true"
+            >
               <span />
               <span />
               <span />
@@ -374,6 +378,7 @@ const {
   --site-nav-z-bar: 37;
   --site-nav-z-drawer: 36;
   --site-nav-z-backdrop: 35;
+  --site-nav-menu-icon-ms: 240ms;
 
   position: fixed;
   top: 0;
@@ -644,6 +649,26 @@ const {
   height: 2px;
   background: currentcolor;
   border-radius: var(--mbl-radius-pill);
+  transition:
+    transform var(--site-nav-menu-icon-ms) ease,
+    opacity calc(var(--site-nav-menu-icon-ms) / 2) ease;
+}
+
+/*
+ * Hamburger → X: the outer bars slide to the middle line (one bar height plus
+ * one gap = 7px) and cross, while the middle bar collapses out of the way.
+ */
+.site-nav__menu-icon--open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.site-nav__menu-icon--open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0.2);
+}
+
+.site-nav__menu-icon--open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 .site-nav__overlay {
@@ -743,6 +768,12 @@ const {
 @media screen and (min-width: 1024px) {
   .site-nav__overlay {
     display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-nav__menu-icon span {
+    transition: none;
   }
 }
 </style>
