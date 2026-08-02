@@ -9,7 +9,6 @@
         {{ t('chapter_checklist') }}
       </h2>
     </header>
-    <br>
     <div>
       <div v-if="!bookReports.length" class="loading-card">
         <strong>{{ t('loading') }}</strong>
@@ -17,7 +16,7 @@
       <div
         v-for="bookReport in bookReports"
         :key="bookReport.bookIndex"
-        class="book-card"
+        class="book-card mbl-card"
         data-testid="book-card"
         :data-book-index="bookReport.bookIndex"
         :data-complete="bookReport.complete || undefined"
@@ -212,21 +211,26 @@ onMounted(async () => {
 <style scoped>
 .loading-card {
   padding: 1rem 2rem;
-  border-radius: var(--mbl-radius-sm);
+  border-radius: var(--mbl-radius-card);
   box-shadow: var(--mbl-shadow-elev-1);
   margin: 0.5rem 0;
 }
-.book-card { user-select: none; }
+.book-card {
+  user-select: none;
+  margin: 0.5rem 0;
+}
 
+/* Sticky inside the card, so the book stays identified while its chapter grid
+   scrolls past; needs its own background and matching top corners to cover the
+   chapters and stay flush with the card it sits in. */
 .book-card--header {
   display: grid;
   grid-template-columns: 2rem 1fr 1fr 2rem;
   grid-template-rows: auto auto;
   padding: 0.5rem;
-  background: var(--mbl-bg);
-  border-radius: var(--mbl-radius-sm);
-  box-shadow: var(--mbl-shadow-elev-1);
-  margin: 0.5rem 0;
+  background: var(--mbl-bg-elevated);
+  border-radius: var(--mbl-radius-card);
+  border-bottom: 1px solid var(--mbl-border);
   font-size: 0.8rem;
   font-weight: bold;
   position: sticky;
@@ -244,6 +248,7 @@ onMounted(async () => {
   display: grid;
   gap: 0.5rem;
   grid-template-columns: repeat(5, 1fr);
+  padding: 0.5rem;
 }
 
 @media screen and (min-width: 769px) { .book-card--chapters { grid-template-columns: repeat(6, 1fr); } }
@@ -257,8 +262,8 @@ onMounted(async () => {
 .chapter-card {
   padding: 0.5rem;
   background: var(--mbl-bg);
-  border-radius: var(--mbl-radius-sm);
-  box-shadow: var(--mbl-shadow-elev-1);
+  border-radius: var(--mbl-radius-xl);
+  border: 1px solid var(--mbl-border);
   position: relative;
   cursor: pointer;
   transition: 0.1s;
