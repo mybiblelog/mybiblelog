@@ -3,7 +3,7 @@
     <template #content>
       <form data-testid="note-editor" @submit.prevent="handleSave">
         <div v-if="formError" class="mbl-help mbl-help--danger">
-          {{ formError }}
+          {{ formErrorMessage }}
         </div>
 
         <div class="mbl-field passages-title">
@@ -140,6 +140,7 @@
 
 <script setup lang="ts">
 import { Bible } from '@mybiblelog/shared';
+import type { ApiErrorDetail } from '~/helpers/api-error';
 import AppModal from '~/components/popups/AppModal.vue';
 import PassageSelector from '~/components/forms/PassageSelector.vue';
 import PassageNoteTagPill from '~/components/notes/PassageNoteTagPill.vue';
@@ -148,11 +149,12 @@ import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
 import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
 import { useDialogStore } from '~/stores/dialog';
 
-const { t, locale } = useI18n();
+const { t, te, locale } = useI18n();
+const { $terr } = useNuxtApp();
 const store = usePassageNoteEditorStore();
 const passageNoteTagsStore = usePassageNoteTagsStore();
 
-const formError = ref('');
+const formError = ref<ApiErrorDetail | null>(null);
 const editingPassage = ref(-1);
 const editingPassageOriginalValue = ref<string | null>(null);
 const editingNewPassage = ref(false);
@@ -160,6 +162,14 @@ const showManageTagsModal = ref(false);
 const draftSelectedTagIds = ref<Array<string | number>>([]);
 
 const allTags = computed(() => passageNoteTagsStore.passageNoteTags ?? []);
+
+// Save failures surface as an `ApiErrorDetail` ({ field, code }), so the code has
+// to be translated — rendering the detail itself prints "[object Object]".
+const formErrorMessage = computed(() => {
+  if (!formError.value) { return ''; }
+  const key = `api_error.${formError.value.code}`;
+  return te(key) ? $terr(formError.value) : t('could_not_save');
+});
 
 const selectedTags = useResolvedPassageNoteTags(() => store.passageNote.tags ?? [], {
   tags: allTags,
@@ -279,10 +289,10 @@ function applyManageTags(tagIds: Array<string | number>) {
 
 async function handleSave() {
   if (!isValid.value) { return; }
-  formError.value = '';
+  formError.value = null;
   const result = await store.savePassageNote();
   if (!result) {
-    formError.value = String(store.errors?._form ?? t('could_not_save'));
+    formError.value = store.errors?._form ?? { field: null, code: 'unknown_error' };
   }
 }
 
@@ -296,7 +306,7 @@ watch(() => store.open, () => {
   editingPassageOriginalValue.value = null;
   editingNewPassage.value = false;
   showManageTagsModal.value = false;
-  formError.value = '';
+  formError.value = null;
 });
 </script>
 
