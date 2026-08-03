@@ -15,7 +15,15 @@ export const buildCsp = (nonce: string, analyticsEnabled = false): string => [
   "style-src 'self' 'unsafe-inline'",
   // The 'unsafe-inline' fallback is ignored by any browser that honors the
   // nonce; it only serves browsers old enough not to support CSP3 nonces.
-  `script-src 'self' 'nonce-${nonce}' 'unsafe-inline'${analyticsEnabled ? ' https://www.googletagmanager.com' : ''}`,
+  //
+  // 'wasm-unsafe-eval' is required by @nuxt/content v3: client-side route
+  // changes resolve queryCollection() against a SQLite-WASM database in the
+  // browser (server-rendered first loads use the Node connector and don't
+  // need it), so without it every client-side navigation to a content page
+  // dies on a WebAssembly.instantiate CompileError. It permits WASM
+  // compilation only — unlike 'unsafe-eval' it does not re-enable eval() or
+  // string-to-code for JavaScript.
+  `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'wasm-unsafe-eval'${analyticsEnabled ? ' https://www.googletagmanager.com' : ''}`,
   "img-src 'self' data:",
   "font-src 'self'",
   `connect-src 'self'${analyticsEnabled ? ' https://www.google-analytics.com https://www.googletagmanager.com' : ''}`,
