@@ -239,21 +239,21 @@ onMounted(() => { loadUsers(); });
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: var(--mbl-space-md);
+  margin-bottom: var(--mbl-space-md);
   flex-wrap: wrap;
 }
 
 .users-page__sort {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--mbl-space-xs);
 }
 
 .users-page__limit {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--mbl-space-xs);
 }
 
 .users-page__results-bar {
@@ -261,15 +261,15 @@ onMounted(() => { loadUsers(); });
   top: calc(var(--header-height) + 0.5rem - 1px);
   z-index: 10;
   background: var(--mbl-app-canvas-bg);
-  padding: 0.5rem 1rem;
-  margin-left: -0.5rem;
-  margin-right: -0.5rem;
-  margin-bottom: 1rem;
+  padding: var(--mbl-space-xs) var(--mbl-space-md);
+  margin-left: calc(-1 * var(--mbl-space-xs));
+  margin-right: calc(-1 * var(--mbl-space-xs));
+  margin-bottom: var(--mbl-space-md);
   border-bottom: 1px solid var(--mbl-border-soft);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--mbl-space-md);
 }
 
 .users-page__pager {
@@ -279,24 +279,24 @@ onMounted(() => { loadUsers(); });
 .user-cards {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--mbl-space-md);
 }
 
 .user-card {
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-rows: auto auto;
-  gap: 0.4rem 1rem;
+  gap: var(--mbl-space-xs) var(--mbl-space-md);
   border: 1px solid var(--mbl-border);
   border-radius: var(--mbl-radius-lg);
-  padding: 0.875rem 1rem;
+  padding: var(--mbl-space-sm) var(--mbl-space-md);
 }
 
 .user-card__email {
   align-self: center;
   display: flex;
   align-items: baseline;
-  gap: 0.5rem;
+  gap: var(--mbl-space-xs);
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;

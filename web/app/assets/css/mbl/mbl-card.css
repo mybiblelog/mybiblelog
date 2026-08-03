@@ -9,11 +9,11 @@
 
 /* Card used as a row in a list (log entries, notes, tags): tighter than __content */
 .mbl-card--list-item {
-  padding: 0.5rem 1rem;
+  padding: var(--mbl-space-xs) var(--mbl-space-md);
 }
 
 .mbl-card__content {
-  padding: 1.5rem;
+  padding: var(--mbl-space-xl);
 }
 
 .mbl-card__content .mbl-field:last-child {

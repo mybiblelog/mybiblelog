@@ -51,7 +51,7 @@ function close() {
 }
 
 .mbl-modal__body {
-  padding: 2rem;
+  padding: var(--mbl-space-2xl);
 }
 </style>
 

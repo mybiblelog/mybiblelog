@@ -53,9 +53,6 @@
             :data-complete="chapterReport.complete || undefined"
             @click="toggleChapter(chapterReport.bookIndex, chapterReport.chapterIndex)"
           >
-            <div class="chapter-card--chapter-number">
-              {{ chapterReport.chapterIndex }}
-            </div>
             <div class="chapter-card--completion-indicator">
               <svg v-if="busyChapter === `${bookReport.bookIndex}.${chapterReport.chapterIndex}`" viewBox="0 0 80 80" width="100%" height="100%">
                 <path
@@ -74,6 +71,9 @@
                 </path>
               </svg>
               <svg v-else viewBox="0 0 24 24" width="100%" height="100%"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" :fill="chapterReport.complete ? 'var(--mbl-success-bright)' : 'transparent'" /></svg>
+            </div>
+            <div class="chapter-card--chapter-number">
+              {{ chapterReport.chapterIndex }}
             </div>
           </div>
         </div>
@@ -210,14 +210,15 @@ onMounted(async () => {
 
 <style scoped>
 .loading-card {
-  padding: 1rem 2rem;
+  padding: var(--mbl-space-md) var(--mbl-space-2xl);
   border-radius: var(--mbl-radius-card);
   box-shadow: var(--mbl-shadow-elev-1);
-  margin: 0.5rem 0;
+  margin: var(--mbl-space-xs) 0;
 }
+
 .book-card {
   user-select: none;
-  margin: 0.5rem 0;
+  margin: var(--mbl-space-xs) 0;
 }
 
 /* Sticky inside the card, so the book stays identified while its chapter grid
@@ -227,17 +228,16 @@ onMounted(async () => {
   display: grid;
   grid-template-columns: 2rem 1fr 1fr 2rem;
   grid-template-rows: auto auto;
-  padding: 0.5rem;
+  padding: var(--mbl-space-xs);
   background: var(--mbl-bg-elevated);
   border-radius: var(--mbl-radius-card);
-  border-bottom: 1px solid var(--mbl-border);
   font-size: 0.8rem;
   font-weight: bold;
   position: sticky;
   top: var(--site-nav-height);
   z-index: 1;
 }
-.book-card--completion-indicator { grid-area: 1 / 1 / 3 / 2; width: 1.5rem; margin-right: 0.5rem; display: flex; }
+.book-card--completion-indicator { grid-area: 1 / 1 / 3 / 2; width: 1.5rem; margin-right: var(--mbl-space-xs); display: flex; }
 .book-card--book-name { grid-area: 1 / 2 / 2 / 3; }
 .book-card--completion-fraction { grid-area: 1 / 3 / 2 / 4; text-align: right; }
 .book-card--completion-bar { grid-area: 2 / 2 / 3 / 4; }
@@ -246,9 +246,9 @@ onMounted(async () => {
 
 .book-card--chapters {
   display: grid;
-  gap: 0.5rem;
+  gap: var(--mbl-space-xs);
   grid-template-columns: repeat(5, 1fr);
-  padding: 0.5rem;
+  padding: var(--mbl-space-xs);
 }
 
 @media screen and (min-width: 769px) { .book-card--chapters { grid-template-columns: repeat(6, 1fr); } }
@@ -260,7 +260,7 @@ onMounted(async () => {
 @media screen and (min-width: 1408px) { .book-card--chapters { grid-template-columns: repeat(12, 1fr); } }
 
 .chapter-card {
-  padding: 0.5rem;
+  padding: var(--mbl-space-xs);
   background: var(--mbl-bg);
   border-radius: var(--mbl-radius-xl);
   border: 1px solid var(--mbl-border);
@@ -268,7 +268,7 @@ onMounted(async () => {
   cursor: pointer;
   transition: 0.1s;
 }
-.chapter-card:hover { transition: 0.2s; box-shadow: var(--mbl-shadow-elev-2); }
+.chapter-card:hover { transition: 0.2s; background: var(--mbl-bg-hover-light); }
 .chapter-card--chapter-number { text-align: center; font-weight: bold; }
 </style>
 

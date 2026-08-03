@@ -1,7 +1,4 @@
-:root {
-  --modal-margin: 1rem;
-}
-
+/* --modal-margin is defined with the other layout tokens in tokens.css */
 .mbl-modal {
   align-items: center;
   bottom: 0;
@@ -39,7 +36,7 @@
   position: relative;
   width: calc(100% - calc(var(--modal-margin) * 2));
   max-width: 640px;
-  margin: 0 1.5rem;
+  margin: 0 var(--mbl-space-xl);
 }
 
 .mbl-modal__head {
@@ -48,7 +45,7 @@
   display: flex;
   flex-shrink: 0;
   justify-content: flex-start;
-  padding: 1rem 1rem;
+  padding: var(--mbl-space-md);
   position: relative;
 }
 
@@ -67,7 +64,7 @@
   flex-grow: 1;
   flex-shrink: 1;
   overflow: auto;
-  padding: 1.25rem;
+  padding: var(--mbl-space-lg);
 }
 
 .mbl-modal__foot {
@@ -77,11 +74,11 @@
   display: flex;
   flex-shrink: 0;
   justify-content: flex-start;
-  padding: 1rem;
+  padding: var(--mbl-space-md);
 }
 
 .mbl-modal__foot .mbl-button:not(:last-child) {
-  margin-right: 0.5rem;
+  margin-right: var(--mbl-space-xs);
 }
 
 /*
@@ -93,7 +90,7 @@
   background-color: var(--mbl-overlay-50);
   position: fixed;
   inset: 0;
-  padding: 0.5rem;
+  padding: var(--mbl-space-xs);
   display: flex;
   align-items: center;
   z-index: var(--z-index-popup);
@@ -122,7 +119,7 @@
 
 .mbl-popup-modal__card {
   background: var(--mbl-bg);
-  padding: 2rem;
+  padding: var(--mbl-space-2xl);
   border: 1px solid var(--mbl-border);
   border-radius: var(--mbl-radius-card);
   box-shadow: 0 0 0.5rem var(--mbl-overlay-20);

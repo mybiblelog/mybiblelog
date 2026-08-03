@@ -76,7 +76,7 @@ const resolvedTags = useResolvedPassageNoteTags(() => props.note.tags ?? [], {
 
 <style scoped>
 .passage-note {
-  margin: 1rem 0;
+  margin: var(--mbl-space-md) 0;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(4, auto);
@@ -88,7 +88,7 @@ const resolvedTags = useResolvedPassageNoteTags(() => props.note.tags ?? [], {
 .passage-note--content {
   overflow-wrap: break-word;
   white-space: pre-line;
-  margin: 0.5rem 0;
+  margin: var(--mbl-space-xs) 0;
   grid-area: 2 / 1 / 3 / 3;
 }
 .passage-note--tags { display: flex; flex-direction: column; align-items: flex-start; grid-area: 3 / 1 / 4 / 2; }

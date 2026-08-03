@@ -37,7 +37,7 @@ onMounted(async () => {
 
 <style scoped>
 .insights-intro {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--mbl-space-xl);
   color: var(--mbl-text-body);
 }
 

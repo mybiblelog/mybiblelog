@@ -127,8 +127,8 @@ const lastLabel = computed(() => {
 .trend__controls {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  gap: var(--mbl-space-xs);
+  margin-bottom: var(--mbl-space-xl);
 }
 
 .trend__svg {

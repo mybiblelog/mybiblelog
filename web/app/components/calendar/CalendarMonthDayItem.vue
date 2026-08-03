@@ -60,7 +60,7 @@ function onClick() {
   font-size: 16px;
   background-color: var(--mbl-bg);
   color: var(--mbl-text-body);
-  padding: 5px;
+  padding: var(--mbl-space-2xs);
   cursor: pointer;
   user-select: none;
   transition: 0.2s ease-out;

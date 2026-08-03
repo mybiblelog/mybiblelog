@@ -150,21 +150,21 @@ const rows = computed(() => {
 .recency__controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: var(--mbl-space-md);
+  margin-bottom: var(--mbl-space-md);
 }
 
 .recency__control {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--mbl-space-2xs);
 }
 
 .recency__legend {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
-  margin-bottom: 0.75rem;
+  gap: var(--mbl-space-xs);
+  margin-bottom: var(--mbl-space-sm);
   font-size: 0.75rem;
   color: var(--mbl-text-muted);
 }
@@ -174,7 +174,7 @@ const rows = computed(() => {
 }
 
 .recency__legend-gap {
-  margin-left: 0.5rem;
+  margin-left: var(--mbl-space-xs);
 }
 
 .recency__list {
@@ -187,8 +187,8 @@ const rows = computed(() => {
   display: grid;
   grid-template-columns: 0.85rem 1fr auto;
   align-items: center;
-  gap: 0.5rem;
-  padding: 2px 0;
+  gap: var(--mbl-space-xs);
+  padding: var(--mbl-space-3xs) 0;
   font-size: 0.8rem;
   line-height: 1.4;
   border-bottom: 1px solid var(--mbl-border-soft);

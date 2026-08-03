@@ -1,6 +1,13 @@
-/* Form layout */
+/*
+ * Form layout
+ *
+ * Control padding is intentionally in `em` so inputs, selects and textareas
+ * grow with their own font-size (and stay aligned with .mbl-button, which does
+ * the same). Do not convert control padding to the fixed --mbl-space-* ladder;
+ * layout spacing between fields does use the ladder.
+ */
 .mbl-field:not(:last-child) {
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--mbl-space-sm);
 }
 
 .mbl-field--addons {
@@ -43,6 +50,7 @@
 }
 
 .mbl-field--addons .mbl-control:not(:last-child) {
+  /* stylelint-disable-next-line declaration-property-value-allowed-list -- overlaps adjacent addon borders */
   margin-right: -1px;
 }
 
@@ -101,7 +109,7 @@
 .mbl-help {
   display: block;
   font-size: 0.75rem;
-  margin-top: 0.25rem;
+  margin-top: var(--mbl-space-2xs);
 }
 
 .mbl-help--danger {

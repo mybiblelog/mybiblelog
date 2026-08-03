@@ -110,13 +110,15 @@ For each finding, record:
 - [ ] No `light-dark()` CSS function anywhere in the codebase. Dark mode is applied exclusively via `[data-theme="dark"]` overrides and `@media (prefers-color-scheme: dark)` blocks on `:root:not([data-theme])` — both patterns are already handled in `tokens.css`. Component styles must **not** contain theme logic.
 - [ ] No inline `style` attributes for visual styling (color, spacing, typography). Data-driven inline styles (e.g. `style="width: {{ pct }}%"`) for dynamic values are acceptable.
 - [ ] New semantic color needs are added to `assets/css/tokens.css` under the `--mbl-*` namespace, with appropriate `[data-theme="dark"]` overrides, before being used in components.
+- [ ] `margin`, `padding`, and `gap` use the `--mbl-space-*` scale (`3xs`/`2xs`/`xs`/`sm`/`md`/`lg`/`xl`/`2xl`/`3xl`/`4xl`) rather than raw `px`/`rem` literals. Page-level chrome uses the fluid `--mbl-page-*` tokens instead of a fixed step. `border-radius` uses `--mbl-radius-*`. All three are enforced by `declaration-property-value-allowed-list` in `web/.stylelintrc.json`, so `npm run -w web lint:css` is the check.
+- [ ] The narrow exceptions to the spacing rule are font-relative control padding (`em`, so `.mbl-button--sm/--lg` scale), 1px hairlines and negative border-collapse offsets, and third-party brand specs. Each must carry a `stylelint-disable-next-line` with a reason — a bare literal that merely passes lint via the `calc()`/`em` escape hatch is still a finding.
 
 ### CSS / Design Tokens — conventions (P1)
 
 - [ ] New component-specific styles are added to a `<style scoped>` block in the SFC, or to an `mbl-*.css` file in `assets/css/mbl/` if the style is part of the shared design system. Global stylesheet pollution (unscoped classes that could conflict) is a P1.
 - [ ] Class names follow the `mbl-*` prefix for shared/reusable classes, and a component-specific `kebab-case-name__element` pattern for scoped styles.
-- [ ] Spacing, typography, radius, and shadow values use `--mbl-*` tokens rather than hard-coded `px`/`rem` literals. `z-index` values use the `--z-index-*` tokens from `tokens.css`.
-- [ ] Responsive breakpoints use consistent units and do not introduce magic numbers outside the established token system.
+- [ ] Typography and shadow values use `--mbl-*` tokens rather than hard-coded literals. `z-index` values use the `--z-index-*` tokens from `tokens.css`. (Spacing and radius are P0 above — stylelint enforces those.)
+- [ ] Anything that scrolls to the bottom of the viewport reserves `--mbl-fab-clearance`, or its last row ends up underneath the fixed feedback button.
 
 ### TypeScript
 

@@ -272,11 +272,11 @@ defineExpose({ confirmAndReset, cancelDraft, resetDraftToApplied });
 </i18n>
 
 <style scoped>
-.log-entries-query-manager__divider { margin: 1rem 0; }
+.log-entries-query-manager__divider { margin: var(--mbl-space-md) 0; }
 
 .log-entries-query-manager__actions {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: var(--mbl-space-xs);
+  margin-top: var(--mbl-space-md);
 }
 </style>

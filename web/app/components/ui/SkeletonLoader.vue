@@ -56,29 +56,29 @@ withDefaults(defineProps<{
 <style scoped>
 /* matches .log-entry dimensions */
 .skeleton-loader__card--log-entry {
-  margin: 0.5rem 0;
+  margin: var(--mbl-space-xs) 0;
 }
 
 /* matches .passage-note dimensions */
 .skeleton-loader__card--note {
-  margin: 1rem 0;
+  margin: var(--mbl-space-md) 0;
 }
 
 /* matches .tag-line dimensions */
 .skeleton-loader__card--tag {
-  margin: 1rem 0;
+  margin: var(--mbl-space-md) 0;
 }
 
 .skeleton-loader__row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 0.5rem;
+  gap: var(--mbl-space-xs);
 }
 
 .skeleton-loader__row--footer {
   align-items: flex-end;
-  margin-top: 0.5rem;
+  margin-top: var(--mbl-space-xs);
 }
 
 .skeleton-loader__bar {
@@ -91,14 +91,14 @@ withDefaults(defineProps<{
   width: 9rem;
   max-width: 40%;
   height: 1rem;
-  margin: 0.25rem 0;
+  margin: var(--mbl-space-2xs) 0;
 }
 
 .skeleton-loader__bar--subtitle {
   width: 6rem;
   max-width: 30%;
   height: 0.75rem;
-  margin-top: 0.5rem;
+  margin-top: var(--mbl-space-xs);
 }
 
 .skeleton-loader__bar--action {
@@ -109,13 +109,13 @@ withDefaults(defineProps<{
 .skeleton-loader__bar--meta {
   width: 5rem;
   height: 0.75rem;
-  margin: 0.25rem 0;
+  margin: var(--mbl-space-2xs) 0;
 }
 
 .skeleton-loader__bar--text {
   width: 100%;
   height: 0.8rem;
-  margin: 0.6rem 0;
+  margin: var(--mbl-space-sm) 0;
 }
 
 .skeleton-loader__bar--text-short {

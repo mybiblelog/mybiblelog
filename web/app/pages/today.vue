@@ -368,12 +368,12 @@ onMounted(async () => {
 
 <style scoped>
 .today-page__progress-bar-container {
-  margin-top: -1rem;
-  margin-bottom: 1.5rem;
+  margin-top: calc(-1 * var(--mbl-space-md));
+  margin-bottom: var(--mbl-space-xl);
 }
 
 .today-page__recent-notes-container {
-  margin-top: 1rem;
+  margin-top: var(--mbl-space-md);
 }
 </style>
 

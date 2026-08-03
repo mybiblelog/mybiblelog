@@ -205,13 +205,13 @@ form {
   max-width: 200px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 1rem;
+  column-gap: var(--mbl-space-md);
 }
 
 @media screen and (min-width: 550px) {
   form {
     max-width: 400px;
-    row-gap: 1rem;
+    row-gap: var(--mbl-space-md);
   }
 }
 
@@ -219,7 +219,7 @@ form {
   grid-column: span 2;
   color: var(--mbl-danger);
   font-size: 0.875rem;
-  margin-top: 0.5rem;
+  margin-top: var(--mbl-space-xs);
 }
 
 .passage-preview {
@@ -227,8 +227,8 @@ form {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
+  padding: var(--mbl-space-xs);
+  margin-bottom: var(--mbl-space-xs);
   color: var(--mbl-on-accent);
   background: var(--mbl-link-bright);
   border-radius: var(--mbl-radius-sm);
@@ -247,7 +247,7 @@ form label {
   left: 0.75rem;
   color: var(--mbl-link-bright);
   background-color: var(--mbl-bg);
-  padding: 0 0.25rem;
+  padding: 0 var(--mbl-space-2xs);
   border-radius: var(--mbl-radius-sm);
   z-index: 1;
   pointer-events: none;
@@ -256,8 +256,8 @@ form label {
 form input {
   font-size: 16px;
   min-height: 3rem;
-  padding: 0.5rem;
-  padding-top: 1.125rem;
+  padding: var(--mbl-space-xs);
+  padding-top: var(--mbl-space-lg);
   border: 2px solid var(--mbl-border-strong);
   width: unset;
   border-radius: var(--mbl-radius-sm);
@@ -268,8 +268,8 @@ form input {
 form select {
   font-size: 16px;
   height: 3rem;
-  padding: 0.5rem;
-  padding-top: 1.125rem;
+  padding: var(--mbl-space-xs);
+  padding-top: var(--mbl-space-lg);
   border: 2px solid var(--mbl-border-strong);
   width: unset;
   border-radius: var(--mbl-radius-sm);
@@ -279,7 +279,7 @@ form select {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.5rem center;
-  padding-right: 2rem;
+  padding-right: var(--mbl-space-2xl);
 }
 
 form select:focus, form input:focus {
@@ -309,7 +309,7 @@ form select:not(:disabled) {
   }
 
   form > div:not(:last-child) {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--mbl-space-xs);
   }
 }
 </style>

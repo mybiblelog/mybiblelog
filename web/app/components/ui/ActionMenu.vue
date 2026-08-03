@@ -61,7 +61,7 @@ useEscapeKey(close, isOpen);
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: var(--mbl-space-xs);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -116,7 +116,7 @@ useEscapeKey(close, isOpen);
 }
 
 .action-menu-item {
-  padding: 0.75rem 1rem;
+  padding: var(--mbl-space-sm) var(--mbl-space-md);
   cursor: pointer;
   transition: background-color 0.15s;
   white-space: nowrap;

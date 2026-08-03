@@ -69,7 +69,7 @@ const displayVerseCountMessage = (passage: Passage) => {
 .log-entry {
   display: flex;
   flex-direction: column;
-  margin: 0.5rem 0;
+  margin: var(--mbl-space-xs) 0;
 }
 
 .log-entry .log-entry-header-message {

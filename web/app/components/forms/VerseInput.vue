@@ -454,7 +454,7 @@ function onPassageSelectorChange({ startVerseId, endVerseId }: { startVerseId: n
   pointer-events: auto;
 }
 
-.verse-input__help { margin-top: 0.35rem; }
+.verse-input__help { margin-top: var(--mbl-space-xs); }
 .verse-input__pick-button { white-space: nowrap; }
 
 .verse-input__hidden-passage-selector {
@@ -471,15 +471,15 @@ function onPassageSelectorChange({ startVerseId, endVerseId }: { startVerseId: n
 .book-selector-controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: var(--mbl-space-xs);
+  margin-bottom: var(--mbl-space-md);
   justify-content: space-between;
 }
 
 .button-group { display: flex; }
 
 .button-group--button {
-  padding: 0.5rem 1rem;
+  padding: var(--mbl-space-xs) var(--mbl-space-md);
   border: 1px solid var(--mbl-border-strong);
   background: var(--mbl-bg);
   cursor: pointer;

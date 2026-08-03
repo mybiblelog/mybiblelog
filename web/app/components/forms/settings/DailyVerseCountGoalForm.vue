@@ -297,8 +297,8 @@ function handlePrevious() {
 .option-cards {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: var(--mbl-space-md);
+  margin-bottom: var(--mbl-space-xl);
 }
 
 .option-card {
@@ -306,7 +306,7 @@ function handlePrevious() {
   align-items: flex-start;
   border: 2px solid var(--mbl-border);
   border-radius: var(--mbl-radius-sm);
-  padding: 1rem;
+  padding: var(--mbl-space-md);
   cursor: pointer;
   transition: border-color 0.2s, background-color 0.2s;
 }
@@ -322,8 +322,8 @@ function handlePrevious() {
 }
 
 .option-card-radio {
-  margin-right: 1rem;
-  margin-top: 0.25rem;
+  margin-right: var(--mbl-space-md);
+  margin-top: var(--mbl-space-2xs);
   flex-shrink: 0;
 }
 
@@ -338,20 +338,20 @@ function handlePrevious() {
 
 .option-card-title {
   font-weight: 600;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--mbl-space-sm);
   font-size: 1rem;
 }
 
 .option-card-details {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--mbl-space-xs);
 }
 
 .detail-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--mbl-space-xs);
   flex-wrap: wrap;
 }
 

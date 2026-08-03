@@ -1,5 +1,10 @@
-/* Buttons */
-/* Base sizing (padding-driven, no fixed height) */
+/*
+ * Buttons
+ *
+ * Base sizing is padding-driven (no fixed height), and that padding is
+ * intentionally in `em` so the --sm / --lg font-size modifiers scale the whole
+ * control. Do not convert control padding to the fixed --mbl-space-* ladder.
+ */
 .mbl-button {
   align-items: center;
   appearance: none;
@@ -107,7 +112,7 @@
 }
 
 .mbl-button-group .mbl-button:not(:last-child) {
-  margin-right: 0.5rem;
+  margin-right: var(--mbl-space-xs);
 }
 
 .mbl-button-group--start {

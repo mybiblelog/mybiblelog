@@ -145,10 +145,10 @@ async function submitFeedback() {
 <style scoped>
 .floating-action-button {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 56px;
-  height: 56px;
+  bottom: var(--mbl-fab-offset);
+  right: var(--mbl-fab-offset);
+  width: var(--mbl-fab-size);
+  height: var(--mbl-fab-size);
   border-radius: var(--mbl-radius-circle);
   background-color: var(--secondary-color);
   color: var(--mbl-on-accent);

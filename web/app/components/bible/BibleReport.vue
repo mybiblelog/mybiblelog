@@ -194,7 +194,7 @@ onMounted(() => {
 .bible-report .testament-toggle--track {
   position: relative;
   display: flex;
-  padding: 0.25rem;
+  padding: var(--mbl-space-2xs);
   border: 1px solid var(--mbl-border-strong);
   border-radius: var(--mbl-radius-pill);
   background: var(--mbl-bg-muted);
@@ -226,7 +226,7 @@ onMounted(() => {
   position: relative;
   flex: 1 1 0;
   min-width: 5rem;
-  padding: 0.4rem 1rem;
+  padding: var(--mbl-space-xs) var(--mbl-space-md);
   border: none;
   border-radius: var(--mbl-radius-pill);
   background: none;
@@ -252,7 +252,7 @@ onMounted(() => {
 }
 
 .plaque {
-  margin-bottom: 2rem;
+  margin-bottom: var(--mbl-space-2xl);
 }
 
 .plaque p {
@@ -262,8 +262,8 @@ onMounted(() => {
 .progress-list .progress-card {
   width: 100%;
   border: none;
-  margin: 0.5rem 0;
-  padding: 0.5rem;
+  margin: var(--mbl-space-xs) 0;
+  padding: var(--mbl-space-xs);
   background: var(--mbl-bg-elevated);
   border-radius: var(--mbl-radius-sm);
   box-shadow: var(--mbl-shadow-elev-1);
@@ -283,7 +283,7 @@ onMounted(() => {
 
 .progress-list .progress-card-icon {
   grid-area: icon;
-  margin-right: 0.5rem;
+  margin-right: var(--mbl-space-xs);
   display: flex;
   align-items: center;
 }
@@ -292,7 +292,7 @@ onMounted(() => {
 .progress-list .progress-card-percentage {
   font-size: 0.8rem;
   font-weight: bold;
-  padding-bottom: 0.5rem;
+  padding-bottom: var(--mbl-space-xs);
 }
 
 .progress-list .progress-card-book { grid-area: title; }
@@ -301,7 +301,7 @@ onMounted(() => {
   grid-area: notes;
   place-self: baseline end;
   width: fit-content;
-  margin-right: 1rem;
+  margin-right: var(--mbl-space-md);
   font-size: 0.8em;
   color: var(--mbl-text-subtle);
   background: var(--mbl-bg-hover-strong);

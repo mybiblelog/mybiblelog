@@ -7,6 +7,7 @@
  *
  * Interactive accent for links and card focus rings is `--mbl-link` (maps to brand secondary).
  */
+
 :root {
   color-scheme: light;
 
@@ -71,6 +72,51 @@
   --mbl-radius-card: var(--mbl-radius-2xl);
   --mbl-radius-button: var(--mbl-radius-pill);
   --mbl-radius-sheet: var(--mbl-radius-2xl);
+
+  /*
+   * Spacing scale — 4pt ladder. Use for margin, padding, and gap.
+   *
+   * Font-relative padding (em) on controls is deliberate and stays hardcoded;
+   * see the note at the top of mbl-button.css and mbl-form.css.
+   */
+  --mbl-space-3xs: 0.125rem; /*  2px */
+  --mbl-space-2xs: 0.25rem; /*  4px */
+  --mbl-space-xs: 0.5rem; /*  8px */
+  --mbl-space-sm: 0.75rem; /* 12px */
+  --mbl-space-md: 1rem; /* 16px */
+  --mbl-space-lg: 1.25rem; /* 20px */
+  --mbl-space-xl: 1.5rem; /* 24px */
+  --mbl-space-2xl: 2rem; /* 32px */
+  --mbl-space-3xl: 3rem; /* 48px */
+  --mbl-space-4xl: 4rem; /* 64px */
+
+  /*
+   * Fluid page-layout spacing. Scales continuously with the viewport so mobile
+   * does not pay desktop's spacing budget — many users run this as a PWA on a
+   * phone, where fixed page chrome eats a large share of the first screen.
+   * Prefer these over the fixed scale for page-level padding.
+   */
+  --mbl-page-gutter: clamp(0.75rem, 3vw, 1.5rem);
+  --mbl-page-gutter: var(--mbl-space-md); /* FIXME: working on this */
+  --mbl-page-top: clamp(1rem, 3vw, 2.5rem);
+  --mbl-page-header-gap: clamp(1rem, 2.5vw, 1.5rem);
+
+  /*
+   * Floating action button footprint (FloatingFeedbackButton.vue). The button
+   * is fixed, so anything that scrolls to the bottom of the viewport must
+   * reserve --mbl-fab-clearance or its last row ends up underneath the button.
+   * This one is deliberately NOT fluid — it is a hard geometric requirement.
+   */
+  --mbl-fab-size: 56px;
+  --mbl-fab-offset: var(--mbl-space-2xl);
+  --mbl-fab-clearance: calc(var(--mbl-fab-offset) + var(--mbl-fab-size));
+  --mbl-page-bottom: var(--mbl-fab-clearance);
+
+  /* Content column widths */
+  --mbl-content-width: 708px;
+  --mbl-content-width-wide: 1100px;
+
+  --modal-margin: var(--mbl-space-md);
 
   --mbl-text: var(--neutral-700);
   --mbl-text-85: rgba(54, 54, 54, 0.85);

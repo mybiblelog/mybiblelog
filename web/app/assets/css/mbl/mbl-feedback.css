@@ -1,7 +1,7 @@
 .mbl-message {
   border-radius: var(--mbl-radius-sm);
   font-size: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--mbl-space-xl);
   padding: 0;
   position: relative;
 }
@@ -79,7 +79,7 @@
   background-color: var(--mbl-bg-muted);
   border-radius: var(--mbl-radius-sm);
   font-weight: 600;
-  padding: 1.25rem 2.5rem 1.25rem 1.5rem;
+  padding: var(--mbl-space-lg) var(--mbl-space-2xl) var(--mbl-space-lg) var(--mbl-space-xl);
   position: relative;
 }
 
@@ -105,6 +105,6 @@
 
 .mbl-notification .mbl-delete {
   position: absolute;
-  right: 0.5rem;
-  top: 0.5rem;
+  right: var(--mbl-space-xs);
+  top: var(--mbl-space-xs);
 }

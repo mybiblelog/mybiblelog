@@ -60,8 +60,8 @@ function isExternal(url: string): boolean {
 <style scoped>
 .page-footer {
   min-height: 20vh;
-  margin: 4rem 0 0;
-  padding: 3rem 0;
+  margin: var(--mbl-space-4xl) 0 0;
+  padding: var(--mbl-space-3xl) 0;
   background: linear-gradient(135deg, var(--mbl-primary-soft) 0%, var(--mbl-secondary-soft) 50%, var(--mbl-tertiary-soft) 100%);
   border-top: 1px solid var(--mbl-primary-soft-border);
 }
@@ -69,7 +69,7 @@ function isExternal(url: string): boolean {
 .footer-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 var(--mbl-space-xl);
 }
 
 .footer-nav { width: 100%; }
@@ -79,11 +79,11 @@ function isExternal(url: string): boolean {
   grid-auto-flow: column;
   grid-auto-columns: minmax(max-content, 1fr);
   justify-content: center;
-  gap: 3rem;
+  gap: var(--mbl-space-3xl);
 }
 
 @media screen and (max-width: 768px) {
-  .footer-columns { grid-auto-flow: row; grid-auto-columns: 1fr; gap: 2rem; }
+  .footer-columns { grid-auto-flow: row; grid-auto-columns: 1fr; gap: var(--mbl-space-2xl); }
 }
 
 .footer-column {
@@ -93,7 +93,7 @@ function isExternal(url: string): boolean {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1rem;
+  gap: var(--mbl-space-md);
 }
 
 .footer-link-item { margin: 0; }
@@ -105,7 +105,7 @@ function isExternal(url: string): boolean {
   font-weight: 500;
   transition: all 0.2s ease;
   position: relative;
-  padding: 0.5rem 0;
+  padding: var(--mbl-space-xs) 0;
 }
 
 @media screen and (max-width: 768px) {

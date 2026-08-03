@@ -82,7 +82,7 @@ onUnmounted(() => {
 }
 
 .action-sheet-title {
-  padding: 1.25rem 1.5rem;
+  padding: var(--mbl-space-lg) var(--mbl-space-xl);
   font-weight: 600;
   font-size: 1.1rem;
   color: var(--mbl-text-strong);
@@ -100,7 +100,7 @@ onUnmounted(() => {
 }
 
 .action-sheet-item {
-  padding: 1rem 1.5rem;
+  padding: var(--mbl-space-md) var(--mbl-space-xl);
   cursor: pointer;
   transition: background-color 0.15s;
   color: var(--mbl-text-strong);

@@ -412,7 +412,7 @@ onUnmounted(() => {
 
 <style scoped>
 .auth-code-modal__email {
-  margin-bottom: 1rem;
+  margin-bottom: var(--mbl-space-md);
   word-break: break-all;
 }
 </style>

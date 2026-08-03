@@ -92,14 +92,14 @@ function processAutomatic(container: HTMLElement) {
 .h3-grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  margin: 1.5rem 0 2rem;
+  gap: var(--mbl-space-xl);
+  margin: var(--mbl-space-xl) 0 var(--mbl-space-2xl);
 }
 
 @media screen and (max-width: 768px) {
   .h3-grid-container {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: var(--mbl-space-md);
   }
 }
 
@@ -107,14 +107,14 @@ function processAutomatic(container: HTMLElement) {
   border: 2px solid;
   border-image-slice: 1;
   border-image-source: linear-gradient(to right, var(--primary-color) 0%, var(--secondary-color) 100%);
-  padding: 1.5rem;
+  padding: var(--mbl-space-xl);
   position: relative;
   overflow: hidden;
 }
 
 :deep(.h3-grid-item h3) {
   margin-top: 0;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--mbl-space-sm);
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--secondary-color);
@@ -129,7 +129,7 @@ function processAutomatic(container: HTMLElement) {
 }
 
 :deep(.h3-grid-item p) {
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--mbl-space-xs);
   color: var(--mbl-text-body);
   line-height: 1.6;
 }
@@ -138,8 +138,8 @@ function processAutomatic(container: HTMLElement) {
 
 :deep(.h3-grid-item ul),
 :deep(.h3-grid-item ol) {
-  margin: 0.5rem 0;
-  padding-left: 1.5rem;
+  margin: var(--mbl-space-xs) 0;
+  padding-left: var(--mbl-space-xl);
   color: var(--mbl-text-body);
 }
 

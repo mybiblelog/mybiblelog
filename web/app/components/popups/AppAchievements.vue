@@ -147,7 +147,7 @@ const _close = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--mbl-space-md);
   height: 80px;
   overflow: visible;
 }
@@ -195,7 +195,7 @@ const _close = () => {
 }
 
 .app-achievements__message {
-  margin-bottom: 1rem;
+  margin-bottom: var(--mbl-space-md);
 }
 </style>
 

@@ -191,7 +191,7 @@ function hideTooltip(): void {
   position: absolute;
   transform: translate(-50%, calc(-100% - 6px));
   z-index: 10;
-  padding: 0.3rem 0.5rem;
+  padding: var(--mbl-space-2xs) var(--mbl-space-xs);
   border-radius: var(--mbl-radius-sm);
   background: var(--mbl-bg-elevated);
   border: 1px solid var(--mbl-border);
@@ -212,7 +212,7 @@ function hideTooltip(): void {
  * design on very wide screens.
  */
 .heatmap__scroll {
-  padding-bottom: 0.25rem;
+  padding-bottom: var(--mbl-space-2xs);
 }
 
 .heatmap__inner {
@@ -224,7 +224,7 @@ function hideTooltip(): void {
 
 .heatmap__months {
   display: flex;
-  margin-bottom: 4px;
+  margin-bottom: var(--mbl-space-2xs);
 }
 
 .heatmap__weekday-spacer {
@@ -258,7 +258,7 @@ function hideTooltip(): void {
   gap: var(--heat-cell-gap);
   width: 28px;
   flex: none;
-  margin-right: 4px;
+  margin-right: var(--mbl-space-2xs);
 }
 
 .heatmap__weekday {
@@ -301,7 +301,7 @@ function hideTooltip(): void {
 }
 
 .heatmap__strip--narrow + .heatmap__strip--narrow {
-  margin-top: 1.25rem;
+  margin-top: var(--mbl-space-lg);
 }
 
 @media (min-width: 640px) {
@@ -328,7 +328,7 @@ function hideTooltip(): void {
   display: flex;
   align-items: center;
   gap: var(--heat-cell-gap);
-  margin-top: 0.75rem;
+  margin-top: var(--mbl-space-sm);
   font-size: 0.7rem;
   color: var(--mbl-text-muted);
 }
@@ -339,7 +339,7 @@ function hideTooltip(): void {
 }
 
 .heatmap__legend span {
-  margin: 0 0.25rem;
+  margin: 0 var(--mbl-space-2xs);
 }
 </style>
 

@@ -159,15 +159,15 @@ onMounted(async () => {
 
 <style scoped>
 .entry-date {
-  padding: 1rem 0.5rem 0;
+  padding: var(--mbl-space-md) var(--mbl-space-xs) 0;
   display: flex;
   justify-content: space-between;
 }
 .entry-date .date { display: flex; flex-direction: column; font-weight: bold; }
 .entry-date .verse-count { font-size: 0.8em; }
 .calendar-page__add-entry-button { align-self: center; }
-.calendar-page__no-entries { margin: 0.5rem 0; }
-.calendar-page__tracker-start-alert { margin-top: 0.75rem; }
+.calendar-page__no-entries { margin: var(--mbl-space-xs) 0; }
+.calendar-page__tracker-start-alert { margin-top: var(--mbl-space-sm); }
 </style>
 
 <i18n lang="json">

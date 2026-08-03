@@ -115,7 +115,7 @@ async function handleReminderSubmit() {
 
 <style scoped>
 p {
-  margin-bottom: 1rem;
+  margin-bottom: var(--mbl-space-md);
 }
 </style>
 

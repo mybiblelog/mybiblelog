@@ -15,7 +15,15 @@
     "declaration-property-value-keyword-no-deprecated": null,
     "declaration-block-single-line-max-declarations": null,
     "declaration-property-value-allowed-list": {
-      "/^border(-[a-z]+)*-radius$/": ["/^var\\(--mbl-radius/", "0"]
+      "/^border(-[a-z]+)*-radius$/": ["/^var\\(--mbl-radius/", "0"],
+      "/^(row-|column-)?gap$/": ["/var\\(--/", "0"],
+      "/^(margin|padding)(-(top|right|bottom|left|inline|block)(-(start|end))?)?$/": [
+        "/var\\(--/",
+        "/^(0|auto)( (0|auto))*$/",
+        "/^calc\\(/",
+        "/em$/",
+        "/%$/"
+      ]
     }
   }
 }

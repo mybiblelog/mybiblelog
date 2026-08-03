@@ -3,6 +3,7 @@
    in each component; only the identical container/cell layout lives here. */
 .mbl-tap-grid {
   display: grid;
+  /* stylelint-disable-next-line declaration-property-value-allowed-list -- hairline grid rule, not spacing */
   padding: 1px;
   font-size: 0.8rem;
   user-select: none;

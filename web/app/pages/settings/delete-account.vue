@@ -96,7 +96,7 @@ async function deleteAccount() {
 
 <style scoped>
 main p {
-  margin-bottom: 1rem;
+  margin-bottom: var(--mbl-space-md);
 }
 </style>
 

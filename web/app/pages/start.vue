@@ -89,7 +89,7 @@ function closeGetStartedModal() {
 
 <style scoped>
 .progress-indicator {
-  margin-bottom: 2rem;
+  margin-bottom: var(--mbl-space-2xl);
 }
 </style>
 

@@ -303,30 +303,30 @@ onMounted(() => { loadFeedbacks(); });
   top: calc(var(--header-height) + 0.5rem - 1px);
   z-index: 10;
   background: var(--mbl-app-canvas-bg);
-  padding: 0.5rem 1rem;
-  margin-left: -0.5rem;
-  margin-right: -0.5rem;
+  padding: var(--mbl-space-xs) var(--mbl-space-md);
+  margin-left: calc(-1 * var(--mbl-space-xs));
+  margin-right: calc(-1 * var(--mbl-space-xs));
   border-bottom: 1px solid var(--mbl-border-soft);
-  margin-bottom: 1rem;
+  margin-bottom: var(--mbl-space-md);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--mbl-space-md);
 }
 
 .feedback-cards {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--mbl-space-md);
 }
 
 .feedback-card {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.4rem 1rem;
+  gap: var(--mbl-space-xs) var(--mbl-space-md);
   border: 1px solid var(--mbl-border);
   border-radius: var(--mbl-radius-lg);
-  padding: 0.875rem 1rem;
+  padding: var(--mbl-space-sm) var(--mbl-space-md);
 }
 
 .feedback-card__date {
@@ -342,7 +342,7 @@ onMounted(() => { loadFeedbacks(); });
 
 .feedback-card__message {
   grid-column: 1 / -1;
-  padding: 0.5rem 0;
+  padding: var(--mbl-space-xs) 0;
   word-break: break-word;
 }
 
@@ -350,7 +350,7 @@ onMounted(() => { loadFeedbacks(); });
   align-self: center;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: var(--mbl-space-xs);
   min-width: 0;
 }
 
@@ -385,8 +385,8 @@ onMounted(() => { loadFeedbacks(); });
   grid-column: 1 / -1;
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 0.25rem;
+  gap: var(--mbl-space-xs);
+  margin-top: var(--mbl-space-2xs);
 }
 
 .feedback-badge {

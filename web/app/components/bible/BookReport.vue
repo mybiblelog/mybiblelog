@@ -170,8 +170,8 @@ function viewReadingLogForChapter(bookIndex: number, chapterIndex: number) {
   grid-template-columns: auto 1fr auto auto;
   grid-template-areas: "back title notes reading";
   align-items: center;
-  gap: 0.5rem 0.75rem;
-  margin-bottom: 1rem;
+  gap: var(--mbl-space-xs) var(--mbl-space-sm);
+  margin-bottom: var(--mbl-space-md);
 }
 
 .book-report-header__back { grid-area: back; }
@@ -188,7 +188,7 @@ function viewReadingLogForChapter(bookIndex: number, chapterIndex: number) {
 }
 
 .plaque {
-  margin-bottom: 2rem;
+  margin-bottom: var(--mbl-space-2xl);
 }
 
 .plaque p {

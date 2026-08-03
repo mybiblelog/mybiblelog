@@ -88,11 +88,12 @@ useContentSeo({
 
 .book-grid {
   columns: 12rem 4;
-  column-gap: 0.1rem;
+  column-gap: var(--mbl-space-3xs);
 }
 
 .book-box {
   border: 1px solid var(--mbl-text-stronger);
+  /* stylelint-disable-next-line declaration-property-value-allowed-list -- collapses adjacent 1px borders */
   margin-bottom: -1px;
   line-height: 1;
 }
@@ -101,7 +102,7 @@ useContentSeo({
   font-weight: bold;
   font-size: 0.8rem;
   white-space: nowrap;
-  padding-right: 0.2rem;
+  padding-right: var(--mbl-space-2xs);
 }
 
 .chapter-checkboxes {
@@ -113,7 +114,7 @@ useContentSeo({
 .chapter-checkbox-container {
   display: inline-flex;
   align-items: center;
-  margin: 0 0.1rem;
+  margin: 0 var(--mbl-space-3xs);
   font-size: 0.8rem;
 }
 
@@ -122,12 +123,12 @@ useContentSeo({
   width: 0.6rem;
   height: 0.6rem;
   border: 1px solid var(--mbl-text-stronger);
-  margin: 0.1rem;
+  margin: var(--mbl-space-3xs);
   text-align: center;
 }
 
 .attribution {
-  padding: 0.5rem;
+  padding: var(--mbl-space-xs);
   text-align: right;
 }
 

@@ -19,8 +19,8 @@ defineProps<{
 <style scoped>
 .pill-progress-bar {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  gap: var(--mbl-space-xs);
+  margin-top: var(--mbl-space-xs);
 }
 
 .pill {

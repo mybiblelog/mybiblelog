@@ -105,7 +105,7 @@ const promptKind = computed<PwaPromptKind>(() => {
   z-index: var(--z-index-toast);
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--mbl-space-xs);
   pointer-events: none;
 }
 
@@ -116,7 +116,7 @@ const promptKind = computed<PwaPromptKind>(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--mbl-space-md);
   box-shadow: 0 0 0 2px var(--mbl-bg), 0 0 5px var(--mbl-text-stronger);
   pointer-events: auto;
 }
@@ -127,7 +127,7 @@ const promptKind = computed<PwaPromptKind>(() => {
 
 .pwa-prompt__actions {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--mbl-space-xs);
   flex-shrink: 0;
 }
 </style>

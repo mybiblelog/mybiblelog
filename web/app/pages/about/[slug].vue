@@ -62,7 +62,7 @@ h1, h2, h3, h4, h5, h6 { clear: both; }
   .phone-frame {
     float: none;
     display: block;
-    margin: 0 auto 1rem;
+    margin: 0 auto var(--mbl-space-md);
   }
 }
 </style>

@@ -1,5 +1,6 @@
 /*  For content screenshots that look like a phone screen */
 .phone-frame {
+  /* stylelint-disable-next-line declaration-property-value-allowed-list -- device bezel width, not layout spacing */
   padding: 14px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: var(--mbl-radius-3xl);

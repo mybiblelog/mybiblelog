@@ -46,7 +46,7 @@ const confirmButtonClass = computed(() => buttonTypeToClass(dialog.confirmButton
 
 <style scoped>
 .app-dialog__actions {
-  margin-top: 1.25rem;
+  margin-top: var(--mbl-space-lg);
 }
 </style>
 

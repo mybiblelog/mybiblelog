@@ -307,7 +307,7 @@ watch(() => store.open, () => {
 }
 
 .passage-list {
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--mbl-space-xs);
 }
 
 .passage-line {
@@ -315,7 +315,7 @@ watch(() => store.open, () => {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  padding: 0.25rem 0;
+  padding: var(--mbl-space-2xs) 0;
   border: 0 solid var(--mbl-border-strong);
   border-top-width: 1px;
 }
@@ -330,14 +330,14 @@ watch(() => store.open, () => {
 }
 
 .passage-line .passage {
-  margin: 0.25rem 0;
+  margin: var(--mbl-space-2xs) 0;
 }
 
 .passage-note-editor-tags {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 0.75rem;
+  gap: var(--mbl-space-sm);
 }
 
 .passage-note-editor-tags__selected {
