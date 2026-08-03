@@ -144,10 +144,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-}
-
-.mbl-button-group .mbl-button:not(:last-child) {
-  margin-right: var(--mbl-space-xs);
+  gap: var(--mbl-space-xs);
 }
 
 .mbl-button-group--start {
