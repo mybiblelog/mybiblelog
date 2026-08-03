@@ -1,13 +1,15 @@
 <template>
   <div class="calendar-date-selector">
-    <span class="prev" @click="selectPrevious"><div class="icon" /></span>
+    <span class="prev" @click="selectPrevious"><triangle-left-icon class="icon" /></span>
     <span class="today" @click="selectCurrent">{{ t('today') }}</span>
-    <span class="next" @click="selectNext"><div class="icon" /></span>
+    <span class="next" @click="selectNext"><triangle-right-icon class="icon" /></span>
   </div>
 </template>
 
 <script setup lang="ts">
 import dayjs, { type Dayjs } from 'dayjs';
+import TriangleLeftIcon from '~/components/svg/TriangleLeftIcon.vue';
+import TriangleRightIcon from '~/components/svg/TriangleRightIcon.vue';
 
 const props = defineProps<{ currentDate: string; selectedDate: Dayjs }>();
 const emit = defineEmits<{ dateSelected: [date: Dayjs]; daySelected: [date: string | null] }>();
@@ -38,8 +40,7 @@ function selectNext() {
 .calendar-date-selector > * { cursor: pointer; user-select: none; }
 .today { padding: var(--mbl-space-2xs) var(--mbl-space-xs); }
 .prev, .next { display: flex; justify-content: center; align-items: center; padding: 0 var(--mbl-space-md); }
-.prev .icon { width: 0; height: 0; border-left: 0; border-top: 0.5rem solid transparent; border-bottom: 0.5rem solid transparent; border-right: 1rem solid var(--mbl-border-strong); }
-.next .icon { width: 0; height: 0; border-right: 0; border-top: 0.5rem solid transparent; border-bottom: 0.5rem solid transparent; border-left: 1rem solid var(--mbl-border-strong); }
+.prev .icon, .next .icon { display: block; }
 </style>
 
 <i18n lang="json">
