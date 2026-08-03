@@ -58,6 +58,10 @@ type Screen = {
 const HIDE_UI_CSS = `
   /* Hide the feedback button */
   .floating-action-button { display: none !important; }
+  /* Hide dev-only overlays (the script runs against the dev server) */
+  #nuxt-devtools-container,
+  #vue-tracer-overlay,
+  nuxt-devtools-inspect-panel { display: none !important; }
 `;
 
 // --- Per-screen prepare / cleanup functions ---
@@ -89,7 +93,7 @@ async function prepareAchievements(page: Page): Promise<void> {
   await page.waitForSelector('.book-card:nth-child(65) .chapter-card', { timeout: 3000 });
   await judeCard.locator('.chapter-card').first().click();
   // Wait for the achievement modal to appear and the star animation to begin
-  await page.waitForSelector('.popup-modal', { timeout: 5000 });
+  await page.waitForSelector('[data-testid="achievements-modal"]', { timeout: 5000 });
   await page.waitForTimeout(500);
 }
 
