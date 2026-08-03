@@ -265,7 +265,7 @@ onMounted(() => {
   margin: var(--mbl-space-xs) 0;
   padding: var(--mbl-space-xs);
   background: var(--mbl-bg-elevated);
-  border-radius: var(--mbl-radius-sm);
+  border-radius: var(--mbl-radius-lg);
   box-shadow: var(--mbl-shadow-elev-1);
   display: grid;
   grid-template:
