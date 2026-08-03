@@ -33,7 +33,7 @@ const { t } = useI18n();
   background-color: white;
   background-image: none;
   border: 1px solid #747775;
-  border-radius: var(--mbl-radius-sm);
+  border-radius: var(--mbl-radius-button);
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   color: #1f1f1f;
