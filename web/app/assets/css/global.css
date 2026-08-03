@@ -216,7 +216,7 @@ table th {
 .box {
   background-color: var(--mbl-bg);
   border-radius: var(--mbl-radius-card);
-  box-shadow: var(--mbl-shadow);
+  box-shadow: var(--mbl-shadow-card);
   color: var(--mbl-text-body);
   display: block;
   padding: var(--mbl-space-lg);
@@ -224,11 +224,11 @@ table th {
 
 a.box:hover,
 a.box:focus {
-  box-shadow: var(--mbl-shadow-box-hover);
+  box-shadow: var(--mbl-shadow-card-hover);
 }
 
 a.box:active {
-  box-shadow: var(--mbl-shadow-box-active);
+  box-shadow: var(--mbl-shadow-card-pressed);
 }
 
 /* Hide Vue.js apps until they are compiled */

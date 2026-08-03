@@ -37,7 +37,7 @@ const messageClass = (type?: string) => {
 }
 
 .mbl-notification {
-  box-shadow: 0 0 0 2px var(--mbl-bg), 0 0 5px var(--mbl-text-stronger);
+  box-shadow: var(--mbl-ring-knockout), var(--mbl-shadow-popover);
   pointer-events: auto;
   margin-bottom: var(--mbl-space-md);
 }

@@ -9,7 +9,7 @@
       </p>
       <p class="hero-description" v-html="description" />
       <div class="hero-cta">
-        <NuxtLink :to="localePath('/register')" class="mbl-button mbl-button--primary mbl-button--lg">
+        <NuxtLink :to="localePath('/register')" class="mbl-button mbl-button--primary mbl-button--lg mbl-button--glow">
           {{ buttonText }}
         </NuxtLink>
         <p class="hero-cta-note">
@@ -98,26 +98,10 @@ const localePath = useLocalePath();
   gap: var(--mbl-space-sm);
 }
 
-.mbl-button.mbl-button--primary.mbl-button--lg {
-  background-color: var(--secondary-color);
-  border-color: var(--secondary-color);
-  color: var(--mbl-on-accent);
-  font-weight: 600;
-  padding: var(--mbl-space-xs) var(--mbl-space-2xl);
+/* Sits between --lg (1.25rem) and the base size; the rest comes from --glow. */
+.mbl-button--glow.mbl-button--lg {
   font-size: 1.125rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px var(--mbl-primary-glow);
 }
-
-.mbl-button.mbl-button--primary.mbl-button--lg:hover {
-  background-color: var(--secondary-color-hover);
-  border-color: var(--secondary-color-hover);
-  color: var(--mbl-on-accent);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px var(--mbl-primary-glow-strong);
-}
-
-.mbl-button.mbl-button--primary.mbl-button--lg:active { transform: translateY(0); }
 
 .hero-cta-note {
   font-size: 0.9rem;

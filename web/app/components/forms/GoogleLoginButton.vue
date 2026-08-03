@@ -115,10 +115,13 @@ const { t } = useI18n();
   opacity: 0.12;
 }
 
+/* stylelint-disable declaration-property-value-allowed-list -- vendored verbatim from Google's
+   sign-in branding spec; must not be re-themed with our own shadow tokens */
 .gsi-material-button:not(:disabled):hover {
   -webkit-box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%);
   box-shadow: 0 1px 2px 0 rgb(60 64 67 / 30%), 0 1px 3px 1px rgb(60 64 67 / 15%);
 }
+/* stylelint-enable declaration-property-value-allowed-list */
 
 .gsi-material-button:not(:disabled):hover .gsi-material-button-state {
   background-color: #303030;

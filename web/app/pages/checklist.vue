@@ -271,7 +271,7 @@ onBeforeUnmount(endCelebration);
 .loading-card {
   padding: var(--mbl-space-md) var(--mbl-space-2xl);
   border-radius: var(--mbl-radius-card);
-  box-shadow: var(--mbl-shadow-elev-1);
+  box-shadow: var(--mbl-shadow-card);
   margin: var(--mbl-space-xs) 0;
 }
 

@@ -842,7 +842,7 @@ onBeforeUnmount(() => {
   height: 0.5rem;
   border-radius: var(--mbl-radius-pill);
   background: var(--primary-color);
-  box-shadow: 0 0 0 2px var(--mbl-bg);
+  box-shadow: var(--mbl-ring-knockout);
 }
 
 .log-page__layout {

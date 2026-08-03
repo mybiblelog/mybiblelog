@@ -89,9 +89,11 @@ useEscapeKey(close, isOpen);
   user-select: none;
   background-color: currentcolor;
   border-radius: var(--mbl-radius-circle);
+  /* stylelint-disable declaration-property-value-allowed-list -- draws the outer two dots of the kebab icon; a shape, not a shadow */
   box-shadow:
     0 -6px 0 0 currentcolor,
     0 6px 0 0 currentcolor;
+  /* stylelint-enable declaration-property-value-allowed-list */
 }
 
 .action-menu-overlay {
@@ -109,7 +111,7 @@ useEscapeKey(close, isOpen);
   background: var(--mbl-bg);
   border: 1px solid var(--mbl-menu-border, var(--mbl-overlay-20));
   border-radius: var(--mbl-radius-2xl);
-  box-shadow: 0 2px 8px var(--mbl-overlay-25);
+  box-shadow: var(--mbl-shadow-popover);
   min-width: 150px;
   z-index: 39;
   overflow: hidden;

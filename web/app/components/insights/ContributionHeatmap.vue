@@ -195,7 +195,7 @@ function hideTooltip(): void {
   border-radius: var(--mbl-radius-sm);
   background: var(--mbl-bg-elevated);
   border: 1px solid var(--mbl-border);
-  box-shadow: var(--mbl-card-shadow);
+  box-shadow: var(--mbl-shadow-popover);
   color: var(--mbl-text-body);
   font-size: 0.72rem;
   line-height: 1.2;

@@ -171,23 +171,77 @@
 
   --mbl-on-accent: var(--neutral-0);
 
-  --mbl-shadow-ambient: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1);
-  --mbl-shadow-ring-subtle: 0 0 0 1px rgba(10, 10, 10, 0.02);
-  --mbl-shadow-light: var(--mbl-shadow-ambient), var(--mbl-shadow-ring-subtle);
-  --mbl-shadow-dark: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
-  --mbl-shadow: var(--mbl-shadow-light);
-  --mbl-shadow-box-hover-light: var(--mbl-shadow-ambient), 0 0 0 1px var(--mbl-link);
-  --mbl-shadow-box-hover-dark: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.5), 0 0 0 1px var(--mbl-link);
-  --mbl-shadow-box-hover: var(--mbl-shadow-box-hover-light);
-  --mbl-shadow-box-active: inset 0 1px 2px rgba(10, 10, 10, 0.2), 0 0 0 1px var(--mbl-link);
-  --mbl-shadow-elev-1: 0 1px 7px rgba(0, 0, 0, 0.3);
-  --mbl-shadow-elev-2: 0 1px 9px rgba(0, 0, 0, 0.45);
-  --mbl-shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.15);
-  --mbl-shadow-overlay: 0 -2px 16px rgba(0, 0, 0, 0.3);
-  --mbl-card-shadow: 0 1px 7px #999;
+  /*
+   * Shadows — three layers. Component CSS should only ever use layer 3.
+   *
+   * 1) Colors (--mbl-shadow-color-*). The ONLY part the dark theme overrides,
+   *    so the geometry below is declared once instead of twice. The rim flips
+   *    from black to white in dark mode for the same reason --mbl-menu-border
+   *    does: a black hairline is invisible against the #000 dark canvas.
+   * 2) Elevation ladder (--mbl-shadow-1..4). Offset and blur roughly double
+   *    per step, so the levels read as one scale rather than four opinions.
+   * 3) Semantic roles. Pick by what the element IS, not by how big a shadow
+   *    it wants:
+   *      --mbl-shadow-card            resting surface on the page — cards,
+   *                                   boxes, grid tiles, control thumbs
+   *      --mbl-shadow-card-raised     that surface lifting on hover
+   *      --mbl-shadow-card-hover      interactive card hover — raised, with
+   *                                   the accent rim
+   *      --mbl-shadow-card-pressed    interactive card :active
+   *      --mbl-shadow-popover         transient layer over content —
+   *                                   dropdowns, menus, tooltips, toasts
+   *      --mbl-shadow-floating        persistent floating chrome — FAB,
+   *                                   install prompt
+   *      --mbl-shadow-modal           centered modal card
+   *      --mbl-shadow-panel           edge-anchored overlay — action sheet,
+   *                                   nav drawer
+   *
+   * Rings and insets are a separate axis from elevation; an element can take
+   * one of each. Brand glow (--mbl-shadow-cta) is decoration, not elevation —
+   * it is only for marketing CTAs.
+   *
+   * stylelint enforces that box-shadow uses one of these tokens.
+   */
+  --mbl-shadow-color-key: rgba(10, 10, 10, 0.14);
+  --mbl-shadow-color-ambient: rgba(10, 10, 10, 0.1);
+  --mbl-shadow-color-rim: rgba(10, 10, 10, 0.04);
 
-  --mbl-inset-well: inset 0 0.0625em 0.125em rgba(10, 10, 10, 0.05);
+  --mbl-shadow-1: 0 1px 2px var(--mbl-shadow-color-key), 0 0 0 1px var(--mbl-shadow-color-rim);
+  --mbl-shadow-2: 0 2px 4px var(--mbl-shadow-color-key),
+    0 4px 8px var(--mbl-shadow-color-ambient), 0 0 0 1px var(--mbl-shadow-color-rim);
+  --mbl-shadow-3: 0 4px 8px var(--mbl-shadow-color-key),
+    0 8px 20px var(--mbl-shadow-color-ambient), 0 0 0 1px var(--mbl-shadow-color-rim);
+  --mbl-shadow-4: 0 8px 16px var(--mbl-shadow-color-key),
+    0 16px 40px var(--mbl-shadow-color-ambient), 0 0 0 1px var(--mbl-shadow-color-rim);
+  /* Edge-anchored panels sit against a viewport edge, where an offset shadow
+     would fall off-screen. Cast evenly instead. */
+  --mbl-shadow-edge: 0 0 24px var(--mbl-shadow-color-key),
+    0 0 0 1px var(--mbl-shadow-color-rim);
+
+  --mbl-shadow-card: var(--mbl-shadow-1);
+  --mbl-shadow-card-raised: var(--mbl-shadow-2);
+  --mbl-shadow-popover: var(--mbl-shadow-3);
+  --mbl-shadow-floating: var(--mbl-shadow-3);
+  --mbl-shadow-floating-hover: var(--mbl-shadow-4);
+  --mbl-shadow-modal: var(--mbl-shadow-4);
+  --mbl-shadow-panel: var(--mbl-shadow-edge);
+
+  /* Interaction states: level-2/inset geometry with the accent rim swapped in. */
+  --mbl-shadow-card-hover: 0 2px 4px var(--mbl-shadow-color-key),
+    0 4px 8px var(--mbl-shadow-color-ambient), 0 0 0 1px var(--mbl-link);
+  --mbl-shadow-card-pressed: inset 0 1px 2px var(--mbl-shadow-color-key),
+    0 0 0 1px var(--mbl-link);
+  --mbl-shadow-inset: inset 0 1px 2px var(--mbl-shadow-color-key);
+
   --mbl-focus-ring: 0 0 0 0.125em rgba(0, 170, 249, 0.25);
+  --mbl-ring-selected: 0 0 0 2px var(--mbl-link);
+  /* Knockout: paints the page background around an element so it separates
+     from whatever it overlaps. Pair with an elevation token when it floats. */
+  --mbl-ring-knockout: 0 0 0 2px var(--mbl-bg);
+
+  /* Brand glow for marketing CTAs — decoration, not elevation. */
+  --mbl-shadow-cta: 0 4px 12px var(--mbl-primary-glow);
+  --mbl-shadow-cta-hover: 0 6px 16px var(--mbl-primary-glow-strong);
 
   /* Site nav brand (text clipped to gradient) */
   --mbl-site-title-gradient: linear-gradient(
@@ -309,19 +363,15 @@
   --mbl-tag-option-border: #585858;
   --mbl-tag-option-selected-bg: #2a2a2a;
 
-  --mbl-shadow-light: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
-  --mbl-shadow-dark: 0 0.5em 1em -0.125em rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
-  --mbl-shadow: var(--mbl-shadow-light);
-  --mbl-shadow-box-hover: var(--mbl-shadow-box-hover-dark);
-  --mbl-shadow-box-active: inset 0 1px 2px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--mbl-link);
-  --mbl-shadow-elev-1: 0 1px 7px rgba(0, 0, 0, 0.6);
-  --mbl-shadow-elev-2: 0 1px 9px rgba(0, 0, 0, 0.7);
-  --mbl-shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.45);
+  /* Shadows: only the colors flip. The geometry ladder in :root is shared. */
+  --mbl-shadow-color-key: rgba(0, 0, 0, 0.55);
+  --mbl-shadow-color-ambient: rgba(0, 0, 0, 0.4);
+  /* Rim goes light — a black hairline is invisible on the dark canvas. */
+  --mbl-shadow-color-rim: rgba(255, 255, 255, 0.06);
+  --mbl-focus-ring: 0 0 0 0.125em rgba(0, 170, 249, 0.45);
+
   /* Compact menus: black overlay borders vanish on dark surfaces */
   --mbl-menu-border: var(--mbl-border);
-  --mbl-shadow-overlay: 0 -2px 16px rgba(0, 0, 0, 0.7);
-  --mbl-card-shadow: 0 1px 7px rgba(0, 0, 0, 0.6);
-  --mbl-inset-well: inset 0 0.0625em 0.125em rgba(0, 0, 0, 0.5);
 
   --mbl-scrim: rgba(0, 0, 0, 0.92);
   --mbl-surface-frost: rgba(24, 24, 24, 0.9);

@@ -20,7 +20,7 @@
           <li v-for="(item, index) in list" :key="index" v-html="item" />
         </ul>
         <div v-if="buttonText && buttonDestination" class="fifty-fifty-cta">
-          <NuxtLink :to="localePath(buttonDestination)" class="mbl-button mbl-button--primary">
+          <NuxtLink :to="localePath(buttonDestination)" class="mbl-button mbl-button--primary mbl-button--glow">
             {{ buttonText }}
           </NuxtLink>
         </div>
@@ -176,27 +176,6 @@ const localePath = useLocalePath();
 }
 
 .fifty-fifty-cta { margin-top: var(--mbl-space-md); }
-
-.fifty-fifty-cta .mbl-button.mbl-button--primary {
-  background-color: var(--secondary-color);
-  border-color: var(--secondary-color);
-  color: var(--mbl-on-accent);
-  font-weight: 600;
-  padding: var(--mbl-space-xs) var(--mbl-space-2xl);
-  font-size: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px var(--mbl-primary-glow);
-}
-
-.fifty-fifty-cta .mbl-button.mbl-button--primary:hover {
-  background-color: var(--secondary-color-hover);
-  border-color: var(--secondary-color-hover);
-  color: var(--mbl-on-accent);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px var(--mbl-primary-glow-strong);
-}
-
-.fifty-fifty-cta .mbl-button.mbl-button--primary:active { transform: translateY(0); }
 
 .fifty-fifty-note {
   font-size: 0.875rem;

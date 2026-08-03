@@ -207,7 +207,7 @@ const setMode = (mode: ThemeMode) => {
 
 .theme-switcher-modal__btn--active {
   border-color: var(--secondary-color);
-  box-shadow: 0 0 0 1px var(--secondary-color);
+  box-shadow: var(--mbl-ring-selected);
 }
 
 .theme-switcher-modal__btn:focus {

@@ -123,7 +123,7 @@
   background-color: var(--mbl-bg);
   border: 1px solid var(--mbl-border);
   border-radius: var(--mbl-radius-sm);
-  box-shadow: var(--mbl-inset-well);
+  box-shadow: var(--mbl-shadow-inset);
   color: var(--mbl-text);
   display: inline-flex;
   font-size: 1rem;
