@@ -97,6 +97,16 @@
   font-size: 1.25rem;
 }
 
+/* Icon-only control: a circle whose square hit target is sized in `em` so it
+   still tracks the --sm / --lg font-size modifiers like the padded variants do.
+   Declared after --sm so its circular radius wins over that modifier's. */
+.mbl-button--icon {
+  border-radius: var(--mbl-radius-circle);
+  height: 2.25em;
+  padding: 0;
+  width: 2.25em;
+}
+
 .mbl-button--static {
   background-color: var(--mbl-bg-muted);
   border-color: var(--mbl-border);

@@ -28,8 +28,14 @@
                 {{ entryDate.verses }} {{ t('verse', entryDate.verses) }}
               </div>
             </div>
-            <button class="mbl-button mbl-button--sm calendar-page__add-entry-button" data-testid="calendar-add-entry" @click="openAddEntryFormForDate(entryDate.date)">
-              +
+            <button
+              class="mbl-button mbl-button--primary mbl-button--icon calendar-page__add-entry-button"
+              :title="t('add_entry')"
+              :aria-label="t('add_entry')"
+              data-testid="calendar-add-entry"
+              @click="openAddEntryFormForDate(entryDate.date)"
+            >
+              <plus-icon width="20px" height="20px" />
             </button>
           </div>
           <log-entry v-for="entry of entryDate.entries" :key="entry.id" :passage="entry" :actions="actionsForLogEntry(entry)" />
@@ -49,6 +55,7 @@ import BusyBar from '~/components/ui/BusyBar.vue';
 import CalendarMonth from '~/components/calendar/CalendarMonth.vue';
 import LogEntry from '~/components/log/LogEntry.vue';
 import ReadingTrackerResetCard from '~/components/ui/ReadingTrackerResetCard.vue';
+import PlusIcon from '~/components/svg/PlusIcon.vue';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
@@ -174,6 +181,7 @@ onMounted(async () => {
 {
   "en": {
     "page_title": "Calendar",
+    "add_entry": "Add Entry",
     "verse": "verse | verses",
     "open_bible": "Open Bible",
     "continue_reading": "Continue Reading",
@@ -188,6 +196,7 @@ onMounted(async () => {
   },
   "de": {
     "page_title": "Kalender",
+    "add_entry": "Eintrag hinzufügen",
     "verse": "Vers | Verse",
     "open_bible": "Bibel öffnen",
     "continue_reading": "Weiterlesen",
@@ -202,6 +211,7 @@ onMounted(async () => {
   },
   "es": {
     "page_title": "Calendario",
+    "add_entry": "Añadir entrada",
     "verse": "versículo | versículos",
     "open_bible": "Abrir en la Biblia",
     "continue_reading": "Seguir leyendo",
@@ -216,6 +226,7 @@ onMounted(async () => {
   },
   "fr": {
     "page_title": "Calendrier",
+    "add_entry": "Ajouter une entrée",
     "verse": "verset | versets",
     "open_bible": "Ouvrir dans la Bible",
     "continue_reading": "Continuer la lecture",
@@ -230,6 +241,7 @@ onMounted(async () => {
   },
   "ko": {
     "page_title": "달력",
+    "add_entry": "기록 추가",
     "verse": "절 | 절",
     "open_bible": "성경 열기",
     "continue_reading": "이어서 읽기",
@@ -244,6 +256,7 @@ onMounted(async () => {
   },
   "pt": {
     "page_title": "Calendário",
+    "add_entry": "Adicionar Entrada",
     "verse": "versículo | versículos",
     "open_bible": "Ler na Biblia",
     "continue_reading": "Continuar lendo",
@@ -258,6 +271,7 @@ onMounted(async () => {
   },
   "uk": {
     "page_title": "Календар",
+    "add_entry": "Додати запис",
     "verse": "верс | віршів",
     "open_bible": "Читати в Біблії",
     "continue_reading": "Продовжити читання",
