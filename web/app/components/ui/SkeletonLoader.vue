@@ -3,7 +3,7 @@
     <div
       v-for="n in count"
       :key="n"
-      class="skeleton-loader__card"
+      class="skeleton-loader__card mbl-card mbl-card--list-item"
       :class="`skeleton-loader__card--${variant}`"
       aria-hidden="true"
     >
@@ -54,46 +54,36 @@ withDefaults(defineProps<{
 </script>
 
 <style scoped>
-.skeleton-loader__card {
-  border-radius: 0.25rem;
-  background: var(--mbl-bg-elevated);
-  box-shadow: var(--mbl-card-shadow);
-}
-
 /* matches .log-entry dimensions */
 .skeleton-loader__card--log-entry {
-  padding: 1em 0.5em;
-  margin: 0.5rem 0;
+  margin: var(--mbl-space-xs) 0;
 }
 
 /* matches .passage-note dimensions */
 .skeleton-loader__card--note {
-  padding: 0.5rem 1rem;
-  margin: 1rem 0;
+  margin: var(--mbl-space-md) 0;
 }
 
 /* matches .tag-line dimensions */
 .skeleton-loader__card--tag {
-  padding: 0.5rem 1rem;
-  margin: 1rem -0.5rem;
-  background: var(--mbl-bg);
+  margin: var(--mbl-space-md) 0;
 }
 
 .skeleton-loader__row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 0.5rem;
+  gap: var(--mbl-space-xs);
 }
 
 .skeleton-loader__row--footer {
   align-items: flex-end;
-  margin-top: 0.5rem;
+  margin-top: var(--mbl-space-xs);
 }
 
 .skeleton-loader__bar {
   background: var(--mbl-border-soft);
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-sm);
   animation: skeleton-loader-pulse 1.4s ease-in-out infinite;
 }
 
@@ -101,14 +91,14 @@ withDefaults(defineProps<{
   width: 9rem;
   max-width: 40%;
   height: 1rem;
-  margin: 0.25rem 0;
+  margin: var(--mbl-space-2xs) 0;
 }
 
 .skeleton-loader__bar--subtitle {
   width: 6rem;
   max-width: 30%;
   height: 0.75rem;
-  margin-top: 0.5rem;
+  margin-top: var(--mbl-space-xs);
 }
 
 .skeleton-loader__bar--action {
@@ -119,13 +109,13 @@ withDefaults(defineProps<{
 .skeleton-loader__bar--meta {
   width: 5rem;
   height: 0.75rem;
-  margin: 0.25rem 0;
+  margin: var(--mbl-space-2xs) 0;
 }
 
 .skeleton-loader__bar--text {
   width: 100%;
   height: 0.8rem;
-  margin: 0.6rem 0;
+  margin: var(--mbl-space-sm) 0;
 }
 
 .skeleton-loader__bar--text-short {
@@ -135,7 +125,7 @@ withDefaults(defineProps<{
 .skeleton-loader__bar--pill {
   width: 4rem;
   height: 1.4rem;
-  border-radius: 999px;
+  border-radius: var(--mbl-radius-pill);
 }
 
 .skeleton-loader__bar--buttons {

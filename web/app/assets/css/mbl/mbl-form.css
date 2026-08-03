@@ -1,6 +1,13 @@
-/* Form layout */
+/*
+ * Form layout
+ *
+ * Control padding is intentionally in `em` so inputs, selects and textareas
+ * grow with their own font-size (and stay aligned with .mbl-button, which does
+ * the same). Do not convert control padding to the fixed --mbl-space-* ladder;
+ * layout spacing between fields does use the ladder.
+ */
 .mbl-field:not(:last-child) {
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--mbl-space-sm);
 }
 
 .mbl-field--addons {
@@ -43,7 +50,15 @@
 }
 
 .mbl-field--addons .mbl-control:not(:last-child) {
+  /* stylelint-disable-next-line declaration-property-value-allowed-list -- overlaps adjacent addon borders */
   margin-right: -1px;
+}
+
+/* Inputs sitting next to a button take the button's radius so joined edges align.
+   Declared before the addon corner rules so those still flatten the inner seams. */
+.mbl-field:has(.mbl-button) .mbl-input,
+.mbl-field:has(.mbl-button) .mbl-select select {
+  border-radius: var(--mbl-radius-button);
 }
 
 .mbl-field--addons .mbl-control:first-child .mbl-button,
@@ -94,7 +109,7 @@
 .mbl-help {
   display: block;
   font-size: 0.75rem;
-  margin-top: 0.25rem;
+  margin-top: var(--mbl-space-2xs);
 }
 
 .mbl-help--danger {
@@ -107,7 +122,7 @@
   align-items: center;
   background-color: var(--mbl-bg);
   border: 1px solid var(--mbl-border);
-  border-radius: var(--mbl-radius);
+  border-radius: var(--mbl-radius-sm);
   box-shadow: var(--mbl-inset-well);
   color: var(--mbl-text);
   display: inline-flex;
@@ -171,7 +186,7 @@
   appearance: none;
   background-color: var(--mbl-bg);
   border: 1px solid var(--mbl-border);
-  border-radius: var(--mbl-radius);
+  border-radius: var(--mbl-radius-sm);
   color: var(--mbl-text);
   cursor: pointer;
   display: block;
@@ -255,7 +270,7 @@
   align-items: center;
   background-color: var(--mbl-bg-muted);
   border: 1px solid var(--mbl-border);
-  border-radius: var(--mbl-radius);
+  border-radius: var(--mbl-radius-sm);
   color: var(--mbl-text);
   cursor: pointer;
   display: inline-flex;

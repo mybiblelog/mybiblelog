@@ -26,11 +26,7 @@ const props = withDefaults(defineProps<{
 });
 
 const backgroundStyle = computed(() => ({
-  position: 'relative' as const,
-  height: '1rem',
   background: props.backgroundColor,
-  borderRadius: '5px',
-  overflow: 'hidden',
 }));
 
 const primaryBarStyle = computed(() => ({
@@ -46,6 +42,13 @@ const secondaryBarStyle = computed(() => ({
 </script>
 
 <style>
+.bar-container {
+  position: relative;
+  height: 1rem;
+  border-radius: var(--mbl-radius-lg);
+  overflow: hidden;
+}
+
 .bar-progress {
   transition: width 1s ease-out;
   position: absolute;

@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div class="log-page" :style="pageCssVars">
+    <div class="content-column content-column--wide log-page" :style="pageCssVars">
       <header class="page-header">
         <h2 class="mbl-title">
           {{ t('log') }}
@@ -813,35 +813,25 @@ onBeforeUnmount(() => {
 </i18n>
 
 <style scoped>
-.log-page {
-  max-width: 1100px;
-  min-height: 70vh;
-  margin: 0 auto;
-  padding: 3rem 1rem 5rem;
-}
-
+/* Layout comes from .content-column--wide; see assets/css/global.css */
 .log-page header.page-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-  align-items: flex-start;
   padding: 0;
 }
 
 .log-page__mobile-query-button {
-  margin-bottom: 1rem;
+  margin-bottom: var(--mbl-space-md);
   display: flex;
-  gap: 0.5rem;
+  gap: var(--mbl-space-xs);
   flex-wrap: wrap;
 }
 
-@media (min-width: 800px) {
+@mixin mbl-wide {
   .log-page__mobile-query-button { display: none; }
 }
 
 .log-page__query-button {
   position: relative;
-  padding-right: 1.25rem;
+  padding-right: var(--mbl-space-lg);
 }
 
 .log-page__query-badge {
@@ -850,7 +840,7 @@ onBeforeUnmount(() => {
   right: 0.35rem;
   width: 0.5rem;
   height: 0.5rem;
-  border-radius: 999px;
+  border-radius: var(--mbl-radius-pill);
   background: var(--primary-color);
   box-shadow: 0 0 0 2px var(--mbl-bg);
 }
@@ -860,8 +850,8 @@ onBeforeUnmount(() => {
   flex-wrap: wrap;
 }
 
-.log-page__layout:last-child { margin-bottom: -0.75rem; }
-.log-page__layout:not(:last-child) { margin-bottom: 0.75rem; }
+.log-page__layout:last-child { margin-bottom: calc(-1 * var(--mbl-space-sm)); }
+.log-page__layout:not(:last-child) { margin-bottom: var(--mbl-space-sm); }
 
 .log-page__layout > * {
   display: block;
@@ -873,13 +863,13 @@ onBeforeUnmount(() => {
   width: 100%;
 }
 
-@media (min-width: 769px) {
+@mixin mbl-wide {
   .log-page__layout > *:first-child { width: 33.3333%; }
 }
 
 .log-page__sidebar { display: none; }
 
-@media (min-width: 800px) {
+@mixin mbl-wide {
   .log-page__sidebar {
     display: block;
     position: sticky;
@@ -888,16 +878,16 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (min-width: 800px) {
-  .log-page__content { padding-left: 1rem; }
+@mixin mbl-wide {
+  .log-page__content { padding-left: var(--mbl-space-md); }
 }
 
-.log-page__query-manager-box { padding: 0.85rem 1rem 1rem; }
+.log-page__query-manager-box { padding: var(--mbl-space-sm) var(--mbl-space-md) var(--mbl-space-md); }
 
 .log-page__query-manager-actions {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--mbl-space-sm);
 }
 
 .log-page__query-manager-actions:empty {
@@ -910,14 +900,14 @@ onBeforeUnmount(() => {
   top: calc(var(--header-height) + 0.5rem - 1px);
   z-index: 10;
   background: var(--mbl-app-canvas-bg);
-  padding: 0.5rem 1rem;
-  margin-left: -0.5rem;
-  margin-right: -0.5rem;
+  padding: var(--mbl-space-xs) var(--mbl-space-md);
+  margin-left: calc(-1 * var(--mbl-space-xs));
+  margin-right: calc(-1 * var(--mbl-space-xs));
   border-bottom: 1px solid var(--mbl-border-soft);
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 0.25rem;
+  gap: var(--mbl-space-2xs);
 }
 
 @media (min-width: 600px) {
@@ -925,7 +915,7 @@ onBeforeUnmount(() => {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 0.75rem;
+    gap: var(--mbl-space-sm);
   }
 }
 
@@ -951,8 +941,8 @@ onBeforeUnmount(() => {
   z-index: 9;
   background: var(--mbl-app-canvas-bg);
   border-bottom: 1px solid var(--mbl-border-soft);
-  padding: 0.5rem;
-  margin: 0.75rem -0.5rem 0.25rem;
+  padding: var(--mbl-space-xs);
+  margin: var(--mbl-space-sm) calc(-1 * var(--mbl-space-xs)) var(--mbl-space-2xs);
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--mbl-text-90);

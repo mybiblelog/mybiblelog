@@ -63,7 +63,7 @@ function dismiss() {
 
 <style scoped>
 .reading-tracker-reset-card {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--mbl-space-xl);
 }
 </style>
 

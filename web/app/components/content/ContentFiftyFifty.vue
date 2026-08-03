@@ -68,26 +68,26 @@ const localePath = useLocalePath();
 
 <style scoped>
 .fifty-fifty-section {
-  margin: 3rem 0;
-  padding: 2rem 0;
+  margin: var(--mbl-space-3xl) 0;
+  padding: var(--mbl-space-2xl) 0;
 }
 
 .fifty-fifty-container {
   display: flex;
   align-items: center;
-  gap: 3rem;
+  gap: var(--mbl-space-3xl);
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 var(--mbl-space-xl);
 }
 
-@media screen and (max-width: 768px) {
-  .fifty-fifty-container { flex-direction: column; gap: 2rem; }
+@mixin mbl-mobile {
+  .fifty-fifty-container { flex-direction: column; gap: var(--mbl-space-2xl); }
 }
 
 .fifty-fifty-section--reverse .fifty-fifty-container { flex-direction: row-reverse; }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .fifty-fifty-section--reverse .fifty-fifty-container { flex-direction: column; }
 }
 
@@ -110,30 +110,30 @@ const localePath = useLocalePath();
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--mbl-space-md);
 }
 
 .fifty-fifty-title {
   font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--mbl-space-xs);
   line-height: 1.3;
   color: var(--mbl-text-strong);
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .fifty-fifty-title { font-size: 1.75rem; }
 }
 
 .fifty-fifty-subtitle {
   font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--mbl-space-xs);
   color: var(--secondary-color);
   line-height: 1.4;
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .fifty-fifty-subtitle { font-size: 1.125rem; }
 }
 
@@ -141,28 +141,28 @@ const localePath = useLocalePath();
   font-size: 1.125rem;
   line-height: 1.7;
   color: var(--mbl-text-soft);
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--mbl-space-xs);
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .fifty-fifty-description { font-size: 1rem; }
 }
 
 .fifty-fifty-list {
   list-style: none;
   padding-left: 0;
-  margin: 1rem 0;
+  margin: var(--mbl-space-md) 0;
 }
 
 .fifty-fifty-list li {
   font-size: 1.125rem;
   line-height: 1.7;
   color: var(--mbl-text-soft);
-  padding: 0.5rem 0 0.5rem 1.5rem;
+  padding: var(--mbl-space-xs) 0 var(--mbl-space-xs) var(--mbl-space-xl);
   position: relative;
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .fifty-fifty-list li { font-size: 1rem; }
 }
 
@@ -175,14 +175,14 @@ const localePath = useLocalePath();
   font-size: 1.25rem;
 }
 
-.fifty-fifty-cta { margin-top: 1rem; }
+.fifty-fifty-cta { margin-top: var(--mbl-space-md); }
 
 .fifty-fifty-cta .mbl-button.mbl-button--primary {
   background-color: var(--secondary-color);
   border-color: var(--secondary-color);
   color: var(--mbl-on-accent);
   font-weight: 600;
-  padding: 0.5rem 2rem;
+  padding: var(--mbl-space-xs) var(--mbl-space-2xl);
   font-size: 1rem;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px var(--mbl-primary-glow);
@@ -201,7 +201,7 @@ const localePath = useLocalePath();
 .fifty-fifty-note {
   font-size: 0.875rem;
   color: var(--mbl-text-subtle);
-  margin-top: 0.5rem;
+  margin-top: var(--mbl-space-xs);
   font-style: italic;
 }
 </style>

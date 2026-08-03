@@ -123,27 +123,27 @@ const rows = computed(() => {
 .frequency__controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: var(--mbl-space-md);
+  margin-bottom: var(--mbl-space-xl);
 }
 
 .frequency__control {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--mbl-space-2xs);
 }
 
 .frequency__bars {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--mbl-space-2xs);
 }
 
 .frequency__row {
   display: grid;
   grid-template-columns: 8rem 1fr 3rem;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--mbl-space-xs);
 }
 
 .frequency__name {
@@ -157,14 +157,14 @@ const rows = computed(() => {
 .frequency__track {
   height: 0.9rem;
   background: var(--mbl-progress-track-bg);
-  border-radius: 4px;
+  border-radius: var(--mbl-radius-sm);
   overflow: hidden;
 }
 
 .frequency__fill {
   height: 100%;
   background: var(--mbl-success);
-  border-radius: 4px;
+  border-radius: var(--mbl-radius-sm);
   transition: width 0.3s ease;
 }
 

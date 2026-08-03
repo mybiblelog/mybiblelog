@@ -26,7 +26,11 @@
             :aria-label="t('open_menu')"
             @click="toggleNav"
           >
-            <span class="site-nav__menu-icon" aria-hidden="true">
+            <span
+              class="site-nav__menu-icon"
+              :class="{ 'site-nav__menu-icon--open': navOpen }"
+              aria-hidden="true"
+            >
               <span />
               <span />
               <span />
@@ -243,6 +247,7 @@
 <script setup lang="ts">
 import { useAuthStore } from '~/stores/auth';
 import { filterVisibleNavItems, isAdminNavVisible } from '~/helpers/site-nav-visibility';
+import { MBL_MEDIA_DESKTOP } from '~/helpers/breakpoints';
 
 const { t } = useI18n();
 
@@ -314,7 +319,7 @@ let onDesktopMq: (() => void) | null = null;
 
 onMounted(() => {
   if (window.matchMedia) {
-    desktopMq = window.matchMedia('(min-width: 1024px)');
+    desktopMq = window.matchMedia(MBL_MEDIA_DESKTOP);
     onDesktopMq = () => {
       if (desktopMq?.matches) { navOpen.value = false; }
     };
@@ -374,6 +379,7 @@ const {
   --site-nav-z-bar: 37;
   --site-nav-z-drawer: 36;
   --site-nav-z-backdrop: 35;
+  --site-nav-menu-icon-ms: 240ms;
 
   position: fixed;
   top: 0;
@@ -392,7 +398,7 @@ const {
 .site-nav__inner {
   max-width: 1152px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 var(--mbl-space-md);
   min-height: var(--site-nav-height);
   display: flex;
   align-items: center;
@@ -403,14 +409,14 @@ const {
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
-  padding: 0.5rem 0;
+  gap: var(--mbl-space-xs);
+  padding: var(--mbl-space-xs) 0;
 }
 
 .site-nav__mobile-brand {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--mbl-space-sm);
   min-width: 0;
   flex: 1;
 }
@@ -427,7 +433,7 @@ const {
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--mbl-space-md);
   flex-wrap: nowrap;
   min-height: var(--site-nav-height);
 }
@@ -435,7 +441,7 @@ const {
 .site-nav__brand {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--mbl-space-sm);
   flex-shrink: 0;
 }
 
@@ -473,7 +479,7 @@ const {
 .site-nav__brand-text:focus-visible {
   outline: 2px solid var(--secondary-color);
   outline-offset: 3px;
-  border-radius: 4px;
+  border-radius: var(--mbl-radius-sm);
 }
 
 .site-nav__link-row {
@@ -481,7 +487,7 @@ const {
   align-items: center;
   flex-wrap: wrap;
   flex-grow: 1;
-  gap: 0.25rem 0.5rem;
+  gap: var(--mbl-space-2xs);
   min-width: 0;
 }
 
@@ -496,7 +502,7 @@ const {
   position: relative;
   display: inline-flex;
   align-items: center;
-  padding: 0.5rem 0.65rem;
+  padding: var(--mbl-space-xs) var(--mbl-space-sm);
   font-size: 0.9375rem;
   color: var(--mbl-text-subtle);
   text-decoration: none;
@@ -513,7 +519,7 @@ const {
   right: 0.65rem;
   bottom: 0.2rem;
   height: 2px;
-  border-radius: 1px;
+  border-radius: var(--mbl-radius-pill);
   background: linear-gradient(90deg, var(--secondary-color), var(--tertiary-color));
   transform: scaleX(0);
   transform-origin: left center;
@@ -548,19 +554,19 @@ const {
   position: absolute;
   top: 100%;
   right: 0;
-  margin-top: 0.125rem;
+  margin-top: var(--mbl-space-3xs);
   min-width: 12rem;
-  padding: 0.35rem 0;
+  padding: var(--mbl-space-xs) 0;
   background: var(--mbl-bg);
   border: 1px solid var(--mbl-border);
-  border-radius: 6px;
+  border-radius: var(--mbl-radius-md);
   box-shadow: 0 4px 12px var(--mbl-overlay-08);
 }
 
 .site-nav__admin-item,
 .site-nav__account-item {
   display: block;
-  padding: 0.5rem 1rem;
+  padding: var(--mbl-space-xs) var(--mbl-space-md);
   font-size: 0.9375rem;
   color: var(--mbl-text-subtle);
   text-decoration: none;
@@ -576,12 +582,12 @@ const {
 
 .site-nav__theme-desktop {
   flex-shrink: 0;
-  margin-left: 0.25rem;
+  margin-left: var(--mbl-space-2xs);
 }
 
 .site-nav__locale-desktop {
   flex-shrink: 0;
-  margin-left: 0.125rem;
+  margin-left: var(--mbl-space-3xs);
 }
 
 .site-nav__auth-slot {
@@ -589,13 +595,13 @@ const {
 }
 
 .site-nav__locale-drawer {
-  margin-top: 0.5rem;
-  padding: 0 1rem;
+  margin-top: var(--mbl-space-xs);
+  padding: 0 var(--mbl-space-md);
 }
 
 .site-nav__theme-drawer {
-  margin-top: 0.5rem;
-  padding: 0 1rem;
+  margin-top: var(--mbl-space-xs);
+  padding: 0 var(--mbl-space-md);
 }
 
 .site-nav__icon-btn {
@@ -604,11 +610,11 @@ const {
   justify-content: center;
   width: 2.75rem;
   height: 2.75rem;
-  margin-top: -0.25rem;
-  margin-bottom: -0.25rem;
+  margin-top: calc(-1 * var(--mbl-space-2xs));
+  margin-bottom: calc(-1 * var(--mbl-space-2xs));
   padding: 0;
   border: none;
-  border-radius: 6px;
+  border-radius: var(--mbl-radius-md);
   background: transparent;
   color: var(--mbl-text-strong);
   cursor: pointer;
@@ -635,7 +641,7 @@ const {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 5px;
+  gap: var(--mbl-space-2xs);
   width: 22px;
 }
 
@@ -643,7 +649,27 @@ const {
   display: block;
   height: 2px;
   background: currentcolor;
-  border-radius: 1px;
+  border-radius: var(--mbl-radius-pill);
+  transition:
+    transform var(--site-nav-menu-icon-ms) ease,
+    opacity calc(var(--site-nav-menu-icon-ms) / 2) ease;
+}
+
+/*
+ * Hamburger → X: the outer bars slide to the middle line (one bar height plus
+ * one gap = 7px) and cross, while the middle bar collapses out of the way.
+ */
+.site-nav__menu-icon--open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.site-nav__menu-icon--open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0.2);
+}
+
+.site-nav__menu-icon--open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 .site-nav__overlay {
@@ -676,13 +702,13 @@ const {
 .site-nav__drawer-scroll {
   display: flex;
   flex-direction: column;
-  padding: 1rem 0 calc(2rem + 56px + 1.25rem);
+  padding: var(--mbl-space-md) 0 calc(var(--mbl-fab-clearance) + var(--mbl-space-lg));
   max-height: calc(100vh - var(--site-nav-height));
   overflow-y: auto;
 }
 
 .site-nav__drawer-link {
-  padding: 0.85rem 1.25rem;
+  padding: var(--mbl-space-sm) var(--mbl-space-lg);
   font-size: 1rem;
   color: var(--mbl-text-strong);
   text-decoration: none;
@@ -707,12 +733,12 @@ const {
 }
 
 .site-nav__drawer-link--indent {
-  padding-left: 2rem;
+  padding-left: var(--mbl-space-2xl);
   font-size: 0.9375rem;
 }
 
 .site-nav__drawer-subhead {
-  padding: 0.75rem 1.25rem 0.25rem;
+  padding: var(--mbl-space-sm) var(--mbl-space-lg) var(--mbl-space-2xs);
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -720,7 +746,7 @@ const {
   color: var(--mbl-text-subtle);
 }
 
-@media screen and (max-width: 1023px) {
+@mixin mbl-nav-mobile {
   .site-nav__mobile-head {
     display: flex;
   }
@@ -730,19 +756,19 @@ const {
   }
 
   .site-nav__inner {
-    padding: 0 0.75rem;
+    padding: 0 var(--mbl-space-sm);
   }
 }
 
-@media screen and (max-width: 768px) {
-  .site-nav__drawer-scroll {
-    padding-bottom: calc(1.5rem + 48px + 1.25rem);
-  }
-}
-
-@media screen and (min-width: 1024px) {
+@mixin mbl-desktop {
   .site-nav__overlay {
     display: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-nav__menu-icon span {
+    transition: none;
   }
 }
 </style>

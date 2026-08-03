@@ -21,7 +21,7 @@ export default defineNuxtConfig({
 
   postcss: {
     plugins: {
-      'postcss-mixins': {},
+      'postcss-mixins': { mixinsDir: resolve(__dirname, 'app/assets/css/mixins') },
     },
   },
 

@@ -19,14 +19,14 @@ defineProps<{
 <style scoped>
 .pill-progress-bar {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  gap: var(--mbl-space-xs);
+  margin-top: var(--mbl-space-xs);
 }
 
 .pill {
   flex: 1;
   height: 0.5rem;
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-sm);
   background-color: var(--mbl-progress-track-bg);
   transition: background-color 0.3s ease;
 }

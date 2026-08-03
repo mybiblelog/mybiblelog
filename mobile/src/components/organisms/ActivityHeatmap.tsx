@@ -7,7 +7,7 @@ import {
   type HeatmapWeek,
   type InsightsLogEntry,
 } from "@mybiblelog/shared";
-import { spacing, useTheme } from "@/src/design";
+import { radius, spacing, useTheme } from "@/src/design";
 import type { ThemeColors } from "@/src/design";
 import { Text } from "../atoms/Text";
 import { formatLongDate } from "@/src/i18n/date";
@@ -231,14 +231,14 @@ const styles = StyleSheet.create({
   // Fluid cell: fills its week column's width so the strip spans the container.
   gridCell: {
     height: CELL_SIZE,
-    borderRadius: 2,
+    borderRadius: radius.xs,
     borderWidth: 1,
   },
   // Fixed-size swatch for the legend (not part of the fluid grid).
   cell: {
     width: CELL_SIZE,
     height: CELL_SIZE,
-    borderRadius: 2,
+    borderRadius: radius.xs,
     borderWidth: 1,
   },
   legend: {

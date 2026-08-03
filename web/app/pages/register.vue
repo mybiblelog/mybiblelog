@@ -138,7 +138,7 @@ const onSubmit = async () => {
 
 <style scoped>
 .google-login-button-container {
-  margin-top: 1.5rem;
+  margin-top: var(--mbl-space-xl);
 }
 </style>
 

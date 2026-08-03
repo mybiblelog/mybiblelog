@@ -6,7 +6,7 @@
   >
     <template #content>
       <div v-if="editorError" class="mbl-help mbl-help--danger">
-        {{ editorError }}
+        {{ editorErrorMessage }}
       </div>
       <div class="mbl-field">
         <label class="mbl-label">{{ t('label') }}</label>
@@ -61,16 +61,26 @@
 </template>
 
 <script setup lang="ts">
+import type { ApiErrorDetail } from '~/helpers/api-error';
 import AppModal from '~/components/popups/AppModal.vue';
 import { usePassageNoteTagEditorStore } from '~/stores/passage-note-tag-editor';
 
-const { t } = useI18n();
+const { t, te } = useI18n();
+const { $terr } = useNuxtApp();
 const tagEditorStore = usePassageNoteTagEditorStore();
 
-const editorError = ref('');
+const editorError = ref<ApiErrorDetail | null>(null);
+
+// Save failures surface as an `ApiErrorDetail` ({ field, code }), so the code has
+// to be translated — rendering the detail itself prints "[object Object]".
+const editorErrorMessage = computed(() => {
+  if (!editorError.value) { return ''; }
+  const key = `api_error.${editorError.value.code}`;
+  return te(key) ? $terr(editorError.value) : t('unknown_error');
+});
 
 watch(() => tagEditorStore.open, (isOpen) => {
-  if (isOpen) { editorError.value = ''; }
+  if (isOpen) { editorError.value = null; }
 });
 
 function onLabelInput(e: Event) {
@@ -89,10 +99,10 @@ function onDescriptionInput(e: Event) {
 }
 
 async function handleEditorSave() {
-  editorError.value = '';
+  editorError.value = null;
   const result = await tagEditorStore.savePassageNoteTag();
   if (!result) {
-    editorError.value = String(tagEditorStore.errors?._form ?? t('unknown_error'));
+    editorError.value = tagEditorStore.errors?._form ?? { field: null, code: 'unknown_error' };
   }
 }
 

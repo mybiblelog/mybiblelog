@@ -102,7 +102,7 @@ async function onResend() {
 
 <style scoped>
 .resend-verification-email {
-  margin: 1rem 0;
+  margin: var(--mbl-space-md) 0;
 }
 </style>
 

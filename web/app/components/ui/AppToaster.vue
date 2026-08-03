@@ -39,7 +39,7 @@ const messageClass = (type?: string) => {
 .mbl-notification {
   box-shadow: 0 0 0 2px var(--mbl-bg), 0 0 5px var(--mbl-text-stronger);
   pointer-events: auto;
-  margin-bottom: 1rem;
+  margin-bottom: var(--mbl-space-md);
 }
 
 .toast-enter-active,

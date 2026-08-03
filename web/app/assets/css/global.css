@@ -134,7 +134,7 @@ hr {
   border: none;
   display: block;
   height: 2px;
-  margin: 1.5rem 0;
+  margin: var(--mbl-space-xl) 0;
 }
 
 input[type="checkbox"],
@@ -166,7 +166,7 @@ pre {
   color: var(--mbl-text-body);
   font-size: 0.875em;
   overflow-x: auto;
-  padding: 1.25rem 1.5rem;
+  padding: var(--mbl-space-lg) var(--mbl-space-xl);
   white-space: pre;
   word-wrap: normal;
 }
@@ -219,7 +219,7 @@ table th {
   box-shadow: var(--mbl-shadow);
   color: var(--mbl-text-body);
   display: block;
-  padding: 1.25rem;
+  padding: var(--mbl-space-lg);
 }
 
 a.box:hover,
@@ -249,17 +249,21 @@ body.has-site-nav-fixed {
 }
 
 .content-column {
-  max-width: 708px;
+  max-width: var(--mbl-content-width);
   min-height: 70vh;
   margin: 0 auto;
-  padding: 3rem 1rem 5rem;
+  padding: var(--mbl-page-top) var(--mbl-page-gutter) var(--mbl-page-bottom);
 }
 
-.container .page-header,
+/* Wider column for data-dense pages (log, notes). */
+.content-column--wide {
+  max-width: var(--mbl-content-width-wide);
+}
+
 .content-column .page-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--mbl-page-header-gap);
   align-items: flex-start;
 }
 

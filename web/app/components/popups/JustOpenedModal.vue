@@ -141,8 +141,8 @@ function takeNote() {
 .just-opened__actions {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 1rem;
+  gap: var(--mbl-space-xs);
+  margin-top: var(--mbl-space-md);
 }
 
 .just-opened__actions .mbl-button {

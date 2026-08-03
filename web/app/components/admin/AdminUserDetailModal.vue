@@ -212,18 +212,18 @@ watch(() => props.open, (isOpen) => {
 <style scoped>
 .admin-user-detail__loading,
 .admin-user-detail__error {
-  margin-bottom: 1rem;
+  margin-bottom: var(--mbl-space-md);
 }
 
 .admin-user-detail__stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.75rem 1.5rem;
-  margin: 0 0 1.25rem;
+  gap: var(--mbl-space-sm) var(--mbl-space-xl);
+  margin: 0 0 var(--mbl-space-lg);
 }
 
 .admin-user-detail__stat dt {
-  margin-bottom: 0.125rem;
+  margin-bottom: var(--mbl-space-3xs);
 }
 
 .admin-user-detail__stat dd {
@@ -239,15 +239,15 @@ watch(() => props.open, (isOpen) => {
 
 .admin-user-detail__login-methods {
   display: flex;
-  gap: 0.5rem;
+  gap: var(--mbl-space-xs);
   flex-wrap: wrap;
-  margin-top: 0.25rem;
+  margin-top: var(--mbl-space-2xs);
 }
 
 .admin-user-detail__login-badge {
   display: inline-block;
-  padding: 0.125rem 0.5rem;
-  border-radius: 999px;
+  padding: var(--mbl-space-3xs) var(--mbl-space-xs);
+  border-radius: var(--mbl-radius-pill);
   font-size: 0.8125rem;
   font-weight: 500;
   background: var(--mbl-surface-2, #e9ecef);

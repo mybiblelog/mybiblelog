@@ -9,7 +9,6 @@
         {{ t('chapter_checklist') }}
       </h2>
     </header>
-    <br>
     <div>
       <div v-if="!bookReports.length" class="loading-card">
         <strong>{{ t('loading') }}</strong>
@@ -17,14 +16,14 @@
       <div
         v-for="bookReport in bookReports"
         :key="bookReport.bookIndex"
-        class="book-card"
+        class="book-card mbl-card"
         data-testid="book-card"
         :data-book-index="bookReport.bookIndex"
         :data-complete="bookReport.complete || undefined"
       >
         <div class="book-card--header">
           <div class="book-card--completion-indicator">
-            <svg v-if="bookReport.complete" viewBox="0 0 24 24" width="100%" height="100%"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" :fill="bookReport.complete ? 'var(--mbl-success-bright)' : 'transparent'" /></svg>
+            <checkmark-icon v-if="bookReport.complete" width="100%" height="100%" />
           </div>
           <div class="book-card--book-name">
             {{ bookReport.bookName }}
@@ -54,9 +53,6 @@
             :data-complete="chapterReport.complete || undefined"
             @click="toggleChapter(chapterReport.bookIndex, chapterReport.chapterIndex)"
           >
-            <div class="chapter-card--chapter-number">
-              {{ chapterReport.chapterIndex }}
-            </div>
             <div class="chapter-card--completion-indicator">
               <svg v-if="busyChapter === `${bookReport.bookIndex}.${chapterReport.chapterIndex}`" viewBox="0 0 80 80" width="100%" height="100%">
                 <path
@@ -74,7 +70,30 @@
                   />
                 </path>
               </svg>
-              <svg v-else viewBox="0 0 24 24" width="100%" height="100%"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" :fill="chapterReport.complete ? 'var(--mbl-success-bright)' : 'transparent'" /></svg>
+              <!-- Kept mounted (transparent) when incomplete: the svg is what gives the cell its height. -->
+              <checkmark-icon
+                v-else
+                width="100%"
+                height="100%"
+                :stroke="chapterReport.complete ? 'var(--mbl-success-bright)' : 'transparent'"
+                :draw="justCompletedChapter === `${bookReport.bookIndex}.${chapterReport.chapterIndex}`"
+              />
+              <particle-burst
+                v-if="justCompletedChapter === `${bookReport.bookIndex}.${chapterReport.chapterIndex}`"
+                :count="8"
+                :min-distance="20"
+                :max-distance="40"
+                :min-size="5"
+                :max-size="12"
+                :end-scale="0.9"
+                :delay-ms="CHECKMARK_DRAW_MS"
+                :duration-ms="700"
+                color="var(--mbl-success-bright)"
+                alt-color="var(--mbl-success)"
+              />
+            </div>
+            <div class="chapter-card--chapter-number">
+              {{ chapterReport.chapterIndex }}
             </div>
           </div>
         </div>
@@ -88,7 +107,9 @@ import dayjs from 'dayjs';
 import { Bible, BrowserCache, computeBibleProgress } from '@mybiblelog/shared';
 import BusyBar from '~/components/ui/BusyBar.vue';
 import CompletionBar from '~/components/ui/CompletionBar.vue';
+import ParticleBurst from '~/components/ui/ParticleBurst.vue';
 import ReadingTrackerResetCard from '~/components/ui/ReadingTrackerResetCard.vue';
+import CheckmarkIcon from '~/components/svg/CheckmarkIcon.vue';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useAppInitStore } from '~/stores/app-init';
 import { useToastStore } from '~/stores/toast';
@@ -123,6 +144,35 @@ for (let i = 1; i <= bookCount; i++) {
 }
 
 const busy = computed(() => Boolean(busyChapter.value || computeBusy.value));
+
+// Only a chapter marked read *in this session* celebrates; everything rendered
+// from the progress snapshot on load stays static. `justCompletedChapter` holds
+// the one `bookIndex.chapterIndex` currently animating.
+// CHECKMARK_DRAW_MS matches the `checkmark-draw` duration in CheckmarkIcon.vue
+// and is handed to ParticleBurst as its delay, so the dots leave the mark just
+// as the stroke lands. CELEBRATION_MS covers that plus the burst's own jitter
+// and 700ms flight, with a little buffer.
+const CHECKMARK_DRAW_MS = 400;
+const CELEBRATION_MS = 1600;
+const justCompletedChapter = ref<string | null>(null);
+let celebrationTimer: ReturnType<typeof setTimeout> | null = null;
+
+function endCelebration() {
+  if (celebrationTimer) {
+    clearTimeout(celebrationTimer);
+    celebrationTimer = null;
+  }
+  justCompletedChapter.value = null;
+}
+
+function celebrateChapter(key: string) {
+  endCelebration();
+  justCompletedChapter.value = key;
+  celebrationTimer = setTimeout(() => {
+    celebrationTimer = null;
+    justCompletedChapter.value = null;
+  }, CELEBRATION_MS);
+}
 
 // Per-book/chapter completion comes straight from the shared progress snapshot
 // (a single consolidation of the log entries); the view only resolves book
@@ -164,6 +214,8 @@ async function toggleChapter(bookIndex: number, chapterIndex: number) {
   if (busyChapter.value) { return; }
   const toastStore = useToastStore();
   busyChapter.value = `${bookIndex}.${chapterIndex}`;
+  // Don't let a still-running celebration bleed into the next interaction.
+  endCelebration();
 
   const date = dayjs().format('YYYY-MM-DD');
   const startVerseId = Bible.makeVerseId(bookIndex, chapterIndex, 1);
@@ -195,6 +247,10 @@ async function toggleChapter(bookIndex: number, chapterIndex: number) {
     const createdEntry = await logEntriesStore.createLogEntry({ date, startVerseId, endVerseId });
     if (createdEntry) {
       await getBookReports();
+      // Flagged before `busyChapter` clears below, so the checkmark replaces the
+      // spinner in a single render with `draw` already true — the animation runs
+      // off a freshly mounted element rather than a class toggle.
+      celebrateChapter(`${bookIndex}.${chapterIndex}`);
     }
     else {
       toastStore.add({ type: 'error', text: t('unable_to_mark_complete') });
@@ -207,34 +263,40 @@ onMounted(async () => {
   await useAppInitStore().loadUserData();
   getBookReports();
 });
+
+onBeforeUnmount(endCelebration);
 </script>
 
 <style scoped>
 .loading-card {
-  padding: 1rem 2rem;
-  border-radius: 0.25rem;
+  padding: var(--mbl-space-md) var(--mbl-space-2xl);
+  border-radius: var(--mbl-radius-card);
   box-shadow: var(--mbl-shadow-elev-1);
-  margin: 0.5rem 0;
+  margin: var(--mbl-space-xs) 0;
 }
-.book-card { user-select: none; }
 
+.book-card {
+  user-select: none;
+  margin: var(--mbl-space-xs) 0;
+}
+
+/* Sticky inside the card, so the book stays identified while its chapter grid
+   scrolls past; needs its own background and matching top corners to cover the
+   chapters and stay flush with the card it sits in. */
 .book-card--header {
   display: grid;
   grid-template-columns: 2rem 1fr 1fr 2rem;
   grid-template-rows: auto auto;
-  padding: 0.5rem;
-  background: var(--mbl-bg);
-  border-radius: 0.25rem;
-  box-shadow: var(--mbl-shadow-elev-1);
-  margin: 0.5rem 0;
+  padding: var(--mbl-space-xs);
+  background: var(--mbl-bg-elevated);
+  border-radius: var(--mbl-radius-card);
   font-size: 0.8rem;
   font-weight: bold;
-
   position: sticky;
   top: var(--site-nav-height);
   z-index: 1;
 }
-.book-card--completion-indicator { grid-area: 1 / 1 / 3 / 2; width: 1.5rem; margin-right: 0.5rem; display: flex; }
+.book-card--completion-indicator { grid-area: 1 / 1 / 3 / 2; width: 1.5rem; margin-right: var(--mbl-space-xs); display: flex; }
 .book-card--book-name { grid-area: 1 / 2 / 2 / 3; }
 .book-card--completion-fraction { grid-area: 1 / 3 / 2 / 4; text-align: right; }
 .book-card--completion-bar { grid-area: 2 / 2 / 3 / 4; }
@@ -243,28 +305,35 @@ onMounted(async () => {
 
 .book-card--chapters {
   display: grid;
-  gap: 0.5rem;
+  gap: var(--mbl-space-xs);
   grid-template-columns: repeat(5, 1fr);
+  padding: var(--mbl-space-xs);
 }
 
-@media screen and (min-width: 769px) { .book-card--chapters { grid-template-columns: repeat(6, 1fr); } }
+@mixin mbl-tablet { .book-card--chapters { grid-template-columns: repeat(6, 1fr); } }
 
-@media screen and (min-width: 1024px) { .book-card--chapters { grid-template-columns: repeat(8, 1fr); } }
+@mixin mbl-desktop { .book-card--chapters { grid-template-columns: repeat(8, 1fr); } }
 
 @media screen and (min-width: 1216px) { .book-card--chapters { grid-template-columns: repeat(10, 1fr); } }
 
 @media screen and (min-width: 1408px) { .book-card--chapters { grid-template-columns: repeat(12, 1fr); } }
 
 .chapter-card {
-  padding: 0.5rem;
+  padding: var(--mbl-space-xs);
   background: var(--mbl-bg);
-  border-radius: 0.25rem;
-  box-shadow: var(--mbl-shadow-elev-1);
+  border-radius: var(--mbl-radius-xl);
+  border: 1px solid var(--mbl-border);
   position: relative;
   cursor: pointer;
   transition: 0.1s;
 }
-.chapter-card:hover { transition: 0.2s; box-shadow: var(--mbl-shadow-elev-2); }
+.chapter-card:hover { transition: 0.2s; background: var(--mbl-bg-hover-light); }
+
+/* Positioning context for the completion burst, so the particles fire from the
+   centre of the checkmark rather than the centre of the whole cell. Particles
+   from the top grid row pass behind the sticky book header (z-index 1); that
+   reads as depth, and raising the burst above it would put dots over the title. */
+.chapter-card--completion-indicator { position: relative; }
 .chapter-card--chapter-number { text-align: center; font-weight: bold; }
 </style>
 

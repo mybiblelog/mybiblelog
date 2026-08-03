@@ -47,7 +47,7 @@ function displayVerseRange(startVerseId: number, endVerseId: number) {
 
 <style>
 .segment-bar {
-  border-radius: 5px;
+  border-radius: var(--mbl-radius-lg);
   overflow: hidden;
   line-height: 0;
   display: flex;

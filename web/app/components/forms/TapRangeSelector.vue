@@ -85,9 +85,9 @@ function handleClick(value: number) {
 <style scoped>
 .tap-range-selector--option {
   justify-content: center;
-  padding: 1rem 0;
+  padding: var(--mbl-space-md) 0;
   border: 2px solid transparent;
-  border-radius: 5px;
+  border-radius: var(--mbl-radius-sm);
 }
 
 .tap-range-selector--option:hover:not(.selected) {

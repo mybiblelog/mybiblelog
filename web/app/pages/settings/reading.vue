@@ -216,7 +216,7 @@ const { error: preferredBibleAppError, submit: savePreferredBibleApp } = useSett
 
 <style scoped>
 p {
-  margin-bottom: 1rem;
+  margin-bottom: var(--mbl-space-md);
 }
 
 select {

@@ -1,5 +1,5 @@
 <template>
-  <div class="notes-page">
+  <div class="content-column content-column--wide notes-page">
     <header class="page-header">
       <h2 class="mbl-title">
         {{ t('notes') }}
@@ -288,26 +288,16 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.notes-page {
-  max-width: 1100px;
-  min-height: 70vh;
-  margin: 0 auto;
-  padding: 3rem 1rem 5rem;
-}
-
+/* Layout comes from .content-column--wide; see assets/css/global.css */
 .notes-page header.page-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-  align-items: flex-start;
   padding: 0;
 }
-.notes-page__layout { display: flex; flex-wrap: wrap; gap: 1rem; }
+.notes-page__layout { display: flex; flex-wrap: wrap; gap: var(--mbl-space-md); }
 
 .notes-page__mobile-query-button {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: var(--mbl-space-xs);
+  margin-bottom: var(--mbl-space-md);
 }
 .notes-page__query-button { position: relative; }
 
@@ -315,8 +305,8 @@ onMounted(() => {
   display: inline-block;
   width: 0.5rem;
   height: 0.5rem;
-  margin-left: 0.35rem;
-  border-radius: 999px;
+  margin-left: var(--mbl-space-xs);
+  border-radius: var(--mbl-radius-pill);
   background: var(--mbl-success-bright);
   vertical-align: middle;
 }
@@ -324,10 +314,10 @@ onMounted(() => {
 .notes-page__query-manager-actions {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--mbl-space-xs);
 }
 
-@media (min-width: 800px) {
+@mixin mbl-wide {
   .notes-page__mobile-query-button { display: none; }
 }
 
@@ -337,7 +327,7 @@ onMounted(() => {
   flex-shrink: 0;
 }
 
-@media (min-width: 800px) {
+@mixin mbl-wide {
   .notes-page__sidebar {
     display: block;
     position: sticky;
@@ -346,21 +336,21 @@ onMounted(() => {
   }
 }
 .notes-page__content { flex: 1; min-width: 0; }
-.notes-page__query-manager-box { padding: 1rem; }
+.notes-page__query-manager-box { padding: var(--mbl-space-md); }
 
 .notes-page__results-bar {
   position: sticky;
   top: calc(var(--header-height) + 0.5rem - 1px);
   z-index: 10;
   background: var(--mbl-app-canvas-bg);
-  padding: 0.5rem 1rem;
-  margin-left: -0.5rem;
-  margin-right: -0.5rem;
+  padding: var(--mbl-space-xs) var(--mbl-space-md);
+  margin-left: calc(-1 * var(--mbl-space-xs));
+  margin-right: calc(-1 * var(--mbl-space-xs));
   border-bottom: 1px solid var(--mbl-border-soft);
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 0.25rem;
+  gap: var(--mbl-space-2xs);
 }
 
 @media (min-width: 600px) {
@@ -368,7 +358,7 @@ onMounted(() => {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 0.75rem;
+    gap: var(--mbl-space-sm);
   }
 }
 

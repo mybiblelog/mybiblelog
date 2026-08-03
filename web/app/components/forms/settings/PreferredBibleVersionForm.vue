@@ -136,12 +136,12 @@ function handlePrevious() {
 
 <style scoped>
 .field-box {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--mbl-space-xl);
 }
 
 .field-box .label {
   font-weight: normal;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--mbl-space-sm);
 }
 
 select {

@@ -14,7 +14,7 @@ import {
   Text,
   useNoteOverlays,
 } from "@/src/components";
-import { spacing, useTheme } from "@/src/design";
+import { radius, spacing, useTheme } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { translateApiErrorCode } from "@/src/i18n/translateApiError";
 import { useIsUnauthenticated } from "@/src/stores/auth";
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
     right: -2,
     width: 10,
     height: 10,
-    borderRadius: 5,
+    borderRadius: radius.pill,
   },
   summary: { marginBottom: spacing.sm },
   listContent: { paddingBottom: spacing.listBottom },

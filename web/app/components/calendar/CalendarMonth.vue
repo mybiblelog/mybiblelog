@@ -77,7 +77,7 @@ function selectDay(date: string | null) {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  padding-bottom: 10px;
+  padding-bottom: var(--mbl-space-xs);
 }
 
 @media screen and (max-width: 380px) {
@@ -87,8 +87,8 @@ function selectDay(date: string | null) {
 .day-of-week {
   color: var(--mbl-text-body);
   font-size: 18px;
-  padding-bottom: 5px;
-  padding-top: 10px;
+  padding-bottom: var(--mbl-space-2xs);
+  padding-top: var(--mbl-space-xs);
 }
 .day-of-week, .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
 
@@ -96,7 +96,10 @@ function selectDay(date: string | null) {
   height: 100%;
   position: relative;
   background-color: var(--mbl-calendar-grid-inner);
+  /* stylelint-disable-next-line declaration-property-value-allowed-list -- hairline grid rule, not spacing */
   gap: 1px;
   border: solid 1px var(--mbl-calendar-grid-outer);
+  border-radius: var(--mbl-radius-sm);
+  overflow: hidden;
 }
 </style>

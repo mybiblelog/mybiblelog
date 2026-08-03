@@ -60,19 +60,19 @@ function onClick() {
   font-size: 16px;
   background-color: var(--mbl-bg);
   color: var(--mbl-text-body);
-  padding: 5px;
+  padding: var(--mbl-space-2xs);
   cursor: pointer;
   user-select: none;
   transition: 0.2s ease-out;
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .calendar-day { min-height: calc(100vw / 7); }
 }
 .calendar-day:hover { background-color: var(--mbl-bg-hover-light); }
 .calendar-day .star { position: absolute; top: 10%; right: 10%; }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .calendar-day .star { top: 5%; right: 5%; }
 }
 
@@ -80,7 +80,7 @@ function onClick() {
   position: absolute;
   left: 5%;
   top: 5%;
-  border-radius: 50%;
+  border-radius: var(--mbl-radius-circle);
   width: 2rem;
   height: 2rem;
   display: flex;
@@ -89,7 +89,7 @@ function onClick() {
   transition: 0.2s;
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .calendar-day .date { top: 5%; left: 5%; width: 1.5rem; height: 1.5rem; }
 }
 .calendar-day--not-current { color: var(--mbl-text-muted); transition: 0s; }
@@ -104,7 +104,7 @@ function onClick() {
   right: 2px;
   height: 5px;
   background: var(--mbl-progress-track-bg);
-  border-radius: 3px;
+  border-radius: var(--mbl-radius-sm);
   overflow: hidden;
 }
 

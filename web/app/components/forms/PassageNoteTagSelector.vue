@@ -74,7 +74,7 @@ function toggle(tagId: string | number) {
 .passage-note-tag-selector__grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.25rem;
+  gap: var(--mbl-space-2xs);
   max-width: 100%;
 }
 
@@ -92,7 +92,7 @@ function toggle(tagId: string | number) {
 .passage-note-tag-option {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: var(--mbl-space-xs);
   position: relative;
   cursor: pointer;
   max-width: 100%;
@@ -102,8 +102,8 @@ function toggle(tagId: string | number) {
   color: var(--mbl-text);
   background: var(--mbl-tag-option-bg);
   border: 1px solid var(--mbl-tag-option-border);
-  padding: 0.25rem 0.6rem 0.25rem 0.5rem;
-  border-radius: 0.25rem;
+  padding: var(--mbl-space-2xs) var(--mbl-space-sm) var(--mbl-space-2xs) var(--mbl-space-xs);
+  border-radius: var(--mbl-radius-sm);
   -webkit-user-select: none;
   user-select: none;
 }
@@ -116,7 +116,7 @@ function toggle(tagId: string | number) {
   content: '';
   width: 0.45rem;
   height: 0.85rem;
-  border-radius: 999px;
+  border-radius: var(--mbl-radius-pill);
   background: var(--tag-color);
   flex: 0 0 auto;
 }

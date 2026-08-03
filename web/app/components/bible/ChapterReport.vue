@@ -96,9 +96,9 @@ function openActionSheet() {
   border: none;
   background: var(--mbl-bg-elevated);
   cursor: pointer;
-  margin: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
+  margin: var(--mbl-space-xs);
+  padding: var(--mbl-space-xs);
+  border-radius: var(--mbl-radius-lg);
   box-shadow: var(--mbl-shadow-elev-1);
   flex-basis: calc(25% - 1rem);
   position: relative;
@@ -109,7 +109,7 @@ function openActionSheet() {
   .chapter-report { flex-basis: calc(100% / 5 - 1rem); }
 }
 
-@media (min-width: 769px) {
+@mixin mbl-tablet {
   .chapter-report { flex-basis: calc(100% / 6 - 1rem); }
 }
 
@@ -123,7 +123,7 @@ function openActionSheet() {
   width: 100%;
   padding-bottom: 100%;
   min-height: 3.5rem;
-  margin-bottom: 5px;
+  margin-bottom: var(--mbl-space-2xs);
 }
 
 .chapter-report--indicator--icon {

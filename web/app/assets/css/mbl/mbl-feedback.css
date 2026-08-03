@@ -1,7 +1,7 @@
 .mbl-message {
-  border-radius: var(--mbl-radius);
+  border-radius: var(--mbl-radius-sm);
   font-size: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--mbl-space-xl);
   padding: 0;
   position: relative;
 }
@@ -9,7 +9,7 @@
 .mbl-message__header {
   align-items: center;
   background-color: var(--mbl-bg-muted);
-  border-radius: var(--mbl-radius) var(--mbl-radius) 0 0;
+  border-radius: var(--mbl-radius-sm) var(--mbl-radius-sm) 0 0;
   color: var(--mbl-text);
   display: flex;
   flex-shrink: 0;
@@ -25,7 +25,7 @@
 }
 
 .mbl-message__body {
-  border-radius: var(--mbl-radius);
+  border-radius: var(--mbl-radius-sm);
   padding: 1.25em 1.5em;
 }
 
@@ -34,7 +34,7 @@
   background-color: var(--mbl-bg-muted);
   border: none;
   border-left: 5px solid var(--mbl-border);
-  border-radius: var(--mbl-radius);
+  border-radius: var(--mbl-radius-sm);
   color: var(--mbl-text);
 }
 
@@ -53,7 +53,7 @@
   background-color: var(--mbl-message-info-bg);
   border: none;
   border-left: 5px solid var(--mbl-message-info-accent);
-  border-radius: var(--mbl-radius);
+  border-radius: var(--mbl-radius-sm);
   color: var(--mbl-message-info-fg);
 }
 
@@ -71,15 +71,15 @@
   background-color: var(--mbl-message-success-bg);
   border: none;
   border-left: 5px solid var(--mbl-message-success-accent);
-  border-radius: var(--mbl-radius);
+  border-radius: var(--mbl-radius-sm);
   color: var(--mbl-message-success-fg);
 }
 
 .mbl-notification {
   background-color: var(--mbl-bg-muted);
-  border-radius: var(--mbl-radius);
+  border-radius: var(--mbl-radius-sm);
   font-weight: 600;
-  padding: 1.25rem 2.5rem 1.25rem 1.5rem;
+  padding: var(--mbl-space-lg) var(--mbl-space-2xl) var(--mbl-space-lg) var(--mbl-space-xl);
   position: relative;
 }
 
@@ -105,6 +105,6 @@
 
 .mbl-notification .mbl-delete {
   position: absolute;
-  right: 0.5rem;
-  top: 0.5rem;
+  right: var(--mbl-space-xs);
+  top: var(--mbl-space-xs);
 }

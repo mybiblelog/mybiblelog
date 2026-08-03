@@ -3,7 +3,7 @@
     class="completion-bar--container"
     data-testid="completion-bar"
     :data-percentage="percentage"
-    :style="{ height: '4px', background: backgroundColor, borderRadius: '5px', overflow: 'hidden' }"
+    :style="{ background: backgroundColor }"
   >
     <div
       class="completion-bar--progress"
@@ -25,6 +25,12 @@ withDefaults(defineProps<{
 </script>
 
 <style>
+.completion-bar--container {
+  height: 4px;
+  border-radius: var(--mbl-radius-sm);
+  overflow: hidden;
+}
+
 .completion-bar--progress {
   transition: width 1s ease-out;
 }

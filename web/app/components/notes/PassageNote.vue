@@ -1,5 +1,5 @@
 <template>
-  <div class="passage-note" data-testid="passage-note">
+  <div class="passage-note mbl-card mbl-card--list-item" data-testid="passage-note">
     <div class="passage-note--passages" data-testid="passage-note-passages">
       <ul>
         <li v-for="passage in note.passages" :key="`${passage.startVerseId}-${passage.endVerseId}`">
@@ -76,11 +76,7 @@ const resolvedTags = useResolvedPassageNoteTags(() => props.note.tags ?? [], {
 
 <style scoped>
 .passage-note {
-  padding: 0.5rem 1rem;
-  margin: 1rem 0;
-  border-radius: 0.25rem;
-  background: var(--mbl-bg-elevated);
-  box-shadow: var(--mbl-card-shadow);
+  margin: var(--mbl-space-md) 0;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(4, auto);
@@ -92,7 +88,7 @@ const resolvedTags = useResolvedPassageNoteTags(() => props.note.tags ?? [], {
 .passage-note--content {
   overflow-wrap: break-word;
   white-space: pre-line;
-  margin: 0.5rem 0;
+  margin: var(--mbl-space-xs) 0;
   grid-area: 2 / 1 / 3 / 3;
 }
 .passage-note--tags { display: flex; flex-direction: column; align-items: flex-start; grid-area: 3 / 1 / 4 / 2; }

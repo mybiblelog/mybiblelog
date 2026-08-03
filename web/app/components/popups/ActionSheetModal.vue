@@ -65,42 +65,42 @@ onUnmounted(() => {
   overflow-y: auto;
   max-height: 80vh;
   bottom: 0;
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
+  border-top-left-radius: var(--mbl-radius-sheet);
+  border-top-right-radius: var(--mbl-radius-sheet);
 }
 
-@media (min-width: 800px) {
+@mixin mbl-wide {
   .action-sheet {
     inset: 50% auto auto 50%;
     transform: translate(-50%, -50%);
     width: auto;
     min-width: 300px;
     max-width: 500px;
-    border-radius: 0.5rem;
+    border-radius: var(--mbl-radius-lg);
     max-height: 70vh;
   }
 }
 
 .action-sheet-title {
-  padding: 1.25rem 1.5rem;
+  padding: var(--mbl-space-lg) var(--mbl-space-xl);
   font-weight: 600;
   font-size: 1.1rem;
   color: var(--mbl-text-strong);
   border-bottom: 1px solid var(--mbl-overlay-15);
   background-color: var(--mbl-bg-subtle);
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
+  border-top-left-radius: var(--mbl-radius-sheet);
+  border-top-right-radius: var(--mbl-radius-sheet);
 }
 
-@media (min-width: 800px) {
+@mixin mbl-wide {
   .action-sheet-title {
-    border-top-left-radius: 0.5rem;
-    border-top-right-radius: 0.5rem;
+    border-top-left-radius: var(--mbl-radius-lg);
+    border-top-right-radius: var(--mbl-radius-lg);
   }
 }
 
 .action-sheet-item {
-  padding: 1rem 1.5rem;
+  padding: var(--mbl-space-md) var(--mbl-space-xl);
   cursor: pointer;
   transition: background-color 0.15s;
   color: var(--mbl-text-strong);
@@ -127,7 +127,7 @@ onUnmounted(() => {
 .slide-up-enter-from,
 .slide-up-leave-to { transform: translateY(100%); opacity: 0; }
 
-@media (min-width: 800px) {
+@mixin mbl-wide {
   .slide-up-enter-from,
   .slide-up-leave-to { transform: translate(-50%, -50%) scale(0.95); opacity: 0; }
 }

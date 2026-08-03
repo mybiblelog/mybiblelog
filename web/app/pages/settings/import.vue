@@ -254,7 +254,7 @@ async function updateLookBackDate() {
 </script>
 
 <style scoped>
-p { margin-bottom: 1rem; }
+p { margin-bottom: var(--mbl-space-md); }
 </style>
 
 <i18n lang="json">

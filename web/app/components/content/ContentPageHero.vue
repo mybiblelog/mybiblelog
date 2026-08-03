@@ -36,10 +36,10 @@ const localePath = useLocalePath();
 
 <style scoped>
 .hero-section {
-  padding: 4rem 1.5rem;
+  padding: var(--mbl-space-4xl) var(--mbl-space-xl);
   background: linear-gradient(135deg, var(--mbl-primary-soft) 0%, var(--mbl-secondary-soft) 50%, var(--mbl-tertiary-soft) 100%);
-  border-radius: 12px;
-  margin: 0 0 2rem;
+  border-radius: var(--mbl-radius-xl);
+  margin: 0 0 var(--mbl-space-2xl);
   text-align: center;
 }
 
@@ -51,7 +51,7 @@ const localePath = useLocalePath();
 .hero-title {
   font-size: 3.5rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: var(--mbl-space-md);
   line-height: 1.2;
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
   -webkit-background-clip: text;
@@ -59,18 +59,18 @@ const localePath = useLocalePath();
   background-clip: text;
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .hero-title { font-size: 2.5rem; }
 }
 
 .hero-subtitle {
   font-size: 1.5rem;
   color: var(--mbl-text-body);
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--mbl-space-xl);
   font-style: italic;
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .hero-subtitle { font-size: 1.25rem; }
 }
 
@@ -78,14 +78,14 @@ const localePath = useLocalePath();
   font-size: 1.125rem;
   line-height: 1.7;
   color: var(--mbl-text-soft);
-  margin-bottom: 2.5rem;
+  margin-bottom: var(--mbl-space-2xl);
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
 }
 
-@media screen and (max-width: 768px) {
-  .hero-description { font-size: 1rem; margin-bottom: 2rem; }
+@mixin mbl-mobile {
+  .hero-description { font-size: 1rem; margin-bottom: var(--mbl-space-2xl); }
 }
 
 .hero-description em { font-style: italic; color: var(--mbl-text-strong); }
@@ -95,7 +95,7 @@ const localePath = useLocalePath();
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--mbl-space-sm);
 }
 
 .mbl-button.mbl-button--primary.mbl-button--lg {
@@ -103,7 +103,7 @@ const localePath = useLocalePath();
   border-color: var(--secondary-color);
   color: var(--mbl-on-accent);
   font-weight: 600;
-  padding: 0.5rem 2.5rem;
+  padding: var(--mbl-space-xs) var(--mbl-space-2xl);
   font-size: 1.125rem;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px var(--mbl-primary-glow);

@@ -400,7 +400,7 @@ onMounted(() => {
 .selector-note {
   background: var(--mbl-bg-hover-light);
   padding: 0.2em 0.5em;
-  border-radius: 0.2em;
+  border-radius: var(--mbl-radius-sm);
   margin-bottom: 0.5em;
   margin-top: -0.5em;
 }
@@ -413,9 +413,9 @@ onMounted(() => {
 .passage-selector .part {
   display: inline;
   background: var(--mbl-border-strong);
-  padding: 0.5rem 0.75rem;
-  margin: 0 0.25rem;
-  border-radius: 3px;
+  padding: var(--mbl-space-xs) var(--mbl-space-sm);
+  margin: 0 var(--mbl-space-2xs);
+  border-radius: var(--mbl-radius-sm);
   white-space: nowrap;
   cursor: pointer;
   transition: color 0.2s ease-out, background-color 0.2s ease-out;
@@ -432,15 +432,15 @@ onMounted(() => {
 .book-selector-controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: var(--mbl-space-xs);
+  margin-bottom: var(--mbl-space-md);
   justify-content: space-between;
 }
 
 .button-group { display: flex; }
 
 .button-group--button {
-  padding: 0.5rem 1rem;
+  padding: var(--mbl-space-xs) var(--mbl-space-md);
   border: 1px solid var(--mbl-border-strong);
   background: var(--mbl-bg);
   cursor: pointer;
@@ -461,14 +461,14 @@ onMounted(() => {
 }
 
 .button-group--button.button-group--button-left {
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  border-top-left-radius: var(--mbl-radius-md);
+  border-bottom-left-radius: var(--mbl-radius-md);
   border-right: none;
 }
 
 .button-group--button.button-group--button-right {
   border-left: none;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
+  border-top-right-radius: var(--mbl-radius-md);
+  border-bottom-right-radius: var(--mbl-radius-md);
 }
 </style>

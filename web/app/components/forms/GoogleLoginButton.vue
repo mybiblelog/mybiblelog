@@ -33,8 +33,7 @@ const { t } = useI18n();
   background-color: white;
   background-image: none;
   border: 1px solid #747775;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
+  border-radius: var(--mbl-radius-sm);
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   color: #1f1f1f;
@@ -45,6 +44,7 @@ const { t } = useI18n();
   letter-spacing: 0.25px;
   outline: none;
   overflow: hidden;
+  /* stylelint-disable-next-line declaration-property-value-allowed-list -- fixed by Google sign-in branding spec */
   padding: 0 12px;
   position: relative;
   text-align: center;
@@ -59,6 +59,7 @@ const { t } = useI18n();
 
 .gsi-material-button .gsi-material-button-icon {
   height: 20px;
+  /* stylelint-disable-next-line declaration-property-value-allowed-list -- fixed by Google sign-in branding spec */
   margin-right: 12px;
   min-width: 20px;
   width: 20px;

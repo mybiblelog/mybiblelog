@@ -35,7 +35,7 @@ const gridSelectorStyle = computed(() => ({
 
 .grid-selector--option {
   justify-content: flex-start;
-  padding: 1rem;
+  padding: var(--mbl-space-md);
 }
 
 .grid-selector--option::before {
@@ -43,7 +43,7 @@ const gridSelectorStyle = computed(() => ({
   position: absolute;
   inset: 2px;
   border: 2px solid var(--mbl-border-strong);
-  border-radius: 5px;
+  border-radius: var(--mbl-radius-sm);
   transition: 0.2s;
 }
 

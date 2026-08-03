@@ -121,4 +121,15 @@ describe('SiteNav', () => {
 
     expect(document.body.classList.contains('site-nav-drawer-open')).toBe(false);
   });
+
+  it('marks the menu icon open so it can morph into an X', async () => {
+    const wrapper = mountNav();
+    expect(wrapper.find('.site-nav__menu-icon--open').exists()).toBe(false);
+
+    await wrapper.get('.site-nav__menu-btn').trigger('click');
+    expect(wrapper.find('.site-nav__menu-icon--open').exists()).toBe(true);
+
+    await wrapper.get('.site-nav__menu-btn').trigger('click');
+    expect(wrapper.find('.site-nav__menu-icon--open').exists()).toBe(false);
+  });
 });

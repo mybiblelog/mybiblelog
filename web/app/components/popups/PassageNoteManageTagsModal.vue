@@ -112,7 +112,7 @@ function cancel() {
 
 <style scoped>
 .manage-tags__new-row {
-  margin-top: 0.75rem;
+  margin-top: var(--mbl-space-sm);
 }
 
 .manage-tags__disabled {

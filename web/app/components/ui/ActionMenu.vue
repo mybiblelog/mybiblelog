@@ -61,11 +61,11 @@ useEscapeKey(close, isOpen);
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 0.5rem;
+  padding: var(--mbl-space-xs);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-sm);
   transition: background-color 0.2s;
   width: 35px;
   height: 35px;
@@ -88,7 +88,7 @@ useEscapeKey(close, isOpen);
   color: var(--mbl-text-subtle);
   user-select: none;
   background-color: currentcolor;
-  border-radius: 50%;
+  border-radius: var(--mbl-radius-circle);
   box-shadow:
     0 -6px 0 0 currentcolor,
     0 6px 0 0 currentcolor;
@@ -108,7 +108,7 @@ useEscapeKey(close, isOpen);
   margin-top: 0;
   background: var(--mbl-bg);
   border: 1px solid var(--mbl-menu-border, var(--mbl-overlay-20));
-  border-radius: 0.25rem;
+  border-radius: var(--mbl-radius-2xl);
   box-shadow: 0 2px 8px var(--mbl-overlay-25);
   min-width: 150px;
   z-index: 39;
@@ -116,7 +116,7 @@ useEscapeKey(close, isOpen);
 }
 
 .action-menu-item {
-  padding: 0.75rem 1rem;
+  padding: var(--mbl-space-sm) var(--mbl-space-md);
   cursor: pointer;
   transition: background-color 0.15s;
   white-space: nowrap;
@@ -128,13 +128,13 @@ useEscapeKey(close, isOpen);
 }
 
 .action-menu-item:first-child {
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
+  border-top-left-radius: var(--mbl-radius-sm);
+  border-top-right-radius: var(--mbl-radius-sm);
 }
 
 .action-menu-item:last-child {
-  border-bottom-left-radius: 0.25rem;
-  border-bottom-right-radius: 0.25rem;
+  border-bottom-left-radius: var(--mbl-radius-sm);
+  border-bottom-right-radius: var(--mbl-radius-sm);
 }
 </style>
 

@@ -93,9 +93,9 @@ const setMode = (mode: ThemeMode) => {
   justify-content: center;
   min-width: 2.75rem;
   height: 2.75rem;
-  padding: 0 0.6rem;
+  padding: 0 var(--mbl-space-sm);
   border: none;
-  border-radius: 6px;
+  border-radius: var(--mbl-radius-md);
   background: transparent;
   color: var(--mbl-text-strong);
   line-height: 0;
@@ -135,11 +135,11 @@ const setMode = (mode: ThemeMode) => {
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  gap: 0.6rem;
-  padding: 0.85rem 1rem;
+  gap: var(--mbl-space-sm);
+  padding: var(--mbl-space-sm) var(--mbl-space-md);
   margin: 0;
   border: 1px solid var(--neutral-200);
-  border-radius: 8px;
+  border-radius: var(--mbl-radius-lg);
   background: var(--mbl-bg);
   font-size: 1rem;
   font-family: inherit;
@@ -164,7 +164,7 @@ const setMode = (mode: ThemeMode) => {
 .theme-switcher__drawer-leading {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--mbl-space-xs);
   min-width: 0;
 }
 
@@ -185,14 +185,14 @@ const setMode = (mode: ThemeMode) => {
 .theme-switcher-modal {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.5rem;
+  gap: var(--mbl-space-xs);
 }
 
 .theme-switcher-modal__btn {
   min-height: 2.5rem;
-  padding: 0.5rem 0.75rem;
+  padding: var(--mbl-space-xs) var(--mbl-space-sm);
   border: 1px solid var(--neutral-200);
-  border-radius: 6px;
+  border-radius: var(--mbl-radius-md);
   background: var(--mbl-bg);
   font-size: 0.9375rem;
   font-family: inherit;
