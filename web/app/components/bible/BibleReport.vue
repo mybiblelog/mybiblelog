@@ -17,30 +17,36 @@
           class="testament-toggle--button"
           :class="{ active: testamentFilter === 'all' }"
           :disabled="!hydrated"
+          :aria-label="t('whole_bible')"
           data-testid="testament-toggle-all"
           @click="setTestamentFilter('all')"
         >
-          {{ t('whole_bible') }}
+          <span class="testament-toggle--label">{{ t('whole_bible') }}</span>
+          <span class="testament-toggle--label-short">{{ t('whole_bible_short') }}</span>
         </button>
         <button
           type="button"
           class="testament-toggle--button"
           :class="{ active: testamentFilter === 'old' }"
           :disabled="!hydrated"
+          :aria-label="t('old_testament')"
           data-testid="testament-toggle-old"
           @click="setTestamentFilter('old')"
         >
-          {{ t('old_testament_short') }}
+          <span class="testament-toggle--label">{{ t('old_testament') }}</span>
+          <span class="testament-toggle--label-short">{{ t('old_testament_short') }}</span>
         </button>
         <button
           type="button"
           class="testament-toggle--button"
           :class="{ active: testamentFilter === 'new' }"
           :disabled="!hydrated"
+          :aria-label="t('new_testament')"
           data-testid="testament-toggle-new"
           @click="setTestamentFilter('new')"
         >
-          {{ t('new_testament_short') }}
+          <span class="testament-toggle--label">{{ t('new_testament') }}</span>
+          <span class="testament-toggle--label-short">{{ t('new_testament_short') }}</span>
         </button>
       </div>
     </div>
@@ -189,11 +195,16 @@ onMounted(() => {
 .bible-report .testament-toggle {
   display: flex;
   justify-content: center;
+  container-type: inline-size;
 }
 
+/* Equal 1fr columns keep the three slots the same width as the longest label,
+   which is what the thumb's one-third geometry below assumes. */
 .bible-report .testament-toggle--track {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 100%;
   padding: var(--mbl-space-2xs);
   border: 1px solid var(--mbl-border-strong);
   border-radius: var(--mbl-radius-pill);
@@ -224,9 +235,8 @@ onMounted(() => {
 
 .bible-report .testament-toggle--button {
   position: relative;
-  flex: 1 1 0;
   min-width: 5rem;
-  padding: var(--mbl-space-xs) var(--mbl-space-md);
+  padding: var(--mbl-space-xs) var(--mbl-space-sm);
   border: none;
   border-radius: var(--mbl-radius-pill);
   background: none;
@@ -234,7 +244,6 @@ onMounted(() => {
   cursor: pointer;
   transition: color 0.2s;
   font-size: 0.9rem;
-  white-space: nowrap;
 }
 
 .bible-report .testament-toggle--button:hover {
@@ -243,6 +252,28 @@ onMounted(() => {
 
 .bible-report .testament-toggle--button.active {
   color: var(--mbl-on-accent);
+}
+
+/*
+ * Labels degrade to a curated abbreviation rather than an ellipsis: the full
+ * names only fit once the page column is wide enough for the longest locale
+ * (es "Antiguo Testamento" needs a 480px track), so 32rem is the cutoff with
+ * room to spare for future translations. Both spans are always in the DOM;
+ * `aria-label` carries the full name either way so the accessible name never
+ * shrinks with the visible one.
+ */
+.bible-report .testament-toggle--label-short {
+  display: none;
+}
+
+@container (max-width: 32rem) {
+  .bible-report .testament-toggle--label {
+    display: none;
+  }
+
+  .bible-report .testament-toggle--label-short {
+    display: inline;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -331,56 +362,77 @@ onMounted(() => {
     "bible_books": "Bible Books",
     "progress": "Progress",
     "note": "Note | Notes",
-    "whole_bible": "Bible",
+    "whole_bible": "Whole Bible",
+    "whole_bible_short": "Bible",
+    "old_testament": "Old Testament",
     "old_testament_short": "OT",
+    "new_testament": "New Testament",
     "new_testament_short": "NT"
   },
   "de": {
     "bible_books": "Bücher der Bibel",
     "progress": "Fortschritt",
     "note": "Notiz | Notizen",
-    "whole_bible": "Bibel",
+    "whole_bible": "Ganze Bibel",
+    "whole_bible_short": "Bibel",
+    "old_testament": "Altes Testament",
     "old_testament_short": "AT",
+    "new_testament": "Neues Testament",
     "new_testament_short": "NT"
   },
   "es": {
     "bible_books": "Libros de la Biblia",
     "progress": "Progreso",
     "note": "Nota | Notas",
-    "whole_bible": "Biblia",
+    "whole_bible": "Toda la Biblia",
+    "whole_bible_short": "Biblia",
+    "old_testament": "Antiguo Testamento",
     "old_testament_short": "AT",
+    "new_testament": "Nuevo Testamento",
     "new_testament_short": "NT"
   },
   "fr": {
     "bible_books": "Livres de la Bible",
     "progress": "Progrès",
     "note": "Note | Notes",
-    "whole_bible": "Bible",
+    "whole_bible": "Toute la Bible",
+    "whole_bible_short": "Bible",
+    "old_testament": "Ancien Testament",
     "old_testament_short": "AT",
+    "new_testament": "Nouveau Testament",
     "new_testament_short": "NT"
   },
   "ko": {
     "bible_books": "성경 일람",
     "progress": "진도",
     "note": "노트 | 노트",
-    "whole_bible": "성경",
+    "whole_bible": "성경 전체",
+    "whole_bible_short": "성경",
+    "old_testament": "구약",
     "old_testament_short": "구약",
+    "new_testament": "신약",
     "new_testament_short": "신약"
   },
   "pt": {
     "bible_books": "Livros da Bíblia",
     "progress": "Progresso",
     "note": "Nota | Notas",
-    "whole_bible": "Bíblia",
+    "whole_bible": "Bíblia inteira",
+    "whole_bible_short": "Bíblia",
+    "old_testament": "Antigo Testamento",
     "old_testament_short": "AT",
+    "new_testament": "Novo Testamento",
     "new_testament_short": "NT"
   },
   "uk": {
     "bible_books": "Книги Біблії",
     "progress": "Прогрес",
     "note": "Примітка | Примітки",
-    "whole_bible": "Біблія",
-    "old_testament_short": "СТ",
+    "whole_bible": "Уся Біблія",
+    "whole_bible_short": "Біблія",
+    "old_testament": "Старий Заповіт",
+    "old_testament_short": "СЗ",
+    "new_testament": "Новий Заповіт",
     "new_testament_short": "НЗ"
   }
 }
