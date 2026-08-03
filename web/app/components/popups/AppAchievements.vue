@@ -7,14 +7,9 @@
             <div class="star-wrapper" :class="{ 'star-stamped': starStamped }">
               <shimmer-star-icon width="64px" height="64px" />
             </div>
-            <div
-              v-for="(particle, index) in particles"
-              :key="index"
-              class="particle"
-              :style="particle.style"
-            >
+            <particle-burst :delay-ms="BURST_DELAY_MS" spin>
               <star-icon width="32px" height="32px" fill="var(--mbl-message-info-accent)" />
-            </div>
+            </particle-burst>
           </div>
           <div class="mbl-title mbl-title--4 mbl-text-center">
             {{ achievementTitle }}
@@ -38,23 +33,22 @@ import { Bible } from '@mybiblelog/shared';
 import { ACHIEVEMENT, useAchievementsStore } from '~/stores/achievements';
 import StarIcon from '~/components/svg/StarIcon.vue';
 import ShimmerStarIcon from '~/components/svg/ShimmerStarIcon.vue';
-
-type Particle = { style: Record<string, string> };
+import ParticleBurst from '~/components/ui/ParticleBurst.vue';
 
 const { t, locale } = useI18n();
 const achievement = useAchievementsStore();
 
 const starStamped = ref(false);
-const particles = ref<Particle[]>([]);
+let stampTimer: ReturnType<typeof setTimeout> | null = null;
 
 // Timing constants below must stay in sync with the CSS transition/animation
 // durations in the <style> block:
 // - MODAL_ENTER_MS matches `--transition-modal` (0.3s, tokens.css) used by the popup's fade-in
-// - PARTICLE_TRIGGER_MS is timed against `.star-wrapper`'s 0.5s transform transition
-// - PARTICLE_CLEANUP_MS covers the `particle-fly` keyframes' 1s duration plus their max ~100ms random delay, with buffer
+// - BURST_DELAY_MS lands the particles ~halfway through `.star-wrapper`'s 0.5s transform transition
+// The burst itself needs no timer: <particle-burst> mounts with the modal, sits
+// invisible until BURST_DELAY_MS elapses, and unmounts when the modal closes.
 const MODAL_ENTER_MS = 300;
-const PARTICLE_TRIGGER_MS = 250; // ~halfway through the 0.5s star-stamp transform
-const PARTICLE_CLEANUP_MS = 1500;
+const BURST_DELAY_MS = MODAL_ENTER_MS + 250;
 
 const achievementTitle = computed(() => {
   if (achievement.achievementType === ACHIEVEMENT.BOOK_COMPLETE) {
@@ -78,63 +72,27 @@ const achievementMessage = computed(() => {
   return '';
 });
 
-const createParticles = () => {
-  const particleCount = 7;
-  const created: Particle[] = [];
-
-  for (let i = 0; i < particleCount; i++) {
-    // Random angle for particle direction
-    const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.5;
-    // Random distance (80-120px)
-    const distance = 60 + Math.random() * 20;
-    // Calculate x and y positions
-    const x = Math.cos(angle) * distance;
-    const y = Math.sin(angle) * distance;
-    // Random delay (0-100ms)
-    const delay = Math.random() * 100;
-    // Random rotation speed
-    const rotationSpeed = (Math.random() - 0.5) * 720; // -360 to +360 degrees
-
-    created.push({
-      style: {
-        '--x': `${x}px`,
-        '--y': `${y}px`,
-        '--delay': `${delay}ms`,
-        '--rotation': `${rotationSpeed}deg`,
-      },
-    });
+const clearStampTimer = () => {
+  if (stampTimer) {
+    clearTimeout(stampTimer);
+    stampTimer = null;
   }
-
-  particles.value = created;
-
-  // Clean up particles after animation completes
-  setTimeout(() => {
-    particles.value = [];
-  }, PARTICLE_CLEANUP_MS);
 };
 
 watch(() => achievement.open, (isOpen) => {
+  clearStampTimer();
+  starStamped.value = false;
+
   if (isOpen) {
-    // Reset animation state
-    starStamped.value = false;
-    particles.value = [];
-
-    // Wait for modal enter animation to complete, then start star animation
-    setTimeout(() => {
+    // Wait for the modal enter animation to finish, then stamp the star.
+    stampTimer = setTimeout(() => {
       starStamped.value = true;
-
-      // Trigger particles partway through the star-stamp transform
-      setTimeout(() => {
-        createParticles();
-      }, PARTICLE_TRIGGER_MS);
+      stampTimer = null;
     }, MODAL_ENTER_MS);
   }
-  else {
-    // Clean up when modal closes
-    starStamped.value = false;
-    particles.value = [];
-  }
 });
+
+onUnmounted(clearStampTimer);
 
 const _close = () => {
   achievement.closeAchievement();
@@ -166,32 +124,6 @@ const _close = () => {
 .star-wrapper.star-stamped {
   transform: scale(1);
   opacity: 1;
-}
-
-.particle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 1;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  animation: particle-fly 1s var(--delay) ease-out forwards;
-}
-
-/* 1s duration + up to 100ms random delay — PARTICLE_CLEANUP_MS in <script> clears particles after this completes */
-@keyframes particle-fly {
-  0% {
-    opacity: 1;
-    transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(1);
-  }
-
-  100% {
-    opacity: 0;
-    transform: translate(-50%, -50%)
-              translate(var(--x), var(--y))
-              rotate(var(--rotation))
-              scale(0.3);
-  }
 }
 
 .app-achievements__message {
