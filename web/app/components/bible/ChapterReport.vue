@@ -109,7 +109,7 @@ function openActionSheet() {
   .chapter-report { flex-basis: calc(100% / 5 - 1rem); }
 }
 
-@media (min-width: 769px) {
+@mixin mbl-tablet {
   .chapter-report { flex-basis: calc(100% / 6 - 1rem); }
 }
 

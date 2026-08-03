@@ -302,7 +302,9 @@ form select:not(:disabled) {
   }
 }
 
-@media screen and (max-width: 550px) {
+/* 549, not 550 — complements the `min-width: 550px` rule above, which would
+   otherwise also match at exactly 550px. */
+@media screen and (max-width: 549px) {
   form {
     display: flex;
     flex-direction: column;

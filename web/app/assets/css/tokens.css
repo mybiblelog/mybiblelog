@@ -96,8 +96,7 @@
    * phone, where fixed page chrome eats a large share of the first screen.
    * Prefer these over the fixed scale for page-level padding.
    */
-  --mbl-page-gutter: clamp(0.75rem, 3vw, 1.5rem);
-  --mbl-page-gutter: var(--mbl-space-md); /* FIXME: working on this */
+  --mbl-page-gutter: var(--mbl-space-md);
   --mbl-page-top: clamp(1rem, 3vw, 2.5rem);
   --mbl-page-header-gap: clamp(1rem, 2.5vw, 1.5rem);
 

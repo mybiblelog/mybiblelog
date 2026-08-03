@@ -1,0 +1,44 @@
+/*
+ * Breakpoint aliases. Custom properties can't be used in media query
+ * conditions, so these are postcss-mixins wrappers loaded globally via
+ * `mixinsDir` in nuxt.config.ts — they resolve inside SFC <style> blocks,
+ * which a per-file transform like postcss-custom-media cannot do.
+ *
+ * Numeric values are mirrored in app/helpers/breakpoints.ts for JS consumers.
+ * Keep the two in sync.
+ */
+
+/* Phone layout: stacked columns, reduced type scale. */
+@define-mixin mbl-mobile {
+  @media screen and (max-width: 768px) {
+    @mixin-content;
+  }
+}
+
+/* Complement of mbl-mobile. */
+@define-mixin mbl-tablet {
+  @media screen and (min-width: 769px) {
+    @mixin-content;
+  }
+}
+
+/* App shell has room for desktop chrome: persistent sidebar, centered modals. */
+@define-mixin mbl-wide {
+  @media screen and (min-width: 800px) {
+    @mixin-content;
+  }
+}
+
+/* Site nav collapses to hamburger. */
+@define-mixin mbl-nav-mobile {
+  @media screen and (max-width: 1023px) {
+    @mixin-content;
+  }
+}
+
+/* Complement of mbl-nav-mobile. */
+@define-mixin mbl-desktop {
+  @media screen and (min-width: 1024px) {
+    @mixin-content;
+  }
+}

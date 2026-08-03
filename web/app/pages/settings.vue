@@ -165,7 +165,7 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
 .narrow-screen { display: block; }
 .wide-screen { display: none; }
 
-@media (min-width: 800px) {
+@mixin mbl-wide {
   .narrow-screen { display: none; }
   .wide-screen { display: block; }
 }

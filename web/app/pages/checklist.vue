@@ -251,9 +251,9 @@ onMounted(async () => {
   padding: var(--mbl-space-xs);
 }
 
-@media screen and (min-width: 769px) { .book-card--chapters { grid-template-columns: repeat(6, 1fr); } }
+@mixin mbl-tablet { .book-card--chapters { grid-template-columns: repeat(6, 1fr); } }
 
-@media screen and (min-width: 1024px) { .book-card--chapters { grid-template-columns: repeat(8, 1fr); } }
+@mixin mbl-desktop { .book-card--chapters { grid-template-columns: repeat(8, 1fr); } }
 
 @media screen and (min-width: 1216px) { .book-card--chapters { grid-template-columns: repeat(10, 1fr); } }
 

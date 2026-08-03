@@ -317,7 +317,7 @@ onMounted(() => {
   margin-bottom: var(--mbl-space-xs);
 }
 
-@media (min-width: 800px) {
+@mixin mbl-wide {
   .notes-page__mobile-query-button { display: none; }
 }
 
@@ -327,7 +327,7 @@ onMounted(() => {
   flex-shrink: 0;
 }
 
-@media (min-width: 800px) {
+@mixin mbl-wide {
   .notes-page__sidebar {
     display: block;
     position: sticky;

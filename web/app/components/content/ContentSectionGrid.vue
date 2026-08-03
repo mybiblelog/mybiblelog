@@ -96,7 +96,7 @@ function processAutomatic(container: HTMLElement) {
   margin: var(--mbl-space-xl) 0 var(--mbl-space-2xl);
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .h3-grid-container {
     grid-template-columns: 1fr;
     gap: var(--mbl-space-md);

@@ -82,7 +82,7 @@ function isExternal(url: string): boolean {
   gap: var(--mbl-space-3xl);
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .footer-columns { grid-auto-flow: row; grid-auto-columns: 1fr; gap: var(--mbl-space-2xl); }
 }
 
@@ -108,7 +108,7 @@ function isExternal(url: string): boolean {
   padding: var(--mbl-space-xs) 0;
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .footer-link { font-size: 0.9375rem; }
 }
 

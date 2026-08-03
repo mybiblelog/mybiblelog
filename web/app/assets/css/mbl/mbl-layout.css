@@ -91,13 +91,13 @@ a.mbl-box:active {
   padding: var(--mbl-space-xl);
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .mbl-hidden-mobile {
     display: none !important;
   }
 }
 
-@media screen and (min-width: 769px) {
+@mixin mbl-tablet {
   .mbl-hidden-tablet {
     display: none !important;
   }

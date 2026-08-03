@@ -81,13 +81,13 @@ const localePath = useLocalePath();
   padding: 0 var(--mbl-space-xl);
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .fifty-fifty-container { flex-direction: column; gap: var(--mbl-space-2xl); }
 }
 
 .fifty-fifty-section--reverse .fifty-fifty-container { flex-direction: row-reverse; }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .fifty-fifty-section--reverse .fifty-fifty-container { flex-direction: column; }
 }
 
@@ -121,7 +121,7 @@ const localePath = useLocalePath();
   color: var(--mbl-text-strong);
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .fifty-fifty-title { font-size: 1.75rem; }
 }
 
@@ -133,7 +133,7 @@ const localePath = useLocalePath();
   line-height: 1.4;
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .fifty-fifty-subtitle { font-size: 1.125rem; }
 }
 
@@ -144,7 +144,7 @@ const localePath = useLocalePath();
   margin-bottom: var(--mbl-space-xs);
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .fifty-fifty-description { font-size: 1rem; }
 }
 
@@ -162,7 +162,7 @@ const localePath = useLocalePath();
   position: relative;
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .fifty-fifty-list li { font-size: 1rem; }
 }
 

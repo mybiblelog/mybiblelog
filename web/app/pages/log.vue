@@ -825,7 +825,7 @@ onBeforeUnmount(() => {
   flex-wrap: wrap;
 }
 
-@media (min-width: 800px) {
+@mixin mbl-wide {
   .log-page__mobile-query-button { display: none; }
 }
 
@@ -863,13 +863,13 @@ onBeforeUnmount(() => {
   width: 100%;
 }
 
-@media (min-width: 769px) {
+@mixin mbl-wide {
   .log-page__layout > *:first-child { width: 33.3333%; }
 }
 
 .log-page__sidebar { display: none; }
 
-@media (min-width: 800px) {
+@mixin mbl-wide {
   .log-page__sidebar {
     display: block;
     position: sticky;
@@ -878,7 +878,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (min-width: 800px) {
+@mixin mbl-wide {
   .log-page__content { padding-left: var(--mbl-space-md); }
 }
 

@@ -118,6 +118,7 @@ For each finding, record:
 - [ ] New component-specific styles are added to a `<style scoped>` block in the SFC, or to an `mbl-*.css` file in `assets/css/mbl/` if the style is part of the shared design system. Global stylesheet pollution (unscoped classes that could conflict) is a P1.
 - [ ] Class names follow the `mbl-*` prefix for shared/reusable classes, and a component-specific `kebab-case-name__element` pattern for scoped styles.
 - [ ] Typography and shadow values use `--mbl-*` tokens rather than hard-coded literals. `z-index` values use the `--z-index-*` tokens from `tokens.css`. (Spacing and radius are P0 above — stylelint enforces those.)
+- [ ] New media queries use the breakpoint mixins from `web/app/assets/css/mixins/breakpoints.css` (`@mixin mbl-mobile` / `mbl-tablet` / `mbl-wide` / `mbl-nav-mobile` / `mbl-desktop`) rather than a new raw pixel threshold. One-off thresholds tied to an intrinsic content width (380/500/549/550/600/640/900/1216/1408) are grandfathered; a *new* raw threshold near an existing breakpoint is a finding.
 - [ ] Anything that scrolls to the bottom of the viewport reserves `--mbl-fab-clearance`, or its last row ends up underneath the fixed feedback button.
 
 ### TypeScript

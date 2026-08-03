@@ -69,7 +69,7 @@ onUnmounted(() => {
   border-top-right-radius: var(--mbl-radius-sheet);
 }
 
-@media (min-width: 800px) {
+@mixin mbl-wide {
   .action-sheet {
     inset: 50% auto auto 50%;
     transform: translate(-50%, -50%);
@@ -92,7 +92,7 @@ onUnmounted(() => {
   border-top-right-radius: var(--mbl-radius-sheet);
 }
 
-@media (min-width: 800px) {
+@mixin mbl-wide {
   .action-sheet-title {
     border-top-left-radius: var(--mbl-radius-lg);
     border-top-right-radius: var(--mbl-radius-lg);
@@ -127,7 +127,7 @@ onUnmounted(() => {
 .slide-up-enter-from,
 .slide-up-leave-to { transform: translateY(100%); opacity: 0; }
 
-@media (min-width: 800px) {
+@mixin mbl-wide {
   .slide-up-enter-from,
   .slide-up-leave-to { transform: translate(-50%, -50%) scale(0.95); opacity: 0; }
 }

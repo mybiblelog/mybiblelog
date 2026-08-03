@@ -247,6 +247,7 @@
 <script setup lang="ts">
 import { useAuthStore } from '~/stores/auth';
 import { filterVisibleNavItems, isAdminNavVisible } from '~/helpers/site-nav-visibility';
+import { MBL_MEDIA_DESKTOP } from '~/helpers/breakpoints';
 
 const { t } = useI18n();
 
@@ -318,7 +319,7 @@ let onDesktopMq: (() => void) | null = null;
 
 onMounted(() => {
   if (window.matchMedia) {
-    desktopMq = window.matchMedia('(min-width: 1024px)');
+    desktopMq = window.matchMedia(MBL_MEDIA_DESKTOP);
     onDesktopMq = () => {
       if (desktopMq?.matches) { navOpen.value = false; }
     };
@@ -745,7 +746,7 @@ const {
   color: var(--mbl-text-subtle);
 }
 
-@media screen and (max-width: 1023px) {
+@mixin mbl-nav-mobile {
   .site-nav__mobile-head {
     display: flex;
   }
@@ -759,7 +760,7 @@ const {
   }
 }
 
-@media screen and (min-width: 1024px) {
+@mixin mbl-desktop {
   .site-nav__overlay {
     display: none !important;
   }

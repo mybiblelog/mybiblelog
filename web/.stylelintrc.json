@@ -25,5 +25,16 @@
         "/%$/"
       ]
     }
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.vue", "**/*.vue"],
+      "rules": {
+        "at-rule-no-unknown": [
+          true,
+          { "ignoreAtRules": ["mixin", "define-mixin", "mixin-content"] }
+        ]
+      }
+    }
+  ]
 }

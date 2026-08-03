@@ -59,7 +59,7 @@ const localePath = useLocalePath();
   background-clip: text;
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .hero-title { font-size: 2.5rem; }
 }
 
@@ -70,7 +70,7 @@ const localePath = useLocalePath();
   font-style: italic;
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .hero-subtitle { font-size: 1.25rem; }
 }
 
@@ -84,7 +84,7 @@ const localePath = useLocalePath();
   margin-right: auto;
 }
 
-@media screen and (max-width: 768px) {
+@mixin mbl-mobile {
   .hero-description { font-size: 1rem; margin-bottom: var(--mbl-space-2xl); }
 }
 

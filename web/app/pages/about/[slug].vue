@@ -58,7 +58,7 @@ useContentSeo({
 
 h1, h2, h3, h4, h5, h6 { clear: both; }
 
-@media (max-width: 767px) {
+@mixin mbl-mobile {
   .phone-frame {
     float: none;
     display: block;
