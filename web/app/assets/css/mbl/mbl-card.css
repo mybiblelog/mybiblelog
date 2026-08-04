@@ -1,7 +1,7 @@
 .mbl-card {
   background-color: var(--mbl-bg-elevated);
   border-radius: var(--mbl-radius-card);
-  box-shadow: var(--mbl-card-shadow);
+  box-shadow: var(--mbl-shadow-card);
   color: var(--mbl-text-body);
   max-width: 100%;
   position: relative;

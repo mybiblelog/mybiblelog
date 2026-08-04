@@ -21,7 +21,7 @@
         :data-book-index="bookReport.bookIndex"
         :data-complete="bookReport.complete || undefined"
       >
-        <div class="book-card--header">
+        <div class="book-card--header" @click="toggleBook(bookReport.bookIndex)">
           <div class="book-card--completion-indicator">
             <checkmark-icon v-if="bookReport.complete" width="100%" height="100%" />
           </div>
@@ -35,9 +35,8 @@
             class="book-card--chapter-toggle"
             data-testid="book-card-toggle"
             :class="{ flipped: expandedBooks[bookReport.bookIndex] }"
-            @click="toggleBook(bookReport.bookIndex)"
           >
-            <svg viewBox="0 0 24 24" width="2rem" height="2rem"><path d="M7 10l5 5 5-5z" fill="var(--mbl-border-strong)" /></svg>
+            <triangle-down-icon width="2rem" height="2rem" />
           </div>
           <div class="book-card--completion-bar">
             <completion-bar :percentage="bookReport.percentage" foreground-color="var(--mbl-success-bright)" />
@@ -110,6 +109,7 @@ import CompletionBar from '~/components/ui/CompletionBar.vue';
 import ParticleBurst from '~/components/ui/ParticleBurst.vue';
 import ReadingTrackerResetCard from '~/components/ui/ReadingTrackerResetCard.vue';
 import CheckmarkIcon from '~/components/svg/CheckmarkIcon.vue';
+import TriangleDownIcon from '~/components/svg/TriangleDownIcon.vue';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useAppInitStore } from '~/stores/app-init';
 import { useToastStore } from '~/stores/toast';
@@ -271,7 +271,7 @@ onBeforeUnmount(endCelebration);
 .loading-card {
   padding: var(--mbl-space-md) var(--mbl-space-2xl);
   border-radius: var(--mbl-radius-card);
-  box-shadow: var(--mbl-shadow-elev-1);
+  box-shadow: var(--mbl-shadow-card);
   margin: var(--mbl-space-xs) 0;
 }
 
@@ -295,12 +295,15 @@ onBeforeUnmount(endCelebration);
   position: sticky;
   top: var(--site-nav-height);
   z-index: 1;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
+.book-card--header:hover { background: var(--mbl-bg-hover-light); }
 .book-card--completion-indicator { grid-area: 1 / 1 / 3 / 2; width: 1.5rem; margin-right: var(--mbl-space-xs); display: flex; }
 .book-card--book-name { grid-area: 1 / 2 / 2 / 3; }
 .book-card--completion-fraction { grid-area: 1 / 3 / 2 / 4; text-align: right; }
 .book-card--completion-bar { grid-area: 2 / 2 / 3 / 4; }
-.book-card--chapter-toggle { grid-area: 1 / 4 / 3 / 5; display: flex; cursor: pointer; }
+.book-card--chapter-toggle { grid-area: 1 / 4 / 3 / 5; display: flex; }
 .book-card--chapter-toggle.flipped { transform: rotate(180deg); }
 
 .book-card--chapters {

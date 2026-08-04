@@ -99,7 +99,7 @@ function openActionSheet() {
   margin: var(--mbl-space-xs);
   padding: var(--mbl-space-xs);
   border-radius: var(--mbl-radius-lg);
-  box-shadow: var(--mbl-shadow-elev-1);
+  box-shadow: var(--mbl-shadow-card);
   flex-basis: calc(25% - 1rem);
   position: relative;
   transition: 0.1s;
@@ -115,7 +115,7 @@ function openActionSheet() {
 
 .chapter-report:hover {
   transition: 0.2s;
-  box-shadow: var(--mbl-shadow-elev-2);
+  box-shadow: var(--mbl-shadow-card-raised);
 }
 
 .chapter-report--indicator {

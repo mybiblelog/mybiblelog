@@ -560,7 +560,7 @@ const {
   background: var(--mbl-bg);
   border: 1px solid var(--mbl-border);
   border-radius: var(--mbl-radius-md);
-  box-shadow: 0 4px 12px var(--mbl-overlay-08);
+  box-shadow: var(--mbl-shadow-popover);
 }
 
 .site-nav__admin-item,
@@ -695,7 +695,7 @@ const {
   width: min(20rem, 88vw);
   max-height: 100%;
   background: var(--mbl-bg);
-  box-shadow: -4px 0 24px var(--mbl-overlay-12);
+  box-shadow: var(--mbl-shadow-panel);
   outline: none;
 }
 

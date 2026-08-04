@@ -220,7 +220,7 @@ onMounted(() => {
   width: calc((100% - 0.5rem) / 3);
   border-radius: var(--mbl-radius-pill);
   background: var(--mbl-link-bright);
-  box-shadow: var(--mbl-shadow-soft);
+  box-shadow: var(--mbl-shadow-card);
   pointer-events: none;
   transition: transform 0.2s ease;
 }
@@ -297,7 +297,7 @@ onMounted(() => {
   padding: var(--mbl-space-xs);
   background: var(--mbl-bg-elevated);
   border-radius: var(--mbl-radius-lg);
-  box-shadow: var(--mbl-shadow-elev-1);
+  box-shadow: var(--mbl-shadow-card);
   display: grid;
   grid-template:
     "icon title notes percentage" auto
@@ -309,7 +309,7 @@ onMounted(() => {
 
 .progress-list .progress-card:hover {
   transition: 0.2s;
-  box-shadow: var(--mbl-shadow-elev-2);
+  box-shadow: var(--mbl-shadow-card-raised);
 }
 
 .progress-list .progress-card-icon {

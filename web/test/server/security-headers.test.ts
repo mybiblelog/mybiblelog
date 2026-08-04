@@ -7,6 +7,13 @@ describe('buildCsp', () => {
     expect(csp).toContain("script-src 'self' 'nonce-abc123' 'unsafe-inline'");
   });
 
+  // @nuxt/content runs SQLite-WASM in the browser for client-side navigation.
+  it('allows WebAssembly compilation without allowing JavaScript eval', () => {
+    const csp = buildCsp('abc123');
+    expect(csp).toContain("'wasm-unsafe-eval'");
+    expect(csp).not.toMatch(/(?<!wasm-)unsafe-eval/);
+  });
+
   it('locks down framing and plugins', () => {
     const csp = buildCsp('abc123');
     expect(csp).toContain("frame-ancestors 'none'");
@@ -21,7 +28,9 @@ describe('buildCsp', () => {
 
   it('allows the GA4 script and beacon hosts when analytics is enabled', () => {
     const csp = buildCsp('abc123', true);
-    expect(csp).toContain("script-src 'self' 'nonce-abc123' 'unsafe-inline' https://www.googletagmanager.com");
+    expect(csp).toContain(
+      "script-src 'self' 'nonce-abc123' 'unsafe-inline' 'wasm-unsafe-eval' https://www.googletagmanager.com",
+    );
     expect(csp).toContain('connect-src \'self\' https://www.google-analytics.com https://www.googletagmanager.com');
   });
 });

@@ -15,7 +15,7 @@
 .mbl-box {
   background-color: var(--mbl-bg);
   border-radius: var(--mbl-radius-card);
-  box-shadow: var(--mbl-shadow);
+  box-shadow: var(--mbl-shadow-card);
   color: var(--mbl-text-body);
   display: block;
   padding: var(--mbl-space-lg);
@@ -23,11 +23,11 @@
 
 a.mbl-box:hover,
 a.mbl-box:focus {
-  box-shadow: var(--mbl-shadow-box-hover);
+  box-shadow: var(--mbl-shadow-card-hover);
 }
 
 a.mbl-box:active {
-  box-shadow: var(--mbl-shadow-box-active);
+  box-shadow: var(--mbl-shadow-card-pressed);
 }
 
 .mbl-level {

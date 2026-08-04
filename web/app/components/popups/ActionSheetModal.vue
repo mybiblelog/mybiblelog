@@ -60,7 +60,7 @@ onUnmounted(() => {
   right: 0;
   background: var(--mbl-bg);
   border: 1px solid var(--mbl-border);
-  box-shadow: var(--mbl-shadow-overlay);
+  box-shadow: var(--mbl-shadow-panel);
   z-index: calc(var(--z-index-action-menu) + 1);
   overflow-y: auto;
   max-height: 80vh;

@@ -114,15 +114,37 @@
   pointer-events: none;
 }
 
+/* Marketing call-to-action. Carries a brand glow rather than a neutral
+   elevation shadow — reserve it for content/landing pages, not app chrome.
+   Declared after --primary so its accent and padding win. */
+.mbl-button--glow {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  box-shadow: var(--mbl-shadow-cta);
+  color: var(--mbl-on-accent);
+  font-weight: 600;
+  padding: var(--mbl-space-xs) var(--mbl-space-2xl);
+  transition: all 0.3s ease;
+}
+
+.mbl-button--glow:hover {
+  background-color: var(--secondary-color-hover);
+  border-color: var(--secondary-color-hover);
+  box-shadow: var(--mbl-shadow-cta-hover);
+  color: var(--mbl-on-accent);
+  transform: translateY(-2px);
+}
+
+.mbl-button--glow:active {
+  transform: translateY(0);
+}
+
 .mbl-button-group {
   align-items: center;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-}
-
-.mbl-button-group .mbl-button:not(:last-child) {
-  margin-right: var(--mbl-space-xs);
+  gap: var(--mbl-space-xs);
 }
 
 .mbl-button-group--start {

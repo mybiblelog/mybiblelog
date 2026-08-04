@@ -117,7 +117,7 @@ const promptKind = computed<PwaPromptKind>(() => {
   align-items: center;
   justify-content: space-between;
   gap: var(--mbl-space-md);
-  box-shadow: 0 0 0 2px var(--mbl-bg), 0 0 5px var(--mbl-text-stronger);
+  box-shadow: var(--mbl-ring-knockout), var(--mbl-shadow-floating);
   pointer-events: auto;
 }
 

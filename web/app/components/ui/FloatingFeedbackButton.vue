@@ -155,7 +155,7 @@ async function submitFeedback() {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px var(--mbl-overlay-15);
+  box-shadow: var(--mbl-shadow-floating);
   transition: all 0.3s ease;
   z-index: var(--z-index-action-button);
   text-decoration: none;
@@ -165,7 +165,7 @@ async function submitFeedback() {
 
 .floating-action-button:hover {
   background-color: var(--secondary-color-hover);
-  box-shadow: 0 6px 16px var(--mbl-overlay-20);
+  box-shadow: var(--mbl-shadow-floating-hover);
   transform: translateY(-2px);
 }
 </style>

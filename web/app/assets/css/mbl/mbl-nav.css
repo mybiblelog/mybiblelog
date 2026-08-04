@@ -31,7 +31,7 @@
 .mbl-dropdown__content {
   background-color: var(--mbl-bg);
   border-radius: var(--mbl-radius-sm);
-  box-shadow: var(--mbl-shadow);
+  box-shadow: var(--mbl-shadow-popover);
   padding-bottom: var(--mbl-space-xs);
   padding-top: var(--mbl-space-xs);
 }

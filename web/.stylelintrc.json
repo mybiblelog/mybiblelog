@@ -15,6 +15,13 @@
     "declaration-property-value-keyword-no-deprecated": null,
     "declaration-block-single-line-max-declarations": null,
     "declaration-property-value-allowed-list": {
+      "box-shadow": [
+        "/^var\\(--mbl-shadow-/",
+        "/^var\\(--mbl-ring-/",
+        "/^var\\(--mbl-focus-ring\\)/",
+        "none",
+        "inherit"
+      ],
       "/^border(-[a-z]+)*-radius$/": ["/^var\\(--mbl-radius/", "0"],
       "/^(row-|column-)?gap$/": ["/var\\(--/", "0"],
       "/^(margin|padding)(-(top|right|bottom|left|inline|block)(-(start|end))?)?$/": [
