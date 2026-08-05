@@ -33,7 +33,7 @@ export function SegmentedControl<T extends string | number>({
           {label}
         </Text>
       )}
-      <View style={[styles.track, { backgroundColor: colors.surfaceAlt }]}>
+      <View style={[styles.track, { backgroundColor: colors.surfaceMuted }]}>
         {options.map((option) => {
           const selected = option.value === value;
           return (
@@ -57,20 +57,22 @@ export function SegmentedControl<T extends string | number>({
 }
 
 const styles = StyleSheet.create({
-  container: { gap: spacing.xs },
+  container: { gap: spacing["2xs"] },
   track: {
     flexDirection: "row",
-    borderRadius: radius.md,
+    borderRadius: radius.xl,
+    // eslint-disable-next-line no-restricted-syntax -- hairline inset so the selected pill sits inside the track without touching it
     padding: 3,
+    // eslint-disable-next-line no-restricted-syntax -- matches the inset above; a ladder step would separate the segments
     gap: 3,
   },
   segment: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: radius.sm,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.sm,
+    borderRadius: radius.xl,
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.xs,
     minHeight: 34,
   },
 });

@@ -54,7 +54,7 @@ export default function AboutSettings() {
         <Text variant="label" color="mutedText" style={styles.sectionLabel}>
           {t("about_legal_label")}
         </Text>
-        <Card padded={false} style={styles.card}>
+        <Card padding="none">
           {links.map((link, i) => (
             <Fragment key={link.url}>
               {i > 0 ? <View style={[styles.divider, { backgroundColor: colors.border }]} /> : null}
@@ -62,8 +62,7 @@ export default function AboutSettings() {
                 title={link.label}
                 leadingIcon={link.icon}
                 trailing={<Icon name="open-outline" size={16} color="mutedText" />}
-                bordered={false}
-                style={styles.row}
+                variant="plain"
                 onPress={() => void openUrl(link.url)}
               />
             </Fragment>
@@ -75,14 +74,12 @@ export default function AboutSettings() {
 }
 
 const styles = StyleSheet.create({
-  content: { padding: spacing.screenH, paddingBottom: spacing.listBottom },
-  sectionLabel: { marginTop: spacing.lg, marginBottom: spacing.sm },
-  card: { overflow: "hidden" },
-  row: { backgroundColor: "transparent" },
+  content: { padding: spacing.pageGutter, paddingBottom: spacing.listBottom },
+  sectionLabel: { marginTop: spacing.sm, marginBottom: spacing.xs },
   infoRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
-  divider: { height: StyleSheet.hairlineWidth, marginLeft: spacing.xxxl + spacing.xl },
+  divider: { height: StyleSheet.hairlineWidth, marginLeft: spacing.xl + spacing.md },
 });

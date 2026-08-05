@@ -30,6 +30,10 @@ function isDarkColor(hex: string): boolean {
 /** Colored tag chip (mobile equivalent of the web `PassageNoteTagPill`). */
 export function TagPill({ label, color, size = "md", selected, onPress, style }: TagPillProps) {
   const { colors } = useTheme();
+  // Pure black/white on purpose: `color` is arbitrary user data, so the
+  // contrast pick has to be absolute rather than a theme role that might
+  // itself be low-contrast against the chosen tag color.
+  // eslint-disable-next-line no-restricted-syntax -- see above
   const textColor = isDarkColor(color) ? "#ffffff" : "#000000";
   const dimmed = selected === false;
 
@@ -73,7 +77,7 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     alignSelf: "flex-start",
   },
-  pillMd: { paddingHorizontal: spacing.md, paddingVertical: spacing.xs },
-  pillSm: { paddingHorizontal: spacing.sm, paddingVertical: 2 },
+  pillMd: { paddingHorizontal: spacing.sm, paddingVertical: spacing["2xs"] },
+  pillSm: { paddingHorizontal: spacing.xs, paddingVertical: spacing["3xs"] },
   dimmed: { opacity: 0.45 },
 });

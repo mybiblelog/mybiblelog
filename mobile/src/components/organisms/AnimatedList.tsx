@@ -1,7 +1,17 @@
 import { type ComponentType, type ReactNode, useCallback, useEffect, useRef } from "react";
-import type { FlatListProps } from "react-native";
+import { StyleSheet, type FlatListProps, type ViewStyle } from "react-native";
 import Animated from "react-native-reanimated";
-import { listItemEnter, listLayout } from "@/src/design";
+import { listItemEnter, listLayout, spacing } from "@/src/design";
+
+/**
+ * Room reserved for row shadows. A scroll view clips to its own bounds, so a
+ * row that spans the full content width has the left and right edge of its
+ * shadow — including the 1px rim that separates a card from the canvas —
+ * shaved off, and the first row loses its top edge the same way. 4pt covers
+ * the widest cast of the `card`/`cardRaised` roles (blur 8 ⇒ 4pt beyond the
+ * box). The bottom needs no allowance: lists pad it with `spacing.listBottom`.
+ */
+const SHADOW_BLEED = spacing["2xs"];
 
 // Reanimated's animated FlatList carries an awkward generic (every prop becomes
 // a possible SharedValue). We keep the public `AnimatedList` props as a plain
@@ -48,7 +58,12 @@ type CellProps = {
  * renders immediately (no N simultaneous animations on a long list) and only
  * rows inserted afterwards animate in.
  */
-export function AnimatedList<T>({ animateItemLayout = true, ...props }: AnimatedListProps<T>) {
+export function AnimatedList<T>({
+  animateItemLayout = true,
+  style,
+  contentContainerStyle,
+  ...props
+}: AnimatedListProps<T>) {
   // A ref (not state) so flipping it doesn't change the cell component's
   // identity and remount every row; each cell reads the value when it mounts.
   const animateInsertions = useRef(false);
@@ -73,5 +88,29 @@ export function AnimatedList<T>({ animateItemLayout = true, ...props }: Animated
     [animateItemLayout]
   );
 
-  return <RNAnimatedFlatList {...props} CellRendererComponent={CellRendererComponent} />;
+  // Grow the list past its container by the bleed and hand the same amount back
+  // as content padding: rows land exactly where the caller put them, but now
+  // with the shadow inside the clip bounds. The caller's own padding is
+  // preserved by adding to it rather than replacing it.
+  const flatContent = StyleSheet.flatten(contentContainerStyle) as ViewStyle | undefined;
+  const padOf = (value: ViewStyle["padding"]) => (typeof value === "number" ? value : 0);
+
+  return (
+    <RNAnimatedFlatList
+      {...props}
+      style={[styles.bleed, style]}
+      contentContainerStyle={[
+        contentContainerStyle,
+        {
+          paddingHorizontal: padOf(flatContent?.paddingHorizontal) + SHADOW_BLEED,
+          paddingTop: padOf(flatContent?.paddingTop) + SHADOW_BLEED,
+        },
+      ]}
+      CellRendererComponent={CellRendererComponent}
+    />
+  );
 }
+
+const styles = StyleSheet.create({
+  bleed: { marginHorizontal: -SHADOW_BLEED, marginTop: -SHADOW_BLEED },
+});

@@ -24,7 +24,15 @@ export const uk = {
   today_progress_meta_no_goal: "%{read} %{verses}",
   today_empty_title: "Ще немає записів",
   today_empty_text: "Додайте те, що ви прочитали сьогодні, щоб відстежувати свій прогрес.",
-  today_entry_meta: "%{new} нових • %{total} віршів загалом",
+  verse_count_verse_one: "верс",
+  verse_count_verse_other: "віршів",
+  verse_count_all_one: "всі",
+  verse_count_all_other: "всі",
+  verse_count_new_one: "новий",
+  verse_count_new_other: "нові",
+  today_new_verses_read: "%{read} / %{goal} нових віршів",
+  today_view_all_reading: "Переглянути все читання",
+  today_no_entries: "Немає записів",
 
   today_reading_suggestions: "Пропозиції для читання",
   today_no_suggestions: "Немає пропозицій",
@@ -495,4 +503,12 @@ export const uk = {
   change_email_submit: "Змінити електронну пошту",
   change_email_new_required: "Введіть свою нову електронну пошту.",
   change_email_password_required: "Введіть свій поточний пароль.",
+
+  // Reading-tracker reset prompt (web ReadingTrackerResetCard.vue)
+  reading_tracker_reset_header: "Ви прочитали всю Біблію!",
+  reading_tracker_reset_message:
+    "Хочете почати спочатку? Встановіть дату початку відстеження на сьогодні, щоб почати заново.",
+  reading_tracker_reset_start_fresh: "Почати заново",
+  reading_tracker_reset_success:
+    "Дата початку вашого трекера встановлена на сьогоднішній день. Тепер ви відстежуєте читання Біблії з початку.",
 } as const satisfies Record<keyof typeof en, string>;

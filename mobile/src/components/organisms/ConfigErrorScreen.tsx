@@ -31,7 +31,7 @@ export function ConfigErrorScreen({ missing }: Props) {
       </Text>
 
       <View
-        style={[styles.list, { backgroundColor: colors.surfaceAlt, borderColor: colors.border }]}
+        style={[styles.list, { backgroundColor: colors.surfaceMuted, borderColor: colors.border }]}
       >
         {missing.map((name) => (
           <Text
@@ -56,16 +56,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: spacing.screenH,
-    gap: spacing.xxl,
+    paddingHorizontal: spacing.pageGutter,
+    gap: spacing.md,
   },
   title: typography.title,
   body: typography.body,
   list: {
     borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: radius.md,
-    padding: spacing.xxl,
-    gap: spacing.sm,
+    borderRadius: radius.xl,
+    padding: spacing.md,
+    gap: spacing.xs,
   },
   var: typography.bodyStrong,
 });

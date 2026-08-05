@@ -44,13 +44,13 @@ export function SelectSheet<T extends string | number>({
           return (
             <ListItem
               title={item.label}
-              bordered={false}
+              variant="plain"
               onPress={() => {
                 onSelect(item.value);
                 onClose();
               }}
               trailing={selected ? <Icon name="checkmark" size={20} color="primary" /> : undefined}
-              style={selected ? { backgroundColor: colors.surfaceAlt } : undefined}
+              style={selected ? { backgroundColor: colors.surfaceMuted } : undefined}
             />
           );
         }}
@@ -63,8 +63,8 @@ export function SelectSheet<T extends string | number>({
 }
 
 const styles = StyleSheet.create({
-  title: { paddingHorizontal: spacing.xl, paddingBottom: spacing.md },
+  title: { paddingHorizontal: spacing.md, paddingBottom: spacing.sm },
   list: { maxHeight: 420 },
-  listContent: { paddingBottom: spacing.sm },
+  listContent: { paddingBottom: spacing.xs },
   separator: { height: StyleSheet.hairlineWidth },
 });

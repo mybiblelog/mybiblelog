@@ -198,7 +198,7 @@ export default function ReadingSettings() {
 }
 
 const styles = StyleSheet.create({
-  content: { padding: spacing.screenH, paddingBottom: spacing.listBottom },
-  sectionLabel: { marginTop: spacing.lg, marginBottom: spacing.sm },
-  help: { marginTop: spacing.lg },
+  content: { padding: spacing.pageGutter, paddingBottom: spacing.listBottom },
+  sectionLabel: { marginTop: spacing.sm, marginBottom: spacing.xs },
+  help: { marginTop: spacing.sm },
 });

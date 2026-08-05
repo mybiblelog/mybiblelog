@@ -5,7 +5,16 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated from "react-native-reanimated";
 import { Bible, type BookProgress, type ChapterProgress } from "@mybiblelog/shared";
-import { AnimatedList, Card, Icon, ProgressBar, Screen, Spinner, Text } from "@/src/components";
+import {
+  AnimatedList,
+  Card,
+  CARD_CONTENT_PADDING,
+  Icon,
+  ProgressBar,
+  Screen,
+  Spinner,
+  Text,
+} from "@/src/components";
 import { fadeIn, radius, spacing, useTheme } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { useBibleProgress } from "@/src/stores/bibleProgress";
@@ -87,7 +96,7 @@ const BookCard = memo(function BookCard({
   onToggleChapter: (bookIndex: number, chapterIndex: number) => void;
 }) {
   return (
-    <Card padded style={styles.bookCard}>
+    <Card style={styles.bookCard}>
       <Pressable
         testID={`checklist.book-${book.bookIndex}`}
         onPress={() => onToggleBook(book.bookIndex)}
@@ -117,11 +126,14 @@ const BookCard = memo(function BookCard({
         </View>
       </Pressable>
 
+      {/* `progressTrack` (web `--mbl-progress-track-bg`), not a surface tone:
+          in dark, `surfaceMuted` is the same #242424 as the card it sits on,
+          so an empty bar was invisible. */}
       <ProgressBar
         progress={book.percentage / 100}
         height={8}
         color="success"
-        trackColor="surfaceAlt"
+        trackColor="progressTrack"
         style={styles.progress}
       />
 
@@ -157,9 +169,12 @@ export default function Checklist() {
 
   // Tiles expand to fill the card edge-to-edge: derive the column count from a
   // ~54pt minimum tile, then split the available width (minus gaps) evenly.
+  // `available` must be the card's *inner* width — overstating it picks a
+  // column count whose row is wider than the card, so the last tile wraps and
+  // leaves a tile-sized hole on the right.
   const tileWidth = useMemo(() => {
-    const gap = spacing.md; // matches chaptersWrap gap
-    const available = windowWidth - spacing.screenH * 2 - spacing.xl * 2;
+    const gap = spacing.sm; // matches chaptersWrap gap
+    const available = windowWidth - spacing.pageGutter * 2 - CARD_CONTENT_PADDING * 2;
     const columns = Math.max(1, Math.floor((available + gap) / (54 + gap)));
     return Math.floor((available - gap * (columns - 1)) / columns);
   }, [windowWidth]);
@@ -284,33 +299,33 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: spacing.lg,
+    marginBottom: spacing.sm,
   },
   listContent: {
     paddingBottom: spacing.listBottom,
   },
-  separator: { height: spacing.lg },
+  separator: { height: spacing.sm },
   pressed: { opacity: 0.7 },
   bookCard: {
-    borderRadius: radius.lg,
+    borderRadius: radius["2xl"],
   },
   bookHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingBottom: spacing.md,
+    paddingBottom: spacing.sm,
   },
   bookHeaderLeft: {
     flexDirection: "row",
     alignItems: "center",
     flexShrink: 1,
-    paddingRight: spacing.md,
-    gap: spacing.md,
+    paddingRight: spacing.sm,
+    gap: spacing.sm,
   },
   bookHeaderRight: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.sm,
+    gap: spacing.xs,
   },
   bookName: {
     flexShrink: 1,
@@ -318,22 +333,22 @@ const styles = StyleSheet.create({
   chevronUp: {
     transform: [{ rotate: "180deg" }],
   },
-  progress: { marginTop: spacing.sm },
+  progress: { marginTop: spacing.xs },
   chaptersWrap: {
-    marginTop: spacing.lg,
+    marginTop: spacing.sm,
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: spacing.md,
+    gap: spacing.sm,
   },
   chapterCard: {
-    paddingVertical: spacing.md,
-    borderRadius: radius.md,
+    paddingVertical: spacing.sm,
+    borderRadius: radius.xl,
     borderWidth: StyleSheet.hairlineWidth,
     alignItems: "center",
     justifyContent: "center",
   },
   chapterNumber: {
-    marginBottom: spacing.xs,
+    marginBottom: spacing["2xs"],
   },
   chapterIndicator: {
     height: 18,

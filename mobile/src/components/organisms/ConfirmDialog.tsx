@@ -50,11 +50,11 @@ export function ConfirmDialog({
 }
 
 const styles = StyleSheet.create({
-  title: { marginBottom: spacing.xs },
-  message: { marginBottom: spacing.lg },
+  title: { marginBottom: spacing["2xs"] },
+  message: { marginBottom: spacing.sm },
   actions: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    gap: spacing.md,
+    gap: spacing.sm,
   },
 });

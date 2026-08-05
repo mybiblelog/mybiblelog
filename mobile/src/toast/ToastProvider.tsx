@@ -15,7 +15,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { durations, radius, useTheme } from "@/src/design";
+import { durations, radius, spacing, useTheme } from "@/src/design";
 
 export type ToastType = "success" | "error" | "info";
 
@@ -141,9 +141,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   toast: {
-    borderRadius: radius.lg,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
+    borderRadius: radius["2xl"],
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
     minWidth: "60%",
     maxWidth: "100%",
   },

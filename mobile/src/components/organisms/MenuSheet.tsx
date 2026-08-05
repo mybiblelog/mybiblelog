@@ -66,6 +66,6 @@ export function MenuSheet({
 }
 
 const styles = StyleSheet.create({
-  item: { paddingHorizontal: spacing.xxl, paddingVertical: spacing.xl },
+  item: { paddingHorizontal: spacing.md, paddingVertical: spacing.md },
   divider: { height: StyleSheet.hairlineWidth },
 });

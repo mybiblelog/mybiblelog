@@ -81,8 +81,8 @@ export default function Insights() {
 
 const styles = StyleSheet.create({
   content: {
-    padding: spacing.screenH,
+    padding: spacing.pageGutter,
     paddingBottom: spacing.listBottom,
-    gap: spacing.lg,
+    gap: spacing.sm,
   },
 });

@@ -1,5 +1,5 @@
 import { useT } from "@/src/i18n/LocaleProvider";
-import { spacing, useTheme } from "@/src/design";
+import { spacing } from "@/src/design";
 import { Button, Card, Screen, Text } from "@/src/components";
 import type { AppSupportStatus } from "@/src/api/appSupportApi";
 import { Linking, StyleSheet } from "react-native";
@@ -13,7 +13,6 @@ export default function UpgradeRequiredScreen({
   >;
 }) {
   const t = useT();
-  const { colors } = useTheme();
 
   const storeUrl =
     typeof status.storeUrl === "string" && status.storeUrl.trim() ? status.storeUrl : null;
@@ -36,7 +35,7 @@ export default function UpgradeRequiredScreen({
 
   return (
     <Screen padded style={styles.screen}>
-      <Card variant="surface" elevated style={[styles.card, { borderColor: colors.border }]}>
+      <Card>
         <Text variant="title" style={styles.title}>
           {t("upgrade_required_title")}
         </Text>
@@ -66,9 +65,8 @@ export default function UpgradeRequiredScreen({
 
 const styles = StyleSheet.create({
   screen: { justifyContent: "center" },
-  card: { borderWidth: 1 },
-  title: { marginBottom: spacing.sm },
-  message: { marginBottom: spacing.md },
-  details: { marginBottom: spacing.lg },
-  fallback: { marginTop: spacing.md },
+  title: { marginBottom: spacing.xs },
+  message: { marginBottom: spacing.sm },
+  details: { marginBottom: spacing.sm },
+  fallback: { marginTop: spacing.sm },
 });

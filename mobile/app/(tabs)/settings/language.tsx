@@ -26,15 +26,14 @@ export default function LanguageSettings() {
           {t("settings_language_label")}
         </Text>
 
-        <Card padded={false} style={styles.card}>
+        <Card padding="none">
           {options.map((opt, i) => (
             <Fragment key={opt.value}>
               {i > 0 ? <View style={[styles.divider, { backgroundColor: colors.border }]} /> : null}
               <ListItem
                 title={opt.label}
                 testID={`language.option-${opt.value}`}
-                bordered={false}
-                style={styles.row}
+                variant="plain"
                 onPress={() => setLocale(opt.value)}
                 trailing={
                   locale === opt.value ? (
@@ -55,10 +54,8 @@ export default function LanguageSettings() {
 }
 
 const styles = StyleSheet.create({
-  content: { padding: spacing.screenH, paddingBottom: spacing.listBottom },
-  sectionLabel: { marginTop: spacing.lg, marginBottom: spacing.sm },
-  card: { overflow: "hidden" },
-  row: { backgroundColor: "transparent" },
+  content: { padding: spacing.pageGutter, paddingBottom: spacing.listBottom },
+  sectionLabel: { marginTop: spacing.sm, marginBottom: spacing.xs },
   divider: { height: StyleSheet.hairlineWidth },
-  help: { marginTop: spacing.md },
+  help: { marginTop: spacing.sm },
 });

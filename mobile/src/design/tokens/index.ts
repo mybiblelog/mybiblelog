@@ -4,6 +4,7 @@ export { spacing, TOUCH_TARGET } from "./spacing";
 export { radius } from "./radius";
 export { typography } from "./typography";
 export type { TypographyVariant } from "./typography";
-export { shadows } from "./shadows";
+export { elevationFallback, makeShadows } from "./shadows";
+export type { Shadows } from "./shadows";
 export { zIndex } from "./zIndex";
 export { durations, easings, springs } from "./motion";

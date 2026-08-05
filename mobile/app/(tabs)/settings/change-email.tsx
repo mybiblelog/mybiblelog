@@ -143,9 +143,9 @@ export default function ChangeEmail() {
 }
 
 const styles = StyleSheet.create({
-  content: { padding: spacing.screenH, paddingBottom: spacing.listBottom },
-  hint: { marginBottom: spacing.sm },
-  current: { marginBottom: spacing.lg },
-  error: { marginBottom: spacing.md },
-  form: { gap: spacing.lg, marginBottom: spacing.lg },
+  content: { padding: spacing.pageGutter, paddingBottom: spacing.listBottom },
+  hint: { marginBottom: spacing.xs },
+  current: { marginBottom: spacing.sm },
+  error: { marginBottom: spacing.sm },
+  form: { gap: spacing.sm, marginBottom: spacing.sm },
 });

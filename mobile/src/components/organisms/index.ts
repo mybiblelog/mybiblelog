@@ -27,6 +27,7 @@ export { OfflineNotesView } from "./OfflineNotesView";
 export { NotesQuerySheet } from "./NotesQuerySheet";
 export { PassageRangeSheet } from "./PassageRangeSheet";
 export { ReadingSuggestionsSection } from "./ReadingSuggestionsSection";
+export { ReadingTrackerResetCard } from "./ReadingTrackerResetCard";
 export { RecentNotesSection } from "./RecentNotesSection";
 export { TagEditorSheet } from "./TagEditorSheet";
 export { TagSelectorSheet } from "./TagSelectorSheet";

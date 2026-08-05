@@ -123,8 +123,8 @@ export default function AccountSettings() {
             <ListItem
               title={t("account_delete_button")}
               titleColor="destructive"
-              bordered={false}
-              style={{ backgroundColor: colors.surfaceAlt }}
+              variant="plain"
+              style={{ backgroundColor: colors.surfaceMuted }}
               onPress={() => router.push("/settings/delete-account")}
             />
           </>
@@ -135,21 +135,21 @@ export default function AccountSettings() {
 }
 
 const styles = StyleSheet.create({
-  content: { padding: spacing.screenH, paddingBottom: spacing.listBottom },
-  sectionLabel: { marginTop: spacing.lg, marginBottom: spacing.sm },
+  content: { padding: spacing.pageGutter, paddingBottom: spacing.listBottom },
+  sectionLabel: { marginTop: spacing.sm, marginBottom: spacing.xs },
   authStatusRow: {
     flexDirection: "row",
     alignItems: "flex-start",
-    gap: spacing.md,
+    gap: spacing.sm,
   },
-  authStatusTextCol: { flex: 1, gap: spacing.xs },
-  authActionButton: { marginTop: spacing.lg, alignSelf: "flex-end" },
-  authActionButtonSpacing: { marginTop: spacing.lg },
+  authStatusTextCol: { flex: 1, gap: spacing["2xs"] },
+  authActionButton: { marginTop: spacing.sm, alignSelf: "flex-end" },
+  authActionButtonSpacing: { marginTop: spacing.sm },
   authOfflineNotice: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.sm,
-    marginTop: spacing.lg,
+    gap: spacing.xs,
+    marginTop: spacing.sm,
   },
   authOfflineNoticeText: { flex: 1 },
 });

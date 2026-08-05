@@ -258,20 +258,20 @@ export default function Progress() {
 
 const styles = StyleSheet.create({
   content: {
-    padding: spacing.screenH,
+    padding: spacing.pageGutter,
     paddingBottom: spacing.listBottom,
-    gap: spacing.lg,
+    gap: spacing.sm,
   },
   card: { gap: 0 },
-  cardDescription: { marginTop: spacing.xs },
-  cardBody: { marginTop: spacing.md, gap: spacing.md },
+  cardDescription: { marginTop: spacing["2xs"] },
+  cardBody: { marginTop: spacing.sm, gap: spacing.sm },
   cardAction: { alignSelf: "flex-start" },
   statRow: {
     flexDirection: "row",
     alignItems: "baseline",
     justifyContent: "space-between",
-    gap: spacing.md,
+    gap: spacing.sm,
   },
   statLabel: { flexShrink: 1 },
-  goalError: { marginTop: -spacing.xs },
+  goalError: { marginTop: -spacing["2xs"] },
 });

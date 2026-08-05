@@ -2,6 +2,7 @@ import { type ReactNode, createContext, useContext, useEffect, useMemo, useState
 import { useColorScheme } from "react-native";
 import { appStorage } from "@/src/storage/keys";
 import { type ColorSchemeName, colorsByScheme } from "./tokens/colors";
+import { type Shadows, makeShadows } from "./tokens/shadows";
 
 export type ThemeMode = "system" | "light" | "dark";
 
@@ -10,6 +11,11 @@ type ThemeContextValue = {
   setMode: (mode: ThemeMode) => void;
   scheme: ColorSchemeName;
   colors: (typeof colorsByScheme)[ColorSchemeName];
+  /**
+   * Semantic elevation roles for the active scheme. Shadow *ink* is themed, so
+   * unlike spacing/radius these can't be imported statically — see `shadows.ts`.
+   */
+  shadows: Shadows;
 };
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -25,9 +31,19 @@ function resolveScheme(mode: ThemeMode, system: string | null): ColorSchemeName 
   return system === "dark" ? "dark" : "light";
 }
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
+export function ThemeProvider({
+  children,
+  initialMode = "system",
+}: {
+  children: ReactNode;
+  /**
+   * Starting mode before the persisted value loads. Defaults to "system";
+   * pass an explicit mode to pin the scheme (tests, previews).
+   */
+  initialMode?: ThemeMode;
+}) {
   const systemScheme = useColorScheme(); // "light" | "dark" | null
-  const [mode, setModeState] = useState<ThemeMode>("system");
+  const [mode, setModeState] = useState<ThemeMode>(initialMode);
 
   useEffect(() => {
     let isMounted = true;
@@ -50,6 +66,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const scheme = resolveScheme(mode, systemScheme);
   const colors = colorsByScheme[scheme];
+  const shadows = useMemo(() => makeShadows(colors), [colors]);
 
   const value = useMemo<ThemeContextValue>(
     () => ({
@@ -57,8 +74,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       setMode: (next) => setModeState(next),
       scheme,
       colors,
+      shadows,
     }),
-    [colors, mode, scheme]
+    [colors, mode, scheme, shadows]
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

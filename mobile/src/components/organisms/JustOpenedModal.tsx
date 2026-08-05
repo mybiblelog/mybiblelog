@@ -115,9 +115,9 @@ export function JustOpenedModal() {
 }
 
 const styles = StyleSheet.create({
-  title: { marginBottom: spacing.xs },
-  message: { marginBottom: spacing.lg },
+  title: { marginBottom: spacing["2xs"] },
+  message: { marginBottom: spacing.sm },
   actions: {
-    gap: spacing.sm,
+    gap: spacing.xs,
   },
 });

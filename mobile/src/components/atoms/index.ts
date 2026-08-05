@@ -6,6 +6,7 @@ export { Icon } from "./Icon";
 export type { IconName } from "./Icon";
 export { IconButton } from "./IconButton";
 export type { IconButtonProps } from "./IconButton";
+export { DoubleProgressBar } from "./DoubleProgressBar";
 export { ProgressBar } from "./ProgressBar";
 export { Skeleton } from "./Skeleton";
 export { Spacer } from "./Spacer";

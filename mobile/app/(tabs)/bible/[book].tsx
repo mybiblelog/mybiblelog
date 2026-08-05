@@ -53,7 +53,7 @@ const ChapterTile = memo(function ChapterTile({
     <Pressable
       style={({ pressed }) => [
         styles.tile,
-        { backgroundColor: colors.surfaceAlt, width, marginRight, marginBottom },
+        { backgroundColor: colors.surfaceMuted, width, marginRight, marginBottom },
         pressed && styles.pressed,
       ]}
       accessibilityRole="button"
@@ -289,22 +289,22 @@ export default function BibleBookScreen() {
 
 const styles = StyleSheet.create({
   plaque: {
-    marginHorizontal: spacing.screenH,
-    marginTop: spacing.md,
-    marginBottom: spacing.xxl,
+    marginHorizontal: spacing.pageGutter,
+    marginTop: spacing.sm,
+    marginBottom: spacing.md,
   },
   plaquePercent: {
     textAlign: "right",
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
   gridContent: {
-    paddingHorizontal: spacing.screenH,
+    paddingHorizontal: spacing.pageGutter,
     paddingBottom: spacing.listBottom,
   },
   pressed: { opacity: 0.7 },
   tile: {
-    borderRadius: radius.lg,
-    padding: spacing.md,
+    borderRadius: radius["2xl"],
+    padding: spacing.sm,
     minHeight: 92,
     justifyContent: "space-between",
   },
@@ -314,6 +314,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tileBar: {
-    marginTop: spacing.md,
+    marginTop: spacing.sm,
   },
 });

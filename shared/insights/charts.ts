@@ -87,11 +87,18 @@ export const buildLineChartGeometry = (
     areaPath = `M ${first.x} ${baseY} ${segments} L ${last.x} ${baseY} Z`;
   }
 
+  // Tick labels are whole verse counts, so a small maximum can't be split into
+  // `yTickSteps` distinct integers: 4 steps over a max of 1 round to 0,0,1,1,1 —
+  // repeated labels stacked on evenly spaced gridlines, and duplicate keys for
+  // renderers that key the tick list by value. Cap the ladder at the maximum;
+  // from `maxCount >= yTickSteps` up, the rounded values are always distinct.
+  const steps = Math.min(yTickSteps, maxCount);
+
   const yTicks: ChartYTick[] = [];
-  for (let i = 0; i <= yTickSteps; i++) {
+  for (let i = 0; i <= steps; i++) {
     yTicks.push({
-      value: Math.round((maxCount / yTickSteps) * i),
-      y: padTop + innerH - (i / yTickSteps) * innerH,
+      value: Math.round((maxCount / steps) * i),
+      y: padTop + innerH - (i / steps) * innerH,
     });
   }
 

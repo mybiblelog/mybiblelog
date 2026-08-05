@@ -211,17 +211,17 @@ export default function Register() {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  container: { flexGrow: 1, paddingHorizontal: spacing.screenH, justifyContent: "center" },
-  title: { marginBottom: spacing.sm },
-  subtitle: { marginBottom: spacing.lg },
-  error: { marginBottom: spacing.md },
-  form: { gap: spacing.lg, marginBottom: spacing.lg },
+  container: { flexGrow: 1, paddingHorizontal: spacing.pageGutter, justifyContent: "center" },
+  title: { marginBottom: spacing.xs },
+  subtitle: { marginBottom: spacing.sm },
+  error: { marginBottom: spacing.sm },
+  form: { gap: spacing.sm, marginBottom: spacing.sm },
   divider: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: spacing.xl,
+    marginVertical: spacing.md,
   },
   dividerLine: { flex: 1, height: StyleSheet.hairlineWidth },
-  dividerText: { marginHorizontal: spacing.lg },
-  secondaryButton: { marginTop: spacing.md },
+  dividerText: { marginHorizontal: spacing.sm },
+  secondaryButton: { marginTop: spacing.sm },
 });

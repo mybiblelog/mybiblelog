@@ -21,14 +21,13 @@ export default function AppearanceSettings() {
           {t("settings_theme_label")}
         </Text>
 
-        <Card padded={false} style={styles.card}>
+        <Card padding="none">
           {options.map((opt, i) => (
             <Fragment key={opt.value}>
               {i > 0 ? <View style={[styles.divider, { backgroundColor: colors.border }]} /> : null}
               <ListItem
                 title={opt.label}
-                bordered={false}
-                style={styles.row}
+                variant="plain"
                 onPress={() => setMode(opt.value)}
                 trailing={
                   mode === opt.value ? (
@@ -49,10 +48,8 @@ export default function AppearanceSettings() {
 }
 
 const styles = StyleSheet.create({
-  content: { padding: spacing.screenH, paddingBottom: spacing.listBottom },
-  sectionLabel: { marginTop: spacing.lg, marginBottom: spacing.sm },
-  card: { overflow: "hidden" },
-  row: { backgroundColor: "transparent" },
+  content: { padding: spacing.pageGutter, paddingBottom: spacing.listBottom },
+  sectionLabel: { marginTop: spacing.sm, marginBottom: spacing.xs },
   divider: { height: StyleSheet.hairlineWidth },
-  help: { marginTop: spacing.md },
+  help: { marginTop: spacing.sm },
 });
