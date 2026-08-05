@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     height: 96,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
   particle: {
     position: "absolute",
@@ -173,10 +173,10 @@ const styles = StyleSheet.create({
   },
   centered: {
     textAlign: "center",
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
   footer: {
-    marginTop: spacing.md,
+    marginTop: spacing.sm,
     alignItems: "center",
   },
 });

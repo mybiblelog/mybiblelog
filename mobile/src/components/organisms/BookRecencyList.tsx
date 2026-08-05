@@ -194,7 +194,7 @@ export function BookRecencyList({ entries }: { entries: InsightsLogEntry[] }) {
                 ]}
               />
             }
-            bordered={false}
+            variant="plain"
           />
         ))}
       </View>
@@ -220,15 +220,15 @@ export function BookRecencyList({ entries }: { entries: InsightsLogEntry[] }) {
 }
 
 const styles = StyleSheet.create({
-  container: { gap: spacing.md },
-  controls: { gap: spacing.md },
-  legend: { flexDirection: "row", alignItems: "center", gap: spacing.xs, flexWrap: "wrap" },
-  legendGap: { marginLeft: spacing.sm },
-  list: { gap: spacing.xs },
+  container: { gap: spacing.sm },
+  controls: { gap: spacing.sm },
+  legend: { flexDirection: "row", alignItems: "center", gap: spacing["2xs"], flexWrap: "wrap" },
+  legendGap: { marginLeft: spacing.xs },
+  list: { gap: spacing["2xs"] },
   swatch: {
     width: 14,
     height: 14,
-    borderRadius: radius.sm,
+    borderRadius: radius.xl,
     borderWidth: 1,
   },
 });

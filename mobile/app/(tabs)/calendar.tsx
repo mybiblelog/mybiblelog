@@ -227,7 +227,7 @@ export default function Calendar() {
                         height: Math.max(70, Math.floor(dayCellMetrics.cellWidth)),
                         marginRight: dayCellMetrics.gap,
                         marginBottom: dayCellMetrics.gap,
-                        backgroundColor: d.isCurrentMonth ? colors.surface : colors.surfaceAlt,
+                        backgroundColor: d.isCurrentMonth ? colors.surface : colors.surfaceMuted,
                         borderColor: colors.border,
                       },
                     ]}
@@ -317,12 +317,12 @@ const styles = StyleSheet.create({
   pageContent: {
     paddingBottom: spacing.listBottom,
   },
-  entrySeparator: { height: spacing.md },
-  rowWrap: { paddingHorizontal: spacing.screenH },
+  entrySeparator: { height: spacing.sm },
+  rowWrap: { paddingHorizontal: spacing.pageGutter },
   monthHeader: {
-    paddingHorizontal: spacing.screenH,
-    paddingTop: spacing.screenH,
-    paddingBottom: spacing.md,
+    paddingHorizontal: spacing.pageGutter,
+    paddingTop: spacing.pageGutter,
+    paddingBottom: spacing.sm,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -330,12 +330,12 @@ const styles = StyleSheet.create({
   monthNav: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.xs,
+    gap: spacing["2xs"],
   },
   weekdaysRow: {
     flexDirection: "row",
-    paddingHorizontal: spacing.screenH,
-    paddingBottom: spacing.xs,
+    paddingHorizontal: spacing.pageGutter,
+    paddingBottom: spacing["2xs"],
   },
   weekdayCell: {
     alignItems: "center",
@@ -344,12 +344,12 @@ const styles = StyleSheet.create({
   daysGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    paddingBottom: spacing.md,
+    paddingBottom: spacing.sm,
   },
   dayCell: {
     position: "relative",
     borderWidth: StyleSheet.hairlineWidth,
-    padding: spacing.xs,
+    padding: spacing["2xs"],
   },
   dayNumberCircle: {
     width: 28,
@@ -381,23 +381,23 @@ const styles = StyleSheet.create({
   },
   entryHeader: {
     borderBottomWidth: 2,
-    marginHorizontal: spacing.screenH,
-    marginBottom: spacing.lg,
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.md,
+    marginHorizontal: spacing.pageGutter,
+    marginBottom: spacing.sm,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.sm,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: spacing.lg,
+    gap: spacing.sm,
   },
   entryHeaderText: { flex: 1 },
   entryVerseCount: {
-    marginTop: 2,
+    marginTop: spacing["3xs"],
   },
   addButton: {
-    borderRadius: radius.md,
+    borderRadius: radius.xl,
   },
-  emptyWrap: { paddingVertical: spacing.xl },
+  emptyWrap: { paddingVertical: spacing.md },
   noEntries: {
     textAlign: "center",
   },

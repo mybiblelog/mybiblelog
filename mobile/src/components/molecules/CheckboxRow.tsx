@@ -46,9 +46,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.md,
+    gap: spacing.sm,
     minHeight: TOUCH_TARGET,
-    paddingVertical: spacing.xs,
+    paddingVertical: spacing["2xs"],
   },
   label: { flex: 1 },
   disabled: { opacity: 0.5 },

@@ -194,16 +194,16 @@ export function AuthCodeForm({
         loading={submitting}
         disabled={step === "code" && code.length !== CODE_LENGTH}
         fullWidth
-        style={{ marginTop: spacing.lg }}
+        style={{ marginTop: spacing.sm }}
       />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { gap: spacing.md },
+  container: { gap: spacing.sm },
   instructions: {},
-  email: { marginBottom: spacing.sm },
+  email: { marginBottom: spacing.xs },
   error: {},
-  passwordFields: { gap: spacing.lg },
+  passwordFields: { gap: spacing.sm },
 });

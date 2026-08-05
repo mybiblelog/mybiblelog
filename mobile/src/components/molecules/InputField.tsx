@@ -37,7 +37,7 @@ export const InputField = forwardRef<TextInput, InputFieldProps>(function InputF
         }}
         style={[
           styles.input,
-          { color: colors.text, backgroundColor: colors.surfaceAlt, borderColor },
+          { color: colors.text, backgroundColor: colors.surfaceMuted, borderColor },
           style,
         ]}
         {...rest}
@@ -52,13 +52,13 @@ export const InputField = forwardRef<TextInput, InputFieldProps>(function InputF
 });
 
 const styles = StyleSheet.create({
-  container: { gap: spacing.xs },
+  container: { gap: spacing["2xs"] },
   input: {
     minHeight: TOUCH_TARGET,
-    borderRadius: radius.md,
+    borderRadius: radius.xl,
     borderWidth: 1,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.sm,
     fontSize: 16,
     fontWeight: "600",
   },

@@ -1,17 +1,18 @@
 import dayjs from "dayjs";
+import { router } from "expo-router";
 import { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import {
   AnimatedList,
   Button,
-  Card,
+  DoubleProgressBar,
   EmptyState,
   LogEntryRow,
-  ProgressBar,
   ReadingSuggestionsSection,
+  ReadingTrackerResetCard,
   RecentNotesSection,
   Screen,
-  Spinner,
+  SkeletonList,
   Text,
   useLogEntryOverlays,
   useSyncRefreshControl,
@@ -20,13 +21,17 @@ import { spacing } from "@/src/design";
 import { formatLongDate } from "@/src/i18n/date";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { computeEntryVerseStatsForDate } from "@/src/log-entries/entryStats";
+import { formatVerseCountMessage } from "@/src/log-entries/verseCountMessage";
 import { useReadingSuggestions } from "@/src/reading-suggestions/useReadingSuggestions";
 import type { StoredLogEntry } from "@/src/storage/logEntries";
+import { useDateVerseCountsStore } from "@/src/stores/dateVerseCounts";
 import { useLogEntryList } from "@/src/stores/logEntries";
 import { useSettingsValue } from "@/src/stores/userSettings";
 import { Bible } from "@mybiblelog/shared";
 
 const Separator = () => <View style={styles.separator} />;
+
+const percentOf = (value: number, goal: number) => (goal > 0 ? (value / goal) * 100 : 0);
 
 export default function Index() {
   const entries = useLogEntryList();
@@ -57,6 +62,14 @@ export default function Index() {
     [entries, lookBackDate, today]
   );
 
+  // The daily goal is measured in *new* verses (web parity) — re-reading a
+  // passage doesn't advance it. Narrow selectors on purpose: the whole map
+  // recomputes on every entry mutation.
+  const newVersesReadToday = useDateVerseCountsStore((s) => s.dateVerseCounts[today]?.unique ?? 0);
+  const countsPending = useDateVerseCountsStore(
+    (s) => s.jobs > 0 && Object.keys(s.dateVerseCounts).length === 0
+  );
+
   const versesReadToday = useMemo(() => {
     const ranges = todayEntries.map((e) => ({
       startVerseId: e.startVerseId,
@@ -65,8 +78,8 @@ export default function Index() {
     return Bible.countUniqueRangeVerses(ranges);
   }, [todayEntries]);
 
-  const progress = goal > 0 ? Math.min(1, versesReadToday / goal) : 0;
-  const progressPct = Math.round(progress * 100);
+  const primaryPercentage = percentOf(newVersesReadToday, goal);
+  const secondaryPercentage = percentOf(versesReadToday, goal);
 
   // Suggestions derive from entries inside the look-back window (web
   // `currentLogEntries` parity).
@@ -76,19 +89,18 @@ export default function Index() {
   );
   const readingSuggestions = useReadingSuggestions(currentEntries, today);
 
-  if (entries === null || settings === null) {
-    return (
-      <Screen>
-        <Spinner center />
-      </Screen>
-    );
-  }
+  const loading = entries === null || settings === null;
+  // The counts map is empty until the first recompute lands, so the bar would
+  // otherwise animate 0 -> N a beat after mount. Web has the same gap.
+  const goalPending = loading || countsPending;
 
   return (
     <Screen padded>
       <View style={styles.header}>
         <View style={styles.headerText}>
           <Text variant="title">{t("today_title")}</Text>
+          {/* Mobile-only: web gets a page title from the browser chrome, a
+              phone doesn't, so the date does that orienting work here. */}
           <Text variant="subtitle" color="mutedText" style={styles.subtitle}>
             {todayDisplay}
           </Text>
@@ -96,34 +108,31 @@ export default function Index() {
         <Button label={t("add")} testID="today.add-entry" leftIcon="add" onPress={openAdd} />
       </View>
 
-      <Card style={styles.progressCard}>
-        <View style={styles.progressTopRow}>
-          <Text variant="label">{t("today_daily_goal")}</Text>
-          <Text variant="caption" color="mutedText">
-            {goal > 0
-              ? t("today_progress_meta_with_goal", {
-                  pct: progressPct,
-                  read: versesReadToday,
-                  goal,
-                  verses: t("verses_lowercase"),
-                })
-              : t("today_progress_meta_no_goal", {
-                  read: versesReadToday,
-                  verses: t("verses_lowercase"),
-                })}
+      <View style={styles.goal} testID="daily-goal">
+        <DoubleProgressBar
+          primaryPercentage={goalPending ? 0 : primaryPercentage}
+          secondaryPercentage={goalPending ? 0 : secondaryPercentage}
+        />
+        <View style={styles.goalMeta}>
+          <Text variant="caption" color="mutedText" testID="daily-goal-summary">
+            {goalPending
+              ? t("loading")
+              : goal > 0
+                ? t("today_new_verses_read", { read: newVersesReadToday, goal })
+                : t("today_no_goal_hint")}
           </Text>
+          {!goalPending && goal > 0 ? (
+            <Text variant="caption" color="mutedText">
+              {`${Math.round(primaryPercentage)}%`}
+            </Text>
+          ) : null}
         </View>
-        {goal > 0 ? (
-          <ProgressBar progress={progress} />
-        ) : (
-          <Text variant="caption" color="mutedText">
-            {t("today_no_goal_hint")}
-          </Text>
-        )}
-      </Card>
+      </View>
+
+      <ReadingTrackerResetCard hasEntriesToday={todayEntries.length > 0} />
 
       <AnimatedList
-        data={todayEntries}
+        data={loading ? [] : todayEntries}
         refreshControl={refreshControl}
         contentContainerStyle={styles.listContent}
         keyExtractor={(item: StoredLogEntry) => item.clientId}
@@ -135,7 +144,10 @@ export default function Index() {
               testID="today.entry-row"
               meta={
                 stats
-                  ? t("today_entry_meta", { new: stats.newSinceLookBack, total: stats.total })
+                  ? formatVerseCountMessage(t, {
+                      count: stats.total,
+                      newVerseCount: stats.newSinceLookBack,
+                    })
                   : undefined
               }
               onPressMenu={() => openMenu(item)}
@@ -144,17 +156,38 @@ export default function Index() {
         }}
         ItemSeparatorComponent={Separator}
         ListEmptyComponent={
-          <EmptyState
-            icon="book-outline"
-            title={t("today_empty_title")}
-            text={t("today_empty_text")}
-            ctaLabel={t("add")}
-            onPressCta={openAdd}
-          />
+          loading ? (
+            <SkeletonList count={3} />
+          ) : (
+            // Mobile-only: web shows a bare "No Entries" card. A phone can
+            // afford the illustration, and the inline CTA saves a reach back
+            // up to the header button.
+            <EmptyState
+              icon="book-outline"
+              title={t("today_empty_title")}
+              text={t("today_empty_text")}
+              ctaLabel={t("add")}
+              onPressCta={openAdd}
+            />
+          )
         }
         ListFooterComponent={
           <>
-            <ReadingSuggestionsSection suggestions={readingSuggestions} today={today} />
+            <ReadingSuggestionsSection
+              suggestions={readingSuggestions}
+              today={today}
+              loading={loading}
+            />
+            <View style={styles.viewAll}>
+              <Button
+                label={t("today_view_all_reading")}
+                variant="ghost"
+                testID="today.view-all-reading"
+                // Mobile has no all-entries list screen; Calendar is the
+                // nearest surface for browsing past reading.
+                onPress={() => router.push("/(tabs)/calendar")}
+              />
+            </View>
             <RecentNotesSection />
           </>
         }
@@ -170,25 +203,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: spacing.lg,
-    marginBottom: spacing.lg,
+    gap: spacing.sm,
+    marginBottom: spacing.sm,
   },
   headerText: { flex: 1 },
-  subtitle: { marginTop: 2 },
-  progressCard: {
-    marginBottom: spacing.xl,
-  },
-  progressTopRow: {
+  subtitle: { marginTop: spacing["3xs"] },
+  goal: { marginBottom: spacing.xl },
+  goalMeta: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "baseline",
-    marginBottom: spacing.md,
-    gap: spacing.sm,
+    marginTop: spacing.xs,
+    gap: spacing.xs,
   },
-  listContent: {
-    paddingBottom: spacing.listBottom,
-  },
-  separator: {
-    height: spacing.md,
-  },
+  listContent: { paddingBottom: spacing.listBottom },
+  separator: { height: spacing.xs },
+  viewAll: { alignItems: "center", marginTop: spacing.sm },
 });

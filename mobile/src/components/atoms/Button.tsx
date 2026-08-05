@@ -46,7 +46,7 @@ export function Button({
 
   const palette: Record<ButtonVariant, { bg: string; fg: keyof ThemeColors }> = {
     primary: { bg: colors.primary, fg: "onPrimary" },
-    secondary: { bg: colors.surfaceAlt, fg: "text" },
+    secondary: { bg: colors.surfaceMuted, fg: "text" },
     destructive: { bg: colors.destructive, fg: "onDestructive" },
     ghost: { bg: "transparent", fg: "primary" },
   };
@@ -55,7 +55,7 @@ export function Button({
   // keeps the variant color (the spinner still signals an active action).
   const showDisabled = disabled && !loading;
   const { bg, fg } = showDisabled
-    ? { bg: variant === "ghost" ? "transparent" : colors.surfaceAlt, fg: "mutedText" as const }
+    ? { bg: variant === "ghost" ? "transparent" : colors.surfaceMuted, fg: "mutedText" as const }
     : palette[variant];
 
   return (
@@ -95,22 +95,22 @@ export function Button({
 
 const styles = StyleSheet.create({
   base: {
-    borderRadius: radius.md,
+    borderRadius: radius.button,
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
   },
   sizeMd: {
     minHeight: TOUCH_TARGET,
-    paddingHorizontal: spacing.xl,
-    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
   },
   sizeSm: {
     minHeight: 36,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   fullWidth: { alignSelf: "stretch" },
   disabled: { opacity: 0.4 },
-  content: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+  content: { flexDirection: "row", alignItems: "center", gap: spacing.xs },
 });

@@ -7,7 +7,7 @@ import { Button } from "../atoms/Button";
 import { Icon, type IconName } from "../atoms/Icon";
 import { IconButton } from "../atoms/IconButton";
 import { Text } from "../atoms/Text";
-import { Card } from "./Card";
+import { Card, type CardTone } from "./Card";
 
 type Props = {
   /** Leading icon. */
@@ -30,6 +30,12 @@ type Props = {
    */
   dismissKey?: string;
   dismissMinutes?: number;
+  /** Callout tone, forwarded to Card (web `.mbl-message--info` / `--success`). */
+  tone?: CardTone;
+  /** A second action beside the CTA, mirroring web's `.mbl-button-group`. */
+  secondaryCtaLabel?: string;
+  onPressSecondaryCta?: () => void;
+  ctaDisabled?: boolean;
   testID?: string;
 };
 
@@ -51,6 +57,10 @@ export function InlineAlert({
   onDismiss,
   dismissKey,
   dismissMinutes = 60 * 24 * 7,
+  tone = "neutral",
+  secondaryCtaLabel,
+  onPressSecondaryCta,
+  ctaDisabled = false,
   testID,
 }: Props) {
   const [dismissed, setDismissed] = useState(false);
@@ -83,7 +93,7 @@ export function InlineAlert({
   const dismissible = Boolean(dismissLabel);
 
   return (
-    <Card testID={testID} style={styles.card}>
+    <Card testID={testID} tone={tone} style={styles.card}>
       <View style={styles.row}>
         {icon ? <Icon name={icon} size={22} color={iconColor} /> : null}
         <View style={styles.textCol}>
@@ -108,22 +118,34 @@ export function InlineAlert({
       {children}
 
       {ctaLabel && onPressCta ? (
-        <Button
-          label={ctaLabel}
-          leftIcon={ctaIcon}
-          fullWidth
-          onPress={onPressCta}
-          style={styles.cta}
-        />
+        <View style={styles.actions}>
+          <Button
+            label={ctaLabel}
+            leftIcon={ctaIcon}
+            fullWidth={!secondaryCtaLabel}
+            disabled={ctaDisabled}
+            onPress={onPressCta}
+            style={secondaryCtaLabel ? styles.action : undefined}
+          />
+          {secondaryCtaLabel && onPressSecondaryCta ? (
+            <Button
+              label={secondaryCtaLabel}
+              variant="secondary"
+              onPress={onPressSecondaryCta}
+              style={styles.action}
+            />
+          ) : null}
+        </View>
       ) : null}
     </Card>
   );
 }
 
 const styles = StyleSheet.create({
-  card: { marginBottom: spacing.lg },
-  row: { flexDirection: "row", alignItems: "flex-start", gap: spacing.md },
-  textCol: { flex: 1, gap: spacing.xs },
-  dismiss: { marginTop: -spacing.sm, marginRight: -spacing.sm },
-  cta: { marginTop: spacing.lg },
+  card: { marginBottom: spacing.sm },
+  row: { flexDirection: "row", alignItems: "flex-start", gap: spacing.sm },
+  textCol: { flex: 1, gap: spacing["2xs"] },
+  dismiss: { marginTop: -spacing.xs, marginRight: -spacing.xs },
+  actions: { flexDirection: "row", gap: spacing.xs, marginTop: spacing.sm },
+  action: { flex: 1 },
 });

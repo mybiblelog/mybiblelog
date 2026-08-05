@@ -138,10 +138,10 @@ export function BookFrequencyChart({ entries }: { entries: InsightsLogEntry[] })
 }
 
 const styles = StyleSheet.create({
-  container: { gap: spacing.lg },
-  controls: { gap: spacing.md },
-  rows: { gap: spacing.sm },
-  row: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+  container: { gap: spacing.sm },
+  controls: { gap: spacing.sm },
+  rows: { gap: spacing.xs },
+  row: { flexDirection: "row", alignItems: "center", gap: spacing.xs },
   name: { width: 88 },
   bar: { flex: 1 },
   value: { width: 44, textAlign: "right" },

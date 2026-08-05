@@ -54,9 +54,11 @@ export function DailyVersesChart({ entries }: { entries: InsightsLogEntry[] }) {
         viewBox={`0 0 ${width} ${height}`}
         accessibilityLabel={t("insights_trend_chart_label")}
       >
-        {geometry.yTicks.map((tick) => (
+        {/* Ticks are a fixed positional ladder, so they key by index: their
+            values are whole verse counts and repeat once the max is small. */}
+        {geometry.yTicks.map((tick, i) => (
           <Line
-            key={`g-${tick.value}`}
+            key={`g-${i}`}
             x1={padLeft}
             y1={tick.y}
             x2={width - padRight}
@@ -65,9 +67,9 @@ export function DailyVersesChart({ entries }: { entries: InsightsLogEntry[] }) {
             strokeWidth={1}
           />
         ))}
-        {geometry.yTicks.map((tick) => (
+        {geometry.yTicks.map((tick, i) => (
           <SvgText
-            key={`t-${tick.value}`}
+            key={`t-${i}`}
             x={padLeft - 6}
             y={tick.y + 3}
             fontSize={11}
@@ -132,5 +134,5 @@ export function DailyVersesChart({ entries }: { entries: InsightsLogEntry[] }) {
 }
 
 const styles = StyleSheet.create({
-  container: { gap: spacing.lg },
+  container: { gap: spacing.sm },
 });

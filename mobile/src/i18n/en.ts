@@ -19,7 +19,15 @@ export const en = {
   today_progress_meta_no_goal: "%{read} %{verses}",
   today_empty_title: "No entries yet",
   today_empty_text: "Add what you read today to track your progress.",
-  today_entry_meta: "%{new} new • %{total} total verses",
+  verse_count_verse_one: "verse",
+  verse_count_verse_other: "verses",
+  verse_count_all_one: "all",
+  verse_count_all_other: "all",
+  verse_count_new_one: "new",
+  verse_count_new_other: "new",
+  today_new_verses_read: "%{read} / %{goal} new verses",
+  today_view_all_reading: "View All Reading",
+  today_no_entries: "No Entries",
 
   today_reading_suggestions: "Reading Suggestions",
   today_no_suggestions: "No Suggestions",
@@ -376,6 +384,12 @@ export const en = {
   dismiss: "Dismiss",
   offline_banner: "You’re offline — changes will sync when you reconnect.",
   today_no_goal_hint: "Set a daily goal in Settings → Reading to track your progress here.",
+  reading_tracker_reset_header: "You've read the whole Bible!",
+  reading_tracker_reset_message:
+    "Want to start over? Set your Tracker Start Date to today to begin tracking fresh.",
+  reading_tracker_reset_start_fresh: "Start Fresh",
+  reading_tracker_reset_success:
+    "Your tracker start date is set to the current date. You are now tracking your Bible reading from the start.",
   chapter_read_a11y: "%{book} chapter %{chapter}, read",
   chapter_unread_a11y: "%{book} chapter %{chapter}, not read",
 

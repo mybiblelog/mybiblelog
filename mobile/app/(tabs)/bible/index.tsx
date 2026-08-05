@@ -51,7 +51,7 @@ const BookRow = memo(function BookRow({
       testID={`bible.book-${book.bookIndex}`}
       style={({ pressed }) => [
         styles.card,
-        { backgroundColor: colors.surfaceAlt },
+        { backgroundColor: colors.surfaceMuted },
         pressed && styles.pressed,
       ]}
       onPress={() => onPress(book.bookIndex)}
@@ -228,38 +228,38 @@ export default function BibleIndex() {
 
 const styles = StyleSheet.create({
   header: {
-    paddingHorizontal: spacing.screenH,
-    paddingTop: spacing.screenTop,
-    gap: spacing.md,
+    paddingHorizontal: spacing.pageGutter,
+    paddingTop: spacing.pageTop,
+    gap: spacing.sm,
   },
   headerRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.md,
+    gap: spacing.sm,
   },
   headerTitle: { flex: 1 },
   plaque: {
-    margin: spacing.screenH,
+    margin: spacing.pageGutter,
   },
   plaquePercent: {
     textAlign: "right",
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
   listContent: {
-    paddingHorizontal: spacing.screenH,
+    paddingHorizontal: spacing.pageGutter,
     paddingBottom: spacing.listBottom,
   },
-  separator: { height: spacing.md },
+  separator: { height: spacing.sm },
   pressed: { opacity: 0.7 },
   card: {
-    borderRadius: radius.md,
-    padding: spacing.lg,
+    borderRadius: radius.xl,
+    padding: spacing.sm,
   },
   cardTopRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.md,
-    marginBottom: spacing.sm,
+    gap: spacing.sm,
+    marginBottom: spacing.xs,
   },
   star: {
     width: 20,
@@ -269,8 +269,8 @@ const styles = StyleSheet.create({
   },
   noteBadge: {
     borderRadius: radius.pill,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing["2xs"],
   },
   percent: {
     width: 48,

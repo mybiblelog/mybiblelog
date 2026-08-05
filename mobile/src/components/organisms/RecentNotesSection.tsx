@@ -8,8 +8,8 @@ import { useRecentNotes } from "@/src/notes/useRecentNotes";
 import { notesActions } from "@/src/stores/passageNotes";
 import { useToast } from "@/src/toast/ToastProvider";
 import { Button } from "../atoms/Button";
-import { Spinner } from "../atoms/Spinner";
 import { Text } from "../atoms/Text";
+import { SkeletonList } from "../molecules/SkeletonList";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { MenuSheet } from "./MenuSheet";
 import { NoteCard } from "./NoteCard";
@@ -49,7 +49,7 @@ export function RecentNotesSection() {
       </View>
 
       {status === "loading" && notes.length === 0 ? (
-        <Spinner />
+        <SkeletonList variant="note" count={3} />
       ) : notes.length === 0 ? (
         <Text variant="body" color="mutedText">
           {t("today_no_recent_notes")}
@@ -130,15 +130,15 @@ export function RecentNotesSection() {
 }
 
 const styles = StyleSheet.create({
-  section: { marginTop: spacing.xl },
+  section: { marginTop: spacing.md },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: spacing.md,
-    marginBottom: spacing.md,
+    gap: spacing.sm,
+    marginBottom: spacing.sm,
   },
   headerTitle: { flex: 1 },
-  list: { gap: spacing.md },
-  viewAll: { marginTop: spacing.md },
+  list: { gap: spacing.sm },
+  viewAll: { marginTop: spacing.sm },
 });

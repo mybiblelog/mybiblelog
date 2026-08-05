@@ -27,9 +27,9 @@ function SectionRow({
       subtitle={subtitle}
       chevron
       onPress={onPress}
-      bordered={false}
+      variant="plain"
       testID={testID}
-      style={{ backgroundColor: colors.surfaceAlt }}
+      style={{ backgroundColor: colors.surfaceMuted }}
       leading={
         <View style={[styles.badge, { backgroundColor: colors.border }]}>
           <Icon name={icon} size={18} color="text" />
@@ -93,14 +93,14 @@ export default function SettingsIndex() {
 
 const styles = StyleSheet.create({
   content: {
-    padding: spacing.screenH,
-    gap: spacing.md,
+    padding: spacing.pageGutter,
+    gap: spacing.sm,
     paddingBottom: spacing.listBottom,
   },
   badge: {
     width: 36,
     height: 36,
-    borderRadius: radius.md,
+    borderRadius: radius.xl,
     alignItems: "center",
     justifyContent: "center",
   },

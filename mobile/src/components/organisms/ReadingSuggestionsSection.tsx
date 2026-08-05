@@ -9,7 +9,9 @@ import { useSettingsValue } from "@/src/stores/userSettings";
 import { useToast } from "@/src/toast/ToastProvider";
 import { IconButton } from "../atoms/IconButton";
 import { Text } from "../atoms/Text";
+import { Card } from "../molecules/Card";
 import { ListItem } from "../molecules/ListItem";
+import { SkeletonList } from "../molecules/SkeletonList";
 import { LogEntryEditorModal } from "./LogEntryEditorModal";
 import { MenuSheet } from "./MenuSheet";
 
@@ -17,6 +19,7 @@ type Props = {
   suggestions: DisplayReadingSuggestion[];
   /** Date (YYYY-MM-DD) preset when logging a suggestion from Today. */
   today: string;
+  loading?: boolean;
 };
 
 /**
@@ -24,7 +27,7 @@ type Props = {
  * equivalent): up to three suggested passages, each with Open Bible and
  * Log Reading actions.
  */
-export function ReadingSuggestionsSection({ suggestions, today }: Props) {
+export function ReadingSuggestionsSection({ suggestions, today, loading = false }: Props) {
   const t = useT();
   const settings = useSettingsValue();
   const { showToast } = useToast();
@@ -50,10 +53,16 @@ export function ReadingSuggestionsSection({ suggestions, today }: Props) {
         {t("today_reading_suggestions")}
       </Text>
 
-      {suggestions.length === 0 ? (
-        <Text variant="body" color="mutedText">
-          {t("today_no_suggestions")}
-        </Text>
+      {loading ? (
+        <SkeletonList count={3} />
+      ) : suggestions.length === 0 ? (
+        // Web renders the empty state as a card in the list, not bare text, so
+        // the section keeps its shape whether or not there's anything in it.
+        <Card padding="list-item">
+          <Text variant="body" color="mutedText">
+            {t("today_no_suggestions")}
+          </Text>
+        </Card>
       ) : (
         <View style={styles.list}>
           {suggestions.map((suggestion) => (
@@ -118,7 +127,7 @@ export function ReadingSuggestionsSection({ suggestions, today }: Props) {
 }
 
 const styles = StyleSheet.create({
-  section: { marginTop: spacing.xl },
-  sectionTitle: { marginBottom: spacing.md },
-  list: { gap: spacing.md },
+  section: { marginTop: spacing.md },
+  sectionTitle: { marginBottom: spacing.sm },
+  list: { gap: spacing.sm },
 });

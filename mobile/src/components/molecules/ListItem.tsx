@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
 import { StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
-import { radius, spacing, useScalePress, useTheme } from "@/src/design";
+import { radius, spacing, useScalePress } from "@/src/design";
 import type { ThemeColors } from "@/src/design";
 import { AnimatedPressable } from "../atoms/AnimatedPressable";
 import { Icon, type IconName } from "../atoms/Icon";
 import { Text } from "../atoms/Text";
+import { Card } from "./Card";
 
 export type ListItemProps = {
   /** Plain string (styled as `bodyStrong`) or a custom node (e.g. a colored pill). */
@@ -19,7 +20,12 @@ export type ListItemProps = {
   /** Show a forward chevron in the trailing slot (ignored if `trailing` set). */
   chevron?: boolean;
   onPress?: () => void;
-  bordered?: boolean;
+  /**
+   * "card" — a standalone row with card chrome, matching web where every list
+   * row is `.mbl-card.mbl-card--list-item`.
+   * "plain" — no surface of its own, for rows grouped inside a parent Card.
+   */
+  variant?: "card" | "plain";
   testID?: string;
   style?: StyleProp<ViewStyle>;
 };
@@ -27,6 +33,11 @@ export type ListItemProps = {
 /**
  * Generic row: optional leading icon/node, title + subtitle + meta, trailing
  * node or chevron. Tappable rows get scale press feedback automatically.
+ *
+ * Web has no ListItem — it composes rows straight out of `.mbl-card`. This
+ * keeps the layout contract as a named component but defers all chrome
+ * (surface, radius, elevation, padding) to `Card`, so the two platforms can't
+ * drift apart on what a list row looks like.
  */
 export function ListItem({
   title,
@@ -38,12 +49,11 @@ export function ListItem({
   trailing,
   chevron,
   onPress,
-  bordered = true,
+  variant = "card",
   testID,
   style,
 }: ListItemProps) {
-  const { colors } = useTheme();
-  const press = useScalePress({ disabled: !onPress, scaleTo: 0.98, opacityTo: 0.95 });
+  const press = useScalePress({ disabled: !onPress, ...ROW_PRESS });
 
   const inner = (
     <>
@@ -71,15 +81,22 @@ export function ListItem({
     </>
   );
 
-  const base: StyleProp<ViewStyle> = [
-    styles.row,
-    { backgroundColor: colors.surface },
-    bordered && {
-      borderColor: colors.border,
-      borderWidth: StyleSheet.hairlineWidth,
-    },
-    style,
-  ];
+  if (variant === "card") {
+    // Card owns the chrome and the press feedback; a row only lays out.
+    return (
+      <Card
+        padding="list-item"
+        onPress={onPress}
+        testID={testID}
+        pressFeedback={ROW_PRESS}
+        style={style}
+      >
+        <View style={styles.row}>{inner}</View>
+      </Card>
+    );
+  }
+
+  const base: StyleProp<ViewStyle> = [styles.row, styles.plain, style];
 
   if (!onPress)
     return (
@@ -102,16 +119,20 @@ export function ListItem({
   );
 }
 
+/** Rows are wide, so they want less travel under the finger than a card does. */
+const ROW_PRESS = { scaleTo: 0.98, opacityTo: 0.95 };
+
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.lg,
-    paddingVertical: spacing.lg,
-    paddingHorizontal: spacing.lg,
-    borderRadius: radius.md,
+  row: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+  // A Card row gets its padding from "list-item"; a plain row brings its own.
+  // The radius is invisible on a transparent row but keeps callers that tint
+  // themselves (selection highlights, the danger row) reading as rounded.
+  plain: {
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.sm,
+    borderRadius: radius.xl,
   },
   body: { flex: 1 },
-  subtitle: { marginTop: 2 },
-  meta: { marginTop: 4 },
+  subtitle: { marginTop: spacing["3xs"] },
+  meta: { marginTop: spacing["2xs"] },
 });

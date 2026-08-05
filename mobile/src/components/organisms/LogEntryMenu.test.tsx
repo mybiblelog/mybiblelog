@@ -7,6 +7,7 @@ function setup(overrides: Partial<Parameters<typeof LogEntryMenu>[0]> = {}) {
     onOpenInBible: jest.fn(),
     onContinueReading: jest.fn(),
     onTakeNote: jest.fn(),
+    onViewNotes: jest.fn(),
     onEdit: jest.fn(),
     onDelete: jest.fn(),
   };
@@ -32,5 +33,19 @@ describe("LogEntryMenu", () => {
     const { handlers, getByText } = setup();
     fireEvent.press(getByText("Take Note"));
     expect(handlers.onTakeNote).toHaveBeenCalledTimes(1);
+  });
+
+  it("offers View Notes", () => {
+    const { handlers, getByText } = setup();
+    fireEvent.press(getByText("View Notes"));
+    expect(handlers.onViewNotes).toHaveBeenCalledTimes(1);
+  });
+
+  it("orders actions as web's useLogEntryActions does", () => {
+    const { getAllByRole } = setup();
+    const labels = getAllByRole("button").map((node) => node.props.accessibilityLabel);
+    expect(labels).toEqual(expect.arrayContaining(["Take Note", "View Notes", "Edit"]));
+    expect(labels.indexOf("View Notes")).toBeGreaterThan(labels.indexOf("Take Note"));
+    expect(labels.indexOf("View Notes")).toBeLessThan(labels.indexOf("Edit"));
   });
 });

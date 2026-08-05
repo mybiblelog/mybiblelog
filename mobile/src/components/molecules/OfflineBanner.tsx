@@ -21,7 +21,7 @@ export function OfflineBanner() {
   return (
     <View
       accessibilityLiveRegion="polite"
-      style={[styles.banner, { backgroundColor: colors.surfaceAlt }]}
+      style={[styles.banner, { backgroundColor: colors.surfaceMuted }]}
     >
       <Icon name="cloud-offline-outline" size={14} color="mutedText" />
       <Text variant="caption" color="mutedText" style={styles.text}>
@@ -35,10 +35,10 @@ const styles = StyleSheet.create({
   banner: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.sm,
-    marginBottom: spacing.sm,
-    paddingHorizontal: spacing.screenH,
-    paddingVertical: spacing.sm,
+    gap: spacing.xs,
+    marginBottom: spacing.xs,
+    paddingHorizontal: spacing.pageGutter,
+    paddingVertical: spacing.xs,
   },
   text: { flexShrink: 1 },
 });

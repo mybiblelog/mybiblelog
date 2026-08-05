@@ -37,5 +37,5 @@ export function DatePickerSheet({ visible, value, onChange, onClose }: Props) {
 }
 
 const styles = StyleSheet.create({
-  picker: { alignItems: "center", marginBottom: spacing.lg },
+  picker: { alignItems: "center", marginBottom: spacing.sm },
 });

@@ -1,23 +1,30 @@
 /**
  * Spacing scale (4pt base).
  *
- * Reference these instead of hard-coding numbers so the app stays visually
- * consistent. `screenH` / `screenTop` / `listBottom` are layout aliases used
- * by the Screen wrapper and scrollable lists.
+ * Mirrors web's `--mbl-space-*` ladder rung-for-rung (see
+ * `web/app/assets/css/tokens.css`) so a rung name means the same number on
+ * both platforms. Reference these instead of hard-coding numbers.
+ *
+ * The `2xs` / `2xl` / `3xl` / `4xl` rungs keep web's literal names even though
+ * TS identifiers can't start with a digit — `spacing["2xs"]` is worth the
+ * bracket access to keep the two ladders greppably identical.
  */
 export const spacing = {
-  xs: 4,
-  sm: 8,
-  md: 10,
-  lg: 12,
-  xl: 14,
-  xxl: 16,
-  xxxl: 24,
-  /** Default horizontal gutter for screen content. */
-  screenH: 16,
-  /** Default top gap below the safe area / header. */
-  screenTop: 16,
-  /** Default bottom padding for scrollable list content. */
+  "3xs": 2,
+  "2xs": 4,
+  xs: 8,
+  sm: 12,
+  md: 16,
+  lg: 20,
+  xl: 24,
+  "2xl": 32,
+  "3xl": 48,
+  "4xl": 64,
+  /** Horizontal gutter for screen content (web `--mbl-page-gutter`). */
+  pageGutter: 16,
+  /** Top gap below the safe area / header (web `--mbl-page-top`). */
+  pageTop: 16,
+  /** Bottom padding for scrollable list content (web `--mbl-page-bottom`). */
   listBottom: 24,
 } as const;
 

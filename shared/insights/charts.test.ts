@@ -40,4 +40,15 @@ describe('buildLineChartGeometry', () => {
     expect(yTicks[0].value).toBe(0);
     expect(yTicks[4].value).toBe(10);
   });
+
+  it('shortens the tick ladder rather than repeating a rounded label', () => {
+    for (const max of [1, 2, 3, 4, 10]) {
+      const { yTicks } = buildLineChartGeometry([{ date: '2024-06-01', count: max }]);
+      const values = yTicks.map(t => t.value);
+      expect(yTicks).toHaveLength(Math.min(4, max) + 1);
+      expect(new Set(values).size).toBe(values.length);
+      expect(values[0]).toBe(0);
+      expect(values[values.length - 1]).toBe(max);
+    }
+  });
 });

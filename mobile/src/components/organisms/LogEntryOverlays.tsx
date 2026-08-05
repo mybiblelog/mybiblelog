@@ -1,4 +1,5 @@
 import { type ReactNode, useCallback, useState } from "react";
+import { openNotesForRange } from "@/src/notes/openNotesForRange";
 import { Bible } from "@mybiblelog/shared";
 import type { NotePassage } from "@/src/api/notesApi";
 import type { StoredLogEntry } from "@/src/storage/logEntries";
@@ -91,6 +92,14 @@ export function useLogEntryOverlays({
   // that chapter (matches web `today.vue`). Only offered when a next verse
   // exists (i.e. not the final verse of Revelation).
   const nextVerseId = menuEntry ? Bible.getNextVerseId(menuEntry.endVerseId, true) : 0;
+
+  const handleViewNotes = () => {
+    if (!menuEntry) return;
+    setMenuClientId(null);
+    // Inclusive matching (web's default): show notes that overlap the passage.
+    openNotesForRange(menuEntry.startVerseId, menuEntry.endVerseId);
+  };
+
   const handleContinueReading = () => {
     if (!nextVerseId) return;
     const { book, chapter } = Bible.parseVerseId(nextVerseId);
@@ -140,6 +149,7 @@ export function useLogEntryOverlays({
         onOpenInBible={handleOpenInBible}
         onContinueReading={nextVerseId ? handleContinueReading : undefined}
         onTakeNote={handleTakeNote}
+        onViewNotes={handleViewNotes}
         onEdit={() => setEditingClientId(menuClientId)}
         onDelete={() => setDeletingClientId(menuClientId)}
       />

@@ -93,8 +93,8 @@ export default function ForgotPassword() {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  container: { flexGrow: 1, paddingHorizontal: spacing.screenH, justifyContent: "center" },
-  title: { marginBottom: spacing.sm },
-  subtitle: { marginBottom: spacing.lg },
-  form: { gap: spacing.lg, marginBottom: spacing.lg },
+  container: { flexGrow: 1, paddingHorizontal: spacing.pageGutter, justifyContent: "center" },
+  title: { marginBottom: spacing.xs },
+  subtitle: { marginBottom: spacing.sm },
+  form: { gap: spacing.sm, marginBottom: spacing.sm },
 });

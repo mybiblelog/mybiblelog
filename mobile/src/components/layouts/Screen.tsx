@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   padded: {
-    paddingHorizontal: spacing.screenH,
-    paddingTop: spacing.screenTop,
+    paddingHorizontal: spacing.pageGutter,
+    paddingTop: spacing.pageTop,
   },
 });

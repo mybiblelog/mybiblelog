@@ -42,10 +42,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: spacing.xxxl,
+    paddingHorizontal: spacing.xl,
+    // eslint-disable-next-line no-restricted-syntax -- optical centering: nudges the block above true center, not a ladder step
     paddingBottom: 40,
   },
-  icon: { marginBottom: spacing.lg },
-  title: { marginBottom: spacing.xs, textAlign: "center" },
-  text: { textAlign: "center", marginBottom: spacing.xl },
+  icon: { marginBottom: spacing.sm },
+  title: { marginBottom: spacing["2xs"], textAlign: "center" },
+  text: { textAlign: "center", marginBottom: spacing.md },
 });

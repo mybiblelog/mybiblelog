@@ -44,7 +44,7 @@ export function BottomSheet({
   swipeToDismiss = true,
   contentStyle,
 }: Props) {
-  const { colors } = useTheme();
+  const { colors, shadows } = useTheme();
   const t = useT();
   const insets = useSafeAreaInsets();
   const [mounted, setMounted] = useState(visible);
@@ -125,14 +125,19 @@ export function BottomSheet({
           style={[styles.backdrop, { backgroundColor: colors.backdrop }, backdropStyle]}
         />
         <GestureDetector gesture={pan}>
-          <Animated.View style={[styles.wrap, surfaceStyle]}>
+          {/* Elevation sits on the wrapper, not the surface: the surface clips
+              its children, and Android drops a shadow under overflow:hidden.
+              A sheet is edge-anchored (panel); a centered dialog is a modal. */}
+          <Animated.View
+            style={[styles.wrap, isSheet ? shadows.panel : shadows.modal, surfaceStyle]}
+          >
             <View
               style={[
                 isSheet ? styles.sheetSurface : styles.centerSurface,
                 { backgroundColor: colors.surface },
                 padded &&
                   (isSheet
-                    ? { padding: spacing.xl, paddingBottom: spacing.xl + insets.bottom }
+                    ? { padding: spacing.md, paddingBottom: spacing.md + insets.bottom }
                     : styles.centerPadding),
                 isSheet && !padded ? { paddingBottom: insets.bottom } : null,
                 contentStyle,
@@ -153,22 +158,22 @@ export function BottomSheet({
 const styles = StyleSheet.create({
   root: { flex: 1 },
   rootSheet: { justifyContent: "flex-end" },
-  rootCenter: { justifyContent: "center", padding: spacing.xxl },
+  rootCenter: { justifyContent: "center", padding: spacing.md },
   backdrop: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0 },
   wrap: { width: "100%" },
   sheetSurface: {
-    borderTopLeftRadius: radius.xl,
-    borderTopRightRadius: radius.xl,
+    borderTopLeftRadius: radius.sheet,
+    borderTopRightRadius: radius.sheet,
     overflow: "hidden",
   },
-  centerSurface: { borderRadius: radius.xl, overflow: "hidden" },
-  centerPadding: { padding: spacing.xl },
+  centerSurface: { borderRadius: radius.card, overflow: "hidden" },
+  centerPadding: { padding: spacing.md },
   grabber: {
     alignSelf: "center",
     width: 36,
     height: 4,
     borderRadius: radius.pill,
-    marginBottom: spacing.lg,
+    marginBottom: spacing.sm,
     opacity: 0.6,
   },
 });

@@ -18,7 +18,7 @@ const CELL_GAP = 3;
 const WEEKDAY_COLUMN = 28;
 // The label gutter width; the months row leaves the same space so month labels
 // line up with the grid columns beneath them (weekday column + its right margin).
-const LABEL_GUTTER = WEEKDAY_COLUMN + spacing.xs;
+const LABEL_GUTTER = WEEKDAY_COLUMN + spacing["2xs"];
 const WEEKDAY_LABEL_OFFSETS = [1, 3, 5]; // Mon, Wed, Fri
 
 const HEAT_LEVEL_OPACITY = [0, 0.28, 0.52, 0.76, 1] as const;
@@ -29,7 +29,7 @@ const NARROW_MONTHS = 6;
 
 function heatCellStyle(level: number, future: boolean, colors: ThemeColors) {
   if (future) return { backgroundColor: "transparent" };
-  if (level === 0) return { backgroundColor: colors.surfaceAlt };
+  if (level === 0) return { backgroundColor: colors.surfaceMuted };
   return { backgroundColor: colors.success, opacity: HEAT_LEVEL_OPACITY[level] };
 }
 
@@ -215,16 +215,16 @@ export function ActivityHeatmap({ entries }: { entries: InsightsLogEntry[] }) {
 }
 
 const styles = StyleSheet.create({
-  container: { gap: spacing.sm },
-  stripGap: { marginTop: spacing.lg },
-  monthsRow: { flexDirection: "row", marginBottom: spacing.xs },
+  container: { gap: spacing.xs },
+  stripGap: { marginTop: spacing.sm },
+  monthsRow: { flexDirection: "row", marginBottom: spacing["2xs"] },
   weekdaySpacer: { width: LABEL_GUTTER },
   // flexGrow is set per segment (= its month's column span); basis 0 keeps the
   // widths proportional so each label lines up over its own run of columns.
   monthLabel: { flexBasis: 0, minWidth: 0 },
   monthYear: { fontSize: 9, opacity: 0.75 },
   body: { flexDirection: "row" },
-  weekdayColumn: { width: WEEKDAY_COLUMN, gap: CELL_GAP, marginRight: spacing.xs },
+  weekdayColumn: { width: WEEKDAY_COLUMN, gap: CELL_GAP, marginRight: spacing["2xs"] },
   weekdayLabel: { height: CELL_SIZE, lineHeight: CELL_SIZE, fontSize: 10 },
   grid: { flex: 1, flexDirection: "row", gap: CELL_GAP },
   week: { flex: 1, minWidth: 0, gap: CELL_GAP },
@@ -245,6 +245,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: CELL_GAP,
-    marginTop: spacing.xs,
+    marginTop: spacing["2xs"],
   },
 });

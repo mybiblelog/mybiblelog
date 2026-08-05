@@ -61,15 +61,15 @@ export function SelectRow({
 }
 
 const styles = StyleSheet.create({
-  container: { gap: spacing.xs },
+  container: { gap: spacing["2xs"] },
   select: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     minHeight: TOUCH_TARGET,
     borderWidth: 1,
-    borderRadius: radius.md,
-    paddingHorizontal: spacing.lg,
+    borderRadius: radius.xl,
+    paddingHorizontal: spacing.sm,
   },
   disabled: { opacity: 0.5 },
 });

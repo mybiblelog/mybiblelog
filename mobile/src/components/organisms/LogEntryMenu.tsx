@@ -8,17 +8,19 @@ type Props = {
   /** Omitted when there is no following passage (final verse of Revelation). */
   onContinueReading?: () => void;
   onTakeNote: () => void;
+  onViewNotes: () => void;
   onEdit: () => void;
   onDelete: () => void;
 };
 
-/** Context menu for a single log entry (open in Bible / continue reading / take note / edit / delete). */
+/** Context menu for a single log entry (open in Bible / continue reading / take note / view notes / edit / delete). */
 export function LogEntryMenu({
   visible,
   onClose,
   onOpenInBible,
   onContinueReading,
   onTakeNote,
+  onViewNotes,
   onEdit,
   onDelete,
 }: Props) {
@@ -31,6 +33,7 @@ export function LogEntryMenu({
     actions.push({ label: t("menu_continue_reading"), onPress: onContinueReading });
   }
   actions.push({ label: t("menu_take_note"), onPress: onTakeNote });
+  actions.push({ label: t("menu_view_notes"), onPress: onViewNotes });
   actions.push({ label: t("menu_edit"), onPress: onEdit });
   actions.push({ label: t("menu_delete"), onPress: onDelete, color: "destructive" });
 

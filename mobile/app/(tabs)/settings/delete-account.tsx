@@ -143,19 +143,19 @@ export default function DeleteAccountScreen() {
 
 const styles = StyleSheet.create({
   content: {
-    padding: spacing.screenH,
+    padding: spacing.pageGutter,
     paddingBottom: spacing.listBottom,
   },
-  description: { marginBottom: spacing.lg },
-  bullets: { marginBottom: spacing.xl, gap: spacing.sm },
-  bulletRow: { flexDirection: "row", gap: spacing.sm },
+  description: { marginBottom: spacing.sm },
+  bullets: { marginBottom: spacing.md, gap: spacing.xs },
+  bulletRow: { flexDirection: "row", gap: spacing.xs },
   bulletText: { flex: 1 },
-  card: { gap: spacing.xs, marginBottom: spacing.xl },
+  card: { gap: spacing["2xs"], marginBottom: spacing.md },
   checkRow: {
     flexDirection: "row",
     alignItems: "flex-start",
-    gap: spacing.md,
-    paddingVertical: spacing.sm,
+    gap: spacing.sm,
+    paddingVertical: spacing.xs,
   },
   checkLabel: { flex: 1 },
 });

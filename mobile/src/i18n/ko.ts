@@ -24,7 +24,15 @@ export const ko = {
   today_progress_meta_no_goal: "%{read} %{verses}",
   today_empty_title: "아직 항목이 없습니다",
   today_empty_text: "오늘 읽은 내용을 추가하여 진행 상황을 추적하세요.",
-  today_entry_meta: "%{new}개 신규 • 총 %{total}구절",
+  verse_count_verse_one: "절",
+  verse_count_verse_other: "절",
+  verse_count_all_one: "전부",
+  verse_count_all_other: "전부",
+  verse_count_new_one: "새 분량",
+  verse_count_new_other: "새 분량",
+  today_new_verses_read: "새로 읽은 구절 %{read} / %{goal}",
+  today_view_all_reading: "모든 기록 보기",
+  today_no_entries: "항목 없음",
 
   today_reading_suggestions: "읽기 제안",
   today_no_suggestions: "제안 없음",
@@ -483,4 +491,12 @@ export const ko = {
   change_email_submit: "이메일 변경",
   change_email_new_required: "새 이메일을 입력하세요.",
   change_email_password_required: "현재 비밀번호를 입력하세요.",
+
+  // Reading-tracker reset prompt (web ReadingTrackerResetCard.vue)
+  reading_tracker_reset_header: "성경을 다 읽으셨네요!",
+  reading_tracker_reset_message:
+    "처음부터 다시 시작하시겠어요? 추적기 시작일을 오늘로 설정하면 새로 시작할 수 있습니다.",
+  reading_tracker_reset_start_fresh: "새로 시작",
+  reading_tracker_reset_success:
+    "추적기 시작 날짜가 오늘로 설정되었습니다. 이제 처음부터 성경 읽기를 추적하고 있습니다.",
 } as const satisfies Record<keyof typeof en, string>;

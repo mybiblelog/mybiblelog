@@ -26,9 +26,18 @@ export type UserSettingsState =
 
 type UserSettingsStore = {
   state: UserSettingsState;
+  /**
+   * Whether the user has waved off the "start fresh" prompt shown when the
+   * whole Bible has been read. Deliberately NOT persisted: web backs this with
+   * sessionStorage, so the prompt returns on a fresh launch. Persisting it
+   * would also mean a new storage key, and therefore a schema migration, for
+   * something that only needs to survive the current session.
+   */
+  readingTrackerResetDelayed: boolean;
   refreshFromServer: () => Promise<void>;
   setLocalSettings: (partial: Partial<LocalUserSettings>) => Promise<void>;
   updateServerSettings: (partial: Partial<ServerUserSettings>) => Promise<boolean>;
+  dismissReadingTrackerReset: () => void;
 };
 
 function applyServerTruth(local: LocalUserSettings, server: ServerUserSettings): LocalUserSettings {
@@ -60,6 +69,11 @@ let refreshInFlight: Promise<void> | null = null;
 
 export const useUserSettingsStore = create<UserSettingsStore>((set, get) => ({
   state: { status: "loading" },
+  readingTrackerResetDelayed: false,
+
+  dismissReadingTrackerReset() {
+    set({ readingTrackerResetDelayed: true });
+  },
 
   async setLocalSettings(partial) {
     const current = get().state;
@@ -164,6 +178,7 @@ export const userSettingsActions = {
   updateServerSettings: (partial: Partial<ServerUserSettings>) =>
     useUserSettingsStore.getState().updateServerSettings(partial),
   refreshFromServer: () => useUserSettingsStore.getState().refreshFromServer(),
+  dismissReadingTrackerReset: () => useUserSettingsStore.getState().dismissReadingTrackerReset(),
 };
 
 export function getDefaultLocalUserSettingsForTest(): LocalUserSettings {

@@ -24,7 +24,15 @@ export const pt = {
   today_progress_meta_no_goal: "%{read} %{verses}",
   today_empty_title: "Ainda não há entradas",
   today_empty_text: "Adicione o que você leu hoje para acompanhar seu progresso.",
-  today_entry_meta: "%{new} novos • %{total} versículos no total",
+  verse_count_verse_one: "versículo",
+  verse_count_verse_other: "versículos",
+  verse_count_all_one: "todas",
+  verse_count_all_other: "todas",
+  verse_count_new_one: "novos",
+  verse_count_new_other: "novos",
+  today_new_verses_read: "%{read} / %{goal} novos versículos",
+  today_view_all_reading: "Ver toda a leitura",
+  today_no_entries: "Sem Entradas",
 
   today_reading_suggestions: "Sugestões de Leitura",
   today_no_suggestions: "Sem sugestões",
@@ -495,4 +503,12 @@ export const pt = {
   change_email_submit: "Alterar E-mail",
   change_email_new_required: "Insira seu novo e-mail.",
   change_email_password_required: "Insira sua senha atual.",
+
+  // Reading-tracker reset prompt (web ReadingTrackerResetCard.vue)
+  reading_tracker_reset_header: "Você leu toda a Bíblia!",
+  reading_tracker_reset_message:
+    "Quer começar de novo? Defina sua Data de Início do Rastreador para hoje para começar a rastrear do zero.",
+  reading_tracker_reset_start_fresh: "Começar do zero",
+  reading_tracker_reset_success:
+    "Sua data de início do rastreador foi definida para a data atual. Agora você está rastreando sua leitura da Bíblia desde o começo.",
 } as const satisfies Record<keyof typeof en, string>;
