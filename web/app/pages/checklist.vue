@@ -249,7 +249,15 @@ async function toggleChapter(bookIndex: number, chapterIndex: number) {
       }
     }
     else {
-      toastStore.add({ type: 'info', text: t('logged_before_today') });
+      // Completion is verse-coverage based, so a chapter can read as complete
+      // without having an entry of its own to delete. Name the actual reason:
+      // covered by a wider entry logged today, or covered only by earlier dates.
+      const loggedToday = Bible.filterRangesByBookChapter(
+        bookIndex,
+        chapterIndex,
+        logEntriesStore.currentLogEntries.filter(logEntry => logEntry.date === date),
+      ).length > 0;
+      toastStore.add({ type: 'info', text: t(loggedToday ? 'logged_in_longer_passage' : 'logged_before_today') });
     }
   }
   else {
@@ -356,6 +364,7 @@ onBeforeUnmount(endCelebration);
     "reading_log": "Log",
     "loading": "Loading...",
     "logged_before_today": "This chapter was logged before today. You can edit previous log entries on the Calendar page.",
+    "logged_in_longer_passage": "This chapter was logged as part of a longer passage, so it can't be unchecked here. You can edit that log entry on the Calendar page.",
     "unable_to_mark_complete": "Unable to mark the chapter complete.",
     "unable_to_mark_incomplete": "Unable to mark the chapter incomplete."
   },
@@ -364,6 +373,7 @@ onBeforeUnmount(endCelebration);
     "reading_log": "Lesejournal",
     "loading": "Laden...",
     "logged_before_today": "Dieses Kapitel wurde vor heute protokolliert. Sie können frühere Protokolleinträge auf der Kalenderseite bearbeiten.",
+    "logged_in_longer_passage": "Dieses Kapitel wurde als Teil eines längeren Abschnitts protokolliert und kann hier nicht abgewählt werden. Sie können diesen Eintrag auf der Kalenderseite bearbeiten.",
     "unable_to_mark_complete": "Kann das Kapitel nicht als abgeschlossen markieren.",
     "unable_to_mark_incomplete": "Kann das Kapitel nicht als unvollständig markieren."
   },
@@ -372,6 +382,7 @@ onBeforeUnmount(endCelebration);
     "reading_log": "Diario",
     "loading": "Cargando...",
     "logged_before_today": "Este capítulo se registró antes de hoy. Puede editar las entradas de registro anteriores en la página del calendario.",
+    "logged_in_longer_passage": "Este capítulo se registró como parte de un pasaje más largo, por lo que no se puede desmarcar aquí. Puede editar esa entrada en la página del calendario.",
     "unable_to_mark_complete": "No se puede marcar el capítulo como completo.",
     "unable_to_mark_incomplete": "No se puede marcar el capítulo como incompleto."
   },
@@ -380,6 +391,7 @@ onBeforeUnmount(endCelebration);
     "reading_log": "Journal",
     "loading": "Chargement...",
     "logged_before_today": "Ce chapitre a été enregistré avant aujourd'hui. Vous pouvez modifier les entrées de journal précédentes sur la page du calendrier.",
+    "logged_in_longer_passage": "Ce chapitre a été enregistré dans le cadre d'un passage plus long ; il ne peut donc pas être décoché ici. Vous pouvez modifier cette entrée sur la page du calendrier.",
     "unable_to_mark_complete": "Impossible de marquer le chapitre comme terminé.",
     "unable_to_mark_incomplete": "Impossible de marquer le chapitre comme incomplet."
   },
@@ -388,6 +400,7 @@ onBeforeUnmount(endCelebration);
     "reading_log": "읽기 일지",
     "loading": "불러오는 중…",
     "logged_before_today": "이 장은 오늘 이전에 기록되었습니다. 달력 페이지에서 이전 기록을 수정할 수 있습니다.",
+    "logged_in_longer_passage": "이 장은 더 긴 본문의 일부로 기록되어 여기서 선택을 해제할 수 없습니다. 달력 페이지에서 해당 기록을 수정할 수 있습니다.",
     "unable_to_mark_complete": "해당 장을 읽기 완료로 표시할 수 없습니다.",
     "unable_to_mark_incomplete": "해당 장을 읽지 않음으로 표시할 수 없습니다."
   },
@@ -396,6 +409,7 @@ onBeforeUnmount(endCelebration);
     "reading_log": "Diário",
     "loading": "Carregando...",
     "logged_before_today": "Este capítulo foi registrado antes de hoje. Você pode editar entradas de log anteriores na página do Calendário.",
+    "logged_in_longer_passage": "Este capítulo foi registrado como parte de uma passagem maior, portanto não pode ser desmarcado aqui. Você pode editar essa entrada na página do Calendário.",
     "unable_to_mark_complete": "Não é possível marcar o capítulo como completo.",
     "unable_to_mark_incomplete": "Não é possível marcar o capítulo como incompleto."
   },
@@ -404,6 +418,7 @@ onBeforeUnmount(endCelebration);
     "reading_log": "Журнал",
     "loading": "Завантаження...",
     "logged_before_today": "Цей розділ був зареєстрований до сьогодні. Ви можете редагувати попередні записи в календарній сторінці.",
+    "logged_in_longer_passage": "Цей розділ було зареєстровано як частину довшого уривка, тому його не можна зняти тут. Ви можете редагувати цей запис на сторінці Календаря.",
     "unable_to_mark_complete": "Не вдалося позначити розділ як завершений.",
     "unable_to_mark_incomplete": "Не вдалося позначити розділ як незавершений."
   }

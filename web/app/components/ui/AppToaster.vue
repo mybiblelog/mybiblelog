@@ -2,7 +2,7 @@
   <div class="toaster">
     <div class="mbl-container">
       <TransitionGroup name="toast" tag="div">
-        <div v-for="message in toastStore.messages" :key="message.id" class="mbl-notification" :class="messageClass(message.type)">
+        <div v-for="message in toastStore.messages" :key="message.id" class="mbl-notification" :class="messageClass(message.type)" data-testid="toast">
           <button class="mbl-delete" @click="toastStore.close(message.id)" />{{ message.text }}
         </div>
       </TransitionGroup>

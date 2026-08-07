@@ -223,7 +223,19 @@ export default function Checklist() {
           if (matching?.clientId) {
             await logEntryActions.deleteEntry(matching.clientId);
           } else {
-            showToast({ type: "info", message: t("logged_before_today") });
+            // Completion is verse-coverage based, so a chapter can read as complete
+            // without having an entry of its own to delete. Name the actual reason:
+            // covered by a wider entry logged today, or covered only by earlier dates.
+            const loggedToday =
+              Bible.filterRangesByBookChapter(
+                bookIndex,
+                chapterIndex,
+                logEntries.filter((e) => e.date === date)
+              ).length > 0;
+            showToast({
+              type: "info",
+              message: t(loggedToday ? "logged_in_longer_passage" : "logged_before_today"),
+            });
           }
         } else {
           await logEntryActions.createEntry({ date, startVerseId, endVerseId });

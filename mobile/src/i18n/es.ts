@@ -474,6 +474,8 @@ export const es = {
   loading: "Cargando...",
   logged_before_today:
     "Este capítulo se registró antes de hoy. Puedes editar entradas anteriores en la página del Calendario.",
+  logged_in_longer_passage:
+    "Este capítulo se registró como parte de un pasaje más largo, por lo que no se puede desmarcar aquí. Puedes editar esa entrada en la página del Calendario.",
   unable_to_mark_complete: "No se puede marcar el capítulo como completo.",
   unable_to_mark_incomplete: "No se puede marcar el capítulo como incompleto.",
   login_forgot_password: "¿Olvidaste tu contraseña?",

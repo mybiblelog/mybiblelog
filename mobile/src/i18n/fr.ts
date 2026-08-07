@@ -477,6 +477,8 @@ export const fr = {
   loading: "Chargement...",
   logged_before_today:
     "Ce chapitre a été enregistré avant aujourd'hui. Vous pouvez modifier les entrées précédentes sur la page Calendrier.",
+  logged_in_longer_passage:
+    "Ce chapitre a été enregistré dans le cadre d'un passage plus long ; il ne peut donc pas être décoché ici. Vous pouvez modifier cette entrée sur la page Calendrier.",
   unable_to_mark_complete: "Impossible de marquer le chapitre comme terminé.",
   unable_to_mark_incomplete: "Impossible de marquer le chapitre comme non terminé.",
   login_forgot_password: "Mot de passe oublié ?",

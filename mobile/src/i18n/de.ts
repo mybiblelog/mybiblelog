@@ -477,6 +477,8 @@ export const de = {
   loading: "Wird geladen...",
   logged_before_today:
     "Dieses Kapitel wurde vor heute eingetragen. Sie können frühere Einträge auf der Kalenderseite bearbeiten.",
+  logged_in_longer_passage:
+    "Dieses Kapitel wurde als Teil eines längeren Abschnitts eingetragen und kann hier nicht abgewählt werden. Sie können diesen Eintrag auf der Kalenderseite bearbeiten.",
   unable_to_mark_complete: "Das Kapitel konnte nicht als abgeschlossen markiert werden.",
   unable_to_mark_incomplete: "Das Kapitel konnte nicht als unvollständig markiert werden.",
   login_forgot_password: "Passwort vergessen?",

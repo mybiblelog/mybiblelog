@@ -461,6 +461,8 @@ export const ko = {
   loading: "불러오는 중...",
   logged_before_today:
     "이 장은 오늘 이전에 기록되었습니다. 달력 페이지에서 이전 기록을 편집할 수 있습니다.",
+  logged_in_longer_passage:
+    "이 장은 더 긴 본문의 일부로 기록되어 여기서 선택을 해제할 수 없습니다. 달력 페이지에서 해당 기록을 편집할 수 있습니다.",
   unable_to_mark_complete: "장을 완료로 표시할 수 없습니다.",
   unable_to_mark_incomplete: "장을 미완료로 표시할 수 없습니다.",
   login_forgot_password: "비밀번호를 잊으셨나요?",

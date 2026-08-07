@@ -501,6 +501,8 @@ export const en = {
   loading: "Loading...",
   logged_before_today:
     "This chapter was logged before today. You can edit previous log entries on the Calendar page.",
+  logged_in_longer_passage:
+    "This chapter was logged as part of a longer passage, so it can't be unchecked here. You can edit that entry on the Calendar page.",
   unable_to_mark_complete: "Unable to mark the chapter complete.",
   unable_to_mark_incomplete: "Unable to mark the chapter incomplete.",
 } as const;
