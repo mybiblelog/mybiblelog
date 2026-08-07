@@ -179,22 +179,35 @@ export default defineNuxtConfig({
   },
 
   hooks: {
-    // Re-register the dev service worker as a Vite route. @vite-pwa/nuxt only
-    // pushes its dev-server route markers when `vite:serverCreated` fires with
-    // `isServer: false`, but `experimental.viteEnvironmentApi` (on by default at
-    // compatibilityVersion 5) collapses the client and SSR Vite servers into one
-    // and fires the hook a single time with `isServer: true`, so the module skips
-    // them. Without the marker, Nuxt's Vite dev handler classifies /dev-sw.js as
-    // a non-Vite route and diverts it past the transform middleware, so the dev
-    // worker 404s and `nuxt dev` registers no service worker at all. The handler
-    // itself is never invoked — Connect matches routes on the pathname and this
-    // route carries a query string — only its presence in the stack matters.
-    // Production is unaffected: the built worker is a real /sw.js asset.
+    // Re-register @vite-pwa/nuxt's dev-server route markers. The module pushes them
+    // only when `vite:serverCreated` fires with `isServer: false`, but
+    // `experimental.viteEnvironmentApi` (on by default at compatibilityVersion 5)
+    // collapses the client and SSR Vite servers into one and fires the hook a single
+    // time with `isServer: true`, so all of them are skipped. Without a marker, Nuxt's
+    // Vite dev handler classifies the URL as a non-Vite route and diverts it past the
+    // transform middleware — and the dev worker, its workbox runtime, and the
+    // suppress-warnings stub are all virtual modules that only the transform middleware
+    // can serve, so `nuxt dev` registers no service worker at all. The handlers are
+    // never invoked (Connect matches on the pathname, and /dev-sw.js carries a query
+    // string) — only their presence in the stack matters. Production is unaffected: the
+    // built worker is a real /sw.js asset.
+    // Remove once @vite-pwa/nuxt relaxes its `if (isServer) return` guard.
     'vite:serverCreated': (viteServer) => {
-      viteServer.middlewares.stack.push({
-        route: '/dev-sw.js?dev-sw',
-        handle: (_req: IncomingMessage, _res: ServerResponse, next: () => void) => next(),
-      });
+      // app.baseURL is the default '/'; Vite's own `base` is /_nuxt/ in dev, so it
+      // cannot be used here.
+      const routes = [
+        '/manifest.webmanifest',
+        '/dev-sw.js?dev-sw',
+        '/workbox-',
+        '/suppress-warnings.js',
+      ];
+      for (const route of routes) {
+        if (viteServer.middlewares.stack.some(layer => layer.route === route)) { continue; }
+        viteServer.middlewares.stack.push({
+          route,
+          handle: (_req: IncomingMessage, _res: ServerResponse, next: () => void) => next(),
+        });
+      }
     },
   },
 

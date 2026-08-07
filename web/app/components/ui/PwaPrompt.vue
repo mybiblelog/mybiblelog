@@ -89,7 +89,11 @@ type PwaPromptKind = 'refresh' | 'offline-ready' | 'install' | null;
 
 // Single source of truth for which card is shown; precedence is refresh > offline-ready > install.
 const promptKind = computed<PwaPromptKind>(() => {
-  if (pwa?.needRefresh) { return 'refresh'; }
+  // needRefresh fires spuriously in dev: the dev worker is /dev-sw.js?dev-sw while a
+  // build serves /sw.js, and `npm run -w web dev` and `preview` share port 3000, so a
+  // leftover registration reports `isExternal`/`waiting` and trips the prompt. There is
+  // no such thing as a new release in dev, so never offer the reload there.
+  if (pwa?.needRefresh && !import.meta.dev) { return 'refresh'; }
   if (pwa?.offlineReady) { return 'offline-ready'; }
   if (pwa?.showInstallPrompt) { return 'install'; }
   return null;
