@@ -8,6 +8,12 @@
       <h2 class="mbl-title">
         {{ t('chapter_checklist') }}
       </h2>
+      <div class="mbl-button-group mbl-button-group--start">
+        <NuxtLink class="mbl-button" :to="localePath('/log')">
+          {{ t('reading_log') }}
+          <caret-right-icon style="margin-left: 0.2rem;" />
+        </NuxtLink>
+      </div>
     </header>
     <div>
       <div v-if="!bookReports.length" class="loading-card">
@@ -108,6 +114,7 @@ import BusyBar from '~/components/ui/BusyBar.vue';
 import CompletionBar from '~/components/ui/CompletionBar.vue';
 import ParticleBurst from '~/components/ui/ParticleBurst.vue';
 import ReadingTrackerResetCard from '~/components/ui/ReadingTrackerResetCard.vue';
+import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
 import CheckmarkIcon from '~/components/svg/CheckmarkIcon.vue';
 import TriangleDownIcon from '~/components/svg/TriangleDownIcon.vue';
 import { useLogEntriesStore } from '~/stores/log-entries';
@@ -117,6 +124,8 @@ import { useToastStore } from '~/stores/toast';
 definePageMeta({ middleware: ['auth'] });
 const { t, locale } = useI18n();
 useHead({ title: () => t('chapter_checklist') });
+
+const localePath = useLocalePath();
 
 const CACHE_KEY = 'chapterChecklist';
 const CACHE_MINUTES = 60;
@@ -344,6 +353,7 @@ onBeforeUnmount(endCelebration);
 {
   "en": {
     "chapter_checklist": "Chapter Checklist",
+    "reading_log": "Log",
     "loading": "Loading...",
     "logged_before_today": "This chapter was logged before today. You can edit previous log entries on the Calendar page.",
     "unable_to_mark_complete": "Unable to mark the chapter complete.",
@@ -351,6 +361,7 @@ onBeforeUnmount(endCelebration);
   },
   "de": {
     "chapter_checklist": "Kapitelliste",
+    "reading_log": "Lesejournal",
     "loading": "Laden...",
     "logged_before_today": "Dieses Kapitel wurde vor heute protokolliert. Sie können frühere Protokolleinträge auf der Kalenderseite bearbeiten.",
     "unable_to_mark_complete": "Kann das Kapitel nicht als abgeschlossen markieren.",
@@ -358,6 +369,7 @@ onBeforeUnmount(endCelebration);
   },
   "es": {
     "chapter_checklist": "Lista de capítulos",
+    "reading_log": "Diario",
     "loading": "Cargando...",
     "logged_before_today": "Este capítulo se registró antes de hoy. Puede editar las entradas de registro anteriores en la página del calendario.",
     "unable_to_mark_complete": "No se puede marcar el capítulo como completo.",
@@ -365,6 +377,7 @@ onBeforeUnmount(endCelebration);
   },
   "fr": {
     "chapter_checklist": "Liste de contrôle",
+    "reading_log": "Journal",
     "loading": "Chargement...",
     "logged_before_today": "Ce chapitre a été enregistré avant aujourd'hui. Vous pouvez modifier les entrées de journal précédentes sur la page du calendrier.",
     "unable_to_mark_complete": "Impossible de marquer le chapitre comme terminé.",
@@ -372,6 +385,7 @@ onBeforeUnmount(endCelebration);
   },
   "ko": {
     "chapter_checklist": "장별 체크",
+    "reading_log": "읽기 일지",
     "loading": "불러오는 중…",
     "logged_before_today": "이 장은 오늘 이전에 기록되었습니다. 달력 페이지에서 이전 기록을 수정할 수 있습니다.",
     "unable_to_mark_complete": "해당 장을 읽기 완료로 표시할 수 없습니다.",
@@ -379,6 +393,7 @@ onBeforeUnmount(endCelebration);
   },
   "pt": {
     "chapter_checklist": "Lista de Capítulos",
+    "reading_log": "Diário",
     "loading": "Carregando...",
     "logged_before_today": "Este capítulo foi registrado antes de hoje. Você pode editar entradas de log anteriores na página do Calendário.",
     "unable_to_mark_complete": "Não é possível marcar o capítulo como completo.",
@@ -386,6 +401,7 @@ onBeforeUnmount(endCelebration);
   },
   "uk": {
     "chapter_checklist": "Перелік розділів",
+    "reading_log": "Журнал",
     "loading": "Завантаження...",
     "logged_before_today": "Цей розділ був зареєстрований до сьогодні. Ви можете редагувати попередні записи в календарній сторінці.",
     "unable_to_mark_complete": "Не вдалося позначити розділ як завершений.",

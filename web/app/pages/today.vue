@@ -90,7 +90,7 @@
         </ClientOnly>
       </div>
       <div class="mbl-text-center" style="margin-top: 1rem;">
-        <NuxtLink class="mbl-button mbl-button--light" :to="localePath('/log')">
+        <NuxtLink class="mbl-button mbl-button--light" :to="localePath('/calendar')">
           {{ t('view_all_reading') }}
         </NuxtLink>
       </div>

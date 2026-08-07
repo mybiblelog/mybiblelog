@@ -5,7 +5,7 @@
         {{ t('note_tags') }}
       </h2>
       <div class="mbl-button-group mbl-button-group--start">
-        <NuxtLink class="mbl-button" to="/notes">
+        <NuxtLink class="mbl-button" :to="localePath('/notes')">
           {{ t('notes') }}
           <caret-right-icon style="margin-left: 0.2rem;" />
         </NuxtLink>
@@ -105,6 +105,7 @@ definePageMeta({ middleware: ['auth'] });
 const { t } = useI18n();
 useHead({ title: () => t('note_tags') });
 
+const localePath = useLocalePath();
 const router = useRouter();
 const passageNoteTagsStore = usePassageNoteTagsStore();
 const tagEditorStore = usePassageNoteTagEditorStore();
