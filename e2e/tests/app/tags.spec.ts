@@ -58,6 +58,23 @@ test.describe('Tags page', () => {
     await expect(page.getByTestId('tag-line').first().getByTestId('tag-label')).toHaveText('Zulu');
   });
 
+  test('search filters the tag listing on the page', async ({ page, api }) => {
+    await seedTag(api, { label: 'Alpha', color: '#111111' });
+    await seedTag(api, { label: 'Beta', color: '#222222' });
+
+    await page.goto('/tags');
+    await expect(page.getByTestId('tag-line')).toHaveCount(2);
+
+    await page.getByTestId('tag-search').fill('alph');
+    await expect(page.getByTestId('tag-line').getByTestId('tag-label')).toHaveText(['Alpha']);
+
+    await page.getByTestId('tag-search').fill('zzz');
+    await expect(page.getByTestId('tag-no-matches')).toBeVisible();
+
+    await page.getByTestId('tag-search').fill('');
+    await expect(page.getByTestId('tag-line')).toHaveCount(2);
+  });
+
   test('user can delete an unused tag with confirmation', async ({ page, api }) => {
     await seedTag(api, { label: 'Ephemeral', color: '#777777' });
 

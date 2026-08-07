@@ -65,24 +65,11 @@ function toggle(tagId: string | number) {
 </script>
 
 <style scoped>
-.passage-note-tag-selector {
-  /* stylelint-disable-next-line property-no-unknown */
-  container-type: inline-size;
-  max-width: 100%;
-}
-
 .passage-note-tag-selector__grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
   gap: var(--mbl-space-2xs);
   max-width: 100%;
-}
-
-/* stylelint-disable-next-line at-rule-no-unknown */
-@container (max-width: 300px) {
-  .passage-note-tag-selector__grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 .passage-note-tag-selector__empty {
