@@ -126,10 +126,16 @@ export interface PassageNoteInput {
   tags?: string[];
 }
 
+/**
+ * `passage` orders notes by the earliest of their passages that matches the
+ * query's passage filter (or, with no filter, their earliest passage overall).
+ */
+export type PassageNoteSortOn = 'createdAt' | 'passage';
+
 export interface PassageNoteSearchQuery {
   limit: number;
   offset: number;
-  sortOn: string;
+  sortOn: PassageNoteSortOn;
   sortDirection: 1 | -1;
   filterTags: string[];
   filterTagMatching: 'any' | 'all' | 'exact';

@@ -40,6 +40,38 @@ describe('decodePassageNotesRouteQuery', () => {
       filterPassageEndVerseId: 0,
     });
   });
+
+  it('defaults to passage order when a passage filter is present', () => {
+    expect(decodePassageNotesRouteQuery({
+      filterPassageStartVerseId: '101001001',
+      filterPassageEndVerseId: '101001031',
+    })).toMatchObject({ sortOn: 'passage', sortDirection: 'ascending' });
+  });
+
+  it('keeps an explicit sort alongside a passage filter', () => {
+    expect(decodePassageNotesRouteQuery({
+      filterPassageStartVerseId: '101001001',
+      filterPassageEndVerseId: '101001031',
+      sortOn: 'createdAt',
+      sortDirection: 'descending',
+    })).toMatchObject({ sortOn: 'createdAt', sortDirection: 'descending' });
+  });
+
+  it('falls back to the contextual default for an unknown sortOn', () => {
+    expect(decodePassageNotesRouteQuery({ sortOn: 'updatedAt' }).sortOn).toBe('createdAt');
+    expect(decodePassageNotesRouteQuery({
+      sortOn: 'updatedAt',
+      filterPassageStartVerseId: '101001001',
+      filterPassageEndVerseId: '101001031',
+    }).sortOn).toBe('passage');
+  });
+
+  it('ignores a half-specified passage filter when defaulting the sort', () => {
+    expect(decodePassageNotesRouteQuery({ filterPassageStartVerseId: '101001001' })).toMatchObject({
+      sortOn: 'createdAt',
+      sortDirection: 'descending',
+    });
+  });
 });
 
 describe('encodePassageNotesQueryToRoute', () => {
@@ -49,9 +81,9 @@ describe('encodePassageNotesQueryToRoute', () => {
   });
 
   it('serializes non-default scalars and trims search text', () => {
-    expect(encodePassageNotesQueryToRoute({ limit: 20, sortOn: 'updatedAt', searchText: '  grace  ' })).toEqual({
+    expect(encodePassageNotesQueryToRoute({ limit: 20, sortDirection: 'ascending', searchText: '  grace  ' })).toEqual({
       limit: '20',
-      sortOn: 'updatedAt',
+      sortDirection: 'ascending',
       searchText: 'grace',
     });
   });
@@ -80,6 +112,51 @@ describe('encodePassageNotesQueryToRoute', () => {
       filterPassageEndVerseId: '101001031',
       filterPassageMatching: 'exclusive',
     });
+  });
+
+  it('omits passage order when a passage filter makes it the default', () => {
+    expect(encodePassageNotesQueryToRoute({
+      filterPassageStartVerseId: 101001001,
+      filterPassageEndVerseId: 101001031,
+      sortOn: 'passage',
+      sortDirection: 'ascending',
+    })).toEqual({
+      filterPassageStartVerseId: '101001001',
+      filterPassageEndVerseId: '101001031',
+    });
+  });
+
+  it('emits a createdAt sort chosen alongside a passage filter', () => {
+    expect(encodePassageNotesQueryToRoute({
+      filterPassageStartVerseId: 101001001,
+      filterPassageEndVerseId: 101001031,
+      sortOn: 'createdAt',
+      sortDirection: 'descending',
+    })).toEqual({
+      filterPassageStartVerseId: '101001001',
+      filterPassageEndVerseId: '101001031',
+      sortOn: 'createdAt',
+      sortDirection: 'descending',
+    });
+  });
+
+  it('emits passage order when no passage filter makes it non-default', () => {
+    expect(encodePassageNotesQueryToRoute({ sortOn: 'passage', sortDirection: 'ascending' })).toEqual({
+      sortOn: 'passage',
+      sortDirection: 'ascending',
+    });
+  });
+});
+
+describe('passage notes sort round-trips', () => {
+  it.each([
+    ['passage filter, default sort', { filterPassageStartVerseId: 101001001, filterPassageEndVerseId: 101001031, sortOn: 'passage' as const, sortDirection: 'ascending' as const }],
+    ['passage filter, createdAt sort', { filterPassageStartVerseId: 101001001, filterPassageEndVerseId: 101001031, sortOn: 'createdAt' as const, sortDirection: 'descending' as const }],
+    ['no filter, default sort', { sortOn: 'createdAt' as const, sortDirection: 'descending' as const }],
+    ['no filter, passage sort', { sortOn: 'passage' as const, sortDirection: 'ascending' as const }],
+  ])('preserves the sort through encode/decode: %s', (_label, query) => {
+    const decoded = decodePassageNotesRouteQuery(encodePassageNotesQueryToRoute(query));
+    expect(decoded).toMatchObject({ sortOn: query.sortOn, sortDirection: query.sortDirection });
   });
 });
 

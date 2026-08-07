@@ -63,6 +63,73 @@ const toPassageNoteRecord = (doc: PassageNoteDocument): PassageNoteRecord => {
   };
 };
 
+/**
+ * Bounds a single passage must satisfy to match the query's filter passage.
+ * `inclusive` means the passage intersects the filter range; `exclusive` means
+ * it is contained by it. Shared by the `$match` filter and the passage sort key
+ * so the two cannot drift apart.
+ */
+const passageMatchBounds = (query: PassageNoteSearchQuery) => {
+  if (query.filterPassageMatching === 'exclusive') {
+    return {
+      startVerseId: { $gte: query.filterPassageStartVerseId },
+      endVerseId: { $lte: query.filterPassageEndVerseId },
+    };
+  }
+  return {
+    startVerseId: { $lte: query.filterPassageEndVerseId },
+    endVerseId: { $gte: query.filterPassageStartVerseId },
+  };
+};
+
+/**
+ * The same predicate as `passageMatchBounds`, as an aggregation expression over
+ * a `$$passage` variable. `true` when no passage filter is set, so every passage
+ * matches. Keep in step with `passageMatchBounds`.
+ */
+const passageMatchExpression = (query: PassageNoteSearchQuery): unknown => {
+  if (!(query.filterPassageStartVerseId && query.filterPassageEndVerseId)) {
+    return true;
+  }
+  if (query.filterPassageMatching === 'exclusive') {
+    return { $and: [
+      { $gte: ['$$passage.startVerseId', query.filterPassageStartVerseId] },
+      { $lte: ['$$passage.endVerseId', query.filterPassageEndVerseId] },
+    ] };
+  }
+  return { $and: [
+    { $lte: ['$$passage.startVerseId', query.filterPassageEndVerseId] },
+    { $gte: ['$$passage.endVerseId', query.filterPassageStartVerseId] },
+  ] };
+};
+
+/** Sorts above every real verse id, so notes with no matching passage land last. */
+const NO_PASSAGE_SORT_KEY = Number.MAX_SAFE_INTEGER;
+
+/**
+ * Aggregation expression yielding the note's earliest matching passage, as the
+ * verse id to sort on. Verse ids are monotonic across the whole Bible, so the
+ * smallest `startVerseId` is the passage that comes first in scripture order.
+ * With no passage filter every passage matches, which degrades to the note's
+ * earliest passage overall.
+ */
+const passageSortKeyExpression = (query: PassageNoteSearchQuery) => {
+  return {
+    $ifNull: [
+      {
+        $min: {
+          $map: {
+            input: { $filter: { input: { $ifNull: ['$passages', []] }, as: 'passage', cond: passageMatchExpression(query) } },
+            as: 'passage',
+            in: '$$passage.startVerseId',
+          },
+        },
+      },
+      NO_PASSAGE_SORT_KEY,
+    ],
+  };
+};
+
 const buildSearchFilter = (ownerId: string, query: PassageNoteSearchQuery): Record<string, unknown> => {
   const filterQuery: Record<string, unknown> = {
     owner: new ObjectId(ownerId),
@@ -87,22 +154,9 @@ const buildSearchFilter = (ownerId: string, query: PassageNoteSearchQuery): Reco
   }
 
   if (query.filterPassageStartVerseId && query.filterPassageEndVerseId) {
-    if (query.filterPassageMatching === 'inclusive') {
-      filterQuery.passages = {
-        $elemMatch: {
-          startVerseId: { $lte: query.filterPassageEndVerseId },
-          endVerseId: { $gte: query.filterPassageStartVerseId },
-        },
-      };
-    }
-    else if (query.filterPassageMatching === 'exclusive') {
-      filterQuery.passages = {
-        $elemMatch: {
-          startVerseId: { $gte: query.filterPassageStartVerseId },
-          endVerseId: { $lte: query.filterPassageEndVerseId },
-        },
-      };
-    }
+    filterQuery.passages = {
+      $elemMatch: passageMatchBounds(query),
+    };
   }
 
   if (query.searchText) {
@@ -118,14 +172,17 @@ export const createPassageNoteRepository = ({ passageNotes }: Collections) => {
   return {
     async search(ownerId: string, query: PassageNoteSearchQuery): Promise<{ results: PassageNoteSearchResultItem[]; total: number }> {
       const filterQuery = buildSearchFilter(ownerId, query);
+      const sortByPassage = query.sortOn === 'passage';
 
-      const sortQuery: Record<string, 1 | -1> = {
-        [query.sortOn]: query.sortDirection,
-      };
+      const sortQuery: Record<string, 1 | -1> = sortByPassage
+        // createdAt/_id break ties so paging stays stable across requests
+        ? { passageSortKey: query.sortDirection, createdAt: -1, _id: 1 }
+        : { [query.sortOn]: query.sortDirection };
 
       const docs = await passageNotes
         .aggregate([
           { $match: filterQuery },
+          ...(sortByPassage ? [{ $addFields: { passageSortKey: passageSortKeyExpression(query) } }] : []),
           { $sort: sortQuery },
           { $skip: query.offset },
           { $limit: query.limit },
@@ -139,6 +196,7 @@ export const createPassageNoteRepository = ({ passageNotes }: Collections) => {
               _id: 0,
               __v: 0,
               owner: 0,
+              passageSortKey: 0,
             },
           },
         ])

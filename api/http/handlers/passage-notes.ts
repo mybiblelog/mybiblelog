@@ -1,7 +1,7 @@
 import { Bible } from '@mybiblelog/shared';
 import { isValidObjectId } from '../../repositories/helpers/ids';
 import { toPassageNoteJSON } from '../../repositories/helpers/serializers';
-import { type PassageNoteSearchQuery } from '../../repositories/helpers/types';
+import { type PassageNoteSearchQuery, type PassageNoteSortOn } from '../../repositories/helpers/types';
 import { ApiErrorDetailCode } from '../errors/error-codes';
 import { ValidationError } from '../errors/validation-errors';
 import { InvalidRequestError, NotFoundError } from '../errors/http-errors';
@@ -56,10 +56,10 @@ const validateQuery = (
   };
 
   // determine field to sort on
-  const sortOnValues = ['createdAt'];
+  const sortOnValues: PassageNoteSortOn[] = ['createdAt', 'passage'];
   if (query.sortOn) {
-    if (sortOnValues.includes(query.sortOn as string)) {
-      validated.sortOn = query.sortOn as string;
+    if (sortOnValues.includes(query.sortOn as PassageNoteSortOn)) {
+      validated.sortOn = query.sortOn as PassageNoteSortOn;
     }
     else {
       return;

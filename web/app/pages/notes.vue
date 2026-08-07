@@ -138,7 +138,7 @@ import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
 import { useUserSettingsStore } from '~/stores/user-settings';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
-import { decodePassageNotesRouteQuery, encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
+import { decodePassageNotesRouteQuery, defaultPassageNotesSort, encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
 import type { PassageNotesQuery } from '~/helpers/passage-notes-route-query';
 import { buildResultsSummary } from '~/helpers/results-summary';
 import type { PassageNoteListItem } from '~/stores/passage-notes';
@@ -202,7 +202,8 @@ const hasAppliedViewOptions = computed(() => {
   const hasTagFilters = Array.isArray(q.filterTags) && q.filterTags.length > 0;
   const hasTagMatchingOverride = Boolean(q.filterTagMatching && q.filterTagMatching !== 'any');
   const hasPassageFilter = Boolean(q.filterPassageStartVerseId && q.filterPassageEndVerseId);
-  const hasSortOverride = (q.sortOn && q.sortOn !== 'createdAt') || (q.sortDirection && q.sortDirection !== 'descending');
+  const sortDefaults = defaultPassageNotesSort(hasPassageFilter);
+  const hasSortOverride = (q.sortOn && q.sortOn !== sortDefaults.sortOn) || (q.sortDirection && q.sortDirection !== sortDefaults.sortDirection);
   const hasPageSizeOverride = Number(q.limit || 10) !== 10;
   return hasSearchText || hasTagFilters || hasTagMatchingOverride || hasPassageFilter || hasSortOverride || hasPageSizeOverride;
 });

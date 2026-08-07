@@ -451,6 +451,7 @@ export const en = {
   query_passage_match_exclusive_desc:
     "Show notes with passages entirely inside the selected passage.",
   query_sort: "Sort",
+  query_sort_passage: "Passage",
   query_sort_newest: "Newest First",
   query_sort_oldest: "Oldest First",
 

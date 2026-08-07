@@ -422,6 +422,7 @@ export const es = {
   query_passage_match_exclusive_desc:
     "Muestra notas con pasajes completamente dentro del pasaje seleccionado.",
   query_sort: "Ordenar",
+  query_sort_passage: "Pasaje",
   query_sort_newest: "Más recientes primero",
   query_sort_oldest: "Más antiguas primero",
 

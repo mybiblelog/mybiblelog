@@ -426,6 +426,7 @@ export const fr = {
   query_passage_match_exclusive_desc:
     "Affiche les notes dont les passages sont entièrement compris dans le passage sélectionné.",
   query_sort: "Trier",
+  query_sort_passage: "Passage",
   query_sort_newest: "Plus récentes en premier",
   query_sort_oldest: "Plus anciennes en premier",
 

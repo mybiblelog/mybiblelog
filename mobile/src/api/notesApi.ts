@@ -12,13 +12,18 @@ export type PassageNote = {
 };
 
 export type NotesSortDirection = "ascending" | "descending";
+/**
+ * `passage` orders notes by the earliest of their passages overlapping the
+ * passage filter (or, with no filter, their earliest passage overall).
+ */
+export type NotesSortOn = "createdAt" | "passage";
 export type TagMatching = "any" | "all" | "exact";
 export type PassageMatching = "inclusive" | "exclusive";
 
 export type NotesQuery = {
   limit: number;
   offset: number;
-  sortOn: "createdAt";
+  sortOn: NotesSortOn;
   sortDirection: NotesSortDirection;
   filterTags: string[];
   filterTagMatching: TagMatching;
@@ -27,6 +32,20 @@ export type NotesQuery = {
   filterPassageEndVerseId: number;
   filterPassageMatching: PassageMatching;
 };
+
+/**
+ * Sorting defaults to scripture order whenever a passage filter is in effect —
+ * reading order is the point of a passage-scoped list. Mirrors the web helper of
+ * the same purpose (`web/app/helpers/passage-notes-route-query.ts`).
+ */
+export function defaultNotesSort(hasPassageFilter: boolean): {
+  sortOn: NotesSortOn;
+  sortDirection: NotesSortDirection;
+} {
+  return hasPassageFilter
+    ? { sortOn: "passage", sortDirection: "ascending" }
+    : { sortOn: "createdAt", sortDirection: "descending" };
+}
 
 export type NotesPageMeta = { offset: number; limit: number; size: number };
 

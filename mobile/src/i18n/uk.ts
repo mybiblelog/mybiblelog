@@ -421,6 +421,7 @@ export const uk = {
   query_passage_match_exclusive_desc:
     "Показує нотатки з уривками, що повністю входять у вибраний уривок.",
   query_sort: "Сортування",
+  query_sort_passage: "За уривком",
   query_sort_newest: "Спочатку нові",
   query_sort_oldest: "Спочатку старі",
 

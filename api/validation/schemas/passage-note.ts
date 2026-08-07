@@ -69,7 +69,7 @@ export const passageNoteSearchResultSchema = passageNoteSchema.extend({
 export const passageNoteListQuerySchema = z.object({
   limit: z.coerce.number().int().optional().describe('Max notes to return (1–50, default 10)'),
   offset: z.coerce.number().int().optional().describe('Notes to skip (default 0)'),
-  sortOn: z.enum(['createdAt']).optional().describe('Field to sort on (default createdAt)'),
+  sortOn: z.enum(['createdAt', 'passage']).optional().describe('Field to sort on (default createdAt; `passage` orders by the earliest passage matching the passage filter)'),
   sortDirection: z.enum(['ascending', 'descending']).optional().describe('Sort direction (default descending)'),
   filterTags: z.array(z.string()).optional().describe('Tag IDs to filter by'),
   filterTagMatching: z.enum(['any', 'all', 'exact']).optional().describe('How to match tags (default any)'),

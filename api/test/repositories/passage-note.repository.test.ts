@@ -246,4 +246,128 @@ describe('passage-note.repository', () => {
       expect(results).toHaveLength(2);
     });
   });
+
+  describe('search sorted by passage', () => {
+    // Mark 3. Verse ids are monotonic across the Bible, so a plain numeric
+    // comparison is scripture order.
+    const MARK_3_START = 141003001;
+    const MARK_3_END = 141003035;
+
+    const markPassage = (chapter: number, startVerse: number, endVerse: number) => ({
+      startVerseId: 141000000 + chapter * 1000 + startVerse,
+      endVerseId: 141000000 + chapter * 1000 + endVerse,
+    });
+
+    const passageSearch = (overrides: Partial<PassageNoteSearchQuery> = {}) => baseSearch({
+      sortOn: 'passage',
+      sortDirection: 1,
+      filterPassageStartVerseId: MARK_3_START,
+      filterPassageEndVerseId: MARK_3_END,
+      ...overrides,
+    });
+
+    /**
+     * Seeds notes whose creation order is the reverse of their scripture order,
+     * so a passage sort cannot accidentally agree with a createdAt sort.
+     */
+    const seedNotes = async () => {
+      const { passageNotes } = await getRepos();
+      await passageNotes.create(ownerId, { content: 'late', passages: [markPassage(3, 20, 25)] });
+      await sleep(5);
+      // two passages overlapping Mark 3; the earlier (3:1-5) must order the note
+      await passageNotes.create(ownerId, {
+        content: 'two-passages',
+        passages: [markPassage(3, 22, 30), markPassage(3, 1, 5)],
+      });
+      await sleep(5);
+      await passageNotes.create(ownerId, { content: 'mid', passages: [markPassage(3, 10, 12)] });
+      await sleep(5);
+      // starts in Mark 2 and runs into Mark 3: overlaps inclusively, not contained
+      await passageNotes.create(ownerId, {
+        content: 'straddles',
+        passages: [{ startVerseId: 141002020, endVerseId: 141003003 }],
+      });
+    };
+
+    it('orders notes by their earliest passage overlapping the filter', async () => {
+      const { passageNotes } = await getRepos();
+      await seedNotes();
+
+      const { results } = await passageNotes.search(ownerId, passageSearch());
+
+      expect(results.map(r => r.content)).toEqual(['straddles', 'two-passages', 'mid', 'late']);
+    });
+
+    it('uses the earliest passage that matches, not the note\'s earliest passage overall', async () => {
+      const { passageNotes } = await getRepos();
+      // Mark 1 comes first in the note, but only the Mark 3 passages can match
+      await passageNotes.create(ownerId, {
+        content: 'earlier-passage-outside-filter',
+        passages: [markPassage(1, 1, 5), markPassage(3, 30, 33)],
+      });
+      await sleep(5);
+      await passageNotes.create(ownerId, { content: 'mid', passages: [markPassage(3, 10, 12)] });
+
+      const { results } = await passageNotes.search(ownerId, passageSearch());
+
+      expect(results.map(r => r.content)).toEqual(['mid', 'earlier-passage-outside-filter']);
+    });
+
+    it('orders under exclusive matching, which drops the straddling note', async () => {
+      const { passageNotes } = await getRepos();
+      await seedNotes();
+
+      const { results, total } = await passageNotes.search(ownerId, passageSearch({ filterPassageMatching: 'exclusive' }));
+
+      expect(total).toBe(3);
+      expect(results.map(r => r.content)).toEqual(['two-passages', 'mid', 'late']);
+    });
+
+    it('reverses with a descending sort direction', async () => {
+      const { passageNotes } = await getRepos();
+      await seedNotes();
+
+      const { results } = await passageNotes.search(ownerId, passageSearch({ sortDirection: -1 }));
+
+      expect(results.map(r => r.content)).toEqual(['late', 'mid', 'two-passages', 'straddles']);
+    });
+
+    it('paginates in passage order', async () => {
+      const { passageNotes } = await getRepos();
+      await seedNotes();
+
+      const first = await passageNotes.search(ownerId, passageSearch({ limit: 2, offset: 0 }));
+      const second = await passageNotes.search(ownerId, passageSearch({ limit: 2, offset: 2 }));
+
+      expect(first.total).toBe(4);
+      expect(first.results.map(r => r.content)).toEqual(['straddles', 'two-passages']);
+      expect(second.results.map(r => r.content)).toEqual(['mid', 'late']);
+    });
+
+    it('falls back to the earliest passage overall when no passage filter is set, sorting passage-less notes last', async () => {
+      const { passageNotes } = await getRepos();
+      await passageNotes.create(ownerId, { content: 'no-passages' });
+      await sleep(5);
+      await passageNotes.create(ownerId, { content: 'mark', passages: [markPassage(3, 10, 12)] });
+      await sleep(5);
+      await passageNotes.create(ownerId, { content: 'genesis', passages: [GEN_1_1_5] });
+
+      const { results } = await passageNotes.search(ownerId, passageSearch({
+        filterPassageStartVerseId: 0,
+        filterPassageEndVerseId: 0,
+      }));
+
+      expect(results.map(r => r.content)).toEqual(['genesis', 'mark', 'no-passages']);
+    });
+
+    it('does not leak the internal sort key into results', async () => {
+      const { passageNotes } = await getRepos();
+      await seedNotes();
+
+      const { results } = await passageNotes.search(ownerId, passageSearch());
+
+      expect(results[0]).not.toHaveProperty('passageSortKey');
+      expect(results[0]).not.toHaveProperty('owner');
+    });
+  });
 });

@@ -1,7 +1,12 @@
 import { Bible } from "@mybiblelog/shared";
 import { useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import type { NotesQuery } from "@/src/api/notesApi";
+import {
+  type NotesQuery,
+  type NotesSortDirection,
+  type NotesSortOn,
+  defaultNotesSort,
+} from "@/src/api/notesApi";
 import { spacing } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { useTagsList } from "@/src/stores/passageNoteTags";
@@ -31,6 +36,7 @@ type QueryDraft = Pick<
   | "filterPassageStartVerseId"
   | "filterPassageEndVerseId"
   | "filterPassageMatching"
+  | "sortOn"
   | "sortDirection"
   | "limit"
 >;
@@ -42,9 +48,40 @@ const toDraft = (query: NotesQuery): QueryDraft => ({
   filterPassageStartVerseId: query.filterPassageStartVerseId,
   filterPassageEndVerseId: query.filterPassageEndVerseId,
   filterPassageMatching: query.filterPassageMatching,
+  sortOn: query.sortOn,
   sortDirection: query.sortDirection,
   limit: query.limit,
 });
+
+/** The sort as one segmented-control value, since it spans two query fields. */
+type SortToken = `${NotesSortOn}:${NotesSortDirection}`;
+
+const toSortToken = (draft: QueryDraft): SortToken => `${draft.sortOn}:${draft.sortDirection}`;
+
+const fromSortToken = (token: SortToken): Pick<QueryDraft, "sortOn" | "sortDirection"> => {
+  const [sortOn, sortDirection] = token.split(":") as [NotesSortOn, NotesSortDirection];
+  return { sortOn, sortDirection };
+};
+
+/**
+ * Choosing a passage flips the sort to scripture order and clearing it flips
+ * back — but only from the other mode's default, so an explicit choice is never
+ * stomped (web `PassageNotesQueryManager`).
+ */
+function withSortForPassageChange(draft: QueryDraft, hadPassageFilter: boolean): QueryDraft {
+  const hasPassageFilter = Boolean(
+    draft.filterPassageStartVerseId && draft.filterPassageEndVerseId
+  );
+  if (hasPassageFilter === hadPassageFilter) return draft;
+  const previousDefault = defaultNotesSort(hadPassageFilter);
+  if (
+    draft.sortOn !== previousDefault.sortOn ||
+    draft.sortDirection !== previousDefault.sortDirection
+  ) {
+    return draft;
+  }
+  return { ...draft, ...defaultNotesSort(hasPassageFilter) };
+}
 
 /**
  * Search / filter / sort sheet (web `PassageNotesQueryManager` equivalent).
@@ -199,11 +236,16 @@ export function NotesQuerySheet({ visible, appliedQuery, onApply, onClose }: Pro
                   size="sm"
                   variant="ghost"
                   onPress={() =>
-                    setDraft((prev) => ({
-                      ...prev,
-                      filterPassageStartVerseId: 0,
-                      filterPassageEndVerseId: 0,
-                    }))
+                    setDraft((prev) =>
+                      withSortForPassageChange(
+                        {
+                          ...prev,
+                          filterPassageStartVerseId: 0,
+                          filterPassageEndVerseId: 0,
+                        },
+                        true
+                      )
+                    )
                   }
                 />
                 <SegmentedControl
@@ -226,14 +268,18 @@ export function NotesQuerySheet({ visible, appliedQuery, onApply, onClose }: Pro
             ) : null}
           </View>
 
-          <SegmentedControl
+          <SegmentedControl<SortToken>
             label={t("query_sort")}
             options={[
-              { value: "descending", label: t("query_sort_newest") },
-              { value: "ascending", label: t("query_sort_oldest") },
+              // Passage order is only meaningful against a passage filter.
+              ...(hasPassageFilter
+                ? [{ value: "passage:ascending" as const, label: t("query_sort_passage") }]
+                : []),
+              { value: "createdAt:descending", label: t("query_sort_newest") },
+              { value: "createdAt:ascending", label: t("query_sort_oldest") },
             ]}
-            value={draft.sortDirection}
-            onChange={(sortDirection) => setDraft((prev) => ({ ...prev, sortDirection }))}
+            value={toSortToken(draft)}
+            onChange={(token) => setDraft((prev) => ({ ...prev, ...fromSortToken(token) }))}
           />
         </ScrollView>
 
@@ -274,11 +320,16 @@ export function NotesQuerySheet({ visible, appliedQuery, onApply, onClose }: Pro
             : null
         }
         onSubmit={(range) =>
-          setDraft((prev) => ({
-            ...prev,
-            filterPassageStartVerseId: range.startVerseId,
-            filterPassageEndVerseId: range.endVerseId,
-          }))
+          setDraft((prev) =>
+            withSortForPassageChange(
+              {
+                ...prev,
+                filterPassageStartVerseId: range.startVerseId,
+                filterPassageEndVerseId: range.endVerseId,
+              },
+              Boolean(prev.filterPassageStartVerseId && prev.filterPassageEndVerseId)
+            )
+          )
         }
         onClose={() => setChoosingPassage(false)}
       />
