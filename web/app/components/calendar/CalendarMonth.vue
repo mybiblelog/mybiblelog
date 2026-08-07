@@ -76,12 +76,17 @@ function selectDay(date: string | null) {
 .calendar-month-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
-  padding-bottom: var(--mbl-space-xs);
+  padding-bottom: var(--mbl-space-md);
 }
 
 @media screen and (max-width: 380px) {
-  .calendar-month-header { flex-direction: column; text-align: center; }
+  .calendar-month-header {
+    flex-direction: column;
+    text-align: center;
+    align-items: stretch;
+  }
 }
 
 .day-of-week {

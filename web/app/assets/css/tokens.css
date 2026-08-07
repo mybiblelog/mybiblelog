@@ -101,6 +101,31 @@
   --mbl-page-header-gap: clamp(1rem, 2.5vw, 1.5rem);
 
   /*
+   * Fluid type scale. Same reasoning as the page spacing above: a 32px page
+   * title costs a phone far more of its first screen than it costs a desktop.
+   * Each token reaches its max at ~768px (the mbl-mobile/mbl-tablet boundary in
+   * mixins/breakpoints.css) and its min at ~360px, so desktop rendering is
+   * unchanged from the fixed scale these replaced.
+   *
+   * The preferred value is `rem + vw`, never bare `vw`: a pure-viewport value
+   * ignores the user's browser font-size and stops responding to zoom. The rem
+   * term is what keeps the text accessible.
+   *
+   * --mbl-title-1..6 map 1:1 onto .mbl-title--1..6 (mbl-type.css). The role
+   * tokens below cover scale steps that have no .mbl-title equivalent.
+   */
+  --mbl-title-1: clamp(2rem, 1.12rem + 3.92vw, 3rem); /* 32 → 48px */
+  --mbl-title-2: clamp(1.75rem, 1.09rem + 2.94vw, 2.5rem); /* 28 → 40px */
+  --mbl-title-3: clamp(1.5rem, 1.06rem + 1.96vw, 2rem); /* 24 → 32px */
+  --mbl-title-4: clamp(1.25rem, 1.03rem + 0.98vw, 1.5rem); /* 20 → 24px */
+  --mbl-title-5: clamp(1.125rem, 1.015rem + 0.49vw, 1.25rem); /* 18 → 20px */
+  --mbl-title-6: 1rem; /* body size — deliberately not fluid */
+
+  --mbl-title-hero: clamp(2.5rem, 1.62rem + 3.92vw, 3.5rem); /* 40 → 56px, marketing hero */
+  --mbl-prose-h2: clamp(1.375rem, 1.045rem + 1.47vw, 1.75rem); /* 22 → 28px, .mbl-content h2 */
+  --mbl-text-lead: clamp(1rem, 0.89rem + 0.49vw, 1.125rem); /* 16 → 18px, marketing lead copy */
+
+  /*
    * Floating action button footprint (FloatingFeedbackButton.vue). The button
    * is fixed, so anything that scrolls to the bottom of the viewport must
    * reserve --mbl-fab-clearance or its last row ends up underneath the button.

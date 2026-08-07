@@ -49,7 +49,7 @@ const localePath = useLocalePath();
 }
 
 .hero-title {
-  font-size: 3.5rem;
+  font-size: var(--mbl-title-hero);
   font-weight: 700;
   margin-bottom: var(--mbl-space-md);
   line-height: 1.2;
@@ -59,33 +59,21 @@ const localePath = useLocalePath();
   background-clip: text;
 }
 
-@mixin mbl-mobile {
-  .hero-title { font-size: 2.5rem; }
-}
-
 .hero-subtitle {
-  font-size: 1.5rem;
+  font-size: var(--mbl-title-4);
   color: var(--mbl-text-body);
   margin-bottom: var(--mbl-space-xl);
   font-style: italic;
 }
 
-@mixin mbl-mobile {
-  .hero-subtitle { font-size: 1.25rem; }
-}
-
 .hero-description {
-  font-size: 1.125rem;
+  font-size: var(--mbl-text-lead);
   line-height: 1.7;
   color: var(--mbl-text-soft);
   margin-bottom: var(--mbl-space-2xl);
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
-}
-
-@mixin mbl-mobile {
-  .hero-description { font-size: 1rem; margin-bottom: var(--mbl-space-2xl); }
 }
 
 .hero-description em { font-style: italic; color: var(--mbl-text-strong); }

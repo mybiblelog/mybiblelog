@@ -264,7 +264,7 @@ body.has-site-nav-fixed {
   display: flex;
   justify-content: space-between;
   margin-bottom: var(--mbl-page-header-gap);
-  align-items: flex-start;
+  align-items: center;
 }
 
 .page-header .mbl-title {

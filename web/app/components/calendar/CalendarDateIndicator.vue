@@ -1,6 +1,6 @@
 <template>
   <div class="calendar-date-indicator">
-    <div class="mbl-title mbl-title--4">
+    <div class="mbl-title">
       {{ selectedMonth }}
     </div>
   </div>
