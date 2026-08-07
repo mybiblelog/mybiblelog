@@ -40,7 +40,14 @@
           }
         }
       ],
-      "@sentry/react-native",
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "react-native",
+          "organization": "my-bible-log"
+        }
+      ],
       "expo-asset",
       "expo-font",
       "expo-image",

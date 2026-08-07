@@ -1,7 +1,9 @@
-const { getDefaultConfig } = require('expo/metro-config');
 const path = require('path');
+const {
+  getSentryExpoConfig
+} = require("@sentry/react-native/metro");
 
-const config = getDefaultConfig(__dirname);
+const config = getSentryExpoConfig(__dirname);
 
 // This file sets up the Metro bundler to resolve workspace dependencies.
 // It also watches the root package for changes and rebuilds the app automatically.
