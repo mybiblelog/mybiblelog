@@ -2,7 +2,7 @@
   <main>
     <div class="content-column">
       <h1 class="mbl-title">
-        Admin Feedback Review
+        {{ t('title') }}
       </h1>
 
       <div class="mbl-tabs">
@@ -13,7 +13,7 @@
               :class="{ 'router-link-exact-active': view === 'open' }"
               @click.prevent="setView('open')"
             >
-              Open
+              {{ t('tab_open') }}
             </a>
           </li>
           <li>
@@ -22,7 +22,7 @@
               :class="{ 'router-link-exact-active': view === 'resolved' }"
               @click.prevent="setView('resolved')"
             >
-              Resolved
+              {{ t('tab_resolved') }}
             </a>
           </li>
           <li>
@@ -31,7 +31,7 @@
               :class="{ 'router-link-exact-active': view === 'archived' }"
               @click.prevent="setView('archived')"
             >
-              Archived
+              {{ t('tab_archived') }}
             </a>
           </li>
         </ul>
@@ -47,13 +47,13 @@
             {{ resultsSummary }}
           </div>
           <div v-if="totalPages > 1" class="feedback-page__pager">
-            <div class="mbl-field mbl-field--addons mbl-field--flush" role="group" aria-label="Pagination">
+            <div class="mbl-field mbl-field--addons mbl-field--flush" role="group" :aria-label="t('aria_pagination')">
               <p class="mbl-control">
                 <button
                   class="mbl-button mbl-button--sm mbl-button--light"
                   type="button"
                   :disabled="page <= 1"
-                  aria-label="Previous page"
+                  :aria-label="t('aria_previous_page')"
                   @click="onPageChanged(page - 1)"
                 >
                   <caret-left-icon width="10px" height="18px" fill="currentColor" />
@@ -61,9 +61,9 @@
               </p>
               <div class="mbl-control">
                 <div class="mbl-select mbl-select--sm">
-                  <select :value="page" aria-label="Page" @change="onPageChanged(Number(($event.target as HTMLSelectElement).value))">
+                  <select :value="page" :aria-label="t('aria_page')" @change="onPageChanged(Number(($event.target as HTMLSelectElement).value))">
                     <option v-for="p in totalPages" :key="p" :value="p">
-                      Page {{ p }}
+                      {{ t('page_number', { page: p }) }}
                     </option>
                   </select>
                 </div>
@@ -73,7 +73,7 @@
                   class="mbl-button mbl-button--sm mbl-button--light"
                   type="button"
                   :disabled="page >= totalPages"
-                  aria-label="Next page"
+                  :aria-label="t('aria_next_page')"
                   @click="onPageChanged(page + 1)"
                 >
                   <caret-right-icon width="10px" height="18px" fill="currentColor" />
@@ -89,7 +89,7 @@
               {{ formatDateTime(feedback.createdAt) }}
             </div>
             <div class="feedback-card__kind mbl-text-small" :class="feedbackKindClass(feedback.kind)">
-              {{ feedback.kind }}
+              {{ feedbackKindLabel(feedback.kind) }}
             </div>
             <div class="feedback-card__message">
               {{ feedback.message }}
@@ -100,7 +100,7 @@
               </button>
               <span v-else class="feedback-card__email-text">{{ feedback.email }}</span>
               <span class="feedback-badge" :class="feedback.owner ? 'feedback-badge--user' : 'feedback-badge--guest'">
-                {{ feedback.owner ? 'user' : 'guest' }}
+                {{ feedback.owner ? t('badge_user') : t('badge_guest') }}
               </span>
             </div>
             <div class="feedback-card__ip mbl-text-small mbl-text-muted">
@@ -113,7 +113,7 @@
                   type="button"
                   @click="setStatus(feedback, 'resolved')"
                 >
-                  Resolve
+                  {{ t('resolve') }}
                 </button>
               </template>
               <template v-else-if="feedback.status === 'resolved'">
@@ -122,14 +122,14 @@
                   type="button"
                   @click="setStatus(feedback, 'open')"
                 >
-                  Reopen
+                  {{ t('reopen') }}
                 </button>
                 <button
                   class="mbl-button mbl-button--sm mbl-button--light"
                   type="button"
                   @click="setStatus(feedback, 'archived')"
                 >
-                  Archive
+                  {{ t('archive') }}
                 </button>
               </template>
               <template v-else>
@@ -138,21 +138,21 @@
                   type="button"
                   @click="setStatus(feedback, 'open')"
                 >
-                  Reopen
+                  {{ t('reopen') }}
                 </button>
                 <button
                   class="mbl-button mbl-button--sm mbl-button--light"
                   type="button"
                   @click="setStatus(feedback, 'resolved')"
                 >
-                  Unarchive
+                  {{ t('unarchive') }}
                 </button>
                 <button
                   class="mbl-button mbl-button--sm mbl-button--danger"
                   type="button"
                   @click="deleteFeedback(feedback)"
                 >
-                  Delete
+                  {{ t('delete') }}
                 </button>
               </template>
             </div>
@@ -196,6 +196,7 @@ interface Feedback {
 }
 
 const { $http } = useNuxtApp();
+const { t } = useI18n();
 const dialogStore = useDialogStore();
 
 const view = ref<FeedbackStatus>('open');
@@ -209,24 +210,34 @@ const { page, totalPages, offset, summary, applyServerMeta, goToPage: onPageChan
   scrollToTopOnPageChange: true,
 });
 
-function pluralize(count: number, singular: string, plural: string) {
-  return count === 1 ? singular : plural;
-}
-
 const resultsSummary = computed(() => {
   const s = summary.value;
-  if (s.kind === 'none') { return 'No feedback'; }
-  if (s.kind === 'all') { return `Showing all ${s.total} ${pluralize(s.total, 'item', 'items')}`; }
-  return `Showing ${s.first}–${s.last} of ${s.total} ${pluralize(s.total, 'item', 'items')}`;
+  if (s.kind === 'none') { return t('summary_none'); }
+  if (s.kind === 'all') { return t('summary_all', { total: s.total }); }
+  return t('summary_range', { first: s.first, last: s.last, total: s.total });
 });
 const emptyMessage = computed(() => {
-  if (view.value === 'resolved') { return 'There is no resolved feedback.'; }
-  if (view.value === 'archived') { return 'There is no archived feedback.'; }
-  return 'There is no open feedback.';
+  if (view.value === 'resolved') { return t('empty_resolved'); }
+  if (view.value === 'archived') { return t('empty_archived'); }
+  return t('empty_open');
 });
 
 function formatDateTime(dateStr: string) {
   return dayjs(dateStr).format('YYYY-MM-DD hh:mm a');
+}
+
+// Kinds come back raw from the API; anything unrecognized (e.g. a kind retired
+// from the submission form) falls back to the stored value.
+const FEEDBACK_KIND_KEYS: Record<string, string> = {
+  bug: 'kind_bug',
+  feature: 'kind_feature',
+  comment: 'kind_comment',
+  question: 'kind_question',
+};
+
+function feedbackKindLabel(kind: string) {
+  const key = FEEDBACK_KIND_KEYS[kind];
+  return key ? t(key) : kind;
 }
 
 function feedbackKindClass(kind: string) {
@@ -275,13 +286,13 @@ async function setStatus(feedback: Feedback, status: FeedbackStatus) {
     await loadFeedbacks();
   }
   catch {
-    await dialogStore.alert({ message: 'Unable to update feedback.' });
+    await dialogStore.alert({ message: t('error_update') });
   }
 }
 
 async function deleteFeedback(feedback: Feedback) {
   const confirmed = await dialogStore.confirm({
-    message: 'Are you sure you want to permanently delete this feedback? This action cannot be undone.',
+    message: t('confirm_delete'),
     confirmButtonType: 'danger',
   });
   if (!confirmed) { return; }
@@ -290,7 +301,7 @@ async function deleteFeedback(feedback: Feedback) {
     await loadFeedbacks();
   }
   catch {
-    await dialogStore.alert({ message: 'Unable to delete feedback.' });
+    await dialogStore.alert({ message: t('error_delete') });
   }
 }
 
@@ -411,3 +422,225 @@ onMounted(() => { loadFeedbacks(); });
   color: var(--neutral-0);
 }
 </style>
+
+<i18n lang="json">
+{
+  "en": {
+    "title": "Admin Feedback Review",
+    "tab_open": "Open",
+    "tab_resolved": "Resolved",
+    "tab_archived": "Archived",
+    "empty_open": "There is no open feedback.",
+    "empty_resolved": "There is no resolved feedback.",
+    "empty_archived": "There is no archived feedback.",
+    "summary_none": "No feedback",
+    "summary_all": "Showing all {total}",
+    "summary_range": "Showing {first}–{last} of {total}",
+    "aria_pagination": "Pagination",
+    "aria_previous_page": "Previous page",
+    "aria_next_page": "Next page",
+    "aria_page": "Page",
+    "page_number": "Page {page}",
+    "kind_bug": "Bug",
+    "kind_feature": "Feature",
+    "kind_comment": "Comment",
+    "kind_question": "Question",
+    "badge_user": "user",
+    "badge_guest": "guest",
+    "resolve": "Resolve",
+    "reopen": "Reopen",
+    "archive": "Archive",
+    "unarchive": "Unarchive",
+    "delete": "Delete",
+    "confirm_delete": "Are you sure you want to permanently delete this feedback? This action cannot be undone.",
+    "error_update": "Unable to update feedback.",
+    "error_delete": "Unable to delete feedback."
+  },
+  "de": {
+    "title": "Feedback-Übersicht",
+    "tab_open": "Offen",
+    "tab_resolved": "Erledigt",
+    "tab_archived": "Archiviert",
+    "empty_open": "Es gibt kein offenes Feedback.",
+    "empty_resolved": "Es gibt kein erledigtes Feedback.",
+    "empty_archived": "Es gibt kein archiviertes Feedback.",
+    "summary_none": "Kein Feedback",
+    "summary_all": "Alle {total} werden angezeigt",
+    "summary_range": "{first}–{last} von {total} werden angezeigt",
+    "aria_pagination": "Seitennummerierung",
+    "aria_previous_page": "Vorherige Seite",
+    "aria_next_page": "Nächste Seite",
+    "aria_page": "Seite",
+    "page_number": "Seite {page}",
+    "kind_bug": "Fehler",
+    "kind_feature": "Funktion",
+    "kind_comment": "Kommentar",
+    "kind_question": "Frage",
+    "badge_user": "Benutzer",
+    "badge_guest": "Gast",
+    "resolve": "Erledigen",
+    "reopen": "Wieder öffnen",
+    "archive": "Archivieren",
+    "unarchive": "Aus Archiv holen",
+    "delete": "Löschen",
+    "confirm_delete": "Möchten Sie dieses Feedback wirklich endgültig löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "error_update": "Feedback konnte nicht aktualisiert werden.",
+    "error_delete": "Feedback konnte nicht gelöscht werden."
+  },
+  "es": {
+    "title": "Revisión de Comentarios",
+    "tab_open": "Abiertos",
+    "tab_resolved": "Resueltos",
+    "tab_archived": "Archivados",
+    "empty_open": "No hay comentarios abiertos.",
+    "empty_resolved": "No hay comentarios resueltos.",
+    "empty_archived": "No hay comentarios archivados.",
+    "summary_none": "Sin comentarios",
+    "summary_all": "Mostrando todos los {total}",
+    "summary_range": "Mostrando {first}–{last} de {total}",
+    "aria_pagination": "Paginación",
+    "aria_previous_page": "Página anterior",
+    "aria_next_page": "Página siguiente",
+    "aria_page": "Página",
+    "page_number": "Página {page}",
+    "kind_bug": "Error",
+    "kind_feature": "Función",
+    "kind_comment": "Comentario",
+    "kind_question": "Pregunta",
+    "badge_user": "usuario",
+    "badge_guest": "invitado",
+    "resolve": "Resolver",
+    "reopen": "Reabrir",
+    "archive": "Archivar",
+    "unarchive": "Desarchivar",
+    "delete": "Eliminar",
+    "confirm_delete": "¿Seguro que quieres eliminar permanentemente este comentario? Esta acción no se puede deshacer.",
+    "error_update": "No se pudo actualizar el comentario.",
+    "error_delete": "No se pudo eliminar el comentario."
+  },
+  "fr": {
+    "title": "Revue des Retours d'Information",
+    "tab_open": "Ouverts",
+    "tab_resolved": "Résolus",
+    "tab_archived": "Archivés",
+    "empty_open": "Il n'y a aucun retour ouvert.",
+    "empty_resolved": "Il n'y a aucun retour résolu.",
+    "empty_archived": "Il n'y a aucun retour archivé.",
+    "summary_none": "Aucun retour",
+    "summary_all": "Affichage des {total}",
+    "summary_range": "Affichage de {first}–{last} sur {total}",
+    "aria_pagination": "Pagination",
+    "aria_previous_page": "Page précédente",
+    "aria_next_page": "Page suivante",
+    "aria_page": "Page",
+    "page_number": "Page {page}",
+    "kind_bug": "Bogue",
+    "kind_feature": "Fonctionnalité",
+    "kind_comment": "Commentaire",
+    "kind_question": "Question",
+    "badge_user": "utilisateur",
+    "badge_guest": "invité",
+    "resolve": "Résoudre",
+    "reopen": "Rouvrir",
+    "archive": "Archiver",
+    "unarchive": "Désarchiver",
+    "delete": "Supprimer",
+    "confirm_delete": "Voulez-vous vraiment supprimer définitivement ce retour ? Cette action est irréversible.",
+    "error_update": "Impossible de mettre à jour le retour.",
+    "error_delete": "Impossible de supprimer le retour."
+  },
+  "ko": {
+    "title": "피드백 검토",
+    "tab_open": "미처리",
+    "tab_resolved": "처리됨",
+    "tab_archived": "보관됨",
+    "empty_open": "미처리 피드백이 없습니다.",
+    "empty_resolved": "처리된 피드백이 없습니다.",
+    "empty_archived": "보관된 피드백이 없습니다.",
+    "summary_none": "피드백 없음",
+    "summary_all": "전체 {total}건 표시 중",
+    "summary_range": "{total}건 중 {first}–{last}건 표시 중",
+    "aria_pagination": "페이지 매기기",
+    "aria_previous_page": "이전 페이지",
+    "aria_next_page": "다음 페이지",
+    "aria_page": "페이지",
+    "page_number": "{page} 페이지",
+    "kind_bug": "버그",
+    "kind_feature": "기능",
+    "kind_comment": "의견",
+    "kind_question": "질문",
+    "badge_user": "회원",
+    "badge_guest": "비회원",
+    "resolve": "처리",
+    "reopen": "다시 열기",
+    "archive": "보관",
+    "unarchive": "보관 해제",
+    "delete": "삭제",
+    "confirm_delete": "이 피드백을 영구적으로 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+    "error_update": "피드백을 업데이트할 수 없습니다.",
+    "error_delete": "피드백을 삭제할 수 없습니다."
+  },
+  "pt": {
+    "title": "Revisão de Feedback",
+    "tab_open": "Abertos",
+    "tab_resolved": "Resolvidos",
+    "tab_archived": "Arquivados",
+    "empty_open": "Não há feedback aberto.",
+    "empty_resolved": "Não há feedback resolvido.",
+    "empty_archived": "Não há feedback arquivado.",
+    "summary_none": "Nenhum feedback",
+    "summary_all": "Mostrando todos os {total}",
+    "summary_range": "Mostrando {first}–{last} de {total}",
+    "aria_pagination": "Paginação",
+    "aria_previous_page": "Página anterior",
+    "aria_next_page": "Próxima página",
+    "aria_page": "Página",
+    "page_number": "Página {page}",
+    "kind_bug": "Erro",
+    "kind_feature": "Recurso",
+    "kind_comment": "Comentário",
+    "kind_question": "Pergunta",
+    "badge_user": "usuário",
+    "badge_guest": "visitante",
+    "resolve": "Resolver",
+    "reopen": "Reabrir",
+    "archive": "Arquivar",
+    "unarchive": "Desarquivar",
+    "delete": "Excluir",
+    "confirm_delete": "Tem certeza de que deseja excluir permanentemente este feedback? Esta ação não pode ser desfeita.",
+    "error_update": "Não foi possível atualizar o feedback.",
+    "error_delete": "Não foi possível excluir o feedback."
+  },
+  "uk": {
+    "title": "Огляд зворотного зв'язку",
+    "tab_open": "Відкриті",
+    "tab_resolved": "Вирішені",
+    "tab_archived": "Архівовані",
+    "empty_open": "Немає відкритих відгуків.",
+    "empty_resolved": "Немає вирішених відгуків.",
+    "empty_archived": "Немає архівованих відгуків.",
+    "summary_none": "Немає відгуків",
+    "summary_all": "Показано всі {total}",
+    "summary_range": "Показано {first}–{last} з {total}",
+    "aria_pagination": "Нумерація сторінок",
+    "aria_previous_page": "Попередня сторінка",
+    "aria_next_page": "Наступна сторінка",
+    "aria_page": "Сторінка",
+    "page_number": "Сторінка {page}",
+    "kind_bug": "Помилка",
+    "kind_feature": "Функція",
+    "kind_comment": "Коментар",
+    "kind_question": "Запитання",
+    "badge_user": "користувач",
+    "badge_guest": "гість",
+    "resolve": "Вирішити",
+    "reopen": "Відкрити знову",
+    "archive": "Архівувати",
+    "unarchive": "Розархівувати",
+    "delete": "Видалити",
+    "confirm_delete": "Ви впевнені, що хочете назавжди видалити цей відгук? Цю дію не можна скасувати.",
+    "error_update": "Не вдалося оновити відгук.",
+    "error_delete": "Не вдалося видалити відгук."
+  }
+}
+</i18n>
