@@ -15,7 +15,6 @@ import {
   Text,
 } from "@/src/components";
 import { radius, spacing, useTheme } from "@/src/design";
-import { openNotesForRange } from "@/src/notes/openNotesForRange";
 import { useBibleProgress } from "@/src/stores/bibleProgress";
 import {
   noteCountsActions,
@@ -35,14 +34,12 @@ const BookRow = memo(function BookRow({
   notesCount,
   showBadge,
   onPress,
-  onPressNotes,
 }: {
   book: BookProgress;
   bookName: string;
   notesCount: number;
   showBadge: boolean;
   onPress: (bookIndex: number) => void;
-  onPressNotes: (bookIndex: number) => void;
 }) {
   const { colors } = useTheme();
   const t = useT();
@@ -67,27 +64,13 @@ const BookRow = memo(function BookRow({
           {bookName}
         </Text>
         {showBadge ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={`${bookName}: ${
-              notesCount === 1
-                ? t("book_note_count_one")
-                : t("book_note_count_other", { count: notesCount })
-            }`}
-            hitSlop={8}
-            onPress={() => onPressNotes(book.bookIndex)}
-            style={({ pressed }) => [
-              styles.noteBadge,
-              { backgroundColor: colors.surface },
-              pressed && styles.pressed,
-            ]}
-          >
+          <View style={[styles.noteBadge, { backgroundColor: colors.surface }]}>
             <Text variant="caption" color="mutedText">
               {notesCount === 1
                 ? t("book_note_count_one")
                 : t("book_note_count_other", { count: notesCount })}
             </Text>
-          </Pressable>
+          </View>
         ) : null}
         <Text variant="caption" color="mutedText" style={styles.percent}>
           {book.percentage}%
@@ -120,14 +103,6 @@ export default function BibleIndex() {
     if (navigatingRef.current) return;
     navigatingRef.current = true;
     router.push(`/bible/${bookIndex}`);
-  }, []);
-
-  const handlePressNotes = useCallback((bookIndex: number) => {
-    openNotesForRange(
-      Bible.getFirstBookVerseId(bookIndex),
-      Bible.getLastBookVerseId(bookIndex),
-      "exclusive"
-    );
   }, []);
 
   const newTestamentBooks = useMemo(
@@ -218,7 +193,6 @@ export default function BibleIndex() {
             notesCount={noteCounts?.[item.bookIndex] ?? 0}
             showBadge={anyBooksHaveNotes}
             onPress={handlePress}
-            onPressNotes={handlePressNotes}
           />
         )}
       />

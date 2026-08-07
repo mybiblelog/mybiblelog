@@ -70,7 +70,7 @@
           <star-icon :fill="report.percentage === 100 ? 'var(--mbl-star-earned)' : 'var(--mbl-star-unearned)'" />
         </span>
         <span class="progress-card-book">{{ report.bookName }}</span>
-        <span v-if="anyBooksHaveNotes" class="progress-card-note-count-badge" @click.stop="viewBookNotes(report.bookIndex)">
+        <span v-if="anyBooksHaveNotes" class="progress-card-note-count-badge">
           {{ report.notesCount }} {{ t('note', report.notesCount) }}
         </span>
         <span class="progress-card-percentage">{{ n(report.percentage / 100, 'percent') }}</span>
@@ -85,7 +85,6 @@
 <script setup lang="ts">
 import { Bible, withSegmentPercentages } from '@mybiblelog/shared';
 import type { LogEntry } from '@mybiblelog/shared';
-import { encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
 import { usePassageNotesStore } from '~/stores/passage-notes';
 import SegmentBar from '~/components/bible/SegmentBar.vue';
 import StarIcon from '~/components/svg/StarIcon.vue';
@@ -168,18 +167,6 @@ function bookReadingSegments(bookIndex: number) {
   const totalBookVerses = Bible.getBookVerseCount(bookIndex);
   const segments = Bible.generateBookSegments(bookIndex, props.logEntries);
   return withSegmentPercentages(segments, totalBookVerses);
-}
-
-function viewBookNotes(bookIndex: number) {
-  const bookStartVerseId = Bible.getFirstBookVerseId(bookIndex);
-  const bookEndVerseId = Bible.getLastBookVerseId(bookIndex);
-  const query = encodePassageNotesQueryToRoute({
-    filterPassageStartVerseId: bookStartVerseId,
-    filterPassageEndVerseId: bookEndVerseId,
-    filterPassageMatching: 'exclusive',
-    offset: 0,
-  });
-  router.push({ path: localePath('/notes'), query });
 }
 
 onMounted(() => {
@@ -340,12 +327,6 @@ onMounted(() => {
   padding: 0 0.5em;
   border-radius: var(--mbl-radius-pill);
   font-weight: normal;
-  transition: 0.2s ease-in-out;
-}
-
-.progress-list .progress-card-note-count-badge:hover {
-  background: var(--mbl-bg-disabled);
-  color: var(--mbl-on-accent);
 }
 
 .progress-list .progress-card-percentage {
