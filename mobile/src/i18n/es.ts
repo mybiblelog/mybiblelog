@@ -220,6 +220,9 @@ export const es = {
   auth_login: "Iniciar sesión",
   auth_create_account: "Crear cuenta",
   auth_logout: "Cerrar sesión",
+  auth_logout_confirm_title: "¿Cerrar sesión?",
+  auth_logout_confirm_message:
+    "Tendrás que iniciar sesión de nuevo para sincronizar este dispositivo con tu cuenta.",
 
   login_title: "Iniciar sesión",
   auth_email: "Correo electrónico",

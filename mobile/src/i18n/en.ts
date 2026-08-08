@@ -215,6 +215,8 @@ export const en = {
   auth_login: "Login",
   auth_create_account: "Create account",
   auth_logout: "Logout",
+  auth_logout_confirm_title: "Log out?",
+  auth_logout_confirm_message: "You'll need to log in again to sync this device with your account.",
 
   login_title: "Login",
   auth_email: "Email",

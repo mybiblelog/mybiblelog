@@ -221,6 +221,9 @@ export const uk = {
   auth_login: "Увійти",
   auth_create_account: "Створити обліковий запис",
   auth_logout: "Вийти",
+  auth_logout_confirm_title: "Вийти?",
+  auth_logout_confirm_message:
+    "Щоб синхронізувати цей пристрій з обліковим записом, потрібно буде увійти знову.",
 
   login_title: "Вхід",
   auth_email: "Електронна пошта",

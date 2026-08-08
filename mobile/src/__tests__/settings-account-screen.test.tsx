@@ -4,11 +4,16 @@ jest.mock("@react-native-community/netinfo", () => ({
   useNetInfo: () => mockUseNetInfo(),
 }));
 
+import { fireEvent } from "@testing-library/react-native";
 import { renderWithProviders } from "@/src/test-utils/renderWithProviders";
 import { useAuthStore } from "@/src/stores/auth";
 import AccountSettings from "@/app/(tabs)/settings/account";
 
+const logout = jest.fn(async () => {});
+
 beforeEach(() => {
+  logout.mockClear();
+  useAuthStore.setState({ logout });
   mockUseNetInfo.mockReturnValue({ isConnected: true, isInternetReachable: true });
 });
 
@@ -58,5 +63,19 @@ describe("Account settings screen", () => {
     const { getByText } = renderWithProviders(<AccountSettings />);
 
     expect(getByText("Logout")).toBeTruthy();
+  });
+
+  it("confirms before logging out", () => {
+    useAuthStore.setState({
+      state: { status: "authenticated", session: { token: "t", user: { email: "a@b.com" } } },
+    });
+    const { getByText, getAllByText, getByTestId } = renderWithProviders(<AccountSettings />);
+
+    fireEvent.press(getByTestId("settings.logout"));
+    expect(logout).not.toHaveBeenCalled();
+    expect(getByText("Log out?")).toBeTruthy();
+
+    fireEvent.press(getAllByText("Logout")[getAllByText("Logout").length - 1]);
+    expect(logout).toHaveBeenCalled();
   });
 });

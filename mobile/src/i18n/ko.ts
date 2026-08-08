@@ -218,6 +218,8 @@ export const ko = {
   auth_login: "로그인",
   auth_create_account: "계정 만들기",
   auth_logout: "로그아웃",
+  auth_logout_confirm_title: "로그아웃할까요?",
+  auth_logout_confirm_message: "이 기기를 계정과 동기화하려면 다시 로그인해야 합니다.",
 
   login_title: "로그인",
   auth_email: "이메일",

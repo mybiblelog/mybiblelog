@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { useAuth } from "@/src/stores/auth";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { spacing, useTheme } from "@/src/design";
-import { Button, Card, Icon, ListItem, Screen, Text } from "@/src/components";
+import { Button, Card, ConfirmDialog, Icon, ListItem, Screen, Text } from "@/src/components";
 import { router } from "expo-router";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { ScrollView, StyleSheet, View } from "react-native";
@@ -10,6 +11,7 @@ export default function AccountSettings() {
   const t = useT();
   const { colors } = useTheme();
   const { state: authState, logout } = useAuth();
+  const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
   const netInfo = useNetInfo();
   const isOnline =
     netInfo.isInternetReachable === null ? netInfo.isConnected : netInfo.isInternetReachable;
@@ -56,6 +58,7 @@ export default function AccountSettings() {
                 variant="secondary"
                 size="sm"
                 leftIcon="mail-outline"
+                fullWidth
                 onPress={() => router.push("/settings/change-email")}
                 style={styles.authActionButtonSpacing}
               />
@@ -64,8 +67,10 @@ export default function AccountSettings() {
                 testID="settings.logout"
                 variant="destructive"
                 size="sm"
-                onPress={() => void logout()}
-                style={styles.authActionButton}
+                leftIcon="log-out-outline"
+                fullWidth
+                onPress={() => setLogoutConfirmVisible(true)}
+                style={styles.authActionButtonSpacing}
               />
             </>
           ) : (
@@ -129,6 +134,19 @@ export default function AccountSettings() {
             />
           </>
         )}
+
+        <ConfirmDialog
+          visible={logoutConfirmVisible}
+          title={t("auth_logout_confirm_title")}
+          message={t("auth_logout_confirm_message")}
+          confirmLabel={t("auth_logout")}
+          cancelLabel={t("cancel")}
+          onConfirm={() => {
+            setLogoutConfirmVisible(false);
+            void logout();
+          }}
+          onCancel={() => setLogoutConfirmVisible(false)}
+        />
       </ScrollView>
     </Screen>
   );
@@ -143,7 +161,6 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   authStatusTextCol: { flex: 1, gap: spacing["2xs"] },
-  authActionButton: { marginTop: spacing.sm, alignSelf: "flex-end" },
   authActionButtonSpacing: { marginTop: spacing.sm },
   authOfflineNotice: {
     flexDirection: "row",

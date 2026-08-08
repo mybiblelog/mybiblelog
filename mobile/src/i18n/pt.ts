@@ -221,6 +221,9 @@ export const pt = {
   auth_login: "Entrar",
   auth_create_account: "Criar conta",
   auth_logout: "Sair",
+  auth_logout_confirm_title: "Sair da conta?",
+  auth_logout_confirm_message:
+    "Você precisará entrar novamente para sincronizar este dispositivo com sua conta.",
 
   login_title: "Entrar",
   auth_email: "Email",

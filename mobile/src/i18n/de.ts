@@ -222,6 +222,9 @@ export const de = {
   auth_login: "Anmelden",
   auth_create_account: "Konto erstellen",
   auth_logout: "Abmelden",
+  auth_logout_confirm_title: "Abmelden?",
+  auth_logout_confirm_message:
+    "Sie müssen sich erneut anmelden, um dieses Gerät mit Ihrem Konto zu synchronisieren.",
 
   login_title: "Anmelden",
   auth_email: "E-Mail",

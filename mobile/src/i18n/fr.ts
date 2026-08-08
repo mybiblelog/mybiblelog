@@ -223,6 +223,9 @@ export const fr = {
   auth_login: "Connexion",
   auth_create_account: "Créer un compte",
   auth_logout: "Déconnexion",
+  auth_logout_confirm_title: "Se déconnecter ?",
+  auth_logout_confirm_message:
+    "Vous devrez vous reconnecter pour synchroniser cet appareil avec votre compte.",
 
   login_title: "Connexion",
   auth_email: "E-mail",
