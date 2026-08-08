@@ -59,7 +59,7 @@
             @click="toggleChapter(chapterReport.bookIndex, chapterReport.chapterIndex)"
           >
             <div class="chapter-card--completion-indicator">
-              <svg v-if="busyChapter === `${bookReport.bookIndex}.${chapterReport.chapterIndex}`" viewBox="0 0 80 80" width="100%" height="100%">
+              <svg v-if="busyChapters.has(`${bookReport.bookIndex}.${chapterReport.chapterIndex}`)" viewBox="0 0 80 80" width="100%" height="100%">
                 <path
                   :fill="chapterReport.complete ? 'var(--neutral-150)' : 'var(--mbl-success-bright)'"
                   d="M40,72C22.4,72,8,57.6,8,40C8,22.4,22.4,8,40,8c17.6,0,32,14.4,32,32c0,1.1-0.9,2-2,2s-2-0.9-2-2c0-15.4-12.6-28-28-28S12,24.6,12,40s12.6,28,28,28c1.1,0,2,0.9,2,2S41.1,72,40,72z"
@@ -81,10 +81,10 @@
                 width="100%"
                 height="100%"
                 :stroke="chapterReport.complete ? 'var(--mbl-success-bright)' : 'transparent'"
-                :draw="justCompletedChapter === `${bookReport.bookIndex}.${chapterReport.chapterIndex}`"
+                :draw="celebratingChapters.has(`${bookReport.bookIndex}.${chapterReport.chapterIndex}`)"
               />
               <particle-burst
-                v-if="justCompletedChapter === `${bookReport.bookIndex}.${chapterReport.chapterIndex}`"
+                v-if="celebratingChapters.has(`${bookReport.bookIndex}.${chapterReport.chapterIndex}`)"
                 :count="8"
                 :min-distance="20"
                 :max-distance="40"
@@ -143,7 +143,10 @@ type BookReport = {
 
 const logEntriesStore = useLogEntriesStore();
 const computeBusy = ref(false);
-const busyChapter = ref<string | null>(null);
+// Keyed by `bookIndex.chapterIndex`. Sets rather than a single key so several
+// chapters can be in flight — and celebrating — at once: tapping a second
+// chapter must not cancel the first one's animation.
+const busyChapters = ref(new Set<string>());
 const bookReports = ref<BookReport[]>([]);
 
 const bookCount = Bible.getBookCount();
@@ -152,35 +155,43 @@ for (let i = 1; i <= bookCount; i++) {
   expandedBooks.value[i] = false;
 }
 
-const busy = computed(() => Boolean(busyChapter.value || computeBusy.value));
+const busy = computed(() => Boolean(busyChapters.value.size || computeBusy.value));
 
 // Only a chapter marked read *in this session* celebrates; everything rendered
-// from the progress snapshot on load stays static. `justCompletedChapter` holds
-// the one `bookIndex.chapterIndex` currently animating.
+// from the progress snapshot on load stays static. `celebratingChapters` holds
+// every `bookIndex.chapterIndex` currently animating, each with its own expiry
+// timer, so overlapping celebrations run to completion independently.
 // CHECKMARK_DRAW_MS matches the `checkmark-draw` duration in CheckmarkIcon.vue
 // and is handed to ParticleBurst as its delay, so the dots leave the mark just
 // as the stroke lands. CELEBRATION_MS covers that plus the burst's own jitter
 // and 700ms flight, with a little buffer.
 const CHECKMARK_DRAW_MS = 400;
 const CELEBRATION_MS = 1600;
-const justCompletedChapter = ref<string | null>(null);
-let celebrationTimer: ReturnType<typeof setTimeout> | null = null;
+const celebratingChapters = ref(new Set<string>());
+const celebrationTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
-function endCelebration() {
-  if (celebrationTimer) {
-    clearTimeout(celebrationTimer);
-    celebrationTimer = null;
+function endCelebration(key: string) {
+  const timer = celebrationTimers.get(key);
+  if (timer) {
+    clearTimeout(timer);
+    celebrationTimers.delete(key);
   }
-  justCompletedChapter.value = null;
+  celebratingChapters.value.delete(key);
+}
+
+function endAllCelebrations() {
+  for (const key of [...celebrationTimers.keys()]) {
+    endCelebration(key);
+  }
 }
 
 function celebrateChapter(key: string) {
-  endCelebration();
-  justCompletedChapter.value = key;
-  celebrationTimer = setTimeout(() => {
-    celebrationTimer = null;
-    justCompletedChapter.value = null;
-  }, CELEBRATION_MS);
+  endCelebration(key);
+  celebratingChapters.value.add(key);
+  celebrationTimers.set(key, setTimeout(() => {
+    celebrationTimers.delete(key);
+    celebratingChapters.value.delete(key);
+  }, CELEBRATION_MS));
 }
 
 // Per-book/chapter completion comes straight from the shared progress snapshot
@@ -190,9 +201,15 @@ function celebrateChapter(key: string) {
 function getBookReports() {
   computeBusy.value = true;
 
-  const cached = BrowserCache.get(CACHE_KEY);
-  if (cached) {
-    bookReports.value = JSON.parse(cached) as BookReport[];
+  // Only worth reading on the first pass, to paint something before the log
+  // entries land. On a recompute triggered by a toggle it would parse 60-odd KB
+  // and render a full stale grid microseconds before the fresh one replaces it —
+  // a wasted render that lands right on top of the completion animation.
+  if (!bookReports.value.length) {
+    const cached = BrowserCache.get(CACHE_KEY);
+    if (cached) {
+      bookReports.value = JSON.parse(cached) as BookReport[];
+    }
   }
 
   const progress = computeBibleProgress(logEntriesStore.currentLogEntries);
@@ -220,11 +237,15 @@ function toggleBook(bookIndex: number) {
 }
 
 async function toggleChapter(bookIndex: number, chapterIndex: number) {
-  if (busyChapter.value) { return; }
+  const key = `${bookIndex}.${chapterIndex}`;
+  // Only this chapter is locked while its request is in flight, so a second
+  // chapter tapped straight after is still handled rather than dropped.
+  if (busyChapters.value.has(key)) { return; }
   const toastStore = useToastStore();
-  busyChapter.value = `${bookIndex}.${chapterIndex}`;
-  // Don't let a still-running celebration bleed into the next interaction.
-  endCelebration();
+  busyChapters.value.add(key);
+  // Don't let this chapter's still-running celebration bleed into its next
+  // interaction; other chapters' celebrations are unaffected.
+  endCelebration(key);
 
   const date = dayjs().format('YYYY-MM-DD');
   const startVerseId = Bible.makeVerseId(bookIndex, chapterIndex, 1);
@@ -264,16 +285,16 @@ async function toggleChapter(bookIndex: number, chapterIndex: number) {
     const createdEntry = await logEntriesStore.createLogEntry({ date, startVerseId, endVerseId });
     if (createdEntry) {
       await getBookReports();
-      // Flagged before `busyChapter` clears below, so the checkmark replaces the
+      // Flagged before the busy flag clears below, so the checkmark replaces the
       // spinner in a single render with `draw` already true — the animation runs
       // off a freshly mounted element rather than a class toggle.
-      celebrateChapter(`${bookIndex}.${chapterIndex}`);
+      celebrateChapter(key);
     }
     else {
       toastStore.add({ type: 'error', text: t('unable_to_mark_complete') });
     }
   }
-  busyChapter.value = null;
+  busyChapters.value.delete(key);
 }
 
 onMounted(async () => {
@@ -281,7 +302,7 @@ onMounted(async () => {
   getBookReports();
 });
 
-onBeforeUnmount(endCelebration);
+onBeforeUnmount(endAllCelebrations);
 </script>
 
 <style scoped>
