@@ -422,6 +422,7 @@ export const pt = {
   query_passage_match_exclusive_desc:
     "Mostra notas com passagens totalmente dentro da passagem selecionada.",
   query_sort: "Ordenar",
+  query_sort_passage: "Passagem",
   query_sort_newest: "Mais recentes primeiro",
   query_sort_oldest: "Mais antigas primeiro",
 

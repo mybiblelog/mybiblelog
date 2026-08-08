@@ -257,6 +257,34 @@ describe('passage-notes.test.js', () => {
       }
     });
 
+    it('can sort by passage order', async () => {
+      const testUser = await createTestUser();
+      try {
+        // Created later-passage first, so passage order disagrees with createdAt order
+        await requestApi
+          .post('/api/passage-notes')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send(passageNote2);
+
+        await requestApi
+          .post('/api/passage-notes')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send(passageNote1);
+
+        const response = await requestApi
+          .get('/api/passage-notes?sortOn=passage&sortDirection=ascending'
+            + '&filterPassageStartVerseId=101001001&filterPassageEndVerseId=101001010')
+          .set('Authorization', `Bearer ${testUser.token}`);
+        expect(response.status).toBe(200);
+        expect(response.body.data.map((note: { content: string }) => note.content))
+          .toEqual([passageNote1.content, passageNote2.content]);
+        expect(response.body.meta.pagination.size).toBe(2);
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
     it('can sort by date', async () => {
       const testUser = await createTestUser();
       try {

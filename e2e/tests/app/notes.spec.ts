@@ -213,6 +213,52 @@ test.describe('Notes page', () => {
     await expect(page.getByTestId('passage-note')).toContainText('Within chapter one');
   });
 
+  test('passage filter defaults to passage order, sorting by earliest overlapping passage', async ({ page, api }) => {
+    // Seeded so creation order is the reverse of scripture order: newest-first
+    // and passage order disagree, so the assertions can tell them apart.
+    await seedNote(api, {
+      content: 'Opening and closing',
+      passages: [
+        { startVerseId: verseId(BOOK.GENESIS, 1, 20), endVerseId: verseId(BOOK.GENESIS, 1, 22) },
+        { startVerseId: verseId(BOOK.GENESIS, 1, 2), endVerseId: verseId(BOOK.GENESIS, 1, 3) },
+      ],
+    });
+    await seedNote(api, {
+      content: 'Middle of the chapter',
+      passages: [{ startVerseId: verseId(BOOK.GENESIS, 1, 10), endVerseId: verseId(BOOK.GENESIS, 1, 12) }],
+    });
+
+    await page.goto('/notes');
+    // Wait for hydration (both seeded notes rendered) before interacting,
+    // otherwise the fill lands pre-hydration and the query draft stays clean.
+    await expect(page.getByTestId('passage-note')).toHaveCount(2);
+    // Newest first (default): the second note appears on top.
+    await expect(page.getByTestId('passage-note').first()).toContainText('Middle of the chapter');
+
+    const sidebar = page.locator('.notes-page__sidebar');
+    // The passage order option only exists while a passage filter is set.
+    await expect(sidebar.getByTestId('notes-query-sort-passage')).toHaveCount(0);
+
+    const passageInput = sidebar.getByTestId('notes-query-passage');
+    await passageInput.fill('Genesis 1:1-31');
+    await passageInput.blur();
+
+    // Choosing a passage auto-selects passage order.
+    await expect(sidebar.getByTestId('notes-query-sort-passage')).toBeChecked();
+    await sidebar.getByTestId('notes-query-apply').click();
+
+    // Ordered by each note's earliest passage overlapping the filter: the
+    // multi-passage note leads on Genesis 1:2, ahead of Genesis 1:10.
+    await expect(page.getByTestId('passage-note').first()).toContainText('Opening and closing');
+    await expect(page).toHaveURL(/filterPassageStartVerseId=/);
+    await expect(page).not.toHaveURL(/sortOn=/);
+
+    // Clearing the passage filter reverts to newest first.
+    await passageInput.fill('');
+    await passageInput.blur();
+    await expect(sidebar.getByTestId('notes-query-sort-newest')).toBeChecked();
+  });
+
   test('sort order can be reversed to oldest first', async ({ page, api }) => {
     await seedNote(api, { content: 'First seeded note', passages: [] });
     await seedNote(api, { content: 'Second seeded note', passages: [] });

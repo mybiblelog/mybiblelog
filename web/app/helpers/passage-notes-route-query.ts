@@ -1,13 +1,17 @@
 import { clamp, parseIntOr, pickEnum, MAX_PAGE_SIZE } from './route-query-codec';
 
 export type PassageNotesSortDirection = 'ascending' | 'descending';
+export type PassageNotesSortOn = 'createdAt' | 'passage';
 export type PassageNotesTagMatching = 'any' | 'all' | 'exact';
 export type PassageNotesPassageMatching = 'inclusive' | 'exclusive';
+
+const SORT_ON_VALUES = ['createdAt', 'passage'] as const;
+const SORT_DIRECTION_VALUES = ['ascending', 'descending'] as const;
 
 export type PassageNotesQuery = {
   limit: number;
   offset: number;
-  sortOn: string;
+  sortOn: PassageNotesSortOn;
   sortDirection: PassageNotesSortDirection;
   filterTags: string[];
   filterTagMatching: PassageNotesTagMatching;
@@ -33,6 +37,21 @@ const DEFAULT_PASSAGE_NOTES_QUERY: PassageNotesQuery = {
   filterPassageMatching: 'inclusive',
 };
 
+/**
+ * Sorting defaults to scripture order whenever a passage filter is in effect —
+ * reading order is the point of a passage-scoped list. Both the decoder and the
+ * encoder route through this so URL round-trips stay symmetric, which also means
+ * deep links that only carry passage params land in Passage Order for free.
+ */
+export function defaultPassageNotesSort(hasPassageFilter: boolean): {
+  sortOn: PassageNotesSortOn;
+  sortDirection: PassageNotesSortDirection;
+} {
+  return hasPassageFilter
+    ? { sortOn: 'passage', sortDirection: 'ascending' }
+    : { sortOn: 'createdAt', sortDirection: 'descending' };
+}
+
 function asStringArray(value: unknown): string[] {
   if (value === null || value === undefined) { return []; }
   if (Array.isArray(value)) { return value.map(v => `${v}`); }
@@ -48,11 +67,14 @@ export function decodePassageNotesRouteQuery(routeQuery: RouteQueryLike = {}): P
   const filterPassageStartVerseId = parseIntOr(routeQuery.filterPassageStartVerseId, DEFAULT_PASSAGE_NOTES_QUERY.filterPassageStartVerseId);
   const filterPassageEndVerseId = parseIntOr(routeQuery.filterPassageEndVerseId, DEFAULT_PASSAGE_NOTES_QUERY.filterPassageEndVerseId);
 
+  const hasPassageFilter = !!(filterPassageStartVerseId && filterPassageEndVerseId);
+  const sortDefaults = defaultPassageNotesSort(hasPassageFilter);
+
   return {
     limit: clamp(parseIntOr(routeQuery.limit, DEFAULT_PASSAGE_NOTES_QUERY.limit), 1, MAX_PAGE_SIZE),
     offset: Math.max(0, parseIntOr(routeQuery.offset, DEFAULT_PASSAGE_NOTES_QUERY.offset)),
-    sortOn: `${routeQuery.sortOn ?? DEFAULT_PASSAGE_NOTES_QUERY.sortOn}`,
-    sortDirection: pickEnum(routeQuery.sortDirection, ['ascending', 'descending'] as const, DEFAULT_PASSAGE_NOTES_QUERY.sortDirection),
+    sortOn: pickEnum(routeQuery.sortOn, SORT_ON_VALUES, sortDefaults.sortOn),
+    sortDirection: pickEnum(routeQuery.sortDirection, SORT_DIRECTION_VALUES, sortDefaults.sortDirection),
     filterTags,
     filterTagMatching: pickEnum(routeQuery.filterTagMatching, ['any', 'all', 'exact'] as const, DEFAULT_PASSAGE_NOTES_QUERY.filterTagMatching),
     searchText: typeof routeQuery.searchText === 'string' ? routeQuery.searchText : `${routeQuery.searchText ?? DEFAULT_PASSAGE_NOTES_QUERY.searchText}`,
@@ -63,12 +85,22 @@ export function decodePassageNotesRouteQuery(routeQuery: RouteQueryLike = {}): P
 }
 
 export function encodePassageNotesQueryToRoute(query: Partial<PassageNotesQuery> = {}): RouteQueryOut {
-  const merged: PassageNotesQuery = { ...DEFAULT_PASSAGE_NOTES_QUERY, ...(query || {}) };
+  const provided = query || {};
+  // Callers that deep-link into /notes pass a passage filter and no sort at all
+  // (see the book/Bible report pages), so the contextual default has to be layered
+  // in before the caller's own values — otherwise an absent sort would resolve to
+  // createdAt and get written into the URL as an override.
+  const hasPassageFilter = !!(
+    parseIntOr(provided.filterPassageStartVerseId, 0) && parseIntOr(provided.filterPassageEndVerseId, 0)
+  );
+  const sortDefaults = defaultPassageNotesSort(hasPassageFilter);
+
+  const merged: PassageNotesQuery = { ...DEFAULT_PASSAGE_NOTES_QUERY, ...sortDefaults, ...provided };
   const normalized: PassageNotesQuery = {
     limit: clamp(parseIntOr(merged.limit, DEFAULT_PASSAGE_NOTES_QUERY.limit), 1, MAX_PAGE_SIZE),
     offset: Math.max(0, parseIntOr(merged.offset, DEFAULT_PASSAGE_NOTES_QUERY.offset)),
-    sortOn: `${merged.sortOn ?? DEFAULT_PASSAGE_NOTES_QUERY.sortOn}`,
-    sortDirection: pickEnum(merged.sortDirection, ['ascending', 'descending'] as const, DEFAULT_PASSAGE_NOTES_QUERY.sortDirection),
+    sortOn: pickEnum(merged.sortOn, SORT_ON_VALUES, sortDefaults.sortOn),
+    sortDirection: pickEnum(merged.sortDirection, SORT_DIRECTION_VALUES, sortDefaults.sortDirection),
     filterTags: Array.isArray(merged.filterTags) ? merged.filterTags : [],
     filterTagMatching: pickEnum(merged.filterTagMatching, ['any', 'all', 'exact'] as const, DEFAULT_PASSAGE_NOTES_QUERY.filterTagMatching),
     searchText: typeof merged.searchText === 'string' ? merged.searchText : `${merged.searchText ?? ''}`,
@@ -85,10 +117,10 @@ export function encodePassageNotesQueryToRoute(query: Partial<PassageNotesQuery>
   if (normalized.offset !== DEFAULT_PASSAGE_NOTES_QUERY.offset) {
     out.offset = `${normalized.offset}`;
   }
-  if (normalized.sortOn !== DEFAULT_PASSAGE_NOTES_QUERY.sortOn) {
+  if (normalized.sortOn !== sortDefaults.sortOn) {
     out.sortOn = normalized.sortOn;
   }
-  if (normalized.sortDirection !== DEFAULT_PASSAGE_NOTES_QUERY.sortDirection) {
+  if (normalized.sortDirection !== sortDefaults.sortDirection) {
     out.sortDirection = normalized.sortDirection;
   }
 
@@ -108,7 +140,6 @@ export function encodePassageNotesQueryToRoute(query: Partial<PassageNotesQuery>
     out.filterTagMatching = normalized.filterTagMatching;
   }
 
-  const hasPassageFilter = !!(normalized.filterPassageStartVerseId && normalized.filterPassageEndVerseId);
   if (hasPassageFilter) {
     out.filterPassageStartVerseId = `${normalized.filterPassageStartVerseId}`;
     out.filterPassageEndVerseId = `${normalized.filterPassageEndVerseId}`;

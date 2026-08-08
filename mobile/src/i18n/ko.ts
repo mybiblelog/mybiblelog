@@ -411,6 +411,7 @@ export const ko = {
   query_passage_match_exclusive_desc:
     "선택한 구절 안에 완전히 포함되는 구절을 가진 노트를 표시합니다.",
   query_sort: "정렬",
+  query_sort_passage: "본문순",
   query_sort_newest: "최신순",
   query_sort_oldest: "오래된 순",
 

@@ -7,7 +7,7 @@ jest.mock("@/src/api/notesApi", () => ({
 }));
 
 import { router } from "expo-router";
-import { initialNotesQuery, useNotesStore } from "@/src/stores/passageNotes";
+import { initialNotesQuery, notesActions, useNotesStore } from "@/src/stores/passageNotes";
 import { openNotesForRange } from "./openNotesForRange";
 
 beforeEach(() => {
@@ -35,5 +35,34 @@ describe("openNotesForRange", () => {
   it("defaults to inclusive matching (chapter View Notes)", () => {
     openNotesForRange(43003001, 43003036);
     expect(useNotesStore.getState().query.filterPassageMatching).toBe("inclusive");
+  });
+
+  it("defaults to passage order, since the list is passage-scoped", () => {
+    openNotesForRange(43003001, 43003036);
+
+    const query = useNotesStore.getState().query;
+    expect(query.sortOn).toBe("passage");
+    expect(query.sortDirection).toBe("ascending");
+  });
+
+  it("leaves the sort at newest-first when no passage range is applied", async () => {
+    await notesActions.resetQuery();
+
+    const query = useNotesStore.getState().query;
+    expect(query.sortOn).toBe("createdAt");
+    expect(query.sortDirection).toBe("descending");
+  });
+
+  it("keeps an explicit sort passed alongside a passage range", async () => {
+    await notesActions.resetQuery({
+      filterPassageStartVerseId: 43003001,
+      filterPassageEndVerseId: 43003036,
+      sortOn: "createdAt",
+      sortDirection: "descending",
+    });
+
+    const query = useNotesStore.getState().query;
+    expect(query.sortOn).toBe("createdAt");
+    expect(query.sortDirection).toBe("descending");
   });
 });

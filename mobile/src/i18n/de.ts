@@ -426,6 +426,7 @@ export const de = {
   query_passage_match_exclusive_desc:
     "Zeigt Notizen mit Textstellen, die vollständig innerhalb der gewählten Textstelle liegen.",
   query_sort: "Sortieren",
+  query_sort_passage: "Bibelstelle",
   query_sort_newest: "Neueste zuerst",
   query_sort_oldest: "Älteste zuerst",
 

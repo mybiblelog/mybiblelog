@@ -4,6 +4,7 @@ import {
   type NotesQuery,
   type PassageNote,
   createNote,
+  defaultNotesSort,
   deleteNote,
   fetchNotesPage,
   updateNote,
@@ -118,7 +119,21 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
   },
 
   async resetQuery(override) {
-    set({ query: cloneQuery({ ...initialNotesQuery, ...override, offset: 0 }) });
+    // Callers that deep-link into the notes tab pass a passage filter and no
+    // sort (see `openNotesForRange`), so the contextual sort default is layered
+    // in under the caller's own values — the web route-query decoder does the
+    // same when a URL carries passage params but no sort.
+    const hasPassageFilter = Boolean(
+      override?.filterPassageStartVerseId && override?.filterPassageEndVerseId
+    );
+    set({
+      query: cloneQuery({
+        ...initialNotesQuery,
+        ...defaultNotesSort(hasPassageFilter),
+        ...override,
+        offset: 0,
+      }),
+    });
     await get().loadFirstPage();
   },
 
@@ -180,13 +195,18 @@ export function useNotesQuery(): NotesQuery {
 
 /** Whether any view option differs from the defaults (web `hasAppliedViewOptions`). */
 export function selectHasAppliedViewOptions(query: NotesQuery): boolean {
+  const hasPassageFilter = Boolean(
+    query.filterPassageStartVerseId && query.filterPassageEndVerseId
+  );
+  const sortDefaults = defaultNotesSort(hasPassageFilter);
   return (
     query.searchText !== initialNotesQuery.searchText ||
     query.filterTags.length > 0 ||
     query.filterTagMatching !== initialNotesQuery.filterTagMatching ||
-    Boolean(query.filterPassageStartVerseId && query.filterPassageEndVerseId) ||
+    hasPassageFilter ||
     query.filterPassageMatching !== initialNotesQuery.filterPassageMatching ||
-    query.sortDirection !== initialNotesQuery.sortDirection ||
+    query.sortOn !== sortDefaults.sortOn ||
+    query.sortDirection !== sortDefaults.sortDirection ||
     query.limit !== initialNotesQuery.limit
   );
 }

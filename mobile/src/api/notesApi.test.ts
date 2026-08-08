@@ -1,4 +1,9 @@
-import { buildNotesQueryString, parseApiPassageNote, type NotesQuery } from "@/src/api/notesApi";
+import {
+  buildNotesQueryString,
+  defaultNotesSort,
+  parseApiPassageNote,
+  type NotesQuery,
+} from "@/src/api/notesApi";
 
 const baseQuery: NotesQuery = {
   limit: 10,
@@ -45,6 +50,28 @@ describe("buildNotesQueryString", () => {
     expect(pair).toContain("filterPassageStartVerseId=1001001");
     expect(pair).toContain("filterPassageEndVerseId=1001031");
     expect(pair).toContain("filterPassageMatching=exclusive");
+  });
+
+  it("sends the passage sort", () => {
+    const qs = buildNotesQueryString({
+      ...baseQuery,
+      sortOn: "passage",
+      sortDirection: "ascending",
+      filterPassageStartVerseId: 1001001,
+      filterPassageEndVerseId: 1001031,
+    });
+    expect(qs).toContain("sortOn=passage");
+    expect(qs).toContain("sortDirection=ascending");
+  });
+});
+
+describe("defaultNotesSort", () => {
+  it("is scripture order with a passage filter and newest-first without one", () => {
+    expect(defaultNotesSort(true)).toEqual({ sortOn: "passage", sortDirection: "ascending" });
+    expect(defaultNotesSort(false)).toEqual({
+      sortOn: "createdAt",
+      sortDirection: "descending",
+    });
   });
 });
 

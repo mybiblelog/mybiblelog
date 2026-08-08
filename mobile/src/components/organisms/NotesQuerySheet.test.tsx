@@ -52,4 +52,69 @@ describe("NotesQuerySheet", () => {
     fireEvent.press(getByLabelText("Apply"));
     expect(onApply).toHaveBeenCalledWith(expect.objectContaining({ sortDirection: "ascending" }));
   });
+
+  describe("passage order sorting", () => {
+    // Genesis 1:1-31, as `openNotesForRange` would have set it up.
+    const passageQuery = {
+      ...initialNotesQuery,
+      filterTags: [],
+      filterPassageStartVerseId: 101001001,
+      filterPassageEndVerseId: 101001031,
+      sortOn: "passage" as const,
+      sortDirection: "ascending" as const,
+    };
+
+    it("offers passage order only while a passage filter is set", () => {
+      expect(renderSheet().queryByText("Passage")).toBeNull();
+      expect(renderPassageSheet().getByText("Passage")).toBeTruthy();
+    });
+
+    it("keeps passage order when applying an unrelated change", () => {
+      const { getByPlaceholderText, getByLabelText, onApply } = renderPassageSheet();
+      fireEvent.changeText(getByPlaceholderText("Search note text…"), "grace");
+      fireEvent.press(getByLabelText("Apply"));
+      expect(onApply).toHaveBeenCalledWith(
+        expect.objectContaining({ sortOn: "passage", sortDirection: "ascending" })
+      );
+    });
+
+    it("reverts to newest first when the passage filter is cleared", () => {
+      const { getByText, getByLabelText, onApply } = renderPassageSheet();
+      fireEvent.press(getByText("Clear passage"));
+      fireEvent.press(getByLabelText("Apply"));
+      expect(onApply).toHaveBeenCalledWith(
+        expect.objectContaining({
+          sortOn: "createdAt",
+          sortDirection: "descending",
+          filterPassageStartVerseId: 0,
+          filterPassageEndVerseId: 0,
+        })
+      );
+    });
+
+    it("does not stomp an explicit sort when the passage filter is cleared", () => {
+      const { getByText, getByLabelText, onApply } = renderPassageSheet();
+      fireEvent.press(getByText("Oldest First"));
+      fireEvent.press(getByText("Clear passage"));
+      fireEvent.press(getByLabelText("Apply"));
+      expect(onApply).toHaveBeenCalledWith(
+        expect.objectContaining({ sortOn: "createdAt", sortDirection: "ascending" })
+      );
+    });
+
+    function renderPassageSheet() {
+      const onApply = jest.fn();
+      return {
+        onApply,
+        ...renderWithProviders(
+          <NotesQuerySheet
+            visible
+            appliedQuery={passageQuery}
+            onApply={onApply}
+            onClose={jest.fn()}
+          />
+        ),
+      };
+    }
+  });
 });

@@ -102,6 +102,12 @@
 
     <div class="mbl-field">
       <label class="mbl-label">{{ t('sort') }}</label>
+      <div v-if="hasSelectedPassage" class="mbl-control">
+        <label class="mbl-radio">
+          <input v-model="draftSort" type="radio" value="passage:ascending" data-testid="notes-query-sort-passage">
+          {{ t('sort_passage_order') }}
+        </label>
+      </div>
       <div class="mbl-control">
         <label class="mbl-radio">
           <input v-model="draftSort" type="radio" value="createdAt:descending" data-testid="notes-query-sort-newest">
@@ -168,7 +174,10 @@ import AppModal from '~/components/popups/AppModal.vue';
 import PassageNoteTagSelector from '~/components/forms/PassageNoteTagSelector.vue';
 import VerseInput from '~/components/forms/VerseInput.vue';
 import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
-import type { PassageNotesQuery, PassageNotesSortDirection } from '~/helpers/passage-notes-route-query';
+import { defaultPassageNotesSort } from '~/helpers/passage-notes-route-query';
+import type { PassageNotesQuery, PassageNotesSortDirection, PassageNotesSortOn } from '~/helpers/passage-notes-route-query';
+
+type DraftPassageRange = { startVerseId: number; endVerseId: number };
 
 type ManagedQuery = Pick<
   PassageNotesQuery,
@@ -239,7 +248,27 @@ const selectedTags = useResolvedPassageNoteTags(() => draft.value.filterTags ?? 
   defaultColor: 'var(--mbl-bg-disabled)',
 });
 
-const passageRangeModel = usePassageRangeModel(draft, setDraft);
+const baseRangeModel = usePassageRangeModel(draft, setDraft);
+
+// Choosing a passage flips the sort to scripture order, and clearing it flips
+// back — but only from the other mode's default, so an explicit choice (Oldest
+// First, or Newest First alongside a passage) is never stomped. This lives in
+// the setter rather than a watcher on `hasSelectedPassage` because `useDraftQuery`
+// re-syncs the draft from `appliedQuery` whenever it is clean; a watcher would
+// fire on that sync too and spuriously dirty the draft.
+const passageRangeModel = computed<DraftPassageRange | null>({
+  get: () => baseRangeModel.value,
+  set(range: DraftPassageRange | null) {
+    const hadPassage = Boolean(baseRangeModel.value);
+    const hasPassage = Boolean(range?.startVerseId && range?.endVerseId);
+    baseRangeModel.value = range;
+    if (hasPassage === hadPassage) { return; }
+    const previousDefault = defaultPassageNotesSort(hadPassage);
+    if (draft.value.sortOn === previousDefault.sortOn && draft.value.sortDirection === previousDefault.sortDirection) {
+      setDraft(defaultPassageNotesSort(hasPassage));
+    }
+  },
+});
 
 const onlyUntaggedNotes = computed({
   get(): boolean {
@@ -264,9 +293,11 @@ const draftSort = computed({
   },
   set(value: string) {
     const [sortOn, sortDirection] = (value || '').split(':');
+    const validSortOn: PassageNotesSortOn =
+      sortOn === 'createdAt' || sortOn === 'passage' ? sortOn : DEFAULT_DRAFT.sortOn;
     const validSortDirection: PassageNotesSortDirection =
       sortDirection === 'ascending' || sortDirection === 'descending' ? sortDirection : DEFAULT_DRAFT.sortDirection;
-    setDraft({ sortOn: sortOn || DEFAULT_DRAFT.sortOn, sortDirection: validSortDirection });
+    setDraft({ sortOn: validSortOn, sortDirection: validSortDirection });
   },
 });
 
@@ -395,6 +426,7 @@ function onTagIdsChange(tagIds: Array<string | number>) {
     "passage_match_inclusive_description": "Matches a note if any of its verses overlap your filter passage.",
     "passage_match_exclusive_description": "Matches a note if any of its verses are within your filter passage.",
     "sort": "Sort",
+    "sort_passage_order": "Passage Order",
     "sort_newest_first": "Newest First",
     "sort_oldest_first": "Oldest First",
     "page_size": "Page Size",
@@ -422,6 +454,7 @@ function onTagIdsChange(tagIds: Array<string | number>) {
     "passage_match_inclusive_description": "Stimmt mit einer Notiz überein, wenn sich einer ihrer Verse mit Ihrer Filterpassage überschneidet.",
     "passage_match_exclusive_description": "Stimmt mit einer Notiz überein, wenn einer ihrer Verse innerhalb Ihrer Filterpassage liegt.",
     "sort": "Sortieren",
+    "sort_passage_order": "Nach Bibelstelle",
     "sort_newest_first": "Neueste zuerst",
     "sort_oldest_first": "Älteste zuerst",
     "page_size": "Seitengröße",
@@ -449,6 +482,7 @@ function onTagIdsChange(tagIds: Array<string | number>) {
     "passage_match_inclusive_description": "Coincide con una nota si alguno de sus versículos se superpone a su pasaje de filtro.",
     "passage_match_exclusive_description": "Coincide con una nota si alguno de sus versículos está dentro de su pasaje de filtro.",
     "sort": "Ordenar",
+    "sort_passage_order": "Orden del pasaje",
     "sort_newest_first": "Más reciente primero",
     "sort_oldest_first": "Más antiguo primero",
     "page_size": "Tamaño de página",
@@ -476,6 +510,7 @@ function onTagIdsChange(tagIds: Array<string | number>) {
     "passage_match_inclusive_description": "Correspond si l’un de ses versets chevauche votre passage de filtre.",
     "passage_match_exclusive_description": "Correspond si l’un de ses versets se trouve dans votre passage de filtre.",
     "sort": "Trier",
+    "sort_passage_order": "Ordre des passages",
     "sort_newest_first": "Le plus récent d'abord",
     "sort_oldest_first": "Plus ancien en premier",
     "page_size": "Taille de page",
@@ -503,6 +538,7 @@ function onTagIdsChange(tagIds: Array<string | number>) {
     "passage_match_inclusive_description": "필터 구절과 한 절이라도 겹치는 노트를 찾습니다.",
     "passage_match_exclusive_description": "필터 구절 범위 내 노트를 찾습니다.",
     "sort": "정렬",
+    "sort_passage_order": "본문 순서",
     "sort_newest_first": "최신순",
     "sort_oldest_first": "오래된순",
     "page_size": "페이지 크기",
@@ -530,6 +566,7 @@ function onTagIdsChange(tagIds: Array<string | number>) {
     "passage_match_inclusive_description": "Corresponde se algum de seus versículos se sobrepõe à sua passagem de filtro.",
     "passage_match_exclusive_description": "Corresponde se algum de seus versículos está dentro da sua passagem de filtro.",
     "sort": "Ordenar",
+    "sort_passage_order": "Ordem da passagem",
     "sort_newest_first": "Mais Recentes Primeiro",
     "sort_oldest_first": "Mais Antigos Primeiro",
     "page_size": "Tamanho da página",
@@ -557,6 +594,7 @@ function onTagIdsChange(tagIds: Array<string | number>) {
     "passage_match_inclusive_description": "Збігається, якщо будь-який її вірш перетинається з вашим фільтрованим уривком.",
     "passage_match_exclusive_description": "Збігається, якщо будь-який її вірш знаходиться всередині вашого фільтрованого уривка.",
     "sort": "Сортувати",
+    "sort_passage_order": "За порядком уривків",
     "sort_newest_first": "Спочатку нові",
     "sort_oldest_first": "Спочатку старі",
     "page_size": "Розмір сторінки",
