@@ -181,7 +181,7 @@ export default function Index() {
             <View style={styles.viewAll}>
               <Button
                 label={t("today_view_all_reading")}
-                variant="ghost"
+                variant="secondary"
                 testID="today.view-all-reading"
                 // Mobile has no all-entries list screen; Calendar is the
                 // nearest surface for browsing past reading.

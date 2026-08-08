@@ -138,7 +138,7 @@ export default function BibleIndex() {
         <Button
           label={t("progress_title")}
           testID="bible.progress-link"
-          variant="ghost"
+          variant="secondary"
           size="sm"
           leftIcon="stats-chart-outline"
           onPress={() => router.push("/bible/progress")}

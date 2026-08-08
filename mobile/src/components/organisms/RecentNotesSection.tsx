@@ -64,7 +64,7 @@ export function RecentNotesSection() {
 
       <Button
         label={t("notes_view_all")}
-        variant="ghost"
+        variant="secondary"
         onPress={() => router.push("/(tabs)/notes")}
         style={styles.viewAll}
       />
