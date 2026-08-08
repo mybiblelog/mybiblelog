@@ -346,7 +346,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   headerTitle: { flex: 1 },
-  scroll: { maxHeight: 480 },
+  // maxHeight is the resting size; flexShrink lets it give way further when the
+  // keyboard is up and BottomSheet has less room to hand out.
+  scroll: { maxHeight: 480, flexShrink: 1 },
   form: { gap: spacing.md },
   section: { gap: spacing.xs },
   sectionHeader: {

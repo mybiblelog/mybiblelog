@@ -54,13 +54,7 @@ describe("(tabs) layout", () => {
     const calendar = capturedScreens.find((s) => s.name === "calendar") as any;
     expect(calendar.options.href).toBeNull();
     const barred = capturedScreens.filter((s) => (s as any).options?.href !== null);
-    expect(barred.map((s) => s.name)).toEqual([
-      "index",
-      "bible",
-      "checklist",
-      "notes",
-      "settings",
-    ]);
+    expect(barred.map((s) => s.name)).toEqual(["index", "bible", "checklist", "notes", "settings"]);
   });
 
   it("no longer uses a per-tab tabPress listener (popToTopOnBlur replaces it)", () => {

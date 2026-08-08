@@ -1,7 +1,7 @@
 import { Bible } from "@mybiblelog/shared";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Platform, StyleSheet, View } from "react-native";
+import { Platform, ScrollView, StyleSheet, View } from "react-native";
 import type { LogEntry } from "@/src/types/log-entry";
 import { formatLongDate, parseYmdToDate } from "@/src/i18n/date";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
@@ -140,7 +140,7 @@ export function LogEntryEditorModal({
 
   return (
     <>
-      <BottomSheet visible={visible} onClose={requestClose} swipeToDismiss={false}>
+      <BottomSheet visible={visible} onClose={requestClose} variant="full" swipeToDismiss={false}>
         <View style={styles.header}>
           <Text variant="heading" style={styles.headerTitle}>
             {title}
@@ -160,7 +160,11 @@ export function LogEntryEditorModal({
           </Text>
         </View>
 
-        <View style={styles.form}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={styles.form}
+          keyboardShouldPersistTaps="handled"
+        >
           {Platform.OS === "web" ? (
             <InputField
               label={t("date")}
@@ -226,7 +230,7 @@ export function LogEntryEditorModal({
               style={styles.row2Item}
             />
           </View>
-        </View>
+        </ScrollView>
 
         <View style={styles.footer}>
           <Button label={t("close")} variant="secondary" onPress={requestClose} />
@@ -312,6 +316,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   previewText: { textAlign: "center" },
+  scroll: { flexShrink: 1 },
   form: { gap: spacing.sm },
   row2: { flexDirection: "row", gap: spacing.sm },
   row2Item: { flex: 1 },

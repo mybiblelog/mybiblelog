@@ -64,7 +64,7 @@ export function SelectSheet<T extends string | number>({
 
 const styles = StyleSheet.create({
   title: { paddingHorizontal: spacing.md, paddingBottom: spacing.sm },
-  list: { maxHeight: 420 },
+  list: { maxHeight: 420, flexShrink: 1 },
   listContent: { paddingBottom: spacing.xs },
   separator: { height: StyleSheet.hairlineWidth },
 });

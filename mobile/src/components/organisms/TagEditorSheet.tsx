@@ -82,7 +82,7 @@ export function TagEditorSheet({ visible, initialTag, onClose, onSaved }: Props)
   }
 
   return (
-    <BottomSheet visible={visible} onClose={onClose} swipeToDismiss={false}>
+    <BottomSheet visible={visible} onClose={onClose} variant="full" swipeToDismiss={false}>
       <View style={styles.header}>
         <Text variant="heading" style={styles.headerTitle}>
           {initialTag ? t("tag_editor_edit") : t("tag_editor_new")}
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   headerTitle: { flex: 1 },
-  scroll: { maxHeight: 440 },
+  scroll: { flexShrink: 1 },
   form: { gap: spacing.sm },
   colorSection: { gap: spacing.xs },
   swatchGrid: {

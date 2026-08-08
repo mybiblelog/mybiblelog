@@ -134,7 +134,7 @@ export function NoteEditorModal({
 
   return (
     <>
-      <BottomSheet visible={visible} onClose={requestClose} swipeToDismiss={false}>
+      <BottomSheet visible={visible} onClose={requestClose} variant="full" swipeToDismiss={false}>
         <View style={styles.header}>
           <Text variant="heading" style={styles.headerTitle}>
             {initialNote ? t("note_editor_edit") : t("note_editor_new")}
@@ -297,7 +297,9 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   headerTitle: { flex: 1 },
-  scroll: { maxHeight: 480 },
+  // Shrinks to whatever the sheet has left after the pinned header/footer, so
+  // the keyboard just makes the scroll area shorter instead of hiding Save.
+  scroll: { flexShrink: 1 },
   form: { gap: spacing.sm },
   section: { gap: spacing.xs },
   sectionHeader: {
