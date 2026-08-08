@@ -5,21 +5,16 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated from "react-native-reanimated";
 import { Bible, type BookProgress, type ChapterProgress } from "@mybiblelog/shared";
-import {
-  AnimatedList,
-  Card,
-  CARD_CONTENT_PADDING,
-  Icon,
-  ProgressBar,
-  Screen,
-  Spinner,
-  Text,
-} from "@/src/components";
+import { AnimatedList, Card, Icon, ProgressBar, Screen, Spinner, Text } from "@/src/components";
 import { fadeIn, radius, spacing, useTheme } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { useBibleProgress } from "@/src/stores/bibleProgress";
 import { logEntryActions, useLogEntryList } from "@/src/stores/logEntries";
 import { useToast } from "@/src/toast/ToastProvider";
+
+/** Card inset, matched to the Bible Books tiles so a collapsed book reads as
+ * lean as a book tile. Also the basis for the chapter grid's tile width. */
+const BOOK_CARD_PADDING = spacing.sm;
 
 const Separator = () => <View style={styles.separator} />;
 
@@ -96,7 +91,7 @@ const BookCard = memo(function BookCard({
   onToggleChapter: (bookIndex: number, chapterIndex: number) => void;
 }) {
   return (
-    <Card style={styles.bookCard}>
+    <Card padding="none" style={styles.bookCard}>
       <Pressable
         testID={`checklist.book-${book.bookIndex}`}
         onPress={() => onToggleBook(book.bookIndex)}
@@ -174,7 +169,7 @@ export default function Checklist() {
   // leaves a tile-sized hole on the right.
   const tileWidth = useMemo(() => {
     const gap = spacing.sm; // matches chaptersWrap gap
-    const available = windowWidth - spacing.pageGutter * 2 - CARD_CONTENT_PADDING * 2;
+    const available = windowWidth - spacing.pageGutter * 2 - BOOK_CARD_PADDING * 2;
     const columns = Math.max(1, Math.floor((available + gap) / (54 + gap)));
     return Math.floor((available - gap * (columns - 1)) / columns);
   }, [windowWidth]);
@@ -320,12 +315,12 @@ const styles = StyleSheet.create({
   pressed: { opacity: 0.7 },
   bookCard: {
     borderRadius: radius["2xl"],
+    padding: BOOK_CARD_PADDING,
   },
   bookHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingBottom: spacing.sm,
   },
   bookHeaderLeft: {
     flexDirection: "row",

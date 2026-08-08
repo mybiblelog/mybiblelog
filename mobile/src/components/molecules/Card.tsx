@@ -11,12 +11,6 @@ import { AnimatedPressable } from "../atoms/AnimatedPressable";
  */
 export type CardPadding = "content" | "list-item" | "none";
 
-/**
- * Inset of `padding="content"`, exported for layouts that have to size children
- * against the card's inner width (e.g. the checklist's chapter grid).
- */
-export const CARD_CONTENT_PADDING = spacing.xl;
-
 /** Callout tones, mirroring web's `.mbl-message--info` / `--success`. */
 export type CardTone = "neutral" | "info" | "success";
 
@@ -103,7 +97,7 @@ export function Card({
 
 const styles = StyleSheet.create({
   card: { maxWidth: "100%", position: "relative" },
-  paddingContent: { padding: CARD_CONTENT_PADDING },
+  paddingContent: { padding: spacing.xl },
   paddingListItem: { paddingVertical: spacing.xs, paddingHorizontal: spacing.md },
   // Toned callouts carry a visible edge, as web's .mbl-message does.
   toned: { borderWidth: StyleSheet.hairlineWidth },

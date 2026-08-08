@@ -1,4 +1,4 @@
-export { Card, CARD_CONTENT_PADDING } from "./Card";
+export { Card } from "./Card";
 export type { CardPadding, CardTone } from "./Card";
 export { CheckboxRow } from "./CheckboxRow";
 export { ErrorState } from "./ErrorState";
