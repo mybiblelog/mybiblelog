@@ -349,6 +349,8 @@ export const es = {
 
   settings_saved_successfully: "Guardado.",
   settings_save_invalid: "Revisa el valor e inténtalo de nuevo.",
+  settings_reading_daily_goal_invalid: "Introduce un número entero entre 1 y 1111.",
+  settings_reading_look_back_date_invalid: "Introduce una fecha con el formato AAAA-MM-DD.",
 
   calendar_today: "Hoy",
   calendar_no_entries: "No hay entradas",

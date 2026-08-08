@@ -348,6 +348,8 @@ export const pt = {
 
   settings_saved_successfully: "Salvo.",
   settings_save_invalid: "Verifique o valor e tente novamente.",
+  settings_reading_daily_goal_invalid: "Digite um número inteiro entre 1 e 1111.",
+  settings_reading_look_back_date_invalid: "Digite uma data no formato AAAA-MM-DD.",
 
   calendar_today: "Hoje",
   calendar_no_entries: "Sem Registros",

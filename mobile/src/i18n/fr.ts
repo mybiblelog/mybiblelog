@@ -352,6 +352,8 @@ export const fr = {
 
   settings_saved_successfully: "Enregistré.",
   settings_save_invalid: "Veuillez vérifier la valeur et réessayer.",
+  settings_reading_daily_goal_invalid: "Saisissez un nombre entier entre 1 et 1111.",
+  settings_reading_look_back_date_invalid: "Saisissez une date au format AAAA-MM-JJ.",
 
   calendar_today: "Aujourd'hui",
   calendar_no_entries: "Aucune entrée",

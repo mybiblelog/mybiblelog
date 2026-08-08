@@ -340,6 +340,8 @@ export const ko = {
 
   settings_saved_successfully: "저장되었습니다.",
   settings_save_invalid: "값을 확인하고 다시 시도해 주세요.",
+  settings_reading_daily_goal_invalid: "1에서 1111 사이의 정수를 입력해 주세요.",
+  settings_reading_look_back_date_invalid: "날짜를 YYYY-MM-DD 형식으로 입력해 주세요.",
 
   calendar_today: "오늘",
   calendar_no_entries: "기록 없음",

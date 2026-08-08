@@ -352,6 +352,8 @@ export const de = {
 
   settings_saved_successfully: "Gespeichert.",
   settings_save_invalid: "Bitte überprüfen Sie den Wert und versuchen Sie es erneut.",
+  settings_reading_daily_goal_invalid: "Geben Sie eine ganze Zahl zwischen 1 und 1111 ein.",
+  settings_reading_look_back_date_invalid: "Geben Sie ein Datum als JJJJ-MM-TT ein.",
 
   calendar_today: "Heute",
   calendar_no_entries: "Keine Einträge",

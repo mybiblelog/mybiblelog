@@ -374,6 +374,8 @@ export const en = {
 
   settings_saved_successfully: "Saved.",
   settings_save_invalid: "Please check the value and try again.",
+  settings_reading_daily_goal_invalid: "Enter a whole number between 1 and 1111.",
+  settings_reading_look_back_date_invalid: "Enter a date as YYYY-MM-DD.",
 
   calendar_today: "Today",
   calendar_no_entries: "No Entries",

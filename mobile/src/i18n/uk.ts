@@ -348,6 +348,8 @@ export const uk = {
 
   settings_saved_successfully: "Збережено.",
   settings_save_invalid: "Перевірте значення та спробуйте ще раз.",
+  settings_reading_daily_goal_invalid: "Введіть ціле число від 1 до 1111.",
+  settings_reading_look_back_date_invalid: "Введіть дату у форматі РРРР-ММ-ДД.",
 
   calendar_today: "Сьогодні",
   calendar_no_entries: "Немає записів",
