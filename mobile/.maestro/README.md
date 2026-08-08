@@ -27,7 +27,8 @@ npm run e2e:seed       # just create + seed a user, print its credentials
 
 `scripts/e2e/run.mjs` checks the adb device, runs `adb reverse tcp:8080`,
 disables emulator animations (so transitions and `waitForAnimationToEnd` are
-instant), seeds a throwaway user via the public API (`scripts/e2e/seed.mjs`,
+instant), turns off stylus handwriting (see below), seeds a throwaway user via
+the public API (`scripts/e2e/seed.mjs`,
 the same HTTP contract as `e2e/helpers/api-client.ts`), and passes the
 credentials to the flows as `E2E_EMAIL` / `E2E_PASSWORD`.
 
@@ -92,10 +93,28 @@ conditional) so the same flows should run unchanged.
 Also note: `03-offline-sync` restores connectivity in `onFlowComplete` so a
 mid-flow failure can't leave the emulator in airplane mode for later flows.
 
-Verified so far (dev build, Android emulator): `01-login` and
-`05-bible-progress` pass end-to-end; `02/03/04` are written and their earlier
-failures were dev-client interference (gear button, airplane-mode leak,
-launcher discovery), each now worked around but not yet re-verified green.
+## Emulator IME quirk (stylus handwriting)
+
+The emulator advertises a stylus-capable pointer, so Gboard opens text fields in
+**handwriting mode** instead of showing the soft keyboard. The first time that
+happens it pops a full-screen "Try out your stylus" onboarding dialog — its own
+window, covering everything — and Maestro's view hierarchy then contains only
+the IME plus system UI. Every app element disappears, so the next step fails
+with a misleading `Element not found` (this is what broke `04-notes-tags` at
+`tag-editor.save`). The runner disables it up front:
+
+```
+adb shell settings put secure stylus_handwriting_enabled 0
+```
+
+Anything that drives the app with Maestro outside `npm run e2e` (a bare
+`maestro test`, a fresh/wiped AVD) needs the same setting.
+
+Verified so far (dev build, Android emulator): the whole `smoke` set
+(`01`, `02`, `04`, `05`, `06`) passes end-to-end. `03-offline-sync` is written
+but not re-verified since its airplane-mode workaround. Earlier failures were
+all environment interference (dev-menu gear button, airplane-mode leak,
+launcher discovery, the stylus IME dialog below), not app bugs.
 
 ## Play Store screenshots (`.maestro/screenshots/`)
 
