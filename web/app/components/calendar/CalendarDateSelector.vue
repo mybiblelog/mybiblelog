@@ -33,7 +33,7 @@ function selectNext() {
 .calendar-date-selector {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
   color: var(--mbl-text-body);
   margin: 0 calc(-1 * var(--mbl-space-md));
 }
