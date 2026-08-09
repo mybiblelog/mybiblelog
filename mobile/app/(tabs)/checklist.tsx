@@ -4,7 +4,12 @@ import { useFocusEffect } from "expo-router";
 import { memo, useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated from "react-native-reanimated";
-import { Bible, type BookProgress, type ChapterProgress } from "@mybiblelog/shared";
+import {
+  Bible,
+  type BookProgress,
+  type ChapterProgress,
+  type TestamentFilter,
+} from "@mybiblelog/shared";
 import {
   AnimatedList,
   Card,
@@ -12,6 +17,7 @@ import {
   ProgressBar,
   Screen,
   ScreenHeader,
+  SegmentedControl,
   Spinner,
   Text,
 } from "@/src/components";
@@ -169,7 +175,20 @@ export default function Checklist() {
 
   const [busyChapter, setBusyChapter] = useState<string | null>(null);
   const [expandedBooks, setExpandedBooks] = useState<Record<string, boolean>>({});
+  const [testament, setTestament] = useState<TestamentFilter>("all");
   const { width: windowWidth } = useWindowDimensions();
+
+  // Purely a view filter: `progress` and `toggleChapter` keep working off the
+  // full 66-book list, and `expandedBooks` is keyed by absolute book index, so
+  // hiding a testament never disturbs what is expanded or what gets saved.
+  const filteredBooks = useMemo(() => {
+    if (!progress) return [];
+    return progress.books.filter((book) => {
+      if (testament === "old") return !Bible.isNewTestament(book.bookIndex);
+      if (testament === "new") return Bible.isNewTestament(book.bookIndex);
+      return true;
+    });
+  }, [progress, testament]);
 
   // Tiles expand to fill the card edge-to-edge: derive the column count from a
   // ~54pt minimum tile, then split the available width (minus gaps) evenly.
@@ -262,11 +281,18 @@ export default function Checklist() {
 
   return (
     <Screen padded>
-      <ScreenHeader
-        title={t("chapter_checklist")}
-        style={styles.header}
-        right={busy ? <Spinner /> : undefined}
-      />
+      <View style={styles.header}>
+        <ScreenHeader title={t("chapter_checklist")} right={busy ? <Spinner /> : undefined} />
+        <SegmentedControl
+          options={[
+            { value: "all", label: t("whole_bible") },
+            { value: "old", label: t("old_testament_short") },
+            { value: "new", label: t("new_testament_short") },
+          ]}
+          value={testament}
+          onChange={setTestament}
+        />
+      </View>
 
       {!progress ? (
         <Card>
@@ -276,15 +302,18 @@ export default function Checklist() {
         </Card>
       ) : (
         <AnimatedList
-          data={progress.books}
+          // Remounted per filter so the enter animation replays on a switch,
+          // matching the Bible Books list.
+          key={testament}
+          data={filteredBooks}
           // Rows expand/collapse in place; the item layout animation leaves
           // sibling books overlapping the expanded chapter grid, so opt out.
           animateItemLayout={false}
           keyExtractor={(b: BookProgress) => String(b.bookIndex)}
-          // Fixed-size list (66 books): render it all up front instead of
-          // FlatList's default incremental backfill, so the page doesn't
+          // Fixed-size list (66 books at most): render it all up front instead
+          // of FlatList's default incremental backfill, so the page doesn't
           // visibly grow after mount.
-          initialNumToRender={progress.books.length}
+          initialNumToRender={filteredBooks.length}
           contentContainerStyle={styles.listContent}
           renderItem={({ item }) => {
             const isExpanded = expandedBooks[String(item.bookIndex)] === true;
@@ -312,7 +341,7 @@ export default function Checklist() {
 }
 
 const styles = StyleSheet.create({
-  header: { marginBottom: spacing.sm },
+  header: { gap: spacing.sm, marginBottom: spacing.sm },
   listContent: {
     paddingBottom: spacing.listBottom,
   },

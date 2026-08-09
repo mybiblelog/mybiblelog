@@ -105,4 +105,35 @@ test.describe('Chapter Checklist', () => {
     await expect(page.getByTestId('toast')).toHaveText(/logged before today/i);
     await expect(chapter1).toHaveAttribute('data-complete', 'true');
   });
+
+  test('testament toggle filters the book list without losing expansion state', async ({ page }) => {
+    await page.goto('/checklist');
+    const books = page.getByTestId('book-card');
+
+    // Default view lists the whole Bible
+    await expect(books).toHaveCount(66);
+
+    // Expand Genesis first: the filter is a view concern, so an open book must
+    // still be open when it comes back into view.
+    const genesisCard = books.first();
+    await genesisCard.getByTestId('book-card-toggle').click();
+    await expect(genesisCard.getByTestId('chapter-card').first()).toBeVisible();
+
+    // New Testament: 27 books starting with Matthew
+    await page.getByTestId('testament-toggle-new').click();
+    await expect(books).toHaveCount(27);
+    await expect(books.first()).toHaveAttribute('data-book-index', String(BOOK.MATTHEW));
+    await expect(books.last()).toHaveAttribute('data-book-index', String(BOOK.REVELATION));
+
+    // Old Testament: 39 books, Genesis through Malachi
+    await page.getByTestId('testament-toggle-old').click();
+    await expect(books).toHaveCount(39);
+    await expect(books.first()).toHaveAttribute('data-book-index', String(BOOK.GENESIS));
+    await expect(books.last()).toHaveAttribute('data-book-index', '39');
+    await expect(books.first().getByTestId('chapter-card').first()).toBeVisible();
+
+    // Back to the whole Bible
+    await page.getByTestId('testament-toggle-all').click();
+    await expect(books).toHaveCount(66);
+  });
 });

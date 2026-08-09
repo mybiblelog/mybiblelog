@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import { Bible, type BookProgress } from "@mybiblelog/shared";
+import { Bible, type BookProgress, type TestamentFilter } from "@mybiblelog/shared";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import {
   AnimatedList,
@@ -22,8 +22,6 @@ import {
   selectAnyBookHasNotes,
   useBookNoteCounts,
 } from "@/src/stores/passageNoteCounts";
-
-type TestamentFilter = "all" | "old" | "new";
 
 const Separator = () => <View style={styles.separator} />;
 
@@ -106,21 +104,11 @@ export default function BibleIndex() {
     router.push(`/bible/${bookIndex}`);
   }, []);
 
-  const newTestamentBooks = useMemo(
-    () =>
-      new Set(
-        Bible.getBooks()
-          .filter((book) => book.newTestament)
-          .map((book) => book.bibleOrder)
-      ),
-    []
-  );
-
   const filtered = useMemo(() => {
     if (!progress) return null;
     const books = progress.books.filter((book) => {
-      if (testament === "old") return !newTestamentBooks.has(book.bookIndex);
-      if (testament === "new") return newTestamentBooks.has(book.bookIndex);
+      if (testament === "old") return !Bible.isNewTestament(book.bookIndex);
+      if (testament === "new") return Bible.isNewTestament(book.bookIndex);
       return true;
     });
     const totalVerses = books.reduce((sum, book) => sum + book.totalVerses, 0);
@@ -128,7 +116,7 @@ export default function BibleIndex() {
     const percentage = totalVerses ? Math.floor((versesRead / totalVerses) * 100) : 0;
     const segments = books.flatMap((book) => book.segments);
     return { books, percentage, segments };
-  }, [progress, testament, newTestamentBooks]);
+  }, [progress, testament]);
 
   const header = (
     <View style={styles.header}>

@@ -15,12 +15,13 @@
         </NuxtLink>
       </div>
     </header>
+    <testament-toggle v-model="testamentFilter" class="testament-filter" />
     <div>
       <div v-if="!bookReports.length" class="loading-card">
         <strong>{{ t('loading') }}</strong>
       </div>
       <div
-        v-for="bookReport in bookReports"
+        v-for="bookReport in visibleBookReports"
         :key="bookReport.bookIndex"
         class="book-card mbl-card"
         data-testid="book-card"
@@ -110,6 +111,8 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
 import { Bible, BrowserCache, computeBibleProgress } from '@mybiblelog/shared';
+import type { TestamentFilter } from '@mybiblelog/shared';
+import TestamentToggle from '~/components/bible/TestamentToggle.vue';
 import BusyBar from '~/components/ui/BusyBar.vue';
 import CompletionBar from '~/components/ui/CompletionBar.vue';
 import ParticleBurst from '~/components/ui/ParticleBurst.vue';
@@ -148,6 +151,16 @@ const computeBusy = ref(false);
 // chapter must not cancel the first one's animation.
 const busyChapters = ref(new Set<string>());
 const bookReports = ref<BookReport[]>([]);
+
+// Purely a view filter: `bookReports`, the cached snapshot and `toggleChapter`
+// all keep working off the full 66-book list, so hiding a testament can never
+// change what gets computed or saved.
+const testamentFilter = ref<TestamentFilter>('all');
+const visibleBookReports = computed(() => bookReports.value.filter((report) => {
+  if (testamentFilter.value === 'old') { return !Bible.isNewTestament(report.bookIndex); }
+  if (testamentFilter.value === 'new') { return Bible.isNewTestament(report.bookIndex); }
+  return true;
+}));
 
 const bookCount = Bible.getBookCount();
 const expandedBooks = ref<Record<number, boolean>>({});
@@ -306,6 +319,12 @@ onBeforeUnmount(endAllCelebrations);
 </script>
 
 <style scoped>
+/* Takes over the gap `.page-header` would otherwise hold against the list,
+   so the toggle reads as part of the page chrome rather than the first card. */
+.testament-filter {
+  margin-bottom: var(--mbl-page-header-gap);
+}
+
 .loading-card {
   padding: var(--mbl-space-md) var(--mbl-space-2xl);
   border-radius: var(--mbl-radius-card);

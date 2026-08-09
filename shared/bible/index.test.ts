@@ -51,6 +51,19 @@ test('should get empty string for nonexistant book names', () => {
   expect(bookName67).toBe('');
 });
 
+test('can identify which testament a book belongs to', () => {
+  // Boundary pair: Malachi is the last Old Testament book, Matthew the first New.
+  expect(Bible.isNewTestament(1)).toBe(false);
+  expect(Bible.isNewTestament(39)).toBe(false);
+  expect(Bible.isNewTestament(40)).toBe(true);
+  expect(Bible.isNewTestament(66)).toBe(true);
+});
+
+test('should report nonexistant books as not New Testament', () => {
+  expect(Bible.isNewTestament(0)).toBe(false);
+  expect(Bible.isNewTestament(67)).toBe(false);
+});
+
 test('can get book index from book name', () => {
   const genesisIndex = Bible.getBookIndex('Genesis');
   const revelationIndex = Bible.getBookIndex('Revelation');
