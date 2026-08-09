@@ -14,19 +14,27 @@ export const beginEmailChange: RouteHandler = async (req, deps) => {
 
   const { users } = deps.repositories;
   const currentUser = await deps.authenticate(req);
-  const { newEmail, password } = asRecord(req.body);
+  const { newEmail: rawNewEmail, password } = asRecord(req.body);
 
-  // Require string values to prevent NoSQL operator injection
-  if (typeof newEmail !== 'string' || !newEmail || !emailString.safeParse(newEmail).success) {
+  // Require string values to prevent NoSQL operator injection. Each failure
+  // gets its own code so the client can say what is actually wrong -- a
+  // malformed address and an unchanged address are different mistakes.
+  if (typeof rawNewEmail !== 'string' || !rawNewEmail.trim()) {
     throw new ValidationError([{ code: ApiErrorDetailCode.NewEmailRequired, field: 'newEmail' }]);
+  }
+  // Match the normalization `beginEmailUpdate` applies before storing, so the
+  // unchanged-address check below can't be sidestepped by case or whitespace.
+  const newEmail = rawNewEmail.trim().toLowerCase();
+  if (!emailString.safeParse(newEmail).success) {
+    throw new ValidationError([{ code: ApiErrorDetailCode.NewEmailInvalid, field: 'newEmail' }]);
   }
   if (typeof password !== 'string' || !password) {
     throw new ValidationError([{ code: ApiErrorDetailCode.PasswordIncorrect, field: 'password' }]);
   }
 
   // disallow newEmail to be current email
-  if (newEmail === currentUser.email) {
-    throw new ValidationError([{ code: ApiErrorDetailCode.NewEmailRequired, field: 'newEmail' }]);
+  if (newEmail === currentUser.email.trim().toLowerCase()) {
+    throw new ValidationError([{ code: ApiErrorDetailCode.NewEmailUnchanged, field: 'newEmail' }]);
   }
 
   // NOTE: We intentionally do NOT check here whether newEmail is already in use

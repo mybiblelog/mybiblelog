@@ -252,7 +252,9 @@ export const es = {
   api_error_not_found: "No encontrado",
   api_error_invalid_login: "El correo electrónico o la contraseña son incorrectos",
   api_error_verify_email: "Por favor revise %{email} para verificar su correo electrónico primero",
-  api_error_new_email_required:
+  api_error_new_email_required: "Se requiere una nueva dirección de correo electrónico",
+  api_error_new_email_invalid: "Por favor ingrese una dirección de correo electrónico válida",
+  api_error_new_email_unchanged:
     "El nuevo correo electrónico no puede ser el mismo que el correo electrónico actual",
   api_error_email_in_use: "La dirección de correo electrónico ya está en uso",
   api_error_password_incorrect: "La contraseña es incorrecta",

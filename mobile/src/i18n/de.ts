@@ -254,7 +254,10 @@ export const de = {
   api_error_not_found: "Nicht gefunden",
   api_error_invalid_login: "Email oder Passwort ist falsch",
   api_error_verify_email: "Bitte überprüfen Sie %{email} zuerst, um Ihre Email zu bestätigen",
-  api_error_new_email_required: "Die neue Email kann nicht die gleiche wie die aktuelle Email sein",
+  api_error_new_email_required: "Eine neue Email-Adresse ist erforderlich",
+  api_error_new_email_invalid: "Bitte geben Sie eine gültige Email-Adresse ein",
+  api_error_new_email_unchanged:
+    "Die neue Email kann nicht die gleiche wie die aktuelle Email sein",
   api_error_email_in_use: "Die Email-Adresse ist bereits in Verwendung",
   api_error_password_incorrect: "Das Passwort ist falsch",
   api_error_account_not_found: "Konto nicht gefunden",

@@ -254,7 +254,9 @@ export const uk = {
   api_error_invalid_login: "Електронна пошта або пароль невірні",
   api_error_verify_email:
     "Будь ласка, перевірте %{email}, щоб спочатку підтвердити свою електронну пошту",
-  api_error_new_email_required:
+  api_error_new_email_required: "Потрібна нова електронна адреса",
+  api_error_new_email_invalid: "Будь ласка, введіть дійсну електронну адресу",
+  api_error_new_email_unchanged:
     "Нова електронна пошта не може бути такою ж, як поточна електронна пошта",
   api_error_email_in_use: "Адреса електронної пошти вже використовується",
   api_error_password_incorrect: "Пароль невірний",

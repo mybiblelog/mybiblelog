@@ -38,6 +38,8 @@ export const ApiErrorDetailCode = {
   InvalidLogin: 'invalid_login',
   VerifyEmail: 'verify_email',
   NewEmailRequired: 'new_email_required',
+  NewEmailInvalid: 'new_email_invalid',
+  NewEmailUnchanged: 'new_email_unchanged',
   EmailInUse: 'email_in_use',
   PasswordIncorrect: 'password_incorrect',
   AccountNotFound: 'account_not_found',

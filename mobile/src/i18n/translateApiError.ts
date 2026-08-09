@@ -20,6 +20,8 @@ const API_ERROR_MESSAGE_KEYS = {
   invalid_login: "api_error_invalid_login",
   verify_email: "api_error_verify_email",
   new_email_required: "api_error_new_email_required",
+  new_email_invalid: "api_error_new_email_invalid",
+  new_email_unchanged: "api_error_new_email_unchanged",
   email_in_use: "api_error_email_in_use",
   password_incorrect: "api_error_password_incorrect",
   account_not_found: "api_error_account_not_found",
