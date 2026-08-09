@@ -15,7 +15,8 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { durations, radius, spacing, useTheme } from "@/src/design";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { type ThemeColors, durations, radius, spacing, useTheme, zIndex } from "@/src/design";
 
 export type ToastType = "success" | "error" | "info";
 
@@ -37,10 +38,32 @@ function makeId() {
 
 const DEFAULT_TOAST_DURATION_MS = 1800;
 
+/** How far above its resting place the toast starts, so it slides in downward. */
+const ENTER_OFFSET = 12;
+
+/**
+ * Solid intent fills, mirroring web's `--mbl-notification-*` tokens: a toast
+ * floats over arbitrary content, so it carries its own color rather than
+ * borrowing a page surface (an `info` toast on `surface` was all but invisible
+ * against the dark-mode canvas).
+ */
+function intentColors(type: ToastType, colors: ThemeColors) {
+  switch (type) {
+    case "success":
+      return { background: colors.success, foreground: colors.onSuccess };
+    case "error":
+      return { background: colors.destructive, foreground: colors.onDestructive };
+    case "info":
+      return { background: colors.info, foreground: colors.onInfo };
+  }
+}
+
 export function ToastProvider({ children }: { children: ReactNode }) {
-  const { colors } = useTheme();
+  const { colors, shadows } = useTheme();
+  const insets = useSafeAreaInsets();
   const [toast, setToast] = useState<Toast | null>(null);
   const opacity = useSharedValue(0);
+  const translateY = useSharedValue(-ENTER_OFFSET);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const clearToast = useCallback(() => setToast(null), []);
@@ -52,10 +75,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = null;
     // eslint-disable-next-line react-hooks/immutability
+    translateY.value = withTiming(-ENTER_OFFSET, { duration: durations.fast });
+    // eslint-disable-next-line react-hooks/immutability
     opacity.value = withTiming(0, { duration: durations.fast }, (finished) => {
       if (finished) runOnJS(clearToast)();
     });
-  }, [clearToast, opacity]);
+  }, [clearToast, opacity, translateY]);
 
   const showToast = useCallback(
     (t: Omit<Toast, "id"> & { durationMs?: number }) => {
@@ -65,9 +90,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       // eslint-disable-next-line react-hooks/immutability
       opacity.value = 0;
       opacity.value = withTiming(1, { duration: durations.fast });
+      // eslint-disable-next-line react-hooks/immutability
+      translateY.value = -ENTER_OFFSET;
+      translateY.value = withTiming(0, { duration: durations.fast });
       timeoutRef.current = setTimeout(hideToast, durationMs);
     },
-    [hideToast, opacity]
+    [hideToast, opacity, translateY]
   );
 
   // Never leave a hide timer running past unmount.
@@ -77,45 +105,38 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const animatedStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
+  }));
 
   const value = useMemo<ToastContextValue>(() => ({ showToast }), [showToast]);
+
+  const intent = toast ? intentColors(toast.type, colors) : null;
 
   return (
     <ToastContext.Provider value={value}>
       {children}
-      {toast && (
+      {toast && intent && (
         <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
-          <Animated.View style={[styles.toastWrap, animatedStyle]} pointerEvents="box-none">
+          <Animated.View
+            testID="toast.wrap"
+            style={[styles.toastWrap, { top: insets.top + spacing.xs }, animatedStyle]}
+            pointerEvents="box-none"
+          >
             <Pressable
               onPress={hideToast}
+              testID="toast.container"
+              // Radius stays inline next to the changing background: on Android a
+              // style update that only swaps backgroundColor drops a radius that
+              // lives in a registered StyleSheet.
               style={[
                 styles.toast,
-                toast.type === "info"
-                  ? {
-                      backgroundColor: colors.surface,
-                      borderColor: colors.border,
-                      borderWidth: StyleSheet.hairlineWidth,
-                    }
-                  : {
-                      backgroundColor:
-                        toast.type === "success" ? colors.primary : colors.destructive,
-                    },
+                shadows.popover,
+                { backgroundColor: intent.background, borderRadius: radius["2xl"] },
               ]}
             >
-              <Text
-                style={[
-                  styles.toastText,
-                  {
-                    color:
-                      toast.type === "error"
-                        ? colors.onDestructive
-                        : toast.type === "info"
-                          ? colors.text
-                          : colors.onPrimary,
-                  },
-                ]}
-              >
+              <Text testID="toast.message" style={[styles.toastText, { color: intent.foreground }]}>
                 {toast.message}
               </Text>
             </Pressable>
@@ -133,15 +154,17 @@ export function useToast() {
 }
 
 const styles = StyleSheet.create({
+  // Top-anchored, like web's toaster: the bottom of the screen is where the
+  // keyboard and the tab bar live, and a toast raised there was routinely
+  // covered while typing.
   toastWrap: {
     position: "absolute",
-    left: 16,
-    right: 16,
-    bottom: 18,
+    left: spacing.md,
+    right: spacing.md,
     alignItems: "center",
+    zIndex: zIndex.toast,
   },
   toast: {
-    borderRadius: radius["2xl"],
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     minWidth: "60%",
