@@ -139,7 +139,6 @@ export default function BibleIndex() {
             label={t("progress_title")}
             testID="bible.progress-link"
             variant="secondary"
-            size="sm"
             leftIcon="stats-chart-outline"
             rightIcon="chevron-forward"
             onPress={() => router.push("/bible/progress")}
