@@ -1,23 +1,17 @@
 import { Stack } from "expo-router";
 import { stackTransition, useTheme } from "@/src/design";
-import { useT } from "@/src/i18n/LocaleProvider";
 
 export default function NotesLayout() {
   const { colors } = useTheme();
-  const t = useT();
+  // Every screen renders its own title + back chevron via `ScreenHeader`, so the
+  // native header would only duplicate it at a different size.
   return (
     <Stack
       screenOptions={{
-        headerStyle: { backgroundColor: colors.surface },
-        headerTintColor: colors.text,
-        headerShadowVisible: false,
+        headerShown: false,
         contentStyle: { backgroundColor: colors.background },
         ...stackTransition,
       }}
-    >
-      {/* The index screen renders its own in-content header (like the other tabs). */}
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="tags" options={{ title: t("tags_title") }} />
-    </Stack>
+    />
   );
 }

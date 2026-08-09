@@ -286,6 +286,7 @@ export const uk = {
   choose_end_chapter: "Вибрати кінцевий розділ",
   end_verse: "Кінцевий вірш",
   choose_end_verse: "Вибрати кінцевий вірш",
+  back: "Назад",
   close: "Закрити",
   discard: "Відхилити",
   discard_changes_title: "Відхилити зміни?",
@@ -505,6 +506,7 @@ export const uk = {
     "Введіть свою електронну пошту, і ми надішлемо вам код для скидання пароля.",
   forgot_password_submit: "Надіслати код",
   account_change_email: "Змінити електронну пошту",
+  change_email_title: "Змінити електронну пошту",
   change_email_hint:
     "Введіть свою нову електронну пошту та поточний пароль. Ми надішлемо код на нову адресу.",
   change_email_current: "Поточна електронна пошта:",

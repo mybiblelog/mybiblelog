@@ -288,6 +288,7 @@ export const fr = {
   choose_end_chapter: "Choisir le chapitre de fin",
   end_verse: "Verset de fin",
   choose_end_verse: "Choisir le verset de fin",
+  back: "Retour",
   close: "Fermer",
   discard: "Ignorer",
   discard_changes_title: "Ignorer les modifications ?",
@@ -511,6 +512,7 @@ export const fr = {
     "Saisissez votre e-mail et nous vous enverrons un code pour réinitialiser votre mot de passe.",
   forgot_password_submit: "Envoyer le code",
   account_change_email: "Changer l'e-mail",
+  change_email_title: "Changer l'e-mail",
   change_email_hint:
     "Saisissez votre nouvel e-mail et votre mot de passe actuel. Nous enverrons un code à la nouvelle adresse.",
   change_email_current: "E-mail actuel :",

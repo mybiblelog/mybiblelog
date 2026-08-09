@@ -9,6 +9,7 @@ import {
   Button,
   Card,
   Screen,
+  ScreenHeader,
   SegmentBar,
   SegmentedControl,
   Spinner,
@@ -131,20 +132,20 @@ export default function BibleIndex() {
 
   const header = (
     <View style={styles.header}>
-      <View style={styles.headerRow}>
-        <Text variant="title" style={styles.headerTitle}>
-          {t("bible_books_title")}
-        </Text>
-        <Button
-          label={t("progress_title")}
-          testID="bible.progress-link"
-          variant="secondary"
-          size="sm"
-          leftIcon="stats-chart-outline"
-          rightIcon="chevron-forward"
-          onPress={() => router.push("/bible/progress")}
-        />
-      </View>
+      <ScreenHeader
+        title={t("bible_books_title")}
+        right={
+          <Button
+            label={t("progress_title")}
+            testID="bible.progress-link"
+            variant="secondary"
+            size="sm"
+            leftIcon="stats-chart-outline"
+            rightIcon="chevron-forward"
+            onPress={() => router.push("/bible/progress")}
+          />
+        }
+      />
       <SegmentedControl
         options={[
           { value: "all", label: t("whole_bible") },
@@ -207,12 +208,6 @@ const styles = StyleSheet.create({
     paddingTop: spacing.pageTop,
     gap: spacing.sm,
   },
-  headerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.sm,
-  },
-  headerTitle: { flex: 1 },
   plaque: {
     margin: spacing.pageGutter,
   },

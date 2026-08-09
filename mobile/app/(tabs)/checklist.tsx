@@ -5,7 +5,16 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated from "react-native-reanimated";
 import { Bible, type BookProgress, type ChapterProgress } from "@mybiblelog/shared";
-import { AnimatedList, Card, Icon, ProgressBar, Screen, Spinner, Text } from "@/src/components";
+import {
+  AnimatedList,
+  Card,
+  Icon,
+  ProgressBar,
+  Screen,
+  ScreenHeader,
+  Spinner,
+  Text,
+} from "@/src/components";
 import { fadeIn, radius, spacing, useTheme } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { useBibleProgress } from "@/src/stores/bibleProgress";
@@ -253,10 +262,11 @@ export default function Checklist() {
 
   return (
     <Screen padded>
-      <View style={styles.header}>
-        <Text variant="title">{t("chapter_checklist")}</Text>
-        {busy && <Spinner />}
-      </View>
+      <ScreenHeader
+        title={t("chapter_checklist")}
+        style={styles.header}
+        right={busy ? <Spinner /> : undefined}
+      />
 
       {!progress ? (
         <Card>
@@ -302,12 +312,7 @@ export default function Checklist() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: spacing.sm,
-  },
+  header: { marginBottom: spacing.sm },
   listContent: {
     paddingBottom: spacing.listBottom,
   },

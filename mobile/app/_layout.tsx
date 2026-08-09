@@ -3,7 +3,7 @@ import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AchievementModal, ConfigErrorScreen, JustOpenedModal } from "@/src/components";
 import { MISSING_CONFIG } from "@/src/config";
-import { LocaleProvider, useT } from "@/src/i18n/LocaleProvider";
+import { LocaleProvider } from "@/src/i18n/LocaleProvider";
 import { ThemeProvider, modalTransition, stackTransition, useTheme } from "@/src/design";
 import { initStores } from "@/src/stores/init";
 import { ToastProvider } from "@/src/toast/ToastProvider";
@@ -59,46 +59,29 @@ function RootLayout() {
 export default Sentry.wrap(RootLayout);
 
 function RootStack() {
-  const t = useT();
   const { colors } = useTheme();
+
+  // The auth screens are the one place a native header survives, and only for
+  // its back/dismiss chevron: they're vertically centred modals, so there's no
+  // top row to host an in-content chevron the way pushed screens have. The
+  // title is blanked and the bar painted the page color so the 28px in-content
+  // title stays the only heading — see `ScreenHeader`.
+  const authOptions = {
+    headerShown: true,
+    headerTitle: "",
+    headerStyle: { backgroundColor: colors.background },
+    headerTintColor: colors.text,
+    headerShadowVisible: false,
+    ...modalTransition,
+  } as const;
 
   return (
     <Stack screenOptions={{ headerShown: false, ...stackTransition }}>
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="upgrade-required" />
-      <Stack.Screen
-        name="login"
-        options={{
-          headerShown: true,
-          title: t("login_title"),
-          headerStyle: { backgroundColor: colors.surface },
-          headerTintColor: colors.text,
-          headerShadowVisible: false,
-          ...modalTransition,
-        }}
-      />
-      <Stack.Screen
-        name="register"
-        options={{
-          headerShown: true,
-          title: t("register_title"),
-          headerStyle: { backgroundColor: colors.surface },
-          headerTintColor: colors.text,
-          headerShadowVisible: false,
-          ...modalTransition,
-        }}
-      />
-      <Stack.Screen
-        name="forgot-password"
-        options={{
-          headerShown: true,
-          title: t("forgot_password_title"),
-          headerStyle: { backgroundColor: colors.surface },
-          headerTintColor: colors.text,
-          headerShadowVisible: false,
-          ...modalTransition,
-        }}
-      />
+      <Stack.Screen name="login" options={authOptions} />
+      <Stack.Screen name="register" options={authOptions} />
+      <Stack.Screen name="forgot-password" options={authOptions} />
     </Stack>
   );
 }

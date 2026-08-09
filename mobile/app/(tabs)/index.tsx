@@ -12,6 +12,7 @@ import {
   ReadingTrackerResetCard,
   RecentNotesSection,
   Screen,
+  ScreenHeader,
   SkeletonList,
   Text,
   useLogEntryOverlays,
@@ -96,17 +97,16 @@ export default function Index() {
 
   return (
     <Screen padded>
-      <View style={styles.header}>
-        <View style={styles.headerText}>
-          <Text variant="title">{t("today_title")}</Text>
-          {/* Mobile-only: web gets a page title from the browser chrome, a
-              phone doesn't, so the date does that orienting work here. */}
-          <Text variant="subtitle" color="mutedText" style={styles.subtitle}>
-            {todayDisplay}
-          </Text>
-        </View>
-        <Button label={t("add")} testID="today.add-entry" leftIcon="add" onPress={openAdd} />
-      </View>
+      {/* Mobile-only subtitle: web gets a page title from the browser chrome, a
+          phone doesn't, so the date does that orienting work here. */}
+      <ScreenHeader
+        title={t("today_title")}
+        subtitle={todayDisplay}
+        style={styles.header}
+        right={
+          <Button label={t("add")} testID="today.add-entry" leftIcon="add" onPress={openAdd} />
+        }
+      />
 
       <View style={styles.goal} testID="daily-goal">
         <DoubleProgressBar
@@ -200,15 +200,7 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: spacing.sm,
-    marginBottom: spacing.sm,
-  },
-  headerText: { flex: 1 },
-  subtitle: { marginTop: spacing["3xs"] },
+  header: { marginBottom: spacing.sm },
   goal: { marginBottom: spacing.xl },
   goalMeta: {
     flexDirection: "row",

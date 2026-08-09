@@ -3,7 +3,15 @@ import dayjs from "dayjs";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
-import { Button, Card, DatePickerSheet, ProgressBar, Screen, Text } from "@/src/components";
+import {
+  Button,
+  Card,
+  DatePickerSheet,
+  ProgressBar,
+  Screen,
+  ScreenHeader,
+  Text,
+} from "@/src/components";
 import { spacing } from "@/src/design";
 import { formatLongDate, parseYmdToDate } from "@/src/i18n/date";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
@@ -138,7 +146,8 @@ export default function Progress() {
   }
 
   return (
-    <Screen edges={[]}>
+    <Screen>
+      <ScreenHeader padded back title={t("progress_title")} />
       <ScrollView contentContainerStyle={styles.content}>
         <SectionCard
           title={t("progress_settings_title")}

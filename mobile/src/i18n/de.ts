@@ -287,6 +287,7 @@ export const de = {
   choose_end_chapter: "Endkapitel wählen",
   end_verse: "Endvers",
   choose_end_verse: "Endvers wählen",
+  back: "Zurück",
   close: "Schließen",
   discard: "Verwerfen",
   discard_changes_title: "Änderungen verwerfen?",
@@ -512,6 +513,7 @@ export const de = {
     "Geben Sie Ihre E-Mail ein und wir senden Ihnen einen Code zum Zurücksetzen Ihres Passworts.",
   forgot_password_submit: "Code senden",
   account_change_email: "E-Mail ändern",
+  change_email_title: "E-Mail ändern",
   change_email_hint:
     "Geben Sie Ihre neue E-Mail und Ihr aktuelles Passwort ein. Wir senden einen Code an die neue Adresse.",
   change_email_current: "Aktuelle E-Mail:",

@@ -11,6 +11,7 @@ import {
   ListItem,
   MenuSheet,
   Screen,
+  ScreenHeader,
   SelectSheet,
   Spinner,
   TagEditorSheet,
@@ -120,7 +121,8 @@ export default function Tags() {
   };
 
   return (
-    <Screen padded edges={[]}>
+    <Screen padded>
+      <ScreenHeader back title={t("tags_title")} style={styles.header} />
       <View style={styles.toolbar}>
         <Button
           label={t("tag_sort_by")}
@@ -206,6 +208,7 @@ export default function Tags() {
 }
 
 const styles = StyleSheet.create({
+  header: { marginBottom: spacing.sm },
   toolbar: {
     flexDirection: "row",
     alignItems: "center",

@@ -4,6 +4,7 @@ import {
   Button,
   InputField,
   Screen,
+  ScreenHeader,
   SelectRow,
   SelectSheet,
   Spinner,
@@ -54,13 +55,15 @@ function isValidIsoDate(value: string): boolean {
 }
 
 export default function ReadingSettings() {
+  const t = useT();
   const settings = useSettingsValue();
 
   // The form only mounts once settings exist, so every draft starts out holding
   // the saved value instead of adopting it a render later.
   if (settings === null) {
     return (
-      <Screen edges={[]}>
+      <Screen>
+        <ScreenHeader padded back title={t("settings_section_reading")} />
         <Spinner center />
       </Screen>
     );
@@ -217,7 +220,8 @@ function ReadingSettingsForm({ settings }: { settings: LocalUserSettings }) {
   }
 
   return (
-    <Screen edges={[]}>
+    <Screen>
+      <ScreenHeader padded back title={t("settings_section_reading")} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <SettingSection
           title={t("settings_reading_daily_goal_title")}

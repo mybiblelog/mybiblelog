@@ -285,6 +285,7 @@ export const pt = {
   choose_end_chapter: "Escolher Capítulo Final",
   end_verse: "Versículo Final",
   choose_end_verse: "Escolher Versículo Final",
+  back: "Voltar",
   close: "Fechar",
   discard: "Descartar",
   discard_changes_title: "Descartar alterações?",
@@ -505,6 +506,7 @@ export const pt = {
   forgot_password_hint: "Insira seu e-mail e enviaremos um código para redefinir sua senha.",
   forgot_password_submit: "Enviar código",
   account_change_email: "Alterar e-mail",
+  change_email_title: "Alterar e-mail",
   change_email_hint:
     "Insira seu novo e-mail e a senha atual. Enviaremos um código para o novo endereço.",
   change_email_current: "E-mail atual:",

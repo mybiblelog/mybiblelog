@@ -2,7 +2,16 @@ import { useState } from "react";
 import { useAuth } from "@/src/stores/auth";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { spacing, useTheme } from "@/src/design";
-import { Button, Card, ConfirmDialog, Icon, ListItem, Screen, Text } from "@/src/components";
+import {
+  Button,
+  Card,
+  ConfirmDialog,
+  Icon,
+  ListItem,
+  Screen,
+  ScreenHeader,
+  Text,
+} from "@/src/components";
 import { router } from "expo-router";
 import { useNetInfo } from "@react-native-community/netinfo";
 import { ScrollView, StyleSheet, View } from "react-native";
@@ -24,7 +33,8 @@ export default function AccountSettings() {
         : t("connectivity_unknown");
 
   return (
-    <Screen edges={[]}>
+    <Screen>
+      <ScreenHeader padded back title={t("settings_section_account")} />
       <ScrollView contentContainerStyle={styles.content}>
         <Text variant="label" color="mutedText" style={styles.sectionLabel}>
           {t("settings_connectivity_label")}

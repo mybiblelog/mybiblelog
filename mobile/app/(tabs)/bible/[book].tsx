@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { memo, useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,6 +15,7 @@ import {
   MenuSheet,
   NoteEditorModal,
   Screen,
+  ScreenHeader,
   SegmentBar,
   Spinner,
   Text,
@@ -151,25 +152,26 @@ export default function BibleBookScreen() {
 
   if (!book || settings === null) {
     return (
-      <Screen edges={[]}>
+      <Screen>
+        <ScreenHeader padded back title={bookName} />
         <Spinner center />
       </Screen>
     );
   }
 
   return (
-    <Screen edges={[]}>
-      <Stack.Screen
-        options={{
-          title: bookName,
-          headerRight: () => (
-            <IconButton
-              name="ellipsis-horizontal"
-              accessibilityLabel={t("book_actions")}
-              onPress={() => setBookMenuOpen(true)}
-            />
-          ),
-        }}
+    <Screen>
+      <ScreenHeader
+        padded
+        back
+        title={bookName}
+        right={
+          <IconButton
+            name="ellipsis-horizontal"
+            accessibilityLabel={t("book_actions")}
+            onPress={() => setBookMenuOpen(true)}
+          />
+        }
       />
 
       <Card style={styles.plaque}>

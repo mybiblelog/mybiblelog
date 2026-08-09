@@ -258,6 +258,7 @@ export const en = {
   forgot_password_submit: "Send reset code",
 
   account_change_email: "Change email",
+  change_email_title: "Change Email",
   change_email_hint:
     "Enter your new email and current password. We'll send a code to the new address.",
   change_email_current: "Current email:",
@@ -311,6 +312,7 @@ export const en = {
   choose_end_chapter: "Choose End Chapter",
   end_verse: "End Verse",
   choose_end_verse: "Choose End Verse",
+  back: "Back",
   close: "Close",
   discard: "Discard",
   discard_changes_title: "Discard changes?",

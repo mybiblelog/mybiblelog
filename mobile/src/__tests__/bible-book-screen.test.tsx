@@ -76,7 +76,9 @@ describe("Bible book screen", () => {
     expect(utils.getByText("New Note")).toBeTruthy();
     const start = Bible.makeVerseId(BOOK_INDEX, 1, 1);
     const end = Bible.makeVerseId(BOOK_INDEX, 1, Bible.getChapterVerseCount(BOOK_INDEX, 1));
-    expect(utils.getByText(Bible.displayVerseRange(start, end))).toBeTruthy();
+    // Match the passage button, not the bare text — a whole-book range renders
+    // as just the book name, which is also the screen's title.
+    expect(utils.getByLabelText(`Edit: ${Bible.displayVerseRange(start, end)}`)).toBeTruthy();
   });
 
   it("view notes on a chapter filters inclusively and navigates", () => {
@@ -111,13 +113,10 @@ describe("Bible book screen", () => {
     fireEvent.press(utils.getByText("Take Note"));
 
     expect(utils.getByText("New Note")).toBeTruthy();
-    expect(
-      utils.getByText(
-        Bible.displayVerseRange(
-          Bible.getFirstBookVerseId(BOOK_INDEX),
-          Bible.getLastBookVerseId(BOOK_INDEX)
-        )
-      )
-    ).toBeTruthy();
+    const wholeBook = Bible.displayVerseRange(
+      Bible.getFirstBookVerseId(BOOK_INDEX),
+      Bible.getLastBookVerseId(BOOK_INDEX)
+    );
+    expect(utils.getByLabelText(`Edit: ${wholeBook}`)).toBeTruthy();
   });
 });

@@ -12,6 +12,7 @@ import { Text } from "../atoms/Text";
 import { Button } from "../atoms/Button";
 import { EmptyState } from "../molecules/EmptyState";
 import { InlineAlert } from "../molecules/InlineAlert";
+import { ScreenHeader } from "../molecules/ScreenHeader";
 import { Screen } from "../layouts/Screen";
 import { AnimatedList } from "./AnimatedList";
 import { NoteCard } from "./NoteCard";
@@ -45,12 +46,11 @@ export function OfflineNotesView() {
   const { openAdd, openMenu, overlays } = useLocalNoteOverlays();
 
   const header = (
-    <View style={styles.header}>
-      <Text variant="title" style={styles.headerTitle}>
-        {t("notes_title")}
-      </Text>
-      <Button label={t("notes_new")} testID="notes.new" leftIcon="add" onPress={openAdd} />
-    </View>
+    <ScreenHeader
+      title={t("notes_title")}
+      style={styles.header}
+      right={<Button label={t("notes_new")} testID="notes.new" leftIcon="add" onPress={openAdd} />}
+    />
   );
 
   const banner = isUnauthenticated ? (
@@ -111,13 +111,7 @@ export function OfflineNotesView() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.sm,
-    marginBottom: spacing.sm,
-  },
-  headerTitle: { flex: 1 },
+  header: { marginBottom: spacing.sm },
   hint: { marginBottom: spacing.xs },
   listContent: { paddingBottom: spacing.listBottom },
   listContentEmpty: { flexGrow: 1 },

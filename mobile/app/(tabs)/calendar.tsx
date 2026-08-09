@@ -9,6 +9,7 @@ import {
   IconButton,
   LogEntryRow,
   Screen,
+  ScreenHeader,
   Text,
   useLogEntryOverlays,
   useSyncRefreshControl,
@@ -154,40 +155,46 @@ export default function Calendar() {
         )}
         ListHeaderComponent={
           <>
-            <View style={styles.monthHeader}>
-              <Text variant="heading">{monthLabel}</Text>
-              <View style={styles.monthNav}>
-                <IconButton
-                  name="chevron-back"
-                  accessibilityLabel={t("calendar_prev_month")}
-                  onPress={() => {
-                    const next = dayjs(selectedMonth).subtract(1, "month");
-                    setSelectedMonth(next);
-                    setSelectedDay(next.date(1).format("YYYY-MM-DD"));
-                  }}
-                />
+            {/* The month is what this screen is about, so it *is* the screen
+                title rather than a section heading above one. */}
+            <ScreenHeader
+              padded
+              title={monthLabel}
+              style={styles.monthHeader}
+              right={
+                <View style={styles.monthNav}>
+                  <IconButton
+                    name="chevron-back"
+                    accessibilityLabel={t("calendar_prev_month")}
+                    onPress={() => {
+                      const next = dayjs(selectedMonth).subtract(1, "month");
+                      setSelectedMonth(next);
+                      setSelectedDay(next.date(1).format("YYYY-MM-DD"));
+                    }}
+                  />
 
-                <Button
-                  label={t("calendar_today")}
-                  variant="ghost"
-                  size="sm"
-                  onPress={() => {
-                    setSelectedMonth(dayjs());
-                    setSelectedDay(today);
-                  }}
-                />
+                  <Button
+                    label={t("calendar_today")}
+                    variant="ghost"
+                    size="sm"
+                    onPress={() => {
+                      setSelectedMonth(dayjs());
+                      setSelectedDay(today);
+                    }}
+                  />
 
-                <IconButton
-                  name="chevron-forward"
-                  accessibilityLabel={t("calendar_next_month")}
-                  onPress={() => {
-                    const next = dayjs(selectedMonth).add(1, "month");
-                    setSelectedMonth(next);
-                    setSelectedDay(next.date(1).format("YYYY-MM-DD"));
-                  }}
-                />
-              </View>
-            </View>
+                  <IconButton
+                    name="chevron-forward"
+                    accessibilityLabel={t("calendar_next_month")}
+                    onPress={() => {
+                      const next = dayjs(selectedMonth).add(1, "month");
+                      setSelectedMonth(next);
+                      setSelectedDay(next.date(1).format("YYYY-MM-DD"));
+                    }}
+                  />
+                </View>
+              }
+            />
 
             <View style={styles.weekdaysRow}>
               {weekdayLabels.map((w) => (
@@ -319,14 +326,7 @@ const styles = StyleSheet.create({
   },
   entrySeparator: { height: spacing.sm },
   rowWrap: { paddingHorizontal: spacing.pageGutter },
-  monthHeader: {
-    paddingHorizontal: spacing.pageGutter,
-    paddingTop: spacing.pageGutter,
-    paddingBottom: spacing.sm,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
+  monthHeader: { paddingBottom: spacing.sm },
   monthNav: {
     flexDirection: "row",
     alignItems: "center",

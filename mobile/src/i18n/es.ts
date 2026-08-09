@@ -285,6 +285,7 @@ export const es = {
   choose_end_chapter: "Elegir capítulo final",
   end_verse: "Versículo final",
   choose_end_verse: "Elegir versículo final",
+  back: "Atrás",
   close: "Cerrar",
   discard: "Descartar",
   discard_changes_title: "¿Descartar cambios?",
@@ -508,6 +509,7 @@ export const es = {
     "Introduce tu correo y te enviaremos un código para restablecer tu contraseña.",
   forgot_password_submit: "Enviar código",
   account_change_email: "Cambiar correo",
+  change_email_title: "Cambiar correo",
   change_email_hint:
     "Introduce tu nuevo correo y tu contraseña actual. Enviaremos un código a la nueva dirección.",
   change_email_current: "Correo actual:",

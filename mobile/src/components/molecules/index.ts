@@ -9,6 +9,8 @@ export type { InputFieldProps } from "./InputField";
 export { ListItem } from "./ListItem";
 export { OfflineBanner } from "./OfflineBanner";
 export type { ListItemProps } from "./ListItem";
+export { ScreenHeader } from "./ScreenHeader";
+export type { ScreenHeaderProps } from "./ScreenHeader";
 export { SegmentBar } from "./SegmentBar";
 export type { SegmentBarSegment } from "./SegmentBar";
 export { SegmentedControl } from "./SegmentedControl";
