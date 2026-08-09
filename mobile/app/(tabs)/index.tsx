@@ -182,6 +182,7 @@ export default function Index() {
               <Button
                 label={t("today_view_all_reading")}
                 variant="secondary"
+                rightIcon="chevron-forward"
                 testID="today.view-all-reading"
                 // Mobile has no all-entries list screen; Calendar is the
                 // nearest surface for browsing past reading.

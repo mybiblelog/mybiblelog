@@ -156,6 +156,7 @@ export default function Progress() {
             label={t("progress_update_settings")}
             variant="secondary"
             size="sm"
+            rightIcon="chevron-forward"
             style={styles.cardAction}
             onPress={() => router.push("/(tabs)/settings/reading")}
           />

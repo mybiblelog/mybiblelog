@@ -84,6 +84,7 @@ export default function Notes() {
         label={t("tags_title")}
         testID="notes.tags"
         variant="secondary"
+        rightIcon="chevron-forward"
         onPress={() => router.push("/(tabs)/notes/tags")}
       />
       <Button label={t("notes_new")} testID="notes.new" leftIcon="add" onPress={openAdd} />

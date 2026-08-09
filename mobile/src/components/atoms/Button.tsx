@@ -17,6 +17,11 @@ export type ButtonProps = {
   disabled?: boolean;
   loading?: boolean;
   leftIcon?: IconName;
+  /**
+   * Trailing glyph. Web marks button-styled links that navigate elsewhere with
+   * a trailing caret (`CaretRightIcon`); pass `chevron-forward` for parity.
+   */
+  rightIcon?: IconName;
   fullWidth?: boolean;
   accessibilityLabel?: string;
   testID?: string;
@@ -35,6 +40,7 @@ export function Button({
   disabled = false,
   loading = false,
   leftIcon,
+  rightIcon,
   fullWidth = false,
   accessibilityLabel,
   testID,
@@ -99,6 +105,8 @@ export function Button({
           <Text variant="button" color={fg}>
             {label}
           </Text>
+          {/* Subordinate to the leading icon, matching web's thin caret. */}
+          {rightIcon ? <Icon name={rightIcon} size={16} color={fg} /> : null}
         </View>
       )}
     </AnimatedPressable>

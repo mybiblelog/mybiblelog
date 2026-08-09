@@ -141,6 +141,7 @@ export default function BibleIndex() {
           variant="secondary"
           size="sm"
           leftIcon="stats-chart-outline"
+          rightIcon="chevron-forward"
           onPress={() => router.push("/bible/progress")}
         />
       </View>

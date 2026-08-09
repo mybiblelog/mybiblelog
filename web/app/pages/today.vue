@@ -90,8 +90,9 @@
         </ClientOnly>
       </div>
       <div class="mbl-text-center" style="margin-top: 1rem;">
-        <NuxtLink class="mbl-button mbl-button--light" :to="localePath('/calendar')">
+        <NuxtLink class="mbl-button" :to="localePath('/calendar')">
           {{ t('view_all_reading') }}
+          <caret-right-icon style="margin-left: 0.2rem;" />
         </NuxtLink>
       </div>
     </div>
@@ -133,8 +134,9 @@
             data-testid="recent-note"
           />
           <div class="mbl-text-center" style="margin-top: 1rem;">
-            <NuxtLink class="mbl-button mbl-button--light" :to="localePath('/notes')">
+            <NuxtLink class="mbl-button" :to="localePath('/notes')">
               {{ t('view_all_notes') }}
+              <caret-right-icon style="margin-left: 0.2rem;" />
             </NuxtLink>
           </div>
         </template>
@@ -155,6 +157,7 @@ import ReadingTrackerResetCard from '~/components/ui/ReadingTrackerResetCard.vue
 import SkeletonLoader from '~/components/ui/SkeletonLoader.vue';
 import LogEntry from '~/components/log/LogEntry.vue';
 import PassageNote from '~/components/notes/PassageNote.vue';
+import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
 import { useAppInitStore } from '~/stores/app-init';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useDateVerseCountsStore } from '~/stores/date-verse-counts';

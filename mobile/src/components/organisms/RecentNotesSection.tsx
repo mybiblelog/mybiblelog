@@ -41,7 +41,6 @@ export function RecentNotesSection() {
         </Text>
         <Button
           label={t("notes_new")}
-          variant="secondary"
           size="sm"
           leftIcon="add"
           onPress={() => setIsAddOpen(true)}
@@ -65,6 +64,7 @@ export function RecentNotesSection() {
       <Button
         label={t("notes_view_all")}
         variant="secondary"
+        rightIcon="chevron-forward"
         onPress={() => router.push("/(tabs)/notes")}
         style={styles.viewAll}
       />
@@ -140,5 +140,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: { flex: 1 },
   list: { gap: spacing.sm },
-  viewAll: { marginTop: spacing.sm },
+  // Content-width and centered, matching the Today screen's "View All Reading"
+  // (a button in a column flex parent stretches full-width by default).
+  viewAll: { marginTop: spacing.sm, alignSelf: "center" },
 });
