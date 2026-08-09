@@ -49,7 +49,7 @@ export function ReadingSuggestionsSection({ suggestions, today, loading = false 
 
   return (
     <View style={styles.section}>
-      <Text variant="label" style={styles.sectionTitle}>
+      <Text variant="heading" style={styles.sectionTitle}>
         {t("today_reading_suggestions")}
       </Text>
 
@@ -131,6 +131,6 @@ export function ReadingSuggestionsSection({ suggestions, today, loading = false 
 
 const styles = StyleSheet.create({
   section: { marginTop: spacing.md },
-  sectionTitle: { marginBottom: spacing.sm },
+  sectionTitle: { marginBottom: spacing.md },
   list: { gap: spacing.sm },
 });

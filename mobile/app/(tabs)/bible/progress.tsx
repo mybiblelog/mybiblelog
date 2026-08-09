@@ -58,7 +58,7 @@ function SectionCard({
 }) {
   return (
     <Card style={styles.card}>
-      <Text variant="label">{title}</Text>
+      <Text variant="heading">{title}</Text>
       {description ? (
         <Text variant="caption" color="mutedText" style={styles.cardDescription}>
           {description}

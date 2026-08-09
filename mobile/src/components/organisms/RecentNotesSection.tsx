@@ -36,7 +36,7 @@ export function RecentNotesSection() {
   return (
     <View style={styles.section}>
       <View style={styles.header}>
-        <Text variant="label" style={styles.headerTitle}>
+        <Text variant="heading" style={styles.headerTitle}>
           {t("today_recent_notes")}
         </Text>
         <Button
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     gap: spacing.sm,
-    marginBottom: spacing.sm,
+    marginBottom: spacing.md,
   },
   headerTitle: { flex: 1 },
   list: { gap: spacing.sm },
