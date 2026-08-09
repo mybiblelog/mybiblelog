@@ -19,6 +19,14 @@ const googleWebClientId = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID;
 // URL scheme the native Google SDK redirects back to.
 const googleIosClientId = process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID?.trim() || undefined;
 
+// Optional launcher-name suffix so tester builds are distinguishable from the
+// real app on a device (e.g. "My Bible Log Dev"). Set per profile in eas.json;
+// production leaves it unset. The package name is deliberately NOT varied — a
+// second applicationId would need its own Android OAuth client (keyed on package
+// + SHA-1) or Google Sign-In breaks, so Dev and production can't coexist on one
+// device.
+const appNameSuffix = process.env.EXPO_PUBLIC_APP_NAME_SUFFIX?.trim() || undefined;
+
 // The iOS URL scheme is the iOS client ID with its `.apps.googleusercontent.com`
 // suffix reversed into `com.googleusercontent.apps.<id>`.
 function toIosUrlScheme(iosClientId: string | undefined): string | undefined {
@@ -62,6 +70,7 @@ const withCleartextTraffic: ConfigPlugin = (config) =>
 
 const baseConfig = ({ config }: { config: ExpoConfig }): ExpoConfig => ({
   ...config,
+  name: appNameSuffix ? `${config.name} ${appNameSuffix}` : config.name,
   plugins: [
     ...(config.plugins ?? []),
     // Native Google Sign-In (Nitro), non-Firebase route. The plugin requires
