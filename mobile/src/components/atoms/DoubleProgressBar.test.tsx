@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { Stop } from "react-native-svg";
 import { colorsByScheme, radius } from "@/src/design";
 import { renderWithProviders, screen } from "@/src/test-utils/renderWithProviders";
 import { DoubleProgressBar } from "./DoubleProgressBar";
@@ -52,6 +53,33 @@ describe("DoubleProgressBar", () => {
     it("stays on past the goal, since overshoot is still complete", () => {
       renderWithProviders(<DoubleProgressBar primaryPercentage={250} />);
       expect(screen.getByTestId("primary-bar-complete")).toBeTruthy();
+    });
+
+    it("loops seamlessly: the sweep distance lands on an identical gradient phase", () => {
+      renderWithProviders(<DoubleProgressBar primaryPercentage={100} />);
+      const sweep = styleOf("primary-bar-complete");
+      const width = Number.parseFloat(String(sweep.width));
+
+      // The rect must hold a whole number of gradient cycles, and one sweep
+      // (half the rect) must be a whole number of them too — otherwise the
+      // restart snaps mid-cycle, which is the bug this guards.
+      const cycleWidth = 200;
+      expect(width % cycleWidth).toBe(0);
+      expect(width / 2 / cycleWidth).toBe(1);
+    });
+
+    it("repeats the red endpoint so the two cycles meet without a hard edge", () => {
+      renderWithProviders(<DoubleProgressBar primaryPercentage={100} />);
+      const stops = screen.UNSAFE_getAllByType(Stop);
+      const at = (offset: string) => stops.filter((s) => s.props.offset === offset);
+
+      expect(at("0%")).toHaveLength(1);
+      expect(at("0%")[0]?.props.stopColor).toBe("red");
+      // Cycle boundary: one red stop, shared by the cycle that ends and the one
+      // that begins there.
+      expect(at("50%")).toHaveLength(1);
+      expect(at("50%")[0]?.props.stopColor).toBe("red");
+      expect(at("100%")[0]?.props.stopColor).toBe("red");
     });
   });
 
