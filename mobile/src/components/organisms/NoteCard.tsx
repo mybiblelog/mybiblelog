@@ -47,7 +47,9 @@ export function NoteCard({ note, onPressMenu, testID }: Props) {
   };
 
   return (
-    <Card testID={testID}>
+    // "list-item" padding, so a note sits in the same column as the log-entry
+    // rows it shares the Today screen with.
+    <Card padding="list-item" testID={testID}>
       <View style={styles.header}>
         {note.passages.length > 0 ? (
           <View style={styles.passageList}>
@@ -74,7 +76,8 @@ export function NoteCard({ note, onPressMenu, testID }: Props) {
           </View>
         ) : null}
         <IconButton
-          name="ellipsis-horizontal"
+          name="ellipsis-vertical"
+          size={18}
           accessibilityLabel={t("note_actions")}
           onPress={() => onPressMenu(note)}
           style={styles.menuButton}

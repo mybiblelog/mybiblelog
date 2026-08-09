@@ -77,7 +77,8 @@ export function ReadingSuggestionsSection({ suggestions, today, loading = false 
               onPress={() => setMenuSuggestion(suggestion)}
               trailing={
                 <IconButton
-                  name="ellipsis-horizontal"
+                  name="ellipsis-vertical"
+                  size={18}
                   accessibilityLabel={t("today_reading_suggestions")}
                   onPress={() => setMenuSuggestion(suggestion)}
                 />
