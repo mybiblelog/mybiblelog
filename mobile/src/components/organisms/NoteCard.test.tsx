@@ -3,6 +3,7 @@ jest.mock("@/src/bible/openInBible", () => ({
 }));
 
 import { Bible } from "@mybiblelog/shared";
+import { StyleSheet } from "react-native";
 import { openPassageInBible } from "@/src/bible/openInBible";
 import type { PassageNote } from "@/src/api/notesApi";
 import { fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/renderWithProviders";
@@ -45,5 +46,16 @@ describe("NoteCard", () => {
     fireEvent.press(getByLabelText("Note actions"));
 
     expect(onPressMenu).toHaveBeenCalledWith(note);
+  });
+
+  it("keeps the menu button on the right edge when the note has no passages", () => {
+    const { getByLabelText } = renderWithProviders(
+      <NoteCard note={{ ...note, passages: [] }} onPressMenu={jest.fn()} />
+    );
+
+    // Without a passage list to take up the slack, only `marginLeft: auto`
+    // keeps the menu off the left edge.
+    const style = StyleSheet.flatten(getByLabelText("Note actions").props.style);
+    expect(style.marginLeft).toBe("auto");
   });
 });

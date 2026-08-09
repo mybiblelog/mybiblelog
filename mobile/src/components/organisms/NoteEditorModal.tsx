@@ -2,10 +2,11 @@ import { Bible } from "@mybiblelog/shared";
 import { useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import type { NoteInput, NotePassage, PassageNote } from "@/src/api/notesApi";
-import { spacing, useTheme } from "@/src/design";
+import { radius, spacing, TOUCH_TARGET, useScalePress, useTheme } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { useTagsList } from "@/src/stores/passageNoteTags";
 import { Button } from "../atoms/Button";
+import { Icon } from "../atoms/Icon";
 import { IconButton } from "../atoms/IconButton";
 import { TagPill } from "../atoms/TagPill";
 import { Text } from "../atoms/Text";
@@ -56,7 +57,6 @@ export function NoteEditorModal({
 }: Props) {
   const t = useT();
   const { locale } = useLocale();
-  const { colors } = useTheme();
   const tags = useTagsList();
   const wasVisible = useRef(false);
 
@@ -174,18 +174,17 @@ export function NoteEditorModal({
               draft.passages.map((passage, index) => (
                 <View
                   key={`${passage.startVerseId}-${passage.endVerseId}-${index}`}
-                  style={[styles.passageRow, { borderColor: colors.border }]}
+                  style={styles.passageRow}
                 >
-                  <AnimatedPressable
-                    accessibilityRole="button"
-                    accessibilityLabel={t("edit")}
+                  <PassageButton
+                    label={Bible.displayVerseRange(
+                      passage.startVerseId,
+                      passage.endVerseId,
+                      locale
+                    )}
+                    editLabel={t("edit")}
                     onPress={() => setEditingPassage(index)}
-                    style={styles.passageLabel}
-                  >
-                    <Text variant="bodyStrong">
-                      {Bible.displayVerseRange(passage.startVerseId, passage.endVerseId, locale)}
-                    </Text>
-                  </AnimatedPressable>
+                  />
                   <IconButton
                     name="trash-outline"
                     accessibilityLabel={t("delete")}
@@ -288,6 +287,47 @@ export function NoteEditorModal({
   );
 }
 
+/**
+ * A saved passage in the list. Carries the same bordered, touch-target-sized
+ * chrome as `SelectRow` so it reads as "tap to change", not as static text.
+ */
+function PassageButton({
+  label,
+  editLabel,
+  onPress,
+}: {
+  label: string;
+  editLabel: string;
+  onPress: () => void;
+}) {
+  const { colors } = useTheme();
+  const press = useScalePress({ scaleTo: 0.98 });
+
+  return (
+    <AnimatedPressable
+      accessibilityRole="button"
+      accessibilityLabel={`${editLabel}: ${label}`}
+      onPress={onPress}
+      onPressIn={press.onPressIn}
+      onPressOut={press.onPressOut}
+      style={[
+        styles.passageButton,
+        // Radius rides along with the backgroundColor: an Android bg-only style
+        // update drops a separately-registered borderRadius.
+        {
+          borderColor: colors.border,
+          backgroundColor: colors.surfaceMuted,
+          borderRadius: radius.xl,
+        },
+        press.animatedStyle,
+      ]}
+    >
+      <Text variant="bodyStrong">{label}</Text>
+      <Icon name="create-outline" size={16} color="mutedText" />
+    </AnimatedPressable>
+  );
+}
+
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
@@ -311,12 +351,18 @@ const styles = StyleSheet.create({
   passageRow: {
     flexDirection: "row",
     alignItems: "center",
+    gap: spacing.xs,
+  },
+  passageButton: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
     gap: spacing.sm,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    paddingVertical: spacing["2xs"],
+    minHeight: TOUCH_TARGET,
+    borderWidth: 1,
+    paddingHorizontal: spacing.sm,
   },
-  passageLabel: { flex: 1, paddingVertical: spacing.xs },
   contentInput: { minHeight: 110, textAlignVertical: "top" },
   charCount: { textAlign: "right", marginTop: -spacing.sm },
   pillRow: { flexDirection: "row", flexWrap: "wrap", gap: spacing.xs },
