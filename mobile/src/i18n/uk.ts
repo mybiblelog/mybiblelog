@@ -221,6 +221,9 @@ export const uk = {
   auth_login: "Увійти",
   auth_create_account: "Створити обліковий запис",
   auth_logout: "Вийти",
+  auth_logout_confirm_title: "Вийти?",
+  auth_logout_confirm_message:
+    "Щоб синхронізувати цей пристрій з обліковим записом, потрібно буде увійти знову.",
 
   login_title: "Вхід",
   auth_email: "Електронна пошта",
@@ -251,7 +254,9 @@ export const uk = {
   api_error_invalid_login: "Електронна пошта або пароль невірні",
   api_error_verify_email:
     "Будь ласка, перевірте %{email}, щоб спочатку підтвердити свою електронну пошту",
-  api_error_new_email_required:
+  api_error_new_email_required: "Потрібна нова електронна адреса",
+  api_error_new_email_invalid: "Будь ласка, введіть дійсну електронну адресу",
+  api_error_new_email_unchanged:
     "Нова електронна пошта не може бути такою ж, як поточна електронна пошта",
   api_error_email_in_use: "Адреса електронної пошти вже використовується",
   api_error_password_incorrect: "Пароль невірний",
@@ -281,6 +286,7 @@ export const uk = {
   choose_end_chapter: "Вибрати кінцевий розділ",
   end_verse: "Кінцевий вірш",
   choose_end_verse: "Вибрати кінцевий вірш",
+  back: "Назад",
   close: "Закрити",
   discard: "Відхилити",
   discard_changes_title: "Відхилити зміни?",
@@ -345,6 +351,8 @@ export const uk = {
 
   settings_saved_successfully: "Збережено.",
   settings_save_invalid: "Перевірте значення та спробуйте ще раз.",
+  settings_reading_daily_goal_invalid: "Введіть ціле число від 1 до 1111.",
+  settings_reading_look_back_date_invalid: "Введіть дату у форматі РРРР-ММ-ДД.",
 
   calendar_today: "Сьогодні",
   calendar_no_entries: "Немає записів",
@@ -471,6 +479,8 @@ export const uk = {
   loading: "Завантаження...",
   logged_before_today:
     "Цей розділ було записано до сьогодні. Ви можете редагувати попередні записи на сторінці Календаря.",
+  logged_in_longer_passage:
+    "Цей розділ було записано як частину довшого уривка, тому його не можна зняти тут. Ви можете редагувати цей запис на сторінці Календаря.",
   unable_to_mark_complete: "Не вдалося позначити розділ як завершений.",
   unable_to_mark_incomplete: "Не вдалося позначити розділ як незавершений.",
   login_forgot_password: "Забули пароль?",
@@ -496,6 +506,7 @@ export const uk = {
     "Введіть свою електронну пошту, і ми надішлемо вам код для скидання пароля.",
   forgot_password_submit: "Надіслати код",
   account_change_email: "Змінити електронну пошту",
+  change_email_title: "Змінити електронну пошту",
   change_email_hint:
     "Введіть свою нову електронну пошту та поточний пароль. Ми надішлемо код на нову адресу.",
   change_email_current: "Поточна електронна пошта:",

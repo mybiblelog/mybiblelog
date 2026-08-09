@@ -8,6 +8,14 @@ export const getChapterVerses = () => chapterVerses;
 
 export const getBookCount = (): number => getBooks().length;
 
+// Built once at module scope: testament membership is static, and the book-list
+// filters that ask this question ask it for every book on every render.
+const newTestamentIndices = new Set(
+  bibleBooks.filter((b) => b.newTestament).map((b) => b.bibleOrder),
+);
+
+export const isNewTestament = (bookIndex: number): boolean => newTestamentIndices.has(bookIndex);
+
 export const getBookChapterCount = (bookIndex: number): number => {
   const targetBook = bibleBooks.find((b) => b.bibleOrder === bookIndex);
   if (!targetBook) { return 0; }

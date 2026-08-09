@@ -102,8 +102,21 @@ appId: com.mybiblelog.app
 - back
 
 # --- Calendar (sc9) ----------------------------------------------------------
+# Calendar has no tab-bar button; reach it from Today's "View All Reading",
+# which sits below the entry list and needs scrolling into view.
 - tapOn:
-    id: "tab.calendar"
+    id: "tab.today"
+- repeat:
+    times: 20
+    while:
+      notVisible:
+        id: "today.view-all-reading"
+    commands:
+      - swipe:
+          start: 50%, 80%
+          end: 50%, 30%
+- tapOn:
+    id: "today.view-all-reading"
 - waitForAnimationToEnd:
     timeout: 2000
 - takeScreenshot: ${OUTPUT_DIR}/sc9-calendar

@@ -2,28 +2,26 @@ import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
 import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import { Bible, type BookProgress } from "@mybiblelog/shared";
+import { Bible, type BookProgress, type TestamentFilter } from "@mybiblelog/shared";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import {
   AnimatedList,
   Button,
   Card,
   Screen,
+  ScreenHeader,
   SegmentBar,
   SegmentedControl,
   Spinner,
   Text,
 } from "@/src/components";
 import { radius, spacing, useTheme } from "@/src/design";
-import { openNotesForRange } from "@/src/notes/openNotesForRange";
 import { useBibleProgress } from "@/src/stores/bibleProgress";
 import {
   noteCountsActions,
   selectAnyBookHasNotes,
   useBookNoteCounts,
 } from "@/src/stores/passageNoteCounts";
-
-type TestamentFilter = "all" | "old" | "new";
 
 const Separator = () => <View style={styles.separator} />;
 
@@ -35,14 +33,12 @@ const BookRow = memo(function BookRow({
   notesCount,
   showBadge,
   onPress,
-  onPressNotes,
 }: {
   book: BookProgress;
   bookName: string;
   notesCount: number;
   showBadge: boolean;
   onPress: (bookIndex: number) => void;
-  onPressNotes: (bookIndex: number) => void;
 }) {
   const { colors } = useTheme();
   const t = useT();
@@ -67,27 +63,13 @@ const BookRow = memo(function BookRow({
           {bookName}
         </Text>
         {showBadge ? (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={`${bookName}: ${
-              notesCount === 1
-                ? t("book_note_count_one")
-                : t("book_note_count_other", { count: notesCount })
-            }`}
-            hitSlop={8}
-            onPress={() => onPressNotes(book.bookIndex)}
-            style={({ pressed }) => [
-              styles.noteBadge,
-              { backgroundColor: colors.surface },
-              pressed && styles.pressed,
-            ]}
-          >
+          <View style={[styles.noteBadge, { backgroundColor: colors.surface }]}>
             <Text variant="caption" color="mutedText">
               {notesCount === 1
                 ? t("book_note_count_one")
                 : t("book_note_count_other", { count: notesCount })}
             </Text>
-          </Pressable>
+          </View>
         ) : null}
         <Text variant="caption" color="mutedText" style={styles.percent}>
           {book.percentage}%
@@ -122,29 +104,11 @@ export default function BibleIndex() {
     router.push(`/bible/${bookIndex}`);
   }, []);
 
-  const handlePressNotes = useCallback((bookIndex: number) => {
-    openNotesForRange(
-      Bible.getFirstBookVerseId(bookIndex),
-      Bible.getLastBookVerseId(bookIndex),
-      "exclusive"
-    );
-  }, []);
-
-  const newTestamentBooks = useMemo(
-    () =>
-      new Set(
-        Bible.getBooks()
-          .filter((book) => book.newTestament)
-          .map((book) => book.bibleOrder)
-      ),
-    []
-  );
-
   const filtered = useMemo(() => {
     if (!progress) return null;
     const books = progress.books.filter((book) => {
-      if (testament === "old") return !newTestamentBooks.has(book.bookIndex);
-      if (testament === "new") return newTestamentBooks.has(book.bookIndex);
+      if (testament === "old") return !Bible.isNewTestament(book.bookIndex);
+      if (testament === "new") return Bible.isNewTestament(book.bookIndex);
       return true;
     });
     const totalVerses = books.reduce((sum, book) => sum + book.totalVerses, 0);
@@ -152,23 +116,23 @@ export default function BibleIndex() {
     const percentage = totalVerses ? Math.floor((versesRead / totalVerses) * 100) : 0;
     const segments = books.flatMap((book) => book.segments);
     return { books, percentage, segments };
-  }, [progress, testament, newTestamentBooks]);
+  }, [progress, testament]);
 
   const header = (
     <View style={styles.header}>
-      <View style={styles.headerRow}>
-        <Text variant="title" style={styles.headerTitle}>
-          {t("bible_books_title")}
-        </Text>
-        <Button
-          label={t("progress_title")}
-          testID="bible.progress-link"
-          variant="ghost"
-          size="sm"
-          leftIcon="stats-chart-outline"
-          onPress={() => router.push("/bible/progress")}
-        />
-      </View>
+      <ScreenHeader
+        title={t("bible_books_title")}
+        right={
+          <Button
+            label={t("progress_title")}
+            testID="bible.progress-link"
+            variant="secondary"
+            leftIcon="stats-chart-outline"
+            rightIcon="chevron-forward"
+            onPress={() => router.push("/bible/progress")}
+          />
+        }
+      />
       <SegmentedControl
         options={[
           { value: "all", label: t("whole_bible") },
@@ -218,7 +182,6 @@ export default function BibleIndex() {
             notesCount={noteCounts?.[item.bookIndex] ?? 0}
             showBadge={anyBooksHaveNotes}
             onPress={handlePress}
-            onPressNotes={handlePressNotes}
           />
         )}
       />
@@ -232,12 +195,6 @@ const styles = StyleSheet.create({
     paddingTop: spacing.pageTop,
     gap: spacing.sm,
   },
-  headerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.sm,
-  },
-  headerTitle: { flex: 1 },
   plaque: {
     margin: spacing.pageGutter,
   },

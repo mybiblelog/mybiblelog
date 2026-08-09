@@ -222,6 +222,9 @@ export const de = {
   auth_login: "Anmelden",
   auth_create_account: "Konto erstellen",
   auth_logout: "Abmelden",
+  auth_logout_confirm_title: "Abmelden?",
+  auth_logout_confirm_message:
+    "Sie müssen sich erneut anmelden, um dieses Gerät mit Ihrem Konto zu synchronisieren.",
 
   login_title: "Anmelden",
   auth_email: "E-Mail",
@@ -251,7 +254,10 @@ export const de = {
   api_error_not_found: "Nicht gefunden",
   api_error_invalid_login: "Email oder Passwort ist falsch",
   api_error_verify_email: "Bitte überprüfen Sie %{email} zuerst, um Ihre Email zu bestätigen",
-  api_error_new_email_required: "Die neue Email kann nicht die gleiche wie die aktuelle Email sein",
+  api_error_new_email_required: "Eine neue Email-Adresse ist erforderlich",
+  api_error_new_email_invalid: "Bitte geben Sie eine gültige Email-Adresse ein",
+  api_error_new_email_unchanged:
+    "Die neue Email kann nicht die gleiche wie die aktuelle Email sein",
   api_error_email_in_use: "Die Email-Adresse ist bereits in Verwendung",
   api_error_password_incorrect: "Das Passwort ist falsch",
   api_error_account_not_found: "Konto nicht gefunden",
@@ -281,6 +287,7 @@ export const de = {
   choose_end_chapter: "Endkapitel wählen",
   end_verse: "Endvers",
   choose_end_verse: "Endvers wählen",
+  back: "Zurück",
   close: "Schließen",
   discard: "Verwerfen",
   discard_changes_title: "Änderungen verwerfen?",
@@ -349,6 +356,8 @@ export const de = {
 
   settings_saved_successfully: "Gespeichert.",
   settings_save_invalid: "Bitte überprüfen Sie den Wert und versuchen Sie es erneut.",
+  settings_reading_daily_goal_invalid: "Geben Sie eine ganze Zahl zwischen 1 und 1111 ein.",
+  settings_reading_look_back_date_invalid: "Geben Sie ein Datum als JJJJ-MM-TT ein.",
 
   calendar_today: "Heute",
   calendar_no_entries: "Keine Einträge",
@@ -477,6 +486,8 @@ export const de = {
   loading: "Wird geladen...",
   logged_before_today:
     "Dieses Kapitel wurde vor heute eingetragen. Sie können frühere Einträge auf der Kalenderseite bearbeiten.",
+  logged_in_longer_passage:
+    "Dieses Kapitel wurde als Teil eines längeren Abschnitts eingetragen und kann hier nicht abgewählt werden. Sie können diesen Eintrag auf der Kalenderseite bearbeiten.",
   unable_to_mark_complete: "Das Kapitel konnte nicht als abgeschlossen markiert werden.",
   unable_to_mark_incomplete: "Das Kapitel konnte nicht als unvollständig markiert werden.",
   login_forgot_password: "Passwort vergessen?",
@@ -502,6 +513,7 @@ export const de = {
     "Geben Sie Ihre E-Mail ein und wir senden Ihnen einen Code zum Zurücksetzen Ihres Passworts.",
   forgot_password_submit: "Code senden",
   account_change_email: "E-Mail ändern",
+  change_email_title: "E-Mail ändern",
   change_email_hint:
     "Geben Sie Ihre neue E-Mail und Ihr aktuelles Passwort ein. Wir senden einen Code an die neue Adresse.",
   change_email_current: "Aktuelle E-Mail:",

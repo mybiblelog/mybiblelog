@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { spacing, useTheme } from "@/src/design";
-import { Card, Icon, ListItem, Screen, Text } from "@/src/components";
+import { Card, Icon, ListItem, Screen, ScreenHeader, Text } from "@/src/components";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 
 export default function LanguageSettings() {
@@ -20,7 +20,8 @@ export default function LanguageSettings() {
   ];
 
   return (
-    <Screen edges={[]}>
+    <Screen>
+      <ScreenHeader padded back title={t("settings_section_language")} />
       <ScrollView contentContainerStyle={styles.content}>
         <Text variant="label" color="mutedText" style={styles.sectionLabel}>
           {t("settings_language_label")}

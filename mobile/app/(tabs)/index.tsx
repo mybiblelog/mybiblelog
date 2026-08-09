@@ -12,14 +12,14 @@ import {
   ReadingTrackerResetCard,
   RecentNotesSection,
   Screen,
+  ScreenHeader,
   SkeletonList,
   Text,
   useLogEntryOverlays,
   useSyncRefreshControl,
 } from "@/src/components";
 import { spacing } from "@/src/design";
-import { formatLongDate } from "@/src/i18n/date";
-import { useLocale, useT } from "@/src/i18n/LocaleProvider";
+import { useT } from "@/src/i18n/LocaleProvider";
 import { computeEntryVerseStatsForDate } from "@/src/log-entries/entryStats";
 import { formatVerseCountMessage } from "@/src/log-entries/verseCountMessage";
 import { useReadingSuggestions } from "@/src/reading-suggestions/useReadingSuggestions";
@@ -37,11 +37,9 @@ export default function Index() {
   const entries = useLogEntryList();
   const settings = useSettingsValue();
   const t = useT();
-  const { locale } = useLocale();
   const refreshControl = useSyncRefreshControl();
 
   const today = useMemo(() => dayjs().format("YYYY-MM-DD"), []);
-  const todayDisplay = useMemo(() => formatLongDate(today, locale), [locale, today]);
 
   const todayEntries = useMemo(
     () => (entries ?? []).filter((e) => e.date === today),
@@ -96,17 +94,13 @@ export default function Index() {
 
   return (
     <Screen padded>
-      <View style={styles.header}>
-        <View style={styles.headerText}>
-          <Text variant="title">{t("today_title")}</Text>
-          {/* Mobile-only: web gets a page title from the browser chrome, a
-              phone doesn't, so the date does that orienting work here. */}
-          <Text variant="subtitle" color="mutedText" style={styles.subtitle}>
-            {todayDisplay}
-          </Text>
-        </View>
-        <Button label={t("add")} testID="today.add-entry" leftIcon="add" onPress={openAdd} />
-      </View>
+      <ScreenHeader
+        title={t("today_title")}
+        style={styles.header}
+        right={
+          <Button label={t("add")} testID="today.add-entry" leftIcon="add" onPress={openAdd} />
+        }
+      />
 
       <View style={styles.goal} testID="daily-goal">
         <DoubleProgressBar
@@ -142,6 +136,8 @@ export default function Index() {
             <LogEntryRow
               entry={item}
               testID="today.entry-row"
+              // Every row on this screen is today's — the date is noise here.
+              showDate={false}
               meta={
                 stats
                   ? formatVerseCountMessage(t, {
@@ -181,7 +177,8 @@ export default function Index() {
             <View style={styles.viewAll}>
               <Button
                 label={t("today_view_all_reading")}
-                variant="ghost"
+                variant="secondary"
+                rightIcon="chevron-forward"
                 testID="today.view-all-reading"
                 // Mobile has no all-entries list screen; Calendar is the
                 // nearest surface for browsing past reading.
@@ -199,15 +196,7 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: spacing.sm,
-    marginBottom: spacing.sm,
-  },
-  headerText: { flex: 1 },
-  subtitle: { marginTop: spacing["3xs"] },
+  header: { marginBottom: spacing.sm },
   goal: { marginBottom: spacing.xl },
   goalMeta: {
     flexDirection: "row",

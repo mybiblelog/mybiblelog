@@ -43,11 +43,18 @@ describe("(tabs) layout", () => {
     expect(capturedScreenOptions).toMatchObject({ popToTopOnBlur: true, headerShown: false });
   });
 
-  it("registers all six tabs", () => {
+  it("registers all six routes", () => {
     const names = capturedScreens.map((s) => s.name);
     expect(names).toEqual(
       expect.arrayContaining(["index", "bible", "calendar", "checklist", "notes", "settings"])
     );
+  });
+
+  it("keeps calendar off the tab bar", () => {
+    const calendar = capturedScreens.find((s) => s.name === "calendar") as any;
+    expect(calendar.options.href).toBeNull();
+    const barred = capturedScreens.filter((s) => (s as any).options?.href !== null);
+    expect(barred.map((s) => s.name)).toEqual(["index", "bible", "checklist", "notes", "settings"]);
   });
 
   it("no longer uses a per-tab tabPress listener (popToTopOnBlur replaces it)", () => {

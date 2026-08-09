@@ -114,38 +114,26 @@ const localePath = useLocalePath();
 }
 
 .fifty-fifty-title {
-  font-size: 2rem;
+  font-size: var(--mbl-title-3);
   font-weight: 700;
   margin-bottom: var(--mbl-space-xs);
   line-height: 1.3;
   color: var(--mbl-text-strong);
 }
 
-@mixin mbl-mobile {
-  .fifty-fifty-title { font-size: 1.75rem; }
-}
-
 .fifty-fifty-subtitle {
-  font-size: 1.25rem;
+  font-size: var(--mbl-title-5);
   font-weight: 600;
   margin-bottom: var(--mbl-space-xs);
   color: var(--secondary-color);
   line-height: 1.4;
 }
 
-@mixin mbl-mobile {
-  .fifty-fifty-subtitle { font-size: 1.125rem; }
-}
-
 .fifty-fifty-description {
-  font-size: 1.125rem;
+  font-size: var(--mbl-text-lead);
   line-height: 1.7;
   color: var(--mbl-text-soft);
   margin-bottom: var(--mbl-space-xs);
-}
-
-@mixin mbl-mobile {
-  .fifty-fifty-description { font-size: 1rem; }
 }
 
 .fifty-fifty-list {
@@ -155,15 +143,11 @@ const localePath = useLocalePath();
 }
 
 .fifty-fifty-list li {
-  font-size: 1.125rem;
+  font-size: var(--mbl-text-lead);
   line-height: 1.7;
   color: var(--mbl-text-soft);
   padding: var(--mbl-space-xs) 0 var(--mbl-space-xs) var(--mbl-space-xl);
   position: relative;
-}
-
-@mixin mbl-mobile {
-  .fifty-fifty-list li { font-size: 1rem; }
 }
 
 .fifty-fifty-list li::before {

@@ -223,6 +223,9 @@ export const fr = {
   auth_login: "Connexion",
   auth_create_account: "Créer un compte",
   auth_logout: "Déconnexion",
+  auth_logout_confirm_title: "Se déconnecter ?",
+  auth_logout_confirm_message:
+    "Vous devrez vous reconnecter pour synchroniser cet appareil avec votre compte.",
 
   login_title: "Connexion",
   auth_email: "E-mail",
@@ -252,7 +255,9 @@ export const fr = {
   api_error_not_found: "Non trouvé",
   api_error_invalid_login: "Email ou mot de passe incorrect",
   api_error_verify_email: "Veuillez vérifier %{email} pour vérifier votre adresse email d'abord",
-  api_error_new_email_required: "Le nouvel email ne peut pas être le même que l'email actuel",
+  api_error_new_email_required: "Une nouvelle adresse email est requise",
+  api_error_new_email_invalid: "Veuillez saisir une adresse email valide",
+  api_error_new_email_unchanged: "Le nouvel email ne peut pas être le même que l'email actuel",
   api_error_email_in_use: "L'adresse email est déjà utilisée",
   api_error_password_incorrect: "Le mot de passe est incorrect",
   api_error_account_not_found: "Compte non trouvé",
@@ -283,6 +288,7 @@ export const fr = {
   choose_end_chapter: "Choisir le chapitre de fin",
   end_verse: "Verset de fin",
   choose_end_verse: "Choisir le verset de fin",
+  back: "Retour",
   close: "Fermer",
   discard: "Ignorer",
   discard_changes_title: "Ignorer les modifications ?",
@@ -349,6 +355,8 @@ export const fr = {
 
   settings_saved_successfully: "Enregistré.",
   settings_save_invalid: "Veuillez vérifier la valeur et réessayer.",
+  settings_reading_daily_goal_invalid: "Saisissez un nombre entier entre 1 et 1111.",
+  settings_reading_look_back_date_invalid: "Saisissez une date au format AAAA-MM-JJ.",
 
   calendar_today: "Aujourd'hui",
   calendar_no_entries: "Aucune entrée",
@@ -477,6 +485,8 @@ export const fr = {
   loading: "Chargement...",
   logged_before_today:
     "Ce chapitre a été enregistré avant aujourd'hui. Vous pouvez modifier les entrées précédentes sur la page Calendrier.",
+  logged_in_longer_passage:
+    "Ce chapitre a été enregistré dans le cadre d'un passage plus long ; il ne peut donc pas être décoché ici. Vous pouvez modifier cette entrée sur la page Calendrier.",
   unable_to_mark_complete: "Impossible de marquer le chapitre comme terminé.",
   unable_to_mark_incomplete: "Impossible de marquer le chapitre comme non terminé.",
   login_forgot_password: "Mot de passe oublié ?",
@@ -502,6 +512,7 @@ export const fr = {
     "Saisissez votre e-mail et nous vous enverrons un code pour réinitialiser votre mot de passe.",
   forgot_password_submit: "Envoyer le code",
   account_change_email: "Changer l'e-mail",
+  change_email_title: "Changer l'e-mail",
   change_email_hint:
     "Saisissez votre nouvel e-mail et votre mot de passe actuel. Nous enverrons un code à la nouvelle adresse.",
   change_email_current: "E-mail actuel :",

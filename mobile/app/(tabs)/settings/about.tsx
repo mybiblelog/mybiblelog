@@ -3,7 +3,7 @@ import Constants from "expo-constants";
 import { Fragment } from "react";
 import { Linking, ScrollView, StyleSheet, View } from "react-native";
 import { spacing, useTheme } from "@/src/design";
-import { Card, Icon, type IconName, ListItem, Screen, Text } from "@/src/components";
+import { Card, Icon, type IconName, ListItem, Screen, ScreenHeader, Text } from "@/src/components";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { useToast } from "@/src/toast/ToastProvider";
 import { PRIVACY_POLICY_URL, TERMS_URL, WEBSITE_BASE_URL } from "@/src/constants/links";
@@ -35,7 +35,8 @@ export default function AboutSettings() {
   ];
 
   return (
-    <Screen edges={[]}>
+    <Screen>
+      <ScreenHeader padded back title={t("settings_section_about")} />
       <ScrollView contentContainerStyle={styles.content}>
         <Text variant="label" color="mutedText" style={styles.sectionLabel}>
           {t("about_app_label")}

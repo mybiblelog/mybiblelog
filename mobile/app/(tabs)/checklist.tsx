@@ -4,14 +4,20 @@ import { useFocusEffect } from "expo-router";
 import { memo, useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated from "react-native-reanimated";
-import { Bible, type BookProgress, type ChapterProgress } from "@mybiblelog/shared";
+import {
+  Bible,
+  type BookProgress,
+  type ChapterProgress,
+  type TestamentFilter,
+} from "@mybiblelog/shared";
 import {
   AnimatedList,
   Card,
-  CARD_CONTENT_PADDING,
   Icon,
   ProgressBar,
   Screen,
+  ScreenHeader,
+  SegmentedControl,
   Spinner,
   Text,
 } from "@/src/components";
@@ -20,6 +26,10 @@ import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { useBibleProgress } from "@/src/stores/bibleProgress";
 import { logEntryActions, useLogEntryList } from "@/src/stores/logEntries";
 import { useToast } from "@/src/toast/ToastProvider";
+
+/** Card inset, matched to the Bible Books tiles so a collapsed book reads as
+ * lean as a book tile. Also the basis for the chapter grid's tile width. */
+const BOOK_CARD_PADDING = spacing.sm;
 
 const Separator = () => <View style={styles.separator} />;
 
@@ -96,7 +106,7 @@ const BookCard = memo(function BookCard({
   onToggleChapter: (bookIndex: number, chapterIndex: number) => void;
 }) {
   return (
-    <Card style={styles.bookCard}>
+    <Card padding="none" style={styles.bookCard}>
       <Pressable
         testID={`checklist.book-${book.bookIndex}`}
         onPress={() => onToggleBook(book.bookIndex)}
@@ -165,7 +175,20 @@ export default function Checklist() {
 
   const [busyChapter, setBusyChapter] = useState<string | null>(null);
   const [expandedBooks, setExpandedBooks] = useState<Record<string, boolean>>({});
+  const [testament, setTestament] = useState<TestamentFilter>("all");
   const { width: windowWidth } = useWindowDimensions();
+
+  // Purely a view filter: `progress` and `toggleChapter` keep working off the
+  // full 66-book list, and `expandedBooks` is keyed by absolute book index, so
+  // hiding a testament never disturbs what is expanded or what gets saved.
+  const filteredBooks = useMemo(() => {
+    if (!progress) return [];
+    return progress.books.filter((book) => {
+      if (testament === "old") return !Bible.isNewTestament(book.bookIndex);
+      if (testament === "new") return Bible.isNewTestament(book.bookIndex);
+      return true;
+    });
+  }, [progress, testament]);
 
   // Tiles expand to fill the card edge-to-edge: derive the column count from a
   // ~54pt minimum tile, then split the available width (minus gaps) evenly.
@@ -174,7 +197,7 @@ export default function Checklist() {
   // leaves a tile-sized hole on the right.
   const tileWidth = useMemo(() => {
     const gap = spacing.sm; // matches chaptersWrap gap
-    const available = windowWidth - spacing.pageGutter * 2 - CARD_CONTENT_PADDING * 2;
+    const available = windowWidth - spacing.pageGutter * 2 - BOOK_CARD_PADDING * 2;
     const columns = Math.max(1, Math.floor((available + gap) / (54 + gap)));
     return Math.floor((available - gap * (columns - 1)) / columns);
   }, [windowWidth]);
@@ -223,7 +246,19 @@ export default function Checklist() {
           if (matching?.clientId) {
             await logEntryActions.deleteEntry(matching.clientId);
           } else {
-            showToast({ type: "info", message: t("logged_before_today") });
+            // Completion is verse-coverage based, so a chapter can read as complete
+            // without having an entry of its own to delete. Name the actual reason:
+            // covered by a wider entry logged today, or covered only by earlier dates.
+            const loggedToday =
+              Bible.filterRangesByBookChapter(
+                bookIndex,
+                chapterIndex,
+                logEntries.filter((e) => e.date === date)
+              ).length > 0;
+            showToast({
+              type: "info",
+              message: t(loggedToday ? "logged_in_longer_passage" : "logged_before_today"),
+            });
           }
         } else {
           await logEntryActions.createEntry({ date, startVerseId, endVerseId });
@@ -247,8 +282,16 @@ export default function Checklist() {
   return (
     <Screen padded>
       <View style={styles.header}>
-        <Text variant="title">{t("chapter_checklist")}</Text>
-        {busy && <Spinner />}
+        <ScreenHeader title={t("chapter_checklist")} right={busy ? <Spinner /> : undefined} />
+        <SegmentedControl
+          options={[
+            { value: "all", label: t("whole_bible") },
+            { value: "old", label: t("old_testament_short") },
+            { value: "new", label: t("new_testament_short") },
+          ]}
+          value={testament}
+          onChange={setTestament}
+        />
       </View>
 
       {!progress ? (
@@ -259,15 +302,18 @@ export default function Checklist() {
         </Card>
       ) : (
         <AnimatedList
-          data={progress.books}
+          // Remounted per filter so the enter animation replays on a switch,
+          // matching the Bible Books list.
+          key={testament}
+          data={filteredBooks}
           // Rows expand/collapse in place; the item layout animation leaves
           // sibling books overlapping the expanded chapter grid, so opt out.
           animateItemLayout={false}
           keyExtractor={(b: BookProgress) => String(b.bookIndex)}
-          // Fixed-size list (66 books): render it all up front instead of
-          // FlatList's default incremental backfill, so the page doesn't
+          // Fixed-size list (66 books at most): render it all up front instead
+          // of FlatList's default incremental backfill, so the page doesn't
           // visibly grow after mount.
-          initialNumToRender={progress.books.length}
+          initialNumToRender={filteredBooks.length}
           contentContainerStyle={styles.listContent}
           renderItem={({ item }) => {
             const isExpanded = expandedBooks[String(item.bookIndex)] === true;
@@ -295,12 +341,7 @@ export default function Checklist() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: spacing.sm,
-  },
+  header: { gap: spacing.sm, marginBottom: spacing.sm },
   listContent: {
     paddingBottom: spacing.listBottom,
   },
@@ -308,12 +349,12 @@ const styles = StyleSheet.create({
   pressed: { opacity: 0.7 },
   bookCard: {
     borderRadius: radius["2xl"],
+    padding: BOOK_CARD_PADDING,
   },
   bookHeader: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingBottom: spacing.sm,
   },
   bookHeaderLeft: {
     flexDirection: "row",

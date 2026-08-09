@@ -37,6 +37,9 @@ export default defineConfig({
     // client-only code paths (DOM/cookies/redirects) are skipped in unit tests.
     'import.meta.client': 'false',
     'import.meta.server': 'true',
+    // Unit tests exercise the production branch; the dev-only suppression in
+    // PwaPrompt.vue is verified by hand in `nuxt dev`.
+    'import.meta.dev': 'false',
   },
   // The project tsconfig extends `./.nuxt/tsconfig.json`, which only exists after
   // `nuxt prepare`. Give esbuild an explicit empty config so the test runner does

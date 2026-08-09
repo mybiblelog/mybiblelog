@@ -45,9 +45,13 @@ export type ThemeColors = {
   secondary: string;
   tertiary: string;
   success: string;
+  /** Text/icon on a solid `success` fill (web `--mbl-on-accent`). */
+  onSuccess: string;
   warning: string;
   onWarning: string;
   info: string;
+  /** Text/icon on a solid `info` fill (web `--mbl-on-accent`). */
+  onInfo: string;
   onPrimary: string;
   destructive: string;
   onDestructive: string;
@@ -105,9 +109,11 @@ export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
     secondary: brand.secondary,
     tertiary: brand.tertiary,
     success: "#48c774",
+    onSuccess: "#ffffff",
     warning: "#ffdd57",
     onWarning: "#946c00",
     info: "#3298dc",
+    onInfo: "#ffffff",
     onPrimary: "#ffffff",
     destructive: "#f14668",
     onDestructive: "#ffffff",
@@ -150,9 +156,11 @@ export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
     secondary: brand.secondary,
     tertiary: brand.tertiary,
     success: "#48c774",
+    onSuccess: "#ffffff",
     warning: "#ffdd57",
     onWarning: "#946c00",
     info: "#3298dc",
+    onInfo: "#ffffff",
     onPrimary: "#ffffff",
     destructive: "#f14668",
     onDestructive: "#ffffff",

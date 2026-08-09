@@ -49,7 +49,7 @@ export function ReadingSuggestionsSection({ suggestions, today, loading = false 
 
   return (
     <View style={styles.section}>
-      <Text variant="label" style={styles.sectionTitle}>
+      <Text variant="heading" style={styles.sectionTitle}>
         {t("today_reading_suggestions")}
       </Text>
 
@@ -69,13 +69,16 @@ export function ReadingSuggestionsSection({ suggestions, today, loading = false 
             <ListItem
               key={`${suggestion.startVerseId}-${suggestion.endVerseId}`}
               testID="today.suggestion"
+              // The reason leads: it's what makes the passage below it make
+              // sense, so it reads as a label on the suggestion, not a footnote.
+              overline={suggestion.contextMessage}
               title={suggestion.passageLabel}
-              subtitle={suggestion.contextMessage}
               meta={t("today_suggestion_meta", { count: suggestion.newVerseCount })}
               onPress={() => setMenuSuggestion(suggestion)}
               trailing={
                 <IconButton
-                  name="ellipsis-horizontal"
+                  name="ellipsis-vertical"
+                  size={18}
                   accessibilityLabel={t("today_reading_suggestions")}
                   onPress={() => setMenuSuggestion(suggestion)}
                 />
@@ -128,6 +131,6 @@ export function ReadingSuggestionsSection({ suggestions, today, loading = false 
 
 const styles = StyleSheet.create({
   section: { marginTop: spacing.md },
-  sectionTitle: { marginBottom: spacing.sm },
+  sectionTitle: { marginBottom: spacing.md },
   list: { gap: spacing.sm },
 });

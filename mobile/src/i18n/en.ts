@@ -215,6 +215,8 @@ export const en = {
   auth_login: "Login",
   auth_create_account: "Create account",
   auth_logout: "Logout",
+  auth_logout_confirm_title: "Log out?",
+  auth_logout_confirm_message: "You'll need to log in again to sync this device with your account.",
 
   login_title: "Login",
   auth_email: "Email",
@@ -256,6 +258,7 @@ export const en = {
   forgot_password_submit: "Send reset code",
 
   account_change_email: "Change email",
+  change_email_title: "Change Email",
   change_email_hint:
     "Enter your new email and current password. We'll send a code to the new address.",
   change_email_current: "Current email:",
@@ -278,7 +281,9 @@ export const en = {
   api_error_not_found: "Not found",
   api_error_invalid_login: "Email or password is incorrect",
   api_error_verify_email: "Please check %{email} to verify your email first",
-  api_error_new_email_required: "New email cannot be the same as current email",
+  api_error_new_email_required: "A new email address is required",
+  api_error_new_email_invalid: "Please enter a valid email address",
+  api_error_new_email_unchanged: "New email cannot be the same as current email",
   api_error_email_in_use: "Email address is already in use",
   api_error_password_incorrect: "Password is incorrect",
   api_error_account_not_found: "Account not found",
@@ -307,6 +312,7 @@ export const en = {
   choose_end_chapter: "Choose End Chapter",
   end_verse: "End Verse",
   choose_end_verse: "Choose End Verse",
+  back: "Back",
   close: "Close",
   discard: "Discard",
   discard_changes_title: "Discard changes?",
@@ -372,6 +378,8 @@ export const en = {
 
   settings_saved_successfully: "Saved.",
   settings_save_invalid: "Please check the value and try again.",
+  settings_reading_daily_goal_invalid: "Enter a whole number between 1 and 1111.",
+  settings_reading_look_back_date_invalid: "Enter a date as YYYY-MM-DD.",
 
   calendar_today: "Today",
   calendar_no_entries: "No Entries",
@@ -501,6 +509,8 @@ export const en = {
   loading: "Loading...",
   logged_before_today:
     "This chapter was logged before today. You can edit previous log entries on the Calendar page.",
+  logged_in_longer_passage:
+    "This chapter was logged as part of a longer passage, so it can't be unchecked here. You can edit that entry on the Calendar page.",
   unable_to_mark_complete: "Unable to mark the chapter complete.",
   unable_to_mark_incomplete: "Unable to mark the chapter incomplete.",
 } as const;

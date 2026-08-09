@@ -18,7 +18,7 @@ import BookReport from '~/components/bible/BookReport.vue';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useAppInitStore } from '~/stores/app-init';
 
-definePageMeta({ middleware: ['auth'] });
+definePageMeta({ middleware: ['auth', 'valid-book'] });
 
 const { locale } = useI18n();
 const localePath = useLocalePath();

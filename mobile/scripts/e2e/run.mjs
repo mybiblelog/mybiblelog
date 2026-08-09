@@ -84,6 +84,15 @@ for (const scale of [
   run("adb", ["shell", "settings", "put", "global", scale, "0"]);
 }
 
+// Turn off stylus handwriting. The emulator reports a stylus-capable pointer,
+// so focusing a text field puts Gboard into handwriting mode — which pops a
+// one-time full-screen "Try out your stylus" onboarding dialog. That dialog is
+// its own window covering the whole screen, so Maestro's hierarchy contains
+// only the IME and the app's elements vanish ("Element not found: …"), and the
+// floating stylus toolbar it leaves behind replaces the soft keyboard. With
+// this off, focusing a field shows the ordinary keyboard.
+run("adb", ["shell", "settings", "put", "secure", "stylus_handwriting_enabled", "0"]);
+
 // 2. Seed.
 const seedOutput = run(process.execPath, [path.join(mobileDir, "scripts/e2e/seed.mjs"), scenario]);
 const user = JSON.parse(seedOutput);

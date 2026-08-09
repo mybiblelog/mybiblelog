@@ -11,10 +11,9 @@ type Edge = "top" | "bottom";
  * safe-area insets so content never collides with the status bar / notch
  * or the home indicator.
  *
- * - Headerless tab screens (Today, Calendar, Checklist, Log) should keep the
- *   default `edges={["top"]}` — they have no native header to protect them.
- * - Screens pushed under a native stack header already get a top inset from
- *   the header, so pass `edges={[]}`.
+ * - Every screen owns its heading in content via `ScreenHeader` and hides the
+ *   native stack header, so the default `edges={["top"]}` is right everywhere —
+ *   there's no header bar left to supply the top inset.
  * - The bottom tab bar owns the bottom inset, so `bottom` is opt-in.
  *
  * `padded` adds the default horizontal gutter + top content gap on top of the

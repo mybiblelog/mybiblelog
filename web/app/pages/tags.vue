@@ -5,7 +5,7 @@
         {{ t('note_tags') }}
       </h2>
       <div class="mbl-button-group mbl-button-group--start">
-        <NuxtLink class="mbl-button" to="/notes">
+        <NuxtLink class="mbl-button" :to="localePath('/notes')">
           {{ t('notes') }}
           <caret-right-icon style="margin-left: 0.2rem;" />
         </NuxtLink>
@@ -16,11 +16,11 @@
     </header>
 
     <div class="tag-sort-row">
-      <div class="mbl-field mbl-field--addons">
+      <div class="mbl-field mbl-field--addons mbl-field--flush">
         <div class="mbl-control">
           <span class="mbl-button mbl-button--static">{{ t('sort_by') }}</span>
         </div>
-        <div class="mbl-control">
+        <div class="mbl-control mbl-control--expanded">
           <div class="mbl-select">
             <select :value="passageNoteTagsStore.sortOrder" :disabled="!hydrated" data-testid="tag-sort-order" @change="onSortOrderChange">
               <option value="label:ascending">
@@ -45,11 +45,22 @@
           </div>
         </div>
       </div>
+      <div class="mbl-control tag-search">
+        <input
+          v-model="searchText"
+          class="mbl-input"
+          type="text"
+          :disabled="!hydrated"
+          :placeholder="t('search_placeholder')"
+          :aria-label="t('search_placeholder')"
+          data-testid="tag-search"
+        >
+      </div>
     </div>
 
     <div>
       <div
-        v-for="tag in passageNoteTagsStore.passageNoteTags"
+        v-for="tag in visibleTags"
         :key="tag.id"
         class="tag-line mbl-card mbl-card--list-item"
         data-testid="tag-line"
@@ -88,6 +99,11 @@
           {{ t('no_tags') }}
         </div>
       </div>
+      <div v-else-if="!loading && !visibleTags.length" class="tag-line mbl-card mbl-card--list-item" data-testid="tag-no-matches">
+        <div class="mbl-text-center">
+          {{ t('no_matching_tags') }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -105,12 +121,25 @@ definePageMeta({ middleware: ['auth'] });
 const { t } = useI18n();
 useHead({ title: () => t('note_tags') });
 
+const localePath = useLocalePath();
 const router = useRouter();
 const passageNoteTagsStore = usePassageNoteTagsStore();
 const tagEditorStore = usePassageNoteTagEditorStore();
 
 const hydrated = useHydrated();
 const loading = ref(true);
+const searchText = ref('');
+
+// Case- and accent-insensitive, matching the collator sensitivity used for A-Z sorting
+function foldForSearch(value: string) {
+  return value.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLocaleLowerCase();
+}
+
+const visibleTags = computed(() => {
+  const query = foldForSearch(searchText.value.trim());
+  if (!query) { return passageNoteTagsStore.passageNoteTags; }
+  return passageNoteTagsStore.passageNoteTags.filter(tag => foldForSearch(tag.label ?? '').includes(query));
+});
 
 onMounted(async () => {
   try {
@@ -163,7 +192,58 @@ async function deleteTag(id: string | number) {
 </script>
 
 <style scoped>
-.tag-sort-row { margin: var(--mbl-space-2xs) 0 var(--mbl-space-md); }
+.tag-sort-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--mbl-space-sm);
+  margin: var(--mbl-space-2xs) 0 var(--mbl-space-md);
+}
+
+.tag-search {
+  flex: 1 1 10rem;
+  max-width: 18rem;
+}
+
+/* Match the pill radius the sort addons group gets from --mbl-radius-button,
+   so the two controls read as one family. */
+.tag-search .mbl-input {
+  border-radius: var(--mbl-radius-button);
+}
+
+@mixin mbl-mobile {
+  .tag-sort-row {
+    gap: var(--mbl-space-xs);
+  }
+
+  /* Share one row when both fit; when the input's basis doesn't fit, it wraps
+     and flex-grow then makes each control fill its own line, so the two read
+     as a matched pair either way. 7rem is tuned against the sort group's
+     ~219px intrinsic width: 375px-wide phones keep one row in English, 360px
+     ones and the longer locales stack. min-width is only an overflow guard
+     for a sort group wider than the whole column. */
+  .tag-sort-row > .mbl-field--addons {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .tag-search {
+    flex: 1 1 7rem;
+    max-width: none;
+  }
+
+  /* .mbl-select is inline-block with no intrinsic full width, so the expanded
+     control needs this to actually take the space it was granted. */
+  .tag-sort-row .mbl-select,
+  .tag-sort-row .mbl-select select {
+    width: 100%;
+  }
+
+  .tag-sort-row .mbl-select select {
+    text-overflow: ellipsis;
+  }
+}
 
 .tag-line {
   display: flex;
@@ -204,6 +284,8 @@ async function deleteTag(id: string | number) {
     "edit": "Edit",
     "delete": "Delete",
     "no_tags": "No Tags",
+    "search_placeholder": "Search tags",
+    "no_matching_tags": "No matching tags",
     "sort_by": "Sort",
     "sort_az": "A-Z",
     "sort_newest_first": "Newest First",
@@ -223,6 +305,8 @@ async function deleteTag(id: string | number) {
     "edit": "Bearbeiten",
     "delete": "Löschen",
     "no_tags": "Keine Tags",
+    "search_placeholder": "Tags suchen",
+    "no_matching_tags": "Keine passenden Tags",
     "sort_by": "Sortieren",
     "sort_az": "A-Z",
     "sort_newest_first": "Neueste zuerst",
@@ -242,6 +326,8 @@ async function deleteTag(id: string | number) {
     "edit": "Editar",
     "delete": "Eliminar",
     "no_tags": "Sin etiquetas",
+    "search_placeholder": "Buscar etiquetas",
+    "no_matching_tags": "Sin coincidencias",
     "sort_by": "Ordenar",
     "sort_az": "A-Z",
     "sort_newest_first": "Más nuevas",
@@ -261,6 +347,8 @@ async function deleteTag(id: string | number) {
     "edit": "Éditer",
     "delete": "Supprimer",
     "no_tags": "Pas d'étiquettes",
+    "search_placeholder": "Rechercher des étiquettes",
+    "no_matching_tags": "Aucun résultat",
     "sort_by": "Trier",
     "sort_az": "A-Z",
     "sort_newest_first": "Plus récentes",
@@ -280,6 +368,8 @@ async function deleteTag(id: string | number) {
     "edit": "편집",
     "delete": "삭제",
     "no_tags": "태그 없음",
+    "search_placeholder": "태그 검색",
+    "no_matching_tags": "일치하는 태그 없음",
     "sort_by": "정렬",
     "sort_az": "가나다순",
     "sort_newest_first": "최신순",
@@ -299,6 +389,8 @@ async function deleteTag(id: string | number) {
     "edit": "Editar",
     "delete": "Apagar",
     "no_tags": "Sem marcadores",
+    "search_placeholder": "Pesquisar marcadores",
+    "no_matching_tags": "Sem correspondências",
     "sort_by": "Ordenar",
     "sort_az": "A-Z",
     "sort_newest_first": "Mais recentes",
@@ -318,6 +410,8 @@ async function deleteTag(id: string | number) {
     "edit": "Редагувати",
     "delete": "Видалити",
     "no_tags": "Немає тегів",
+    "search_placeholder": "Пошук тегів",
+    "no_matching_tags": "Нічого не знайдено",
     "sort_by": "Сортувати",
     "sort_az": "A-Z",
     "sort_newest_first": "Найновіші",

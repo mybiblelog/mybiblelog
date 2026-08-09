@@ -8,9 +8,13 @@ import type { TextStyle } from "react-native";
  * the names used before the design-system consolidation.
  */
 export const typography = {
-  /** Large top-level screen title (Today / Log / Checklist …). */
+  /**
+   * The one top-level screen title size, app-wide. Exactly one per screen, and
+   * always through `<ScreenHeader>` — never set directly, and never used for a
+   * heading *within* a screen.
+   */
   title: { fontSize: 28, fontWeight: "800", lineHeight: 34 } as TextStyle,
-  /** Section / card heading. */
+  /** Heading inside a screen: section, card, sheet, modal. Never a screen title. */
   heading: { fontSize: 20, fontWeight: "800", lineHeight: 26 } as TextStyle,
   /** Secondary line under a title. */
   subtitle: { fontSize: 13, fontWeight: "700", lineHeight: 18 } as TextStyle,

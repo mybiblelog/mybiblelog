@@ -3,7 +3,15 @@ import dayjs from "dayjs";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
-import { Button, Card, DatePickerSheet, ProgressBar, Screen, Text } from "@/src/components";
+import {
+  Button,
+  Card,
+  DatePickerSheet,
+  ProgressBar,
+  Screen,
+  ScreenHeader,
+  Text,
+} from "@/src/components";
 import { spacing } from "@/src/design";
 import { formatLongDate, parseYmdToDate } from "@/src/i18n/date";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
@@ -50,7 +58,7 @@ function SectionCard({
 }) {
   return (
     <Card style={styles.card}>
-      <Text variant="label">{title}</Text>
+      <Text variant="heading">{title}</Text>
       {description ? (
         <Text variant="caption" color="mutedText" style={styles.cardDescription}>
           {description}
@@ -138,7 +146,8 @@ export default function Progress() {
   }
 
   return (
-    <Screen edges={[]}>
+    <Screen>
+      <ScreenHeader padded back title={t("progress_title")} />
       <ScrollView contentContainerStyle={styles.content}>
         <SectionCard
           title={t("progress_settings_title")}
@@ -156,6 +165,7 @@ export default function Progress() {
             label={t("progress_update_settings")}
             variant="secondary"
             size="sm"
+            rightIcon="chevron-forward"
             style={styles.cardAction}
             onPress={() => router.push("/(tabs)/settings/reading")}
           />

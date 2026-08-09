@@ -6,6 +6,7 @@ import {
   BookRecencyList,
   DailyVersesChart,
   Screen,
+  ScreenHeader,
   SegmentedControl,
   Text,
 } from "@/src/components";
@@ -21,7 +22,8 @@ export default function Insights() {
   const [view, setView] = useState<InsightsView>("activity");
 
   return (
-    <Screen edges={[]}>
+    <Screen>
+      <ScreenHeader padded back title={t("insights_title")} />
       <ScrollView contentContainerStyle={styles.content}>
         <SegmentedControl
           options={[

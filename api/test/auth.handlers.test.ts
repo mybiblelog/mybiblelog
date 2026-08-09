@@ -588,6 +588,46 @@ describe('auth handlers (unit)', () => {
   });
 
   describe('beginEmailChange', () => {
+    // Each rejection reason gets its own code: a client that showed the
+    // "same as current email" copy for a malformed address would be lying
+    // about what the user did wrong.
+    const beginEmailChangeError = async (body: Record<string, unknown>, users?: UsersStub) => {
+      const currentUser = { ...verifiedUser, settings: { locale: 'en' } } as unknown as UserRecord;
+      const deps = makeDeps({
+        authenticate: (async () => currentUser) as RouteDependencies['authenticate'],
+        users: { verifyPassword: async () => true, ...users },
+      });
+      try {
+        await beginEmailChange(makeRequest({ body }), deps);
+      }
+      catch (err) {
+        return err as ValidationError;
+      }
+      throw new Error('expected beginEmailChange to reject');
+    };
+
+    it('reports a missing new email as required', async () => {
+      const err = await beginEmailChangeError({ newEmail: '   ', password: 'pw' });
+      expect(err.details).toEqual([{ code: ApiErrorDetailCode.NewEmailRequired, field: 'newEmail' }]);
+    });
+
+    it('reports a malformed new email as invalid, not as unchanged', async () => {
+      const err = await beginEmailChangeError({ newEmail: 'not-an-email', password: 'pw' });
+      expect(err.details).toEqual([{ code: ApiErrorDetailCode.NewEmailInvalid, field: 'newEmail' }]);
+    });
+
+    it('reports the current address as unchanged', async () => {
+      const err = await beginEmailChangeError({ newEmail: 'user@example.com', password: 'pw' });
+      expect(err.details).toEqual([{ code: ApiErrorDetailCode.NewEmailUnchanged, field: 'newEmail' }]);
+    });
+
+    it('treats a differently-cased or padded current address as unchanged', async () => {
+      // `beginEmailUpdate` lowercases before storing, so comparing the raw input
+      // would let ' User@Example.com ' start a change to the same address.
+      const err = await beginEmailChangeError({ newEmail: '  User@Example.COM  ', password: 'pw' });
+      expect(err.details).toEqual([{ code: ApiErrorDetailCode.NewEmailUnchanged, field: 'newEmail' }]);
+    });
+
     it('rejects an incorrect password', async () => {
       const deps = makeDeps({ users: { verifyPassword: async () => false } });
       await expect(

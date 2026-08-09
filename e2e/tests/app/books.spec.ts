@@ -94,6 +94,15 @@ test.describe('Bible Books pages', () => {
     await expect(page.getByTestId('book-report-progress')).toBeVisible();
   });
 
+  test('invalid book index redirects to the books overview', async ({ page }) => {
+    // Every in-app link builds `/books/${bookIndex}`, but a hand-typed or stale
+    // URL must not reach the Bible lookups with a non-numeric or out-of-range index.
+    for (const badIndex of ['genesis', '0', String(BOOK.REVELATION + 1), '1.5']) {
+      await page.goto(`/books/${badIndex}`);
+      await expect(page).toHaveURL(/\/books$/);
+    }
+  });
+
   test('adding an entry from a chapter updates the book report', async ({ page }) => {
     await page.goto('/books/1');
 

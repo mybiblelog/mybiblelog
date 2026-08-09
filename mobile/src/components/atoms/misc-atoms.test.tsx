@@ -1,4 +1,5 @@
 import { View } from "react-native";
+import { Path } from "react-native-svg";
 import { Icon } from "./Icon";
 import { Skeleton } from "./Skeleton";
 import { Spacer } from "./Spacer";
@@ -7,6 +8,11 @@ import { renderWithProviders } from "@/src/test-utils/renderWithProviders";
 describe("Icon", () => {
   it("renders without crashing", () => {
     expect(() => renderWithProviders(<Icon name="book-outline" />)).not.toThrow();
+  });
+
+  it("draws the local SVG plus for the add glyph", () => {
+    const { UNSAFE_getByType } = renderWithProviders(<Icon name="add" />);
+    expect(UNSAFE_getByType(Path).props.d).toBe("M12 5V19M5 12H19");
   });
 });
 

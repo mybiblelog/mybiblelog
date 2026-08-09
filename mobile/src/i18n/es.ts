@@ -220,6 +220,9 @@ export const es = {
   auth_login: "Iniciar sesión",
   auth_create_account: "Crear cuenta",
   auth_logout: "Cerrar sesión",
+  auth_logout_confirm_title: "¿Cerrar sesión?",
+  auth_logout_confirm_message:
+    "Tendrás que iniciar sesión de nuevo para sincronizar este dispositivo con tu cuenta.",
 
   login_title: "Iniciar sesión",
   auth_email: "Correo electrónico",
@@ -249,7 +252,9 @@ export const es = {
   api_error_not_found: "No encontrado",
   api_error_invalid_login: "El correo electrónico o la contraseña son incorrectos",
   api_error_verify_email: "Por favor revise %{email} para verificar su correo electrónico primero",
-  api_error_new_email_required:
+  api_error_new_email_required: "Se requiere una nueva dirección de correo electrónico",
+  api_error_new_email_invalid: "Por favor ingrese una dirección de correo electrónico válida",
+  api_error_new_email_unchanged:
     "El nuevo correo electrónico no puede ser el mismo que el correo electrónico actual",
   api_error_email_in_use: "La dirección de correo electrónico ya está en uso",
   api_error_password_incorrect: "La contraseña es incorrecta",
@@ -280,6 +285,7 @@ export const es = {
   choose_end_chapter: "Elegir capítulo final",
   end_verse: "Versículo final",
   choose_end_verse: "Elegir versículo final",
+  back: "Atrás",
   close: "Cerrar",
   discard: "Descartar",
   discard_changes_title: "¿Descartar cambios?",
@@ -346,6 +352,8 @@ export const es = {
 
   settings_saved_successfully: "Guardado.",
   settings_save_invalid: "Revisa el valor e inténtalo de nuevo.",
+  settings_reading_daily_goal_invalid: "Introduce un número entero entre 1 y 1111.",
+  settings_reading_look_back_date_invalid: "Introduce una fecha con el formato AAAA-MM-DD.",
 
   calendar_today: "Hoy",
   calendar_no_entries: "No hay entradas",
@@ -474,6 +482,8 @@ export const es = {
   loading: "Cargando...",
   logged_before_today:
     "Este capítulo se registró antes de hoy. Puedes editar entradas anteriores en la página del Calendario.",
+  logged_in_longer_passage:
+    "Este capítulo se registró como parte de un pasaje más largo, por lo que no se puede desmarcar aquí. Puedes editar esa entrada en la página del Calendario.",
   unable_to_mark_complete: "No se puede marcar el capítulo como completo.",
   unable_to_mark_incomplete: "No se puede marcar el capítulo como incompleto.",
   login_forgot_password: "¿Olvidaste tu contraseña?",
@@ -499,6 +509,7 @@ export const es = {
     "Introduce tu correo y te enviaremos un código para restablecer tu contraseña.",
   forgot_password_submit: "Enviar código",
   account_change_email: "Cambiar correo",
+  change_email_title: "Cambiar correo",
   change_email_hint:
     "Introduce tu nuevo correo y tu contraseña actual. Enviaremos un código a la nueva dirección.",
   change_email_current: "Correo actual:",

@@ -14,7 +14,7 @@ jest.mock("@/src/api/notesApi", () => ({
     .mockResolvedValue({ notes: [], meta: { offset: 0, limit: 10, size: 0 } }),
 }));
 
-import { Bible, computeBibleProgress } from "@mybiblelog/shared";
+import { computeBibleProgress } from "@mybiblelog/shared";
 import { router } from "expo-router";
 import { fetchBookNoteCounts } from "@/src/api/notesApi";
 import { fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/renderWithProviders";
@@ -49,20 +49,20 @@ describe("Bible Books screen", () => {
     await waitFor(() => expect(fetchBookNoteCounts).toHaveBeenCalled());
   });
 
-  it("opens the notes tab filtered to the book when the badge is pressed", () => {
+  it("navigates to the book when the badge is pressed, without filtering the notes tab", () => {
     useNoteCountsStore.setState({ counts: { 1: 2 } });
     const { getByText } = renderWithProviders(<BibleIndex />);
 
     fireEvent.press(getByText("2 notes"));
 
+    // The badge is a plain label, not a link: the press falls through to the row.
+    expect(router.push).toHaveBeenCalledWith("/bible/1");
     const query = useNotesStore.getState().query;
-    expect(query.filterPassageStartVerseId).toBe(Bible.getFirstBookVerseId(1));
-    expect(query.filterPassageEndVerseId).toBe(Bible.getLastBookVerseId(1));
-    expect(query.filterPassageMatching).toBe("exclusive");
-    expect(router.push).toHaveBeenCalledWith("/(tabs)/notes");
+    expect(query.filterPassageStartVerseId).toBe(0);
+    expect(query.filterPassageEndVerseId).toBe(0);
   });
 
-  it("still navigates to the book when the row itself is pressed", () => {
+  it("navigates to the book when the row itself is pressed", () => {
     useNoteCountsStore.setState({ counts: { 1: 2 } });
     const { getByText } = renderWithProviders(<BibleIndex />);
     fireEvent.press(getByText("Genesis"));

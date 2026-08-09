@@ -30,6 +30,10 @@ export function NoteCard({ note, onPressMenu, testID }: Props) {
     .map((id) => tags.find((tag) => tag.id === id))
     .filter((tag): tag is NonNullable<typeof tag> => tag !== undefined);
 
+  // The API stamps `updatedAt` on create and bumps it on every edit; `createdAt`
+  // covers notes stored before it existed.
+  const editedAt = note.updatedAt ?? note.createdAt;
+
   const handleOpenPassage = (startVerseId: number, endVerseId: number) => {
     void (async () => {
       const ok = await openPassageInBible(startVerseId, endVerseId, {
@@ -43,43 +47,40 @@ export function NoteCard({ note, onPressMenu, testID }: Props) {
   };
 
   return (
-    <Card testID={testID}>
+    // "list-item" padding, so a note sits in the same column as the log-entry
+    // rows it shares the Today screen with.
+    <Card padding="list-item" testID={testID}>
       <View style={styles.header}>
-        <View style={styles.headerText}>
-          {note.passages.length > 0 ? (
-            <View style={styles.passageRow}>
-              {note.passages.map((passage, index) => {
-                const label = Bible.displayVerseRange(
-                  passage.startVerseId,
-                  passage.endVerseId,
-                  locale
-                );
-                return (
-                  <Pressable
-                    key={`${passage.startVerseId}-${passage.endVerseId}-${index}`}
-                    accessibilityRole="link"
-                    accessibilityLabel={label}
-                    onPress={() => handleOpenPassage(passage.startVerseId, passage.endVerseId)}
-                    style={({ pressed }) => pressed && styles.pressed}
-                  >
-                    <Text variant="bodyStrong" color="primary">
-                      {label}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-          ) : null}
-          {note.createdAt ? (
-            <Text variant="caption" color="mutedText">
-              {displayTimeSince(note.createdAt, locale)}
-            </Text>
-          ) : null}
-        </View>
+        {note.passages.length > 0 ? (
+          <View style={styles.passageList}>
+            {note.passages.map((passage, index) => {
+              const label = Bible.displayVerseRange(
+                passage.startVerseId,
+                passage.endVerseId,
+                locale
+              );
+              return (
+                <Pressable
+                  key={`${passage.startVerseId}-${passage.endVerseId}-${index}`}
+                  accessibilityRole="link"
+                  accessibilityLabel={label}
+                  onPress={() => handleOpenPassage(passage.startVerseId, passage.endVerseId)}
+                  style={({ pressed }) => pressed && styles.pressed}
+                >
+                  <Text variant="bodyStrong" color="primary">
+                    {label}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        ) : null}
         <IconButton
-          name="ellipsis-horizontal"
+          name="ellipsis-vertical"
+          size={18}
           accessibilityLabel={t("note_actions")}
           onPress={() => onPressMenu(note)}
+          style={styles.menuButton}
         />
       </View>
 
@@ -92,6 +93,12 @@ export function NoteCard({ note, onPressMenu, testID }: Props) {
           ))}
         </View>
       ) : null}
+
+      {editedAt ? (
+        <Text variant="caption" color="mutedText" style={styles.editedAt}>
+          {displayTimeSince(editedAt, locale)}
+        </Text>
+      ) : null}
     </Card>
   );
 }
@@ -100,12 +107,17 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "flex-start",
-    justifyContent: "space-between",
     gap: spacing.sm,
     marginBottom: spacing.xs,
   },
-  headerText: { flex: 1, gap: spacing["3xs"] },
-  passageRow: { flexDirection: "row", flexWrap: "wrap", columnGap: spacing.sm },
+  // One passage per line: a wrapping row let two short references share a line,
+  // which read as a single run-on reference.
+  passageList: { flex: 1, alignItems: "flex-start", rowGap: spacing["3xs"] },
+  // Pins the menu to the right edge even when there is no passage list beside
+  // it to take up the slack. The spacing-token rule matches every margin
+  // literal; "auto" is a keyword, not a raw spacing value.
+  // eslint-disable-next-line no-restricted-syntax
+  menuButton: { marginLeft: "auto" },
   pressed: { opacity: 0.7 },
   pillRow: {
     flexDirection: "row",
@@ -113,4 +125,5 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
     marginTop: spacing.sm,
   },
+  editedAt: { alignSelf: "flex-end", marginTop: spacing.xs },
 });

@@ -218,6 +218,8 @@ export const ko = {
   auth_login: "로그인",
   auth_create_account: "계정 만들기",
   auth_logout: "로그아웃",
+  auth_logout_confirm_title: "로그아웃할까요?",
+  auth_logout_confirm_message: "이 기기를 계정과 동기화하려면 다시 로그인해야 합니다.",
 
   login_title: "로그인",
   auth_email: "이메일",
@@ -246,7 +248,9 @@ export const ko = {
   api_error_not_found: "찾을 수 없습니다",
   api_error_invalid_login: "이메일 또는 비밀번호가 올바르지 않습니다",
   api_error_verify_email: "먼저 %{email}로 발신된 메일을 통해 이메일 주소 인증을 완료해 주세요",
-  api_error_new_email_required: "새로운 이메일 주소는 현재 이메일 주소와 달라야 합니다",
+  api_error_new_email_required: "새 이메일 주소를 입력해 주세요",
+  api_error_new_email_invalid: "올바른 이메일 주소를 입력해 주세요",
+  api_error_new_email_unchanged: "새로운 이메일 주소는 현재 이메일 주소와 달라야 합니다",
   api_error_email_in_use: "해당 이메일 주소는 이미 사용 중입니다",
   api_error_password_incorrect: "비밀번호가 올바르지 않습니다",
   api_error_account_not_found: "계정을 찾을 수 없습니다",
@@ -275,6 +279,7 @@ export const ko = {
   choose_end_chapter: "종료 장 선택",
   end_verse: "종료 절",
   choose_end_verse: "종료 절 선택",
+  back: "뒤로",
   close: "닫기",
   discard: "취소",
   discard_changes_title: "변경 사항을 취소할까요?",
@@ -338,6 +343,8 @@ export const ko = {
 
   settings_saved_successfully: "저장되었습니다.",
   settings_save_invalid: "값을 확인하고 다시 시도해 주세요.",
+  settings_reading_daily_goal_invalid: "1에서 1111 사이의 정수를 입력해 주세요.",
+  settings_reading_look_back_date_invalid: "날짜를 YYYY-MM-DD 형식으로 입력해 주세요.",
 
   calendar_today: "오늘",
   calendar_no_entries: "기록 없음",
@@ -461,6 +468,8 @@ export const ko = {
   loading: "불러오는 중...",
   logged_before_today:
     "이 장은 오늘 이전에 기록되었습니다. 달력 페이지에서 이전 기록을 편집할 수 있습니다.",
+  logged_in_longer_passage:
+    "이 장은 더 긴 본문의 일부로 기록되어 여기서 선택을 해제할 수 없습니다. 달력 페이지에서 해당 기록을 편집할 수 있습니다.",
   unable_to_mark_complete: "장을 완료로 표시할 수 없습니다.",
   unable_to_mark_incomplete: "장을 미완료로 표시할 수 없습니다.",
   login_forgot_password: "비밀번호를 잊으셨나요?",
@@ -485,6 +494,7 @@ export const ko = {
   forgot_password_hint: "이메일을 입력하시면 비밀번호 재설정 코드를 보내드립니다.",
   forgot_password_submit: "재설정 코드 보내기",
   account_change_email: "이메일 변경",
+  change_email_title: "이메일 변경",
   change_email_hint: "새 이메일과 현재 비밀번호를 입력하세요. 새 주소로 코드를 보내드립니다.",
   change_email_current: "현재 이메일:",
   change_email_new_label: "새 이메일",

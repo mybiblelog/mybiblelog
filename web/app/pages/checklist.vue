@@ -8,13 +8,20 @@
       <h2 class="mbl-title">
         {{ t('chapter_checklist') }}
       </h2>
+      <div class="mbl-button-group mbl-button-group--start">
+        <NuxtLink class="mbl-button" :to="localePath('/log')">
+          {{ t('reading_log') }}
+          <caret-right-icon style="margin-left: 0.2rem;" />
+        </NuxtLink>
+      </div>
     </header>
+    <testament-toggle v-model="testamentFilter" class="testament-filter" />
     <div>
       <div v-if="!bookReports.length" class="loading-card">
         <strong>{{ t('loading') }}</strong>
       </div>
       <div
-        v-for="bookReport in bookReports"
+        v-for="bookReport in visibleBookReports"
         :key="bookReport.bookIndex"
         class="book-card mbl-card"
         data-testid="book-card"
@@ -53,7 +60,7 @@
             @click="toggleChapter(chapterReport.bookIndex, chapterReport.chapterIndex)"
           >
             <div class="chapter-card--completion-indicator">
-              <svg v-if="busyChapter === `${bookReport.bookIndex}.${chapterReport.chapterIndex}`" viewBox="0 0 80 80" width="100%" height="100%">
+              <svg v-if="busyChapters.has(`${bookReport.bookIndex}.${chapterReport.chapterIndex}`)" viewBox="0 0 80 80" width="100%" height="100%">
                 <path
                   :fill="chapterReport.complete ? 'var(--neutral-150)' : 'var(--mbl-success-bright)'"
                   d="M40,72C22.4,72,8,57.6,8,40C8,22.4,22.4,8,40,8c17.6,0,32,14.4,32,32c0,1.1-0.9,2-2,2s-2-0.9-2-2c0-15.4-12.6-28-28-28S12,24.6,12,40s12.6,28,28,28c1.1,0,2,0.9,2,2S41.1,72,40,72z"
@@ -75,10 +82,10 @@
                 width="100%"
                 height="100%"
                 :stroke="chapterReport.complete ? 'var(--mbl-success-bright)' : 'transparent'"
-                :draw="justCompletedChapter === `${bookReport.bookIndex}.${chapterReport.chapterIndex}`"
+                :draw="celebratingChapters.has(`${bookReport.bookIndex}.${chapterReport.chapterIndex}`)"
               />
               <particle-burst
-                v-if="justCompletedChapter === `${bookReport.bookIndex}.${chapterReport.chapterIndex}`"
+                v-if="celebratingChapters.has(`${bookReport.bookIndex}.${chapterReport.chapterIndex}`)"
                 :count="8"
                 :min-distance="20"
                 :max-distance="40"
@@ -104,10 +111,13 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
 import { Bible, BrowserCache, computeBibleProgress } from '@mybiblelog/shared';
+import type { TestamentFilter } from '@mybiblelog/shared';
+import TestamentToggle from '~/components/bible/TestamentToggle.vue';
 import BusyBar from '~/components/ui/BusyBar.vue';
 import CompletionBar from '~/components/ui/CompletionBar.vue';
 import ParticleBurst from '~/components/ui/ParticleBurst.vue';
 import ReadingTrackerResetCard from '~/components/ui/ReadingTrackerResetCard.vue';
+import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
 import CheckmarkIcon from '~/components/svg/CheckmarkIcon.vue';
 import TriangleDownIcon from '~/components/svg/TriangleDownIcon.vue';
 import { useLogEntriesStore } from '~/stores/log-entries';
@@ -117,6 +127,8 @@ import { useToastStore } from '~/stores/toast';
 definePageMeta({ middleware: ['auth'] });
 const { t, locale } = useI18n();
 useHead({ title: () => t('chapter_checklist') });
+
+const localePath = useLocalePath();
 
 const CACHE_KEY = 'chapterChecklist';
 const CACHE_MINUTES = 60;
@@ -134,8 +146,21 @@ type BookReport = {
 
 const logEntriesStore = useLogEntriesStore();
 const computeBusy = ref(false);
-const busyChapter = ref<string | null>(null);
+// Keyed by `bookIndex.chapterIndex`. Sets rather than a single key so several
+// chapters can be in flight — and celebrating — at once: tapping a second
+// chapter must not cancel the first one's animation.
+const busyChapters = ref(new Set<string>());
 const bookReports = ref<BookReport[]>([]);
+
+// Purely a view filter: `bookReports`, the cached snapshot and `toggleChapter`
+// all keep working off the full 66-book list, so hiding a testament can never
+// change what gets computed or saved.
+const testamentFilter = ref<TestamentFilter>('all');
+const visibleBookReports = computed(() => bookReports.value.filter((report) => {
+  if (testamentFilter.value === 'old') { return !Bible.isNewTestament(report.bookIndex); }
+  if (testamentFilter.value === 'new') { return Bible.isNewTestament(report.bookIndex); }
+  return true;
+}));
 
 const bookCount = Bible.getBookCount();
 const expandedBooks = ref<Record<number, boolean>>({});
@@ -143,35 +168,43 @@ for (let i = 1; i <= bookCount; i++) {
   expandedBooks.value[i] = false;
 }
 
-const busy = computed(() => Boolean(busyChapter.value || computeBusy.value));
+const busy = computed(() => Boolean(busyChapters.value.size || computeBusy.value));
 
 // Only a chapter marked read *in this session* celebrates; everything rendered
-// from the progress snapshot on load stays static. `justCompletedChapter` holds
-// the one `bookIndex.chapterIndex` currently animating.
+// from the progress snapshot on load stays static. `celebratingChapters` holds
+// every `bookIndex.chapterIndex` currently animating, each with its own expiry
+// timer, so overlapping celebrations run to completion independently.
 // CHECKMARK_DRAW_MS matches the `checkmark-draw` duration in CheckmarkIcon.vue
 // and is handed to ParticleBurst as its delay, so the dots leave the mark just
 // as the stroke lands. CELEBRATION_MS covers that plus the burst's own jitter
 // and 700ms flight, with a little buffer.
 const CHECKMARK_DRAW_MS = 400;
 const CELEBRATION_MS = 1600;
-const justCompletedChapter = ref<string | null>(null);
-let celebrationTimer: ReturnType<typeof setTimeout> | null = null;
+const celebratingChapters = ref(new Set<string>());
+const celebrationTimers = new Map<string, ReturnType<typeof setTimeout>>();
 
-function endCelebration() {
-  if (celebrationTimer) {
-    clearTimeout(celebrationTimer);
-    celebrationTimer = null;
+function endCelebration(key: string) {
+  const timer = celebrationTimers.get(key);
+  if (timer) {
+    clearTimeout(timer);
+    celebrationTimers.delete(key);
   }
-  justCompletedChapter.value = null;
+  celebratingChapters.value.delete(key);
+}
+
+function endAllCelebrations() {
+  for (const key of [...celebrationTimers.keys()]) {
+    endCelebration(key);
+  }
 }
 
 function celebrateChapter(key: string) {
-  endCelebration();
-  justCompletedChapter.value = key;
-  celebrationTimer = setTimeout(() => {
-    celebrationTimer = null;
-    justCompletedChapter.value = null;
-  }, CELEBRATION_MS);
+  endCelebration(key);
+  celebratingChapters.value.add(key);
+  celebrationTimers.set(key, setTimeout(() => {
+    celebrationTimers.delete(key);
+    celebratingChapters.value.delete(key);
+  }, CELEBRATION_MS));
 }
 
 // Per-book/chapter completion comes straight from the shared progress snapshot
@@ -181,9 +214,15 @@ function celebrateChapter(key: string) {
 function getBookReports() {
   computeBusy.value = true;
 
-  const cached = BrowserCache.get(CACHE_KEY);
-  if (cached) {
-    bookReports.value = JSON.parse(cached) as BookReport[];
+  // Only worth reading on the first pass, to paint something before the log
+  // entries land. On a recompute triggered by a toggle it would parse 60-odd KB
+  // and render a full stale grid microseconds before the fresh one replaces it —
+  // a wasted render that lands right on top of the completion animation.
+  if (!bookReports.value.length) {
+    const cached = BrowserCache.get(CACHE_KEY);
+    if (cached) {
+      bookReports.value = JSON.parse(cached) as BookReport[];
+    }
   }
 
   const progress = computeBibleProgress(logEntriesStore.currentLogEntries);
@@ -211,11 +250,15 @@ function toggleBook(bookIndex: number) {
 }
 
 async function toggleChapter(bookIndex: number, chapterIndex: number) {
-  if (busyChapter.value) { return; }
+  const key = `${bookIndex}.${chapterIndex}`;
+  // Only this chapter is locked while its request is in flight, so a second
+  // chapter tapped straight after is still handled rather than dropped.
+  if (busyChapters.value.has(key)) { return; }
   const toastStore = useToastStore();
-  busyChapter.value = `${bookIndex}.${chapterIndex}`;
-  // Don't let a still-running celebration bleed into the next interaction.
-  endCelebration();
+  busyChapters.value.add(key);
+  // Don't let this chapter's still-running celebration bleed into its next
+  // interaction; other chapters' celebrations are unaffected.
+  endCelebration(key);
 
   const date = dayjs().format('YYYY-MM-DD');
   const startVerseId = Bible.makeVerseId(bookIndex, chapterIndex, 1);
@@ -240,23 +283,31 @@ async function toggleChapter(bookIndex: number, chapterIndex: number) {
       }
     }
     else {
-      toastStore.add({ type: 'info', text: t('logged_before_today') });
+      // Completion is verse-coverage based, so a chapter can read as complete
+      // without having an entry of its own to delete. Name the actual reason:
+      // covered by a wider entry logged today, or covered only by earlier dates.
+      const loggedToday = Bible.filterRangesByBookChapter(
+        bookIndex,
+        chapterIndex,
+        logEntriesStore.currentLogEntries.filter(logEntry => logEntry.date === date),
+      ).length > 0;
+      toastStore.add({ type: 'info', text: t(loggedToday ? 'logged_in_longer_passage' : 'logged_before_today') });
     }
   }
   else {
     const createdEntry = await logEntriesStore.createLogEntry({ date, startVerseId, endVerseId });
     if (createdEntry) {
       await getBookReports();
-      // Flagged before `busyChapter` clears below, so the checkmark replaces the
+      // Flagged before the busy flag clears below, so the checkmark replaces the
       // spinner in a single render with `draw` already true — the animation runs
       // off a freshly mounted element rather than a class toggle.
-      celebrateChapter(`${bookIndex}.${chapterIndex}`);
+      celebrateChapter(key);
     }
     else {
       toastStore.add({ type: 'error', text: t('unable_to_mark_complete') });
     }
   }
-  busyChapter.value = null;
+  busyChapters.value.delete(key);
 }
 
 onMounted(async () => {
@@ -264,10 +315,16 @@ onMounted(async () => {
   getBookReports();
 });
 
-onBeforeUnmount(endCelebration);
+onBeforeUnmount(endAllCelebrations);
 </script>
 
 <style scoped>
+/* Takes over the gap `.page-header` would otherwise hold against the list,
+   so the toggle reads as part of the page chrome rather than the first card. */
+.testament-filter {
+  margin-bottom: var(--mbl-page-header-gap);
+}
+
 .loading-card {
   padding: var(--mbl-space-md) var(--mbl-space-2xl);
   border-radius: var(--mbl-radius-card);
@@ -344,50 +401,64 @@ onBeforeUnmount(endCelebration);
 {
   "en": {
     "chapter_checklist": "Chapter Checklist",
+    "reading_log": "Log",
     "loading": "Loading...",
     "logged_before_today": "This chapter was logged before today. You can edit previous log entries on the Calendar page.",
+    "logged_in_longer_passage": "This chapter was logged as part of a longer passage, so it can't be unchecked here. You can edit that log entry on the Calendar page.",
     "unable_to_mark_complete": "Unable to mark the chapter complete.",
     "unable_to_mark_incomplete": "Unable to mark the chapter incomplete."
   },
   "de": {
     "chapter_checklist": "Kapitelliste",
+    "reading_log": "Lesejournal",
     "loading": "Laden...",
     "logged_before_today": "Dieses Kapitel wurde vor heute protokolliert. Sie können frühere Protokolleinträge auf der Kalenderseite bearbeiten.",
+    "logged_in_longer_passage": "Dieses Kapitel wurde als Teil eines längeren Abschnitts protokolliert und kann hier nicht abgewählt werden. Sie können diesen Eintrag auf der Kalenderseite bearbeiten.",
     "unable_to_mark_complete": "Kann das Kapitel nicht als abgeschlossen markieren.",
     "unable_to_mark_incomplete": "Kann das Kapitel nicht als unvollständig markieren."
   },
   "es": {
     "chapter_checklist": "Lista de capítulos",
+    "reading_log": "Diario",
     "loading": "Cargando...",
     "logged_before_today": "Este capítulo se registró antes de hoy. Puede editar las entradas de registro anteriores en la página del calendario.",
+    "logged_in_longer_passage": "Este capítulo se registró como parte de un pasaje más largo, por lo que no se puede desmarcar aquí. Puede editar esa entrada en la página del calendario.",
     "unable_to_mark_complete": "No se puede marcar el capítulo como completo.",
     "unable_to_mark_incomplete": "No se puede marcar el capítulo como incompleto."
   },
   "fr": {
     "chapter_checklist": "Liste de contrôle",
+    "reading_log": "Journal",
     "loading": "Chargement...",
     "logged_before_today": "Ce chapitre a été enregistré avant aujourd'hui. Vous pouvez modifier les entrées de journal précédentes sur la page du calendrier.",
+    "logged_in_longer_passage": "Ce chapitre a été enregistré dans le cadre d'un passage plus long ; il ne peut donc pas être décoché ici. Vous pouvez modifier cette entrée sur la page du calendrier.",
     "unable_to_mark_complete": "Impossible de marquer le chapitre comme terminé.",
     "unable_to_mark_incomplete": "Impossible de marquer le chapitre comme incomplet."
   },
   "ko": {
     "chapter_checklist": "장별 체크",
+    "reading_log": "읽기 일지",
     "loading": "불러오는 중…",
     "logged_before_today": "이 장은 오늘 이전에 기록되었습니다. 달력 페이지에서 이전 기록을 수정할 수 있습니다.",
+    "logged_in_longer_passage": "이 장은 더 긴 본문의 일부로 기록되어 여기서 선택을 해제할 수 없습니다. 달력 페이지에서 해당 기록을 수정할 수 있습니다.",
     "unable_to_mark_complete": "해당 장을 읽기 완료로 표시할 수 없습니다.",
     "unable_to_mark_incomplete": "해당 장을 읽지 않음으로 표시할 수 없습니다."
   },
   "pt": {
     "chapter_checklist": "Lista de Capítulos",
+    "reading_log": "Diário",
     "loading": "Carregando...",
     "logged_before_today": "Este capítulo foi registrado antes de hoje. Você pode editar entradas de log anteriores na página do Calendário.",
+    "logged_in_longer_passage": "Este capítulo foi registrado como parte de uma passagem maior, portanto não pode ser desmarcado aqui. Você pode editar essa entrada na página do Calendário.",
     "unable_to_mark_complete": "Não é possível marcar o capítulo como completo.",
     "unable_to_mark_incomplete": "Não é possível marcar o capítulo como incompleto."
   },
   "uk": {
     "chapter_checklist": "Перелік розділів",
+    "reading_log": "Журнал",
     "loading": "Завантаження...",
     "logged_before_today": "Цей розділ був зареєстрований до сьогодні. Ви можете редагувати попередні записи в календарній сторінці.",
+    "logged_in_longer_passage": "Цей розділ було зареєстровано як частину довшого уривка, тому його не можна зняти тут. Ви можете редагувати цей запис на сторінці Календаря.",
     "unable_to_mark_complete": "Не вдалося позначити розділ як завершений.",
     "unable_to_mark_incomplete": "Не вдалося позначити розділ як незавершений."
   }

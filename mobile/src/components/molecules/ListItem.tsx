@@ -8,6 +8,8 @@ import { Text } from "../atoms/Text";
 import { Card } from "./Card";
 
 export type ListItemProps = {
+  /** Small label above the title — context for what the row is, not part of it. */
+  overline?: string;
   /** Plain string (styled as `bodyStrong`) or a custom node (e.g. a colored pill). */
   title: ReactNode;
   /** Semantic color for the title (ignored when `title` is a node). */
@@ -40,6 +42,7 @@ export type ListItemProps = {
  * drift apart on what a list row looks like.
  */
 export function ListItem({
+  overline,
   title,
   titleColor = "text",
   subtitle,
@@ -59,6 +62,11 @@ export function ListItem({
     <>
       {leading ?? (leadingIcon ? <Icon name={leadingIcon} size={20} color="mutedText" /> : null)}
       <View style={styles.body}>
+        {!!overline && (
+          <Text variant="caption" color="mutedText" style={styles.overline}>
+            {overline}
+          </Text>
+        )}
         {typeof title === "string" ? (
           <Text variant="bodyStrong" color={titleColor}>
             {title}
@@ -133,6 +141,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.xl,
   },
   body: { flex: 1 },
+  overline: { marginBottom: spacing["3xs"] },
   subtitle: { marginTop: spacing["3xs"] },
   meta: { marginTop: spacing["2xs"] },
 });

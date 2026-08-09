@@ -33,6 +33,7 @@ export {
   filterAndSortBookOptions,
   type BookOption,
   type Testament,
+  type TestamentFilter,
   type BookSortOrder,
   type FilterAndSortBookOptions,
 } from './bible/options';

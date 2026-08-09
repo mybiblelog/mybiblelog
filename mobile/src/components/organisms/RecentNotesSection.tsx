@@ -36,12 +36,11 @@ export function RecentNotesSection() {
   return (
     <View style={styles.section}>
       <View style={styles.header}>
-        <Text variant="label" style={styles.headerTitle}>
+        <Text variant="heading" style={styles.headerTitle}>
           {t("today_recent_notes")}
         </Text>
         <Button
           label={t("notes_new")}
-          variant="secondary"
           size="sm"
           leftIcon="add"
           onPress={() => setIsAddOpen(true)}
@@ -64,7 +63,8 @@ export function RecentNotesSection() {
 
       <Button
         label={t("notes_view_all")}
-        variant="ghost"
+        variant="secondary"
+        rightIcon="chevron-forward"
         onPress={() => router.push("/(tabs)/notes")}
         style={styles.viewAll}
       />
@@ -136,9 +136,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     gap: spacing.sm,
-    marginBottom: spacing.sm,
+    marginBottom: spacing.md,
   },
   headerTitle: { flex: 1 },
   list: { gap: spacing.sm },
-  viewAll: { marginTop: spacing.sm },
+  // Content-width and centered, matching the Today screen's "View All Reading"
+  // (a button in a column flex parent stretches full-width by default).
+  viewAll: { marginTop: spacing.sm, alignSelf: "center" },
 });

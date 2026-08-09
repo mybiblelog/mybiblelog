@@ -45,16 +45,9 @@ export default function TabsLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="calendar"
-        options={{
-          tabBarButtonTestID: "tab.calendar",
-          title: t("tab_calendar"),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar-outline" color={color} size={size} />
-          ),
-        }}
-      />
+      {/* Calendar is off the tab bar: `href: null` keeps the route registered
+          (Today's "View All Reading" pushes to it) without rendering a tab. */}
+      <Tabs.Screen name="calendar" options={{ href: null, title: t("tab_calendar") }} />
       <Tabs.Screen
         name="checklist"
         options={{

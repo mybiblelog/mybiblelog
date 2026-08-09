@@ -16,6 +16,8 @@ export type Translation = {
     invalid_login: string;
     verify_email: string;
     new_email_required: string;
+    new_email_invalid: string;
+    new_email_unchanged: string;
     email_in_use: string;
     password_incorrect: string;
     account_not_found: string;

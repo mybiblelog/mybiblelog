@@ -57,6 +57,9 @@ test.describe('PWA', () => {
     });
     expect(scriptUrl).toBeTruthy();
 
+    // The dev worker must not masquerade as a new release.
+    await expect(page.getByTestId('pwa-refresh-prompt')).toBeHidden();
+
     // Fetch the registered worker and ensure it isn't the old self-destroying
     // stray that used to shadow /sw.js and unregister itself.
     const body = await (await page.request.get(scriptUrl!)).text();

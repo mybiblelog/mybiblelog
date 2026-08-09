@@ -10,6 +10,8 @@ export type BookOption = {
 };
 
 export type Testament = 'old' | 'new';
+/** Testament selection widened with the "no filter" option the book-list switchers offer. */
+export type TestamentFilter = 'all' | Testament;
 export type BookSortOrder = 'numerical' | 'alphabetical';
 
 export type FilterAndSortBookOptions = {

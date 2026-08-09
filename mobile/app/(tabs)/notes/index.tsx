@@ -10,6 +10,7 @@ import {
   NoteCard,
   OfflineNotesView,
   Screen,
+  ScreenHeader,
   Spinner,
   Text,
   useNoteOverlays,
@@ -76,18 +77,22 @@ export default function Notes() {
   }
 
   const header = (
-    <View style={styles.header}>
-      <Text variant="title" style={styles.headerTitle}>
-        {t("notes_title")}
-      </Text>
-      <Button
-        label={t("tags_title")}
-        testID="notes.tags"
-        variant="secondary"
-        onPress={() => router.push("/(tabs)/notes/tags")}
-      />
-      <Button label={t("notes_new")} testID="notes.new" leftIcon="add" onPress={openAdd} />
-    </View>
+    <ScreenHeader
+      title={t("notes_title")}
+      style={styles.header}
+      right={
+        <>
+          <Button
+            label={t("tags_title")}
+            testID="notes.tags"
+            variant="secondary"
+            rightIcon="chevron-forward"
+            onPress={() => router.push("/(tabs)/notes/tags")}
+          />
+          <Button label={t("notes_new")} testID="notes.new" leftIcon="add" onPress={openAdd} />
+        </>
+      }
+    />
   );
 
   const queryBar = (
@@ -188,13 +193,7 @@ export default function Notes() {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.sm,
-    marginBottom: spacing.sm,
-  },
-  headerTitle: { flex: 1 },
+  header: { marginBottom: spacing.sm },
   queryBar: {
     flexDirection: "row",
     alignItems: "center",

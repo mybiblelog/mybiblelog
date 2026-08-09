@@ -125,6 +125,11 @@ async function main(): Promise<void> {
     adb(['shell', 'settings', 'put', 'global', scale, '0']);
   }
 
+  // Turn off stylus handwriting (matches scripts/e2e/run.mjs): the emulator's
+  // stylus-capable pointer makes Gboard open in handwriting mode, whose one-time
+  // onboarding dialog covers the screen and hides the app from Maestro.
+  adb(['shell', 'settings', 'put', 'secure', 'stylus_handwriting_enabled', '0']);
+
   // Clean status bar via SystemUI demo mode: fixed 09:00 clock, full battery
   // (unplugged), full wifi, no mobile signal, no notification icons.
   adb(['shell', 'settings', 'put', 'global', 'sysui_demo_allowed', '1']);

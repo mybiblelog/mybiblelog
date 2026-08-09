@@ -11,6 +11,7 @@ import {
   getChapterVerseCount,
   getChapterVerses,
   getTotalVerseCount,
+  isNewTestament,
 } from './core/metadata';
 import {
   getFirstBookChapterVerseId,
@@ -56,6 +57,7 @@ const Bible = {
   getBookIndex,
   getBookUsfmCode,
   getBookBlbCode,
+  isNewTestament,
   verseExists,
   validateRange,
   countRangeVerses,

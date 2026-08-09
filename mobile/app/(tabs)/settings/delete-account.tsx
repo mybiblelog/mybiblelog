@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { deleteAccount } from "@/src/api/settingsApi";
 import { useAuth } from "@/src/stores/auth";
-import { Button, Card, ConfirmDialog, Icon, Screen, Text } from "@/src/components";
+import { Button, Card, ConfirmDialog, Icon, Screen, ScreenHeader, Text } from "@/src/components";
 import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { useToast } from "@/src/toast/ToastProvider";
@@ -81,7 +81,8 @@ export default function DeleteAccountScreen() {
   ];
 
   return (
-    <Screen edges={[]}>
+    <Screen>
+      <ScreenHeader padded back title={t("delete_account_title")} />
       <ScrollView contentContainerStyle={styles.content}>
         <Text variant="bodyStrong" style={styles.description}>
           {t("delete_account_description")}

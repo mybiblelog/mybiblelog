@@ -4,7 +4,15 @@ import { useAuth } from "@/src/stores/auth";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { translateApiError } from "@/src/i18n/translateApiError";
 import { spacing } from "@/src/design";
-import { AuthCodeForm, Button, Card, InputField, Screen, Text } from "@/src/components";
+import {
+  AuthCodeForm,
+  Button,
+  Card,
+  InputField,
+  Screen,
+  ScreenHeader,
+  Text,
+} from "@/src/components";
 import { router } from "expo-router";
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
@@ -23,7 +31,8 @@ export default function ChangeEmail() {
 
   if (authState.status !== "authenticated") {
     return (
-      <Screen edges={[]}>
+      <Screen>
+        <ScreenHeader padded back title={t("change_email_title")} />
         <View style={styles.content}>
           <Card>
             <Text variant="body" color="mutedText">
@@ -75,7 +84,8 @@ export default function ChangeEmail() {
   }
 
   return (
-    <Screen edges={[]}>
+    <Screen>
+      <ScreenHeader padded back title={t("change_email_title")} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         {step === "form" ? (
           <>

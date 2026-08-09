@@ -221,6 +221,9 @@ export const pt = {
   auth_login: "Entrar",
   auth_create_account: "Criar conta",
   auth_logout: "Sair",
+  auth_logout_confirm_title: "Sair da conta?",
+  auth_logout_confirm_message:
+    "Você precisará entrar novamente para sincronizar este dispositivo com sua conta.",
 
   login_title: "Entrar",
   auth_email: "Email",
@@ -250,7 +253,9 @@ export const pt = {
   api_error_not_found: "Não encontrado",
   api_error_invalid_login: "Email ou senha incorretos",
   api_error_verify_email: "Por favor, verifique %{email} para confirmar seu email primeiro",
-  api_error_new_email_required: "O novo email não pode ser o mesmo que o email atual",
+  api_error_new_email_required: "É necessário um novo endereço de email",
+  api_error_new_email_invalid: "Por favor, insira um endereço de email válido",
+  api_error_new_email_unchanged: "O novo email não pode ser o mesmo que o email atual",
   api_error_email_in_use: "O endereço de email já está em uso",
   api_error_password_incorrect: "A senha está incorreta",
   api_error_account_not_found: "Conta não encontrada",
@@ -280,6 +285,7 @@ export const pt = {
   choose_end_chapter: "Escolher Capítulo Final",
   end_verse: "Versículo Final",
   choose_end_verse: "Escolher Versículo Final",
+  back: "Voltar",
   close: "Fechar",
   discard: "Descartar",
   discard_changes_title: "Descartar alterações?",
@@ -345,6 +351,8 @@ export const pt = {
 
   settings_saved_successfully: "Salvo.",
   settings_save_invalid: "Verifique o valor e tente novamente.",
+  settings_reading_daily_goal_invalid: "Digite um número inteiro entre 1 e 1111.",
+  settings_reading_look_back_date_invalid: "Digite uma data no formato AAAA-MM-DD.",
 
   calendar_today: "Hoje",
   calendar_no_entries: "Sem Registros",
@@ -472,6 +480,8 @@ export const pt = {
   loading: "Carregando...",
   logged_before_today:
     "Este capítulo foi registrado antes de hoje. Você pode editar registros anteriores na página do Calendário.",
+  logged_in_longer_passage:
+    "Este capítulo foi registrado como parte de uma passagem maior, portanto não pode ser desmarcado aqui. Você pode editar esse registro na página do Calendário.",
   unable_to_mark_complete: "Não foi possível marcar o capítulo como concluído.",
   unable_to_mark_incomplete: "Não foi possível marcar o capítulo como incompleto.",
   login_forgot_password: "Esqueceu a senha?",
@@ -496,6 +506,7 @@ export const pt = {
   forgot_password_hint: "Insira seu e-mail e enviaremos um código para redefinir sua senha.",
   forgot_password_submit: "Enviar código",
   account_change_email: "Alterar e-mail",
+  change_email_title: "Alterar e-mail",
   change_email_hint:
     "Insira seu novo e-mail e a senha atual. Enviaremos um código para o novo endereço.",
   change_email_current: "E-mail atual:",

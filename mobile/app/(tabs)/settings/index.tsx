@@ -1,7 +1,14 @@
 import { router } from "expo-router";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { radius, spacing, useTheme } from "@/src/design";
-import { AttentionDot, Icon, type IconName, ListItem, Screen } from "@/src/components";
+import {
+  AttentionDot,
+  Icon,
+  type IconName,
+  ListItem,
+  Screen,
+  ScreenHeader,
+} from "@/src/components";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { useIsUnauthenticated } from "@/src/stores/auth";
 
@@ -44,7 +51,9 @@ export default function SettingsIndex() {
   const t = useT();
   const showSignInAlert = useIsUnauthenticated();
   return (
-    <Screen edges={[]}>
+    <Screen>
+      {/* Tab root — nothing to go back to. */}
+      <ScreenHeader padded title={t("settings_tab_title")} />
       <ScrollView contentContainerStyle={styles.content}>
         <SectionRow
           icon="person-circle-outline"

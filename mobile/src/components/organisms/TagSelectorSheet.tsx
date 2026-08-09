@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   headerTitle: { flex: 1 },
-  list: { maxHeight: 360 },
+  list: { maxHeight: 360, flexShrink: 1 },
   empty: { paddingVertical: spacing.md },
   footer: {
     marginTop: spacing.sm,
