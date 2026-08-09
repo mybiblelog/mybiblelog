@@ -11,11 +11,14 @@ export const LogEntryRow = memo(function LogEntryRow({
   entry,
   onPressMenu,
   meta,
+  showDate = true,
   testID,
 }: {
   entry: LogEntry;
   onPressMenu: () => void;
   meta?: string;
+  /** Hide the date on screens that are already scoped to one day (Today). */
+  showDate?: boolean;
   testID?: string;
 }) {
   const { locale } = useLocale();
@@ -23,7 +26,10 @@ export const LogEntryRow = memo(function LogEntryRow({
     () => Bible.displayVerseRange(entry.startVerseId, entry.endVerseId, locale),
     [entry.endVerseId, entry.startVerseId, locale]
   );
-  const displayDate = useMemo(() => formatLongDate(entry.date, locale), [entry.date, locale]);
+  const displayDate = useMemo(
+    () => (showDate ? formatLongDate(entry.date, locale) : undefined),
+    [entry.date, locale, showDate]
+  );
 
   return (
     <ListItem

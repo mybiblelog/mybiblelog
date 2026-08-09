@@ -19,8 +19,7 @@ import {
   useSyncRefreshControl,
 } from "@/src/components";
 import { spacing } from "@/src/design";
-import { formatLongDate } from "@/src/i18n/date";
-import { useLocale, useT } from "@/src/i18n/LocaleProvider";
+import { useT } from "@/src/i18n/LocaleProvider";
 import { computeEntryVerseStatsForDate } from "@/src/log-entries/entryStats";
 import { formatVerseCountMessage } from "@/src/log-entries/verseCountMessage";
 import { useReadingSuggestions } from "@/src/reading-suggestions/useReadingSuggestions";
@@ -38,11 +37,9 @@ export default function Index() {
   const entries = useLogEntryList();
   const settings = useSettingsValue();
   const t = useT();
-  const { locale } = useLocale();
   const refreshControl = useSyncRefreshControl();
 
   const today = useMemo(() => dayjs().format("YYYY-MM-DD"), []);
-  const todayDisplay = useMemo(() => formatLongDate(today, locale), [locale, today]);
 
   const todayEntries = useMemo(
     () => (entries ?? []).filter((e) => e.date === today),
@@ -97,11 +94,8 @@ export default function Index() {
 
   return (
     <Screen padded>
-      {/* Mobile-only subtitle: web gets a page title from the browser chrome, a
-          phone doesn't, so the date does that orienting work here. */}
       <ScreenHeader
         title={t("today_title")}
-        subtitle={todayDisplay}
         style={styles.header}
         right={
           <Button label={t("add")} testID="today.add-entry" leftIcon="add" onPress={openAdd} />
@@ -142,6 +136,8 @@ export default function Index() {
             <LogEntryRow
               entry={item}
               testID="today.entry-row"
+              // Every row on this screen is today's — the date is noise here.
+              showDate={false}
               meta={
                 stats
                   ? formatVerseCountMessage(t, {

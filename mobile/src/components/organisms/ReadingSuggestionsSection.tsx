@@ -69,8 +69,10 @@ export function ReadingSuggestionsSection({ suggestions, today, loading = false 
             <ListItem
               key={`${suggestion.startVerseId}-${suggestion.endVerseId}`}
               testID="today.suggestion"
+              // The reason leads: it's what makes the passage below it make
+              // sense, so it reads as a label on the suggestion, not a footnote.
+              overline={suggestion.contextMessage}
               title={suggestion.passageLabel}
-              subtitle={suggestion.contextMessage}
               meta={t("today_suggestion_meta", { count: suggestion.newVerseCount })}
               onPress={() => setMenuSuggestion(suggestion)}
               trailing={
