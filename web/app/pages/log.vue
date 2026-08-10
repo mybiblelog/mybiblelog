@@ -829,20 +829,16 @@ onBeforeUnmount(() => {
   .log-page__mobile-query-button { display: none; }
 }
 
-.log-page__query-button {
-  position: relative;
-  padding-right: var(--mbl-space-lg);
-}
+.log-page__query-button { position: relative; }
 
 .log-page__query-badge {
-  position: absolute;
-  top: 0.35rem;
-  right: 0.35rem;
+  display: inline-block;
   width: 0.5rem;
   height: 0.5rem;
+  margin-left: var(--mbl-space-xs);
   border-radius: var(--mbl-radius-pill);
   background: var(--primary-color);
-  box-shadow: var(--mbl-ring-knockout);
+  vertical-align: middle;
 }
 
 .log-page__layout {
