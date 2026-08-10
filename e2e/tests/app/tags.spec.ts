@@ -96,4 +96,42 @@ test.describe('Tags page', () => {
     await page.getByTestId('dialog-ok').click();
     await expect(page.getByTestId('tag-line').getByTestId('tag-label')).toHaveText('InUse');
   });
+
+  // Regression: the tags store caches the API-computed `noteCount` behind an
+  // `isLoaded` flag, and note writes used not to invalidate it. Removing a tag
+  // from its last note left /tags showing a stale count and refusing the delete
+  // until a full page reload. Everything here stays on a client-side navigation.
+  test('note count updates after removing a tag from its only note', async ({ page, api }) => {
+    const tag = await seedTag(api, { label: 'Solitary', color: '#884499' });
+    await seedNote(api, { content: 'The only note with this tag', passages: [], tags: [tag.id] });
+
+    await page.goto('/tags');
+    const countButton = page.getByTestId('tag-line').first().getByTestId('tag-notes-count');
+    await expect(countButton).toHaveAttribute('data-note-count', '1');
+
+    // Follow the count through to the filtered notes view
+    await countButton.click();
+    await expect(page).toHaveURL(/\/notes/);
+    const note = page.getByTestId('passage-note').first();
+    await expect(note).toContainText('The only note with this tag');
+
+    // Remove the tag from the note
+    await note.getByRole('button', { name: 'Edit' }).click();
+    await page.getByTestId('note-editor-manage-tags').click();
+    await page.getByRole('checkbox').first().uncheck();
+    await page.getByRole('button', { name: 'Done' }).click();
+    await page.getByTestId('note-editor-submit').click();
+    await expect(page.getByTestId('note-editor')).toBeHidden();
+
+    // Back to the tags page without a reload
+    await page.goBack();
+    await expect(page).toHaveURL(/\/tags/);
+    await expect(page.getByTestId('tag-line').first().getByTestId('tag-notes-count'))
+      .toHaveAttribute('data-note-count', '0');
+
+    // The freed tag can now be deleted
+    await page.getByTestId('tag-line').first().getByTestId('tag-delete').click();
+    await page.getByTestId('dialog-confirm').click();
+    await expect(page.getByTestId('tag-line').getByTestId('tag-label')).toHaveCount(0);
+  });
 });

@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import {
-  BrowserCache,
   getTagCreatedMsOrNull,
   normalizeSortOrder,
   sortPassageNoteTags,
@@ -10,9 +9,6 @@ import {
 import { useUserSettingsStore } from '~/stores/user-settings';
 
 export type { PassageNoteTag, PassageNoteTagSortOrder };
-
-const PASSAGE_NOTE_TAGS_CACHE_KEY = 'passageNoteTags';
-const PASSAGE_NOTE_TAGS_CACHE_MINUTES = 10;
 
 export type PassageNoteTagsState = {
   passageNoteTags: PassageNoteTag[];
@@ -75,39 +71,8 @@ export const usePassageNoteTagsStore = defineStore('passage-note-tags', {
         this.setPassageNoteTagSortOrder({ sortOrder, persist: false });
       }
 
-      const cachedRaw = BrowserCache.get(PASSAGE_NOTE_TAGS_CACHE_KEY) as unknown;
-      let passageNoteTags: PassageNoteTag[] | null = null;
-      if (Array.isArray(cachedRaw)) {
-        passageNoteTags = cachedRaw as PassageNoteTag[];
-      }
-      else if (typeof cachedRaw === 'string' && cachedRaw) {
-        try {
-          const parsed = JSON.parse(cachedRaw) as unknown;
-          if (Array.isArray(parsed)) {
-            passageNoteTags = parsed as PassageNoteTag[];
-          }
-        }
-        catch {
-          // ignore cache read failures
-        }
-      }
-      if (passageNoteTags) {
-        this.setPassageNoteTags(passageNoteTags);
-        try {
-          BrowserCache.set(
-            PASSAGE_NOTE_TAGS_CACHE_KEY,
-            JSON.stringify(passageNoteTags),
-            PASSAGE_NOTE_TAGS_CACHE_MINUTES,
-          );
-        }
-        catch {
-          // ignore cache write failures
-        }
-      }
-
       const { data } = await http.get<PassageNoteTag[]>('/api/passage-note-tags');
-      passageNoteTags = data;
-      this.setPassageNoteTags(passageNoteTags);
+      this.setPassageNoteTags(data);
       this.isLoaded = true;
     },
 

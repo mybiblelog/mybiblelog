@@ -36,6 +36,16 @@ const initialQuery: PassageNotesQuery = {
 
 const clone = <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
 
+// Tag `noteCount` is computed per request by the API and cached in the tags
+// store, so any write that changes a note's tag set leaves it stale.
+const refreshPassageNoteTags = async (): Promise<void> => {
+  const { usePassageNoteTagsStore } = await import('~/stores/passage-note-tags');
+  const passageNoteTagsStore = usePassageNoteTagsStore();
+  // Nothing to invalidate if the tag list was never loaded
+  if (!passageNoteTagsStore.isLoaded) { return; }
+  await passageNoteTagsStore.loadPassageNoteTags({ force: true });
+};
+
 const emptyPagination: PassageNotesPagination = {
   limit: 10,
   page: 1,
@@ -198,8 +208,11 @@ export const usePassageNotesStore = defineStore('passage-notes', {
     async createPassageNote(newPassageNote: Record<string, unknown>): Promise<PassageNoteListItem | null> {
       const http = useHttp();
       const { data } = await http.post<PassageNoteListItem>('/api/passage-notes', newPassageNote);
-      if (data && this.hasLoadedOnce) {
-        await this.loadPassageNotesPage();
+      if (data) {
+        await Promise.all([
+          this.hasLoadedOnce ? this.loadPassageNotesPage() : Promise.resolve(),
+          refreshPassageNoteTags(),
+        ]);
       }
       return data || null;
     },
@@ -208,8 +221,11 @@ export const usePassageNotesStore = defineStore('passage-notes', {
       const http = useHttp();
       const { id } = passageNoteUpdate;
       const { data } = await http.patch<PassageNoteListItem>(`/api/passage-notes/${id}`, passageNoteUpdate);
-      if (data && this.hasLoadedOnce) {
-        await this.loadPassageNotesPage();
+      if (data) {
+        await Promise.all([
+          this.hasLoadedOnce ? this.loadPassageNotesPage() : Promise.resolve(),
+          refreshPassageNoteTags(),
+        ]);
       }
       return data || null;
     },
@@ -218,7 +234,10 @@ export const usePassageNotesStore = defineStore('passage-notes', {
       const http = useHttp();
       const { data } = await http.delete<unknown>(`/api/passage-notes/${passageNoteId}`);
       if (data) {
-        await this.loadPassageNotesPage();
+        await Promise.all([
+          this.loadPassageNotesPage(),
+          refreshPassageNoteTags(),
+        ]);
         return true;
       }
       return false;

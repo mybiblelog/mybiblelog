@@ -47,6 +47,7 @@ export const ApiErrorDetailCode = {
   EmailNotVerified: 'email_not_verified',
   VerificationCodeExpired: 'verification_code_expired',
   AdminCannotDeleteOwnAccount: 'admin_cannot_delete_own_account',
+  TagInUse: 'tag_in_use',
 };
 
 export type ApiErrorDetailCode = typeof ApiErrorDetailCode[keyof typeof ApiErrorDetailCode];

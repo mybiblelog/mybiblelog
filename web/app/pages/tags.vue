@@ -116,9 +116,11 @@ import { usePassageNoteTagEditorStore } from '~/stores/passage-note-tag-editor';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
+import { ApiError } from '~/helpers/api-error';
 
 definePageMeta({ middleware: ['auth'] });
-const { t } = useI18n();
+const { t, te } = useI18n();
+const { $terr } = useNuxtApp();
 useHead({ title: () => t('note_tags') });
 
 const localePath = useLocalePath();
@@ -184,10 +186,26 @@ async function deleteTag(id: string | number) {
   });
   if (!confirmed) { return; }
 
-  const success = await passageNoteTagsStore.deletePassageNoteTag(id);
-  if (!success) {
-    toastStore.add({ type: 'error', text: t('tag_not_deleted') });
+  try {
+    const success = await passageNoteTagsStore.deletePassageNoteTag(id);
+    if (!success) {
+      toastStore.add({ type: 'error', text: t('tag_not_deleted') });
+    }
   }
+  catch (error) {
+    // The server rejects a tag that is still attached to notes, which the
+    // client-side pre-check above can miss if its noteCount is raced.
+    toastStore.add({ type: 'error', text: deleteErrorMessage(error) });
+  }
+}
+
+// Delete failures arrive as an ApiError whose `errors` carry an `ApiErrorDetail`
+// ({ field, code }); the code has to be translated to be readable.
+function deleteErrorMessage(error: unknown): string {
+  const detail = error instanceof ApiError ? error.errors[0] : null;
+  if (!detail) { return t('tag_not_deleted'); }
+  const key = `api_error.${detail.code}`;
+  return te(key) ? $terr(detail) : t('tag_not_deleted');
 }
 </script>
 

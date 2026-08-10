@@ -26,6 +26,7 @@ const locales: Locales = {
       invalid_request: 'Invalid request',
       email_not_verified: 'Email not verified',
       verification_code_expired: 'Verification code has expired',
+      tag_in_use: 'This tag is still used by one or more notes',
     },
     reading_suggestion: {
       new_testament: 'Read something new in the New Testament',
@@ -59,6 +60,7 @@ const locales: Locales = {
       invalid_request: 'Ungültige Anfrage',
       email_not_verified: 'Email nicht verifiziert',
       verification_code_expired: 'Verifizierungscode abgelaufen',
+      tag_in_use: 'Dieser Tag wird noch von einer oder mehreren Notizen verwendet',
     },
     reading_suggestion: {
       new_testament: 'Lese etwas Neues im Neuen Testament',
@@ -92,6 +94,7 @@ const locales: Locales = {
       invalid_request: 'Solicitud inválida',
       email_not_verified: 'Correo electrónico no verificado',
       verification_code_expired: 'El código de verificación ha caducado',
+      tag_in_use: 'Esta etiqueta todavía se usa en una o más notas',
     },
     reading_suggestion: {
       new_testament: 'Lee algo nuevo en el Nuevo Testamento',
@@ -125,6 +128,7 @@ const locales: Locales = {
       invalid_request: 'Requête invalide',
       email_not_verified: 'Email non vérifié',
       verification_code_expired: 'Code de vérification expiré',
+      tag_in_use: 'Ce tag est encore utilisé par une ou plusieurs notes',
     },
     reading_suggestion: {
       new_testament: 'Lisez quelque chose de nouveau dans le Nouveau Testament',
@@ -158,6 +162,7 @@ const locales: Locales = {
       invalid_request: '잘못된 요청입니다',
       email_not_verified: '이메일이 인증되지 않았습니다',
       verification_code_expired: '인증 코드가 만료되었습니다',
+      tag_in_use: '이 태그는 아직 하나 이상의 노트에서 사용 중입니다',
     },
     reading_suggestion: {
       new_testament: '신약성경에서 새로운 내용을 읽어보세요',
@@ -191,6 +196,7 @@ const locales: Locales = {
       invalid_request: 'Solicitação inválida',
       email_not_verified: 'Email não verificado',
       verification_code_expired: 'Código de verificação expirado',
+      tag_in_use: 'Esta tag ainda é usada por uma ou mais notas',
     },
     reading_suggestion: {
       new_testament: 'Leia algo novo no Novo Testamento',
@@ -224,6 +230,7 @@ const locales: Locales = {
       invalid_request: 'Недійсний запит',
       email_not_verified: 'Email не підтверджений',
       verification_code_expired: 'Код підтвердження застарів',
+      tag_in_use: 'Цей тег усе ще використовується в одній або кількох нотатках',
     },
     reading_suggestion: {
       new_testament: 'Прочитайте щось нове в Новому Заповіті',
