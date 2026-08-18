@@ -4,8 +4,8 @@ import {
   type AuthSession,
   clearAuthSession,
   clearLastLoggedInEmail,
-  loadAuthSession,
   loadLastLoggedInEmail,
+  readAuthSession,
   saveAuthSession,
   saveLastLoggedInEmail,
 } from "@/src/auth/authStorage";
@@ -15,6 +15,7 @@ import type { ApiErrorPayload } from "@/src/api/apiError";
 import { fetchWithTimeout } from "@/src/api/fetchWithTimeout";
 import { emailPasswordLogin, googleIdTokenLogin } from "@/src/api/authApi";
 import { signOutGoogle } from "@/src/auth/googleSignIn";
+import { reportHandledError } from "@/src/observability/sentry";
 import {
   getIsOnline,
   reportApiReachability,
@@ -89,8 +90,11 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
   logout: async () => {
     const current = get().state;
-    // Drop any pending verification so it can't fire against a torn-down session.
+    // Drop any pending verification so it can't fire against a torn-down session,
+    // and make sure nothing re-reads the keychain and signs the user back in.
     cancelRetry();
+    loggedOutThisSession = true;
+    sessionUnreadable = false;
     try {
       if (current.status === "authenticated") {
         await fetchWithTimeout(`${getApiBaseUrl()}/auth/logout`, {
@@ -102,7 +106,12 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       // ignore logout network errors; local logout still proceeds
     }
     await signOutGoogle();
-    await clearAuthSession();
+    // A keychain that refuses the delete leaves the token on disk, so retry once
+    // before giving up. `loggedOutThisSession` is the backstop either way.
+    const cleared = (await clearAuthSession()) || (await clearAuthSession());
+    if (!cleared) {
+      reportHandledError(new Error("auth_session_delete_failed"), { op: "auth.logout" });
+    }
     await clearLastLoggedInEmail();
     set({ state: { status: "unauthenticated" } });
   },
@@ -126,10 +135,22 @@ const RETRY_DELAYS_MS = [5_000, 15_000, 60_000, 300_000, 900_000];
 const MIN_PROBE_INTERVAL_MS = 15_000;
 const JITTER_RATIO = 0.2;
 
+/**
+ * Delays for re-reading a session the keychain refused. Short and fixed, not the
+ * network ladder: this is a local read, there is no server to overload, and the
+ * condition usually clears the moment the device is unlocked.
+ */
+const STORAGE_RETRY_DELAYS_MS = [250, 1_000, 3_000];
+
 let retryTimer: ReturnType<typeof setTimeout> | null = null;
 let retryAttempt = 0;
 let probeInFlight: Promise<void> | null = null;
+let hydrateInFlight: Promise<void> | null = null;
 let lastProbeStartedAt = 0;
+/** The stored session exists but the keychain wouldn't hand it over. */
+let sessionUnreadable = false;
+/** Once the user signs out, no later read may sign them back in. */
+let loggedOutThisSession = false;
 
 /**
  * Hydrate the session from storage and verify it in the background. Re-verifies
@@ -144,12 +165,23 @@ export function initAuth(): void {
   let wasOnline = getIsOnline();
   useConnectivityStore.subscribe((s) => {
     const isOnline = s.isOnline;
-    if (isOnline === true && wasOnline !== true) tryRevalidateNow("edge");
+    if (isOnline === true && wasOnline !== true) {
+      if (sessionUnreadable) void hydrateAndValidate();
+      else tryRevalidateNow("edge");
+    }
     wasOnline = isOnline;
   });
 
   AppState.addEventListener("change", (next) => {
     if (next === "active") {
+      // Returning to the foreground is the signal that the device was unlocked,
+      // which is exactly when a previously unreadable keychain becomes readable.
+      // Deliberately not routed through `tryRevalidateNow`: that path bails out
+      // (and cancels the retry) whenever the store isn't `authenticated`.
+      if (sessionUnreadable) {
+        void hydrateAndValidate();
+        return;
+      }
       tryRevalidateNow("edge");
       return;
     }
@@ -160,10 +192,41 @@ export function initAuth(): void {
   });
 }
 
-async function hydrateAndValidate(): Promise<void> {
-  const [session, lastEmail] = await Promise.all([loadAuthSession(), loadLastLoggedInEmail()]);
+function hydrateAndValidate(): Promise<void> {
+  if (hydrateInFlight) return hydrateInFlight;
+  hydrateInFlight = hydrate().finally(() => {
+    hydrateInFlight = null;
+  });
+  return hydrateInFlight;
+}
 
-  if (!session) {
+async function hydrate(): Promise<void> {
+  if (loggedOutThisSession) return;
+
+  // Only a keychain that actually threw is retried, so a normal launch pays
+  // nothing. Each attempt is cheap and local; three of them cover the usual
+  // "app started before the device was unlocked" window.
+  let read = await readAuthSession();
+  for (const delay of STORAGE_RETRY_DELAYS_MS) {
+    if (read.status !== "unreadable") break;
+    await sleep(delay);
+    if (loggedOutThisSession) return;
+    read = await readAuthSession();
+  }
+
+  if (read.status === "unreadable") {
+    // The token is almost certainly still on disk, so nothing is cleared here.
+    // We just can't use it yet; the foreground/online listeners will try again.
+    sessionUnreadable = true;
+    reportHandledError(new Error("auth_session_unreadable"), { op: "auth.hydrate" });
+    useAuthStore.setState({ state: { status: "unauthenticated" } });
+    return;
+  }
+
+  sessionUnreadable = false;
+
+  if (read.status === "absent") {
+    const lastEmail = await loadLastLoggedInEmail();
     useAuthStore.setState({
       state: { status: "unauthenticated", lastLoggedInEmail: lastEmail ?? undefined },
     });
@@ -173,6 +236,7 @@ async function hydrateAndValidate(): Promise<void> {
   // Trust the stored token immediately: verification can only ever downgrade
   // this, and awaiting it would hold the whole app in `loading` behind a request
   // to a server that may be down.
+  const session = read.session;
   useAuthStore.setState({ state: { status: "authenticated", session } });
 
   if (getIsOnline() === false) {
@@ -180,6 +244,10 @@ async function hydrateAndValidate(): Promise<void> {
     return;
   }
   void revalidate(session);
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function revalidate(session: AuthSession): Promise<void> {

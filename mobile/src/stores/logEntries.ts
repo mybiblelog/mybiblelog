@@ -18,6 +18,7 @@ import {
   loadLogEntries,
   loadPendingLogEntryMutations,
   saveLogEntries,
+  saveLogEntriesFromServer,
   savePendingLogEntryMutations,
 } from "@/src/storage/logEntries";
 import {
@@ -106,7 +107,7 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
         const remote = parseApiLogEntries(await fetchLogEntries(httpClient));
         setEntries(remote.map((e) => toStored(e, e.id ?? undefined)));
         const after = get().state;
-        if (after.status === "ready") await saveLogEntries(after.entries);
+        if (after.status === "ready") await saveLogEntriesFromServer(after.entries);
       } catch (err) {
         // Network or API error: keep current local state, fail gracefully.
         reportHandledError(err, { op: "logEntries.reloadFromApi" });

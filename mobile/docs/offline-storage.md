@@ -70,11 +70,39 @@ operations. Pure logic lives in `src/log-entries/sync.ts`; the drain loop is
 
 ### Durability & failure model
 
-- All writes are **best-effort**: a failed `setItem` is logged and swallowed
-  (`console.warn` / `reportHandledError`) — persistence never crashes the app.
+- **Reads never throw, but they say why they came back empty.**
+  `typedStorage.read()` returns `ok` / `absent` / `corrupt` (stored bytes don't
+  parse) / `unreadable` (the backend itself threw — a locked keychain, a disk
+  error). `get()` still collapses all three failure states to `null` for callers
+  that can't act on the difference.
+- **A key whose read failed is quarantined**, and `setDerived` — the write of a
+  value computed from an earlier read of that same key — is refused while it is.
+  This is what stops a degraded read from becoming a durable delete: without it,
+  a loader that can't reach the disk returns `[]`, the store persists that `[]`,
+  and the user's data is gone. Plain `set` is unaffected, because it replaces the
+  value outright and doesn't depend on what was there.
+- Quarantine clears on a later successful read (`ok`, `absent` and `corrupt` all
+  prove the backend works), a successful `remove`, or a successful authoritative
+  `set` (which has already replaced the bytes being protected). It must **never**
+  be cleared by a speculative probe before a derived write: that would read the
+  real value and then let the caller's stale-derived value overwrite it — the
+  same data loss, a moment later.
+- The trade this makes: while a key is quarantined, writes to it are dropped, so
+  data created during that window is lost on relaunch. That is deliberate — the
+  alternative destroys everything already stored, which is unbounded and, for
+  local notes, has no server copy. If telemetry shows this happening in the
+  field, the escalation is a `<key>.recovery` side key merged on the next
+  successful read.
+- All writes are **best-effort** and report their outcome (`Promise<boolean>` +
+  `reportHandledError`) — persistence never crashes the app. A failed write does
+  *not* quarantine: disk still holds the last good value, so the next write is a
+  legitimate repair.
 - All reads run **defensive type-guards** (`isLogEntry`, `isLocalUserSettings`,
   `isPendingMutation`) that silently drop malformed records and fall back to
-  defaults. A read never throws.
+  defaults.
+- **`clearAuthSession()` returning `false` means the token is still on disk.**
+  `logout()` retries, then sets a session-lifetime flag so no later read can sign
+  the user back in — a shared-device privacy concern, not just a correctness one.
 - **Derived caches are disposable.** `cache.dateVerseCounts` and
   `cache.bibleProgress` are recomputed from the log entries; deleting them just
   forces a rebuild on next launch.
@@ -112,6 +140,11 @@ for a `.vN` bump only when the old shape is genuinely disposable.
   a try/catch; the stored version advances only *after* a step succeeds. A failure
   stops progression and is reported via `reportHandledError` — it never blocks app
   start. Because steps are idempotent, a failed step retries next launch.
+- **An unreadable version marker aborts the run.** `getStoredSchemaVersion()`
+  returns `null` (not `0`) when the read throws, and the runner skips this launch
+  and reports. Treating it as `0` would look like a fresh install and replay every
+  step — survivable only for as long as every step happens to be idempotent, and
+  a backend that can't be read probably can't be written either.
 
 ### Authoring a migration (playbook)
 
@@ -142,6 +175,10 @@ something changed. It's a no-op for entries that already have a `clientId`.
 - **Never destroy data you don't understand.** Type-guards drop only clearly
   malformed *records*, and only for that read — they never rewrite the store to
   remove unknown fields. Migrations, likewise, transform rather than truncate.
+  The same rule covers data you *can't* read: a key whose read failed is
+  quarantined against derived writes (see **Durability & failure model**), and an
+  unreadable `storage.schemaVersion` marker skips migrations for that launch
+  rather than treating the install as fresh and replaying every step.
 
 ### Cross-version scenarios
 

@@ -43,5 +43,5 @@ export async function loadLocalUserSettings(): Promise<LocalUserSettings> {
 }
 
 export async function saveLocalUserSettings(settings: LocalUserSettings): Promise<void> {
-  await appStorage.set("userSettings", settings);
+  await appStorage.setDerived("userSettings", settings);
 }

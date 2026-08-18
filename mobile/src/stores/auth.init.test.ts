@@ -11,13 +11,13 @@
  * go through the isolated module's own exports, never a top-level import.
  */
 
-const mockLoadAuthSession = jest.fn();
+const mockReadAuthSession = jest.fn();
 const mockLoadLastLoggedInEmail = jest.fn();
 const mockClearAuthSession = jest.fn();
 const mockSaveLastLoggedInEmail = jest.fn();
 
 jest.mock("@/src/auth/authStorage", () => ({
-  loadAuthSession: mockLoadAuthSession,
+  readAuthSession: mockReadAuthSession,
   loadLastLoggedInEmail: mockLoadLastLoggedInEmail,
   saveAuthSession: jest.fn(),
   clearAuthSession: mockClearAuthSession,
@@ -64,9 +64,9 @@ beforeEach(() => {
     if (type === "change") appStateListeners.push(handler as (s: AppStateStatus) => void);
     return { remove: () => {} } as ReturnType<typeof AppState.addEventListener>;
   });
-  mockLoadAuthSession.mockResolvedValue(SESSION);
+  mockReadAuthSession.mockResolvedValue({ status: "ok", session: SESSION });
   mockLoadLastLoggedInEmail.mockResolvedValue(null);
-  mockClearAuthSession.mockResolvedValue(undefined);
+  mockClearAuthSession.mockResolvedValue(true);
   mockSaveLastLoggedInEmail.mockResolvedValue(undefined);
   global.fetch = jest.fn();
 });
@@ -184,7 +184,7 @@ describe("hydration", () => {
   });
 
   it("resolves to unauthenticated when there is no stored session", async () => {
-    mockLoadAuthSession.mockResolvedValue(null);
+    mockReadAuthSession.mockResolvedValue({ status: "absent" });
     mockLoadLastLoggedInEmail.mockResolvedValue("old@b.com");
     await withFreshAuth(async (auth) => {
       auth.initAuth();
@@ -329,6 +329,142 @@ describe("retry", () => {
 
       await jest.advanceTimersByTimeAsync(30 * 60_000);
       expect(fetchCount()).toBe(afterLogout);
+    });
+  });
+});
+
+/**
+ * A keychain that won't hand over the token is not the same as having no token.
+ * Nothing here may clear storage — the bytes are still on disk and become
+ * readable again once the device is unlocked.
+ */
+describe("an unreadable stored session", () => {
+  const unreadable = { status: "unreadable" } as const;
+  const ok = { status: "ok", session: SESSION } as const;
+
+  it("retries and signs the user in when the keychain opens up", async () => {
+    mockReadAuthSession
+      .mockResolvedValueOnce(unreadable)
+      .mockResolvedValueOnce(unreadable)
+      .mockResolvedValue(ok);
+    respondWith(200, { data: { user: { email: "a@b.com" } } });
+
+    await withFreshAuth(async (auth) => {
+      auth.initAuth();
+      await jest.advanceTimersByTimeAsync(2_000);
+
+      expect(auth.useAuthStore.getState().state.status).toBe("authenticated");
+      expect(mockReadAuthSession).toHaveBeenCalledTimes(3);
+      expect(mockClearAuthSession).not.toHaveBeenCalled();
+    });
+  });
+
+  it("gives up as signed out without ever clearing the stored token", async () => {
+    mockReadAuthSession.mockResolvedValue(unreadable);
+
+    await withFreshAuth(async (auth) => {
+      auth.initAuth();
+      await jest.advanceTimersByTimeAsync(10_000);
+
+      expect(auth.useAuthStore.getState().state.status).toBe("unauthenticated");
+      expect(mockClearAuthSession).not.toHaveBeenCalled();
+      expect(mockSaveLastLoggedInEmail).not.toHaveBeenCalled();
+      expect(fetchCount()).toBe(0);
+    });
+  });
+
+  // Foregrounding is the post-unlock signal. This must not go through
+  // `tryRevalidateNow`, which bails out (and cancels the retry) while the store
+  // is unauthenticated.
+  it("restores the session on the next foreground, with no relaunch", async () => {
+    mockReadAuthSession.mockResolvedValue(unreadable);
+    respondWith(200, { data: { user: { email: "a@b.com" } } });
+
+    await withFreshAuth(async (auth) => {
+      auth.initAuth();
+      await jest.advanceTimersByTimeAsync(10_000);
+      expect(auth.useAuthStore.getState().state.status).toBe("unauthenticated");
+
+      mockReadAuthSession.mockResolvedValue(ok);
+      appStateListeners.forEach((l) => l("active"));
+      await jest.advanceTimersByTimeAsync(10_000);
+
+      expect(auth.useAuthStore.getState().state.status).toBe("authenticated");
+    });
+  });
+
+  // A keychain read has nothing to do with the network.
+  it("recovers even while the device reports itself offline", async () => {
+    mockIsOnline = false;
+    mockReadAuthSession.mockResolvedValue(unreadable);
+
+    await withFreshAuth(async (auth) => {
+      auth.initAuth();
+      await jest.advanceTimersByTimeAsync(10_000);
+
+      mockReadAuthSession.mockResolvedValue(ok);
+      appStateListeners.forEach((l) => l("active"));
+      await jest.advanceTimersByTimeAsync(10_000);
+
+      expect(auth.useAuthStore.getState().state.status).toBe("authenticated");
+      expect(fetchCount()).toBe(0);
+    });
+  });
+
+  it("runs one retry ladder however many triggers arrive", async () => {
+    mockReadAuthSession.mockResolvedValue(unreadable);
+
+    await withFreshAuth(async (auth) => {
+      auth.initAuth();
+      await jest.advanceTimersByTimeAsync(300);
+      const during = mockReadAuthSession.mock.calls.length;
+      appStateListeners.forEach((l) => l("active"));
+      appStateListeners.forEach((l) => l("active"));
+      await jest.advanceTimersByTimeAsync(0);
+
+      expect(mockReadAuthSession.mock.calls.length).toBe(during);
+    });
+  });
+
+  /**
+   * If the keychain refuses the delete, the token is still on disk. Nothing may
+   * read it back and sign the user in again — that would be a privacy failure on
+   * a shared device.
+   */
+  it("never signs a user back in after they logged out", async () => {
+    respondWith(200, { data: { user: { email: "a@b.com" } } });
+    mockClearAuthSession.mockResolvedValue(false);
+
+    await withFreshAuth(async (auth) => {
+      auth.initAuth();
+      await flush();
+      expect(auth.useAuthStore.getState().state.status).toBe("authenticated");
+
+      await auth.useAuthStore.getState().logout();
+      expect(auth.useAuthStore.getState().state.status).toBe("unauthenticated");
+
+      mockReadAuthSession.mockResolvedValue(ok);
+      appStateListeners.forEach((l) => l("active"));
+      await jest.advanceTimersByTimeAsync(10_000);
+
+      expect(auth.useAuthStore.getState().state.status).toBe("unauthenticated");
+    });
+  });
+
+  // The network ladder is for a server that can't answer; a locked keychain must
+  // not inflate it.
+  it("leaves the network backoff untouched", async () => {
+    mockReadAuthSession.mockResolvedValueOnce(unreadable).mockResolvedValue(ok);
+    respondWith(503, undefined);
+
+    await withFreshAuth(async (auth) => {
+      auth.initAuth();
+      await jest.advanceTimersByTimeAsync(300);
+      expect(fetchCount()).toBe(1);
+
+      // Still the first rung of the network ladder, not a later one.
+      await jest.advanceTimersByTimeAsync(5_000);
+      expect(fetchCount()).toBe(2);
     });
   });
 });

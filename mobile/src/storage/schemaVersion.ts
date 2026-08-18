@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { reportHandledError } from "@/src/observability/sentry";
 
 /**
  * On-device storage schema version.
@@ -25,15 +26,25 @@ export const SCHEMA_VERSION_KEY = "storage.schemaVersion";
  */
 export const CURRENT_SCHEMA_VERSION = 1;
 
-export async function getStoredSchemaVersion(): Promise<number> {
+/**
+ * The version recorded on device, or `null` when the marker could not be read.
+ *
+ * `null` is not the same as `0`: a failed read would otherwise look like a fresh
+ * install and replay every migration. That is survivable only while every step
+ * happens to be idempotent — and a backend that can't be read probably can't be
+ * written either, so the right move is to skip this launch, not to start over.
+ */
+export async function getStoredSchemaVersion(): Promise<number | null> {
+  let raw: string | null;
   try {
-    const raw = await AsyncStorage.getItem(SCHEMA_VERSION_KEY);
-    if (!raw) return 0;
-    const parsed = Number.parseInt(raw, 10);
-    return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
-  } catch {
-    return 0;
+    raw = await AsyncStorage.getItem(SCHEMA_VERSION_KEY);
+  } catch (err) {
+    reportHandledError(err, { op: "storage.readSchemaVersion" });
+    return null;
   }
+  if (!raw) return 0;
+  const parsed = Number.parseInt(raw, 10);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
 }
 
 export async function setStoredSchemaVersion(version: number): Promise<void> {
@@ -42,6 +53,6 @@ export async function setStoredSchemaVersion(version: number): Promise<void> {
   } catch (err) {
     // A failed version write means the just-applied migration will re-run next
     // launch. Migrations are idempotent, so that's safe — surface it, don't crash.
-    console.warn("Failed to persist storage schema version", err);
+    reportHandledError(err, { op: "storage.writeSchemaVersion", version });
   }
 }

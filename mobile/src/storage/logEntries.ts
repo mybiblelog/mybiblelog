@@ -41,6 +41,18 @@ export async function loadLogEntries(): Promise<StoredLogEntry[] | null> {
 }
 
 export async function saveLogEntries(entries: StoredLogEntry[]): Promise<void> {
+  await appStorage.setDerived("logEntries", entries);
+}
+
+/**
+ * Persist a list that came from the API rather than from local storage.
+ *
+ * Server truth doesn't depend on what we managed to read locally, so this is an
+ * authoritative write: it goes through even after a failed hydrate read, and
+ * clears that key's quarantine so ordinary persistence resumes mid-session
+ * instead of waiting for a relaunch.
+ */
+export async function saveLogEntriesFromServer(entries: StoredLogEntry[]): Promise<void> {
   await appStorage.set("logEntries", entries);
 }
 
@@ -85,5 +97,5 @@ export async function loadPendingLogEntryMutations(): Promise<PendingLogEntryMut
 export async function savePendingLogEntryMutations(
   mutations: PendingLogEntryMutation[]
 ): Promise<void> {
-  await appStorage.set("logEntryMutations", mutations);
+  await appStorage.setDerived("logEntryMutations", mutations);
 }

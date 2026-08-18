@@ -1,8 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { appStorage } from "@/src/storage/keys";
 import {
   loadLogEntries,
   loadPendingLogEntryMutations,
   saveLogEntries,
+  saveLogEntriesFromServer,
   savePendingLogEntryMutations,
   type PendingLogEntryMutation,
   type StoredLogEntry,
@@ -19,6 +21,9 @@ const entry: StoredLogEntry = {
 };
 
 beforeEach(async () => {
+  // `appStorage` is a module-scoped singleton, so a key quarantined by one test
+  // would otherwise refuse writes in the next.
+  appStorage.__resetForTest();
   await AsyncStorage.clear();
 });
 
@@ -99,5 +104,53 @@ describe("pending mutations", () => {
     );
     const loaded = await loadPendingLogEntryMutations();
     expect(loaded.map((m) => m.clientId)).toEqual(["c1", "z"]);
+  });
+});
+
+/**
+ * The failure that motivated the read-state work: a loader that can't tell "no
+ * entries" from "the read threw" hands the store an empty list, and the store
+ * persists that empty list over everything the user has logged.
+ */
+describe("a failed read never becomes a durable delete", () => {
+  it("refuses to persist a list derived from a read that failed", async () => {
+    await saveLogEntries([entry]);
+
+    jest.spyOn(AsyncStorage, "getItem").mockRejectedValueOnce(new Error("disk error"));
+    expect(await loadLogEntries()).toBeNull();
+
+    await saveLogEntries([]);
+    expect(JSON.parse((await AsyncStorage.getItem(STORAGE_KEY))!)).toEqual([entry]);
+  });
+
+  it("refuses to replace a pending queue derived from a read that failed", async () => {
+    const mutation: PendingLogEntryMutation = {
+      type: "create",
+      clientId: "c1",
+      entry: { date: "2026-06-27", startVerseId: 43003016, endVerseId: 43003018 },
+      ts: 1,
+    };
+    await savePendingLogEntryMutations([mutation]);
+
+    jest.spyOn(AsyncStorage, "getItem").mockRejectedValueOnce(new Error("disk error"));
+    expect(await loadPendingLogEntryMutations()).toEqual([]);
+
+    await savePendingLogEntryMutations([]);
+    expect(JSON.parse((await AsyncStorage.getItem(MUTATIONS_KEY))!)).toEqual([mutation]);
+  });
+
+  // Server truth doesn't depend on the local read, so it goes through — and
+  // restores normal persistence for the rest of the session.
+  it("still accepts an authoritative write from the server", async () => {
+    await saveLogEntries([entry]);
+    jest.spyOn(AsyncStorage, "getItem").mockRejectedValueOnce(new Error("disk error"));
+    await loadLogEntries();
+
+    const fromServer: StoredLogEntry = { ...entry, clientId: "c2", id: "server-1" };
+    await saveLogEntriesFromServer([fromServer]);
+    expect(JSON.parse((await AsyncStorage.getItem(STORAGE_KEY))!)).toEqual([fromServer]);
+
+    await saveLogEntries([entry, fromServer]);
+    expect(JSON.parse((await AsyncStorage.getItem(STORAGE_KEY))!)).toHaveLength(2);
   });
 });

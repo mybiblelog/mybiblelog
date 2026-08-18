@@ -61,7 +61,7 @@ export async function loadLocalNotes(): Promise<StoredLocalNote[]> {
 }
 
 export async function saveLocalNotes(notes: StoredLocalNote[]): Promise<void> {
-  await appStorage.set("passageNotes", notes);
+  await appStorage.setDerived("passageNotes", notes);
 }
 
 function isNoteInput(value: unknown): value is NoteInput {
@@ -93,5 +93,5 @@ export async function loadPendingNoteMutations(): Promise<PendingNoteMutation[]>
 }
 
 export async function savePendingNoteMutations(mutations: PendingNoteMutation[]): Promise<void> {
-  await appStorage.set("passageNoteMutations", mutations);
+  await appStorage.setDerived("passageNoteMutations", mutations);
 }
