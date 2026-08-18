@@ -2,7 +2,9 @@ import { ApiError } from "./apiError";
 
 // Control the auth token the client injects.
 jest.mock("@/src/stores/auth", () => ({ getAuthToken: jest.fn() }));
+jest.mock("@/src/stores/connectivity", () => ({ reportApiReachability: jest.fn() }));
 import { getAuthToken } from "@/src/stores/auth";
+import { reportApiReachability } from "@/src/stores/connectivity";
 import { httpClient } from "./httpClient";
 
 function mockFetchOnce(body: unknown, ok = true, status = 200) {
@@ -86,5 +88,33 @@ describe("httpClient", () => {
     const err = await httpClient.get("/api/boom").catch((e) => e);
     expect(err).toBeInstanceOf(ApiError);
     expect(err.code).toBe("unknown_error");
+  });
+});
+
+// Every request doubles as a reachability sample, so the UI can distinguish a
+// server outage from the user's own network being down.
+describe("reachability reporting", () => {
+  it("reports the API as reachable on a success", async () => {
+    mockFetchOnce({ data: [] });
+    await httpClient.get("/api/log-entries");
+    expect(reportApiReachability).toHaveBeenCalledWith(true);
+  });
+
+  it("reports the API as reachable on a 4xx — it answered", async () => {
+    mockFetchOnce({ error: { code: "not_found" } }, false, 404);
+    await expect(httpClient.get("/api/log-entries")).rejects.toBeInstanceOf(ApiError);
+    expect(reportApiReachability).toHaveBeenCalledWith(true);
+  });
+
+  it("reports the API as unreachable on a 5xx", async () => {
+    mockFetchOnce({ error: { code: "internal_server_error" } }, false, 503);
+    await expect(httpClient.get("/api/log-entries")).rejects.toBeInstanceOf(ApiError);
+    expect(reportApiReachability).toHaveBeenCalledWith(false);
+  });
+
+  it("reports the API as unreachable when the request never lands", async () => {
+    (global.fetch as jest.Mock).mockRejectedValueOnce(new TypeError("Network request failed"));
+    await expect(httpClient.get("/api/log-entries")).rejects.toBeInstanceOf(ApiError);
+    expect(reportApiReachability).toHaveBeenCalledWith(false);
   });
 });

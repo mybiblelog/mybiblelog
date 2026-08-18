@@ -4,7 +4,7 @@ import type { PassageNote } from "@/src/api/notesApi";
 import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { useIsUnauthenticated } from "@/src/stores/auth";
-import { useIsOnline } from "@/src/stores/connectivity";
+import { useConnectionStatus } from "@/src/stores/connectivity";
 import { useLocalNotes } from "@/src/stores/offlineNotes";
 import type { StoredLocalNote } from "@/src/storage/passageNotes";
 import { Icon } from "../atoms/Icon";
@@ -42,7 +42,8 @@ export function OfflineNotesView() {
   const t = useT();
   const notes = useLocalNotes();
   const isUnauthenticated = useIsUnauthenticated();
-  const isOnline = useIsOnline();
+  const status = useConnectionStatus();
+  const canReachServer = status === "online" || status === "unknown";
   const { openAdd, openMenu, overlays } = useLocalNoteOverlays();
 
   const header = (
@@ -59,20 +60,28 @@ export function OfflineNotesView() {
       icon="log-in-outline"
       title={t("notes_signin_title")}
       text={t("notes_signin_text")}
-      ctaLabel={isOnline === false ? undefined : t("auth_login")}
+      ctaLabel={canReachServer ? t("auth_login") : undefined}
       ctaIcon="log-in-outline"
-      onPressCta={isOnline === false ? undefined : () => router.push("/login")}
+      onPressCta={canReachServer ? () => router.push("/login") : undefined}
       dismissLabel={t("dismiss")}
       dismissKey="notesSignInDismissed"
     >
-      {isOnline === false ? (
+      {canReachServer ? null : (
         <View style={styles.offlineNotice}>
-          <Icon name="cloud-offline-outline" size={16} color="mutedText" />
+          <Icon
+            name={status === "device-offline" ? "cloud-offline-outline" : "alert-circle-outline"}
+            size={16}
+            color="mutedText"
+          />
           <Text variant="caption" color="mutedText" style={styles.offlineNoticeText}>
-            {t("auth_login_requires_connection")}
+            {t(
+              status === "device-offline"
+                ? "auth_login_requires_connection"
+                : "auth_login_requires_server"
+            )}
           </Text>
         </View>
-      ) : null}
+      )}
     </InlineAlert>
   ) : null;
 

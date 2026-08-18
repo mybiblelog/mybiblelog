@@ -215,6 +215,7 @@ export const ko = {
   auth_offline_sync_hint:
     "온라인 상태로 로그인하기 전까지는 이 기기의 오프라인 데이터가 계정과 동기화되지 않습니다.",
   auth_login_requires_connection: "로그인하려면 인터넷 연결이 필요합니다.",
+  auth_login_requires_server: "로그인하려면 My Bible Log 서버에 연결되어야 합니다.",
   auth_login: "로그인",
   auth_create_account: "계정 만들기",
   auth_logout: "로그아웃",
@@ -290,6 +291,7 @@ export const ko = {
   connectivity_online: "온라인",
   connectivity_offline: "오프라인",
   connectivity_unknown: "알 수 없음",
+  connectivity_server_unreachable: "서버 사용 불가",
 
   settings_section_account: "계정",
   settings_section_account_subtitle: "로그인 및 연결 상태",
@@ -356,6 +358,8 @@ export const ko = {
 
   dismiss: "닫기",
   offline_banner: "오프라인 상태입니다 — 다시 연결되면 변경 사항이 동기화됩니다.",
+  server_unreachable_banner:
+    "My Bible Log 서버에 연결할 수 없습니다 — 서버가 복구되면 변경 사항이 동기화됩니다.",
   today_no_goal_hint: "설정 → 읽기에서 일일 목표를 설정하면 여기서 진행 상황을 확인할 수 있습니다.",
   chapter_read_a11y: "%{book} %{chapter}장, 읽음",
   chapter_unread_a11y: "%{book} %{chapter}장, 읽지 않음",

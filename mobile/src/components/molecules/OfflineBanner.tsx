@@ -1,31 +1,40 @@
 import { StyleSheet, View } from "react-native";
 import { spacing, useTheme } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
-import { useIsOnline } from "@/src/stores/connectivity";
+import { useConnectionStatus } from "@/src/stores/connectivity";
 import { Icon } from "../atoms/Icon";
 import { Text } from "../atoms/Text";
 
 /**
- * Subtle "you're offline" strip shown at the top of screens while the device
- * has no connectivity, so users can trust that the offline-first queue has
- * their changes. Renders nothing while online or before the first NetInfo
- * event resolves.
+ * Subtle connection strip shown at the top of screens whenever the app can't
+ * sync, so users can trust that the offline-first queue has their changes.
+ *
+ * It distinguishes "your device has no network" from "our server isn't
+ * answering" — telling someone they're offline while every other app works
+ * blames the wrong thing. Renders nothing while healthy or before the first
+ * connectivity signal resolves.
  */
 export function OfflineBanner() {
-  const isOnline = useIsOnline();
+  const status = useConnectionStatus();
   const t = useT();
   const { colors } = useTheme();
 
-  if (isOnline !== false) return null;
+  if (status !== "device-offline" && status !== "server-unreachable") return null;
+
+  const offline = status === "device-offline";
 
   return (
     <View
       accessibilityLiveRegion="polite"
       style={[styles.banner, { backgroundColor: colors.surfaceMuted }]}
     >
-      <Icon name="cloud-offline-outline" size={14} color="mutedText" />
+      <Icon
+        name={offline ? "cloud-offline-outline" : "alert-circle-outline"}
+        size={14}
+        color="mutedText"
+      />
       <Text variant="caption" color="mutedText" style={styles.text}>
-        {t("offline_banner")}
+        {t(offline ? "offline_banner" : "server_unreachable_banner")}
       </Text>
     </View>
   );

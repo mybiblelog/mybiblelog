@@ -13,6 +13,7 @@ jest.mock("@/src/auth/authStorage", () => ({
 jest.mock("@/src/auth/googleSignIn", () => ({ signOutGoogle: jest.fn() }));
 jest.mock("@/src/stores/connectivity", () => ({
   getIsOnline: jest.fn(() => true),
+  reportApiReachability: jest.fn(),
   useConnectivityStore: { subscribe: jest.fn() },
 }));
 

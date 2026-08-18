@@ -218,6 +218,7 @@ export const pt = {
   auth_offline_sync_hint:
     "Seus dados offline neste dispositivo não serão sincronizados com sua conta até que você esteja online e conectado.",
   auth_login_requires_connection: "Fazer login requer uma conexão com a internet.",
+  auth_login_requires_server: "Fazer login exige acesso ao servidor do My Bible Log.",
   auth_login: "Entrar",
   auth_create_account: "Criar conta",
   auth_logout: "Sair",
@@ -296,6 +297,7 @@ export const pt = {
   connectivity_online: "Online",
   connectivity_offline: "Offline",
   connectivity_unknown: "Desconhecido",
+  connectivity_server_unreachable: "Servidor indisponível",
 
   settings_section_account: "Conta",
   settings_section_account_subtitle: "Login e conectividade",
@@ -365,6 +367,8 @@ export const pt = {
   dismiss: "Dispensar",
   offline_banner:
     "Você está offline — as alterações serão sincronizadas quando você se reconectar.",
+  server_unreachable_banner:
+    "Não foi possível acessar o My Bible Log — as alterações serão sincronizadas quando o servidor voltar.",
   today_no_goal_hint:
     "Defina uma meta diária em Ajustes → Leitura para acompanhar seu progresso aqui.",
   chapter_read_a11y: "%{book} capítulo %{chapter}, lido",

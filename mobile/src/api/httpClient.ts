@@ -3,6 +3,7 @@ import { getApiOrigin } from "@/src/api/apiBase";
 import { ApiError, parseApiErrorBody } from "@/src/api/apiError";
 import { fetchWithTimeout } from "@/src/api/fetchWithTimeout";
 import { getAuthToken } from "@/src/stores/auth";
+import { reportApiReachability } from "@/src/stores/connectivity";
 
 /**
  * Mobile implementation of the shared `HttpClient` port (see
@@ -12,6 +13,11 @@ import { getAuthToken } from "@/src/stores/auth";
  * paths that already include `/api` (e.g. `/api/log-entries`), so we prepend the
  * API origin (without `/api`). The bearer token is read from the auth store, and
  * non-OK responses are parsed into a typed `ApiError`.
+ *
+ * Every request also reports whether the API answered (`reportApiReachability`),
+ * which is what lets the UI say "server unavailable" instead of blaming the
+ * user's network — and lets a recovered server clear that state immediately
+ * rather than waiting for the auth store's next backoff tick.
  */
 
 type Method = "GET" | "POST" | "PATCH" | "DELETE";
@@ -34,8 +40,13 @@ async function request<T>(method: Method, path: string, body?: unknown): Promise
     // DNS, TLS) or a timeout (`AbortError`). The platform surfaces these as raw
     // native exceptions (e.g. Android's `java.io.IOException`), which must never
     // reach the UI — normalize them to a typed, translatable `network_error`.
+    reportApiReachability(false);
     throw new ApiError({ code: "network_error", errors: [] });
   }
+
+  // A 4xx is a coherent answer (the API is up and talking to us); a 5xx means it
+  // can't serve the app, which reads to the user as the server being down.
+  reportApiReachability(res.status < 500);
 
   const json = (await res.json().catch(() => undefined)) as
     { data?: unknown; meta?: unknown } | undefined;

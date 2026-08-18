@@ -212,6 +212,7 @@ export const en = {
   auth_offline_sync_hint:
     "Your offline data on this device will not sync to your account until you are online and logged in.",
   auth_login_requires_connection: "Logging in requires an internet connection.",
+  auth_login_requires_server: "Logging in requires reaching the My Bible Log server.",
   auth_login: "Login",
   auth_create_account: "Create account",
   auth_logout: "Logout",
@@ -323,6 +324,7 @@ export const en = {
   connectivity_online: "Online",
   connectivity_offline: "Offline",
   connectivity_unknown: "Unknown",
+  connectivity_server_unreachable: "Server unavailable",
 
   settings_section_account: "Account",
   settings_section_account_subtitle: "Login and connectivity",
@@ -391,6 +393,8 @@ export const en = {
 
   dismiss: "Dismiss",
   offline_banner: "You’re offline — changes will sync when you reconnect.",
+  server_unreachable_banner:
+    "Can’t reach My Bible Log — changes will sync once the server is back.",
   today_no_goal_hint: "Set a daily goal in Settings → Reading to track your progress here.",
   reading_tracker_reset_header: "You've read the whole Bible!",
   reading_tracker_reset_message:

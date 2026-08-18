@@ -218,6 +218,7 @@ export const uk = {
   auth_offline_sync_hint:
     "Ваші офлайн-дані на цьому пристрої не синхронізуються з вашим обліковим записом, доки ви не будете онлайн і не увійдете в систему.",
   auth_login_requires_connection: "Для входу потрібне підключення до інтернету.",
+  auth_login_requires_server: "Для входу потрібен доступ до сервера My Bible Log.",
   auth_login: "Увійти",
   auth_create_account: "Створити обліковий запис",
   auth_logout: "Вийти",
@@ -297,6 +298,7 @@ export const uk = {
   connectivity_online: "Онлайн",
   connectivity_offline: "Офлайн",
   connectivity_unknown: "Невідомо",
+  connectivity_server_unreachable: "Сервер недоступний",
 
   settings_section_account: "Обліковий запис",
   settings_section_account_subtitle: "Вхід та з'єднання",
@@ -364,6 +366,8 @@ export const uk = {
 
   dismiss: "Закрити",
   offline_banner: "Ви офлайн — зміни синхронізуються, коли ви знову підключитеся.",
+  server_unreachable_banner:
+    "Не вдається з’єднатися з My Bible Log — зміни синхронізуються, коли сервер повернеться.",
   today_no_goal_hint:
     "Встановіть щоденну мету в Налаштування → Читання, щоб відстежувати свій прогрес тут.",
   chapter_read_a11y: "%{book}, розділ %{chapter}, прочитано",

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/src/stores/auth";
+import { type ConnectionStatus, useConnectionStatus } from "@/src/stores/connectivity";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { spacing, useTheme } from "@/src/design";
 import {
@@ -13,24 +14,27 @@ import {
   Text,
 } from "@/src/components";
 import { router } from "expo-router";
-import { useNetInfo } from "@react-native-community/netinfo";
 import { ScrollView, StyleSheet, View } from "react-native";
+import type { TranslationKey } from "@/src/i18n";
+
+const CONNECTIVITY_TEXT_KEYS: Record<ConnectionStatus, TranslationKey> = {
+  online: "connectivity_online",
+  "device-offline": "connectivity_offline",
+  "server-unreachable": "connectivity_server_unreachable",
+  unknown: "connectivity_unknown",
+};
 
 export default function AccountSettings() {
   const t = useT();
   const { colors } = useTheme();
   const { state: authState, logout } = useAuth();
   const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
-  const netInfo = useNetInfo();
-  const isOnline =
-    netInfo.isInternetReachable === null ? netInfo.isConnected : netInfo.isInternetReachable;
+  const connectionStatus = useConnectionStatus();
+  // `unknown` (no connectivity signal yet) keeps the sign-in actions available
+  // rather than pre-emptively blocking them.
+  const canReachServer = connectionStatus === "online" || connectionStatus === "unknown";
 
-  const connectivityText =
-    isOnline === true
-      ? t("connectivity_online")
-      : isOnline === false
-        ? t("connectivity_offline")
-        : t("connectivity_unknown");
+  const connectivityText = t(CONNECTIVITY_TEXT_KEYS[connectionStatus]);
 
   return (
     <Screen>
@@ -96,11 +100,23 @@ export default function AccountSettings() {
                   </Text>
                 </View>
               </View>
-              {isOnline === false ? (
+              {!canReachServer ? (
                 <View style={styles.authOfflineNotice}>
-                  <Icon name="cloud-offline-outline" size={16} color="mutedText" />
+                  <Icon
+                    name={
+                      connectionStatus === "device-offline"
+                        ? "cloud-offline-outline"
+                        : "alert-circle-outline"
+                    }
+                    size={16}
+                    color="mutedText"
+                  />
                   <Text variant="caption" color="mutedText" style={styles.authOfflineNoticeText}>
-                    {t("auth_login_requires_connection")}
+                    {t(
+                      connectionStatus === "device-offline"
+                        ? "auth_login_requires_connection"
+                        : "auth_login_requires_server"
+                    )}
                   </Text>
                 </View>
               ) : (
