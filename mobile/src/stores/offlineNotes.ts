@@ -21,9 +21,12 @@ import {
   type StoredLocalNote,
   loadLocalNotes,
   loadPendingNoteMutations,
+  readLocalNotes,
   saveLocalNotes,
   savePendingNoteMutations,
 } from "@/src/storage/passageNotes";
+import { appStorage } from "@/src/storage/keys";
+import { registerManagedKey } from "@/src/storage/health";
 import { useAuthStore } from "@/src/stores/auth";
 import { getIsOnline, useConnectivityStore } from "@/src/stores/connectivity";
 import { notesActions, useNotesStore } from "@/src/stores/passageNotes";
@@ -225,6 +228,11 @@ export function initNotes(): void {
   if (initialized) return;
   initialized = true;
 
+  registerManagedKey(appStorage.keyName("passageNotes"), rehydrateFromDisk);
+  // The queue is re-read from disk on every mutation, so it heals on its own —
+  // it registers only so that writes refused in the meantime raise the banner.
+  registerManagedKey(appStorage.keyName("passageNoteMutations"));
+
   void (async () => {
     const notes = await loadLocalNotes();
     useOfflineNotesStore.setState({
@@ -239,6 +247,36 @@ export function initNotes(): void {
     wasOnline = s.isOnline;
   });
   useAuthStore.subscribe(() => onReachable());
+}
+
+/**
+ * Merge the stored local notes back into memory once the backend answers again.
+ *
+ * This is the key with no server copy, so a failed read showing an empty list is
+ * the most alarming failure in the app. Re-reading is safe here, and *only*
+ * here, because this consumes the value it reads — the merge runs in the
+ * continuation immediately after the `await`, leaving no window for a store
+ * action to persist the empty list over the real one. See the invariant in
+ * `storage/health.ts`.
+ *
+ * Notes are unioned by `clientId` with memory winning, so notes written during
+ * the outage survive alongside the ones the failed read hid. A note *deleted*
+ * during the outage reappears — the bounded, deliberate trade.
+ */
+async function rehydrateFromDisk(): Promise<void> {
+  const disk = await readLocalNotes();
+  if (disk.status === "unreadable") return; // still broken; stay degraded
+
+  const current = useOfflineNotesStore.getState().state;
+  if (current.status !== "ready") return;
+
+  // `absent`/`corrupt` mean there is nothing worth merging; re-persisting what
+  // is in memory is what gets this key writing again.
+  const merged = sortNotesNewestFirst(
+    disk.status === "ok" ? current.notes.reduce(upsertLocalNote, disk.value) : current.notes
+  );
+  useOfflineNotesStore.setState({ state: { ...current, notes: merged } });
+  await saveLocalNotes(merged);
 }
 
 /** Drain the offline queue and refresh the online list, if we can reach the API. */

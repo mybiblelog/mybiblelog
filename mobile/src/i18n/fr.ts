@@ -369,6 +369,8 @@ export const fr = {
   calendar_day_verses_read: "%{count} versets lus",
 
   dismiss: "Ignorer",
+  storage_degraded_banner:
+    "Les modifications ne peuvent pas être enregistrées pour le moment. Vos données enregistrées sont intactes.",
   offline_banner:
     "Vous êtes hors ligne — les modifications seront synchronisées lors de la reconnexion.",
   server_unreachable_banner:

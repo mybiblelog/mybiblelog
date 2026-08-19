@@ -365,6 +365,7 @@ export const uk = {
   calendar_day_verses_read: "%{count} віршів прочитано",
 
   dismiss: "Закрити",
+  storage_degraded_banner: "Наразі не вдається зберегти зміни. Ваші збережені дані в безпеці.",
   offline_banner: "Ви офлайн — зміни синхронізуються, коли ви знову підключитеся.",
   server_unreachable_banner:
     "Не вдається з’єднатися з My Bible Log — зміни синхронізуються, коли сервер повернеться.",

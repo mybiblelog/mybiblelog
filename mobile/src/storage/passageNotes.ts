@@ -1,5 +1,6 @@
 import type { NoteInput, NotePassage } from "@/src/api/notesApi";
 import { appStorage } from "@/src/storage/keys";
+import type { ReadResult } from "@/src/storage/typedStorage";
 
 /**
  * Offline (local-only) passage-notes persistence.
@@ -54,10 +55,25 @@ function isStoredLocalNote(value: unknown): value is StoredLocalNote {
   );
 }
 
+/**
+ * Read the local notes, reporting *why* an empty result is empty.
+ *
+ * These notes have no server copy, so `loadLocalNotes` returning `[]` after a
+ * failed read is the most dangerous shape in the app: it looks exactly like
+ * "you have no offline notes". The rehydrator in `stores/offlineNotes.ts` needs
+ * the distinction to know whether merging disk back in is safe.
+ */
+export async function readLocalNotes(): Promise<ReadResult<StoredLocalNote[]>> {
+  const stored = await appStorage.read("passageNotes");
+  if (stored.status === "unreadable") return { status: "unreadable" };
+  if (stored.status === "corrupt") return { status: "corrupt" };
+  if (stored.status === "absent" || !Array.isArray(stored.value)) return { status: "absent" };
+  return { status: "ok", value: stored.value.filter(isStoredLocalNote) };
+}
+
 export async function loadLocalNotes(): Promise<StoredLocalNote[]> {
-  const stored = await appStorage.get("passageNotes");
-  if (!Array.isArray(stored)) return [];
-  return stored.filter(isStoredLocalNote);
+  const result = await readLocalNotes();
+  return result.status === "ok" ? result.value : [];
 }
 
 export async function saveLocalNotes(notes: StoredLocalNote[]): Promise<void> {

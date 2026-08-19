@@ -72,6 +72,21 @@ export function reportApiReachability(reachable: boolean): void {
   useConnectivityStore.setState({ apiReachable: reachable });
 }
 
+/**
+ * Forget whether the API was reachable.
+ *
+ * The verdict is measured on behalf of a session — the token probe and every
+ * authenticated request produce it — so it must not outlive one. Without this a
+ * "server is down" reading taken before sign-out sticks forever, because a
+ * signed-out app makes no further requests to correct it, and then greets the
+ * next sign-in as though the server were still down. Same reasoning as clearing
+ * it when the device drops its network; the next request re-establishes it.
+ */
+export function resetApiReachability(): void {
+  if (useConnectivityStore.getState().apiReachable === null) return;
+  useConnectivityStore.setState({ apiReachable: null });
+}
+
 /** Synchronous accessor for use inside store actions (outside React). */
 export function getIsOnline(): boolean | null {
   return useConnectivityStore.getState().isOnline;

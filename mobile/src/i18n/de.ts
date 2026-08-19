@@ -370,6 +370,8 @@ export const de = {
   calendar_day_verses_read: "%{count} Verse gelesen",
 
   dismiss: "Verwerfen",
+  storage_degraded_banner:
+    "Änderungen können derzeit nicht gespeichert werden. Ihre gespeicherten Daten sind sicher.",
   offline_banner:
     "Sie sind offline — Änderungen werden synchronisiert, sobald Sie wieder online sind.",
   server_unreachable_banner:

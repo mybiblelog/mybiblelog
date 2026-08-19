@@ -392,6 +392,7 @@ export const en = {
   calendar_day_verses_read: "%{count} verses read",
 
   dismiss: "Dismiss",
+  storage_degraded_banner: "Changes can’t be saved right now. Your saved data is safe.",
   offline_banner: "You’re offline — changes will sync when you reconnect.",
   server_unreachable_banner:
     "Can’t reach My Bible Log — changes will sync once the server is back.",

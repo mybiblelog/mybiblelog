@@ -1,6 +1,7 @@
 import type { LogEntry } from "@/src/types/log-entry";
 import { makeClientId } from "@/src/log-entries/sync";
 import { appStorage } from "@/src/storage/keys";
+import type { ReadResult } from "@/src/storage/typedStorage";
 
 function isLogEntry(value: unknown): value is LogEntry {
   if (!value || typeof value !== "object") return false;
@@ -25,19 +26,43 @@ function ensureClientIds(entries: LogEntry[]): StoredLogEntry[] {
   }));
 }
 
-export async function loadLogEntries(): Promise<StoredLogEntry[] | null> {
-  const stored = await appStorage.get("logEntries");
-  if (!Array.isArray(stored)) return null;
+async function parseStoredLogEntries(): Promise<
+  ReadResult<{ entries: StoredLogEntry[]; migrated: boolean }>
+> {
+  const stored = await appStorage.read("logEntries");
+  if (stored.status === "unreadable") return { status: "unreadable" };
+  if (stored.status === "corrupt") return { status: "corrupt" };
+  if (stored.status === "absent" || !Array.isArray(stored.value)) return { status: "absent" };
 
-  const entries = stored.filter(isLogEntry);
+  const entries = stored.value.filter(isLogEntry);
   const withClientIds = ensureClientIds(entries);
+  const migrated = withClientIds.some((e, i) => e.clientId !== entries[i]?.clientId);
+  return { status: "ok", value: { entries: withClientIds, migrated } };
+}
+
+/**
+ * Read the stored entries, reporting *why* an empty result is empty.
+ *
+ * `loadLogEntries` collapses every failure to `null`, which the hydrating store
+ * turns into an empty list — indistinguishable, to the user, from having lost
+ * their whole reading log. The rehydrator in `stores/logEntries.ts` needs the
+ * difference so it only merges when the disk actually answered.
+ *
+ * Unlike `loadLogEntries` this never writes: the caller persists the value it
+ * derives, and a backfill write racing that one could land last and win.
+ */
+export async function readLogEntries(): Promise<ReadResult<StoredLogEntry[]>> {
+  const result = await parseStoredLogEntries();
+  return result.status === "ok" ? { status: "ok", value: result.value.entries } : result;
+}
+
+export async function loadLogEntries(): Promise<StoredLogEntry[] | null> {
+  const result = await parseStoredLogEntries();
+  if (result.status !== "ok") return null;
 
   // If we had to migrate any entries, persist immediately.
-  const changed = withClientIds.some((e, i) => e.clientId !== entries[i]?.clientId);
-  if (changed) {
-    void saveLogEntries(withClientIds);
-  }
-  return withClientIds;
+  if (result.value.migrated) void saveLogEntries(result.value.entries);
+  return result.value.entries;
 }
 
 export async function saveLogEntries(entries: StoredLogEntry[]): Promise<void> {

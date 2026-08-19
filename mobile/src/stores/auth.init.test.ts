@@ -33,10 +33,12 @@ jest.mock("@/src/auth/googleSignIn", () => ({ signOutGoogle: jest.fn() }));
 let mockIsOnline: boolean | null = true;
 const mockConnectivityListeners: ((s: { isOnline: boolean | null }) => void)[] = [];
 const mockReportApiReachability = jest.fn();
+const mockResetApiReachability = jest.fn();
 
 jest.mock("@/src/stores/connectivity", () => ({
   getIsOnline: () => mockIsOnline,
   reportApiReachability: mockReportApiReachability,
+  resetApiReachability: mockResetApiReachability,
   useConnectivityStore: {
     subscribe: (listener: (s: { isOnline: boolean | null }) => void) => {
       mockConnectivityListeners.push(listener);
@@ -156,6 +158,19 @@ describe("session is cleared only on an authoritative rejection", () => {
 
       expect(auth.useAuthStore.getState().state.status).toBe("unauthenticated");
       expect(mockClearAuthSession).toHaveBeenCalled();
+    });
+  });
+
+  // The verdict was measured for a session that no longer exists, and a
+  // signed-out app makes no further requests to correct it.
+  it("forgets the reachability verdict when the session expires", async () => {
+    respondWith(401, { error: { code: "unauthenticated", errors: [] } });
+    await withFreshAuth(async (auth) => {
+      auth.initAuth();
+      await flush();
+
+      expect(auth.useAuthStore.getState().state.status).toBe("unauthenticated");
+      expect(mockResetApiReachability).toHaveBeenCalled();
     });
   });
 

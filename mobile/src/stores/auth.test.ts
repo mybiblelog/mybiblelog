@@ -14,9 +14,11 @@ jest.mock("@/src/auth/googleSignIn", () => ({ signOutGoogle: jest.fn() }));
 jest.mock("@/src/stores/connectivity", () => ({
   getIsOnline: jest.fn(() => true),
   reportApiReachability: jest.fn(),
+  resetApiReachability: jest.fn(),
   useConnectivityStore: { subscribe: jest.fn() },
 }));
 
+import { reportApiReachability, resetApiReachability } from "@/src/stores/connectivity";
 import { emailPasswordLogin, googleIdTokenLogin } from "@/src/api/authApi";
 import { clearAuthSession, saveAuthSession } from "@/src/auth/authStorage";
 import { signOutGoogle } from "@/src/auth/googleSignIn";
@@ -41,6 +43,9 @@ describe("loginWithEmailPassword", () => {
     expect(saveAuthSession).toHaveBeenCalledWith({ token: "tok", user: { email: "a@b.com" } });
     expect(useAuthStore.getState().state.status).toBe("authenticated");
     expect(getAuthToken()).toBe("tok");
+    // The login endpoints bypass `httpClient`, so nothing else would report it,
+    // and a stale server-down verdict would greet the new session.
+    expect(reportApiReachability).toHaveBeenCalledWith(true);
   });
 
   it("returns the error and stays unauthenticated on failure", async () => {
@@ -97,5 +102,15 @@ describe("logout", () => {
     });
     await actions().logout();
     expect(useAuthStore.getState().state.status).toBe("unauthenticated");
+  });
+
+  // Left behind, a "server is down" reading taken before sign-out sticks
+  // forever: a signed-out app makes no requests to correct it.
+  it("forgets the reachability verdict measured for the session", async () => {
+    useAuthStore.setState({
+      state: { status: "authenticated", session: { token: "tok", user: { email: "a@b.com" } } },
+    });
+    await actions().logout();
+    expect(resetApiReachability).toHaveBeenCalled();
   });
 });

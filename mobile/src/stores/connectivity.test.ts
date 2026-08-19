@@ -4,6 +4,7 @@ import {
   getIsOnline,
   initConnectivity,
   reportApiReachability,
+  resetApiReachability,
   useConnectivityStore,
 } from "./connectivity";
 
@@ -71,6 +72,24 @@ describe("api reachability", () => {
 
     listener({ isConnected: false, isInternetReachable: false });
     expect(useConnectivityStore.getState().apiReachable).toBeNull();
+  });
+
+  // The verdict is measured on behalf of a session. Left behind after sign-out
+  // it sticks forever, because a signed-out app makes no requests to correct it.
+  it("forgets the verdict on reset", () => {
+    reportApiReachability(false);
+    resetApiReachability();
+    expect(useConnectivityStore.getState().apiReachable).toBeNull();
+  });
+
+  it("does not notify when there was no verdict to forget", () => {
+    resetApiReachability();
+    const spy = jest.fn();
+    const unsubscribe = useConnectivityStore.subscribe(spy);
+
+    resetApiReachability();
+    expect(spy).not.toHaveBeenCalled();
+    unsubscribe();
   });
 });
 

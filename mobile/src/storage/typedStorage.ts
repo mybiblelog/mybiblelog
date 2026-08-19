@@ -30,6 +30,20 @@ export interface KeyValueBackend {
 
 export type StorageKeyDef<T> = { key: string; __type?: T };
 
+/**
+ * Optional observers for backend outcomes, keyed by the resolved storage key.
+ *
+ * This is how `keys.ts` connects the quarantine to `storage/health.ts` without
+ * this module knowing anything about stores or React. A *refused* `setDerived`
+ * deliberately doesn't fire `onFailure`: the key is already failing from the
+ * read that quarantined it, and counting the refusal again would just report the
+ * same outage twice.
+ */
+export type StorageHooks = {
+  onFailure?(key: string, kind: "read" | "write"): void;
+  onOk?(key: string): void;
+};
+
 export function defineKey<T>(key: string): StorageKeyDef<T> {
   return { key };
 }
@@ -68,8 +82,15 @@ type StorageSchema = Record<string, StorageKeyDef<any>>;
  *   let the caller's stale-derived value overwrite it — the original bug, a
  *   moment later.
  * - Writes are best-effort and report their outcome; failures never crash.
+ * - Every outcome is also announced through `hooks`, which `keys.ts` forwards to
+ *   `storage/health.ts` — that is what recovers a quarantined key mid-session
+ *   and tells the user their changes aren't landing.
  */
-export function createTypedStorage<S extends StorageSchema>(backend: KeyValueBackend, schema: S) {
+export function createTypedStorage<S extends StorageSchema>(
+  backend: KeyValueBackend,
+  schema: S,
+  hooks: StorageHooks = {}
+) {
   const unreadable = new Set<keyof S>();
 
   const keyOf = (name: keyof S): string => schema[name]!.key;
@@ -85,10 +106,13 @@ export function createTypedStorage<S extends StorageSchema>(backend: KeyValueBac
         unreadable.add(name);
         reportHandledError(err, { op: "storage.read", key: keyOf(name) });
       }
+      hooks.onFailure?.(keyOf(name), "read");
       return { status: "unreadable" };
     }
 
     unreadable.delete(name);
+    // `absent` and `corrupt` still prove the backend answered.
+    hooks.onOk?.(keyOf(name));
     if (raw == null) return { status: "absent" };
     try {
       return { status: "ok", value: JSON.parse(raw) as KeyType<S[K]> };
@@ -109,9 +133,11 @@ export function createTypedStorage<S extends StorageSchema>(backend: KeyValueBac
       // there is no longer anything for the quarantine to protect. (Only
       // clearing it *without* writing would be unsafe — see the note above.)
       if (authoritative) unreadable.delete(name);
+      hooks.onOk?.(keyOf(name));
       return true;
     } catch (err) {
       reportHandledError(err, { op: "storage.write", key: keyOf(name) });
+      hooks.onFailure?.(keyOf(name), "write");
       return false;
     }
   }
@@ -150,13 +176,23 @@ export function createTypedStorage<S extends StorageSchema>(backend: KeyValueBac
       try {
         await backend.removeItem(keyOf(name));
         unreadable.delete(name);
+        hooks.onOk?.(keyOf(name));
         return true;
       } catch (err) {
         // Leave the quarantine in place: a failed delete means the old bytes
         // may still be there, so a derived write still must not clobber them.
         reportHandledError(err, { op: "storage.remove", key: keyOf(name) });
+        hooks.onFailure?.(keyOf(name), "write");
         return false;
       }
+    },
+
+    /**
+     * The resolved key string for a registry entry. Lets callers name a key to
+     * `storage/health.ts` without re-typing the literal and letting it drift.
+     */
+    keyName<K extends keyof S>(name: K): string {
+      return keyOf(name);
     },
 
     /** True when the last read of this key failed at the backend. */

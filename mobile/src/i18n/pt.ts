@@ -365,6 +365,8 @@ export const pt = {
   calendar_day_verses_read: "%{count} versículos lidos",
 
   dismiss: "Dispensar",
+  storage_degraded_banner:
+    "Não é possível salvar as alterações no momento. Seus dados salvos estão seguros.",
   offline_banner:
     "Você está offline — as alterações serão sincronizadas quando você se reconectar.",
   server_unreachable_banner:

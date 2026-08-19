@@ -1,5 +1,6 @@
 import { getDefaultBibleVersion } from "@mybiblelog/shared";
 import { appStorage } from "@/src/storage/keys";
+import type { ReadResult } from "@/src/storage/typedStorage";
 
 export type LocalUserSettings = {
   lookBackDate: string; // YYYY-MM-DD
@@ -37,11 +38,28 @@ function isLocalUserSettings(value: unknown): value is LocalUserSettings {
   );
 }
 
-export async function loadLocalUserSettings(): Promise<LocalUserSettings> {
-  const stored = await appStorage.get("userSettings");
-  return isLocalUserSettings(stored) ? stored : DEFAULT_LOCAL_USER_SETTINGS;
+/**
+ * Read the stored settings, reporting *why* the defaults would be used.
+ *
+ * `loadLocalUserSettings` falling back to `DEFAULT_LOCAL_USER_SETTINGS` after a
+ * failed read is visible and wrong-looking — the look-back date resets to today
+ * — while the real values sit intact on disk. The rehydrator in
+ * `stores/userSettings.ts` needs the difference so it can put them back.
+ */
+export async function readLocalUserSettings(): Promise<ReadResult<LocalUserSettings>> {
+  const stored = await appStorage.read("userSettings");
+  if (stored.status === "unreadable") return { status: "unreadable" };
+  if (stored.status === "corrupt") return { status: "corrupt" };
+  if (stored.status === "absent" || !isLocalUserSettings(stored.value)) return { status: "absent" };
+  return { status: "ok", value: stored.value };
 }
 
-export async function saveLocalUserSettings(settings: LocalUserSettings): Promise<void> {
-  await appStorage.setDerived("userSettings", settings);
+export async function loadLocalUserSettings(): Promise<LocalUserSettings> {
+  const result = await readLocalUserSettings();
+  return result.status === "ok" ? result.value : DEFAULT_LOCAL_USER_SETTINGS;
+}
+
+/** Returns false when the write was refused or failed — nothing reached disk. */
+export async function saveLocalUserSettings(settings: LocalUserSettings): Promise<boolean> {
+  return appStorage.setDerived("userSettings", settings);
 }

@@ -367,6 +367,8 @@ export const es = {
   calendar_day_verses_read: "%{count} versículos leídos",
 
   dismiss: "Descartar",
+  storage_degraded_banner:
+    "Ahora mismo no se pueden guardar los cambios. Tus datos guardados están a salvo.",
   offline_banner: "Sin conexión: los cambios se sincronizarán cuando te vuelvas a conectar.",
   server_unreachable_banner:
     "No se puede conectar con My Bible Log: los cambios se sincronizarán cuando el servidor vuelva.",

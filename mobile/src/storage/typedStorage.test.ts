@@ -194,3 +194,78 @@ describe("writes", () => {
     expect(map.get("entries.v1")).toBe(JSON.stringify([2]));
   });
 });
+
+/**
+ * The hooks are how `keys.ts` connects the quarantine to `storage/health.ts`.
+ */
+describe("health hooks", () => {
+  function setupWithHooks() {
+    const { map, state, backend } = makeBackend();
+    const onFailure = jest.fn();
+    const onOk = jest.fn();
+    return {
+      map,
+      state,
+      onFailure,
+      onOk,
+      storage: createTypedStorage(backend, schema, { onFailure, onOk }),
+    };
+  }
+
+  it("reports a failing read against the resolved key", async () => {
+    const { state, storage, onFailure } = setupWithHooks();
+    state.failGet = true;
+    await storage.read("entries");
+    expect(onFailure).toHaveBeenCalledWith("entries.v1", "read");
+  });
+
+  // `absent` and `corrupt` still prove the backend answered.
+  it.each([
+    ["absent", () => {}],
+    ["corrupt", (map: Map<string, string>) => map.set("entries.v1", "garbage")],
+  ] as const)("reports ok for a %s read", async (_label, seed) => {
+    const { map, storage, onOk } = setupWithHooks();
+    seed(map);
+    await storage.read("entries");
+    expect(onOk).toHaveBeenCalledWith("entries.v1");
+  });
+
+  it("reports a failing write", async () => {
+    const { state, storage, onFailure } = setupWithHooks();
+    state.failSet = true;
+    await storage.set("entries", [1]);
+    expect(onFailure).toHaveBeenCalledWith("entries.v1", "write");
+  });
+
+  it("reports a failing remove", async () => {
+    const { state, storage, onFailure } = setupWithHooks();
+    state.failRemove = true;
+    await storage.remove("entries");
+    expect(onFailure).toHaveBeenCalledWith("entries.v1", "write");
+  });
+
+  // The key is already failing from the read that quarantined it; counting the
+  // refusal again would report the same outage twice.
+  it("stays quiet when a derived write is refused", async () => {
+    const { state, storage, onFailure } = setupWithHooks();
+    state.failGet = true;
+    await storage.read("entries");
+    onFailure.mockClear();
+
+    expect(await storage.setDerived("entries", [1])).toBe(false);
+    expect(onFailure).not.toHaveBeenCalled();
+  });
+
+  it("reports ok on a successful write", async () => {
+    const { storage, onOk } = setupWithHooks();
+    await storage.set("entries", [1]);
+    expect(onOk).toHaveBeenCalledWith("entries.v1");
+  });
+});
+
+describe("keyName", () => {
+  it("resolves a registry entry to its storage key", () => {
+    const { storage } = setup();
+    expect(storage.keyName("entries")).toBe("entries.v1");
+  });
+});

@@ -19,6 +19,7 @@ import { reportHandledError } from "@/src/observability/sentry";
 import {
   getIsOnline,
   reportApiReachability,
+  resetApiReachability,
   useConnectivityStore,
 } from "@/src/stores/connectivity";
 
@@ -64,6 +65,9 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     if (typeof idToken !== "string" || idToken.length === 0) return { ok: false };
     const result = await googleIdTokenLogin(idToken, locale);
     if (!result) return { ok: false };
+    // The login endpoints bypass `httpClient`, so nothing else reports this —
+    // and a returned token is proof the API answered.
+    reportApiReachability(true);
     const session: AuthSession = { token: result.token, user: { email: result.email } };
     await clearLastLoggedInEmail();
     await saveAuthSession(session);
@@ -74,6 +78,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   loginWithEmailPassword: async (email, password) => {
     const result = await emailPasswordLogin(email, password);
     if (!result.ok) return { ok: false, error: result.error };
+    reportApiReachability(true);
     const session: AuthSession = { token: result.token, user: { email: result.email } };
     await clearLastLoggedInEmail();
     await saveAuthSession(session);
@@ -82,6 +87,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   },
 
   establishSession: async (token, email) => {
+    // Reached via the code-based flows, which have just had a token issued.
+    reportApiReachability(true);
     const session: AuthSession = { token, user: { email } };
     await clearLastLoggedInEmail();
     await saveAuthSession(session);
@@ -95,6 +102,9 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     cancelRetry();
     loggedOutThisSession = true;
     sessionUnreadable = false;
+    // The reachability verdict was measured for this session; it must not
+    // outlive it and mislead the next one.
+    resetApiReachability();
     try {
       if (current.status === "authenticated") {
         await fetchWithTimeout(`${getApiBaseUrl()}/auth/logout`, {
@@ -260,6 +270,7 @@ async function revalidate(session: AuthSession): Promise<void> {
 
     if (validation.result === "invalid") {
       // The only path that may destroy a session.
+      resetApiReachability();
       await clearAuthSession();
       await saveLastLoggedInEmail(session.user.email);
       useAuthStore.setState({

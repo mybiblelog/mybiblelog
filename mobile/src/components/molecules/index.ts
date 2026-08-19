@@ -7,7 +7,7 @@ export { InlineAlert } from "./InlineAlert";
 export { InputField } from "./InputField";
 export type { InputFieldProps } from "./InputField";
 export { ListItem } from "./ListItem";
-export { OfflineBanner } from "./OfflineBanner";
+export { StatusBanner } from "./StatusBanner";
 export type { ListItemProps } from "./ListItem";
 export { ScreenHeader } from "./ScreenHeader";
 export type { ScreenHeaderProps } from "./ScreenHeader";

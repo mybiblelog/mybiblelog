@@ -87,12 +87,47 @@ operations. Pure logic lives in `src/log-entries/sync.ts`; the drain loop is
   be cleared by a speculative probe before a derived write: that would read the
   real value and then let the caller's stale-derived value overwrite it — the
   same data loss, a moment later.
-- The trade this makes: while a key is quarantined, writes to it are dropped, so
-  data created during that window is lost on relaunch. That is deliberate — the
-  alternative destroys everything already stored, which is unbounded and, for
-  local notes, has no server copy. If telemetry shows this happening in the
-  field, the escalation is a `<key>.recovery` side key merged on the next
-  successful read.
+- **A quarantine is recovered, not waited out.** `src/storage/health.ts` keeps
+  the set of keys currently failing and, for each, how to reconcile it. Recovery
+  runs when the app is foregrounded — the signal that the device was unlocked,
+  which is what usually fixes a refusing backend — and on a short `250/1s/3s`
+  ladder after the first failure, which turns "launched before first unlock" into
+  a blip instead of a dead session. Without it, `userSettings` and `passageNotes`
+  stayed write-protected until relaunch, because nothing else ever re-read or
+  authoritatively rewrote them.
+- **Registration is the opt-in.** Only keys passed to `registerManagedKey` count
+  as degraded. A read failure on a key whose every write is an authoritative
+  `set` (`themeMode`, `locale`, `forceUpgradeStatus`) costs the user nothing and
+  must not claim their changes aren't saving. Write failures *do* count even
+  though they never quarantine: disk keeps its last good value, but the change
+  the user just made did not land.
+- **A rehydrator must consume what it reads.** This is the one subtle rule. The
+  note above says a quarantine must never be cleared by a *probe* — and a
+  rehydrator's read is a probe. It is safe for exactly one reason: it merges the
+  value it just read back into memory instead of discarding it, in the
+  continuation immediately after the `await`, where no store action can
+  interleave. A rehydrator that reads and throws the value away recreates the
+  original data-loss bug.
+- **The reconciliation is per-key, and memory does not simply win.** Lists
+  (`logEntries`, `passageNotes`) union by `clientId` with memory winning, so work
+  done during the outage survives and everything the failed read hid comes back;
+  the accepted trade is that an entry *deleted* during the outage reappears —
+  bounded, and far better than memory's partial list overwriting the stored one.
+  `userSettings` is a single object, so it tracks which fields were actually
+  written and overlays only those onto disk: taking memory wholesale would
+  promote a hydration default — a look-back date silently reset to today — into
+  durable truth. `absent`/`corrupt` mean there is nothing to merge, so memory is
+  re-persisted; `unreadable` means still broken, so nothing changes.
+- The trade that remains: while a key is degraded, writes to it are still
+  dropped, so data created in that window is lost if the app is killed before
+  recovery runs. That is deliberate — the alternative destroys everything already
+  stored, which is unbounded and, for local notes, has no server copy.
+- **The user is told.** `StatusBanner` (`src/components/molecules/`) shows
+  "changes can't be saved right now" whenever any managed key is degraded, taking
+  priority over the connectivity copy — a queue that can't be written to makes
+  "will sync when you reconnect" a false promise. Before this, a refused write
+  reported to Sentry and returned `false`, every caller ignored the boolean,
+  Sentry is a no-op without a DSN, and the UI showed the change applied.
 - All writes are **best-effort** and report their outcome (`Promise<boolean>` +
   `reportHandledError`) — persistence never crashes the app. A failed write does
   *not* quarantine: disk still holds the last good value, so the next write is a

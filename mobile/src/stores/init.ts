@@ -5,6 +5,7 @@ import { initNotes } from "@/src/stores/offlineNotes";
 import { initUserSettings } from "@/src/stores/userSettings";
 import { initDateVerseCounts } from "@/src/stores/dateVerseCounts";
 import { initBibleProgress } from "@/src/stores/bibleProgress";
+import { initStorageHealth } from "@/src/storage/health";
 import { runStorageMigrations } from "@/src/storage/migrations/runner";
 
 /**
@@ -14,6 +15,10 @@ import { runStorageMigrations } from "@/src/storage/migrations/runner";
  * must start first so auth, log-entries and user-settings can read online status
  * inside their actions. Each `init*` is idempotent. Mirrors the sequencing of
  * the Nuxt `app-init` plugin (hydrate, then refresh when authenticated + online).
+ *
+ * Storage health starts before the first hydrate read, so a key that fails on
+ * launch is already being watched and recovered rather than left write-protected
+ * until relaunch.
  *
  * Storage migrations (`src/storage/migrations/`) run to completion *before* any
  * store hydrates, so the loaders read already-migrated bytes. The signature
@@ -28,6 +33,7 @@ export function initStores(): void {
   started = true;
   void (async () => {
     await runStorageMigrations();
+    initStorageHealth();
     initConnectivity();
     initAuth();
     initLogEntries();

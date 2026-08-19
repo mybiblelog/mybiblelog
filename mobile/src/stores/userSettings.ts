@@ -3,10 +3,13 @@ import {
   DEFAULT_LOCAL_USER_SETTINGS,
   type LocalUserSettings,
   loadLocalUserSettings,
+  readLocalUserSettings,
   saveLocalUserSettings,
 } from "@/src/settings/userSettingsStorage";
 import { type ServerUserSettings, getSettings, updateSettings } from "@/src/api/settingsApi";
 import { reportHandledError } from "@/src/observability/sentry";
+import { appStorage } from "@/src/storage/keys";
+import { registerManagedKey } from "@/src/storage/health";
 import { useAuthStore } from "@/src/stores/auth";
 import { getIsOnline, useConnectivityStore } from "@/src/stores/connectivity";
 
@@ -65,6 +68,59 @@ function isAuthenticated(): boolean {
   return useAuthStore.getState().state.status === "authenticated";
 }
 
+/**
+ * Settings fields written since the last time this store and disk agreed.
+ *
+ * A failed read hydrates the store with `DEFAULT_LOCAL_USER_SETTINGS` while the
+ * user's real settings sit intact on disk, and quarantines the key so nothing
+ * saves. Recovering by taking either side wholesale is wrong in both directions:
+ * disk-wins discards choices the user made during the outage, memory-wins
+ * promotes hydration defaults — a look-back date silently reset to today — into
+ * durable truth. So we remember which fields were actually written and overlay
+ * only those onto disk.
+ */
+const dirtyFields = new Set<keyof LocalUserSettings>();
+
+function markDirty(keys: Iterable<keyof LocalUserSettings>): void {
+  for (const key of keys) dirtyFields.add(key);
+}
+
+/**
+ * Fields the server changed. Diffed rather than assumed, because only the values
+ * that actually moved represent a decision worth preserving over disk.
+ */
+function changedFields(
+  before: LocalUserSettings,
+  after: LocalUserSettings
+): (keyof LocalUserSettings)[] {
+  const keys = new Set([...Object.keys(before), ...Object.keys(after)]) as Set<
+    keyof LocalUserSettings
+  >;
+  return [...keys].filter((key) => before[key] !== after[key]);
+}
+
+function dirtyOverlay(settings: LocalUserSettings): Partial<LocalUserSettings> {
+  const overlay: Record<string, unknown> = {};
+  for (const key of dirtyFields) overlay[key] = settings[key];
+  return overlay as Partial<LocalUserSettings>;
+}
+
+/**
+ * Persist, and on success forget the fields that write put on disk — the set
+ * tracks "written but not known to be stored", so it must not grow unbounded
+ * across a healthy session or a later outage would take memory wholesale.
+ *
+ * Only the fields dirty when the write was issued are cleared; anything marked
+ * while it was in flight is not covered by this write and stays dirty until its
+ * own write lands.
+ */
+async function persistSettings(settings: LocalUserSettings): Promise<void> {
+  const written = [...dirtyFields];
+  const saved = await saveLocalUserSettings(settings);
+  if (!saved) return;
+  for (const key of written) dirtyFields.delete(key);
+}
+
 let refreshInFlight: Promise<void> | null = null;
 
 export const useUserSettingsStore = create<UserSettingsStore>((set, get) => ({
@@ -79,8 +135,11 @@ export const useUserSettingsStore = create<UserSettingsStore>((set, get) => ({
     const current = get().state;
     if (current.status !== "ready") return;
     const next = { ...current.settings, ...partial };
+    // Keyed on what the caller asked to set, not on what changed: choosing the
+    // value that happens to match the hydration default is still a choice.
+    markDirty(Object.keys(partial) as (keyof LocalUserSettings)[]);
     set({ state: { ...current, settings: next } });
-    await saveLocalUserSettings(next);
+    await persistSettings(next);
   },
 
   async refreshFromServer() {
@@ -97,8 +156,9 @@ export const useUserSettingsStore = create<UserSettingsStore>((set, get) => ({
         if (before.status === "ready") {
           const next = applyServerTruth(before.settings, server);
           if (!shallowEqualReadingSettings(next, before.settings)) {
+            markDirty(changedFields(before.settings, next));
             set({ state: { ...before, settings: next } });
-            await saveLocalUserSettings(next);
+            await persistSettings(next);
           }
         }
       } catch (err) {
@@ -121,8 +181,9 @@ export const useUserSettingsStore = create<UserSettingsStore>((set, get) => ({
     try {
       const updated = await updateSettings(partial);
       const next = applyServerTruth(current.settings, updated);
+      markDirty(changedFields(current.settings, next));
       set({ state: { status: "ready", settings: next, isRefreshingFromServer: false } });
-      await saveLocalUserSettings(next);
+      await persistSettings(next);
       return true;
     } catch (err) {
       reportHandledError(err, { op: "userSettings.updateServerSettings" });
@@ -137,6 +198,8 @@ let initialized = false;
 export function initUserSettings(): void {
   if (initialized) return;
   initialized = true;
+
+  registerManagedKey(appStorage.keyName("userSettings"), rehydrateFromDisk);
 
   void (async () => {
     const local = await loadLocalUserSettings();
@@ -157,6 +220,32 @@ export function initUserSettings(): void {
     wasOnline = s.isOnline;
   });
   useAuthStore.subscribe(() => tryRefresh());
+}
+
+/**
+ * Merge the stored settings back into memory once the backend answers again.
+ *
+ * Disk is the base and only `dirtyFields` are overlaid, so an untouched
+ * hydration default never overwrites a real stored value while a setting the
+ * user actually chose during the outage survives. Re-reading is safe here, and
+ * *only* here, because this consumes the value it reads — the merge runs in the
+ * continuation immediately after the `await`. See the invariant in
+ * `storage/health.ts`.
+ */
+async function rehydrateFromDisk(): Promise<void> {
+  const disk = await readLocalUserSettings();
+  if (disk.status === "unreadable") return; // still broken; stay degraded
+
+  const current = useUserSettingsStore.getState().state;
+  if (current.status !== "ready") return;
+
+  // `absent`/`corrupt` mean there is nothing worth merging; re-persisting what
+  // is in memory is what gets this key writing again.
+  const merged =
+    disk.status === "ok" ? { ...disk.value, ...dirtyOverlay(current.settings) } : current.settings;
+
+  useUserSettingsStore.setState({ state: { ...current, settings: merged } });
+  await persistSettings(merged);
 }
 
 /**

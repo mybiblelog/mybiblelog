@@ -27,8 +27,20 @@ import { ApiError } from "@/src/api/apiError";
 import { achievementActions } from "@/src/stores/achievements";
 import { getIsOnline } from "@/src/stores/connectivity";
 import { useUserSettingsStore } from "@/src/stores/userSettings";
-import { loadPendingLogEntryMutations, type StoredLogEntry } from "@/src/storage/logEntries";
-import { useLogEntriesStore } from "./logEntries";
+import {
+  loadLogEntries,
+  loadPendingLogEntryMutations,
+  saveLogEntries,
+  type StoredLogEntry,
+} from "@/src/storage/logEntries";
+import { appStorage } from "@/src/storage/keys";
+import {
+  __resetForTest as resetStorageHealth,
+  isStorageDegraded,
+  recoverStorage,
+  reportStorageOk,
+} from "@/src/storage/health";
+import { initLogEntries, useLogEntriesStore } from "./logEntries";
 
 const actions = () => useLogEntriesStore.getState();
 const entry = { date: "2026-06-27", startVerseId: 43003016, endVerseId: 43003018 };
@@ -214,5 +226,117 @@ describe("syncNow poison-pill handling", () => {
     const queue = await loadPendingLogEntryMutations();
     expect(queue).toHaveLength(1);
     expect(fetchLogEntries).not.toHaveBeenCalled();
+  });
+});
+
+/**
+ * End-to-end through the real `appStorage`. A failed hydrate read leaves the
+ * store showing an *empty reading log* while the entries sit intact on disk —
+ * the symptom users see, and the one that looks exactly like data loss.
+ */
+describe("rehydrating after a failed read", () => {
+  const KEY = appStorage.keyName("logEntries");
+
+  const onlyOnDisk: StoredLogEntry = {
+    clientId: "a",
+    date: "2026-06-01",
+    startVerseId: 43003016,
+    endVerseId: 43003018,
+  };
+  const staleOnDisk: StoredLogEntry = {
+    clientId: "b",
+    date: "2026-06-02",
+    startVerseId: 43003016,
+    endVerseId: 43003018,
+  };
+  const editedInMemory: StoredLogEntry = { ...staleOnDisk, endVerseId: 43003020 };
+  const createdInMemory: StoredLogEntry = {
+    clientId: "c",
+    date: "2026-06-03",
+    startVerseId: 43003016,
+    endVerseId: 43003018,
+  };
+
+  // `jest.spyOn(...).mockRestore()` leaves this mock without an implementation,
+  // so swap the implementation and put the captured original back by hand.
+  const getItem = AsyncStorage.getItem as jest.Mock;
+  const workingGetItem = getItem.getMockImplementation()!;
+
+  function refuseReads(): void {
+    getItem.mockImplementation(() => Promise.reject(new Error("locked")));
+  }
+
+  function allowReads(): void {
+    getItem.mockImplementation(workingGetItem);
+  }
+
+  beforeAll(async () => {
+    // Module-guarded, so this registers the rehydrator once for the describe.
+    (getIsOnline as jest.Mock).mockReturnValue(false);
+    initLogEntries();
+    await Promise.resolve();
+  });
+
+  afterEach(() => {
+    allowReads();
+    appStorage.__resetForTest();
+    // Clear the degraded flag without wiping the registration `initLogEntries`
+    // made, which cannot be redone (it is module-guarded).
+    reportStorageOk(KEY);
+  });
+
+  afterAll(() => {
+    resetStorageHealth();
+  });
+
+  async function hydrateAgainstABrokenBackend(): Promise<StoredLogEntry[] | null> {
+    refuseReads();
+    const loaded = await loadLogEntries();
+    allowReads();
+    return loaded;
+  }
+
+  it("hands the store an empty log and refuses writes while quarantined", async () => {
+    await AsyncStorage.setItem(KEY, JSON.stringify([onlyOnDisk]));
+
+    expect(await hydrateAgainstABrokenBackend()).toBeNull();
+    expect(isStorageDegraded()).toBe(true);
+
+    // The refusal is what keeps the real entries on disk instead of overwriting
+    // them with the empty list the failed read produced.
+    await saveLogEntries([]);
+    expect(JSON.parse((await AsyncStorage.getItem(KEY))!)).toEqual([onlyOnDisk]);
+  });
+
+  it("merges stored entries back in, memory winning by clientId", async () => {
+    await AsyncStorage.setItem(KEY, JSON.stringify([onlyOnDisk, staleOnDisk]));
+    await hydrateAgainstABrokenBackend();
+    setReady([createdInMemory, editedInMemory]);
+
+    await recoverStorage();
+
+    // Newest-first: c, b, a. The entry only on disk is back, the one only in
+    // memory survived, and the shared clientId kept the in-memory edit.
+    const state = useLogEntriesStore.getState().state;
+    expect(state.status === "ready" && state.entries).toEqual([
+      createdInMemory,
+      editedInMemory,
+      onlyOnDisk,
+    ]);
+    expect(isStorageDegraded()).toBe(false);
+  });
+
+  it("changes nothing while the backend is still refusing", async () => {
+    await AsyncStorage.setItem(KEY, JSON.stringify([onlyOnDisk]));
+    await hydrateAgainstABrokenBackend();
+    setReady([createdInMemory]);
+
+    refuseReads();
+    await recoverStorage();
+    allowReads();
+
+    const state = useLogEntriesStore.getState().state;
+    expect(state.status === "ready" && state.entries).toEqual([createdInMemory]);
+    expect(isStorageDegraded()).toBe(true);
   });
 });

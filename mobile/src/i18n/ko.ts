@@ -357,6 +357,7 @@ export const ko = {
   calendar_day_verses_read: "%{count}구절 읽음",
 
   dismiss: "닫기",
+  storage_degraded_banner: "지금은 변경 사항을 저장할 수 없습니다. 저장된 데이터는 안전합니다.",
   offline_banner: "오프라인 상태입니다 — 다시 연결되면 변경 사항이 동기화됩니다.",
   server_unreachable_banner:
     "My Bible Log 서버에 연결할 수 없습니다 — 서버가 복구되면 변경 사항이 동기화됩니다.",
