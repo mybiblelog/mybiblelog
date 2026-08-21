@@ -40,6 +40,7 @@ import {
 } from "@/src/storage/health";
 import { getSettings, updateSettings } from "@/src/api/settingsApi";
 import { getIsOnline } from "@/src/stores/connectivity";
+import { useAuthStore } from "@/src/stores/auth";
 import { initUserSettings, useUserSettingsStore } from "./userSettings";
 
 const actions = () => useUserSettingsStore.getState();
@@ -126,12 +127,19 @@ describe("rehydrating after a failed read", () => {
     preferredBibleApp: "youversion",
   };
 
+  // Captured here, not read from `useAuthStore.subscribe.mock.calls` inside a
+  // test: `clearMocks: true` (jest.config.js) wipes recorded calls before each
+  // test, but `initUserSettings` — and therefore this `subscribe` call — only
+  // ever runs once, in this `beforeAll`.
+  let authListener: () => void;
+
   beforeAll(() => {
     // `initUserSettings` is module-guarded, so this registers the rehydrator
     // once for the whole describe.
     (loadLocalUserSettings as jest.Mock).mockResolvedValue(DEFAULTS);
     (getSettings as jest.Mock).mockRejectedValue(new Error("offline"));
     initUserSettings();
+    authListener = (useAuthStore.subscribe as jest.Mock).mock.calls[0][0];
   });
 
   beforeEach(() => {
@@ -171,6 +179,24 @@ describe("rehydrating after a failed read", () => {
 
     const settings = await recoverWithDisk({ status: "ok", value: STORED });
     expect(settings).toEqual({ ...STORED, dailyVerseCountGoal: 200 });
+  });
+
+  // A device can sign out and a different account sign in without an app
+  // restart. A field left dirty by the first account must not leak into the
+  // next account's settings the next time this key rehydrates.
+  it("does not carry a dirty field across a sign-out", async () => {
+    (saveLocalUserSettings as jest.Mock).mockResolvedValue(false); // refused
+    await actions().setLocalSettings({ dailyVerseCountGoal: 200 });
+    (saveLocalUserSettings as jest.Mock).mockResolvedValue(true);
+
+    // Simulate the session ending via the listener `initUserSettings`
+    // registered with the mocked `useAuthStore.subscribe`.
+    (useAuthStore.getState as jest.Mock).mockReturnValue({ state: { status: "unauthenticated" } });
+    authListener();
+
+    (useAuthStore.getState as jest.Mock).mockReturnValue({ state: { status: "authenticated" } });
+    const settings = await recoverWithDisk({ status: "ok", value: STORED });
+    expect(settings).toEqual(STORED);
   });
 
   // Choosing the value that happens to match the hydration default is still a

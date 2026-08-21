@@ -219,7 +219,20 @@ export function initUserSettings(): void {
     if (s.isOnline === true && wasOnline !== true) tryRefresh();
     wasOnline = s.isOnline;
   });
-  useAuthStore.subscribe(() => tryRefresh());
+  let wasAuthenticated = isAuthenticated();
+  useAuthStore.subscribe(() => {
+    const nowAuthenticated = isAuthenticated();
+    if (wasAuthenticated && !nowAuthenticated) {
+      // A session just ended (explicit logout or automatic token invalidation
+      // — both flow through this same status change). Dirty-field tracking is
+      // scoped to that session; a different account may sign in next without
+      // an app restart, and must not inherit unsaved fields that were never
+      // theirs.
+      dirtyFields.clear();
+    }
+    wasAuthenticated = nowAuthenticated;
+    tryRefresh();
+  });
 }
 
 /**
