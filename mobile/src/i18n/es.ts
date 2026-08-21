@@ -456,6 +456,13 @@ export const es = {
   tag_description_placeholder: "Descripción opcional",
   tag_could_not_save: "No se pudo guardar la etiqueta.",
   tag_no_tags: "Todavía no hay etiquetas. Crea tu primera etiqueta.",
+  tag_unavailable_offline:
+    "Las etiquetas no están disponibles sin conexión. Tu nota se guardará igualmente y se sincronizará cuando vuelvas a conectarte.",
+  tag_create_requires_connection: "Crear etiquetas requiere una conexión a internet.",
+  tag_create_requires_server: "Crear etiquetas requiere acceder al servidor de My Bible Log.",
+  tag_create_requires_signin: "Inicia sesión para crear y usar etiquetas.",
+  tag_unavailable_signed_out:
+    "Inicia sesión para usar etiquetas. Tu nota se guardará igualmente en este dispositivo.",
   tag_notes_count: "%{count} notas",
   tag_view_notes: "Ver notas (%{count})",
   tag_sort_by: "Ordenar",

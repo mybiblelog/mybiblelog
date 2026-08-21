@@ -460,6 +460,15 @@ export const de = {
   tag_description_placeholder: "Optionale Beschreibung",
   tag_could_not_save: "Der Tag konnte nicht gespeichert werden.",
   tag_no_tags: "Noch keine Tags. Erstellen Sie Ihren ersten Tag.",
+  tag_unavailable_offline:
+    "Tags sind offline nicht verfügbar. Ihre Notiz wird trotzdem gespeichert und synchronisiert, sobald Sie wieder verbunden sind.",
+  tag_create_requires_connection:
+    "Zum Erstellen von Tags ist eine Internetverbindung erforderlich.",
+  tag_create_requires_server:
+    "Zum Erstellen von Tags muss der My Bible Log-Server erreichbar sein.",
+  tag_create_requires_signin: "Melden Sie sich an, um Tags zu erstellen und zu verwenden.",
+  tag_unavailable_signed_out:
+    "Melden Sie sich an, um Tags zu verwenden. Ihre Notiz wird trotzdem auf diesem Gerät gespeichert.",
   tag_notes_count: "%{count} Notizen",
   tag_view_notes: "Notizen ansehen (%{count})",
   tag_sort_by: "Sortieren",

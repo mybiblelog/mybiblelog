@@ -1,9 +1,11 @@
 export { Card } from "./Card";
 export type { CardPadding, CardTone } from "./Card";
 export { CheckboxRow } from "./CheckboxRow";
+export { ConnectionNotice } from "./ConnectionNotice";
 export { ErrorState } from "./ErrorState";
 export { EmptyState } from "./EmptyState";
 export { InlineAlert } from "./InlineAlert";
+export { InlineHint } from "./InlineHint";
 export { InputField } from "./InputField";
 export type { InputFieldProps } from "./InputField";
 export { ListItem } from "./ListItem";

@@ -4,12 +4,12 @@ import type { PassageNote } from "@/src/api/notesApi";
 import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { useIsUnauthenticated } from "@/src/stores/auth";
-import { useConnectionStatus } from "@/src/stores/connectivity";
+import { useCanReachServer } from "@/src/stores/connectivity";
 import { useLocalNotes } from "@/src/stores/offlineNotes";
 import type { StoredLocalNote } from "@/src/storage/passageNotes";
-import { Icon } from "../atoms/Icon";
 import { Text } from "../atoms/Text";
 import { Button } from "../atoms/Button";
+import { ConnectionNotice } from "../molecules/ConnectionNotice";
 import { EmptyState } from "../molecules/EmptyState";
 import { InlineAlert } from "../molecules/InlineAlert";
 import { ScreenHeader } from "../molecules/ScreenHeader";
@@ -42,8 +42,7 @@ export function OfflineNotesView() {
   const t = useT();
   const notes = useLocalNotes();
   const isUnauthenticated = useIsUnauthenticated();
-  const status = useConnectionStatus();
-  const canReachServer = status === "online" || status === "unknown";
+  const canReachServer = useCanReachServer();
   const { openAdd, openMenu, overlays } = useLocalNoteOverlays();
 
   const header = (
@@ -66,22 +65,10 @@ export function OfflineNotesView() {
       dismissLabel={t("dismiss")}
       dismissKey="notesSignInDismissed"
     >
-      {canReachServer ? null : (
-        <View style={styles.offlineNotice}>
-          <Icon
-            name={status === "device-offline" ? "cloud-offline-outline" : "alert-circle-outline"}
-            size={16}
-            color="mutedText"
-          />
-          <Text variant="caption" color="mutedText" style={styles.offlineNoticeText}>
-            {t(
-              status === "device-offline"
-                ? "auth_login_requires_connection"
-                : "auth_login_requires_server"
-            )}
-          </Text>
-        </View>
-      )}
+      <ConnectionNotice
+        offlineText={t("auth_login_requires_connection")}
+        unreachableText={t("auth_login_requires_server")}
+      />
     </InlineAlert>
   ) : null;
 
@@ -125,11 +112,4 @@ const styles = StyleSheet.create({
   listContent: { paddingBottom: spacing.listBottom },
   listContentEmpty: { flexGrow: 1 },
   separator: { height: spacing.sm },
-  offlineNotice: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.xs,
-    marginTop: spacing.sm,
-  },
-  offlineNoticeText: { flex: 1 },
 });

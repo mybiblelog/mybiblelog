@@ -4,6 +4,7 @@ jest.mock("@/src/api/tagsApi", () => ({
   updateTag: jest.fn(),
 }));
 
+import { ApiError } from "@/src/api/apiError";
 import { createTag } from "@/src/api/tagsApi";
 import { fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/renderWithProviders";
 import { TAG_COLOR_PALETTE } from "@/src/notes/tagColors";
@@ -48,6 +49,37 @@ describe("TagEditorSheet", () => {
       description: "",
     });
     expect(onSaved).toHaveBeenCalledWith(expect.objectContaining({ id: "t9" }));
+  });
+
+  // Tags have no offline queue, so a dropped connection is the likely failure
+  // here — a flat "unable to save" would leave the user with nothing to act on.
+  it("names the connection as the reason when the save fails offline", async () => {
+    (createTag as jest.Mock).mockRejectedValue(new ApiError({ code: "network_error", errors: [] }));
+    const onClose = jest.fn();
+    const { getByLabelText, getByPlaceholderText, findByText } = renderWithProviders(
+      <TagEditorSheet visible onClose={onClose} />
+    );
+
+    fireEvent.changeText(getByPlaceholderText("Tag name"), "Prayer");
+    fireEvent.press(getByLabelText("Save"));
+
+    expect(
+      await findByText("Can't reach the server. Please check your connection and try again.")
+    ).toBeTruthy();
+    // The sheet stays open so the typed-in tag isn't thrown away.
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it("falls back to the generic message for an unrecognized failure", async () => {
+    (createTag as jest.Mock).mockRejectedValue(new Error("boom"));
+    const { getByLabelText, getByPlaceholderText, findByText } = renderWithProviders(
+      <TagEditorSheet visible onClose={jest.fn()} />
+    );
+
+    fireEvent.changeText(getByPlaceholderText("Tag name"), "Prayer");
+    fireEvent.press(getByLabelText("Save"));
+
+    expect(await findByText("Unable to save the tag.")).toBeTruthy();
   });
 
   it("keeps an off-palette color choosable when editing a web-created tag", () => {

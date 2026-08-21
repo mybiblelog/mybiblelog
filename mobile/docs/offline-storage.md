@@ -40,8 +40,20 @@ Every key lives in **one typed registry**, `src/storage/keys.ts` — read that f
 for the authoritative list of keys and their value types (a table here would just
 drift).
 
-**Passage notes and tags are online-only** — they are paginated from the API and
-never persisted on device.
+**Server-side passage notes are online-only** — they are paginated from the API and
+never persisted on device. What *is* persisted is the offline *staging* layer:
+notes created on device before they sync (`passageNotes.local.v1` + its mutation
+queue). A local note is dropped once its create syncs and thereafter comes back
+through the normal paginated list.
+
+**Tags are online-only, with no staging layer at all** — no local key, no mutation
+queue. A tag can only be created against a live, authenticated API. Because that
+makes the app's offline-first promise untrue for one specific action, the two
+Create Tag entry points **withdraw the action instead of failing it**: see
+`useCanCreateTags` / `TagCreationNotice` in
+`src/components/organisms/TagCreationGate.tsx`. Giving tags a real offline queue
+means solving clientId→serverId remapping for queued notes that reference a tag
+that hasn't synced yet — deferred, not overlooked.
 
 ### Data shapes
 

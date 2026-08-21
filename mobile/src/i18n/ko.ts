@@ -442,6 +442,12 @@ export const ko = {
   tag_description_placeholder: "선택적 설명",
   tag_could_not_save: "태그를 저장할 수 없습니다.",
   tag_no_tags: "아직 태그가 없습니다. 첫 번째 태그를 만드세요.",
+  tag_unavailable_offline:
+    "오프라인에서는 태그를 사용할 수 없습니다. 메모는 저장되며 다시 연결되면 동기화됩니다.",
+  tag_create_requires_connection: "태그를 만들려면 인터넷 연결이 필요합니다.",
+  tag_create_requires_server: "태그를 만들려면 My Bible Log 서버에 연결되어야 합니다.",
+  tag_create_requires_signin: "태그를 만들고 사용하려면 로그인하세요.",
+  tag_unavailable_signed_out: "태그를 사용하려면 로그인하세요. 메모는 이 기기에 저장됩니다.",
   tag_notes_count: "노트 %{count}개",
   tag_view_notes: "노트 보기 (%{count})",
   tag_sort_by: "정렬",

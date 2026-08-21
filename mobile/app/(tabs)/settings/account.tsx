@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { useAuth } from "@/src/stores/auth";
-import { type ConnectionStatus, useConnectionStatus } from "@/src/stores/connectivity";
+import {
+  type ConnectionStatus,
+  useCanReachServer,
+  useConnectionStatus,
+} from "@/src/stores/connectivity";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { spacing, useTheme } from "@/src/design";
 import {
   Button,
   Card,
   ConfirmDialog,
+  ConnectionNotice,
   Icon,
   ListItem,
   Screen,
@@ -32,7 +37,7 @@ export default function AccountSettings() {
   const connectionStatus = useConnectionStatus();
   // `unknown` (no connectivity signal yet) keeps the sign-in actions available
   // rather than pre-emptively blocking them.
-  const canReachServer = connectionStatus === "online" || connectionStatus === "unknown";
+  const canReachServer = useCanReachServer();
 
   const connectivityText = t(CONNECTIVITY_TEXT_KEYS[connectionStatus]);
 
@@ -101,24 +106,10 @@ export default function AccountSettings() {
                 </View>
               </View>
               {!canReachServer ? (
-                <View style={styles.authOfflineNotice}>
-                  <Icon
-                    name={
-                      connectionStatus === "device-offline"
-                        ? "cloud-offline-outline"
-                        : "alert-circle-outline"
-                    }
-                    size={16}
-                    color="mutedText"
-                  />
-                  <Text variant="caption" color="mutedText" style={styles.authOfflineNoticeText}>
-                    {t(
-                      connectionStatus === "device-offline"
-                        ? "auth_login_requires_connection"
-                        : "auth_login_requires_server"
-                    )}
-                  </Text>
-                </View>
+                <ConnectionNotice
+                  offlineText={t("auth_login_requires_connection")}
+                  unreachableText={t("auth_login_requires_server")}
+                />
               ) : (
                 <>
                   <Button
@@ -188,11 +179,4 @@ const styles = StyleSheet.create({
   },
   authStatusTextCol: { flex: 1, gap: spacing["2xs"] },
   authActionButtonSpacing: { marginTop: spacing.sm },
-  authOfflineNotice: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: spacing.xs,
-    marginTop: spacing.sm,
-  },
-  authOfflineNoticeText: { flex: 1 },
 });

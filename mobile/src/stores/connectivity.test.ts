@@ -1,10 +1,12 @@
 import NetInfo from "@react-native-community/netinfo";
+import { renderHook } from "@testing-library/react-native";
 import {
   getConnectionStatus,
   getIsOnline,
   initConnectivity,
   reportApiReachability,
   resetApiReachability,
+  useCanReachServer,
   useConnectivityStore,
 } from "./connectivity";
 
@@ -110,5 +112,29 @@ describe("getConnectionStatus", () => {
   it.each(cases)("isOnline=%p apiReachable=%p -> %s", (isOnline, apiReachable, expected) => {
     useConnectivityStore.setState({ isOnline, apiReachable });
     expect(getConnectionStatus()).toBe(expected);
+  });
+});
+
+describe("useCanReachServer", () => {
+  // `unknown` is deliberately permissive: before the first connectivity signal
+  // arrives we must not block server actions on a verdict we don't have.
+  const cases: [string, boolean][] = [
+    ["online", true],
+    ["unknown", true],
+    ["device-offline", false],
+    ["server-unreachable", false],
+  ];
+
+  const stateFor: Record<string, { isOnline: boolean | null; apiReachable: boolean | null }> = {
+    online: { isOnline: true, apiReachable: true },
+    unknown: { isOnline: null, apiReachable: null },
+    "device-offline": { isOnline: false, apiReachable: null },
+    "server-unreachable": { isOnline: true, apiReachable: false },
+  };
+
+  it.each(cases)("%s -> %p", (status, expected) => {
+    useConnectivityStore.setState(stateFor[status]);
+    const { result } = renderHook(() => useCanReachServer());
+    expect(result.current).toBe(expected);
   });
 });

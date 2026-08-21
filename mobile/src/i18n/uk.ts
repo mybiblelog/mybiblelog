@@ -453,6 +453,13 @@ export const uk = {
   tag_description_placeholder: "Необов'язковий опис",
   tag_could_not_save: "Не вдалося зберегти тег.",
   tag_no_tags: "Тегів поки немає. Створіть свій перший тег.",
+  tag_unavailable_offline:
+    "Теги недоступні без з’єднання. Ваша нотатка все одно збережеться та синхронізується, коли ви знову підключитеся.",
+  tag_create_requires_connection: "Для створення тегів потрібне інтернет-з’єднання.",
+  tag_create_requires_server: "Для створення тегів потрібен доступ до сервера My Bible Log.",
+  tag_create_requires_signin: "Увійдіть, щоб створювати та використовувати теги.",
+  tag_unavailable_signed_out:
+    "Увійдіть, щоб використовувати теги. Ваша нотатка все одно збережеться на цьому пристрої.",
   tag_notes_count: "%{count} нотаток",
   tag_view_notes: "Переглянути нотатки (%{count})",
   tag_sort_by: "Сортування",

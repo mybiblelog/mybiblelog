@@ -459,6 +459,13 @@ export const fr = {
   tag_description_placeholder: "Description facultative",
   tag_could_not_save: "Impossible d'enregistrer le tag.",
   tag_no_tags: "Pas encore de tags. Créez votre premier tag.",
+  tag_unavailable_offline:
+    "Les tags ne sont pas disponibles hors ligne. Votre note sera tout de même enregistrée et synchronisée dès votre reconnexion.",
+  tag_create_requires_connection: "La création de tags nécessite une connexion internet.",
+  tag_create_requires_server: "La création de tags nécessite d’atteindre le serveur My Bible Log.",
+  tag_create_requires_signin: "Connectez-vous pour créer et utiliser des tags.",
+  tag_unavailable_signed_out:
+    "Connectez-vous pour utiliser les tags. Votre note sera tout de même enregistrée sur cet appareil.",
   tag_notes_count: "%{count} notes",
   tag_view_notes: "Voir les notes (%{count})",
   tag_sort_by: "Trier",

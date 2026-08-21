@@ -2,12 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
+import { useIsAuthenticated } from "@/src/stores/auth";
 import { useTagsList } from "@/src/stores/passageNoteTags";
 import { Button } from "../atoms/Button";
 import { TagPill } from "../atoms/TagPill";
 import { Text } from "../atoms/Text";
 import { CheckboxRow } from "../molecules/CheckboxRow";
 import { BottomSheet } from "./BottomSheet";
+import { TagCreationNotice, useCanCreateTags } from "./TagCreationGate";
 import { TagEditorSheet } from "./TagEditorSheet";
 
 type Props = {
@@ -24,6 +26,11 @@ type Props = {
  * With `allowCreate`, stacks a `TagEditorSheet` on top and auto-selects the
  * newly created tag — the sheets are sibling Modals, same stacking mechanism
  * as the log-entry editor's select sheets.
+ *
+ * Tags are online-only (no offline mutation queue, unlike notes and log
+ * entries), so creation is withdrawn rather than offered-then-failed whenever
+ * the server is out of reach. Note editing itself stays available — the note
+ * still queues locally — which is what the offline copy tells the user.
  */
 export function TagSelectorSheet({
   visible,
@@ -34,6 +41,8 @@ export function TagSelectorSheet({
 }: Props) {
   const t = useT();
   const tags = useTagsList();
+  const isAuthenticated = useIsAuthenticated();
+  const canCreateTag = useCanCreateTags();
   const wasVisible = useRef(false);
 
   const [draftIds, setDraftIds] = useState<string[]>([]);
@@ -70,7 +79,15 @@ export function TagSelectorSheet({
 
         {tags.length === 0 ? (
           <Text variant="body" color="mutedText" style={styles.empty}>
-            {t("tag_no_tags")}
+            {/* An empty list here is not an empty account — saying "create
+                your first tag" would send the user at an action that can't
+                succeed, so name the real reason and reassure them the note
+                itself is still safe. */}
+            {canCreateTag
+              ? t("tag_no_tags")
+              : isAuthenticated
+                ? t("tag_unavailable_offline")
+                : t("tag_unavailable_signed_out")}
           </Text>
         ) : (
           <ScrollView style={styles.list} keyboardShouldPersistTaps="handled">
@@ -87,22 +104,30 @@ export function TagSelectorSheet({
           </ScrollView>
         )}
 
+        {/* When the list is empty the copy above already carries the reason;
+            this is for the case where there are tags to pick but none to add. */}
+        {allowCreate && tags.length > 0 ? (
+          <TagCreationNotice testID="tag-selector.blocked-notice" />
+        ) : null}
+
         <View style={styles.footer}>
-          {allowCreate ? (
+          {allowCreate && canCreateTag ? (
             <Button
               label={t("tag_create")}
+              testID="tag-selector.create"
               variant="secondary"
               leftIcon="add"
               onPress={() => setCreating(true)}
             />
           ) : (
+            // Keeps Cancel right-aligned when there's no Create button.
             <View />
           )}
           <Button label={t("cancel")} variant="secondary" onPress={onClose} />
         </View>
       </BottomSheet>
 
-      {allowCreate ? (
+      {allowCreate && canCreateTag ? (
         <TagEditorSheet
           visible={creating}
           onClose={() => setCreating(false)}

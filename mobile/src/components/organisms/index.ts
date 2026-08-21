@@ -29,6 +29,7 @@ export { PassageRangeSheet } from "./PassageRangeSheet";
 export { ReadingSuggestionsSection } from "./ReadingSuggestionsSection";
 export { ReadingTrackerResetCard } from "./ReadingTrackerResetCard";
 export { RecentNotesSection } from "./RecentNotesSection";
+export { TagCreationNotice, useCanCreateTags } from "./TagCreationGate";
 export { TagEditorSheet } from "./TagEditorSheet";
 export { TagSelectorSheet } from "./TagSelectorSheet";
 export { SelectSheet } from "./SelectSheet";

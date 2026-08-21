@@ -100,3 +100,13 @@ export function getConnectionStatus(): ConnectionStatus {
 export function useConnectionStatus(): ConnectionStatus {
   return useConnectivityStore(computeStatus);
 }
+
+/**
+ * True when a server round-trip is worth attempting, so UI can gate
+ * server-only actions. `unknown` stays permissive: before the first signal we
+ * assume reachable rather than blocking the user on a verdict we don't have.
+ */
+export function useCanReachServer(): boolean {
+  const status = useConnectionStatus();
+  return status === "online" || status === "unknown";
+}
