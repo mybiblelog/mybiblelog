@@ -1,5 +1,6 @@
-import { Bible } from "@mybiblelog/shared";
+import { Bible, computeBibleProgress } from "@mybiblelog/shared";
 import { useAuthStore } from "@/src/stores/auth";
+import { useBibleProgressStore } from "@/src/stores/bibleProgress";
 import { useLogEntriesStore } from "@/src/stores/logEntries";
 import { useUserSettingsStore } from "@/src/stores/userSettings";
 import {
@@ -22,16 +23,26 @@ const wholeBibleEntries = Array.from({ length: Bible.getBookCount() }, (_, i) =>
   updatedAt: "2026-01-02T00:00:00.000Z",
 }));
 
-function seed({ entries = wholeBibleEntries, dismissed = false } = {}) {
+function seed({
+  entries = wholeBibleEntries,
+  dismissed = false,
+  lookBackDate = "2026-01-01",
+} = {}) {
   useLogEntriesStore.setState({
     state: { status: "ready", entries, isSyncing: false },
+  });
+  // The card reads completion off the precomputed progress snapshot, which is
+  // scoped to the tracker window — mirror that filtering here.
+  useBibleProgressStore.setState({
+    progress: computeBibleProgress(entries.filter((e) => e.date >= lookBackDate)),
+    jobs: 0,
   });
   useUserSettingsStore.setState({
     readingTrackerResetDelayed: dismissed,
     state: {
       status: "ready",
       settings: {
-        lookBackDate: "2026-01-01",
+        lookBackDate,
         dailyVerseCountGoal: 86,
         preferredBibleVersion: "kjv",
         preferredBibleApp: "",
@@ -59,6 +70,13 @@ describe("ReadingTrackerResetCard", () => {
 
   it("stays hidden while the Bible is incomplete", () => {
     seed({ entries: [] });
+    renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
+    expect(screen.queryByText("Start Fresh")).toBeNull();
+  });
+
+  it("stays hidden when the whole Bible was read before the tracker start date", () => {
+    // Entries predate the tracker reset, so this pass still has unread portions.
+    seed({ lookBackDate: "2026-06-01" });
     renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
     expect(screen.queryByText("Start Fresh")).toBeNull();
   });

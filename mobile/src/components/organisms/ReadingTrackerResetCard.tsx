@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { useState } from "react";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { useIsAuthenticated } from "@/src/stores/auth";
-import { selectIsBibleComplete, useLogEntriesStore } from "@/src/stores/logEntries";
+import { useIsBibleComplete } from "@/src/stores/bibleProgress";
 import { userSettingsActions, useUserSettingsStore } from "@/src/stores/userSettings";
 import { useToast } from "@/src/toast/ToastProvider";
 import { InlineAlert } from "../molecules/InlineAlert";
@@ -21,7 +21,7 @@ export function ReadingTrackerResetCard({ hasEntriesToday }: { hasEntriesToday: 
   const { showToast } = useToast();
   const isAuthenticated = useIsAuthenticated();
 
-  const isBibleComplete = useLogEntriesStore((s) => selectIsBibleComplete(s.state));
+  const isBibleComplete = useIsBibleComplete();
   const settingsReady = useUserSettingsStore((s) => s.state.status === "ready");
   const dismissed = useUserSettingsStore((s) => s.readingTrackerResetDelayed);
 

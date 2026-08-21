@@ -63,6 +63,21 @@ export function useBibleProgress(): BibleProgress | null {
   return useBibleProgressStore((s) => s.progress);
 }
 
+/**
+ * True when every verse in the current tracking window has been read.
+ *
+ * Equivalent to shared `isBibleComplete` over look-back-filtered entries: a
+ * book's `versesRead` can never exceed its total, so the sums match iff every
+ * book is complete. Reading it from this store (rather than re-running the
+ * 66-book `isBibleComplete` scan per render) also means it reacts to a
+ * `lookBackDate` change for free. False until the first snapshot lands.
+ */
+export function useIsBibleComplete(): boolean {
+  return useBibleProgressStore(
+    (s) => !!s.progress && s.progress.versesRead >= s.progress.totalVerses
+  );
+}
+
 /** Hook returning a single book's progress (null while loading or out of range). */
 export function useBookProgress(bookIndex: number) {
   return useBibleProgressStore(

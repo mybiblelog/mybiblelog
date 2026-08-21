@@ -4,7 +4,6 @@ import {
   deleteLogEntryRequest,
   fetchLogEntries,
   getBookIndexFromVerseId,
-  isBibleComplete as isBibleCompleteShared,
   postLogEntry,
   patchLogEntry,
 } from "@mybiblelog/shared";
@@ -346,12 +345,6 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
     },
   };
 });
-
-/** Selector helper mirroring the Nuxt `isBibleComplete` getter. */
-export function selectIsBibleComplete(state: LogEntriesState): boolean {
-  if (state.status !== "ready") return false;
-  return isBibleCompleteShared(state.entries);
-}
 
 let initialized = false;
 
