@@ -4,6 +4,8 @@ export { CheckboxRow } from "./CheckboxRow";
 export { ConnectionNotice } from "./ConnectionNotice";
 export { ErrorState } from "./ErrorState";
 export { EmptyState } from "./EmptyState";
+export { GoogleSignInButton } from "./GoogleSignInButton";
+export type { GoogleSignInButtonProps } from "./GoogleSignInButton";
 export { InlineAlert } from "./InlineAlert";
 export { InlineHint } from "./InlineHint";
 export { InputField } from "./InputField";
