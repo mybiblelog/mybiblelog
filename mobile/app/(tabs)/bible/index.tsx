@@ -195,6 +195,7 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: spacing.pageGutter,
     paddingTop: spacing.pageTop,
+    paddingBottom: spacing.md,
     gap: spacing.sm,
   },
   overallRow: {
