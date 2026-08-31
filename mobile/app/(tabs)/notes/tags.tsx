@@ -14,9 +14,11 @@ import {
   ScreenHeader,
   SelectSheet,
   Spinner,
+  TagCreationNotice,
   TagEditorSheet,
   TagPill,
   Text,
+  useCanCreateTags,
 } from "@/src/components";
 import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
@@ -33,6 +35,7 @@ export default function Tags() {
   const { showToast } = useToast();
   const state = useTagsState();
   const sortOrder = useTagsSortOrder();
+  const canCreateTag = useCanCreateTags();
 
   const [sortOpen, setSortOpen] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -112,8 +115,8 @@ export default function Tags() {
             icon="pricetags-outline"
             title={t("tags_empty_title")}
             text={t("tags_empty_text")}
-            ctaLabel={t("tag_create")}
-            onPressCta={() => setCreating(true)}
+            ctaLabel={canCreateTag ? t("tag_create") : undefined}
+            onPressCta={canCreateTag ? () => setCreating(true) : undefined}
           />
         }
       />
@@ -136,9 +139,13 @@ export default function Tags() {
           testID="tags.new"
           size="sm"
           leftIcon="add"
+          disabled={!canCreateTag}
           onPress={() => setCreating(true)}
         />
       </View>
+
+      {/* A disabled button with no explanation reads as a bug. */}
+      <TagCreationNotice testID="tags.blocked-notice" />
 
       {body()}
 

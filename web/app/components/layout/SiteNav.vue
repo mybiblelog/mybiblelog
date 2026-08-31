@@ -15,7 +15,7 @@
               class="site-nav__brand-text"
               :to="localePath(authStore.loggedIn ? '/start' : '/')"
             >
-              {{ $t('my_bible_log') }}
+              {{ $t("my_bible_log") }}
             </NuxtLink>
           </div>
           <button
@@ -52,7 +52,7 @@
               class="site-nav__brand-text"
               :to="localePath('/')"
             >
-              {{ $t('my_bible_log') }}
+              {{ $t("my_bible_log") }}
             </NuxtLink>
           </div>
 
@@ -63,10 +63,7 @@
                 class="site-nav__route-spacer"
                 aria-hidden="true"
               />
-              <NuxtLink
-                class="site-nav__link"
-                :to="localePath(item.to)"
-              >
+              <NuxtLink class="site-nav__link" :to="localePath(item.to)">
                 {{ t(item.labelKey) }}
               </NuxtLink>
             </template>
@@ -75,18 +72,14 @@
               class="site-nav__route-spacer"
               aria-hidden="true"
             />
-            <div
-              v-if="showAdminNav"
-              ref="adminNavRef"
-              class="site-nav__admin"
-            >
+            <div v-if="showAdminNav" ref="adminNavRef" class="site-nav__admin">
               <button
                 type="button"
                 class="site-nav__link site-nav__admin-trigger"
                 :aria-expanded="adminDropdownOpen ? 'true' : 'false'"
                 @click="toggleAdminDropdown"
               >
-                {{ t('admin') }}
+                {{ t("admin") }}
               </button>
               <div
                 v-if="adminDropdownOpen"
@@ -106,17 +99,14 @@
               </div>
             </div>
             <template v-if="authStore.loggedIn">
-              <div
-                ref="accountNavRef"
-                class="site-nav__account"
-              >
+              <div ref="accountNavRef" class="site-nav__account">
                 <button
                   type="button"
                   class="site-nav__link site-nav__account-trigger"
                   :aria-expanded="accountDropdownOpen ? 'true' : 'false'"
                   @click="toggleAccountDropdown"
                 >
-                  {{ t('account') }}
+                  {{ t("account") }}
                 </button>
                 <div
                   v-if="accountDropdownOpen"
@@ -129,31 +119,37 @@
                     :to="localePath('/settings')"
                     role="menuitem"
                   >
-                    {{ t('settings') }}
+                    {{ t("settings") }}
                   </NuxtLink>
                   <a
                     class="site-nav__account-item"
                     href="#"
                     role="menuitem"
                     @click.prevent="logout"
-                  >{{ t('log_out') }}</a>
+                  >{{ t("log_out") }}</a>
                 </div>
               </div>
             </template>
             <template v-if="!authStore.loggedIn">
               <span class="site-nav__auth-slot">
                 <NuxtLink class="site-nav__link" :to="localePath('/register')">
-                  {{ t('sign_up') }}
+                  {{ t("sign_up") }}
                 </NuxtLink>
               </span>
               <span class="site-nav__auth-slot">
                 <NuxtLink class="site-nav__link" :to="localePath('/login')">
-                  {{ t('sign_in') }}
+                  {{ t("sign_in") }}
                 </NuxtLink>
               </span>
             </template>
-            <LayoutThemeSwitcher variant="toolbar" class="site-nav__theme-desktop" />
-            <LayoutLanguageSwitcher variant="toolbar" class="site-nav__locale-desktop" />
+            <LayoutThemeSwitcher
+              variant="toolbar"
+              class="site-nav__theme-desktop"
+            />
+            <LayoutLanguageSwitcher
+              variant="toolbar"
+              class="site-nav__locale-desktop"
+            />
           </div>
         </div>
       </div>
@@ -167,15 +163,8 @@
       @leave="onDrawerLeave"
       @after-leave="onDrawerAfterLeave"
     >
-      <div
-        v-if="navOpen"
-        class="site-nav__overlay"
-      >
-        <div
-          class="site-nav__backdrop"
-          aria-hidden="true"
-          @click="closeNav"
-        />
+      <div v-if="navOpen" class="site-nav__overlay">
+        <div class="site-nav__backdrop" aria-hidden="true" @click="closeNav" />
         <aside
           id="site-nav-drawer"
           class="site-nav__drawer"
@@ -195,7 +184,7 @@
             </NuxtLink>
             <template v-if="showAdminNav">
               <div class="site-nav__drawer-subhead">
-                {{ t('admin') }}
+                {{ t("admin") }}
               </div>
               <NuxtLink
                 v-for="item in ADMIN_CHILD_LINKS"
@@ -208,35 +197,47 @@
             </template>
             <template v-if="authStore.loggedIn">
               <div class="site-nav__drawer-subhead">
-                {{ t('account') }}
+                {{ t("account") }}
               </div>
               <NuxtLink
                 class="site-nav__drawer-link site-nav__drawer-link--indent"
                 :to="localePath('/settings')"
               >
-                {{ t('settings') }}
+                {{ t("settings") }}
               </NuxtLink>
               <a
                 class="site-nav__drawer-link site-nav__drawer-link--indent"
                 href="#"
                 role="button"
                 @click.prevent="logout"
-              >{{ t('log_out') }}</a>
+              >{{ t("log_out") }}</a>
             </template>
             <template v-if="!authStore.loggedIn">
               <span class="site-nav__auth-slot">
-                <NuxtLink class="site-nav__drawer-link" :to="localePath('/register')">
-                  {{ t('sign_up') }}
+                <NuxtLink
+                  class="site-nav__drawer-link"
+                  :to="localePath('/register')"
+                >
+                  {{ t("sign_up") }}
                 </NuxtLink>
               </span>
               <span class="site-nav__auth-slot">
-                <NuxtLink class="site-nav__drawer-link" :to="localePath('/login')">
-                  {{ t('sign_in') }}
+                <NuxtLink
+                  class="site-nav__drawer-link"
+                  :to="localePath('/login')"
+                >
+                  {{ t("sign_in") }}
                 </NuxtLink>
               </span>
             </template>
-            <LayoutThemeSwitcher variant="drawer" class="site-nav__theme-drawer" />
-            <LayoutLanguageSwitcher variant="drawer" class="site-nav__locale-drawer" />
+            <LayoutThemeSwitcher
+              variant="drawer"
+              class="site-nav__theme-drawer"
+            />
+            <LayoutLanguageSwitcher
+              variant="drawer"
+              class="site-nav__locale-drawer"
+            />
           </div>
         </aside>
       </div>
@@ -246,7 +247,10 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '~/stores/auth';
-import { filterVisibleNavItems, isAdminNavVisible } from '~/helpers/site-nav-visibility';
+import {
+  filterVisibleNavItems,
+  isAdminNavVisible,
+} from '~/helpers/site-nav-visibility';
 import { MBL_MEDIA_DESKTOP } from '~/helpers/breakpoints';
 
 const { t } = useI18n();
@@ -254,11 +258,22 @@ const { t } = useI18n();
 const ORDERED_ROUTE_NAV = [
   { labelKey: 'today', to: '/today', authOnly: true, spaceBefore: false },
   { labelKey: 'bible_books', to: '/books', authOnly: true, spaceBefore: false },
-  { labelKey: 'chapter_checklist', to: '/checklist', authOnly: true, spaceBefore: false },
+  {
+    labelKey: 'chapter_checklist',
+    to: '/checklist',
+    authOnly: true,
+    spaceBefore: false,
+  },
   { labelKey: 'calendar', to: '/calendar', authOnly: true, spaceBefore: false },
   { labelKey: 'notes', to: '/notes', authOnly: true, spaceBefore: false },
   { labelKey: 'insights', to: '/insights', authOnly: true, spaceBefore: false },
-  { labelKey: 'about', to: '/about/overview', authOnly: false, guestOnly: true, spaceBefore: true },
+  {
+    labelKey: 'about',
+    to: '/about/overview',
+    authOnly: false,
+    guestOnly: true,
+    spaceBefore: true,
+  },
 ] as const;
 
 const ADMIN_CHILD_LINKS = [
@@ -279,39 +294,58 @@ const accountDropdownOpen = ref(false);
 const adminNavRef = ref<HTMLElement | null>(null);
 const accountNavRef = ref<HTMLElement | null>(null);
 
-const visibleRouteNavItems = computed(() => filterVisibleNavItems(ORDERED_ROUTE_NAV, authStore.loggedIn));
+const visibleRouteNavItems = computed(() =>
+  filterVisibleNavItems(ORDERED_ROUTE_NAV, authStore.loggedIn),
+);
 
-const showAdminNav = computed(() => isAdminNavVisible(authStore.loggedIn, authStore.user?.isAdmin));
+const showAdminNav = computed(() =>
+  isAdminNavVisible(authStore.loggedIn, authStore.user?.isAdmin),
+);
 
-watch(() => route.fullPath, () => {
-  navOpen.value = false;
-  adminDropdownOpen.value = false;
-  accountDropdownOpen.value = false;
-});
+watch(
+  () => route.fullPath,
+  () => {
+    navOpen.value = false;
+    adminDropdownOpen.value = false;
+    accountDropdownOpen.value = false;
+  },
+);
 
 watch(navOpen, (open) => {
-  if (typeof document === 'undefined') { return; }
+  if (typeof document === 'undefined') {
+    return;
+  }
   document.body.classList.toggle('site-nav-drawer-open', open);
 });
 
 useClickOutside(
   computed(() => (adminDropdownOpen.value ? adminNavRef.value : null)),
-  () => { adminDropdownOpen.value = false; },
+  () => {
+    adminDropdownOpen.value = false;
+  },
 );
 
 useClickOutside(
   computed(() => (accountDropdownOpen.value ? accountNavRef.value : null)),
-  () => { accountDropdownOpen.value = false; },
+  () => {
+    accountDropdownOpen.value = false;
+  },
 );
 
-const anyDropdownOrDrawerOpen = computed(() =>
-  adminDropdownOpen.value || accountDropdownOpen.value || navOpen.value,
+const anyDropdownOrDrawerOpen = computed(
+  () => adminDropdownOpen.value || accountDropdownOpen.value || navOpen.value,
 );
 
 useEscapeKey(() => {
-  if (adminDropdownOpen.value) { adminDropdownOpen.value = false; }
-  if (accountDropdownOpen.value) { accountDropdownOpen.value = false; }
-  if (navOpen.value) { closeNav(); }
+  if (adminDropdownOpen.value) {
+    adminDropdownOpen.value = false;
+  }
+  if (accountDropdownOpen.value) {
+    accountDropdownOpen.value = false;
+  }
+  if (navOpen.value) {
+    closeNav();
+  }
 }, anyDropdownOrDrawerOpen);
 
 let desktopMq: MediaQueryList | null = null;
@@ -321,7 +355,9 @@ onMounted(() => {
   if (window.matchMedia) {
     desktopMq = window.matchMedia(MBL_MEDIA_DESKTOP);
     onDesktopMq = () => {
-      if (desktopMq?.matches) { navOpen.value = false; }
+      if (desktopMq?.matches) {
+        navOpen.value = false;
+      }
     };
     if (desktopMq.addEventListener) {
       desktopMq.addEventListener('change', onDesktopMq);
@@ -346,15 +382,23 @@ onBeforeUnmount(() => {
   }
 });
 
-const toggleNav = () => { navOpen.value = !navOpen.value; };
-const closeNav = () => { navOpen.value = false; };
+const toggleNav = () => {
+  navOpen.value = !navOpen.value;
+};
+const closeNav = () => {
+  navOpen.value = false;
+};
 const toggleAdminDropdown = () => {
   adminDropdownOpen.value = !adminDropdownOpen.value;
-  if (adminDropdownOpen.value) { accountDropdownOpen.value = false; }
+  if (adminDropdownOpen.value) {
+    accountDropdownOpen.value = false;
+  }
 };
 const toggleAccountDropdown = () => {
   accountDropdownOpen.value = !accountDropdownOpen.value;
-  if (accountDropdownOpen.value) { adminDropdownOpen.value = false; }
+  if (accountDropdownOpen.value) {
+    adminDropdownOpen.value = false;
+  }
 };
 
 const logout = async () => {
@@ -513,14 +557,18 @@ const {
 }
 
 .site-nav__link::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0.65rem;
   right: 0.65rem;
   bottom: 0.2rem;
   height: 2px;
   border-radius: var(--mbl-radius-pill);
-  background: linear-gradient(90deg, var(--secondary-color), var(--tertiary-color));
+  background: linear-gradient(
+    90deg,
+    var(--secondary-color),
+    var(--tertiary-color)
+  );
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform 0.2s ease;
@@ -638,16 +686,19 @@ const {
 }
 
 .site-nav__menu-icon {
+  --site-nav-menu-bar-height: 2px;
+  --site-nav-menu-bar-gap: var(--mbl-space-2xs);
+
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: var(--mbl-space-2xs);
+  gap: var(--site-nav-menu-bar-gap);
   width: 22px;
 }
 
 .site-nav__menu-icon span {
   display: block;
-  height: 2px;
+  height: var(--site-nav-menu-bar-height);
   background: currentcolor;
   border-radius: var(--mbl-radius-pill);
   transition:
@@ -656,11 +707,16 @@ const {
 }
 
 /*
- * Hamburger → X: the outer bars slide to the middle line (one bar height plus
- * one gap = 7px) and cross, while the middle bar collapses out of the way.
+ * Hamburger → X: the outer bars slide onto the middle line and cross, while the
+ * middle bar collapses out of the way. The travel is the distance between bar
+ * centers — one bar height plus one gap — so both strokes land on the same
+ * center point and the X stays symmetrical.
  */
 .site-nav__menu-icon--open span:nth-child(1) {
-  transform: translateY(7px) rotate(45deg);
+  transform: translateY(
+      calc(var(--site-nav-menu-bar-height) + var(--site-nav-menu-bar-gap))
+    )
+    rotate(45deg);
 }
 
 .site-nav__menu-icon--open span:nth-child(2) {
@@ -669,7 +725,12 @@ const {
 }
 
 .site-nav__menu-icon--open span:nth-child(3) {
-  transform: translateY(-7px) rotate(-45deg);
+  transform: translateY(
+      calc(
+        -1 * (var(--site-nav-menu-bar-height) + var(--site-nav-menu-bar-gap))
+      )
+    )
+    rotate(-45deg);
 }
 
 .site-nav__overlay {
@@ -702,7 +763,8 @@ const {
 .site-nav__drawer-scroll {
   display: flex;
   flex-direction: column;
-  padding: var(--mbl-space-md) 0 calc(var(--mbl-fab-clearance) + var(--mbl-space-lg));
+  padding: var(--mbl-space-md) 0
+    calc(var(--mbl-fab-clearance) + var(--mbl-space-lg));
   max-height: calc(100vh - var(--site-nav-height));
   overflow-y: auto;
 }

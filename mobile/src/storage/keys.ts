@@ -20,20 +20,40 @@ import type { StoredLogEntry, PendingLogEntryMutation } from "@/src/storage/logE
 import type { StoredLocalNote, PendingNoteMutation } from "@/src/storage/passageNotes";
 import type { AuthSession } from "@/src/auth/authStorage";
 import { createTypedStorage, defineKey } from "./typedStorage";
+import type { StorageHooks } from "./typedStorage";
+import { reportStorageFailure, reportStorageOk } from "./health";
 import { secureBackend } from "./secureBackend";
 
-export const appStorage = createTypedStorage(AsyncStorage, {
-  userSettings: defineKey<LocalUserSettings>("userSettings.v1"),
-  themeMode: defineKey<ThemeMode>("themeMode.v1"),
-  locale: defineKey<SupportedLocale>("locale.v1"),
-  forceUpgradeStatus: defineKey<ForceUpgradeCache>("forceUpgradeStatus.v1"),
-  logEntries: defineKey<StoredLogEntry[]>("logEntries.v1"),
-  logEntryMutations: defineKey<PendingLogEntryMutation[]>("logEntries.mutations.v1"),
-  passageNotes: defineKey<StoredLocalNote[]>("passageNotes.local.v1"),
-  passageNoteMutations: defineKey<PendingNoteMutation[]>("passageNotes.mutations.v1"),
-});
+/**
+ * Both backends report their outcomes to `storage/health.ts`. Wiring it here
+ * rather than inside `typedStorage` keeps that module a pure (de)serialization
+ * layer, and keeps `health.ts` free of any dependency on this registry.
+ */
+const healthHooks: StorageHooks = {
+  onFailure: reportStorageFailure,
+  onOk: reportStorageOk,
+};
 
-export const secureStorage = createTypedStorage(secureBackend, {
-  authSession: defineKey<AuthSession>("auth.session.v1"),
-  lastLoggedInEmail: defineKey<string>("auth.lastLoggedInEmail.v1"),
-});
+export const appStorage = createTypedStorage(
+  AsyncStorage,
+  {
+    userSettings: defineKey<LocalUserSettings>("userSettings.v1"),
+    themeMode: defineKey<ThemeMode>("themeMode.v1"),
+    locale: defineKey<SupportedLocale>("locale.v1"),
+    forceUpgradeStatus: defineKey<ForceUpgradeCache>("forceUpgradeStatus.v1"),
+    logEntries: defineKey<StoredLogEntry[]>("logEntries.v1"),
+    logEntryMutations: defineKey<PendingLogEntryMutation[]>("logEntries.mutations.v1"),
+    passageNotes: defineKey<StoredLocalNote[]>("passageNotes.local.v1"),
+    passageNoteMutations: defineKey<PendingNoteMutation[]>("passageNotes.mutations.v1"),
+  },
+  healthHooks
+);
+
+export const secureStorage = createTypedStorage(
+  secureBackend,
+  {
+    authSession: defineKey<AuthSession>("auth.session.v1"),
+    lastLoggedInEmail: defineKey<string>("auth.lastLoggedInEmail.v1"),
+  },
+  healthHooks
+);

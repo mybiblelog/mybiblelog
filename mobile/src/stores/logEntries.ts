@@ -4,7 +4,6 @@ import {
   deleteLogEntryRequest,
   fetchLogEntries,
   getBookIndexFromVerseId,
-  isBibleComplete as isBibleCompleteShared,
   postLogEntry,
   patchLogEntry,
 } from "@mybiblelog/shared";
@@ -17,7 +16,9 @@ import {
   type StoredLogEntry,
   loadLogEntries,
   loadPendingLogEntryMutations,
+  readLogEntries,
   saveLogEntries,
+  saveLogEntriesFromServer,
   savePendingLogEntryMutations,
 } from "@/src/storage/logEntries";
 import {
@@ -31,6 +32,8 @@ import {
   toStored,
   upsertLocal,
 } from "@/src/log-entries/sync";
+import { registerManagedKey } from "@/src/storage/health";
+import { appStorage } from "@/src/storage/keys";
 import { achievementActions } from "@/src/stores/achievements";
 import { useAuthStore } from "@/src/stores/auth";
 import { getIsOnline, useConnectivityStore } from "@/src/stores/connectivity";
@@ -106,7 +109,7 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
         const remote = parseApiLogEntries(await fetchLogEntries(httpClient));
         setEntries(remote.map((e) => toStored(e, e.id ?? undefined)));
         const after = get().state;
-        if (after.status === "ready") await saveLogEntries(after.entries);
+        if (after.status === "ready") await saveLogEntriesFromServer(after.entries);
       } catch (err) {
         // Network or API error: keep current local state, fail gracefully.
         reportHandledError(err, { op: "logEntries.reloadFromApi" });
@@ -343,18 +346,17 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
   };
 });
 
-/** Selector helper mirroring the Nuxt `isBibleComplete` getter. */
-export function selectIsBibleComplete(state: LogEntriesState): boolean {
-  if (state.status !== "ready") return false;
-  return isBibleCompleteShared(state.entries);
-}
-
 let initialized = false;
 
 /** Hydrate entries from storage, persist on change, and background-sync. */
 export function initLogEntries(): void {
   if (initialized) return;
   initialized = true;
+
+  registerManagedKey(appStorage.keyName("logEntries"), rehydrateFromDisk);
+  // The queue is re-read from disk on every mutation, so it heals on its own —
+  // it registers only so that writes refused in the meantime raise the banner.
+  registerManagedKey(appStorage.keyName("logEntryMutations"));
 
   void (async () => {
     const stored = await loadLogEntries();
@@ -386,6 +388,37 @@ export function initLogEntries(): void {
     wasOnline = s.isOnline;
   });
   useAuthStore.subscribe(() => trySync());
+}
+
+/**
+ * Merge the stored entries back into memory once the backend answers again.
+ *
+ * A failed hydrate read leaves the store showing an empty log while the real
+ * entries sit intact on disk, and quarantines the key so nothing can be saved.
+ * Re-reading is safe here, and *only* here, because this consumes the value it
+ * reads: the merge runs in the continuation immediately after the `await`, so
+ * no store action can slip in between and overwrite disk with the empty list.
+ * See the invariant in `storage/health.ts`.
+ *
+ * Entries are unioned by `clientId` with memory winning, so anything created
+ * during the outage survives and everything the failed read hid comes back. The
+ * trade is that an entry *deleted* during the outage reappears — bounded, and
+ * far better than the alternative of memory clobbering the whole stored list.
+ */
+async function rehydrateFromDisk(): Promise<void> {
+  const disk = await readLogEntries();
+  if (disk.status === "unreadable") return; // still broken; stay degraded
+
+  const current = useLogEntriesStore.getState().state;
+  if (current.status !== "ready") return;
+
+  // `absent`/`corrupt` mean there is nothing worth merging; re-persisting what
+  // is in memory is what gets this key writing again.
+  const merged =
+    disk.status === "ok" ? current.entries.reduce(upsertLocal, disk.value) : current.entries;
+
+  // A fresh array every time, so the persist subscriber above always fires.
+  useLogEntriesStore.setState({ state: { ...current, entries: sortEntries(merged) } });
 }
 
 /**

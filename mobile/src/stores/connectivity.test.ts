@@ -1,5 +1,14 @@
 import NetInfo from "@react-native-community/netinfo";
-import { getIsOnline, initConnectivity, useConnectivityStore } from "./connectivity";
+import { renderHook } from "@testing-library/react-native";
+import {
+  getConnectionStatus,
+  getIsOnline,
+  initConnectivity,
+  reportApiReachability,
+  resetApiReachability,
+  useCanReachServer,
+  useConnectivityStore,
+} from "./connectivity";
 
 type Listener = (s: { isConnected: boolean | null; isInternetReachable: boolean | null }) => void;
 
@@ -12,7 +21,7 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-  useConnectivityStore.setState({ isOnline: null });
+  useConnectivityStore.setState({ isOnline: null, apiReachable: null });
 });
 
 describe("connectivity store", () => {
@@ -34,5 +43,98 @@ describe("connectivity store", () => {
 
     listener({ isConnected: false, isInternetReachable: null });
     expect(getIsOnline()).toBe(false);
+  });
+});
+
+describe("api reachability", () => {
+  it("starts as null until the first API attempt", () => {
+    expect(useConnectivityStore.getState().apiReachable).toBeNull();
+  });
+
+  // Every HTTP response reports reachability, and four modules subscribe to this
+  // store — an unchanged value must not wake any of them.
+  it("does not notify subscribers when the value is unchanged", () => {
+    const spy = jest.fn();
+    const unsubscribe = useConnectivityStore.subscribe(spy);
+
+    reportApiReachability(true);
+    reportApiReachability(true);
+    reportApiReachability(true);
+    expect(spy).toHaveBeenCalledTimes(1);
+
+    reportApiReachability(false);
+    expect(spy).toHaveBeenCalledTimes(2);
+    unsubscribe();
+  });
+
+  it("clears a stale server-down verdict when the device drops its network", () => {
+    listener({ isConnected: true, isInternetReachable: true });
+    reportApiReachability(false);
+    expect(useConnectivityStore.getState().apiReachable).toBe(false);
+
+    listener({ isConnected: false, isInternetReachable: false });
+    expect(useConnectivityStore.getState().apiReachable).toBeNull();
+  });
+
+  // The verdict is measured on behalf of a session. Left behind after sign-out
+  // it sticks forever, because a signed-out app makes no requests to correct it.
+  it("forgets the verdict on reset", () => {
+    reportApiReachability(false);
+    resetApiReachability();
+    expect(useConnectivityStore.getState().apiReachable).toBeNull();
+  });
+
+  it("does not notify when there was no verdict to forget", () => {
+    resetApiReachability();
+    const spy = jest.fn();
+    const unsubscribe = useConnectivityStore.subscribe(spy);
+
+    resetApiReachability();
+    expect(spy).not.toHaveBeenCalled();
+    unsubscribe();
+  });
+});
+
+describe("getConnectionStatus", () => {
+  const cases: [boolean | null, boolean | null, string][] = [
+    [null, null, "unknown"],
+    [null, true, "unknown"],
+    [true, null, "online"],
+    [true, true, "online"],
+    [true, false, "server-unreachable"],
+    [null, false, "server-unreachable"],
+    // No network beats everything: don't blame the server when the device is off.
+    [false, false, "device-offline"],
+    [false, null, "device-offline"],
+    [false, true, "device-offline"],
+  ];
+
+  it.each(cases)("isOnline=%p apiReachable=%p -> %s", (isOnline, apiReachable, expected) => {
+    useConnectivityStore.setState({ isOnline, apiReachable });
+    expect(getConnectionStatus()).toBe(expected);
+  });
+});
+
+describe("useCanReachServer", () => {
+  // `unknown` is deliberately permissive: before the first connectivity signal
+  // arrives we must not block server actions on a verdict we don't have.
+  const cases: [string, boolean][] = [
+    ["online", true],
+    ["unknown", true],
+    ["device-offline", false],
+    ["server-unreachable", false],
+  ];
+
+  const stateFor: Record<string, { isOnline: boolean | null; apiReachable: boolean | null }> = {
+    online: { isOnline: true, apiReachable: true },
+    unknown: { isOnline: null, apiReachable: null },
+    "device-offline": { isOnline: false, apiReachable: null },
+    "server-unreachable": { isOnline: true, apiReachable: false },
+  };
+
+  it.each(cases)("%s -> %p", (status, expected) => {
+    useConnectivityStore.setState(stateFor[status]);
+    const { result } = renderHook(() => useCanReachServer());
+    expect(result.current).toBe(expected);
   });
 });

@@ -218,6 +218,7 @@ export const uk = {
   auth_offline_sync_hint:
     "Ваші офлайн-дані на цьому пристрої не синхронізуються з вашим обліковим записом, доки ви не будете онлайн і не увійдете в систему.",
   auth_login_requires_connection: "Для входу потрібне підключення до інтернету.",
+  auth_login_requires_server: "Для входу потрібен доступ до сервера My Bible Log.",
   auth_login: "Увійти",
   auth_create_account: "Створити обліковий запис",
   auth_logout: "Вийти",
@@ -297,6 +298,7 @@ export const uk = {
   connectivity_online: "Онлайн",
   connectivity_offline: "Офлайн",
   connectivity_unknown: "Невідомо",
+  connectivity_server_unreachable: "Сервер недоступний",
 
   settings_section_account: "Обліковий запис",
   settings_section_account_subtitle: "Вхід та з'єднання",
@@ -363,7 +365,10 @@ export const uk = {
   calendar_day_verses_read: "%{count} віршів прочитано",
 
   dismiss: "Закрити",
+  storage_degraded_banner: "Наразі не вдається зберегти зміни. Ваші збережені дані в безпеці.",
   offline_banner: "Ви офлайн — зміни синхронізуються, коли ви знову підключитеся.",
+  server_unreachable_banner:
+    "Не вдається з’єднатися з My Bible Log — зміни синхронізуються, коли сервер повернеться.",
   today_no_goal_hint:
     "Встановіть щоденну мету в Налаштування → Читання, щоб відстежувати свій прогрес тут.",
   chapter_read_a11y: "%{book}, розділ %{chapter}, прочитано",
@@ -448,6 +453,13 @@ export const uk = {
   tag_description_placeholder: "Необов'язковий опис",
   tag_could_not_save: "Не вдалося зберегти тег.",
   tag_no_tags: "Тегів поки немає. Створіть свій перший тег.",
+  tag_unavailable_offline:
+    "Теги недоступні без з’єднання. Ваша нотатка все одно збережеться та синхронізується, коли ви знову підключитеся.",
+  tag_create_requires_connection: "Для створення тегів потрібне інтернет-з’єднання.",
+  tag_create_requires_server: "Для створення тегів потрібен доступ до сервера My Bible Log.",
+  tag_create_requires_signin: "Увійдіть, щоб створювати та використовувати теги.",
+  tag_unavailable_signed_out:
+    "Увійдіть, щоб використовувати теги. Ваша нотатка все одно збережеться на цьому пристрої.",
   tag_notes_count: "%{count} нотаток",
   tag_view_notes: "Переглянути нотатки (%{count})",
   tag_sort_by: "Сортування",

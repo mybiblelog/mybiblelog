@@ -217,6 +217,8 @@ export const es = {
   auth_offline_sync_hint:
     "Tus datos sin conexión en este dispositivo no se sincronizarán con tu cuenta hasta que estés en línea y hayas iniciado sesión.",
   auth_login_requires_connection: "Para iniciar sesión necesitas conexión a internet.",
+  auth_login_requires_server:
+    "Para iniciar sesión hay que poder conectar con el servidor de My Bible Log.",
   auth_login: "Iniciar sesión",
   auth_create_account: "Crear cuenta",
   auth_logout: "Cerrar sesión",
@@ -296,6 +298,7 @@ export const es = {
   connectivity_online: "En línea",
   connectivity_offline: "Sin conexión",
   connectivity_unknown: "Desconocido",
+  connectivity_server_unreachable: "Servidor no disponible",
 
   settings_section_account: "Cuenta",
   settings_section_account_subtitle: "Inicio de sesión y conectividad",
@@ -364,7 +367,11 @@ export const es = {
   calendar_day_verses_read: "%{count} versículos leídos",
 
   dismiss: "Descartar",
+  storage_degraded_banner:
+    "Ahora mismo no se pueden guardar los cambios. Tus datos guardados están a salvo.",
   offline_banner: "Sin conexión: los cambios se sincronizarán cuando te vuelvas a conectar.",
+  server_unreachable_banner:
+    "No se puede conectar con My Bible Log: los cambios se sincronizarán cuando el servidor vuelva.",
   today_no_goal_hint:
     "Establece una meta diaria en Ajustes → Lectura para seguir tu progreso aquí.",
   chapter_read_a11y: "%{book} capítulo %{chapter}, leído",
@@ -449,6 +456,13 @@ export const es = {
   tag_description_placeholder: "Descripción opcional",
   tag_could_not_save: "No se pudo guardar la etiqueta.",
   tag_no_tags: "Todavía no hay etiquetas. Crea tu primera etiqueta.",
+  tag_unavailable_offline:
+    "Las etiquetas no están disponibles sin conexión. Tu nota se guardará igualmente y se sincronizará cuando vuelvas a conectarte.",
+  tag_create_requires_connection: "Crear etiquetas requiere una conexión a internet.",
+  tag_create_requires_server: "Crear etiquetas requiere acceder al servidor de My Bible Log.",
+  tag_create_requires_signin: "Inicia sesión para crear y usar etiquetas.",
+  tag_unavailable_signed_out:
+    "Inicia sesión para usar etiquetas. Tu nota se guardará igualmente en este dispositivo.",
   tag_notes_count: "%{count} notas",
   tag_view_notes: "Ver notas (%{count})",
   tag_sort_by: "Ordenar",

@@ -215,6 +215,7 @@ export const ko = {
   auth_offline_sync_hint:
     "온라인 상태로 로그인하기 전까지는 이 기기의 오프라인 데이터가 계정과 동기화되지 않습니다.",
   auth_login_requires_connection: "로그인하려면 인터넷 연결이 필요합니다.",
+  auth_login_requires_server: "로그인하려면 My Bible Log 서버에 연결되어야 합니다.",
   auth_login: "로그인",
   auth_create_account: "계정 만들기",
   auth_logout: "로그아웃",
@@ -290,6 +291,7 @@ export const ko = {
   connectivity_online: "온라인",
   connectivity_offline: "오프라인",
   connectivity_unknown: "알 수 없음",
+  connectivity_server_unreachable: "서버 사용 불가",
 
   settings_section_account: "계정",
   settings_section_account_subtitle: "로그인 및 연결 상태",
@@ -355,7 +357,10 @@ export const ko = {
   calendar_day_verses_read: "%{count}구절 읽음",
 
   dismiss: "닫기",
+  storage_degraded_banner: "지금은 변경 사항을 저장할 수 없습니다. 저장된 데이터는 안전합니다.",
   offline_banner: "오프라인 상태입니다 — 다시 연결되면 변경 사항이 동기화됩니다.",
+  server_unreachable_banner:
+    "My Bible Log 서버에 연결할 수 없습니다 — 서버가 복구되면 변경 사항이 동기화됩니다.",
   today_no_goal_hint: "설정 → 읽기에서 일일 목표를 설정하면 여기서 진행 상황을 확인할 수 있습니다.",
   chapter_read_a11y: "%{book} %{chapter}장, 읽음",
   chapter_unread_a11y: "%{book} %{chapter}장, 읽지 않음",
@@ -437,6 +442,12 @@ export const ko = {
   tag_description_placeholder: "선택적 설명",
   tag_could_not_save: "태그를 저장할 수 없습니다.",
   tag_no_tags: "아직 태그가 없습니다. 첫 번째 태그를 만드세요.",
+  tag_unavailable_offline:
+    "오프라인에서는 태그를 사용할 수 없습니다. 메모는 저장되며 다시 연결되면 동기화됩니다.",
+  tag_create_requires_connection: "태그를 만들려면 인터넷 연결이 필요합니다.",
+  tag_create_requires_server: "태그를 만들려면 My Bible Log 서버에 연결되어야 합니다.",
+  tag_create_requires_signin: "태그를 만들고 사용하려면 로그인하세요.",
+  tag_unavailable_signed_out: "태그를 사용하려면 로그인하세요. 메모는 이 기기에 저장됩니다.",
   tag_notes_count: "노트 %{count}개",
   tag_view_notes: "노트 보기 (%{count})",
   tag_sort_by: "정렬",

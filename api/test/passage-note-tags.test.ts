@@ -692,5 +692,108 @@ describe('passage-note-tags.test.js', () => {
         await deleteTestUser(testUser);
       }
     });
+
+    // Create a tag, then a passage note (Genesis 1:1-5) carrying that tag.
+    async function createTaggedNote(testUser: TestUser): Promise<{ tagId: string; noteId: string }> {
+      const tagResponse = await requestApi
+        .post('/api/passage-note-tags')
+        .set('Authorization', `Bearer ${testUser.token}`)
+        .send(tag1);
+      const noteResponse = await requestApi
+        .post('/api/passage-notes')
+        .set('Authorization', `Bearer ${testUser.token}`)
+        .send({
+          passages: [{ startVerseId: 101001001, endVerseId: 101001005 }],
+          content: 'A note',
+          tags: [tagResponse.body.data.id],
+        });
+      return { tagId: tagResponse.body.data.id, noteId: noteResponse.body.data.id };
+    }
+
+    it('refuses to delete a tag that is still used by a note', async () => {
+      const testUser = await createTestUser();
+      try {
+        const { tagId } = await createTaggedNote(testUser);
+
+        const response = await requestApi
+          .delete(`/api/passage-note-tags/${tagId}`)
+          .set('Authorization', `Bearer ${testUser.token}`);
+        expect(response.status).toBe(400);
+        expect(response.body.error.errors).toEqual([{ field: null, code: 'tag_in_use' }]);
+        expect(response.body).not.toHaveProperty('data');
+
+        // The tag survives the refused delete
+        const listResponse = await requestApi
+          .get('/api/passage-note-tags')
+          .set('Authorization', `Bearer ${testUser.token}`);
+        expect((listResponse.body.data as Array<{ id: string }>).map((tag) => tag.id)).toContain(tagId);
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
+    it('allows the delete once the last note drops the tag', async () => {
+      const testUser = await createTestUser();
+      try {
+        const { tagId, noteId } = await createTaggedNote(testUser);
+
+        await requestApi
+          .patch(`/api/passage-notes/${noteId}`)
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send({ tags: [] });
+
+        const response = await requestApi
+          .delete(`/api/passage-note-tags/${tagId}`)
+          .set('Authorization', `Bearer ${testUser.token}`);
+        expect(response.status).toBe(200);
+        expect(response.body.data).toBe(1);
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
+    it('does not let another user\'s notes block a delete', async () => {
+      const testUser1 = await createTestUser();
+      const testUser2 = await createTestUser();
+      try {
+        // User 2 has a tagged note; user 1's identically-labeled tag is unused.
+        await createTaggedNote(testUser2);
+        const tagResponse = await requestApi
+          .post('/api/passage-note-tags')
+          .set('Authorization', `Bearer ${testUser1.token}`)
+          .send(tag1);
+
+        const response = await requestApi
+          .delete(`/api/passage-note-tags/${tagResponse.body.data.id}`)
+          .set('Authorization', `Bearer ${testUser1.token}`);
+        expect(response.status).toBe(200);
+        expect(response.body.data).toBe(1);
+      }
+      finally {
+        await deleteTestUser(testUser1);
+        await deleteTestUser(testUser2);
+      }
+    });
+
+    it('404s for another user\'s tag rather than reporting it in use', async () => {
+      const testUser1 = await createTestUser();
+      const testUser2 = await createTestUser();
+      try {
+        const { tagId } = await createTaggedNote(testUser2);
+
+        const response = await requestApi
+          .delete(`/api/passage-note-tags/${tagId}`)
+          .set('Authorization', `Bearer ${testUser1.token}`);
+        expect(response.status).toBe(404);
+        expect(response.body).toHaveProperty('error');
+        expect(response.body).not.toHaveProperty('data');
+      }
+      finally {
+        await deleteTestUser(testUser1);
+        await deleteTestUser(testUser2);
+      }
+    });
   });
 });

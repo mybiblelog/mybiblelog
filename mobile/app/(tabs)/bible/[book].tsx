@@ -175,10 +175,14 @@ export default function BibleBookScreen() {
       />
 
       <Card style={styles.plaque}>
-        <Text variant="label" style={styles.plaquePercent}>
-          {book.percentage}%
-        </Text>
-        <SegmentBar segments={book.segments} thick />
+        <View style={styles.plaqueRow}>
+          <View style={styles.plaqueBar}>
+            <SegmentBar segments={book.segments} thick />
+          </View>
+          <Text variant="label" style={styles.plaquePercent}>
+            {book.percentage}%
+          </Text>
+        </View>
       </Card>
 
       <AnimatedList
@@ -295,9 +299,17 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
     marginBottom: spacing.md,
   },
+  plaqueRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+  },
+  plaqueBar: {
+    flex: 1,
+  },
   plaquePercent: {
+    width: 48,
     textAlign: "right",
-    marginBottom: spacing.sm,
   },
   gridContent: {
     paddingHorizontal: spacing.pageGutter,

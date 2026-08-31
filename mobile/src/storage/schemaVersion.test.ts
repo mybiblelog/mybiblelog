@@ -28,4 +28,11 @@ describe("getStoredSchemaVersion", () => {
     await setStoredSchemaVersion(4);
     expect(await getStoredSchemaVersion()).toBe(4);
   });
+
+  // Not 0: a failed read that looked like a fresh install would replay every
+  // migration over data we can't even verify.
+  it("reports null when the marker can't be read at all", async () => {
+    jest.spyOn(AsyncStorage, "getItem").mockRejectedValueOnce(new Error("disk error"));
+    expect(await getStoredSchemaVersion()).toBeNull();
+  });
 });

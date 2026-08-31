@@ -22,6 +22,12 @@ export async function runStorageMigrations(
   target: number = CURRENT_SCHEMA_VERSION
 ): Promise<void> {
   const stored = await getStoredSchemaVersion();
+  // Unreadable marker: skip this launch and retry next, rather than assuming a
+  // fresh install and replaying every step over data we can't verify.
+  if (stored === null) {
+    reportHandledError(new Error("schema_version_unreadable"), { op: "storage.runMigrations" });
+    return;
+  }
   if (stored >= target) return;
 
   const pending = migrations

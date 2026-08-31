@@ -160,6 +160,8 @@ export default function Index() {
             // up to the header button.
             <EmptyState
               icon="book-outline"
+              background="surfaceMuted"
+              iconColor="primary"
               title={t("today_empty_title")}
               text={t("today_empty_text")}
               ctaLabel={t("add")}

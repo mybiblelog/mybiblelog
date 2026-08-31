@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { spacing, useTheme } from "@/src/design";
-import { OfflineBanner } from "../molecules/OfflineBanner";
+import { StatusBanner } from "../molecules/StatusBanner";
 
 type Edge = "top" | "bottom";
 
@@ -46,7 +46,7 @@ export function Screen({
       ]}
     >
       {/* Full-bleed: never inset by `padded`, so it always spans the screen width. */}
-      <OfflineBanner />
+      <StatusBanner />
       <View style={[styles.body, padded && styles.padded]}>{children}</View>
     </View>
   );

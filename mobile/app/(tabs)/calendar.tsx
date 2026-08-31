@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
-import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Bible } from "@mybiblelog/shared";
 import {
@@ -35,6 +35,23 @@ function getWeekdayLabels(locale: string): string[] {
   ];
 }
 
+/**
+ * The rule between day cells. Cells draw no borders of their own — the grid
+ * container is painted `colors.border` and shows through 1px gaps, so any two
+ * neighbours share exactly one line and can never double it or drift apart.
+ * Same technique as web's `.days-grid`. It's a hairline rule, not spacing, so
+ * it deliberately isn't a spacing token.
+ */
+const GRID_RULE = 1;
+
+/**
+ * The frame's outer radius, and the radius the four corner cells take so they
+ * follow its curve. Without matching the cells, the container clips their
+ * square corners and the 1px rule reads as a blunt diagonal cut.
+ */
+const GRID_RADIUS = radius.sm;
+const CELL_RADIUS = GRID_RADIUS - GRID_RULE;
+
 type DayCell = {
   date: string;
   dayNumber: number;
@@ -49,7 +66,6 @@ export default function Calendar() {
   const { colors } = useTheme();
   const t = useT();
   const { locale } = useLocale();
-  const { width: windowWidth } = useWindowDimensions();
   const entries = useLogEntryList();
   const settings = useSettingsValue();
   const refreshControl = useSyncRefreshControl();
@@ -108,13 +124,11 @@ export default function Calendar() {
 
   const weekdayLabels = useMemo(() => getWeekdayLabels(locale), [locale]);
 
-  const dayCellMetrics = useMemo(() => {
-    const horizontalPadding = 16;
-    const gap = 1;
-    const available = windowWidth - horizontalPadding * 2;
-    const cellWidth = Math.floor((available - gap * 6) / 7);
-    return { horizontalPadding, gap, cellWidth };
-  }, [windowWidth]);
+  const weeks = useMemo<DayCell[][]>(() => {
+    const out: DayCell[][] = [];
+    for (let i = 0; i < days.length; i += 7) out.push(days.slice(i, i + 7));
+    return out;
+  }, [days]);
 
   const entriesForSelectedDay = useMemo(
     () => (entries ?? []).filter((e) => e.date === selectedDay),
@@ -196,9 +210,9 @@ export default function Calendar() {
               }
             />
 
-            <View style={styles.weekdaysRow}>
+            <View testID="calendar.weekdays-row" style={styles.weekdaysRow}>
               {weekdayLabels.map((w) => (
-                <View key={w} style={[styles.weekdayCell, { width: dayCellMetrics.cellWidth }]}>
+                <View key={w} style={styles.weekdayCell}>
                   <Text variant="caption" color="mutedText">
                     {w}
                   </Text>
@@ -206,87 +220,109 @@ export default function Calendar() {
               ))}
             </View>
 
+            {/* borderRadius rides with the inline backgroundColor on purpose:
+                on Android a background-only update drops a separately
+                registered radius. */}
             <View
-              style={[styles.daysGrid, { paddingHorizontal: dayCellMetrics.horizontalPadding }]}
+              testID="calendar.days-grid"
+              style={[
+                styles.daysGrid,
+                { backgroundColor: colors.border, borderRadius: GRID_RADIUS },
+              ]}
             >
-              {days.map((d) => {
-                const isToday = d.date === today;
-                const isSelected = d.date === selectedDay;
+              {weeks.map((week, weekIndex) => (
+                <View key={week[0].date} testID="calendar.week-row" style={styles.weekRow}>
+                  {week.map((d, dayIndex) => {
+                    const isTopRow = weekIndex === 0;
+                    const isBottomRow = weekIndex === weeks.length - 1;
+                    const isFirstColumn = dayIndex === 0;
+                    const isLastColumn = dayIndex === week.length - 1;
 
-                const primaryPct = Math.min(100, d.uniquePct);
-                const secondaryPct = Math.min(100, d.totalPct);
+                    const isToday = d.date === today;
+                    const isSelected = d.date === selectedDay;
 
-                const showGoldStar = d.isCurrentMonth && d.uniquePct >= 100;
-                const showBlueStar = !showGoldStar && d.isCurrentMonth && d.totalPct >= 100;
+                    const primaryPct = Math.min(100, d.uniquePct);
+                    const secondaryPct = Math.min(100, d.totalPct);
 
-                return (
-                  <Pressable
-                    key={d.date}
-                    disabled={!d.isCurrentMonth}
-                    accessibilityRole="button"
-                    accessibilityLabel={formatLongDate(d.date, locale)}
-                    accessibilityState={{ selected: isSelected, disabled: !d.isCurrentMonth }}
-                    onPress={() => setSelectedDay(d.date)}
-                    style={[
-                      styles.dayCell,
-                      {
-                        width: dayCellMetrics.cellWidth,
-                        height: Math.max(70, Math.floor(dayCellMetrics.cellWidth)),
-                        marginRight: dayCellMetrics.gap,
-                        marginBottom: dayCellMetrics.gap,
-                        backgroundColor: d.isCurrentMonth ? colors.surface : colors.surfaceMuted,
-                        borderColor: colors.border,
-                      },
-                    ]}
-                  >
-                    <View
-                      style={[
-                        styles.dayNumberCircle,
-                        {
-                          backgroundColor: isSelected
-                            ? colors.primary
-                            : isToday
-                              ? colors.border
-                              : "transparent",
-                        },
-                      ]}
-                    >
-                      <Text
-                        variant="label"
-                        color={isSelected ? "onPrimary" : d.isCurrentMonth ? "text" : "mutedText"}
+                    const showGoldStar = d.isCurrentMonth && d.uniquePct >= 100;
+                    const showBlueStar = !showGoldStar && d.isCurrentMonth && d.totalPct >= 100;
+
+                    return (
+                      <Pressable
+                        key={d.date}
+                        testID={`calendar.day-cell.${d.date}`}
+                        disabled={!d.isCurrentMonth}
+                        accessibilityRole="button"
+                        accessibilityLabel={formatLongDate(d.date, locale)}
+                        accessibilityState={{ selected: isSelected, disabled: !d.isCurrentMonth }}
+                        onPress={() => setSelectedDay(d.date)}
+                        style={[
+                          styles.dayCell,
+                          {
+                            backgroundColor: d.isCurrentMonth
+                              ? colors.surface
+                              : colors.surfaceMuted,
+                            borderTopLeftRadius: isTopRow && isFirstColumn ? CELL_RADIUS : 0,
+                            borderTopRightRadius: isTopRow && isLastColumn ? CELL_RADIUS : 0,
+                            borderBottomLeftRadius: isBottomRow && isFirstColumn ? CELL_RADIUS : 0,
+                            borderBottomRightRadius: isBottomRow && isLastColumn ? CELL_RADIUS : 0,
+                          },
+                        ]}
                       >
-                        {d.dayNumber}
-                      </Text>
-                    </View>
-
-                    {(showGoldStar || showBlueStar) && (
-                      <Ionicons
-                        name="star"
-                        size={16}
-                        color={showGoldStar ? colors.starGold : colors.secondary}
-                        style={styles.dayStar}
-                      />
-                    )}
-
-                    {d.isCurrentMonth && (
-                      <View style={[styles.dayProgressTrack, { backgroundColor: colors.border }]}>
                         <View
                           style={[
-                            styles.dayProgressFill,
-                            { width: `${secondaryPct}%`, backgroundColor: colors.secondary },
+                            styles.dayNumberCircle,
+                            {
+                              backgroundColor: isSelected
+                                ? colors.primary
+                                : isToday
+                                  ? colors.border
+                                  : "transparent",
+                            },
                           ]}
-                        />
-                        <View
-                          style={[
-                            styles.dayProgressFill,
-                            { width: `${primaryPct}%`, backgroundColor: colors.primary },
-                          ]}
-                        />
-                      </View>
-                    )}
-                  </Pressable>
-                );
-              })}
+                        >
+                          <Text
+                            variant="label"
+                            color={
+                              isSelected ? "onPrimary" : d.isCurrentMonth ? "text" : "mutedText"
+                            }
+                          >
+                            {d.dayNumber}
+                          </Text>
+                        </View>
+
+                        {(showGoldStar || showBlueStar) && (
+                          <Ionicons
+                            name="star"
+                            size={16}
+                            color={showGoldStar ? colors.starGold : colors.secondary}
+                            style={styles.dayStar}
+                          />
+                        )}
+
+                        {d.isCurrentMonth && (
+                          <View
+                            style={[styles.dayProgressTrack, { backgroundColor: colors.border }]}
+                          >
+                            <View
+                              style={[
+                                styles.dayProgressFill,
+                                { width: `${secondaryPct}%`, backgroundColor: colors.secondary },
+                              ]}
+                            />
+                            <View
+                              style={[
+                                styles.dayProgressFill,
+                                { width: `${primaryPct}%`, backgroundColor: colors.primary },
+                              ]}
+                            />
+                          </View>
+                        )}
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              ))}
             </View>
 
             <View style={[styles.entryHeader, { borderBottomColor: colors.primary }]}>
@@ -332,23 +368,36 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: spacing["2xs"],
   },
+  // Column geometry is mirrored from daysGrid/weekRow below so the labels stay
+  // centred over their columns.
   weekdaysRow: {
     flexDirection: "row",
-    paddingHorizontal: spacing.pageGutter,
+    marginHorizontal: spacing.pageGutter,
+    paddingHorizontal: GRID_RULE,
+    gap: GRID_RULE,
     paddingBottom: spacing["2xs"],
   },
   weekdayCell: {
+    flex: 1,
+    minWidth: 0,
     alignItems: "center",
     justifyContent: "center",
   },
   daysGrid: {
+    marginHorizontal: spacing.pageGutter,
+    marginBottom: spacing.sm,
+    padding: GRID_RULE,
+    gap: GRID_RULE,
+  },
+  weekRow: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    paddingBottom: spacing.sm,
+    gap: GRID_RULE,
   },
   dayCell: {
     position: "relative",
-    borderWidth: StyleSheet.hairlineWidth,
+    flex: 1,
+    minWidth: 0,
+    minHeight: 70,
     padding: spacing["2xs"],
   },
   dayNumberCircle: {

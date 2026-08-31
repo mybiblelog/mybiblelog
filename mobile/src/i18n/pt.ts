@@ -218,6 +218,7 @@ export const pt = {
   auth_offline_sync_hint:
     "Seus dados offline neste dispositivo não serão sincronizados com sua conta até que você esteja online e conectado.",
   auth_login_requires_connection: "Fazer login requer uma conexão com a internet.",
+  auth_login_requires_server: "Fazer login exige acesso ao servidor do My Bible Log.",
   auth_login: "Entrar",
   auth_create_account: "Criar conta",
   auth_logout: "Sair",
@@ -296,6 +297,7 @@ export const pt = {
   connectivity_online: "Online",
   connectivity_offline: "Offline",
   connectivity_unknown: "Desconhecido",
+  connectivity_server_unreachable: "Servidor indisponível",
 
   settings_section_account: "Conta",
   settings_section_account_subtitle: "Login e conectividade",
@@ -363,8 +365,12 @@ export const pt = {
   calendar_day_verses_read: "%{count} versículos lidos",
 
   dismiss: "Dispensar",
+  storage_degraded_banner:
+    "Não é possível salvar as alterações no momento. Seus dados salvos estão seguros.",
   offline_banner:
     "Você está offline — as alterações serão sincronizadas quando você se reconectar.",
+  server_unreachable_banner:
+    "Não foi possível acessar o My Bible Log — as alterações serão sincronizadas quando o servidor voltar.",
   today_no_goal_hint:
     "Defina uma meta diária em Ajustes → Leitura para acompanhar seu progresso aqui.",
   chapter_read_a11y: "%{book} capítulo %{chapter}, lido",
@@ -449,6 +455,13 @@ export const pt = {
   tag_description_placeholder: "Descrição opcional",
   tag_could_not_save: "Não foi possível salvar a tag.",
   tag_no_tags: "Ainda não há tags. Crie sua primeira tag.",
+  tag_unavailable_offline:
+    "As tags não estão disponíveis offline. Sua nota ainda será salva e sincronizada quando você se reconectar.",
+  tag_create_requires_connection: "Criar tags exige uma conexão com a internet.",
+  tag_create_requires_server: "Criar tags exige acesso ao servidor do My Bible Log.",
+  tag_create_requires_signin: "Entre na sua conta para criar e usar tags.",
+  tag_unavailable_signed_out:
+    "Entre na sua conta para usar tags. Sua nota será salva neste dispositivo mesmo assim.",
   tag_notes_count: "%{count} notas",
   tag_view_notes: "Ver notas (%{count})",
   tag_sort_by: "Ordenar",

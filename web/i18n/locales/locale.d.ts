@@ -26,6 +26,7 @@ export type Translation = {
     invalid_request: string;
     email_not_verified: string;
     verification_code_expired: string;
+    tag_in_use: string;
   };
   reading_suggestion: {
     new_testament: string;

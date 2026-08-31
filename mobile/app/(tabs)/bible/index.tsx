@@ -7,7 +7,6 @@ import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import {
   AnimatedList,
   Button,
-  Card,
   Screen,
   ScreenHeader,
   SegmentBar,
@@ -142,6 +141,16 @@ export default function BibleIndex() {
         value={testament}
         onChange={setTestament}
       />
+      {filtered ? (
+        <View style={styles.overallRow}>
+          <View style={styles.overallBar}>
+            <SegmentBar segments={filtered.segments} />
+          </View>
+          <Text variant="caption" color="mutedText" style={styles.overallPercent}>
+            {filtered.percentage}%
+          </Text>
+        </View>
+      ) : null}
     </View>
   );
 
@@ -157,13 +166,6 @@ export default function BibleIndex() {
   return (
     <Screen>
       {header}
-
-      <Card style={styles.plaque}>
-        <Text variant="label" style={styles.plaquePercent}>
-          {filtered.percentage}%
-        </Text>
-        <SegmentBar segments={filtered.segments} thick />
-      </Card>
 
       <AnimatedList
         key={testament}
@@ -193,14 +195,22 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: spacing.pageGutter,
     paddingTop: spacing.pageTop,
+    paddingBottom: spacing.md,
     gap: spacing.sm,
   },
-  plaque: {
-    margin: spacing.pageGutter,
+  overallRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: spacing["2xs"],
   },
-  plaquePercent: {
+  overallBar: {
+    flex: 1,
+  },
+  overallPercent: {
+    width: 48,
     textAlign: "right",
-    marginBottom: spacing.sm,
   },
   listContent: {
     paddingHorizontal: spacing.pageGutter,

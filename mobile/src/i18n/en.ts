@@ -212,6 +212,7 @@ export const en = {
   auth_offline_sync_hint:
     "Your offline data on this device will not sync to your account until you are online and logged in.",
   auth_login_requires_connection: "Logging in requires an internet connection.",
+  auth_login_requires_server: "Logging in requires reaching the My Bible Log server.",
   auth_login: "Login",
   auth_create_account: "Create account",
   auth_logout: "Logout",
@@ -323,6 +324,7 @@ export const en = {
   connectivity_online: "Online",
   connectivity_offline: "Offline",
   connectivity_unknown: "Unknown",
+  connectivity_server_unreachable: "Server unavailable",
 
   settings_section_account: "Account",
   settings_section_account_subtitle: "Login and connectivity",
@@ -390,7 +392,10 @@ export const en = {
   calendar_day_verses_read: "%{count} verses read",
 
   dismiss: "Dismiss",
+  storage_degraded_banner: "Changes can’t be saved right now. Your saved data is safe.",
   offline_banner: "You’re offline — changes will sync when you reconnect.",
+  server_unreachable_banner:
+    "Can’t reach My Bible Log — changes will sync once the server is back.",
   today_no_goal_hint: "Set a daily goal in Settings → Reading to track your progress here.",
   reading_tracker_reset_header: "You've read the whole Bible!",
   reading_tracker_reset_message:
@@ -478,6 +483,12 @@ export const en = {
   tag_description_placeholder: "Optional description",
   tag_could_not_save: "Unable to save the tag.",
   tag_no_tags: "No tags yet. Create your first tag.",
+  tag_unavailable_offline:
+    "Tags aren’t available offline. Your note will still be saved and synced when you reconnect.",
+  tag_create_requires_connection: "Creating tags requires an internet connection.",
+  tag_create_requires_server: "Creating tags requires reaching the My Bible Log server.",
+  tag_create_requires_signin: "Sign in to create and use tags.",
+  tag_unavailable_signed_out: "Sign in to use tags. Your note will still be saved on this device.",
   tag_notes_count: "%{count} notes",
   tag_view_notes: "View notes (%{count})",
   tag_sort_by: "Sort",

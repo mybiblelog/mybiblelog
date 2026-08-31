@@ -23,8 +23,17 @@ import { userSettingsActions, useUserSettingsStore } from "@/src/stores/userSett
  * client-side by the user's persisted sort order (a server-backed user
  * setting). Loaded lazily from the Notes/Tags screens' mount effects, not
  * `init.ts`. Unlike the web store, `create` returns the created tag so callers
- * can auto-select it directly (no baseline diffing).
+ * can auto-select it directly (no baseline diffing) — see `TagMutationResult`.
  */
+
+/**
+ * Create/update outcome. The failure arm keeps the API error `code` (as
+ * `loadTags` does for its error state) so the editor can say *why* a save
+ * failed — "can't reach the server" reads very differently from a generic
+ * "unable to save", and offline is the common case here since tags have no
+ * offline mutation queue.
+ */
+export type TagMutationResult = { ok: true; tag: PassageNoteTag } | { ok: false; code: string };
 
 export type TagsState =
   | { status: "idle" }
@@ -37,8 +46,8 @@ type TagsStore = {
   sortOrder: PassageNoteTagSortOrder;
   loadTags: () => Promise<void>;
   setSortOrder: (order: PassageNoteTagSortOrder, options?: { persist?: boolean }) => Promise<void>;
-  create: (input: TagInput) => Promise<PassageNoteTag | null>;
-  update: (input: TagInput & { id: string }) => Promise<PassageNoteTag | null>;
+  create: (input: TagInput) => Promise<TagMutationResult>;
+  update: (input: TagInput & { id: string }) => Promise<TagMutationResult>;
   remove: (id: string) => Promise<boolean>;
 };
 
@@ -114,10 +123,10 @@ export const useTagsStore = create<TagsStore>((set, get) => ({
           },
         });
       }
-      return created;
+      return { ok: true, tag: created };
     } catch (err) {
       reportHandledError(err, { op: "passageNoteTags.create" });
-      return null;
+      return { ok: false, code: toApiErrorCode(err) };
     }
   },
 
@@ -140,10 +149,10 @@ export const useTagsStore = create<TagsStore>((set, get) => ({
           },
         });
       }
-      return saved;
+      return { ok: true, tag: saved };
     } catch (err) {
       reportHandledError(err, { op: "passageNoteTags.update" });
-      return null;
+      return { ok: false, code: toApiErrorCode(err) };
     }
   },
 

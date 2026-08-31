@@ -19,7 +19,7 @@ import { radius, spacing, useTheme } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { translateApiErrorCode } from "@/src/i18n/translateApiError";
 import { useIsUnauthenticated } from "@/src/stores/auth";
-import { useIsOnline } from "@/src/stores/connectivity";
+import { useConnectionStatus } from "@/src/stores/connectivity";
 import {
   notesActions,
   selectHasAppliedViewOptions,
@@ -39,11 +39,13 @@ export default function Notes() {
   const { openAdd, openMenu, openQuery, overlays } = useNoteOverlays();
   const [refreshing, setRefreshing] = useState(false);
   const isUnauthenticated = useIsUnauthenticated();
-  const isOnline = useIsOnline();
-  // When we can't reach the API (logged out or offline), swap to the on-device
-  // local notes surface. `useIsUnauthenticated()` is false while auth is still
-  // loading, so this doesn't flash the local view on startup.
-  const showLocalView = isUnauthenticated || isOnline === false;
+  const status = useConnectionStatus();
+  // When we can't reach the API (logged out, offline, or the server is down),
+  // swap to the on-device local notes surface. `useIsUnauthenticated()` is false
+  // while auth is still loading, so this doesn't flash the local view on
+  // startup; likewise `unknown` keeps the online view until we know better.
+  const showLocalView =
+    isUnauthenticated || status === "device-offline" || status === "server-unreachable";
 
   useEffect(() => {
     if (useNotesStore.getState().state.status === "idle") {

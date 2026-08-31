@@ -29,6 +29,18 @@ beforeEach(async () => {
 });
 
 describe("runStorageMigrations", () => {
+  // A version marker we can't read is not a fresh install. Replaying every step
+  // over data we can't verify is the one outcome that could corrupt it.
+  it("skips this launch when the version marker can't be read", async () => {
+    const order: number[] = [];
+    jest.spyOn(AsyncStorage, "getItem").mockRejectedValueOnce(new Error("disk error"));
+
+    await runStorageMigrations([step(1, order), step(2, order)], 2);
+
+    expect(order).toEqual([]);
+    expect(reportHandledErrorMock).toHaveBeenCalled();
+  });
+
   it("runs every step on a fresh install and lands on the target version", async () => {
     const order: number[] = [];
     const migrations = [step(1, order), step(2, order), step(3, order)];
@@ -64,7 +76,7 @@ describe("runStorageMigrations", () => {
 
   it("advances the version after each individual step", async () => {
     const order: number[] = [];
-    const seen: number[] = [];
+    const seen: (number | null)[] = [];
     const migrations = [
       step(1, order),
       step(2, order, async () => {

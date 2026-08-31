@@ -13,6 +13,7 @@ jest.mock("@/src/stores/userSettings", () => ({
   },
 }));
 
+import { ApiError } from "@/src/api/apiError";
 import { createTag, deleteTag, fetchTags, updateTag, type PassageNoteTag } from "@/src/api/tagsApi";
 import { userSettingsActions, useUserSettingsStore } from "@/src/stores/userSettings";
 import { useTagsStore } from "./passageNoteTags";
@@ -96,7 +97,7 @@ describe("mutations", () => {
 
     const created = await actions().create({ label: "middle", color: "#00aaf9", description: "" });
 
-    expect(created).toEqual(tag("3", "middle"));
+    expect(created).toEqual({ ok: true, tag: tag("3", "middle") });
     const state = useTagsStore.getState().state;
     expect(state.status === "ready" && state.tags.map((t) => t.label)).toEqual([
       "apple",
@@ -115,6 +116,31 @@ describe("mutations", () => {
     expect(state.status === "ready" && state.tags[0]).toEqual(
       expect.objectContaining({ label: "renamed", noteCount: 5 })
     );
+  });
+
+  it("create surfaces the API error code so the editor can explain the failure", async () => {
+    (createTag as jest.Mock).mockRejectedValue(new ApiError({ code: "network_error", errors: [] }));
+    setReady([tag("1", "apple")]);
+
+    const result = await actions().create({ label: "nope", color: "#00aaf9", description: "" });
+
+    expect(result).toEqual({ ok: false, code: "network_error" });
+    const state = useTagsStore.getState().state;
+    expect(state.status === "ready" && state.tags.map((t) => t.label)).toEqual(["apple"]);
+  });
+
+  it("update surfaces the API error code", async () => {
+    (updateTag as jest.Mock).mockRejectedValue(new ApiError({ code: "network_error", errors: [] }));
+    setReady([tag("1", "original")]);
+
+    const result = await actions().update({
+      id: "1",
+      label: "renamed",
+      color: "#00aaf9",
+      description: "",
+    });
+
+    expect(result).toEqual({ ok: false, code: "network_error" });
   });
 
   it("remove drops the tag on success", async () => {

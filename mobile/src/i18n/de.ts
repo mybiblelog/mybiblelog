@@ -219,6 +219,7 @@ export const de = {
   auth_offline_sync_hint:
     "Ihre Offline-Daten auf diesem Gerät werden erst mit Ihrem Konto synchronisiert, wenn Sie online und angemeldet sind.",
   auth_login_requires_connection: "Für die Anmeldung ist eine Internetverbindung erforderlich.",
+  auth_login_requires_server: "Für die Anmeldung muss der My-Bible-Log-Server erreichbar sein.",
   auth_login: "Anmelden",
   auth_create_account: "Konto erstellen",
   auth_logout: "Abmelden",
@@ -298,6 +299,7 @@ export const de = {
   connectivity_online: "Online",
   connectivity_offline: "Offline",
   connectivity_unknown: "Unbekannt",
+  connectivity_server_unreachable: "Server nicht erreichbar",
 
   settings_section_account: "Konto",
   settings_section_account_subtitle: "Anmeldung und Verbindung",
@@ -368,8 +370,12 @@ export const de = {
   calendar_day_verses_read: "%{count} Verse gelesen",
 
   dismiss: "Verwerfen",
+  storage_degraded_banner:
+    "Änderungen können derzeit nicht gespeichert werden. Ihre gespeicherten Daten sind sicher.",
   offline_banner:
     "Sie sind offline — Änderungen werden synchronisiert, sobald Sie wieder online sind.",
+  server_unreachable_banner:
+    "My Bible Log ist nicht erreichbar — Änderungen werden synchronisiert, sobald der Server wieder da ist.",
   today_no_goal_hint:
     "Legen Sie ein Tagesziel in Einstellungen → Lesen fest, um Ihren Fortschritt hier zu verfolgen.",
   chapter_read_a11y: "%{book} Kapitel %{chapter}, gelesen",
@@ -454,6 +460,15 @@ export const de = {
   tag_description_placeholder: "Optionale Beschreibung",
   tag_could_not_save: "Der Tag konnte nicht gespeichert werden.",
   tag_no_tags: "Noch keine Tags. Erstellen Sie Ihren ersten Tag.",
+  tag_unavailable_offline:
+    "Tags sind offline nicht verfügbar. Ihre Notiz wird trotzdem gespeichert und synchronisiert, sobald Sie wieder verbunden sind.",
+  tag_create_requires_connection:
+    "Zum Erstellen von Tags ist eine Internetverbindung erforderlich.",
+  tag_create_requires_server:
+    "Zum Erstellen von Tags muss der My Bible Log-Server erreichbar sein.",
+  tag_create_requires_signin: "Melden Sie sich an, um Tags zu erstellen und zu verwenden.",
+  tag_unavailable_signed_out:
+    "Melden Sie sich an, um Tags zu verwenden. Ihre Notiz wird trotzdem auf diesem Gerät gespeichert.",
   tag_notes_count: "%{count} Notizen",
   tag_view_notes: "Notizen ansehen (%{count})",
   tag_sort_by: "Sortieren",

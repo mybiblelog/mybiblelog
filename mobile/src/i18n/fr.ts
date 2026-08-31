@@ -220,6 +220,7 @@ export const fr = {
   auth_offline_sync_hint:
     "Vos données hors ligne sur cet appareil ne seront pas synchronisées avec votre compte tant que vous n'êtes pas en ligne et connecté.",
   auth_login_requires_connection: "La connexion nécessite une connexion internet.",
+  auth_login_requires_server: "La connexion nécessite de joindre le serveur My Bible Log.",
   auth_login: "Connexion",
   auth_create_account: "Créer un compte",
   auth_logout: "Déconnexion",
@@ -299,6 +300,7 @@ export const fr = {
   connectivity_online: "En ligne",
   connectivity_offline: "Hors ligne",
   connectivity_unknown: "Inconnu",
+  connectivity_server_unreachable: "Serveur indisponible",
 
   settings_section_account: "Compte",
   settings_section_account_subtitle: "Connexion et connectivité",
@@ -367,8 +369,12 @@ export const fr = {
   calendar_day_verses_read: "%{count} versets lus",
 
   dismiss: "Ignorer",
+  storage_degraded_banner:
+    "Les modifications ne peuvent pas être enregistrées pour le moment. Vos données enregistrées sont intactes.",
   offline_banner:
     "Vous êtes hors ligne — les modifications seront synchronisées lors de la reconnexion.",
+  server_unreachable_banner:
+    "Impossible de joindre My Bible Log — les modifications seront synchronisées dès le retour du serveur.",
   today_no_goal_hint:
     "Définissez un objectif quotidien dans Réglages → Lecture pour suivre votre progression ici.",
   chapter_read_a11y: "%{book} chapitre %{chapter}, lu",
@@ -453,6 +459,13 @@ export const fr = {
   tag_description_placeholder: "Description facultative",
   tag_could_not_save: "Impossible d'enregistrer le tag.",
   tag_no_tags: "Pas encore de tags. Créez votre premier tag.",
+  tag_unavailable_offline:
+    "Les tags ne sont pas disponibles hors ligne. Votre note sera tout de même enregistrée et synchronisée dès votre reconnexion.",
+  tag_create_requires_connection: "La création de tags nécessite une connexion internet.",
+  tag_create_requires_server: "La création de tags nécessite d’atteindre le serveur My Bible Log.",
+  tag_create_requires_signin: "Connectez-vous pour créer et utiliser des tags.",
+  tag_unavailable_signed_out:
+    "Connectez-vous pour utiliser les tags. Votre note sera tout de même enregistrée sur cet appareil.",
   tag_notes_count: "%{count} notes",
   tag_view_notes: "Voir les notes (%{count})",
   tag_sort_by: "Trier",

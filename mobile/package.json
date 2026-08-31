@@ -26,6 +26,8 @@
     "eas:build:android:dev": "node scripts/check-build-env.mjs --profile development && eas build --platform android --profile development",
     "eas:build:android:preview": "node scripts/check-build-env.mjs --profile preview && eas build --platform android --profile preview",
     "eas:build:android:production": "node scripts/check-build-env.mjs --profile production && eas build --platform android --profile production",
+    "eas:build:android:production:submit": "node scripts/check-build-env.mjs --profile production && eas build --platform android --profile production --auto-submit",
+    "eas:submit:android": "eas submit --platform android --profile production --latest",
     "eas-build-pre-install": "node scripts/check-build-env.mjs --assert && npm --prefix ../shared install",
     "clean": "rm -rf node_modules .expo .expo-shared .turbo dist build coverage android ios"
   },

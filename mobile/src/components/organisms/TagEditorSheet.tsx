@@ -7,6 +7,7 @@ import {
 } from "@/src/api/tagsApi";
 import { radius, spacing, TOUCH_TARGET, useTheme } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
+import { translateApiErrorCode } from "@/src/i18n/translateApiError";
 import { TAG_COLOR_PALETTE } from "@/src/notes/tagColors";
 import { normalizeHexColor } from "@/src/notes/tagSort";
 import { tagActions } from "@/src/stores/passageNoteTags";
@@ -69,15 +70,22 @@ export function TagEditorSheet({ visible, initialTag, onClose, onSaved }: Props)
     setSaving(true);
     setError(null);
     const input = { label: label.trim(), color, description };
-    const saved = initialTag
+    const result = initialTag
       ? await tagActions.update({ ...input, id: initialTag.id })
       : await tagActions.create(input);
     setSaving(false);
-    if (!saved) {
-      setError(t("tag_could_not_save"));
+    if (!result.ok) {
+      // Name the actual cause where we know it — offline is the likely one,
+      // since tags have no offline queue and the connection can drop between
+      // opening this sheet and hitting Save.
+      setError(
+        result.code === "unknown_error"
+          ? t("tag_could_not_save")
+          : translateApiErrorCode(t, result.code)
+      );
       return;
     }
-    onSaved?.(saved);
+    onSaved?.(result.tag);
     onClose();
   }
 

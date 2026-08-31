@@ -1,5 +1,6 @@
 import { toPassageNoteTagJSON } from '../../repositories/helpers/serializers';
-import { NotFoundError } from '../errors/http-errors';
+import { InvalidRequestError, NotFoundError } from '../errors/http-errors';
+import { ApiErrorDetailCode } from '../errors/error-codes';
 import { validate } from '../../validation/validate';
 import { objectIdParam } from '../../validation/primitives';
 import {
@@ -70,6 +71,21 @@ export const updatePassageNoteTag: RouteHandler = async (req, deps) => {
 export const deletePassageNoteTag: RouteHandler = async (req, deps) => {
   const { params } = validate(req, { params: objectIdParam });
   const currentUser = await deps.authenticate(req);
+
+  // Confirm ownership before counting: `countByTag` is not owner-scoped, so a
+  // foreign tag must 404 here rather than leak its note count.
+  const tag = await deps.repositories.passageNoteTags.findByIdForOwner(currentUser.id, params.id);
+  if (!tag) {
+    throw new NotFoundError();
+  }
+
+  // A tag still attached to notes cannot be deleted; doing so would leave
+  // orphaned tag ids on those notes. The client pre-checks this, but its
+  // `noteCount` can be stale or raced by another session.
+  const noteCount = await deps.repositories.passageNotes.countByTag(tag.id);
+  if (noteCount > 0) {
+    throw new InvalidRequestError([{ code: ApiErrorDetailCode.TagInUse, field: null }]);
+  }
 
   const deletedCount = await deps.repositories.passageNoteTags.deleteByIdForOwner(currentUser.id, params.id);
   if (deletedCount === 0) {
