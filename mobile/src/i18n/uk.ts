@@ -356,6 +356,36 @@ export const uk = {
   settings_reading_daily_goal_invalid: "Введіть ціле число від 1 до 1111.",
   settings_reading_look_back_date_invalid: "Введіть дату у форматі РРРР-ММ-ДД.",
 
+  // Onboarding wizard
+  onboarding_choice_title: "My Bible Log",
+  onboarding_choice_login: "Увійти",
+  onboarding_choice_new: "Я новий користувач",
+  onboarding_welcome_title: "Ласкаво просимо до My Bible Log!",
+  onboarding_welcome_description:
+    "Давайте персоналізуємо ваші налаштування, щоб ви могли максимально використовувати додаток.",
+  onboarding_welcome_next: "Персоналізувати мої налаштування",
+  onboarding_welcome_skip: "Пропустити персоналізацію",
+  onboarding_goal_title: "Щоденна мета читання",
+  onboarding_goal_description:
+    "Скільки віршів ви хочете читати кожного дня? My Bible Log покаже ваш прогрес до цієї мети.",
+  onboarding_goal_finish_on: "Завершити",
+  onboarding_goal_days_to_read: "Днів на читання Біблії",
+  onboarding_goal_daily_verse_count: "Вірші для читання щодня",
+  onboarding_goal_decrease: "Зменшити кількість віршів на день",
+  onboarding_goal_increase: "Збільшити кількість віршів на день",
+  onboarding_goal_change_hint: "Ви можете змінити це налаштування в будь-який час.",
+  onboarding_bible_title: "Налаштування Біблії",
+  onboarding_bible_translation_label:
+    "Коли я відкриваю Біблію з My Bible Log, я хочу читати цей переклад:",
+  onboarding_bible_app_label:
+    "Коли я відкриваю уривок з My Bible Log, я хочу, щоб він відкрився в цій програмі або на веб-сайті:",
+  onboarding_bible_change_hint: "Ви можете змінити ці налаштування в будь-який час.",
+  onboarding_continue: "Продовжити",
+  onboarding_finish_title: "Почніть",
+  onboarding_finish_description: "Все налаштовано! Час почати читати.",
+  onboarding_finish_button: "Поїхали",
+  settings_reset_onboarding: "Скинути онбординг (Dev)",
+
   calendar_today: "Сьогодні",
   calendar_no_entries: "Немає записів",
   calendar_verses: "віршів",

@@ -13,6 +13,7 @@
  */
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { LocalUserSettings } from "@/src/settings/userSettingsStorage";
+import type { OnboardingState } from "@/src/onboarding/onboardingStorage";
 import type { ThemeMode } from "@/src/design/ThemeProvider";
 import type { SupportedLocale } from "@/src/i18n/LocaleProvider";
 import type { ForceUpgradeCache } from "@/src/upgrade/UpgradeGate";
@@ -38,6 +39,13 @@ export const appStorage = createTypedStorage(
   AsyncStorage,
   {
     userSettings: defineKey<LocalUserSettings>("userSettings.v1"),
+    /**
+     * Set when settings are chosen locally before an account exists (the
+     * onboarding wizard's "I'm New" path) and cleared once they've been pushed
+     * to the server on the next successful sign-in. See `stores/userSettings.ts`.
+     */
+    settingsPendingServerPush: defineKey<boolean>("userSettings.pendingServerPush.v1"),
+    onboarding: defineKey<OnboardingState>("onboarding.v1"),
     themeMode: defineKey<ThemeMode>("themeMode.v1"),
     locale: defineKey<SupportedLocale>("locale.v1"),
     forceUpgradeStatus: defineKey<ForceUpgradeCache>("forceUpgradeStatus.v1"),

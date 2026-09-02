@@ -361,6 +361,37 @@ export const de = {
   settings_reading_daily_goal_invalid: "Geben Sie eine ganze Zahl zwischen 1 und 1111 ein.",
   settings_reading_look_back_date_invalid: "Geben Sie ein Datum als JJJJ-MM-TT ein.",
 
+  // Onboarding wizard
+  onboarding_choice_title: "My Bible Log",
+  onboarding_choice_login: "Anmelden",
+  onboarding_choice_new: "Ich bin neu",
+  onboarding_welcome_title: "Willkommen bei My Bible Log!",
+  onboarding_welcome_description:
+    "Lassen Sie uns Ihre Einstellungen personalisieren, damit Sie das Beste aus der App herausholen können.",
+  onboarding_welcome_next: "Meine Einstellungen personalisieren",
+  onboarding_welcome_skip: "Personalisierung überspringen",
+  onboarding_goal_title: "Tägliches Leseziel",
+  onboarding_goal_description:
+    "Wie viele Verse möchten Sie jeden Tag lesen? My Bible Log zeigt Ihnen Ihren Fortschritt zu diesem Ziel.",
+  onboarding_goal_finish_on: "Fertig am",
+  onboarding_goal_days_to_read: "Tage bis zur vollständigen Bibel-Lektüre",
+  onboarding_goal_daily_verse_count: "Verse pro Tag zu lesen",
+  onboarding_goal_decrease: "Verse pro Tag verringern",
+  onboarding_goal_increase: "Verse pro Tag erhöhen",
+  onboarding_goal_change_hint: "Sie können diese Einstellung jederzeit ändern.",
+  onboarding_bible_title: "Bibel-Einstellungen",
+  onboarding_bible_translation_label:
+    "Wenn ich die Bibel von My Bible Log öffne, möchte ich diese Übersetzung lesen:",
+  onboarding_bible_app_label:
+    "Wenn ich eine Passage von My Bible Log öffne, möchte ich, dass sie in dieser App oder Website geöffnet wird:",
+  onboarding_bible_change_hint: "Sie können diese Einstellungen jederzeit ändern.",
+  onboarding_continue: "Weiter",
+  onboarding_finish_title: "Loslegen",
+  onboarding_finish_description:
+    "Sie sind fertig eingerichtet! Es ist Zeit, mit dem Lesen zu beginnen.",
+  onboarding_finish_button: "Los geht's",
+  settings_reset_onboarding: "Onboarding zurücksetzen (Dev)",
+
   calendar_today: "Heute",
   calendar_no_entries: "Keine Einträge",
   calendar_verses: "Verse",

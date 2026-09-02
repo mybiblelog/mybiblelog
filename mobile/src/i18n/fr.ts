@@ -360,6 +360,36 @@ export const fr = {
   settings_reading_daily_goal_invalid: "Saisissez un nombre entier entre 1 et 1111.",
   settings_reading_look_back_date_invalid: "Saisissez une date au format AAAA-MM-JJ.",
 
+  // Onboarding wizard
+  onboarding_choice_title: "My Bible Log",
+  onboarding_choice_login: "Se connecter",
+  onboarding_choice_new: "Je suis nouveau",
+  onboarding_welcome_title: "Bienvenue sur My Bible Log !",
+  onboarding_welcome_description:
+    "Personnalisons vos paramètres pour que vous puissiez tirer le meilleur parti de l'application.",
+  onboarding_welcome_next: "Personnaliser mes paramètres",
+  onboarding_welcome_skip: "Ignorer la personnalisation",
+  onboarding_goal_title: "Objectif de lecture quotidien",
+  onboarding_goal_description:
+    "Combien de versets voulez-vous lire chaque jour ? My Bible Log affichera vos progrès vers cet objectif.",
+  onboarding_goal_finish_on: "Terminer le",
+  onboarding_goal_days_to_read: "Jours pour lire la Bible",
+  onboarding_goal_daily_verse_count: "Versets à lire chaque jour",
+  onboarding_goal_decrease: "Diminuer les versets par jour",
+  onboarding_goal_increase: "Augmenter les versets par jour",
+  onboarding_goal_change_hint: "Vous pouvez modifier ce paramètre à tout moment.",
+  onboarding_bible_title: "Paramètres de la Bible",
+  onboarding_bible_translation_label:
+    "Lorsque j'ouvre la Bible depuis My Bible Log, je veux lire cette traduction :",
+  onboarding_bible_app_label:
+    "Lorsque j'ouvre un passage depuis My Bible Log, je veux qu'il s'ouvre dans cette application ou ce site web :",
+  onboarding_bible_change_hint: "Vous pouvez modifier ces paramètres à tout moment.",
+  onboarding_continue: "Continuer",
+  onboarding_finish_title: "Commencer",
+  onboarding_finish_description: "Tout est prêt ! Il est temps de commencer à lire.",
+  onboarding_finish_button: "Allons-y",
+  settings_reset_onboarding: "Réinitialiser l'intégration (Dev)",
+
   calendar_today: "Aujourd'hui",
   calendar_no_entries: "Aucune entrée",
   calendar_verses: "versets",

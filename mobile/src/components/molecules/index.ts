@@ -21,4 +21,5 @@ export { SegmentedControl } from "./SegmentedControl";
 export type { SegmentedControlOption } from "./SegmentedControl";
 export { SelectRow } from "./SelectRow";
 export { SkeletonList } from "./SkeletonList";
+export { StepProgressDots } from "./StepProgressDots";
 export type { SkeletonListVariant } from "./SkeletonList";

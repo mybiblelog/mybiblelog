@@ -348,6 +348,35 @@ export const ko = {
   settings_reading_daily_goal_invalid: "1에서 1111 사이의 정수를 입력해 주세요.",
   settings_reading_look_back_date_invalid: "날짜를 YYYY-MM-DD 형식으로 입력해 주세요.",
 
+  // Onboarding wizard
+  onboarding_choice_title: "My Bible Log",
+  onboarding_choice_login: "로그인",
+  onboarding_choice_new: "처음이에요",
+  onboarding_welcome_title: "My Bible Log에 오신 것을 환영합니다!",
+  onboarding_welcome_description:
+    "My Bible Log를 최대한 유용하게 활용할 수 있도록 개인화 설정을 도와드리겠습니다.",
+  onboarding_welcome_next: "내 설정 개인화하기",
+  onboarding_welcome_skip: "개인화 설정 건너뛰기",
+  onboarding_goal_title: "일일 읽기 목표",
+  onboarding_goal_description:
+    "매일 몇 구절을 읽고 싶으신가요? My Bible Log는 이 목표를 향한 진도를 표시해줍니다.",
+  onboarding_goal_finish_on: "완료일",
+  onboarding_goal_days_to_read: "성경을 읽는 데 걸리는 일수",
+  onboarding_goal_daily_verse_count: "매일 읽어야 할 구절 수",
+  onboarding_goal_decrease: "하루 구절 수 줄이기",
+  onboarding_goal_increase: "하루 구절 수 늘리기",
+  onboarding_goal_change_hint: "이 설정은 언제든지 바꿀 수 있습니다.",
+  onboarding_bible_title: "성경 설정",
+  onboarding_bible_translation_label: "My Bible Log에서 성경을 열 때, 이 번역본으로 읽고 싶습니다:",
+  onboarding_bible_app_label:
+    "My Bible Log에서 성경 구절을 열 때 이 앱 또는 성경 사이트에서 열고 싶습니다:",
+  onboarding_bible_change_hint: "이 설정은 언제든지 바꿀 수 있습니다.",
+  onboarding_continue: "계속",
+  onboarding_finish_title: "시작하기",
+  onboarding_finish_description: "준비가 모두 끝났습니다! 이제 성경을 읽기 시작할 시간이에요.",
+  onboarding_finish_button: "시작해볼까요?",
+  settings_reset_onboarding: "온보딩 재설정 (개발용)",
+
   calendar_today: "오늘",
   calendar_no_entries: "기록 없음",
   calendar_verses: "구절",
