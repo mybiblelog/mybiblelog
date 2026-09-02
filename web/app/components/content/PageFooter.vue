@@ -44,7 +44,7 @@ const columns = computed(() => [
   ],
   [
     { text: t('donate_ko_fi'), destination: 'https://ko-fi.com/mybiblelog' },
-    { text: t('code_on_github'), destination: 'https://github.com/mybiblelog/mybiblelog-nuxt' },
+    { text: t('code_on_github'), destination: 'https://github.com/mybiblelog/mybiblelog' },
   ],
   [
     { text: t('privacy_policy'), destination: '/policy/privacy' },

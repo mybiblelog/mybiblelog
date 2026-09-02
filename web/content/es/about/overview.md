@@ -17,7 +17,7 @@ Puedes enviar una solicitud de función, informe de error u otro mensaje con [es
 
 ## Contribuir
 
-¡My Bible Log es de código abierto! Puedes encontrar el código fuente en GitHub: [My Bible Log Repository](https://github.com/mybiblelog/mybiblelog-nuxt)
+¡My Bible Log es de código abierto! Puedes encontrar el código fuente en GitHub: [My Bible Log Repository](https://github.com/mybiblelog/mybiblelog)
 
 Cualquiera es bienvenido a copiar el código, modificarlo para su propio uso, alojar su propia instancia de My Bible Log y contribuir al código base original.
 

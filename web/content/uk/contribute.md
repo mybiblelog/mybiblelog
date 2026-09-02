@@ -31,7 +31,7 @@ og:
 
 ### ⭐ Поставити зірку проекту на GitHub
 
-Якщо у вас є обліковий запис GitHub, додавання зірки до [репозиторію My Bible Log](https://github.com/mybiblelog/mybiblelog-nuxt) — це чудовий спосіб показати вашу підтримку! Зірки допомагають проекту набути видимості та показують, що люди вважають його цінним.
+Якщо у вас є обліковий запис GitHub, додавання зірки до [репозиторію My Bible Log](https://github.com/mybiblelog/mybiblelog) — це чудовий спосіб показати вашу підтримку! Зірки допомагають проекту набути видимості та показують, що люди вважають його цінним.
 
 </content-section-grid>
 
@@ -69,7 +69,7 @@ My Bible Log безкоштовний для використання, але й
 - Як ви уявляєте роботу функції
 - Будь-які приклади або макети (якщо вони у вас є)
 
-Для більш детальних запитів на функції ви також можете створити issue на [GitHub](https://github.com/mybiblelog/mybiblelog-nuxt), використовуючи шаблон запиту на функцію.
+Для більш детальних запитів на функції ви також можете створити issue на [GitHub](https://github.com/mybiblelog/mybiblelog), використовуючи шаблон запиту на функцію.
 
 </content-section-grid>
 
@@ -113,8 +113,8 @@ My Bible Log є відкритим кодом, і ми вітаємо внеск
 
 ### 🚀 Початок роботи
 
-1. **Зробити fork репозиторію** на [GitHub](https://github.com/mybiblelog/mybiblelog-nuxt)
-2. **Прочитати [Керівництво з внеску](https://github.com/mybiblelog/mybiblelog-nuxt/blob/main/CONTRIBUTING.md)** для інструкцій з налаштування та стандартів кодування
+1. **Зробити fork репозиторію** на [GitHub](https://github.com/mybiblelog/mybiblelog)
+2. **Прочитати [Керівництво з внеску](https://github.com/mybiblelog/mybiblelog/blob/main/CONTRIBUTING.md)** для інструкцій з налаштування та стандартів кодування
 3. **Вибрати issue** для роботи або запропонувати нову функцію
 4. **Надіслати pull request** з вашими змінами
 
@@ -127,7 +127,7 @@ My Bible Log є відкритим кодом, і ми вітаємо внеск
 - **Express** для API
 - **MongoDB** для бази даних
 
-Для детальних інструкцій з налаштування див. [Керівництво з внеску](https://github.com/mybiblelog/mybiblelog-nuxt/blob/main/CONTRIBUTING.md#development-setup).
+Для детальних інструкцій з налаштування див. [Керівництво з внеску](https://github.com/mybiblelog/mybiblelog/blob/main/CONTRIBUTING.md#development-setup).
 
 </content-section-grid>
 
@@ -136,7 +136,7 @@ My Bible Log є відкритим кодом, і ми вітаємо внеск
 Якщо у вас є питання про внесення внеску або ви хочете обговорити ідею внеску, ви можете:
 
 - Надіслати питання через [нашу форму відгуків](/feedback)
-- Відкрити issue на [GitHub](https://github.com/mybiblelog/mybiblelog-nuxt)
-- Переглянути [Керівництво з внеску](https://github.com/mybiblelog/mybiblelog-nuxt/blob/main/CONTRIBUTING.md) для технічних деталей
+- Відкрити issue на [GitHub](https://github.com/mybiblelog/mybiblelog)
+- Переглянути [Керівництво з внеску](https://github.com/mybiblelog/mybiblelog/blob/main/CONTRIBUTING.md) для технічних деталей
 
 Дякуємо за розгляд внесення внеску в My Bible Log! Кожен внесок, незалежно від того, наскільки він малий, допомагає зробити цей інструмент кращим для всіх. 🙏

@@ -31,7 +31,7 @@ My Bible Log가 도움이 되셨다면 친구, 가족, 주변 사람들에게 �
 
 ### ⭐ GitHub에서 별 달기
 
-GitHub 계정이 있다면 [My Bible Log 저장소](https://github.com/mybiblelog/mybiblelog-nuxt)에 별을 추가하는 것만으로도 든든한 지원입니다! My Bible Log의 가시성을 높이고, 많은 사람들이 가치를 느끼고 있다는 것을 보여 줍니다.
+GitHub 계정이 있다면 [My Bible Log 저장소](https://github.com/mybiblelog/mybiblelog)에 별을 추가하는 것만으로도 든든한 지원입니다! My Bible Log의 가시성을 높이고, 많은 사람들이 가치를 느끼고 있다는 것을 보여 줍니다.
 
 </content-section-grid>
 
@@ -69,7 +69,7 @@ My Bible Log는 무료로 사용할 수 있지만, 운영에는 비용이 발생
 - 해당 기능이 어떻게 작동하면 좋을지
 - 예시나 목업이 있다면 첨부
 
-보다 상세한 기능 요청은 [GitHub](https://github.com/mybiblelog/mybiblelog-nuxt)에서 기능 요청 템플릿을 사용해 이슈를 생성할 수도 있습니다.
+보다 상세한 기능 요청은 [GitHub](https://github.com/mybiblelog/mybiblelog)에서 기능 요청 템플릿을 사용해 이슈를 생성할 수도 있습니다.
 
 </content-section-grid>
 
@@ -113,8 +113,8 @@ My Bible Log는 오픈 소스이며, 코드 기여를 환영합니다! 버그 �
 
 ### 🚀 시작하기
 
-1. [GitHub](https://github.com/mybiblelog/mybiblelog-nuxt)에서 **저장소 포크**
-2. 개발 환경·코딩 규칙은 **[기여 가이드](https://github.com/mybiblelog/mybiblelog-nuxt/blob/main/CONTRIBUTING.md) 참고**
+1. [GitHub](https://github.com/mybiblelog/mybiblelog)에서 **저장소 포크**
+2. 개발 환경·코딩 규칙은 **[기여 가이드](https://github.com/mybiblelog/mybiblelog/blob/main/CONTRIBUTING.md) 참고**
 3. **이슈를 고르거나** 신규 기능 제안
 4. 변경 사항을 **풀 리퀘스트**로 제출
 
@@ -127,7 +127,7 @@ My Bible Log는 다음 기술 스택을 활용합니다:
 - API는 **Express**
 - 데이터베이스는 **MongoDB**
 
-자세한 설정 방법은 [기여 가이드](https://github.com/mybiblelog/mybiblelog-nuxt/blob/main/CONTRIBUTING.md#development-setup)를 참고해 주세요.
+자세한 설정 방법은 [기여 가이드](https://github.com/mybiblelog/mybiblelog/blob/main/CONTRIBUTING.md#development-setup)를 참고해 주세요.
 
 </content-section-grid>
 
@@ -136,7 +136,7 @@ My Bible Log는 다음 기술 스택을 활용합니다:
 기여에 대해 궁금한 점이 있거나 기여 아이디어를 논의하고 싶다면 다음 방법을 활용할 수 있습니다:
 
 - [피드백 양식](/ko/feedback)을 통해 질문 제출
-- [GitHub](https://github.com/mybiblelog/mybiblelog-nuxt)에서 이슈 열기
-- [기여 가이드](https://github.com/mybiblelog/mybiblelog-nuxt/blob/main/CONTRIBUTING.md)에서 기술 세부 사항 확인
+- [GitHub](https://github.com/mybiblelog/mybiblelog)에서 이슈 열기
+- [기여 가이드](https://github.com/mybiblelog/mybiblelog/blob/main/CONTRIBUTING.md)에서 기술 세부 사항 확인
 
 My Bible Log에 관심을 가져 주셔서 감사합니다. 아무리 작은 기여라도 My Bible Log를 모든 사용자에게 보다 유용한 도구로 만드는 데 도움이 됩니다. 🙏 

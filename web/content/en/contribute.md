@@ -31,7 +31,7 @@ If you have a blog or website, consider adding a link to My Bible Log. This help
 
 ### ⭐ Star the Project on GitHub
 
-If you have a GitHub account, adding a star to the [My Bible Log repository](https://github.com/mybiblelog/mybiblelog-nuxt) is a great way to show your support! Stars help the project gain visibility and show that people find it valuable.
+If you have a GitHub account, adding a star to the [My Bible Log repository](https://github.com/mybiblelog/mybiblelog) is a great way to show your support! Stars help the project gain visibility and show that people find it valuable.
 
 </content-section-grid>
 
@@ -69,7 +69,7 @@ You can submit feature requests, bug reports, or general feedback using [our fee
 - How you envision the feature working
 - Any examples or mockups (if you have them)
 
-For more detailed feature requests, you can also create an issue on [GitHub](https://github.com/mybiblelog/mybiblelog-nuxt) using the feature request template.
+For more detailed feature requests, you can also create an issue on [GitHub](https://github.com/mybiblelog/mybiblelog) using the feature request template.
 
 </content-section-grid>
 
@@ -113,8 +113,8 @@ My Bible Log is open source, and we welcome code contributions! Whether you're f
 
 ### 🚀 Getting Started
 
-1. **Fork the repository** on [GitHub](https://github.com/mybiblelog/mybiblelog-nuxt)
-2. **Read the [Contributing Guide](https://github.com/mybiblelog/mybiblelog-nuxt/blob/main/CONTRIBUTING.md)** for setup instructions and coding standards
+1. **Fork the repository** on [GitHub](https://github.com/mybiblelog/mybiblelog)
+2. **Read the [Contributing Guide](https://github.com/mybiblelog/mybiblelog/blob/main/CONTRIBUTING.md)** for setup instructions and coding standards
 3. **Pick an issue** to work on, or propose a new feature
 4. **Submit a pull request** with your changes
 
@@ -127,7 +127,7 @@ The project uses:
 - **Express** for the API
 - **MongoDB** for the database
 
-For detailed setup instructions, see the [Contributing Guide](https://github.com/mybiblelog/mybiblelog-nuxt/blob/main/CONTRIBUTING.md#development-setup).
+For detailed setup instructions, see the [Contributing Guide](https://github.com/mybiblelog/mybiblelog/blob/main/CONTRIBUTING.md#development-setup).
 
 </content-section-grid>
 
@@ -136,7 +136,7 @@ For detailed setup instructions, see the [Contributing Guide](https://github.com
 If you have questions about contributing or want to discuss a contribution idea, you can:
 
 - Submit a question through [our feedback form](/feedback)
-- Open an issue on [GitHub](https://github.com/mybiblelog/mybiblelog-nuxt)
-- Review the [Contributing Guide](https://github.com/mybiblelog/mybiblelog-nuxt/blob/main/CONTRIBUTING.md) for technical details
+- Open an issue on [GitHub](https://github.com/mybiblelog/mybiblelog)
+- Review the [Contributing Guide](https://github.com/mybiblelog/mybiblelog/blob/main/CONTRIBUTING.md) for technical details
 
 Thank you for considering contributing to My Bible Log! Every contribution, no matter how small, helps make this tool better for everyone. 🙏

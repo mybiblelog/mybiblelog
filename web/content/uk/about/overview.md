@@ -17,7 +17,7 @@ og:
 
 ## Внесок
 
-My Bible Log є відкритим кодом! Ви можете знайти вихідний код на GitHub: [My Bible Log Repository](https://github.com/mybiblelog/mybiblelog-nuxt)
+My Bible Log є відкритим кодом! Ви можете знайти вихідний код на GitHub: [My Bible Log Repository](https://github.com/mybiblelog/mybiblelog)
 
 Будь-хто може скопіювати код, модифікувати його для власного використання, розмістити власний екземпляр My Bible Log та внести свій внесок у оригінальну кодову базу.
 

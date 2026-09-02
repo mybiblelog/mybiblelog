@@ -17,7 +17,7 @@ og:
 
 ## 기여하기
 
-My Bible Log는 오픈 소스입니다! 소스 코드는 GitHub에서 확인할 수 있습니다: [My Bible Log 리파지토리](https://github.com/mybiblelog/mybiblelog-nuxt)
+My Bible Log는 오픈 소스입니다! 소스 코드는 GitHub에서 확인할 수 있습니다: [My Bible Log 리파지토리](https://github.com/mybiblelog/mybiblelog)
 
 누구나 코드를 복사해 자신의 용도에 맞게 수정하거나 자체 My Bible Log 인스턴스를 호스팅할 수 있으며, 원본 코드베이스에도 기여할 수 있습니다.
 
