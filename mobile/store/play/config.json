@@ -1,0 +1,33 @@
+{
+  "packageName": "com.mybiblelog.app",
+  "defaultLanguage": "en-US",
+  "limits": {
+    "title": 30,
+    "shortDescription": 80,
+    "fullDescription": 4000
+  },
+  "locales": [
+    { "play": "en-US", "app": "en" },
+    { "play": "de-DE", "app": "de" },
+    { "play": "es-419", "app": "es" },
+    { "play": "es-ES", "aliasOf": "es-419" },
+    { "play": "fr-FR", "app": "fr" },
+    { "play": "ko-KR", "app": "ko" },
+    { "play": "pt-BR", "app": "pt" },
+    { "play": "uk", "app": "uk" }
+  ],
+  "screenshots": {
+    "sourceDir": "../../screenshots",
+    "background": "#ffffff",
+    "phone": [
+      "sc4-daily-goal",
+      "sc7-bible-progress",
+      "sc12-checklist",
+      "sc9-calendar",
+      "sc10-notes",
+      "sc13-progress",
+      "sc2-achievements",
+      "sc6-book-chapter-progress"
+    ]
+  }
+}

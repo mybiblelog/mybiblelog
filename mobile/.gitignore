@@ -18,6 +18,10 @@ expo-env.d.ts
 *.key
 *.mobileprovision
 
+# Play Developer API service-account key (scripts/play/*)
+play-service-account*.json
+mybiblelog-*-*.json
+
 # Metro
 .metro-health-check*
 
