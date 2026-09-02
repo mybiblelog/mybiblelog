@@ -24,7 +24,7 @@ export const SCHEMA_VERSION_KEY = "storage.schemaVersion";
  * The schema version the current build expects. Bump this by one whenever you
  * add a migration step in `migrations/index.ts`.
  */
-export const CURRENT_SCHEMA_VERSION = 1;
+export const CURRENT_SCHEMA_VERSION = 2;
 
 /**
  * The version recorded on device, or `null` when the marker could not be read.

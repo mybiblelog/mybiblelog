@@ -358,6 +358,36 @@ export const es = {
   settings_reading_daily_goal_invalid: "Introduce un número entero entre 1 y 1111.",
   settings_reading_look_back_date_invalid: "Introduce una fecha con el formato AAAA-MM-DD.",
 
+  // Onboarding wizard
+  onboarding_choice_title: "My Bible Log",
+  onboarding_choice_login: "Iniciar sesión",
+  onboarding_choice_new: "Soy nuevo",
+  onboarding_welcome_title: "¡Bienvenido a My Bible Log!",
+  onboarding_welcome_description:
+    "Personalicemos tu configuración para que puedas aprovechar al máximo la aplicación.",
+  onboarding_welcome_next: "Personalizar mi configuración",
+  onboarding_welcome_skip: "Omitir personalización",
+  onboarding_goal_title: "Meta Diaria de Lectura",
+  onboarding_goal_description:
+    "¿Cuántos versículos quiere leer cada día? My Bible Log mostrará su progreso hacia este objetivo.",
+  onboarding_goal_finish_on: "Terminar el",
+  onboarding_goal_days_to_read: "Días para leer la Biblia",
+  onboarding_goal_daily_verse_count: "Versículos para leer cada día",
+  onboarding_goal_decrease: "Disminuir versículos por día",
+  onboarding_goal_increase: "Aumentar versículos por día",
+  onboarding_goal_change_hint: "Puede cambiar esta configuración en cualquier momento.",
+  onboarding_bible_title: "Configuración de la Biblia",
+  onboarding_bible_translation_label:
+    "Cuando abro la Biblia desde My Bible Log, quiero leer esta traducción:",
+  onboarding_bible_app_label:
+    "Cuando abro un pasaje desde My Bible Log, quiero que se abra en esta aplicación o sitio web:",
+  onboarding_bible_change_hint: "Puede cambiar esta configuración en cualquier momento.",
+  onboarding_continue: "Continuar",
+  onboarding_finish_title: "Comenzar",
+  onboarding_finish_description: "¡Todo está listo! Es hora de comenzar a leer.",
+  onboarding_finish_button: "Vamos",
+  settings_reset_onboarding: "Restablecer incorporación (Dev)",
+
   calendar_today: "Hoy",
   calendar_no_entries: "No hay entradas",
   calendar_verses: "versículos",

@@ -1,10 +1,21 @@
 import * as Application from "expo-application";
 import Constants from "expo-constants";
+import { router } from "expo-router";
 import { Fragment } from "react";
 import { Linking, ScrollView, StyleSheet, View } from "react-native";
 import { spacing, useTheme } from "@/src/design";
-import { Card, Icon, type IconName, ListItem, Screen, ScreenHeader, Text } from "@/src/components";
+import {
+  Button,
+  Card,
+  Icon,
+  type IconName,
+  ListItem,
+  Screen,
+  ScreenHeader,
+  Text,
+} from "@/src/components";
 import { useT } from "@/src/i18n/LocaleProvider";
+import { resetOnboardingForTesting } from "@/src/stores/onboarding";
 import { useToast } from "@/src/toast/ToastProvider";
 import { PRIVACY_POLICY_URL, TERMS_URL, WEBSITE_BASE_URL } from "@/src/constants/links";
 
@@ -69,6 +80,18 @@ export default function AboutSettings() {
             </Fragment>
           ))}
         </Card>
+
+        {__DEV__ ? (
+          <Button
+            label={t("settings_reset_onboarding")}
+            variant="secondary"
+            size="sm"
+            style={styles.devReset}
+            onPress={() => {
+              void resetOnboardingForTesting().then(() => router.replace("/onboarding"));
+            }}
+          />
+        ) : null}
       </ScrollView>
     </Screen>
   );
@@ -83,4 +106,5 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   divider: { height: StyleSheet.hairlineWidth, marginLeft: spacing.xl + spacing.md },
+  devReset: { marginTop: spacing.lg, alignSelf: "flex-start" },
 });

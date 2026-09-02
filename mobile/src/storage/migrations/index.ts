@@ -1,4 +1,5 @@
 import { up as up0001 } from "@/src/storage/migrations/0001-baseline";
+import { up as up0002 } from "@/src/storage/migrations/0002-onboarding-existing-install";
 
 /**
  * Ordered registry of storage migrations.
@@ -20,7 +21,10 @@ export type Migration = {
   up: () => Promise<void>;
 };
 
-export const MIGRATIONS: Migration[] = [{ version: 1, name: "0001-baseline", up: up0001 }];
+export const MIGRATIONS: Migration[] = [
+  { version: 1, name: "0001-baseline", up: up0001 },
+  { version: 2, name: "0002-onboarding-existing-install", up: up0002 },
+];
 
 // Guard the registry invariants at module load so a mis-authored migration
 // fails loudly in dev/CI rather than silently misordering at runtime.

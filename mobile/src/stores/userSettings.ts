@@ -192,6 +192,23 @@ export const useUserSettingsStore = create<UserSettingsStore>((set, get) => ({
   },
 }));
 
+/**
+ * Stage a setting chosen before an account exists (the onboarding wizard's
+ * "I'm New" path) and flag it to be pushed — not overwritten — the next time
+ * this device signs in. Kept distinct from `setLocalSettings` so ordinary
+ * signed-in-device edits (`reading.tsx`) are unaffected by construction; only
+ * the wizard calls this one.
+ *
+ * Not a repurposing of `dirtyFields`: that set is cleared the instant a value
+ * lands on disk and exists only for crash-safe recovery across a storage
+ * outage, not for surviving from "wizard completed" to "account created days
+ * later." This uses its own disk-persisted flag instead.
+ */
+async function setLocalSettingsWithPendingSync(partial: Partial<LocalUserSettings>): Promise<void> {
+  await useUserSettingsStore.getState().setLocalSettings(partial);
+  await appStorage.set("settingsPendingServerPush", true);
+}
+
 let initialized = false;
 
 /** Hydrate local settings, then refresh from server when authenticated + online. */
@@ -206,7 +223,11 @@ export function initUserSettings(): void {
     useUserSettingsStore.setState({
       state: { status: "ready", settings: local, isRefreshingFromServer: false },
     });
-    void useUserSettingsStore.getState().refreshFromServer();
+    // Covers the app being killed between account creation and the push
+    // landing: a cold boot straight into `authenticated` sees no live
+    // unauthenticated→authenticated transition, so it must make this same
+    // push-vs-pull check itself rather than pulling unconditionally.
+    void pushPendingSettingsOrRefresh();
   })();
 
   const tryRefresh = () => {
@@ -214,6 +235,32 @@ export function initUserSettings(): void {
       void useUserSettingsStore.getState().refreshFromServer();
     }
   };
+
+  /**
+   * A brand-new account's server defaults would otherwise arrive a moment
+   * after sign-in and silently overwrite whatever the "I'm New" wizard staged
+   * locally (`refreshFromServer` is server-wins). Pushing first — and
+   * skipping that pull for this transition — makes the user's real choices
+   * the ones that land.
+   */
+  async function pushPendingSettingsOrRefresh(): Promise<void> {
+    const pending = await appStorage.get("settingsPendingServerPush");
+    if (pending) {
+      const current = useUserSettingsStore.getState().state;
+      if (current.status === "ready") {
+        // `preferredBibleApp` is excluded — the server schema doesn't accept it
+        // (see `ServerUserSettings`); it stays device-only everywhere else too.
+        const { dailyVerseCountGoal, lookBackDate, preferredBibleVersion } = current.settings;
+        await useUserSettingsStore
+          .getState()
+          .updateServerSettings({ dailyVerseCountGoal, lookBackDate, preferredBibleVersion });
+      }
+      await appStorage.set("settingsPendingServerPush", false);
+      return;
+    }
+    tryRefresh();
+  }
+
   let wasOnline = getIsOnline();
   useConnectivityStore.subscribe((s) => {
     if (s.isOnline === true && wasOnline !== true) tryRefresh();
@@ -230,8 +277,10 @@ export function initUserSettings(): void {
       // theirs.
       dirtyFields.clear();
     }
+    const justAuthenticated = !wasAuthenticated && nowAuthenticated;
     wasAuthenticated = nowAuthenticated;
-    tryRefresh();
+    if (justAuthenticated) void pushPendingSettingsOrRefresh();
+    else tryRefresh();
   });
 }
 
@@ -277,6 +326,7 @@ export function useSettingsValue(): LocalUserSettings | null {
 export const userSettingsActions = {
   setLocalSettings: (partial: Partial<LocalUserSettings>) =>
     useUserSettingsStore.getState().setLocalSettings(partial),
+  setLocalSettingsWithPendingSync,
   updateServerSettings: (partial: Partial<ServerUserSettings>) =>
     useUserSettingsStore.getState().updateServerSettings(partial),
   refreshFromServer: () => useUserSettingsStore.getState().refreshFromServer(),

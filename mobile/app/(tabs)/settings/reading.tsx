@@ -12,6 +12,8 @@ import {
 } from "@/src/components";
 import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
+import { bibleVersionOptions } from "@/src/settings/bibleVersionOptions";
+import { DAILY_GOAL_RANGE } from "@/src/settings/dailyGoalRange";
 import type { LocalUserSettings } from "@/src/settings/userSettingsStorage";
 import {
   userSettingsActions,
@@ -19,7 +21,7 @@ import {
   useUserSettingsStore,
 } from "@/src/stores/userSettings";
 import { useToast } from "@/src/toast/ToastProvider";
-import { bibleAppNames, BibleVersions } from "@mybiblelog/shared";
+import { bibleAppNames } from "@mybiblelog/shared";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 /**
@@ -34,8 +36,8 @@ type SettingField =
 /** Every editable setting as a string, so drafts compare in one stable form. */
 type Drafts = Record<SettingField, string>;
 
-const MIN_DAILY_GOAL = 1;
-const MAX_DAILY_GOAL = 1111;
+const MIN_DAILY_GOAL = DAILY_GOAL_RANGE.min;
+const MAX_DAILY_GOAL = DAILY_GOAL_RANGE.max;
 
 function toDrafts(settings: LocalUserSettings): Drafts {
   return {
@@ -109,30 +111,6 @@ function ReadingSettingsForm({ settings }: { settings: LocalUserSettings }) {
       }),
     []
   );
-
-  const bibleVersionOptions = useMemo(() => {
-    const names: Record<string, string> = {
-      [BibleVersions.NASB2020]: "New American Standard Bible (NASB)",
-      [BibleVersions.NASB1995]: "New American Standard Bible 1995 (NASB 1995)",
-      [BibleVersions.AMP]: "Amplified Bible (AMP)",
-      [BibleVersions.KJV]: "King James Version (KJV)",
-      [BibleVersions.NKJV]: "New King James Version (NKJV)",
-      [BibleVersions.NIV]: "New International Version (NIV)",
-      [BibleVersions.ESV]: "English Standard Version (ESV)",
-      [BibleVersions.NABRE]: "New American Bible Revised Edition (NABRE)",
-      [BibleVersions.NLT]: "New Living Translation (NLT)",
-      [BibleVersions.TPT]: "The Passion Translation (TPT)",
-      [BibleVersions.MSG]: "The Message (MSG)",
-      [BibleVersions.RVR1960]: "Reina-Valera 1960 (RVR1960)",
-      [BibleVersions.RVR2020]: "Reina-Valera 2020 (RVR2020)",
-      [BibleVersions.UKR]: "українська (UKRK)",
-      [BibleVersions.BDS]: "Bible du Semeur (BDS)",
-      [BibleVersions.LSG]: "Louis Segond (LSG)",
-      [BibleVersions.ARC]: "Almeida Revista e Corrigida (ARC)",
-      [BibleVersions.LUT]: "Luther 1545 (LUT)",
-    };
-    return Object.keys(names).map((value) => ({ value, label: names[value] as string }));
-  }, []);
 
   const bibleAppOptions = useMemo(
     () => Object.entries(bibleAppNames).map(([value, label]) => ({ value, label })),

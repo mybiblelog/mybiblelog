@@ -1,4 +1,5 @@
 import { initConnectivity } from "@/src/stores/connectivity";
+import { initOnboarding } from "@/src/stores/onboarding";
 import { initAuth } from "@/src/stores/auth";
 import { initLogEntries } from "@/src/stores/logEntries";
 import { initNotes } from "@/src/stores/offlineNotes";
@@ -35,6 +36,10 @@ export function initStores(): void {
     await runStorageMigrations();
     initStorageHealth();
     initConnectivity();
+    // Gates the root navigator (`app/_layout.tsx`) between the onboarding
+    // wizard and the tab stack; started before auth so its own hydrate wins
+    // the race against the auth-transition subscription it sets up.
+    initOnboarding();
     initAuth();
     initLogEntries();
     // Offline notes: hydrate local notes + subscribe to auth/connectivity so the

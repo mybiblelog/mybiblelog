@@ -383,6 +383,36 @@ export const en = {
   settings_reading_daily_goal_invalid: "Enter a whole number between 1 and 1111.",
   settings_reading_look_back_date_invalid: "Enter a date as YYYY-MM-DD.",
 
+  // Onboarding wizard
+  onboarding_choice_title: "My Bible Log",
+  onboarding_choice_login: "Log In",
+  onboarding_choice_new: "I'm New",
+  onboarding_welcome_title: "Welcome to My Bible Log!",
+  onboarding_welcome_description:
+    "Let's personalize your settings so you can get the most out of the app.",
+  onboarding_welcome_next: "Personalize My Settings",
+  onboarding_welcome_skip: "Skip Personalization",
+  onboarding_goal_title: "Daily Reading Goal",
+  onboarding_goal_description:
+    "How many verses do you want to read each day? My Bible Log will show your progress toward this goal.",
+  onboarding_goal_finish_on: "Finish on",
+  onboarding_goal_days_to_read: "Days to read the Bible",
+  onboarding_goal_daily_verse_count: "Verses to read each day",
+  onboarding_goal_decrease: "Decrease verses per day",
+  onboarding_goal_increase: "Increase verses per day",
+  onboarding_goal_change_hint: "You can change this setting at any time.",
+  onboarding_bible_title: "Bible Settings",
+  onboarding_bible_translation_label:
+    "When I open the Bible from My Bible Log, I want to read this translation:",
+  onboarding_bible_app_label:
+    "When I open a passage from My Bible Log, I want it to open in this app or website:",
+  onboarding_bible_change_hint: "You can change these settings at any time.",
+  onboarding_continue: "Continue",
+  onboarding_finish_title: "Get Started",
+  onboarding_finish_description: "You're all set up! It's time to start reading.",
+  onboarding_finish_button: "Let's Go",
+  settings_reset_onboarding: "Reset Onboarding (Dev)",
+
   calendar_today: "Today",
   calendar_no_entries: "No Entries",
   calendar_verses: "verses",

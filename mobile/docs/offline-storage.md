@@ -55,6 +55,15 @@ Create Tag entry points **withdraw the action instead of failing it**: see
 means solving clientId→serverId remapping for queued notes that reference a tag
 that hasn't synced yet — deferred, not overlooked.
 
+**User settings sync is normally pull-only (server wins on every sign-in) — with
+one deliberate exception.** The onboarding wizard's "I'm New" path lets a
+signed-out user choose real settings (goal, translation) before any account
+exists. If the ordinary pull ran unconditionally, a newly created account's
+server defaults would land a moment after sign-in and silently overwrite those
+choices. `settingsPendingServerPush` (`userSettings.pendingServerPush.v1`) flags
+exactly that case: set only by the wizard's writes, checked before the pull on
+the next sign-in, and cleared once pushed. See `stores/userSettings.ts`.
+
 ### Data shapes
 
 Source-of-truth types (don't duplicate them — link):
