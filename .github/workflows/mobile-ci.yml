@@ -53,3 +53,9 @@ jobs:
       - name: Test
         working-directory: mobile
         run: npm test -- --ci
+
+      # Offline: no Play credentials, and the screenshots it would check are
+      # gitignored. This catches listing copy that exceeds Play's field limits.
+      - name: Validate Play listing metadata
+        working-directory: mobile
+        run: npm run play:validate

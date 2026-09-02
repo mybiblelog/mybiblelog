@@ -178,6 +178,11 @@ placeholder text in every shot.
 
 ## 4. Localized Listings (7 locales at launch)
 
+> **Where this lives now:** the listing copy in §2 is maintained as files under
+> [`mobile/store/play/`](../store/play/) — one directory per Play locale, one text file per
+> field — and published with `npm run play:listing:push` (see that directory's README).
+> Edit the files, not this document, when the copy changes.
+
 The store listing text and screenshots should be localized for every locale the app
 ships. Translation sources already exist on the web side — reuse the vetted phrasing
 rather than re-translating.
@@ -255,8 +260,10 @@ Condensed, corrected sequence. Items marked *(Console)* happen in Play Console.
 11. **Content rating (IARC)** questionnaire → expect Everyone.
 12. **Target audience**: 13+ (avoid the under-13 designation and its added
     obligations). **Ads**: none. **Privacy policy URL**: §1.
-13. **Store listing**: title, descriptions, graphics, screenshots per §2–§4;
-    category Books & Reference; support email.
+13. **Store listing**: category Books & Reference, support email and graphics
+    *(Console)*; title, descriptions and phone screenshots are pushed from
+    `mobile/store/play/` with `npm run play:listing:push` — the API only accepts
+    edits once the first build has been uploaded.
 
 ### D. Rollout
 
@@ -286,8 +293,8 @@ Condensed, corrected sequence. Items marked *(Console)* happen in Play Console.
 - [ ] Register prod SHA-1 with Google OAuth client; verify Google Sign-In on internal track
 - [ ] Complete Console declarations: App access (demo creds), Data Safety, IARC, target audience, ads=none, privacy URL
 - [ ] Produce assets: 512 icon, 1024×500 feature graphic, 8 en screenshots (seeded demo account)
-- [ ] Enter en listing: title "My Bible Log: Reading Tracker", short + full description (§2)
-- [ ] Localize listings + screenshots for de/es/fr/ko/pt/uk (§4)
+- [ ] Push listing text + screenshots for all locales: `npm run play:listing:push` (§4)
+- [ ] Native-speaker review of the de/es/fr/ko/pt/uk copy in `mobile/store/play/listings/`
 - [ ] Internal testing pass (auth, offline, themes, locales, links)
 - [ ] Closed test (12 testers × 14 days) **if** personal dev account
 - [ ] Fix/verify force-upgrade `storeUrl` against the live listing URL
