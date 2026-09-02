@@ -17,7 +17,7 @@ Vous pouvez soumettre une demande de fonctionnalité, un rapport de bogue ou tou
 
 ## Contribuer
 
-My Bible Log est open source ! Vous pouvez trouver le code source sur GitHub : [My Bible Log Repository](https://github.com/mybiblelog/mybiblelog-nuxt)
+My Bible Log est open source ! Vous pouvez trouver le code source sur GitHub : [My Bible Log Repository](https://github.com/mybiblelog/mybiblelog)
 
 Tout le monde est invité à copier le code, le modifier pour son propre usage, héberger sa propre instance de My Bible Log et contribuer au code source original.
 

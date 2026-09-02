@@ -4,5 +4,5 @@ contact_links:
     url: mailto:mybiblelog.com@gmail.com
     about: Report security vulnerabilities privately (DO NOT create public issues)
   - name: Documentation
-    url: https://github.com/mybiblelog/mybiblelog-nuxt#readme
+    url: https://github.com/mybiblelog/mybiblelog#readme
     about: Check the README and CONTRIBUTING guide for setup and contribution information
