@@ -148,8 +148,8 @@ async function push(ctx) {
     return;
   }
 
-  ctx.editId = null;
   await play.commitEdit(editId);
+  ctx.editId = null;
   console.log("\n✓ Committed. Play reviews listing changes before they go live.");
 }
 
