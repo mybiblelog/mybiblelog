@@ -43,7 +43,7 @@ const columns = computed(() => [
     { text: t('contribute'), destination: '/contribute' },
   ],
   [
-    { text: t('donate_ko_fi'), destination: 'https://ko-fi.com/mybiblelog' },
+    { text: t('android_app'), destination: '/android-app' },
     { text: t('code_on_github'), destination: 'https://github.com/mybiblelog/mybiblelog' },
   ],
   [
@@ -136,7 +136,7 @@ function isExternal(url: string): boolean {
     "faq": "FAQ",
     "give_feedback": "Give Feedback",
     "contribute": "Contribute",
-    "donate_ko_fi": "Donate via Ko-fi",
+    "android_app": "Android App",
     "code_on_github": "Code on GitHub",
     "privacy_policy": "Privacy Policy",
     "terms_and_conditions": "Terms and Conditions"
@@ -146,7 +146,7 @@ function isExternal(url: string): boolean {
     "faq": "FAQ",
     "give_feedback": "Feedback geben",
     "contribute": "Mitwirken",
-    "donate_ko_fi": "Mitwirken via Ko-fi",
+    "android_app": "Android-App",
     "code_on_github": "Code auf GitHub",
     "privacy_policy": "Datenschutzrichtlinie",
     "terms_and_conditions": "Nutzungsbedingungen"
@@ -156,7 +156,7 @@ function isExternal(url: string): boolean {
     "faq": "FAQ",
     "give_feedback": "Enviar feedback",
     "contribute": "Contribuir",
-    "donate_ko_fi": "Donar via Ko-fi",
+    "android_app": "App para Android",
     "code_on_github": "Código en GitHub",
     "privacy_policy": "Política de privacidad",
     "terms_and_conditions": "Términos y condiciones"
@@ -166,7 +166,7 @@ function isExternal(url: string): boolean {
     "faq": "FAQ",
     "give_feedback": "Donner un feedback",
     "contribute": "Contribuer",
-    "donate_ko_fi": "Donner via Ko-fi",
+    "android_app": "Application Android",
     "code_on_github": "Code sur GitHub",
     "privacy_policy": "Politique de confidentialité",
     "terms_and_conditions": "Conditions d'utilisation"
@@ -176,7 +176,7 @@ function isExternal(url: string): boolean {
     "faq": "자주 묻는 질문",
     "give_feedback": "피드백 보내기",
     "contribute": "기여하기",
-    "donate_ko_fi": "Ko-fi를 통해 기부",
+    "android_app": "안드로이드 앱",
     "code_on_github": "GitHub 코드",
     "privacy_policy": "개인정보처리방침",
     "terms_and_conditions": "이용약관"
@@ -186,7 +186,7 @@ function isExternal(url: string): boolean {
     "faq": "FAQ",
     "give_feedback": "Enviar feedback",
     "contribute": "Contribuir",
-    "donate_ko_fi": "Doar via Ko-fi",
+    "android_app": "App para Android",
     "code_on_github": "Código em GitHub",
     "privacy_policy": "Política de privacidade",
     "terms_and_conditions": "Termos e condições"
@@ -196,7 +196,7 @@ function isExternal(url: string): boolean {
     "faq": "FAQ",
     "give_feedback": "Надіслати відгук",
     "contribute": "Допомога",
-    "donate_ko_fi": "Зробити подарунок через Ko-fi",
+    "android_app": "Android-додаток",
     "code_on_github": "Код на GitHub",
     "privacy_policy": "Політика конфіденційності",
     "terms_and_conditions": "Умови використання"
