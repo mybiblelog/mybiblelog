@@ -56,6 +56,7 @@ const localePath = useLocalePath();
 <style scoped>
 .platform-choice-section {
   margin: var(--mbl-space-3xl) 0;
+  padding: 0 var(--mbl-space-xl);
   text-align: center;
 }
 
