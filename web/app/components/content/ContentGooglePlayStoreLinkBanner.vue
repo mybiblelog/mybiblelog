@@ -37,19 +37,48 @@ const { t } = useI18n();
   flex-direction: column;
   align-items: center;
   gap: var(--mbl-space-md);
-  padding: var(--mbl-space-lg) var(--mbl-space-xl);
+  padding: var(--mbl-space-xl);
   margin: 0 0 var(--mbl-space-2xl);
-  background: var(--mbl-primary-soft);
-  border: 1px solid var(--mbl-primary-soft-border);
+  background:
+    radial-gradient(circle, rgb(255 255 255 / 25%) 1.5px, transparent 1.5px) 0 0 / 22px 22px,
+    linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 55%, var(--tertiary-color) 100%);
   border-radius: var(--mbl-radius-xl);
+  box-shadow: var(--mbl-shadow-cta);
   text-align: center;
 }
 
 .play-store-banner-title {
   font-size: var(--mbl-title-5);
-  font-weight: 600;
-  color: var(--mbl-text-strong);
+  font-weight: 700;
+  color: var(--mbl-on-accent);
+  text-shadow: 0 1px 2px rgb(0 0 0 / 15%);
   margin: 0;
+}
+
+/* Overrides the shared .mbl-button modifiers only within this banner's
+   scope, since the vivid gradient backdrop needs light-on-color buttons
+   rather than the design system's default surface-colored ones. */
+.play-store-banner :deep(.mbl-button--light) {
+  background-color: rgb(255 255 255 / 15%);
+  border: 2px solid rgb(255 255 255 / 60%);
+  color: var(--mbl-on-accent);
+}
+
+.play-store-banner :deep(.mbl-button--light:hover) {
+  background-color: rgb(255 255 255 / 25%);
+  border-color: var(--mbl-on-accent);
+  color: var(--mbl-on-accent);
+}
+
+.play-store-banner :deep(.mbl-button--primary.mbl-button--glow) {
+  background-color: var(--mbl-on-accent);
+  border-color: var(--mbl-on-accent);
+  color: var(--secondary-color);
+}
+
+.play-store-banner :deep(.mbl-button--primary.mbl-button--glow:hover) {
+  background-color: var(--mbl-on-accent);
+  filter: brightness(0.95);
 }
 </style>
 
