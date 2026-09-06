@@ -9,9 +9,10 @@ import { type RouteHandler } from '../types';
  * Framework-agnostic sitemap handler.
  *
  * The sitemap is a public, non-JSON endpoint: it enumerates the localized site
- * URLs (homepages, FAQ pages, generated /about pages, and the printable reading
- * tracker PDFs) and returns the result as an XML string via `HttpResult.raw`,
- * bypassing the standard JSON envelope. It needs no auth or repositories.
+ * URLs (top-level content pages such as the homepage/FAQ/android-app, generated
+ * /about pages, and the printable reading tracker PDFs) and returns the result
+ * as an XML string via `HttpResult.raw`, bypassing the standard JSON envelope.
+ * It needs no auth or repositories.
  */
 
 const siteLocales = locales.map((locale) => locale.code);
@@ -28,18 +29,22 @@ const repoRoot = __dirname.includes('dist') ?
 export const getSitemap: RouteHandler = async () => {
   const relativeUrls: string[] = [];
 
-  // start with the homepage of each locale
-  for (const locale of siteLocales) {
-    // English (default locale) has no prefix
-    const url = locale === 'en' ? '' : `/${locale}`;
-    relativeUrls.push(url);
-  }
-
-  // add the FAQ page of each locale
+  // iterate through the top-level *.md files inside each /content/{locale} directory
+  // (index.md -> homepage, everything else -> /{slug}); about/ and policy/ are
+  // subdirectories so they're naturally excluded by the isFile() filter, and
+  // policy/ pages are intentionally excluded from the sitemap (they're noindex)
   for (const locale of siteLocales) {
     const localePrefix = locale === 'en' ? '' : `/${locale}`;
-    const url = `${localePrefix}/faq`;
-    relativeUrls.push(url);
+
+    const localeContentDir = path.resolve(repoRoot, 'web', 'content', locale);
+    const topLevelFiles = fs.readdirSync(localeContentDir, { withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.endsWith('.md'));
+
+    for (const file of topLevelFiles) {
+      const slug = file.name.replace('.md', '');
+      const url = slug === 'index' ? localePrefix : `${localePrefix}/${slug}`;
+      relativeUrls.push(url);
+    }
   }
 
   // iterate through the /about directory inside each /content/{locale} directory

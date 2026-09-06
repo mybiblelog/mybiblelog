@@ -17,6 +17,7 @@ ld_json:
   button-text="Get Started Free"
   cta-note="Sign up with email or Google"></content-page-hero>
 
+<!--
 ::content-platform-choice-banner
 ---
 heading: Available on Web and Android
@@ -31,6 +32,7 @@ android-button-text: Get the Android App
 android-button-destination: /android-app
 ---
 ::
+-->
 
 ::content-fifty-fifty
 ---
