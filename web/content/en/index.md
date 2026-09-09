@@ -20,14 +20,14 @@ ld_json:
 ::content-platform-choice-banner
 ---
 heading: Available on Web and Android
-subheading: My Bible Log works great right here in your browser — and now there's a native Android app too.
+subheading: My Bible Log works great right here in your browser — and now there's an Android app too.
 web-title: On the Web
 web-description: Keep reading and logging right here in your browser — the full experience, completely free.
 web-button-text: Get Started Free
 web-button-destination: /register
 android-title: On Android
-android-description: Log your reading offline and try it without creating an account, with our new native app.
-android-button-text: Get the Android App
+android-description: Try our new native Android app — log your reading offline and explore it without an account.
+android-button-text: Try the Beta App
 android-button-destination: /android-app
 ---
 ::
