@@ -85,37 +85,37 @@ const { t } = useI18n();
 <i18n lang="json">
 {
   "en": {
-    "title": "Download on the Play Store",
+    "title": "Now in Open Beta on the Play Store",
     "join_the_beta": "Join the Beta",
     "get_the_app": "Get the App"
   },
   "de": {
-    "title": "Im Play Store herunterladen",
+    "title": "Jetzt in der offenen Beta im Play Store",
     "join_the_beta": "An der Beta teilnehmen",
     "get_the_app": "App herunterladen"
   },
   "es": {
-    "title": "Descárgala en Play Store",
+    "title": "Ya disponible en beta abierta en Play Store",
     "join_the_beta": "Unirse a la beta",
     "get_the_app": "Obtener la app"
   },
   "fr": {
-    "title": "Télécharger sur le Play Store",
+    "title": "Désormais en bêta ouverte sur le Play Store",
     "join_the_beta": "Rejoindre la bêta",
     "get_the_app": "Obtenir l'application"
   },
   "ko": {
-    "title": "Play 스토어에서 다운로드",
+    "title": "지금 Play 스토어에서 오픈 베타 이용 가능",
     "join_the_beta": "베타 참여하기",
     "get_the_app": "앱 받기"
   },
   "pt": {
-    "title": "Baixe na Play Store",
+    "title": "Agora em beta aberto na Play Store",
     "join_the_beta": "Participar do beta",
     "get_the_app": "Baixar o app"
   },
   "uk": {
-    "title": "Завантажити в Play Store",
+    "title": "Тепер у відкритому бета-тесті в Play Store",
     "join_the_beta": "Приєднатися до бета-тесту",
     "get_the_app": "Отримати додаток"
   }
