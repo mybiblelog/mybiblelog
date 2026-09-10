@@ -102,7 +102,7 @@ export default defineNuxtConfig({
     locales: [
       { code: 'en', iso: 'en-US', name: 'English' },
       { code: 'de', iso: 'de-DE', name: 'Deutsch' },
-      { code: 'es', iso: 'es-ES', name: 'Español' },
+      { code: 'es', iso: 'es-419', name: 'Español' },
       { code: 'fr', iso: 'fr-FR', name: 'Français' },
       { code: 'ko', iso: 'ko-KR', name: '한국어' },
       { code: 'pt', iso: 'pt-BR', name: 'Português' },
