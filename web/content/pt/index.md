@@ -1,38 +1,53 @@
 ---
 seo:
-  title: My Bible Log - Rastreador Gratuito de Leitura Bíblica
-  description: Acompanhe seu progresso de leitura bíblica com My Bible Log, um rastreador gratuito de leitura bíblica online. Defina metas diárias, faça anotações e veja seu progresso em todos os 66 livros. Sem anúncios, sem assinaturas — completamente gratuito.
+  title: My Bible Log - registro gratuito de leitura da Bíblia
+  description: Acompanhe sua leitura da Bíblia com o My Bible Log, uma ferramenta online gratuita. Defina metas diárias, faça anotações e veja seu progresso nos 66 livros. Sem anúncios, sem assinaturas: totalmente grátis.
 og:
-  title: My Bible Log - Rastreador Gratuito de Leitura Bíblica
-  description: Acompanhe sua leitura bíblica no seu próprio ritmo com My Bible Log. Defina metas diárias, faça anotações e faça progresso em direção à leitura de toda a Bíblia. Gratuito, sem anúncios, sem assinaturas.
+  title: My Bible Log - registro gratuito de leitura da Bíblia
+  description: Leia a Bíblia no seu ritmo e acompanhe tudo com o My Bible Log. Defina metas diárias, faça anotações e avance rumo à Bíblia inteira. Grátis, sem anúncios e sem assinaturas.
 ld_json:
   name: My Bible Log
-  description: Um rastreador gratuito de leitura bíblica online que ajuda você a acompanhar e organizar sua leitura bíblica
+  description: Uma ferramenta online gratuita para registrar e organizar sua leitura da Bíblia
 ---
 
 <content-page-hero
   title="My Bible Log"
-  subtitle="Leia toda a Bíblia — do seu jeito."
-  description="Rastreie sua leitura da Bíblia no seu próprio ritmo, seguindo <em>seu</em> plano. My Bible Log é um <strong style='color: var(--primary-color);'>rastreador gratuito de leitura bíblica</strong> que ajuda você a ver o que leu, manter-se consistente e fazer progresso em direção à leitura de toda a Bíblia."
-  button-text="Começar grátis"
+  subtitle="Leia a Bíblia inteira, do seu jeito."
+  description="Leia no seu ritmo, seguindo <em>o seu</em> plano. O My Bible Log é um <strong style='color: var(--primary-color);'>registro gratuito de leitura da Bíblia</strong>: ele mostra o que você já leu, ajuda a manter a constância e vai aproximando você da Bíblia inteira."
+  button-text="Comece grátis"
   cta-note="Cadastre-se com e-mail ou Google"></content-page-hero>
+
+::content-platform-choice-banner
+---
+heading: Disponível na web e no Android
+subheading: O My Bible Log funciona muito bem aqui mesmo no navegador — e agora tem também um app para Android.
+web-title: Na web
+web-description: Continue lendo e registrando pelo navegador: a experiência completa, totalmente grátis.
+web-button-text: Comece grátis
+web-button-destination: /register
+android-title: No Android
+android-description: Experimente nosso novo app para Android: registre sua leitura offline e explore sem criar conta.
+android-button-text: Testar o app beta
+android-button-destination: /android-app
+---
+::
 
 ::content-fifty-fifty
 ---
 image-src: /screenshots/pt/sc4-daily-goal.webp
-image-alt: O aplicativo My Bible Log mostrando uma barra de progresso concluída para atingir a meta de leitura diária
+image-alt: O app My Bible Log com a barra de progresso cheia ao bater a meta diária de leitura
 image-width: "750"
 image-height: "1334"
 image-container-class: phone-frame
 image-fetch-priority: high
-title: Por que My Bible Log?
-subtitle: Leia do Seu Jeito
+title: Por que o My Bible Log?
+subtitle: Leia do seu jeito
 description: >-
-  A maioria dos planos de leitura bíblica diz <em>o que</em> ler e <em>quando</em>. <strong>My Bible Log funciona de forma diferente.</strong> Você simplesmente registra o que já leu — de sermões, devocionais, pequenos grupos ou estudo pessoal — e tudo conta para o seu progresso.
+  Quase todo plano de leitura diz <em>o que</em> ler e <em>quando</em>. <strong>O My Bible Log faz o contrário.</strong> Você só registra o que já leu — na pregação, num devocional, no grupo pequeno ou sozinho — e tudo entra no seu progresso.
 list:
-  - Sem cronogramas rígidos
-  - Sem culpa se você perder um dia
-  - Toda a sua leitura conta
+  - Sem horários rígidos
+  - Sem culpa quando você pula um dia
+  - Toda leitura conta
 reverse: false
 ---
 ::
@@ -40,18 +55,18 @@ reverse: false
 ::content-fifty-fifty
 ---
 image-src: /screenshots/pt/sc2-achievements.webp
-image-alt: O aplicativo My Bible Log concedendo uma estrela dourada por ler um livro da Bíblia
+image-alt: O app My Bible Log dando uma estrela dourada por terminar um livro da Bíblia
 image-width: "750"
 image-height: "1334"
 image-container-class: phone-frame
-title: Mantenha-se Consistente Sem Pressão
-subtitle: Metas de Leitura Diária
-description: Defina uma meta diária que funcione para você.
+title: Constância sem cobrança
+subtitle: Metas diárias de leitura
+description: Defina uma meta diária que caiba na sua rotina.
 list:
-  - Leia um pouco ou muito — você decide
-  - Veja seu progresso atualizar com cada entrada de registro
-  - Ler ~86 versículos por dia significa que você terminará a Bíblia em um ano
-button-text: Começar grátis
+  - Leia pouco ou leia muito: você decide
+  - Cada registro faz seu progresso crescer na hora
+  - Com cerca de 86 versículos por dia, você termina a Bíblia em um ano
+button-text: Comece grátis
 button-destination: /register
 reverse: true
 ---
@@ -60,13 +75,13 @@ reverse: true
 ::content-fifty-fifty
 ---
 image-src: /screenshots/pt/sc1-reading-suggestions.webp
-image-alt: A página Hoje do aplicativo My Bible Log mostrando várias sugestões de leitura
+image-alt: A página Hoje do app My Bible Log com várias sugestões de leitura
 image-width: "750"
 image-height: "1334"
 image-container-class: phone-frame
-title: Sempre Saiba O Que Ler Em Seguida
-subtitle: Sugestões Inteligentes de Leitura
-description: Sugestões convenientes ajudam você a encontrar capítulos não lidos com base no que você registrou recentemente. Perfeito quando você quer ler mas não sabe por onde começar.
+title: Você sempre sabe o que ler em seguida
+subtitle: Sugestões de leitura sob medida
+description: As sugestões mostram capítulos que você ainda não leu, a partir do que você registrou por último. Perfeito para quando bate a vontade de ler mas você não sabe por onde começar.
 reverse: false
 ---
 ::
@@ -74,16 +89,16 @@ reverse: false
 ::content-fifty-fifty
 ---
 image-src: /screenshots/pt/sc7-bible-progress.webp
-image-alt: O aplicativo My Bible Log mostrando uma barra de progresso segmentada para ler toda a Bíblia
+image-alt: O app My Bible Log com uma barra de progresso segmentada da Bíblia inteira
 image-width: "750"
 image-height: "1334"
 image-container-class: phone-frame
-title: Veja Seu Progresso de Relance
-subtitle: Acompanhe Capítulos, Livros e Toda a Bíblia
+title: Seu progresso numa olhada só
+subtitle: Capítulos, livros e a Bíblia inteira
 list:
-  - Veja quais capítulos você leu
-  - Visualize o progresso para cada livro e toda a Bíblia
-  - Identifique rapidamente seções não lidas
+  - Veja quais capítulos você já leu
+  - Acompanhe o progresso de cada livro e da Bíblia toda
+  - Descubra na hora o que ainda falta
 reverse: true
 ---
 ::
@@ -91,18 +106,18 @@ reverse: true
 ::content-fifty-fifty
 ---
 image-src: /screenshots/pt/sc9-calendar.webp
-image-alt: O calendário My Bible Log mostrando um mês onde muitas datas ganharam uma estrela por atingir a meta de leitura diária
+image-alt: O calendário do My Bible Log com um mês em que vários dias ganharam estrela por bater a meta diária
 image-width: "750"
 image-height: "1334"
 image-container-class: phone-frame
-title: Crie um Hábito no Qual Você Pode Refletir
-subtitle: Calendário de Leitura
-description: Revise seu histórico de leitura e observe padrões ao longo do tempo.
+title: Um hábito que você pode olhar para trás e ver
+subtitle: Calendário de leitura
+description: Reveja como tem sido sua leitura e perceba os seus padrões.
 list:
-  - Edite ou revise qualquer entrada de registro
-  - Estrelas douradas mostram os dias em que você atingiu sua meta
-  - Exporte ou importe seu registro de leitura a qualquer momento
-button-text: Começar grátis
+  - Consulte ou edite qualquer registro
+  - As estrelas douradas marcam os dias em que você bateu a meta
+  - Exporte ou importe seu registro quando quiser
+button-text: Comece grátis
 button-destination: /register
 reverse: false
 ---
@@ -111,14 +126,14 @@ reverse: false
 ::content-fifty-fifty
 ---
 image-src: /screenshots/pt/sc10-notes.webp
-image-alt: A tela de anotações do My Bible Log mostrando vários versículos para memorizar
+image-alt: A tela de notas do My Bible Log com vários versículos para memorizar
 image-width: "750"
 image-height: "1334"
 image-container-class: phone-frame
-title: Faça Anotações Enquanto Lê
-subtitle: Anotações Flexíveis de Leitura Bíblica
+title: Anote enquanto lê
+subtitle: Notas bíblicas do seu jeito
 description: >-
-  Anote perguntas, ideias ou reflexões enquanto estuda. Organize anotações com <strong>tags personalizadas</strong> para corresponder ao seu estilo de estudo pessoal — versículos para memorizar, tópicos, perguntas sem resposta e muito mais.
+  Escreva dúvidas, descobertas e reflexões enquanto estuda. Organize as notas com <strong>tags próprias</strong>, do jeito que você estuda: versículos para memorizar, temas, perguntas em aberto e o que mais quiser.
 reverse: true
 ---
 ::
@@ -126,14 +141,14 @@ reverse: true
 ::content-fifty-fifty
 ---
 image-src: /screenshots/pt/sc12-checklist.webp
-image-alt: A lista de verificação de capítulos do My Bible Log com os primeiros quatro capítulos de Apocalipse marcados como completos
+image-alt: A lista de capítulos do My Bible Log com os quatro primeiros capítulos de Apocalipse marcados
 image-width: "750"
 image-height: "1334"
 image-container-class: phone-frame
-title: Registre a Leitura em Segundos
-subtitle: Registro Rápido de Capítulos
+title: Registre sua leitura em segundos
+subtitle: Marque capítulos na hora
 description: >-
-  Sem tempo? Marque capítulos como lidos com <strong>um único clique</strong> — sem necessidade de digitação.
+  Pouco tempo? Marque os capítulos como lidos com <strong>um único clique</strong>, sem digitar nada.
 reverse: false
 ---
 ::
@@ -141,17 +156,17 @@ reverse: false
 ::content-fifty-fifty
 ---
 image-src: /screenshots/pt/sc8-install-anywhere.webp
-image-alt: O aplicativo My Bible Log executando no modo desktop
+image-alt: O app My Bible Log rodando no modo desktop
 image-width: "1069"
 image-height: "690"
-title: Use em Qualquer Lugar
-subtitle: Funciona Onde Você Estiver
+title: Use onde você estiver
+subtitle: Funciona em qualquer lugar
 list:
-  - Use no seu navegador
-  - Instale como aplicativo no seu telefone, tablet ou computador
+  - Use direto no navegador
+  - Instale como aplicativo no celular, no tablet ou no computador
   - Sem anúncios. Nunca.
-  - Gratuito para usar
-button-text: Começar grátis
+  - Grátis para usar
+button-text: Comece grátis
 button-destination: /register
 reverse: true
 ---

@@ -1,87 +1,87 @@
 ---
 seo:
-  title: Wie man zu My Bible Log beiträgt
-  description: Erfahren Sie, wie Sie zu My Bible Log beitragen können, indem Sie teilen, Feedback geben, übersetzen, programmieren oder finanziell unterstützen
+  title: Zu My Bible Log beitragen
+  description: So können Sie My Bible Log unterstützen – durch Weitererzählen, Feedback, Übersetzungen, Code oder eine Spende
 og:
-  title: Wie man zu My Bible Log beiträgt
-  description: Erfahren Sie, wie Sie zu My Bible Log beitragen können, indem Sie teilen, Feedback geben, übersetzen, programmieren oder finanziell unterstützen
+  title: Zu My Bible Log beitragen
+  description: So können Sie My Bible Log unterstützen – durch Weitererzählen, Feedback, Übersetzungen, Code oder eine Spende
 ---
 
-# Beitragen
+# Mitmachen
 
-Vielen Dank für Ihr Interesse, zu My Bible Log beizutragen! Es gibt viele Möglichkeiten zu helfen, und jeder Beitrag macht einen Unterschied. Ob Sie ein paar Sekunden oder mehrere Stunden haben, es gibt einen Weg für Sie, beizutragen.
+Schön, dass Sie My Bible Log unterstützen möchten! Es gibt viele Wege zu helfen, und jeder einzelne zählt. Ob Sie ein paar Sekunden übrig haben oder mehrere Stunden – für jeden ist etwas dabei.
 
-## My Bible Log teilen
+## My Bible Log weiterempfehlen
 
-Der einfachste Weg, beizutragen, ist, My Bible Log mit anderen zu teilen. Mundpropaganda hilft mehr Menschen, dieses kostenlose Tool zur Verfolgung ihrer Bibellektüre zu entdecken.
+Am einfachsten helfen Sie, indem Sie anderen von My Bible Log erzählen. Mundpropaganda sorgt dafür, dass mehr Menschen dieses kostenlose Werkzeug fürs Bibellesen entdecken.
 
 <content-section-grid>
 
-### 💬 Jemandem davon erzählen
+### 💬 Erzählen Sie jemandem davon
 
-Wenn Sie My Bible Log hilfreich finden, sollten Sie einem Freund, Familienmitglied oder jemandem in Ihrer Gemeinde davon erzählen. Persönliche Empfehlungen sind oft der effektivste Weg, wie Menschen neue Tools entdecken.
+Wenn Ihnen My Bible Log hilft, erzählen Sie einer Freundin, einem Freund, der Familie oder jemandem aus Ihrer Gemeinde davon. Eine persönliche Empfehlung wirkt fast immer am besten.
 
 ### 📱 In sozialen Medien teilen
 
-Teilen Sie My Bible Log auf Ihren bevorzugten Social-Media-Plattformen. Ob es ein kurzer Beitrag darüber ist, wie Sie es verwenden, oder eine Empfehlung an Ihre Follower, jeder Beitrag hilft, das Wort zu verbreiten.
+Teilen Sie My Bible Log dort, wo Sie ohnehin unterwegs sind. Ein kurzer Beitrag darüber, wie Sie es nutzen, oder eine Empfehlung an Ihre Follower – alles hilft.
 
-### 🔗 Einen Link von Ihrem Blog oder Ihrer Website hinzufügen
+### 🔗 Von Ihrem Blog oder Ihrer Website verlinken
 
-Wenn Sie einen Blog oder eine Website haben, sollten Sie einen Link zu My Bible Log hinzufügen. Dies hilft anderen, das Tool zu entdecken und unterstützt die Sichtbarkeit des Projekts online.
+Wenn Sie einen Blog oder eine Website betreiben, freuen wir uns über einen Link zu My Bible Log. So finden andere leichter hierher, und das Projekt wird im Netz sichtbarer.
 
 ### ⭐ Dem Projekt auf GitHub einen Stern geben
 
-Wenn Sie ein GitHub-Konto haben, ist das Hinzufügen eines Sterns zum [My Bible Log Repository](https://github.com/mybiblelog/mybiblelog) eine großartige Möglichkeit, Ihre Unterstützung zu zeigen! Sterne helfen dem Projekt, Sichtbarkeit zu gewinnen und zeigen, dass Menschen es wertvoll finden.
+Haben Sie ein GitHub-Konto? Dann ist ein Stern für das [My Bible Log Repository](https://github.com/mybiblelog/mybiblelog) eine schöne Art, Unterstützung zu zeigen. Sterne machen das Projekt sichtbarer und zeigen, dass es Menschen etwas bringt.
 
 </content-section-grid>
 
-## Finanzielle Beiträge
+## Finanzielle Unterstützung
 
-My Bible Log ist kostenlos zu verwenden, aber der Betrieb kostet Geld. Finanzielle Beiträge helfen bei der Deckung von:
+My Bible Log ist kostenlos, der Betrieb kostet aber Geld. Ihre Spende hilft bei:
 
-- Kosten für **Webserver-Hosting**
-- **Datenbank**-Hosting und -wartung
-- **Entwicklungstools** wie Code-Editoren und KI-Assistenten
-- **E-Mail-Dienste** für Kontoverifizierung und Erinnerungen
+- den Kosten fürs **Webhosting**
+- Betrieb und Wartung der **Datenbank**
+- **Entwicklungswerkzeugen** wie Code-Editoren und KI-Assistenten
+- **E-Mail-Diensten** für Kontobestätigungen und Erinnerungen
 
 <content-section-grid>
 
-### 💰 Wie man finanziell beiträgt
+### 💰 So können Sie spenden
 
-Sie können My Bible Log jetzt finanziell über [seine Ko-fi-Seite](https://ko-fi.com/mybiblelog) unterstützen. Jeder Betrag hilft, und alle Beiträge gehen daran, My Bible Log am Laufen zu halten und zu verbessern.
+Sie können My Bible Log ab sofort über [die Ko-fi-Seite](https://ko-fi.com/mybiblelog) unterstützen. Jeder Betrag hilft, und alles fließt in den Betrieb und die Weiterentwicklung.
 
-Finanzielle Beiträge sind völlig optional — My Bible Log bleibt immer kostenlos zu verwenden, unabhängig davon, ob Sie finanziell beitragen.
+Spenden sind völlig freiwillig — My Bible Log bleibt in jedem Fall kostenlos, ob Sie etwas geben oder nicht.
 
 </content-section-grid>
 
-## Funktionsideen und Feedback einreichen
+## Ideen und Feedback einschicken
 
-Ihre Ideen und Ihr Feedback helfen, die Zukunft von My Bible Log zu gestalten. Wir möchten hören, welche Funktionen für Sie am hilfreichsten wären.
+Ihre Ideen und Rückmeldungen prägen, wohin sich My Bible Log entwickelt. Wir hören gern, welche Funktionen Ihnen am meisten helfen würden.
 
 <content-section-grid>
 
-### 📝 Wie man Feedback einreicht
+### 📝 So schicken Sie uns Feedback
 
-Sie können Funktionsanfragen, Fehlerberichte oder allgemeines Feedback über [unser Feedback-Formular](/feedback) einreichen. Wenn Sie eine Funktionsidee einreichen, geben Sie bitte an:
+Funktionswünsche, Fehlerberichte oder allgemeines Feedback nehmen wir über [unser Feedback-Formular](/de/feedback) entgegen. Wenn Sie eine Idee einreichen, schreiben Sie am besten dazu:
 
-- Welches Problem die Funktion lösen würde
-- Wer von dieser Funktion profitieren würde
-- Wie Sie sich vorstellen, dass die Funktion funktioniert
-- Alle Beispiele oder Mockups (falls vorhanden)
+- welches Problem die Funktion löst
+- wem sie helfen würde
+- wie Sie sich die Funktion vorstellen
+- Beispiele oder Skizzen, falls Sie welche haben
 
-Für detailliertere Funktionsanfragen können Sie auch ein Issue auf [GitHub](https://github.com/mybiblelog/mybiblelog) mit der Funktionsanfrage-Vorlage erstellen.
+Für ausführlichere Wünsche können Sie auch ein Issue auf [GitHub](https://github.com/mybiblelog/mybiblelog) anlegen und dabei die Vorlage für Funktionswünsche verwenden.
 
 </content-section-grid>
 
-## Bei Übersetzungen helfen
+## Beim Übersetzen helfen
 
-My Bible Log unterstützt mehrere Sprachen, und wir suchen immer nach Möglichkeiten, die Sprachunterstützung zu erweitern oder bestehende Übersetzungen zu verbessern.
+My Bible Log gibt es in mehreren Sprachen, und wir freuen uns immer über neue Sprachen oder bessere Übersetzungen.
 
 <content-section-grid>
 
-### 🌍 Aktuelle Sprachen
+### 🌍 Verfügbare Sprachen
 
-My Bible Log unterstützt derzeit:
+My Bible Log gibt es derzeit auf:
 
 - Englisch
 - Spanisch
@@ -91,52 +91,52 @@ My Bible Log unterstützt derzeit:
 - Koreanisch
 - Ukrainisch
 
-### 🌐 Wie man zu Übersetzungen beiträgt
+### 🌐 So helfen Sie beim Übersetzen
 
-Wir verwenden [Crowdin](https://crowdin.com/), um Übersetzungen zu verwalten.
+Für die Übersetzungen nutzen wir [Crowdin](https://crowdin.com/).
 
-Wenn Sie eine dieser Sprachen fließend beherrschen (oder eine Sprache, die wir noch nicht unterstützen), können Sie helfen durch:
+Wenn Sie eine dieser Sprachen fließend sprechen – oder eine, die noch fehlt –, können Sie helfen, indem Sie:
 
-- Überprüfen und Verbessern bestehender Übersetzungen
-- Übersetzen neuer Funktionen und Inhalte
-- Hinzufügen der Unterstützung für eine neue Sprache
+- bestehende Übersetzungen durchsehen und verbessern
+- neue Funktionen und Texte übersetzen
+- eine ganz neue Sprache hinzufügen
 
-Um mit Übersetzungsbeiträgen zu beginnen, können Sie uns über das [Feedback-Formular](/feedback) kontaktieren, um Interesse zu bekunden.
+Melden Sie sich dafür einfach über das [Feedback-Formular](/de/feedback) bei uns.
 
 </content-section-grid>
 
-## Code beitragen
+## Code beisteuern
 
-My Bible Log ist Open Source, und wir heißen Code-Beiträge willkommen! Ob Sie Fehler beheben, Funktionen hinzufügen oder die Dokumentation verbessern, Ihre Code-Beiträge helfen, My Bible Log für alle besser zu machen.
+My Bible Log ist Open Source, und Code-Beiträge sind sehr willkommen! Ob Sie Fehler beheben, Funktionen ergänzen oder die Dokumentation verbessern – damit wird My Bible Log für alle besser.
 
 <content-section-grid>
 
 ### 🚀 Erste Schritte
 
-1. **Das Repository forken** auf [GitHub](https://github.com/mybiblelog/mybiblelog)
-2. **Den [Beitragsleitfaden](https://github.com/mybiblelog/mybiblelog/blob/main/CONTRIBUTING.md) lesen** für Setup-Anweisungen und Codierungsstandards
-3. **Ein Issue auswählen**, an dem Sie arbeiten möchten, oder eine neue Funktion vorschlagen
-4. **Einen Pull Request** mit Ihren Änderungen einreichen
+1. **Forken Sie das Repository** auf [GitHub](https://github.com/mybiblelog/mybiblelog).
+2. **Lesen Sie den [Beitragsleitfaden](https://github.com/mybiblelog/mybiblelog/blob/main/CONTRIBUTING.md)** mit Einrichtungshinweisen und Coding-Standards.
+3. **Suchen Sie sich ein Issue** aus oder schlagen Sie eine neue Funktion vor.
+4. **Reichen Sie einen Pull Request** mit Ihren Änderungen ein.
 
 ### ⚙️ Entwicklungsumgebung
 
-Das Projekt verwendet:
+Das Projekt setzt auf:
 
 - **Node.js** mit TypeScript
-- **Nuxt.js** für das Frontend
+- **Nuxt.js** fürs Frontend
 - **Express** für die API
-- **MongoDB** für die Datenbank
+- **MongoDB** als Datenbank
 
-Für detaillierte Setup-Anweisungen siehe den [Beitragsleitfaden](https://github.com/mybiblelog/mybiblelog/blob/main/CONTRIBUTING.md#development-setup).
+Eine ausführliche Anleitung zur Einrichtung finden Sie im [Beitragsleitfaden](https://github.com/mybiblelog/mybiblelog/blob/main/CONTRIBUTING.md#development-setup).
 
 </content-section-grid>
 
-## Fragen?
+## Noch Fragen?
 
-Wenn Sie Fragen zum Beitragen haben oder eine Beitragsidee besprechen möchten, können Sie:
+Wenn Sie Fragen zum Mitmachen haben oder eine Idee besprechen möchten, können Sie:
 
-- Eine Frage über [unser Feedback-Formular](/feedback) einreichen
-- Ein Issue auf [GitHub](https://github.com/mybiblelog/mybiblelog) öffnen
-- Den [Beitragsleitfaden](https://github.com/mybiblelog/mybiblelog/blob/main/CONTRIBUTING.md) für technische Details überprüfen
+- uns über [unser Feedback-Formular](/de/feedback) schreiben
+- ein Issue auf [GitHub](https://github.com/mybiblelog/mybiblelog) eröffnen
+- im [Beitragsleitfaden](https://github.com/mybiblelog/mybiblelog/blob/main/CONTRIBUTING.md) nach technischen Details schauen
 
-Vielen Dank, dass Sie erwägen, zu My Bible Log beizutragen! Jeder Beitrag, egal wie klein, hilft, dieses Tool für alle besser zu machen. 🙏
+Vielen Dank, dass Sie überlegen, bei My Bible Log mitzumachen! Jeder Beitrag, und sei er noch so klein, macht dieses Werkzeug für alle ein Stück besser. 🙏

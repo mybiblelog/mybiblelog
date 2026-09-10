@@ -1,153 +1,153 @@
 ---
 seo:
-  title: My Bible Log - Preguntas Frecuentes (FAQ)
-  description: Obtenga respuestas a preguntas comunes sobre My Bible Log, un rastreador gratuito de lectura bíblica. Aprenda sobre funciones, objetivos de lectura, notas, privacidad, administración de cuenta y cómo rastrear su progreso de lectura bíblica.
+  title: My Bible Log - preguntas frecuentes
+  description: Respuestas a las preguntas más comunes sobre My Bible Log, el registro gratuito de lectura bíblica: funciones, metas de lectura, notas, privacidad, cuenta y cómo seguir tu avance.
 og:
-  title: My Bible Log - Preguntas Frecuentes (FAQ)
-  description: Obtenga respuestas a preguntas comunes sobre My Bible Log, un rastreador gratuito de lectura bíblica. Aprenda sobre funciones, objetivos de lectura, notas, privacidad, administración de cuenta y cómo rastrear su progreso de lectura bíblica.
+  title: My Bible Log - preguntas frecuentes
+  description: Respuestas a las preguntas más comunes sobre My Bible Log, el registro gratuito de lectura bíblica: funciones, metas de lectura, notas, privacidad, cuenta y cómo seguir tu avance.
 ---
 
-## Preguntas Frecuentes
+## Preguntas frecuentes
 
 ### ¿Qué es My Bible Log?
 
-My Bible Log es un rastreador gratuito de lectura bíblica en línea que te ayuda a rastrear lo que has leído y cuándo lo leíste. En lugar de seguir un plan de lectura predefinido, registras tu lectura bíblica real y ves tu progreso con el tiempo.
+My Bible Log es un registro gratuito en línea de lectura bíblica: guarda qué leíste y cuándo lo leíste. En vez de seguir un plan de lectura ya armado, anotas lo que realmente leíste y ves cómo va creciendo tu avance.
 
 ---
 
-### ¿Es My Bible Log gratuito?
+### ¿My Bible Log es gratis?
 
-Sí. My Bible Log es completamente gratuito de usar.
+Sí, usarlo es completamente gratis.
 
 * Sin anuncios
 * Sin suscripciones
 * Sin funciones de pago
 
-Puedes registrarte con tu dirección de correo electrónico o usar el inicio de sesión de Google para comenzar.
+Para empezar, te registras con tu correo electrónico o entras con Google.
 
 ---
 
 ### ¿Tengo que seguir un plan de lectura bíblica?
 
-No. My Bible Log no asigna planes de lectura ni horarios.
+No. My Bible Log no te asigna planes ni calendarios.
 
-Lees la Biblia como elijas—a través de sermones, devocionales, estudio personal u otros recursos—y registras lo que has leído. Mientras estés leyendo versículos nuevos, todo cuenta para tu progreso.
-
----
-
-### ¿Puede My Bible Log ayudarme a leer la Biblia en un año?
-
-Sí. Uno de los objetivos principales de My Bible Log es ayudar a las personas a leer toda la Biblia.
-
-* La Biblia contiene **31,102 versículos**
-* Leer un promedio de **86 versículos nuevos por día** te permite terminar en un año
-* Puedes leer más algunos días y menos otros—todo se equilibra con el tiempo
-
-My Bible Log rastrea tu ritmo y te ayuda a mantenerte consciente de qué tan cerca estás de tu objetivo.
+Lees la Biblia como quieras —en la predicación, en un devocional, en tu estudio personal o donde sea— y después anotas lo que leíste. Mientras sean versículos nuevos para ti, todo suma a tu avance.
 
 ---
 
-### ¿Cómo funcionan los objetivos de lectura diaria?
+### ¿My Bible Log me ayuda a leer la Biblia en un año?
 
-Puedes establecer un objetivo diario basado en cuántos **versículos nuevos** quieres leer cada día.
+Sí, y es justamente una de las razones por las que existe.
 
-Cada vez que registras una lectura, My Bible Log actualiza tu progreso hacia ese objetivo. Los días en que alcanzas tu objetivo se marcan con una **estrella dorada** en tu calendario de lectura.
+* La Biblia tiene **31.102 versículos**
+* Leyendo un promedio de **86 versículos nuevos al día** la terminas en un año
+* Unos días leerás más y otros menos; con el tiempo se empareja
+
+My Bible Log sigue tu ritmo y te muestra qué tan cerca estás de la meta.
 
 ---
 
-### ¿Puedo establecer una fecha objetivo para terminar la Biblia?
+### ¿Cómo funcionan las metas diarias de lectura?
 
-Sí. Puedes elegir una fecha en la que quieras terminar de leer la Biblia.
+Tú eliges cuántos **versículos nuevos** quieres leer cada día.
 
-My Bible Log calculará automáticamente cuántos versículos necesitas leer cada día para alcanzar ese objetivo en la fecha elegida.
+Cada vez que registras una lectura, tu avance hacia esa meta se actualiza. Los días en que la cumples quedan marcados con una **estrella dorada** en tu calendario de lectura.
+
+---
+
+### ¿Puedo fijar una fecha para terminar la Biblia?
+
+Sí. Solo eliges el día en que quieres haber terminado.
+
+My Bible Log calcula solo cuántos versículos tienes que leer por día para llegar a tiempo.
 
 ---
 
 ### ¿Qué son las sugerencias de lectura?
 
-Las sugerencias de lectura te ayudan a decidir qué leer a continuación.
+Las sugerencias te ayudan a decidir qué leer después.
 
-Las sugerencias se basan en:
+Se basan en:
 
-* Lo que ya has registrado
-* Qué capítulos no has leído aún
-* Tu actividad de lectura reciente
+* lo que ya registraste
+* los capítulos que todavía no leíste
+* cómo has venido leyendo últimamente
 
-Facilitan seguir avanzando por la Biblia sin necesidad de un plan formal.
+Así avanzas por la Biblia sin necesidad de un plan formal.
 
 ---
 
-### ¿Cómo registro mi lectura bíblica?
+### ¿Cómo registro mi lectura?
 
-El registro está diseñado para ser rápido y simple.
+Registrar está pensado para ser rápido y sencillo.
 
 Puedes:
 
-* Seleccionar un libro, capítulo y rango de versículos
-* Registrar capítulos completos
-* Marcar capítulos como leídos con un solo clic desde la Lista de Verificación de Capítulos
+* elegir libro, capítulo y rango de versículos
+* registrar capítulos completos
+* marcar capítulos como leídos con un solo clic desde la Lista de Capítulos
 
-Cada entrada de registro registra lo que leíste y cuándo lo leíste.
+Cada registro guarda qué leíste y cuándo lo leíste.
 
 ---
 
-### ¿Puedo rastrear el progreso por capítulo y libro?
+### ¿Puedo ver mi avance por capítulo y por libro?
 
 Sí.
 
 Puedes:
 
-* Ver qué capítulos has leído en cada libro
-* Ver barras de progreso para cada libro de la Biblia
-* Ver tu progreso general en toda la Biblia
+* ver qué capítulos ya leíste en cada libro
+* consultar la barra de progreso de cada libro de la Biblia
+* seguir tu avance total en toda la Biblia
 
-Los capítulos que has leído están claramente marcados para que puedas encontrar fácilmente secciones no leídas.
-
----
-
-### ¿Incluye My Bible Log una traducción de la Biblia?
-
-My Bible Log no incluye su propio texto bíblico.
-
-En su lugar, proporciona enlaces directos a aplicaciones y sitios web bíblicos externos. Se admiten las traducciones bíblicas más utilizadas, y se continúan agregando traducciones adicionales.
+Los capítulos leídos quedan bien marcados, así que encuentras al instante lo que te falta.
 
 ---
 
-### ¿Puedo tomar notas sobre mi lectura bíblica?
+### ¿My Bible Log incluye el texto de la Biblia?
 
-Sí. My Bible Log incluye una función de notas integrada.
+No, My Bible Log no trae su propio texto bíblico.
 
-Puedes usar notas para:
+En su lugar, te lleva directo a apps y sitios bíblicos externos. Están las traducciones más usadas, y seguimos agregando más.
 
-* Registrar ideas de tu lectura
-* Anotar preguntas para revisar más tarde
-* Mantener un registro de estudio personal vinculado a tu lectura
+---
+
+### ¿Puedo tomar notas de mi lectura?
+
+Sí, My Bible Log tiene una función de notas incorporada.
+
+Las notas te sirven para:
+
+* anotar lo que descubres al leer
+* dejar por escrito preguntas para retomar después
+* llevar un registro personal de estudio ligado a tu lectura
 
 ---
 
 ### ¿Puedo organizar mis notas?
 
-Sí. Las notas se pueden organizar usando **etiquetas personalizadas**.
+Sí, con **etiquetas personalizadas**.
 
 Puedes:
 
-* Crear tus propias etiquetas
-* Asignar colores personalizados
-* Usar etiquetas para temas, versículos para memorizar, preguntas o temas de estudio
+* crear tus propias etiquetas
+* asignarles colores
+* usarlas para temas, versículos para memorizar, preguntas o líneas de estudio
 
-Esto te permite organizar las notas de una manera que se adapte a tu estilo de estudio personal.
+Así ordenas tus notas según tu forma de estudiar.
 
 ---
 
 ### ¿Puedo ver mi historial de lectura?
 
-Sí. El Calendario de Lectura muestra tu actividad de lectura bíblica con el tiempo.
+Sí. El calendario de lectura muestra cómo has leído a lo largo del tiempo.
 
 Puedes:
 
-* Ver y editar cualquier entrada de registro
-* Ver tendencias en tus hábitos de lectura
-* Identificar días en que alcanzaste tu objetivo diario
+* ver y editar cualquier registro
+* notar tendencias en tus hábitos de lectura
+* identificar los días en que cumpliste tu meta diaria
 
 ---
 
@@ -155,52 +155,52 @@ Puedes:
 
 Sí.
 
-Puedes exportar tu registro de lectura como una hoja de cálculo o importar una hoja de cálculo para comenzar rápidamente o restaurar tus datos.
+Puedes exportar tu registro de lectura como planilla, o importar una planilla para arrancar más rápido o recuperar tus datos.
 
 ---
 
-### ¿Puedo usar My Bible Log en mi teléfono o computadora?
+### ¿Puedo usar My Bible Log en el celular y en la computadora?
 
-Sí. My Bible Log funciona en teléfonos modernos, tabletas y computadoras de escritorio.
+Sí. My Bible Log funciona en celulares, tabletas y computadoras actuales.
 
-Puedes usarlo en un navegador web o instalarlo como una aplicación en tu dispositivo para acceso conveniente.
+Puedes usarlo desde el navegador o instalarlo como app en tu dispositivo para tenerlo siempre a mano.
 
-Si necesitas ayuda para instalar la aplicación, busca en la web "Cómo instalar una Progressive Web App en (tu dispositivo)"
-
----
-
-### ¿Necesito crear una contraseña?
-
-No. Puedes iniciar sesión usando Google sin crear una contraseña.
-
-Si prefieres, también puedes crear una cuenta usando tu dirección de correo electrónico, lo que te permitirá iniciar sesión con una contraseña.
+Si necesitas ayuda para instalarlo, busca en internet «cómo instalar una aplicación web progresiva en (tu dispositivo)».
 
 ---
 
-### ¿Son privados mis datos de lectura?
+### ¿Tengo que crear una contraseña?
 
-Sí. Tus datos de lectura son privados y visibles solo para ti.
+No. Con Google entras sin contraseña.
 
-My Bible Log no tiene funciones sociales y no comparte tu actividad de lectura con otros usuarios.
-
----
-
-### ¿Puedo eliminar mi cuenta y datos?
-
-Sí. Puedes eliminar tu cuenta en cualquier momento.
-
-La eliminación de la cuenta:
-
-* Elimina inmediata y permanentemente todos tus datos
-* No se puede deshacer
-* Elimina todos los registros de lectura, notas y configuraciones
+Si lo prefieres, también puedes crear una cuenta con tu correo electrónico y entrar con contraseña.
 
 ---
 
-### ¿Está My Bible Log diseñado para uso grupal o de iglesia?
+### ¿Mis datos de lectura son privados?
 
-My Bible Log está actualmente diseñado para **lectura y estudio bíblico personal**.
+Sí. Tus datos de lectura son privados y solo tú los ves.
 
-No incluye funciones sociales, grupales o de compartir.
+My Bible Log no tiene funciones sociales y no comparte tu actividad con nadie.
 
-Esto es intencional, ayudando a promover el estudio personal enfocado y mantener My Bible Log seguro para usuarios de todas las edades.
+---
+
+### ¿Puedo eliminar mi cuenta y mis datos?
+
+Sí, cuando quieras.
+
+Al eliminar la cuenta:
+
+* todos tus datos se borran de inmediato y para siempre
+* no hay forma de deshacerlo
+* desaparecen todos los registros, notas y ajustes
+
+---
+
+### ¿My Bible Log sirve para grupos o iglesias?
+
+Por ahora My Bible Log está pensado para la **lectura y el estudio personal de la Biblia**.
+
+No tiene funciones sociales, de grupo ni para compartir.
+
+Es a propósito: así el foco se queda en el estudio personal y My Bible Log sigue siendo un lugar seguro para personas de cualquier edad.
