@@ -2,7 +2,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount, type VueWrapper } from '@vue/test-utils';
 import { reactive, defineComponent, h } from 'vue';
+import { setActivePinia, createPinia } from 'pinia';
 import PwaPrompt from '~/components/ui/PwaPrompt.vue';
+import { useAuthStore } from '~/stores/auth';
 
 // Passthrough stub for Nuxt's <ClientOnly> so the prompt's slot content renders.
 const ClientOnlyStub = defineComponent({
@@ -33,8 +35,14 @@ const makePwa = (state: Partial<PwaStub> = {}): PwaStub => reactive({
   ...state,
 });
 
-const mountPrompt = (pwa: PwaStub | undefined): VueWrapper => {
+const mountPrompt = (
+  pwa: PwaStub | undefined,
+  options: { loggedIn?: boolean; contentPage?: boolean } = {},
+): VueWrapper => {
+  const { loggedIn = true, contentPage = false } = options;
   vi.stubGlobal('useNuxtApp', () => ({ $pwa: pwa }));
+  vi.stubGlobal('useRoute', () => ({ query: {}, params: {}, path: '/', fullPath: '/', meta: { contentPage } }));
+  useAuthStore().setUser(loggedIn ? { email: 'user@example.test' } : null);
   return mount(PwaPrompt, {
     global: { stubs: { ClientOnly: ClientOnlyStub } },
   });
@@ -42,6 +50,7 @@ const mountPrompt = (pwa: PwaStub | undefined): VueWrapper => {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  setActivePinia(createPinia());
 });
 
 describe('PwaPrompt', () => {
@@ -92,5 +101,19 @@ describe('PwaPrompt', () => {
 
     expect(wrapper.find('[data-testid="pwa-offline-ready"]').exists()).toBe(true);
     expect(wrapper.find('[data-testid="pwa-install-prompt"]').exists()).toBe(false);
+  });
+
+  it('hides the offline-ready notice when the user is not authenticated', () => {
+    const pwa = makePwa({ offlineReady: true });
+    const wrapper = mountPrompt(pwa, { loggedIn: false });
+
+    expect(wrapper.find('[data-testid="pwa-offline-ready"]').exists()).toBe(false);
+  });
+
+  it('hides the offline-ready notice on content pages', () => {
+    const pwa = makePwa({ offlineReady: true });
+    const wrapper = mountPrompt(pwa, { contentPage: true });
+
+    expect(wrapper.find('[data-testid="pwa-offline-ready"]').exists()).toBe(false);
   });
 });
