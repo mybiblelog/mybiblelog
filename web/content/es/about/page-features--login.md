@@ -1,53 +1,47 @@
 ---
 seo:
-  title: Inicio de Sesión y Creación de Cuenta
-  description: Cómo iniciar sesión y crear una cuenta en My Bible Log
+  title: Crear una cuenta
+  description: Cómo crear una cuenta e iniciar sesión en My Bible Log
 og:
-  title: Inicio de Sesión y Creación de Cuenta
-  description: Cómo iniciar sesión y crear una cuenta en My Bible Log
+  title: Crear una cuenta
+  description: Cómo crear una cuenta e iniciar sesión en My Bible Log
 ---
 
 ![](/share.jpg)
 
-# Inicio de Sesión y Creación de Cuenta
+# Crear una cuenta
 
-My Bible Log admite varios métodos de autenticación para facilitar el inicio de sesión.
+Para que empezar sea lo más fácil posible, My Bible Log ofrece varias formas de iniciar sesión.
 
-## Inicio de Sesión con Redes Sociales
+## Iniciar sesión con Google
 
-Los usuarios que tengan una cuenta de Google pueden utilizarla para iniciar sesión. La página de inicio de sesión tiene un botón "Iniciar sesión con Google". Al hacer clic en el botón, se le redirigirá a Google para que pueda iniciar sesión.
+Si tienes una cuenta de Google, puedes usarla para entrar. En la página de inicio de sesión encontrarás el botón «Iniciar sesión con Google», que te lleva a Google para que ingreses ahí.
 
-Los usuarios nunca ingresan su contraseña de Google en My Bible Log. Una vez que un usuario haya iniciado sesión en Google, Google lo redirigirá a My Bible Log y le enviará la verificación de que ha iniciado sesión en ese sitio web.
+Tu contraseña de Google nunca se escribe en My Bible Log. Una vez que inicias sesión en Google, Google te devuelve al sitio y le confirma a My Bible Log que la autenticación fue correcta.
 
-## Creación de Cuenta Local
+## Crear una cuenta propia
 
-Las cuentas de usuario están vinculadas a direcciones de correo electrónico. Iniciar sesión con Google es una forma de verificar una dirección de correo electrónico.
+Cada cuenta está vinculada a un correo electrónico, y entrar con Google es una de las maneras de verificarlo.
 
-Los usuarios que deseen iniciar sesión directamente en My Bible Log pueden registrarse en el sitio. Para hacerlo, proporciona una dirección de correo electrónico y una contraseña. Se enviará un enlace de verificación a la dirección de correo electrónico proporcionada, y la dirección de correo electrónico debe verificarse con este enlace antes de que un usuario pueda iniciar sesión.
+Si prefieres iniciar sesión directamente en My Bible Log, puedes registrarte en el sitio: solo indica un correo electrónico y una contraseña. Te enviaremos un enlace de verificación a ese correo, y hasta que lo abras no podrás iniciar sesión.
 
-Al verificar las direcciones de correo electrónico, My Bible Log evita que las cuentas de spam abusen de los recursos del servidor y garantiza que el sitio siga siendo rápido y eficiente para todos los usuarios.
+Verificar los correos evita que las cuentas de spam consuman los recursos del servidor y mantiene el sitio rápido para todos.
 
-## Cambio de Métodos de Inicio de Sesión
+## Cambiar de método de inicio de sesión
 
-Los usuarios también pueden cambiar entre métodos de autenticación. Dado que una dirección de correo electrónico es lo que identifica una cuenta, puede iniciar sesión en la misma cuenta utilizando Google o su contraseña local.
+Puedes alternar entre los métodos cuando quieras. Como lo que identifica a tu cuenta es el correo electrónico, llegas a la misma cuenta tanto con Google como con tu propia contraseña.
 
-Los usuarios que anteriormente utilizaron el inicio de sesión social y no tienen una contraseña pueden crear una:
+Si hasta ahora solo entrabas con Google y todavía no tienes contraseña, puedes crear una así:
 
-* Ve a la página de inicio de sesión
-* Haz clic en "Iniciar sesión" (no es necesario completar el nombre de usuario o la contraseña)
-* Aparecerá un enlace que ofrece restablecer tu contraseña por correo electrónico. Haz clic en él.
-* Abre el correo electrónico y haz clic en el enlace.
-* Ahora puedes crear una contraseña en My Bible Log.
-* Una vez que se haya creado tu contraseña, iniciarás sesión automáticamente.
+* Abre la página de inicio de sesión.
+* Haz clic en «Iniciar sesión» (no hace falta llenar el correo ni la contraseña).
+* Aparecerá un enlace para restablecer tu contraseña por correo. Haz clic en él.
+* Abre el correo y sigue el enlace.
+* Ya puedes crear una contraseña en My Bible Log.
+* En cuanto la guardes, la sesión se inicia sola.
 
-## Cambiar la Dirección de Correo Electrónico de la Cuenta
+## Cambiar el correo electrónico de la cuenta
 
-Los usuarios pueden cambiar su dirección de correo electrónico exportando sus entradas de registro e importándolas en una cuenta diferente.
+Puedes cambiar tu correo electrónico desde la página Configuración.
 
-Las entradas de registro se pueden exportar e importar en la página de Configuración.
-
-Actualmente, los usuarios no pueden exportar notas, por lo que las notas no se pueden transferir automáticamente entre cuentas.
-
-<div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/es/login">Ir a la página de Inicio de Sesión</a>
-</div>
+En la sección «Cuenta» encontrarás el botón «Cambiar correo».

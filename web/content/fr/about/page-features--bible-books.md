@@ -1,49 +1,49 @@
 ---
 seo:
-  title: Suivez votre progression de lecture biblique par livre et chapitre
-  description: Apprenez à utiliser la page des livres bibliques de My Bible Log pour suivre votre progression de lecture à travers chaque livre et chapitre de la Bible
+  title: Suivez votre lecture livre par livre et chapitre par chapitre
+  description: Comment utiliser la page Livres de la Bible de My Bible Log pour suivre votre lecture dans chaque livre et chaque chapitre
 og:
-  title: Suivez votre progression de lecture biblique par livre et chapitre
-  description: Apprenez à utiliser la page des livres bibliques de My Bible Log pour suivre votre progression de lecture à travers chaque livre et chapitre de la Bible
+  title: Suivez votre lecture livre par livre et chapitre par chapitre
+  description: Comment utiliser la page Livres de la Bible de My Bible Log pour suivre votre lecture dans chaque livre et chaque chapitre
 ---
 
 ![](/share.jpg)
 
-# Page des Livres de la Bible
+# Page Livres de la Bible
 
 <div class="phone-frame">
-  <img alt="Capture d'écran de la page des Livres de la Bible de My Bible Log" src="/screenshots/fr/sc7-bible-progress.webp" />
+  <img alt="Capture d'écran de la page Livres de la Bible de My Bible Log" src="/screenshots/fr/sc7-bible-progress.webp" />
 </div>
 
-La page des Livres de la Bible vous aide à suivre votre progression de lecture à travers toute la Bible. En haut, vous verrez une barre de progression visuelle qui montre quelles parties de la Bible vous avez lues. Contrairement à une simple barre de progression de gauche à droite, celle-ci se remplit exactement là où vous avez lu - que ce soit au début, au milieu ou à la fin de la Bible.
+La page Livres de la Bible vous montre où vous en êtes dans la Bible entière. Tout en haut, une barre de progression met en évidence les passages que vous avez déjà lus. Contrairement à une barre classique, elle ne se remplit pas de gauche à droite : elle se colore exactement là où vous avez lu, au début, au milieu ou à la fin de la Bible.
 
-Pensez-y comme au bord d'une Bible papier : si les pages que vous avez lues devenaient bleues, c'est ce que vous verriez.
+Imaginez la tranche d'une Bible papier : si les pages que vous avez lues devenaient bleues, voilà ce que vous verriez.
 
-Sous la barre de progression, vous trouverez une liste de tous les livres de la Bible. Chaque livre a :
+Sous la barre figure la liste de tous les livres de la Bible. Chaque livre comporte :
 
-* Une étoile grise qui devient dorée lorsque vous terminez le livre
-* Sa propre barre de progression montrant combien de ce livre vous avez lu
+* une étoile grise qui devient dorée dès que vous terminez le livre
+* sa propre barre de progression, qui indique la part du livre déjà lue
 
-## Pages Individuelles des Livres
+## Les pages de chaque livre
 
 <div class="phone-frame">
-  <img alt="Capture d'écran de la page de livre individuelle de My Bible Log" src="/screenshots/fr/sc6-book-chapter-progress.webp" />
+  <img alt="Capture d'écran de la page d'un livre dans My Bible Log" src="/screenshots/fr/sc6-book-chapter-progress.webp" />
 </div>
 
-Cliquez sur n'importe quel livre pour voir sa page de progression détaillée. Ici vous trouverez :
+Cliquez sur un livre pour ouvrir sa page détaillée. Vous y trouverez :
 
-* La même barre de progression de la Bible entière en haut
-* Une grille des chapitres pour ce livre
-* Des barres de progression et des étoiles de complétion pour chaque chapitre
-* Des comptes de versets montrant combien de versets vous avez lus dans chaque chapitre
+* en haut, la même barre de progression pour toute la Bible
+* une grille des chapitres du livre
+* une barre de progression et une étoile pour chaque chapitre
+* le nombre de versets que vous avez lus dans chaque chapitre
 
-Pour chaque chapitre, vous avez deux options :
+Pour chaque chapitre, deux options s'offrent à vous :
 
-* **Ouvrir** - Ouvre le chapitre dans votre application biblique préférée (YouVersion sur mobile, BibleGateway sur ordinateur)
-* **Suivre** - Crée une nouvelle entrée de journal de lecture pour ce chapitre. Vous pouvez ajuster l'entrée avant de l'enregistrer, ce qui est utile si vous :
-  * N'avez lu qu'une partie du chapitre
-  * Voulez enregistrer plusieurs chapitres à la fois
+* **Ouvrir dans la Bible** - ouvre le chapitre dans votre application biblique préférée (YouVersion sur mobile, BibleGateway sur ordinateur)
+* **Ajouter lecture à registre** - crée une nouvelle entrée pour ce chapitre. Vous pouvez l'ajuster avant de l'enregistrer, ce qui est bien pratique si :
+  * vous n'avez lu qu'une partie du chapitre
+  * vous souhaitez enregistrer plusieurs chapitres d'un coup
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/fr/books">Aller à la page des Livres</a>
+  <a class="mbl-button mbl-button--light" href="/fr/books">Aller à la page Livres de la Bible</a>
 </div>

@@ -4,74 +4,74 @@
 
 ## Aperçu
 
-My Bible Log est un outil en ligne gratuit pour vous aider à suivre votre lecture de la Bible. En utilisant ce site web, vous acceptez ces conditions. Si vous n'êtes pas d'accord avec ces conditions, veuillez ne pas utiliser le site.
+My Bible Log est un outil en ligne gratuit qui vous aide à suivre votre lecture de la Bible. En utilisant ce site, vous acceptez les présentes conditions. Si vous ne les acceptez pas, merci de ne pas utiliser le site.
 
-Nous pouvons mettre à jour ces conditions occasionnellement. Lorsque nous le faisons, nous publierons les modifications ici. Votre utilisation continue du site après la publication des modifications signifie que vous acceptez les nouvelles conditions.
+Ces conditions peuvent être mises à jour de temps à autre ; le cas échéant, nous publierons les modifications sur cette page. Si vous continuez à utiliser le site après leur publication, cela vaut acceptation des nouvelles conditions.
 
-## Exigences d'âge et responsabilités des utilisateurs
+## Âge minimum et responsabilités des utilisateurs
 
-Pour utiliser My Bible Log, vous devez avoir au moins 13 ans ou avoir l'autorisation d'un parent ou tuteur. Si vous êtes mineur dans votre état ou province de résidence, vous devez avoir le consentement parental pour utiliser ce site.
+Pour utiliser My Bible Log, vous devez avoir au moins 13 ans ou disposer de l'autorisation d'un parent ou d'un tuteur. Si vous n'avez pas atteint la majorité dans votre État ou votre province de résidence, le consentement parental est nécessaire.
 
-Veuillez utiliser le site de manière responsable et légale. Vous acceptez de ne pas :
+Merci d'utiliser le site de façon responsable et dans le respect de la loi. Vous vous engagez à ne pas :
 
-* Enfreindre les lois ou violer les règlements
-* Partager du contenu nuisible, des virus ou du code malveillant
-* Tenter d'accéder aux comptes d'autres utilisateurs
-* Harceler, maltraiter ou discriminer les autres
-* Partager des informations fausses ou trompeuses
-* Interférer avec la sécurité ou le fonctionnement du site
-* Collecter ou suivre les informations personnelles d'autres personnes
-* Utiliser le site à des fins obscènes ou immorales
-* Reproduire, dupliquer, copier, vendre ou exploiter une partie du service sans autorisation
+* enfreindre une loi ou un règlement
+* diffuser des contenus nuisibles, des virus ou du code malveillant
+* tenter d'accéder au compte d'autres utilisateurs
+* harceler, maltraiter ou discriminer autrui
+* diffuser des informations fausses ou trompeuses
+* nuire à la sécurité ou au fonctionnement du site
+* collecter ou pister les données personnelles d'autrui
+* utiliser le site à des fins obscènes ou immorales
+* reproduire, dupliquer, copier, vendre ou exploiter tout ou partie du service sans autorisation
 
-## Votre contenu et confidentialité
+## Vos contenus et votre vie privée
 
-Le contenu que vous créez sur My Bible Log (comme les notes et la progression de lecture) vous appartient. Nous le garderons privé et ne le partagerons pas sans votre permission, sauf comme décrit dans notre [Politique de confidentialité](/fr/policy/privacy).
+Ce que vous créez sur My Bible Log - notes, progression de lecture et le reste - vous appartient. Nous le gardons confidentiel et ne le partageons pas sans votre autorisation, sauf dans les cas décrits par notre [Politique de confidentialité](/fr/policy/privacy).
 
-Votre soumission d'informations personnelles via le site est régie par notre Politique de confidentialité. Nous pouvons transférer votre contenu non chiffré sur divers réseaux et l'adapter aux exigences techniques des réseaux ou appareils de connexion.
+Les données personnelles que vous transmettez via le site relèvent de cette même Politique de confidentialité. Nous pouvons transférer vos contenus non chiffrés sur différents réseaux et les adapter aux exigences techniques des réseaux ou appareils par lesquels ils transitent.
 
-## Disponibilité et modifications du site
+## Disponibilité du site et modifications
 
-Nous essayons de maintenir My Bible Log en bon état de fonctionnement, mais nous ne pouvons pas garantir un service ininterrompu, ponctuel, sécurisé ou sans erreur. Nous nous réservons le droit de :
+Nous faisons de notre mieux pour que My Bible Log fonctionne bien, sans pouvoir garantir un service ininterrompu, ponctuel, sécurisé ni exempt d'erreurs. Nous nous réservons le droit :
 
-* Modifier ou interrompre le service à tout moment
-* Mettre le site hors ligne pour maintenance
-* Mettre à jour ou modifier toute information sur le site
-* Refuser le service à quiconque pour quelque raison que ce soit
+* de modifier ou d'arrêter le service à tout moment
+* de mettre le site hors ligne pour maintenance
+* de mettre à jour ou de modifier toute information du site
+* de refuser le service à quiconque, pour quelque raison que ce soit
 
-Nous ne sommes pas responsables si les informations sur le site ne sont pas exactes, complètes ou à jour. Le matériel est fourni à titre d'information générale uniquement et ne doit pas être considéré comme la seule base pour prendre des décisions.
+Nous ne sommes pas responsables si une information du site s'avère inexacte, incomplète ou périmée. Ces contenus sont fournis à titre purement informatif et ne doivent pas servir de seule base à une décision.
 
-## Services tiers et liens
+## Services et liens de tiers
 
-My Bible Log utilise des services tiers et peut fournir des liens vers des sites web tiers. Nous :
+My Bible Log fait appel à des services tiers et peut renvoyer vers des sites tiers. Nous :
 
-* Ne sommes pas responsables du contenu ou de l'exactitude des tiers
-* Ne garantissons pas et n'avons aucune responsabilité pour les matériaux ou sites web tiers
-* Fournissons l'accès aux outils tiers "tels quels" sans garanties
-* Pourrons offrir de nouveaux services et fonctionnalités à l'avenir
+* n'assumons aucune responsabilité quant aux contenus de tiers ni à leur exactitude
+* n'offrons aucune garantie et n'assumons aucune responsabilité concernant les documents ou sites de tiers
+* donnons accès aux outils de tiers « en l'état », sans garantie
+* pourrons proposer de nouveaux services et de nouvelles fonctionnalités à l'avenir
 
-## Clause de non-responsabilité et limitation de responsabilité
+## Exclusion de garanties et limitation de responsabilité
 
-Le service est fourni "tel quel" et "tel que disponible" sans aucune garantie ou condition de quelque nature que ce soit. Nous ne garantissons pas que :
+Le service est fourni « en l'état » et « selon disponibilité », sans garantie ni condition d'aucune sorte. Nous ne garantissons notamment pas que :
 
-* Le service répondra à vos attentes
-* Le service sera ininterrompu ou sans erreur
-* Les résultats obtenus du service seront exacts ou fiables
+* le service répondra à vos attentes
+* le service fonctionnera sans interruption ni erreur
+* les résultats obtenus grâce au service seront exacts ou fiables
 
-En aucun cas My Bible Log, nos administrateurs, dirigeants, employés, affiliés, agents, entrepreneurs, stagiaires, fournisseurs, prestataires de services ou concédants de licence ne seront responsables de toute blessure, perte, réclamation ou de tout dommage direct, indirect, accessoire, punitif, spécial ou consécutif de quelque nature que ce soit.
+En aucun cas My Bible Log, nos administrateurs, dirigeants, employés, sociétés affiliées, agents, prestataires, stagiaires, fournisseurs, prestataires de services ou concédants de licence ne pourront être tenus responsables d'une blessure, d'une perte, d'une réclamation, ni d'un dommage direct, indirect, accessoire, punitif, spécial ou consécutif, de quelque nature que ce soit.
 
 ## Indemnisation
 
-Vous acceptez d'indemniser, de défendre et de dégager de toute responsabilité My Bible Log et nos affiliés, partenaires, dirigeants, administrateurs, agents, entrepreneurs et employés de toute réclamation ou demande, y compris les honoraires d'avocat raisonnables, découlant de votre violation de ces Conditions d'utilisation ou de la violation de toute loi ou des droits de tiers.
+Vous vous engagez à indemniser, défendre et dégager de toute responsabilité My Bible Log ainsi que nos sociétés affiliées, partenaires, dirigeants, administrateurs, agents, prestataires et employés, face à toute réclamation ou demande - y compris les honoraires d'avocat raisonnables - découlant du non-respect des présentes Conditions d'utilisation par vous-même, ou de la violation d'une loi ou des droits d'un tiers.
 
 ## Résiliation
 
-Vous pouvez cesser d'utiliser My Bible Log à tout moment. Nous pouvons résilier votre accès si vous violez ces conditions. Les obligations et responsabilités encourues avant la résiliation survivront.
+Vous pouvez cesser d'utiliser My Bible Log quand vous le souhaitez. De notre côté, nous pouvons mettre fin à votre accès si vous ne respectez pas ces conditions. Les obligations et responsabilités nées avant la résiliation lui survivent.
 
 ## Droit applicable et divisibilité
 
-Ces Conditions d'utilisation sont régies par les lois de Columbus, OH, États-Unis. Si une disposition est jugée illégale, nulle ou inapplicable, elle sera appliquée dans toute la mesure permise par la loi, et les dispositions restantes resteront pleinement en vigueur.
+Les présentes Conditions d'utilisation sont régies par le droit en vigueur à Columbus, Ohio, États-Unis. Si une disposition venait à être jugée illégale, nulle ou inapplicable, elle s'appliquerait dans toute la mesure permise par la loi et les autres dispositions resteraient pleinement en vigueur.
 
 ## Modifications des conditions
 
-Nous nous réservons le droit de mettre à jour, de modifier ou de remplacer toute partie de ces Conditions d'utilisation en publiant des mises à jour sur notre site web. Il est de votre responsabilité de vérifier les modifications. Votre utilisation continue du site suite à toute modification constitue l'acceptation de ces modifications.
+Nous nous réservons le droit de mettre à jour, de modifier ou de remplacer toute partie des présentes Conditions d'utilisation en publiant les mises à jour sur notre site. Il vous appartient de vous tenir informé de ces modifications. Continuer à utiliser le site après une modification vaut acceptation de celle-ci.

@@ -1,46 +1,46 @@
 ---
 seo:
-  title: Verfolgen Sie Ihren täglichen Bibellesefortschritt
-  description: Erfahren Sie, wie Sie die Today-Seite von My Bible Log nutzen können, um Ihre täglichen Leseziele zu verfolgen und neue Passagen zum Lesen zu entdecken
+  title: Ihren täglichen Bibellesefortschritt im Blick behalten
+  description: So nutzen Sie die Heute-Seite von My Bible Log, um Ihr Tagesziel zu verfolgen und neue Bibelstellen zu entdecken
 og:
-  title: Verfolgen Sie Ihren täglichen Bibellesefortschritt
-  description: Erfahren Sie, wie Sie die Today-Seite von My Bible Log nutzen können, um Ihre täglichen Leseziele zu verfolgen und neue Passagen zum Lesen zu entdecken
+  title: Ihren täglichen Bibellesefortschritt im Blick behalten
+  description: So nutzen Sie die Heute-Seite von My Bible Log, um Ihr Tagesziel zu verfolgen und neue Bibelstellen zu entdecken
 ---
 
 ![](/share.jpg)
 
-# Today-Seite
+# Heute-Seite
 
 <div class="phone-frame">
-  <img alt="Screenshot der Today-Seite von My Bible Log" src="/screenshots/de/sc4-daily-goal.webp" />
+  <img alt="Screenshot der Heute-Seite von My Bible Log" src="/screenshots/de/sc4-daily-goal.webp" />
 </div>
 
-Die Today-Seite hilft Ihnen, Ihren täglichen Bibellesefortschritt zu verfolgen. Oben sehen Sie eine Fortschrittsleiste, die zeigt, wie nahe Sie Ihrem täglichen Ziel sind. Wenn Ihr Ziel beispielsweise 86 Verse beträgt, ist die Leiste voll, sobald Sie heute 86 Verse gelesen haben.
+Auf der Heute-Seite behalten Sie Ihr tägliches Bibellesen im Blick. Ganz oben zeigt eine Fortschrittsleiste, wie weit Sie von Ihrem Tagesziel entfernt sind. Liegt Ihr Ziel etwa bei 86 Versen, ist die Leiste voll, sobald Sie heute 86 Verse gelesen haben.
 
-Sie können hier auch die Einträge im heutigen Leselog anzeigen und verwalten. Müssen Sie Ihren Fortschritt aktualisieren? Sie können Einträge jederzeit bearbeiten oder löschen – ideal, wenn Sie an einem Tag in mehreren Sitzungen lesen.
+Hier sehen und verwalten Sie auch die heutigen Einträge. Etwas nachzutragen? Einträge lassen sich jederzeit bearbeiten oder löschen – praktisch, wenn Sie über den Tag verteilt in mehreren Abschnitten lesen.
 
-Die Fortschrittsleiste verwendet verschiedene Farben, um anzuzeigen:
+Die Farben der Fortschrittsleiste bedeuten:
 
-* **Fetter blauer Text** - Neue Verse, die Sie heute lesen
-* **Dunkelblauer Text** - Verse, die Sie zuvor gelesen haben (seit Ihrem Rückblickdatum)
-* **Glitzereffekt** - Erscheint, wenn Sie Ihr tägliches Ziel mit neuen Versen erreichen
+* **Kräftiges Blau** – Verse, die Sie heute zum ersten Mal lesen
+* **Dunkelblau** – Verse, die Sie schon einmal gelesen haben (ab Ihrem Rückblickdatum)
+* **Leuchteffekt** – Erscheint, sobald Sie Ihr Tagesziel mit neuen Versen erreichen
 
 ## Lesevorschläge
 
-Nicht sicher, was Sie als Nächstes lesen sollen? Die Today-Seite bietet personalisierte Lesevorschläge, um Ihnen zu helfen:
+Sie wissen nicht, was Sie als Nächstes lesen sollen? Die Heute-Seite macht Ihnen passende Vorschläge. So können Sie:
 
-* Neue Passagen zu entdecken
-* Ihr tägliches Leseziel zu erreichen
-* Unterschiedliche Teile der Bibel zu erkunden
+* neue Bibelstellen entdecken
+* Ihr Tagesziel erreichen
+* verschiedene Teile der Bibel kennenlernen
 
-Die Vorschläge umfassen eine Mischung aus:
+Die Vorschläge sind bunt gemischt:
 
-* Büchern des Neuen Testaments
+* Bücher des Neuen Testaments
 * Psalmen und Weisheitsliteratur
-* Anderen Büchern des Alten Testaments
+* weitere Bücher des Alten Testaments
 
-Wenn Sie die vorgeschlagenen Kapitel abschließen, werden neue erscheinen, um Ihr Lesen frisch und spannend zu halten.
+Sobald Sie ein vorgeschlagenes Kapitel gelesen haben, rückt ein neues nach – so bleibt Ihre Lektüre abwechslungsreich.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/de/today">Zur Today-Seite</a>
+  <a class="mbl-button mbl-button--light" href="/de/today">Zur Heute-Seite</a>
 </div>

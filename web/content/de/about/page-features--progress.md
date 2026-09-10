@@ -1,10 +1,10 @@
 ---
 seo:
   title: Fortschrittsseite
-  description: Dokumentation für die Funktionen zum Fortschritts-Tracking und zur Zielsetzung von My Bible Log
+  description: Fortschrittsübersicht, Prognosen und Zielsetzung in My Bible Log
 og:
   title: Fortschrittsseite
-  description: Dokumentation für die Funktionen zum Fortschritts-Tracking und zur Zielsetzung von My Bible Log
+  description: Fortschrittsübersicht, Prognosen und Zielsetzung in My Bible Log
 ---
 
 ![](/share.jpg)
@@ -15,53 +15,50 @@ og:
   <img alt="Screenshot der Fortschrittsseite von My Bible Log" src="/screenshots/de/sc13-progress.webp" />
 </div>
 
-Die Fortschrittsseite kann erreicht werden, indem man zur Bibelbücherseite geht und oben auf die Schaltfläche "Fortschritt" klickt.
+Zur Fortschrittsseite gelangen Sie über die Bibelbücher-Seite: Klicken Sie dort oben auf die Schaltfläche „Fortschritt".
 
-Die Fortschrittsseite bietet Ihnen einen Überblick über Ihren Lesefortschritt.
+Die Fortschrittsseite zeigt Ihnen auf einen Blick, wo Sie beim Bibellesen stehen.
 
 ## Leseeinstellungen
 
-Sie können Ihre Leseeinstellungen sehen, einschließlich Ihres "Rückblickdatums" und Ihres "täglichen Verszielzähls".
-Sie können auch sehen, wie viele Verse Sie bisher gelesen haben und den Prozentsatz der Bibel, den Sie gelesen haben.
+Hier sehen Sie Ihre Leseeinstellungen, darunter Ihr „Rückblickdatum" und Ihr „tägliches Versziel".
+Außerdem sehen Sie, wie viele Verse Sie bisher gelesen haben und welchen Anteil der Bibel das ausmacht.
 
-## Lesevorhersagen
+## Leseprognosen
 
-Diese Seite wird Ihre Lesegewohnheiten verwenden, um vorherzusagen, wann Sie mit dem Lesen der Bibel fertig sein werden.
-Zuerst bestimmt sie, wie viele Verse Sie durchschnittlich pro Tag gelesen haben, dann benutzt sie diese Lesegeschwindigkeit,
-um zu berechnen, wie viel länger es dauern wird, den restlichen Vers zu lesen.
+Aus Ihren Lesegewohnheiten schätzt die Seite, wann Sie die Bibel durchgelesen haben werden.
+Sie ermittelt zunächst, wie viele Verse Sie im Schnitt pro Tag lesen, und rechnet mit diesem Tempo hoch,
+wie lange die verbleibenden Verse noch dauern.
 
-Sie können vier separate Vorhersagen sehen, die jeweils auf Ihrem Lesefortschritt über einen bestimmten Zeitraum basieren:
+Sie erhalten vier Prognosen, die jeweils einen anderen Zeitraum Ihres Lesens zugrunde legen:
 
-**Ihr historischer Ausblick:**
-Diese Schätzung basiert auf Ihrem Fortschritt seit Ihrem Rückblickdatum (dem Datum, an dem Sie begonnen haben, My Bible Log zu verwenden, oder dem Datum, das Sie später speziell gewählt haben).
+**Gesamtprognose:**
+Diese Schätzung stützt sich auf Ihren Fortschritt seit Ihrem Rückblickdatum – also seit dem Tag, an dem Sie My Bible Log zum ersten Mal genutzt haben, oder seit einem Datum, das Sie später selbst gewählt haben.
 
-**Ihr 30-Tage-Ausblick:**
-Diese Schätzung basiert auf Ihrem Fortschritt in den letzten 30 Tagen oder ungefähr im letzten Monat.
-Da es über vier Wochen Lesegeschichte berücksichtigt, kann diese Schätzung genauer sein als der tägliche oder wöchentliche Ausblick.
+**30-Tage-Prognose:**
+Diese Schätzung stützt sich auf die vergangenen 30 Tage, also rund einen Monat.
+Weil sie über vier Wochen Leseverlauf berücksichtigt, ist sie oft treffsicherer als die Tages- oder Wochenprognose.
 
-Außerdem, wenn Sie an einem Punkt eine Lesepause eingelegt haben, könnte sich dies negativ auf Ihren historischen Ausblick auswirken.
-Wenn Sie jedoch Ihre Lesegewohnheit für 30 Tage beibehalten, erhalten Sie dennoch eine solide Schätzung, wann Sie mit dem Lesen fertig werden.
+Wenn Sie zwischendurch einmal eine Lesepause eingelegt haben, drückt das Ihre Gesamtprognose nach unten.
+Bleiben Sie aber 30 Tage am Ball, bekommen Sie hier trotzdem eine belastbare Schätzung, wann Sie fertig sein werden.
 
-**Ihr 7-Tage-Ausblick:**
-Diese Schätzung basiert auf Ihrem Fortschritt in den letzten 7 Tagen oder in der letzten Woche.
-Unterschiedliche Wochentage machen es einfacher oder schwieriger, die Bibel zu lesen.
-Dieser Ausblick kann genauer sein als der heutige Ausblick, da er Ihnen einen ausgewogenen Überblick darüber gibt,
-wie lange es dauern wird, die Bibel zu lesen, auch wenn einige Tage schwieriger zu lesen sind als andere.
+**7-Tage-Prognose:**
+Diese Schätzung stützt sich auf die vergangenen 7 Tage, also die letzte Woche.
+An manchen Wochentagen findet man leichter Zeit zum Lesen als an anderen.
+Deshalb ist diese Prognose meist aussagekräftiger als die Tagesprognose: Sie gleicht ruhigere und vollere Tage miteinander aus.
 
-**Heutiger Ausblick:**
-Diese Schätzung basiert auf Ihrem Fortschritt für heute.
-Wenn Sie gerade erst anfangen oder Ihre Bibel-Lese-Gewohnheit wieder aufnehmen, macht diese Schätzung es einfach
-zu bestimmen, wie lange es dauern wird, die Bibel zu lesen, wenn Sie heute im gleichen Tempo weitermachen.
+**Tagesprognose:**
+Diese Schätzung stützt sich allein auf den heutigen Tag.
+Gerade wenn Sie neu anfangen oder wieder einsteigen, sehen Sie damit sofort, wie lange Sie für die ganze Bibel bräuchten, wenn Sie das heutige Tempo beibehalten.
 
-## Setzen Sie ein Ziel
+## Ein Ziel setzen
 
-Die Fortschrittsseite ermöglicht es Ihnen auch, ein Ziel-Datum festzulegen, wann Sie mit dem Lesen der Bibel fertig sein möchten.
+Auf der Fortschrittsseite können Sie außerdem festlegen, bis wann Sie die Bibel durchgelesen haben möchten.
 
-My Bible Log wird von diesem Ziel-Datum ausgehend bestimmen, wie viele Verse Sie täglich lesen müssen,
-um die Bibel bis zu Ihrem Ziel-Datum fertig zu lesen.
+My Bible Log rechnet von diesem Zieldatum zurück und sagt Ihnen, wie viele Verse Sie dafür täglich lesen müssen.
 
-Dies ist eine großartige Möglichkeit zu bestimmen, wie viel Sie lesen müssen, um die Bibel bis zum Ende des Jahres, oder bis zu einem beliebigen anderen gewünschten Ziel-Datum, fertig zu lesen.
+So finden Sie schnell heraus, welches Pensum nötig ist, um die Bibel bis zum Jahresende – oder bis zu jedem anderen Wunschtermin – zu schaffen.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/progress">Zur Fortschrittsseite gehen</a>
+  <a class="mbl-button mbl-button--light" href="/de/progress">Zur Fortschrittsseite</a>
 </div>

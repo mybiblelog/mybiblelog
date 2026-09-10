@@ -1,92 +1,92 @@
 ---
 seo:
   title: Einstellungsseite
-  description: Dokumentation für My Bible Log Lese-, Berichts- und Kontoeinstellungen
+  description: Lese-, Erinnerungs- und Kontoeinstellungen in My Bible Log
 og:
   title: Einstellungsseite
-  description: Dokumentation für My Bible Log Lese-, Berichts- und Kontoeinstellungen
+  description: Lese-, Erinnerungs- und Kontoeinstellungen in My Bible Log
 ---
 
 ![](/share.jpg)
 
 # Einstellungsseite
 
-Die Einstellungsseite ist in mehrere Panels unterteilt:
+Die Einstellungsseite gliedert sich in mehrere Bereiche:
 
 * Konto
 * Lesen
 * Tägliche Erinnerungs-E-Mails
-* Export
-* Import
+* Exportieren
+* Importieren
 
 ## Konto
 
-Wenn die Einstellungsseite zum ersten Mal geöffnet wird, wird das Panel Konto angezeigt.
+Beim Öffnen der Einstellungsseite landen Sie zuerst im Bereich „Konto".
 
-Von hier aus können Sie:
+Hier können Sie:
 
 * Ihre E-Mail-Adresse ändern
 * Ihr Konto löschen
 
 ## Lesen
 
-Das Lesen-Panel ermöglicht es Ihnen, Einstellungen im Zusammenhang mit dem Bibellesen anzupassen. Dazu gehören Ihr **Tagesversziel** und Ihr **Rückblickdatum**.
+Im Bereich „Lesen" stellen Sie alles rund ums Bibellesen ein – darunter Ihr **tägliches Versziel** und Ihr **Rückblickdatum**.
 
-### Tagesversziel
+### Tägliches Versziel
 
-Ihr tägliches Versziel ist die Anzahl der Bibelverse, die Sie jeden Tag lesen möchten. Diese Einstellung beeinflusst das Verhalten der Fortschrittsbalken auf der Heute-Seite und der Kalender-Seite.
+Das tägliche Versziel ist die Anzahl der Bibelverse, die Sie sich pro Tag vornehmen. Es bestimmt, wie sich die Fortschrittsleisten auf der Heute-Seite und der Kalenderseite füllen.
 
-Um Ihnen bei der Entscheidung zu helfen, was Ihr tägliches Versziel sein sollte, zeigt Ihnen dieser Abschnitt, wie viele Tage es dauern wird, die Bibel zu lesen, wenn Sie jeden Tag Ihr Versziel erreichen. Standardmäßig beträgt dieser Wert 86, was es Ihnen ermöglicht, die gesamte Bibel in weniger als 365 Tagen zu lesen.
+Damit Sie leichter ein passendes Ziel finden, zeigt Ihnen dieser Bereich, wie lange Sie für die ganze Bibel brauchen, wenn Sie Ihr Ziel Tag für Tag erreichen. Voreingestellt sind 86 Verse – damit schaffen Sie die Bibel in weniger als 365 Tagen.
 
 ### Rückblickdatum
 
-Ihr Rückblickdatum bestimmt, wie weit zurück in Ihrem Lese-Log My Bible Log schauen wird, um Ihren Fortschritt zu bestimmen. Ihr Rückblickdatum beginnt als das Datum, an dem Sie My Bible Log zum ersten Mal verwendet haben.
+Das Rückblickdatum legt fest, wie weit My Bible Log für Ihren Fortschritt in Ihre Einträge zurückschaut. Zu Beginn ist es der Tag, an dem Sie My Bible Log zum ersten Mal genutzt haben.
 
-Einträge vor diesem Datum werden ignoriert. Zum Beispiel zeigt die Bibelbücher-Seite kein Lesen an, das Sie vor Ihrem Rückblickdatum gemacht haben.
+Einträge vor diesem Datum bleiben unberücksichtigt: Auf der Bibelbücher-Seite erscheint zum Beispiel nichts, was Sie davor gelesen haben.
 
-Wenn Sie die gesamte Bibel gelesen haben und von vorne beginnen möchten, Ihr Rückblickdatum auf das aktuelle Datum zu setzen, löscht Ihren Fortschritt auf der Bibelbücher-Seite und ermöglicht Ihren Log-Einträgen, auf der Heute-Seite und der Kalender-Seite wieder als "neue" Verse betrachtet zu werden.
+Haben Sie die ganze Bibel durch und möchten von vorn beginnen, setzen Sie das Rückblickdatum einfach auf heute. Damit wird Ihr Fortschritt auf der Bibelbücher-Seite zurückgesetzt, und auf der Heute-Seite und der Kalenderseite zählen Ihre Einträge wieder als „neue" Verse.
 
-Das Ändern Ihres Rückblickdatums löscht keine Daten aus My Bible Log. Alle Ihre Log-Einträge existieren weiterhin und können jederzeit von der Kalender-Seite aus angesehen werden.
+Gelöscht wird dabei nichts. Alle Ihre Einträge bleiben erhalten und lassen sich jederzeit über die Kalenderseite ansehen.
 
-### Bevorzugte Bibelversion
+### Bevorzugte Bibelübersetzung
 
-Sie können eine Übersetzung auswählen, die Sie zum Lesen bevorzugen. Externe Lese-Links öffnen diese Bibelübersetzung in Ihrer bevorzugten Lese-App.
+Sie können festlegen, mit welcher Übersetzung Sie am liebsten lesen. Lese-Links öffnen dann genau diese Übersetzung in Ihrer bevorzugten App.
 
-Wenn eine Übersetzung, die Sie verwenden möchten, nicht aufgeführt ist, fordern Sie diese bitte mit [diesem Formular](/de/feedback) an.
+Fehlt eine Übersetzung, die Sie gern nutzen würden? Wünschen Sie sie sich über [dieses Formular](/de/feedback).
 
 ### Bevorzugte Bibel-App
 
-Sie können die App oder Website auswählen, die geöffnet wird, wenn Sie auf einen Lese-Link klicken.
+Sie können auswählen, welche App oder Website sich öffnet, wenn Sie auf einen Lese-Link klicken.
 
-Diese Einstellung wird auf dem Gerät gespeichert, anstatt auf Ihrem Konto, sodass Sie auf verschiedenen Geräten verschiedene Apps oder Websites verwenden können.
+Diese Einstellung wird auf dem jeweiligen Gerät gespeichert und nicht in Ihrem Konto – so können Sie am Handy eine andere App nutzen als am Computer.
 
-Wenn eine Website oder App, die Sie verwenden möchten, nicht aufgeführt ist, fordern Sie diese bitte mit [diesem Formular](/de/feedback) an.
+Fehlt eine App oder Website, die Sie gern nutzen würden? Wünschen Sie sie sich über [dieses Formular](/de/feedback).
 
 ## Tägliche Erinnerungs-E-Mails
 
-Sie können sich dafür entscheiden, eine tägliche E-Mail-Erinnerung von My Bible Log zu erhalten. Die E-Mail wird zu einer von Ihnen gewählten Zeit ankommen.
+Auf Wunsch schickt Ihnen My Bible Log jeden Tag eine Erinnerung per E-Mail – zu einer Uhrzeit, die Sie selbst bestimmen.
 
-### Opt-in
+### Anmeldung
 
-Sie müssen bestätigen, dass Sie eine tägliche Erinnerungs-E-Mail erhalten möchten. My Bible Log sendet keine unaufgeforderten E-Mails.
+Sie müssen ausdrücklich bestätigen, dass Sie diese Erinnerungen erhalten möchten. Unaufgeforderte E-Mails verschickt My Bible Log nicht.
 
-Sie können die Erinnerungs-E-Mails jederzeit über Ihre Einstellungen deaktivieren. Jede E-Mail enthält auch einen sofortigen Abmelde-Link.
+In den Einstellungen können Sie die Erinnerungen jederzeit wieder abschalten. Außerdem enthält jede E-Mail einen Abmeldelink.
 
-### Erinnerungszeit
+### Uhrzeit der Erinnerung
 
-Sie müssen eine Zeit auswählen, zu der Sie Ihre tägliche Erinnerungs-E-Mail erhalten möchten. Dies ermöglicht es den Erinnerungen, ein hilfreicher und absichtlicher Teil Ihrer täglichen Routine zu sein.
+Sie legen selbst fest, wann die tägliche Erinnerung ankommen soll. So wird sie zu einem festen, hilfreichen Teil Ihres Tagesablaufs.
 
-## Export
+## Exportieren
 
-### Lese-Log (CSV)
+### Leseprotokoll (CSV)
 
-Ihr Lese-Log kann als Tabelle exportiert werden (im CSV-Format). Dies ermöglicht es Ihnen, Ihre Daten auf die von Ihnen gewünschte Weise zu bearbeiten.
+Ihr Leseprotokoll lässt sich als Tabelle im CSV-Format exportieren. Damit können Sie mit Ihren Daten machen, was Sie möchten.
 
-Wenn Sie über Programmierkenntnisse verfügen oder jemanden kennen, der dies tut, könnten Sie diese Daten verwenden, um neue Diagramme und Grafiken zu erstellen. Sie könnten sogar Exportdaten von My Bible Log von mehreren Personen kombinieren.
+Wenn Sie programmieren können – oder jemanden kennen, der es kann –, lassen sich daraus eigene Auswertungen und Diagramme bauen. Man könnte sogar die Exporte mehrerer Personen zusammenführen.
 
-Nachstehend finden Sie ein Beispiel dafür, wie eine exportierte Tabelle von My Bible Log aussieht. Die Überschriften "Datum" und "Passage" erscheinen nicht in der Datei.
+So sieht eine Exporttabelle von My Bible Log aus. Die Überschriften „Datum" und „Abschnitt" stehen dabei nicht in der Datei.
 
-|Datum|Passage|
+|Datum|Abschnitt|
 |---|---|
 |2020-07-21|Matthäus 1-3|
 |2020-07-22|Matthäus 4-9|
@@ -96,7 +96,7 @@ Nachstehend finden Sie ein Beispiel dafür, wie eine exportierte Tabelle von My 
 |2020-07-24|Matthäus 18-21|
 |2020-07-24|Matthäus 22-28|
 
-Nachstehend sehen Sie, wie die CSV-Datei in einem Texteditor aussieht. Beachten Sie, wie ein Komma zwischen Datum und Passage erscheint, da es sich um eine durch Kommas getrennte Werte (CSV) Datei handelt.
+Und so sieht dieselbe CSV-Datei in einem Texteditor aus. Zwischen Datum und Abschnitt steht jeweils ein Komma – daher der Name „Comma Separated Values".
 
 ```csv
 2020-07-21,Matthäus 1-3
@@ -110,19 +110,19 @@ Nachstehend sehen Sie, wie die CSV-Datei in einem Texteditor aussieht. Beachten 
 
 ### Notizen und Tags (Textdatei)
 
-Sie können Ihre Notizen und Tags in einer Textdatei exportieren.
+Ihre Notizen und Tags können Sie als Textdatei exportieren.
 
-Während das Exportieren des Lese-Logs (CSV-Datei) automatisch wieder in My Bible Log importiert werden kann, können die Notizen nicht automatisch importiert werden.
-Sie können jedoch immer manuell Notizen und Tags aus Ihrer Exportdatei wiederherstellen, wenn Sie Ihre Daten wiederherstellen müssen.
+Das Leseprotokoll (CSV) lässt sich später automatisch wieder einlesen – die Notizen leider nicht.
+Sie können sie aber jederzeit anhand der Exportdatei von Hand neu anlegen, falls Sie Ihre Daten wiederherstellen müssen.
 
-## Import
+## Importieren
 
-Sie können ein Lese-Log-Tabelle (im CSV-Dateiformat) zu My Bible Log importieren. Sie können eine Tabelle importieren, die Sie selbst erstellt haben, oder eine Tabelle importieren, die Sie zuvor aus My Bible Log exportiert haben.
+Sie können ein Leseprotokoll als CSV-Tabelle in My Bible Log einlesen: entweder eine Tabelle, die Sie selbst erstellt haben, oder eine, die Sie zuvor aus My Bible Log exportiert haben.
 
-Die Funktion zum Importieren des Lese-Logs verwendet das gleiche Dateiformat wie die Funktion zum Exportieren des Lese-Logs.
+Der Import erwartet dasselbe Dateiformat, das auch der Export erzeugt.
 
-Wenn Sie eine Tabelle importieren, wird der Importfortschritt auf der Seite angezeigt. My Bible Log erstellt keine Log-Einträge neu, die bereits existieren. Wenn Sie am 1. Januar Genesis 1 gelesen und in My Bible Log verfolgt haben und dann eine Tabelle importiert haben, die einen Log-Eintrag für denselben Abschnitt und dasselbe Datum enthielt, würde My Bible Log diesen ignorieren.
+Während des Einlesens sehen Sie den Fortschritt direkt auf der Seite. Bereits vorhandene Einträge legt My Bible Log kein zweites Mal an: Haben Sie etwa am 1. Januar 1. Mose 1 gelesen und eingetragen, und Ihre Tabelle enthält denselben Abschnitt am selben Datum, wird dieser Eintrag übersprungen.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/de/settings">Zur Einstellungsseite gehen</a>
+  <a class="mbl-button mbl-button--light" href="/de/settings">Zur Einstellungsseite</a>
 </div>

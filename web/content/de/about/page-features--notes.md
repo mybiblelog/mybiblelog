@@ -1,10 +1,10 @@
 ---
 seo:
-  title: Notiz- und Tags-Seiten
-  description: Dokumentation für die kostenlosen Bibelnotizen und individuellen Tags-Funktionen von My Bible Log
+  title: Notizen und Tags
+  description: Freie Bibelnotizen und eigene Tags in My Bible Log
 og:
-  title: Notiz- und Tags-Seiten
-  description: Dokumentation für die kostenlosen Bibelnotizen und individuellen Tags-Funktionen von My Bible Log
+  title: Notizen und Tags
+  description: Freie Bibelnotizen und eigene Tags in My Bible Log
 ---
 
 ![](/share.jpg)
@@ -15,60 +15,60 @@ og:
   <img alt="Screenshot der Notizseite von My Bible Log" src="/screenshots/de/sc10-notes.webp" />
 </div>
 
-My Bible Log ermöglicht es Ihnen, freie Notizen zu erstellen, zu organisieren und zu verarbeiten, während Sie lesen.
+Mit My Bible Log können Sie beim Lesen frei Notizen festhalten, sammeln und ordnen.
 
-Auf der Notizseite können Sie Notizen erstellen und mit den bereits erstellten Notizen arbeiten. Da Sie im Laufe der Zeit wahrscheinlich viele Notizen erstellen werden, ist Organisation sehr wichtig.
+Auf der Notizseite legen Sie neue Notizen an und arbeiten mit den vorhandenen weiter. Weil im Lauf der Zeit einiges zusammenkommt, ist eine gute Ordnung Gold wert.
 
-Sie können auch eigene individuelle Tags definieren, um Ihre Notizen zu kategorisieren.
+Dafür können Sie eigene Tags anlegen und Ihre Notizen damit einsortieren.
 
-## Erstellen einer Notiz
+## Eine Notiz anlegen
 
-Der Inhalt einer Notiz ist Freitext. Notizen unterstützen Zeilenumbrüche (die Enter-Taste), sodass eine einzige Notiz mehrere Absätze enthalten kann.
+Der Inhalt einer Notiz ist freier Text. Zeilenumbrüche mit der Enter-Taste sind möglich, eine einzelne Notiz darf also mehrere Absätze umfassen.
 
-Wenn Sie in den Notizinhalt URLs aufnehmen, erkennt My Bible Log diese und wandelt sie automatisch in Hyperlinks um, wenn Sie die Notiz speichern. Sie können dann auf diese URLs klicken, um schnell auf die verlinkte Ressource zuzugreifen.
+Schreiben Sie eine Internetadresse in die Notiz, erkennt My Bible Log sie beim Speichern und macht automatisch einen Link daraus. Ein Klick genügt später, um die verlinkte Seite zu öffnen.
 
-Jede Notiz kann eine beliebige Anzahl von verbundenen Bibelstellen haben. Notizen müssen keine Bibelstellen enthalten und können einfach Textinhalte sein.
+Zu jeder Notiz können Sie beliebig viele Bibelstellen verknüpfen – müssen es aber nicht. Eine reine Textnotiz ist genauso in Ordnung.
 
-Optional können Sie eine Notiz ohne Textinhalt erstellen, solange sie mindestens eine verbundene Bibelstelle hat. Dies ermöglicht es Benutzern, Bibelstellen zu markieren, die sie später erneut lesen oder zu denen sie später Notizen machen möchten.
+Umgekehrt geht es auch: Eine Notiz ohne Text ist erlaubt, solange mindestens eine Bibelstelle verknüpft ist. So markieren Sie Stellen, zu denen Sie später zurückkehren oder etwas notieren möchten.
 
-Das Hinzufügen von Tags zu einer Notiz ist ebenfalls optional. Notizen können mit einer beliebigen Anzahl von individuellen Tags versehen werden.
+Auch Tags sind freiwillig. Eine Notiz kann beliebig viele davon tragen.
 
-## Filtern nach Tag
+## Nach Tags filtern
 
-Der Button "Tagfilter" oben auf der Notizseite ermöglicht die Auswahl beliebiger individueller Tags. Notizen werden nach den ausgewählten Tags gefiltert.
+Über die Schaltfläche „Nach Tags filtern" oben auf der Notizseite wählen Sie beliebig viele Ihrer Tags aus, und die Liste zeigt nur noch passende Notizen.
 
-Es gibt drei verschiedene Übereinstimmungsmodi für die ausgewählten Tags:
+Dafür gibt es drei Suchmodi:
 
-* **Irgendeiner** - Notizen mit einem der ausgewählten Tags werden einbezogen. Wenn Sie 2 Tags auswählen, werden alle Notizen mit einem, dem anderen oder beiden Tags einbezogen. Es ist nicht wichtig, ob die Notizen zusätzliche Tags neben den ausgewählten haben.
-* **Alle** - Notizen mit allen ausgewählten Tags werden einbezogen. Wenn Sie 2 Tags auswählen, werden Notizen mit nur einem dieser Tags ausgeschlossen, aber Notizen mit beiden Tags einbezogen. Es ist nicht wichtig, ob die Notizen Tags haben, die nicht ausgewählt wurden.
-* **Exakte** - Notizen mit der genauen Kombination der ausgewählten Tags werden einbezogen. Notizen, die einen der ausgewählten Tags vermissen, werden ausgeschlossen, ebenso wie Notizen, die zusätzliche Tags haben, die über die ausgewählten hinausgehen.
+* **Beliebig** – Es genügt einer der gewählten Tags. Bei zwei ausgewählten Tags erscheinen also Notizen mit dem einen, dem anderen oder beiden. Ob eine Notiz darüber hinaus noch weitere Tags hat, spielt keine Rolle.
+* **Alle** – Eine Notiz muss sämtliche gewählten Tags tragen. Bei zwei ausgewählten Tags fällt eine Notiz mit nur einem davon heraus, eine Notiz mit beiden bleibt drin. Zusätzliche Tags stören auch hier nicht.
+* **Exakt** – Nur Notizen mit genau dieser Tag-Kombination erscheinen. Fehlt einer der gewählten Tags, fällt die Notiz heraus – und ebenso, wenn sie noch weitere Tags trägt.
 
-## Sortieren nach Erstellungsdatum
+## Nach Erstellungsdatum sortieren
 
-Der "Sortieren"-Button ermöglicht es, Notizen auf eine der beiden Arten zu sortieren:
+Über die Schaltfläche „Sortieren" ordnen Sie Ihre Notizen auf zwei Arten:
 
 * Neueste zuerst
 * Älteste zuerst
 
-Beide Sortierreihenfolgen basieren auf dem Datum und der Uhrzeit, zu der die Notiz ursprünglich erstellt wurde. Das Aktualisieren einer Notiz ändert diese Zeit nicht.
+Beides richtet sich danach, wann die Notiz ursprünglich angelegt wurde. Wenn Sie eine Notiz später bearbeiten, ändert das diesen Zeitpunkt nicht.
 
-## Tags erstellen, um Ihre Notizen zu organisieren
+## Mit Tags Ordnung schaffen
 
 <div class="phone-frame">
-  <img alt="Screenshot der Notiztagsseite von My Bible Log" src="/screenshots/de/sc11-note-tags.webp" />
+  <img alt="Screenshot der Tags-Seite von My Bible Log" src="/screenshots/de/sc11-note-tags.webp" />
 </div>
 
-Um zur Tags-Seite zu gelangen und mit Ihren eigenen individuellen Tags zu arbeiten, klicken Sie auf den Button "Tags" auf der Notizseite.
+Zur Tags-Seite kommen Sie über die Schaltfläche „Tags" auf der Notizseite.
 
-Jeder Tag hat eine individuelle Farbe zur einfachen Erkennung - entwickeln Sie Ihr eigenes farbcodiertes System zur Organisation von Notizen.
+Jeder Tag bekommt seine eigene Farbe, damit Sie ihn sofort wiedererkennen – so entsteht nach und nach Ihr persönliches Farbsystem.
 
-Sie können auch Ihre eigene Beschreibung zu jedem Tag hinzufügen, damit Sie Details darüber, wofür der Tag gedacht ist und wie Sie ihn verwenden, einschließen können. Alle URLs in diesen Beschreibungen werden erkannt und in Hyperlinks umgewandelt, sodass Sie schnell auf die verlinkte Ressource zurückgreifen können.
+Zu jedem Tag können Sie außerdem eine Beschreibung hinterlegen und festhalten, wofür er gedacht ist und wie Sie ihn einsetzen. Auch hier werden Internetadressen automatisch zu Links.
 
-Auf der Tags-Seite sehen Sie die Anzahl der Notizen, die jeden Tag verwenden. Wenn Sie diesen Button klicken, gelangen Sie zur Notizseite, die nun gefiltert wird, um nur Notizen anzuzeigen, die diesen Tag haben.
+Auf der Tags-Seite sehen Sie zu jedem Tag, wie viele Notizen ihn verwenden. Ein Klick auf diese Zahl führt Sie zur Notizseite, die dann nur noch die Notizen mit diesem Tag zeigt.
 
-Sie können einen Tag, der noch verwendet wird, nicht löschen. Sie müssen daher alle Notizen untaggen oder löschen, die einen Tag verwenden, bevor Sie den Tag löschen können.
+Einen Tag, der noch im Einsatz ist, können Sie nicht löschen. Entfernen Sie ihn also erst aus allen Notizen – oder löschen Sie diese Notizen –, bevor Sie den Tag selbst löschen.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/de/notes">Zur Notizseite gehen</a>
-  <a class="mbl-button mbl-button--light" href="/de/tags">Zur Tags-Seite gehen</a>
+  <a class="mbl-button mbl-button--light" href="/de/notes">Zur Notizseite</a>
+  <a class="mbl-button mbl-button--light" href="/de/tags">Zur Tags-Seite</a>
 </div>

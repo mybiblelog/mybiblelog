@@ -1,47 +1,47 @@
 ---
 seo:
-  title: Création de compte
-  description: Comment créer un compte sur My Bible Log
+  title: Créer un compte
+  description: Comment créer un compte et se connecter à My Bible Log
 og:
-  title: Création de compte
-  description: Comment créer un compte sur My Bible Log
+  title: Créer un compte
+  description: Comment créer un compte et se connecter à My Bible Log
 ---
 
 ![](/share.jpg)
 
-# Création de compte
+# Créer un compte
 
-My Bible Log prend en charge plusieurs méthodes d'authentification pour faciliter le démarrage.
+Pour que le démarrage soit simple, My Bible Log propose plusieurs façons de se connecter.
 
-## Connexion sociale
+## Connexion avec Google
 
-Les utilisateurs qui disposent d'un compte Google peuvent l'utiliser pour se connecter. La page de connexion propose un bouton "Se connecter avec Google" qui vous redirigera vers Google pour vous connecter.
+Si vous avez un compte Google, vous pouvez l'utiliser pour vous connecter. La page de connexion comporte un bouton « Se connecter avec Google » qui vous redirige vers Google.
 
-Les utilisateurs ne saisissent jamais leur mot de passe Google dans My Bible Log. Une fois connecté à Google, ce dernier redirigera vers My Bible Log et transmettra une vérification que vous vous êtes connecté à ce site.
+Votre mot de passe Google n'est jamais saisi sur My Bible Log. Une fois connecté chez Google, celui-ci vous renvoie sur le site et confirme à My Bible Log que la connexion a bien eu lieu.
 
-## Création de compte local
+## Créer un compte sur le site
 
-Les comptes utilisateurs sont liés à des adresses e-mail. Se connecter avec Google est un moyen de vérifier une adresse e-mail.
+Chaque compte est rattaché à une adresse e-mail, et la connexion avec Google est l'un des moyens de vérifier cette adresse.
 
-Les utilisateurs qui souhaitent se connecter directement à My Bible Log peuvent s'inscrire sur le site. Pour ce faire, fournissez une adresse e-mail et un mot de passe. Un lien de vérification sera envoyé à l'adresse e-mail fournie, et l'adresse e-mail doit être vérifiée avec ce lien avant qu'un utilisateur puisse se connecter.
+Si vous préférez vous connecter directement à My Bible Log, inscrivez-vous sur le site : indiquez simplement une adresse e-mail et un mot de passe. Nous vous envoyons ensuite un lien de vérification à cette adresse, et tant que vous n'avez pas cliqué dessus, la connexion reste impossible.
 
-En vérifiant les adresses e-mail, My Bible Log empêche les comptes de spam d'abuser des ressources du serveur et garantit que le site reste rapide et performant pour tous les utilisateurs.
+Cette vérification empêche les comptes indésirables de monopoliser les ressources du serveur et garde le site rapide pour tout le monde.
 
-## Changement des méthodes de connexion
+## Changer de méthode de connexion
 
-Les utilisateurs peuvent également passer d'une méthode d'authentification à une autre. Comme une adresse e-mail est ce qui identifie un compte, vous pouvez vous connecter au même compte en utilisant Google ou votre mot de passe local.
+Vous pouvez passer d'une méthode à l'autre quand vous le souhaitez. Comme c'est l'adresse e-mail qui identifie votre compte, vous retrouvez le même compte avec Google comme avec votre propre mot de passe.
 
-Les utilisateurs qui ont précédemment utilisé une connexion sociale et n'ont pas de mot de passe peuvent en créer un :
+Si vous ne vous connectiez jusqu'ici qu'avec Google et n'avez pas encore de mot de passe, voici comment en créer un :
 
-* Rendez-vous sur la page de connexion
-* Cliquez sur "Se connecter" (pas besoin de remplir l'e-mail ou le mot de passe)
-* Un lien apparaîtra pour réinitialiser votre mot de passe par e-mail. Cliquez dessus.
-* Ouvrez l'e-mail et cliquez sur le lien.
-* Vous pouvez désormais créer un mot de passe sur My Bible Log.
-* Une fois votre mot de passe créé, vous serez automatiquement connecté.
+* Ouvrez la page de connexion.
+* Cliquez sur « Se connecter » (inutile de remplir l'e-mail ou le mot de passe).
+* Un lien apparaît pour réinitialiser votre mot de passe par e-mail. Cliquez dessus.
+* Ouvrez l'e-mail et suivez le lien.
+* Vous pouvez maintenant définir un mot de passe pour My Bible Log.
+* Dès qu'il est enregistré, vous êtes connecté automatiquement.
 
 ## Changer l'adresse e-mail du compte
 
-Les utilisateurs peuvent modifier leur adresse e-mail depuis la page Paramètres.
+Vous pouvez modifier votre adresse e-mail depuis la page Paramètres.
 
-Dans la section "Compte", il y a un bouton "Changer l'e-mail".
+Dans la section « Compte » se trouve le bouton « Changer l'e-mail ».

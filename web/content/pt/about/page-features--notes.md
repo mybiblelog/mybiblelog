@@ -1,74 +1,74 @@
 ---
 seo:
-  title: Páginas de Notas e Tags
-  description: Documentação para as funcionalidades de notas livres e tags personalizadas do My Bible Log
+  title: Notas e tags
+  description: Notas bíblicas livres e tags personalizadas no My Bible Log
 og:
-  title: Páginas de Notas e Tags
-  description: Documentação para as funcionalidades de notas livres e tags personalizadas do My Bible Log
+  title: Notas e tags
+  description: Notas bíblicas livres e tags personalizadas no My Bible Log
 ---
 
 ![](/share.jpg)
 
-# Página de Notas
+# Página Notas
 
 <div class="phone-frame">
-  <img alt="Captura de tela da Página de Notas do My Bible Log" src="/screenshots/pt/sc10-notes.webp" />
+  <img alt="Captura de tela da página Notas do My Bible Log" src="/screenshots/pt/sc10-notes.webp" />
 </div>
 
-O My Bible Log permite que você faça anotações livres para coletar, organizar e processar enquanto lê.
+O My Bible Log deixa você anotar livremente o que for percebendo durante a leitura, para depois reunir e organizar tudo.
 
-A página de Notas permite que você crie notas e trabalhe com as notas que já foram criadas. Como provavelmente você irá criar muitas notas ao longo do tempo, a organização é muito importante.
+Na página Notas você cria notas novas e mexe nas que já tem. Como com o tempo elas se acumulam, manter tudo organizado faz toda a diferença.
 
-Você também pode definir suas próprias tags personalizadas para categorizar suas notas.
+É para isso que servem as tags: você cria as suas e classifica as notas com elas.
 
-## Criando uma Nota
+## Criar uma nota
 
-O conteúdo da nota é texto livre. As notas suportam quebras de linha (tecla Enter), então uma única nota pode conter vários parágrafos.
+O conteúdo da nota é texto livre. Dá para quebrar linha com a tecla Enter, então uma nota só pode ter vários parágrafos.
 
-Se você incluir URLs no conteúdo da nota, o My Bible Log irá identificá-los e automaticamente transformá-los em hiperlinks quando você salvar a nota. Você pode então clicar nesses URLs para acessar rapidamente o recurso vinculado.
+Se você escrever um endereço da web dentro da nota, o My Bible Log reconhece na hora de salvar e transforma em link. Depois é só clicar para abrir a página.
 
-Cada nota pode ter qualquer número de passagens conectadas. As notas não são obrigadas a ter passagens e podem simplesmente ser conteúdo de texto.
+Você pode ligar quantas passagens quiser a uma nota, mas não é obrigatório: uma nota só de texto funciona igual.
 
-Opcionalmente, você pode criar uma nota sem nenhum conteúdo de texto, desde que tenha pelo menos uma passagem conectada. Isso permite que os usuários marquem passagens que desejam revisitar ou fazer anotações posteriormente.
+O contrário também vale: dá para salvar uma nota sem texto nenhum, desde que tenha pelo menos uma passagem ligada a ela. Assim você marca as passagens às quais quer voltar ou sobre as quais pretende escrever depois.
 
-Adicionar tags a uma nota também é opcional. As notas podem ser marcadas com qualquer número de tags personalizadas.
+As tags também são opcionais, e uma nota pode levar quantas você quiser.
 
-## Filtrando por Tag
+## Filtrar por tag
 
-O botão "Filtros de Tag" no topo da página de Notas permite a seleção de qualquer número de tags personalizadas. As notas serão filtradas pelas tags selecionadas.
+O botão "Filtrar por tags", no topo da página Notas, deixa você escolher quantas tags quiser, e a lista passa a mostrar só as notas que combinam.
 
-Existem três modos diferentes de correspondência para as tags selecionadas:
+São três modos de correspondência:
 
-* **Qualquer** - Notas com qualquer uma das tags selecionadas serão incluídas. Se você selecionar 2 tags, qualquer nota com uma, a outra ou ambas as tags será incluída. Não importa se as notas têm tags adicionais além das selecionadas.
-* **Todas** - Notas com todas as tags selecionadas serão incluídas. Se você selecionar 2 tags, as notas com apenas uma dessas tags serão excluídas, mas as notas com ambas as tags serão incluídas. Não importa se as notas têm tags diferentes das selecionadas.
-* **Exata** - Notas com a combinação exata de tags selecionadas serão incluídas. Notas que estão sem qualquer uma das tags selecionadas serão excluídas, assim como as notas que têm tags adicionais além das selecionadas.
+* **Qualquer** — basta a nota ter uma das tags escolhidas. Se você escolher 2, aparecem as notas com uma, com a outra ou com as duas. Não importa se elas têm outras tags além dessas.
+* **Tudo** — a nota precisa ter todas as tags escolhidas. Se você escolher 2, as notas com apenas uma ficam de fora e as com as duas entram. Tags extras também não atrapalham.
+* **Exato** — só aparecem as notas com exatamente essa combinação. Se faltar alguma das tags escolhidas, a nota fica de fora; e fica de fora também se tiver tags a mais.
 
-## Ordenando por Data de Criação
+## Ordenar por data de criação
 
-O botão "Ordenar" permite que as notas sejam ordenadas de duas maneiras:
+O botão "Ordenar" oferece duas opções:
 
-* Mais Recentes Primeiro
-* Mais Antigos Primeiro
+* Mais recentes primeiro
+* Mais antigos primeiro
 
-Ambas as ordens de classificação são baseadas na data e hora em que a nota foi originalmente criada. Atualizar uma nota não alterará esse tempo.
+As duas se baseiam na data e hora em que você criou a nota. Editar a nota depois não muda esse horário.
 
-## Criando Tags para Organizar Suas Notas
+## Criar tags para organizar suas notas
 
 <div class="phone-frame">
-  <img alt="Captura de tela da Página de Tags de Notas do My Bible Log" src="/screenshots/pt/sc11-note-tags.webp" />
+  <img alt="Captura de tela da página Tags do My Bible Log" src="/screenshots/pt/sc11-note-tags.webp" />
 </div>
 
-Para acessar a página de Tags e trabalhar com suas próprias tags personalizadas, clique no botão "Tags" na página de Notas.
+Para abrir a página Tags e mexer nas suas, clique no botão "Tags" dentro da página Notas.
 
-Cada tag tem uma cor personalizada para fácil reconhecimento - desenvolva seu próprio sistema de codificação por cores para organizar as notas.
+Cada tag ganha uma cor própria para você reconhecer de imediato — aos poucos você monta seu próprio código de cores.
 
-Você pode adicionar sua própria descrição a cada tag, para que possa incluir detalhes sobre para que a tag serve e como está sendo usada. Qualquer URL nessas descrições será reconhecido e convertido em hiperlinks para que você possa revisitar rapidamente o recurso vinculado.
+Cada tag também pode ter uma descrição, onde você anota para que ela serve e como costuma usá-la. Endereços da web escritos aí também viram links.
 
-Na página de Tags, você pode ver o número de notas que estão usando cada tag. Clicar neste botão o levará para a página de Notas, que agora será filtrada para mostrar apenas as notas que têm essa tag.
+Na página Tags você vê quantas notas usam cada tag. Clicando nesse número, você vai para a página Notas já filtrada, mostrando só as notas com aquela tag.
 
-Você não pode excluir uma tag que ainda está em uso, então você precisará desmarcar ou excluir quaisquer notas que estão usando uma tag antes de poder excluir a tag.
+Uma tag que ainda está em uso não pode ser apagada: primeiro tire a tag das notas que a usam (ou apague essas notas) e só então será possível excluí-la.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/pt/notes">Ir para a página de Notas</a>
-  <a class="mbl-button mbl-button--light" href="/pt/tags">Ir para a página de Tags</a>
+  <a class="mbl-button mbl-button--light" href="/pt/notes">Ir para a página Notas</a>
+  <a class="mbl-button mbl-button--light" href="/pt/tags">Ir para a página Tags</a>
 </div>

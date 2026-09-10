@@ -1,68 +1,63 @@
 ---
 seo:
-  title: Página de Progreso
-  description: Documentación para la página de progreso de My Bible Log
+  title: Página Progreso
+  description: Resumen de avance, proyecciones y metas de lectura en My Bible Log
 og:
-  title: Página de Progreso
-  description: Documentación para la página de progreso de My Bible Log
+  title: Página Progreso
+  description: Resumen de avance, proyecciones y metas de lectura en My Bible Log
 ---
 
 ![](/share.jpg)
 
-## Página de Progreso
+# Página Progreso
 
 <div class="phone-frame">
-  <img alt="Captura de pantalla de la Página de Progreso de My Bible Log" src="/screenshots/es/sc13-progress.webp" />
+  <img alt="Captura de pantalla de la página Progreso de My Bible Log" src="/screenshots/es/sc13-progress.webp" />
 </div>
 
-Se puede acceder a la página de Progreso yendo a la página de Libros de la Biblia y haciendo clic en el botón "Progreso" en la parte superior.
+Para llegar a la página Progreso, entra a la página Libros Bíblicos y haz clic en el botón «Progreso» de la parte superior.
 
-La página de Progreso te proporciona una descripción general de tu progreso de lectura.
+Ahí ves de un vistazo cómo va tu lectura de la Biblia.
 
-### Configuración de Lectura
+## Ajustes de lectura
 
-Puedes ver tu configuración de lectura, incluidas tu "fecha de revisión" y tu "objetivo diario de versículos".
-También puedes ver cuántos versículos has leído hasta ahora y el porcentaje de la Biblia que has leído.
+Puedes consultar tus ajustes de lectura, entre ellos tu «Fecha de Revisión» y tu «meta diaria de versículos».
+También ves cuántos versículos llevas leídos y qué porcentaje de la Biblia representan.
 
-### Predicciones de Lectura
+## Proyecciones de lectura
 
-Esta página utilizará tus hábitos de lectura para predecir cuándo terminarás de leer la Biblia.
-Primero determina cuántos versículos has leído en promedio cada día y luego utiliza esa velocidad de lectura
-para calcular cuánto tiempo te llevará leer los versículos restantes.
+A partir de tus hábitos, la página calcula cuándo terminarás de leer la Biblia.
+Primero saca cuántos versículos lees en promedio por día y, con ese ritmo, estima cuánto te falta para los versículos restantes.
 
-Puedes ver cuatro predicciones separadas, cada una basada en tu progreso de lectura durante un período específico:
+Verás cuatro proyecciones, cada una basada en un período distinto de tu lectura:
 
-**Tu Perspectiva Histórica:**
-Esta estimación utiliza tu progreso desde tu fecha de revisión (la fecha en que comenzaste a usar My Bible Log o la fecha que elegiste específicamente más adelante).
+**Proyección histórica:**
+Se basa en tu avance desde tu Fecha de Revisión, es decir, desde el día en que empezaste a usar My Bible Log o desde la fecha que hayas elegido después.
 
-**Tu Perspectiva de 30 Días:**
-Esta estimación utiliza tu progreso durante los últimos 30 días, o aproximadamente el último mes.
-Como tiene en cuenta más de cuatro semanas de historial de lectura, esta estimación puede ser más precisa que la perspectiva diaria o semanal.
+**Proyección de 30 días:**
+Se basa en los últimos 30 días, más o menos el último mes.
+Como toma en cuenta más de cuatro semanas de lectura, suele ser más certera que la proyección diaria o semanal.
 
-Además, si tomaste un descanso de la lectura en algún momento, ese descanso podría afectar negativamente tu Perspectiva Histórica.
-Sin embargo, si mantienes tu hábito de lectura durante 30 días, esto aún te dará una estimación sólida de cuándo terminarás de leer.
+Además, si en algún momento hiciste una pausa, esa pausa arrastra hacia abajo tu proyección histórica.
+En cambio, si mantienes el hábito durante 30 días, esta proyección te da igual una estimación confiable de cuándo vas a terminar.
 
-**Tu Perspectiva de 7 Días:**
-Esta estimación utiliza tu progreso durante los últimos 7 días, o la última semana.
-Diferentes días de la semana hacen que sea más fácil o más difícil leer la Biblia.
-Esta perspectiva puede ser más precisa que la Perspectiva de Hoy, ya que ayuda a ofrecer una visión equilibrada
-de cuánto tiempo tomará terminar de leer la Biblia, incluso si algunos días hacen que sea más difícil leer que otros.
+**Proyección de 7 días:**
+Se basa en los últimos 7 días, o sea la última semana.
+Hay días de la semana en que es más fácil sentarse a leer y otros en que cuesta más.
+Por eso esta proyección suele ser más certera que la de hoy: equilibra los días tranquilos con los días ocupados.
 
-**Perspectiva de Hoy:**
-Esta estimación utiliza tu progreso de hoy.
-Si estás comenzando o volviendo a empezar tu hábito de lectura de la Biblia, esta estimación facilita
-determinar cuánto tiempo tomará terminar la Biblia si mantienes el ritmo de hoy.
+**Proyección de hoy:**
+Se basa únicamente en lo que leíste hoy.
+Si recién estás empezando, o retomando el hábito, te muestra al instante cuánto tardarías en terminar la Biblia manteniendo el ritmo de hoy.
 
-## Establecer una Meta
+## Ponte una meta
 
-La página de Progreso también te permite establecer una fecha objetivo para cuando desees terminar de leer la Biblia.
+En la página Progreso también puedes fijar la fecha en la que quieres terminar de leer la Biblia.
 
-My Bible Log trabajará hacia atrás desde esa fecha objetivo para determinar cuántos versículos necesitas leer cada día
-para terminar de leer la Biblia para tu fecha objetivo.
+My Bible Log calcula hacia atrás desde esa fecha y te dice cuántos versículos tienes que leer por día para llegar a tiempo.
 
-Esta es una excelente manera de determinar cuánta lectura necesitas hacer para terminar de leer la Biblia al final del año,
-o para cualquier otra fecha objetivo que elijas.
+Es una forma muy práctica de saber qué ritmo necesitas para terminar la Biblia antes de fin de año, o para cualquier otra fecha que te propongas.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/progress">Ir a la página de Progreso</a>
+  <a class="mbl-button mbl-button--light" href="/es/progress">Ir a la página Progreso</a>
 </div>

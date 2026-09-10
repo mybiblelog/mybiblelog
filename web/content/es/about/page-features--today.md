@@ -1,40 +1,46 @@
 ---
 seo:
-  title: Página de Hoy
-  description: Documentación para la página de hoy de My Bible Log
+  title: Lleva el control de tu lectura bíblica diaria
+  description: Cómo usar la página Hoy de My Bible Log para seguir tu meta diaria y descubrir nuevos pasajes para leer
 og:
-  title: Página de Hoy
-  description: Documentación para la página de hoy de My Bible Log
+  title: Lleva el control de tu lectura bíblica diaria
+  description: Cómo usar la página Hoy de My Bible Log para seguir tu meta diaria y descubrir nuevos pasajes para leer
 ---
 
 ![](/share.jpg)
 
-# Página de Hoy
+# Página Hoy
 
 <div class="phone-frame">
-  <img alt="Captura de pantalla de la Página de Hoy de My Bible Log" src="/screenshots/es/sc4-daily-goal.webp" />
+  <img alt="Captura de pantalla de la página Hoy de My Bible Log" src="/screenshots/es/sc4-daily-goal.webp" />
 </div>
 
-La página de Hoy muestra una barra de progreso de tu objetivo de lectura diaria. Si tu cuenta de versículos de lectura diaria es de 86, la barra de progreso estará completa una vez que hayas leído al menos 86 versículos.
+La página Hoy te ayuda a seguir tu lectura bíblica del día. Arriba de todo verás una barra de progreso que muestra qué tan cerca estás de tu meta diaria. Por ejemplo, si tu meta es de 86 versículos, la barra se llena por completo apenas leas los 86 de hoy.
 
-También puedes ver las entradas del registro de hoy en esta página. Si necesitas hacer algún cambio en tu registro de lectura, puedes actualizar o eliminar entradas aquí. Esto es especialmente útil si comenzaste a leer en algún momento del día y registraste tu progreso, y luego continuaste leyendo y quisiste actualizar tu entrada en el registro para agregar más versículos.
+Aquí también ves y administras los registros de hoy. ¿Necesitas corregir algo? Puedes editar o eliminar entradas cuando quieras: viene muy bien si lees en varios ratos a lo largo del día.
 
-Esta barra de progreso, junto con el resto de la página de Hoy, distingue entre versículos nuevos y versículos que ya has leído:
+Los colores de la barra de progreso significan lo siguiente:
 
-* Cualquier versículo que hayas leído en un día anterior (desde tu fecha de revisión) llenará la barra de progreso con un color azul oscuro.
-* Los versículos nuevos llenarán la barra de progreso con un azul intenso.
-* Si todos los versículos que leíste son nuevos, no verás la barra azul oscuro ya que permanecerá oculta detrás de la barra azul intensa de versículos nuevos.
+* **Azul intenso**: versículos que estás leyendo hoy por primera vez
+* **Azul oscuro**: versículos que ya habías leído antes (desde tu Fecha de Revisión)
+* **Efecto brillante**: aparece cuando alcanzas tu meta diaria con versículos nuevos
 
-Si cumples tu objetivo diario con versículos nuevos y llenas la barra de progreso, comenzará a brillar y continuará haciéndolo durante el resto del día.
+## Sugerencias de lectura
 
-## Sugerencias de Lectura
+¿No sabes qué leer hoy? La página Hoy te propone pasajes pensados para ti, para que puedas:
 
-My Bible Log muestra pasajes de lectura sugeridos en la página de Hoy. Si aún no tienes un pasaje en mente, puedes elegir uno de estos.
+* descubrir pasajes nuevos
+* alcanzar tu meta diaria de lectura
+* recorrer distintas partes de la Biblia
 
-Las sugerencias de lectura son un equilibrio entre libros del Nuevo Testamento, salmos y literatura de sabiduría, y otros libros del Antiguo Testamento. El objetivo es facilitarte al máximo el inicio de la lectura.
+Las sugerencias combinan:
 
-Estas sugerencias de lectura respaldan tu objetivo de lectura diaria promoviendo capítulos que aún no has leído. Una vez que terminas de leer uno de los capítulos sugeridos, se sugerirá un nuevo capítulo en su lugar.
+* libros del Nuevo Testamento
+* Salmos y libros de sabiduría
+* otros libros del Antiguo Testamento
+
+Cada vez que terminas un capítulo sugerido, aparece otro en su lugar, de modo que siempre tengas algo nuevo por delante.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/es/today">Ir a la página de Hoy</a>
+  <a class="mbl-button mbl-button--light" href="/es/today">Ir a la página Hoy</a>
 </div>

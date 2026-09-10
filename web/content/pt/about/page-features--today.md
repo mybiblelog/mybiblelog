@@ -1,46 +1,46 @@
 ---
 seo:
-  title: Acompanhe o Progresso da sua Leitura Diária da Bíblia
-  description: Aprenda como usar a página de Hoje do My Bible Log para acompanhar suas metas de leitura diária e descobrir novos trechos para ler
+  title: Acompanhe sua leitura diária da Bíblia
+  description: Como usar a página Hoje do My Bible Log para acompanhar sua meta diária e descobrir novas passagens para ler
 og:
-  title: Acompanhe o Progresso da sua Leitura Diária da Bíblia
-  description: Aprenda como usar a página de Hoje do My Bible Log para acompanhar suas metas de leitura diária e descobrir novos trechos para ler
+  title: Acompanhe sua leitura diária da Bíblia
+  description: Como usar a página Hoje do My Bible Log para acompanhar sua meta diária e descobrir novas passagens para ler
 ---
 
 ![](/share.jpg)
 
-# Página de Hoje
+# Página Hoje
 
 <div class="phone-frame">
-  <img alt="Captura de tela da Página de Hoje do My Bible Log" src="/screenshots/pt/sc4-daily-goal.webp" />
+  <img alt="Captura de tela da página Hoje do My Bible Log" src="/screenshots/pt/sc4-daily-goal.webp" />
 </div>
 
-A página de Hoje ajuda você a acompanhar o progresso da sua leitura diária da Bíblia. No topo, você verá uma barra de progresso mostrando o quão perto está de atingir sua meta diária. Por exemplo, se sua meta for 86 versículos, a barra estará completa quando você ler 86 versículos hoje.
+A página Hoje ajuda você a acompanhar a leitura da Bíblia do dia. Logo no topo há uma barra de progresso que mostra o quanto falta para a sua meta diária. Se a meta for de 86 versículos, por exemplo, a barra fica cheia assim que você ler os 86 de hoje.
 
-Você também pode visualizar e gerenciar os registros de leitura de hoje aqui. Precisa atualizar seu progresso? Você pode editar ou excluir entradas a qualquer momento - perfeito para quando lê em múltiplas sessões ao longo do dia.
+É aqui também que você vê e organiza os registros do dia. Precisa corrigir alguma coisa? Dá para editar ou excluir registros a qualquer momento — ótimo para quem lê em vários momentos ao longo do dia.
 
-A barra de progresso usa cores diferentes para mostrar:
+As cores da barra de progresso indicam:
 
-* **Azul em negrito** - Novos versículos que você está lendo hoje
-* **Azul escuro** - Versículos que você já leu antes (desde sua data de revisão)
-* **Efeito brilhante** - Aparece quando você atinge sua meta diária com novos versículos
+* **Azul vibrante** — versículos que você está lendo hoje pela primeira vez
+* **Azul escuro** — versículos que você já tinha lido antes (a partir da sua Data de Revisão)
+* **Efeito brilhante** — aparece quando você bate a meta diária com versículos novos
 
-## Sugestões de Leitura
+## Sugestões de leitura
 
-Não sabe o que ler em seguida? A página de Hoje oferece sugestões de leitura personalizadas para ajudar você a:
+Sem ideia do que ler hoje? A página Hoje sugere passagens escolhidas para você, para ajudar a:
 
-* Descobrir novos trechos
-* Atingir sua meta de leitura diária
-* Explorar diferentes partes da Bíblia
+* descobrir passagens novas
+* bater sua meta diária de leitura
+* percorrer diferentes partes da Bíblia
 
-As sugestões incluem uma mistura de:
+As sugestões misturam:
 
-* Livros do Novo Testamento
-* Salmos e literatura de sabedoria
-* Outros livros do Antigo Testamento
+* livros do Novo Testamento
+* Salmos e livros sapienciais
+* outros livros do Antigo Testamento
 
-Conforme você completa os capítulos sugeridos, novos aparecerão para manter sua leitura atualizada e envolvente.
+Cada capítulo sugerido que você termina dá lugar a um novo, então há sempre algo diferente pela frente.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/pt/today">Ir para a página de Hoje</a>
+  <a class="mbl-button mbl-button--light" href="/pt/today">Ir para a página Hoje</a>
 </div>
