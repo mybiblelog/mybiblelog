@@ -50,37 +50,37 @@ onMounted(async () => {
 {
   "en": {
     "trend": "Trend",
-    "description": "Verses read each day over your chosen time window.",
+    "description": "Verses read over your chosen time window, summarized by day or by week.",
     "loading": "Loading your reading history…"
   },
   "de": {
     "trend": "Verlauf",
-    "description": "Pro Tag gelesene Verse über den gewählten Zeitraum.",
+    "description": "Gelesene Verse über den gewählten Zeitraum, zusammengefasst nach Tag oder Woche.",
     "loading": "Ihr Leseverlauf wird geladen…"
   },
   "es": {
     "trend": "Tendencia",
-    "description": "Versículos leídos cada día durante el período elegido.",
+    "description": "Versículos leídos durante el período elegido, resumidos por día o por semana.",
     "loading": "Cargando tu historial de lectura…"
   },
   "fr": {
     "trend": "Tendance",
-    "description": "Versets lus chaque jour sur la période choisie.",
+    "description": "Versets lus sur la période choisie, résumés par jour ou par semaine.",
     "loading": "Chargement de votre historique de lecture…"
   },
   "ko": {
     "trend": "추세",
-    "description": "선택한 기간 동안 매일 읽은 구절 수입니다.",
+    "description": "선택한 기간 동안 읽은 구절 수를 일별 또는 주별로 요약합니다.",
     "loading": "읽기 기록을 불러오는 중…"
   },
   "pt": {
     "trend": "Tendência",
-    "description": "Versículos lidos a cada dia no período escolhido.",
+    "description": "Versículos lidos no período escolhido, resumidos por dia ou por semana.",
     "loading": "Carregando seu histórico de leitura…"
   },
   "uk": {
     "trend": "Тренд",
-    "description": "Віршів прочитано щодня за вибраний період.",
+    "description": "Віршів прочитано за вибраний період, підсумовано по днях або тижнях.",
     "loading": "Завантаження історії читання…"
   }
 }

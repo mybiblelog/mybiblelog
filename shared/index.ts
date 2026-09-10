@@ -16,6 +16,7 @@ export {
   computeBookRecency,
   computeBookFrequencies,
   computeDailyVerseSeries,
+  computeWeeklyVerseSeries,
   type InsightsLogEntry,
   type HeatmapCell,
   type HeatmapWeek,
@@ -24,6 +25,7 @@ export {
   type BookRecency,
   type BookFrequency,
   type DailyVersePoint,
+  type WeeklyVersePoint,
 } from './insights/insights';
 
 // Framework-agnostic UI/domain logic (consumable from a React hook, a Pinia

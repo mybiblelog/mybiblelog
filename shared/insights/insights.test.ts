@@ -7,6 +7,7 @@ import {
   computeBookLastRead,
   computeBookRecency,
   computeDailyVerseSeries,
+  computeWeeklyVerseSeries,
   filterEntriesByDateRange,
   getIntensityLevel,
   getRecencyLevel,
@@ -266,4 +267,36 @@ test('computeDailyVerseSeries supports each supported window length', () => {
 
 test('computeDailyVerseSeries returns an empty array for non-positive days', () => {
   expect(computeDailyVerseSeries([], 0, '2026-06-15')).toEqual([]);
+});
+
+// ---------------------------------------------------------------------------
+// computeWeeklyVerseSeries
+// ---------------------------------------------------------------------------
+
+test('computeWeeklyVerseSeries returns exactly `weeks` points, each 7 days ending on endDate', () => {
+  const series = computeWeeklyVerseSeries([], 3, '2026-06-15');
+  expect(series).toHaveLength(3);
+  expect(series[0]).toEqual({ weekStart: '2026-05-26', weekEnd: '2026-06-01', count: 0 });
+  expect(series[1]).toEqual({ weekStart: '2026-06-02', weekEnd: '2026-06-08', count: 0 });
+  expect(series[2]).toEqual({ weekStart: '2026-06-09', weekEnd: '2026-06-15', count: 0 });
+});
+
+test('computeWeeklyVerseSeries sums verses across every day in each week, so a single reading day never drops to zero for the week', () => {
+  const entries = [
+    // Only one day read in the most recent week — the week's total still reflects it.
+    entry('2026-06-10', Bible.makeVerseId(1, 1, 1), Bible.makeVerseId(1, 1, 4)),
+    // Two reads in the prior week, summed together.
+    entry('2026-06-02', Bible.makeVerseId(1, 1, 1), Bible.makeVerseId(1, 1, 2)),
+    entry('2026-06-05', Bible.makeVerseId(1, 1, 1), Bible.makeVerseId(1, 1, 3)),
+    // Outside the 3-week window — ignored.
+    entry('2026-05-01', Bible.makeVerseId(1, 1, 1), Bible.makeVerseId(1, 1, 9)),
+  ];
+  const series = computeWeeklyVerseSeries(entries, 3, '2026-06-15');
+  expect(series.find(w => w.weekStart === '2026-06-09')?.count).toBe(4);
+  expect(series.find(w => w.weekStart === '2026-06-02')?.count).toBe(5);
+  expect(series.find(w => w.weekStart === '2026-05-26')?.count).toBe(0);
+});
+
+test('computeWeeklyVerseSeries returns an empty array for non-positive weeks', () => {
+  expect(computeWeeklyVerseSeries([], 0, '2026-06-15')).toEqual([]);
 });

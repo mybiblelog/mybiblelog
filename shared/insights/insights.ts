@@ -259,3 +259,55 @@ export const computeDailyVerseSeries = (
   }
   return series;
 };
+
+export type WeeklyVersePoint = {
+  /** YYYY-MM-DD date of the first day in this week's 7-day bucket. */
+  weekStart: string;
+  /** YYYY-MM-DD date of the last day in this week's 7-day bucket. */
+  weekEnd: string;
+  count: number;
+};
+
+/**
+ * Returns the total verses read in each of the trailing `weeks` 7-day buckets
+ * ending on `endDate` (defaults to today), ordered oldest → newest. Always
+ * returns exactly `weeks` points. Summarizing by week (rather than by day)
+ * smooths over individual days with no reading, so the series reflects
+ * reading trends instead of dropping to zero whenever a single day was skipped.
+ */
+export const computeWeeklyVerseSeries = (
+  entries: ReadonlyArray<Readonly<InsightsLogEntry>>,
+  weeks: number,
+  endDate?: string,
+): WeeklyVersePoint[] => {
+  const safeWeeks = Math.max(0, Math.floor(weeks));
+  if (safeWeeks === 0) {
+    return [];
+  }
+
+  const end = endDate ? dayjs(endDate) : dayjs();
+  const start = end.subtract(safeWeeks * 7 - 1, 'day');
+  const startStr = start.format('YYYY-MM-DD');
+  const endStr = end.format('YYYY-MM-DD');
+
+  const counts = computeDateVerseCounts(entries, startStr, endStr);
+
+  const series: WeeklyVersePoint[] = [];
+  let weekStart = start;
+  for (let i = 0; i < safeWeeks; i++) {
+    const weekEnd = weekStart.add(6, 'day');
+    let total = 0;
+    let day = weekStart;
+    while (day.isBefore(weekEnd) || day.isSame(weekEnd, 'day')) {
+      total += counts[day.format('YYYY-MM-DD')]?.total ?? 0;
+      day = day.add(1, 'day');
+    }
+    series.push({
+      weekStart: weekStart.format('YYYY-MM-DD'),
+      weekEnd: weekEnd.format('YYYY-MM-DD'),
+      count: total,
+    });
+    weekStart = weekStart.add(7, 'day');
+  }
+  return series;
+};
