@@ -1,10 +1,10 @@
 ---
 seo:
   title: My Bible Log - questions fréquentes
-  description: Les réponses aux questions les plus courantes sur My Bible Log, l'outil gratuit de suivi de lecture biblique : fonctionnalités, objectifs, notes, confidentialité, compte et suivi de votre progression.
+  description: Les réponses aux questions les plus courantes sur My Bible Log, l'outil gratuit de suivi de lecture biblique — fonctionnalités, objectifs, notes, confidentialité, compte et suivi de votre progression.
 og:
   title: My Bible Log - questions fréquentes
-  description: Les réponses aux questions les plus courantes sur My Bible Log, l'outil gratuit de suivi de lecture biblique : fonctionnalités, objectifs, notes, confidentialité, compte et suivi de votre progression.
+  description: Les réponses aux questions les plus courantes sur My Bible Log, l'outil gratuit de suivi de lecture biblique — fonctionnalités, objectifs, notes, confidentialité, compte et suivi de votre progression.
 ---
 
 ## Questions fréquentes

@@ -1,142 +1,142 @@
 ---
 seo:
-  title: 7 Façons d'Organiser Votre Étude Biblique Personnelle
-  description: Comment utiliser les puissantes fonctionnalités de note et de tag de My Bible Log pour tirer le meilleur parti de votre temps d'étude biblique personnel.
+  title: 7 façons d'organiser votre étude biblique personnelle
+  description: Comment tirer parti des notes et des tags de My Bible Log pour rendre votre temps d'étude biblique personnelle plus fructueux
 og:
-  title: 7 Façons d'Organiser Votre Étude Biblique Personnelle
-  description: Comment utiliser les puissantes fonctionnalités de note et de tag de My Bible Log pour tirer le meilleur parti de votre temps d'étude biblique personnel.
+  title: 7 façons d'organiser votre étude biblique personnelle
+  description: Comment tirer parti des notes et des tags de My Bible Log pour rendre votre temps d'étude biblique personnelle plus fructueux
 ---
 
 ![](/share.jpg)
 
-# 7 Façons d'Organiser Votre Étude Biblique Personnelle
+# 7 façons d'organiser votre étude biblique personnelle
 
-La fonctionnalité Notes de My Bible Log est particulièrement puissante. Il existe de nombreuses façons différentes de créer des tags et d'organiser des notes pour permettre différents flux de travail.
+La fonction Notes de My Bible Log a plus d'un tour dans son sac. Avec vos propres tags, vous pouvez classer vos notes de bien des manières, selon votre façon de travailler.
 
-Voici 7 idées pour utiliser la fonctionnalité des notes pour tirer le meilleur parti de votre lecture biblique personnelle.
+Voici 7 idées pour tirer davantage de votre lecture personnelle de la Bible.
 
-## 1. Questions Ouvertes
+## 1. Questions en suspens
 
-Suivez toutes vos questions au fur et à mesure sans vous arrêter, puis revenez sur elles. Lorsque vous vous asseyez pour lire, examinez vos notes qui portent ce tag. Vous pouvez trouver une réponse ou des informations pertinentes en lisant.
+Notez les questions qui vous viennent au fil de la lecture, sans vous interrompre, et revenez-y plus tard. La prochaine fois que vous vous installez pour lire, parcourez les notes portant ce tag : la réponse se trouve peut-être dans le passage du jour.
 
-### Agir
+### À vous de jouer
 
-Créez un tag pour au moins 3 questions que vous souhaitez rechercher dans la Bible. Pouvez-vous répondre à ces 3 questions d'exemple ?
+Créez un tag pour au moins 3 questions que vous aimeriez creuser dans la Bible. Sauriez-vous répondre à ces trois-là ?
 
-* Comment quelqu'un peut-il être "sauvé" et que signifie être sauvé ? Tag suggéré : Sauvetage
-* Est-ce que toutes les règles des livres de l'Ancien Testament comme le Lévitique s'appliquent à nous aujourd'hui ? Tag suggéré : Règles de l'AT
-* Comment la Bible parle-t-elle de l'église ? Qui ou quoi compte comme une église ? La Bible nous commande-t-elle d'aller à l'église ? Tag suggéré : Église
-
-<div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/fr/notes">Aller à la page des Notes</a>
-  <a class="mbl-button mbl-button--light" href="/fr/tags">Aller à la page des Tags</a>
-</div>
-
-## 2. Discipulat / Points de Conversation 1:1
-
-Beaucoup de gens étudient la Bible avec un ami ou un mentor. Les mentors peuvent se réunir pour étudier la Bible tout au long de la semaine avec plusieurs personnes dans des relations de discipulat. Créer un tag pour chaque personne avec laquelle vous étudiez peut vous aider à entretenir votre conversation biblique en cours. Ces tags peuvent vous aider à suivre les questions, les réponses et les sujets importants pour votre temps d'étude.
-
-### Agir
-
-Créez un tag pour chaque personne avec qui vous étudiez ou avec qui vous pouvez parler de la Bible. Pour chaque personne, créez au moins une note avec quelque chose que vous voulez discuter avec cette personne.
+* Comment quelqu'un est-il « sauvé », et que signifie être sauvé ? Tag suggéré : Salut
+* Toutes les règles des livres de l'Ancien Testament, comme le Lévitique, s'appliquent-elles encore aujourd'hui ? Tag suggéré : Lois AT
+* Comment la Bible parle-t-elle de l'Église ? Qui ou quoi est une Église ? La Bible nous ordonne-t-elle d'« aller à l'église » ? Tag suggéré : Église
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/fr/notes">Aller à la page des Notes</a>
-  <a class="mbl-button mbl-button--light" href="/fr/tags">Aller à la page des Tags</a>
+  <a class="mbl-button mbl-button--light" href="/fr/notes">Aller à la page Notes</a>
+  <a class="mbl-button mbl-button--light" href="/fr/tags">Aller à la page Tags</a>
 </div>
 
-## 3. Étude Thématique
+## 2. Discipulat et entretiens en tête-à-tête
 
-Créez un tag pour un sujet spécifique, puis recherchez-le. Il est utile de "porter" des questions avec vous. Vous pouvez constater qu'en lisant la Bible, différents passages vous aident à mieux comprendre un sujet ou à répondre à une question que vous avez eue.
+Beaucoup étudient la Bible avec un ami ou un mentor. Ceux qui accompagnent d'autres personnes rencontrent parfois plusieurs d'entre elles dans la semaine. Créer un tag par personne aide à garder le fil d'une rencontre à l'autre : les questions, les réponses et les sujets importants restent au même endroit.
 
-Un grand sujet pour ce type d'étude est "la prière". Vous pouvez suivre les versets qui vous aident à comprendre la prière et à avoir la bonne disposition d'esprit pour parler à Dieu. Voyez comment les gens ont parlé à Dieu de la Genèse à l'Apocalypse. Voyez comment Dieu a parlé aux gens et les promesses qu'il nous a faites.
+### À vous de jouer
 
-### Agir
-
-La Bible regorge de sujets intéressants, mais ce n'est pas un manuel. Il n'y a pas de glossaire à la fin avec chaque sujet ou question que nous voulons étudier. Eh bien, parfois si, mais ils ne peuvent pas couvrir tout ! Choisissez un sujet de la Bible qui vous intéresse et créez un tag pour organiser vos notes sur ce sujet.
-
-Utilisez cette liste pour vous inspirer :
-
-* Péché
-* Salut
-* Baptême
-* Communion
-* Leadership de l'Église
-* Paradis
-* Dons Spirituels
+Créez un tag pour chaque personne avec qui vous étudiez la Bible ou pouvez en parler. Pour chacune, rédigez au moins une note avec un point que vous aimeriez aborder.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/fr/notes">Aller à la page des Notes</a>
-  <a class="mbl-button mbl-button--light" href="/fr/tags">Aller à la page des Tags</a>
+  <a class="mbl-button mbl-button--light" href="/fr/notes">Aller à la page Notes</a>
+  <a class="mbl-button mbl-button--light" href="/fr/tags">Aller à la page Tags</a>
 </div>
 
-## 4. Langue Originale
+## 3. Étude thématique
 
-Vous connaissez peut-être certaines des façons dont l'hébreu et le grec originaux diffèrent des mots que vous lisez. Suivez les versets que vous voulez étudier dans leur langue originale pour les comprendre pleinement.
+Créez un tag pour un sujet précis et rassemblez-y tout ce que vous croisez. Cela vaut vraiment la peine de « porter » une question avec soi un moment : au fil des lectures, des passages viennent éclairer un thème ou répondre à une question qui vous trottait dans la tête.
 
-### Agir
+L'un des sujets les plus riches pour ce genre d'étude est la prière. Rassemblez les versets qui vous aident à comprendre ce qu'est prier et dans quelle disposition s'adresser à Dieu. Observez comment les hommes ont parlé à Dieu, de la Genèse à l'Apocalypse, comment Dieu leur a parlé, et quelles promesses il nous a faites.
 
-Beaucoup de mots ont des nuances différentes dans différentes langues. Par exemple, en anglais, il n'y a qu'un seul mot pour "amour", mais en grec ancien (la langue du Nouveau Testament), il y a sept mots différents pour "amour" qui ont tous des significations légèrement différentes.
+### À vous de jouer
 
-Créez un tag pour les passages que vous voulez rechercher dans la langue originale, comme "Langue Orig." Trouvez au moins 3 versets différents avec le mot "amour" et taguez-les avec ce nouveau tag. Vous pouvez étudier ces versets dans leur langue originale sur des sites comme [Blue Letter Bible](https://www.blueletterbible.org/study.cfm).
+La Bible regorge de sujets passionnants, mais ce n'est pas un manuel : il n'y a pas, à la fin, un index couvrant toutes les questions qu'on aimerait creuser. Parfois si, bien sûr, mais il ne pourrait jamais tout couvrir. Choisissez un sujet biblique qui vous intéresse et créez un tag pour y ranger vos notes.
+
+Quelques pistes :
+
+* Le péché
+* Le salut
+* Le baptême
+* La cène
+* La direction de l'Église
+* Le ciel
+* Les dons spirituels
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/fr/notes">Aller à la page des Notes</a>
-  <a class="mbl-button mbl-button--light" href="/fr/tags">Aller à la page des Tags</a>
+  <a class="mbl-button mbl-button--light" href="/fr/notes">Aller à la page Notes</a>
+  <a class="mbl-button mbl-button--light" href="/fr/tags">Aller à la page Tags</a>
 </div>
 
-## 5. Comparer les Traductions
+## 4. Langue d'origine
 
-Vous avez une traduction préférée ? Peut-être voulez-vous voir comment d'autres traductions ont traité le même verset pour saisir plus de nuances de la signification de l'auteur original.
+Vous savez peut-être déjà que l'hébreu et le grec d'origine disent parfois les choses autrement que la traduction que vous avez sous les yeux. Gardez de côté les versets que vous voulez vérifier dans la langue d'origine, pour les comprendre pleinement.
 
-De temps en temps, une étude côte à côte des traductions montrera que certaines phrases ou sections entières n'existent que dans une traduction. Cela est souvent dû au fait que ces différences apparaissent dans certaines copies des manuscrits originaux que nous avons aujourd'hui.
+### À vous de jouer
 
-Plus souvent, la comparaison des traductions révélera des différences mineures dans le choix des mots et de la formulation.
+Chaque langue donne aux mots ses propres nuances. En français, nous avons pour ainsi dire un seul mot pour « amour » ; en grec ancien, la langue du Nouveau Testament, il y en a sept, chacun avec un sens légèrement différent.
 
-Les traductions bibliques plus récentes ont tendance à suivre les manuscrits les plus anciens et les plus établis pour garantir la plus grande précision possible. Les phrases qui ont été copiées dans des manuscrits ultérieurs peuvent apparaître en tant que notes de bas de page dans ces traductions plus récentes.
-
-Par exemple, 1 Jean 5:7-8 comporte quelques mots supplémentaires dans la King James Version (KJV), l'une des premières traductions anglaises de la Bible :
-
-> 7 Car il y en a trois qui rendent témoignage dans le ciel, le Père, la Parole, et le Saint-Esprit: et ces trois sont un.
-> 8 Et il y en a trois qui rendent témoignage sur la terre, l'Esprit, et l'eau, et le sang: et ces trois sont d'accord en un.
-
-La New American Standard Bible (NASB) omet ces phrases pour rester fidèle aux premières copies du texte :
-> 7 Car il y en a trois qui rendent témoignage : 8 l'Esprit et l'eau et le sang; et les trois sont en accord.
-
-Cependant, la NASB *inclut* les ajouts des manuscrits ultérieurs en tant que note de bas de page afin que nous puissions en être conscients.
-
-Un exemple très clair de la manière dont les traductions peuvent différer est lorsque qu'une traduction particulière est mise à jour pour suivre les évolutions de la langue anglaise. La NASB a été mise à jour en 2020 après sa dernière mise à jour en 1995.
-
-La Fondation Lockman, qui est responsable de la NASB, explique [sur leur site web](https://www.lockman.org/nasb-bible-info/) comment et pourquoi ils ont mis à jour la traduction après 25 ans.
-
-La NASB2020 a apporté de petites mises à jour pour clarifier le genre dans certains versets. Cela est dû au fait que la langue grecque originale gère le genre différemment de l'anglais moderne.
-
-En anglais, le mot "brothers" signifie toujours des frères mâles. En grec biblique, il n'y a pas de mot pour "frère ou soeur", juste "frère" et "soeur". Pour parler à la fois de frères et de soeurs en grec biblique, vous utiliseriez toujours le mot "frères" et les gens comprendraient que vous parliez de tout le monde. Si vous vouliez seulement parler de vos frères mâles en grec biblique, vous devriez dire "frères hommes".
-
-Les traducteurs de la NASB ont déterminé que les lecteurs anglais modernes pourraient faire de fausses hypothèses sur ce que disait le grec original, alors ils ont mis à jour certains cas de "frères" avec "frères et soeurs" pour garantir une compréhension claire.
-
-Avec cette distinction, nous pouvons maintenant savoir quand les auteurs originaux parlaient à la fois d'hommes et de femmes, ainsi que quand ils ne parlaient que d'hommes.
-
-### Agir
-
-Trouvez des versets qui disent "frères" dans la NASB95 et voyez s'ils ont été mis à jour en "frères et soeurs" dans la NASB2020, ou si ces versets faisaient vraiment référence uniquement aux hommes.
+Créez un tag pour les passages que vous voulez consulter dans le texte original, par exemple « Langue orig. ». Trouvez au moins 3 versets contenant le mot « amour » et taguez-les. Vous pourrez ensuite les étudier sur des sites comme [Blue Letter Bible](https://www.blueletterbible.org/study.cfm).
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/fr/notes">Aller à la page des Notes</a>
-  <a class="mbl-button mbl-button--light" href="/fr/tags">Aller à la page des Tags</a>
+  <a class="mbl-button mbl-button--light" href="/fr/notes">Aller à la page Notes</a>
+  <a class="mbl-button mbl-button--light" href="/fr/tags">Aller à la page Tags</a>
 </div>
 
-## 6. Versets à Mémoriser
+## 5. Comparer les traductions
 
-Suivez les versets que vous voulez mémoriser et pratiquez-les.
+Vous avez une traduction préférée ? Il est parfois utile de voir comment d'autres ont rendu le même verset : on saisit ainsi davantage de nuances de ce que l'auteur voulait dire.
 
-Il y a de nombreux passages dans la Bible qui partagent l'importance et la valeur de l'Écriture :
+De temps à autre, une comparaison côte à côte révèle des expressions, voire des passages entiers, qui n'existent que dans une seule traduction. C'est souvent parce que ces différences ne figurent que dans une partie des manuscrits qui nous sont parvenus.
 
-* Psaume 19:7-11
-* Psaume 119:9-12
-* Psaume 119:105
-* Psaume 119:140
-* Psaume 119:151
+Le plus souvent, la comparaison fait surtout apparaître de petites variations de vocabulaire et de formulation.
+
+Les traductions récentes s'appuient en général sur les manuscrits les plus anciens et les mieux attestés, pour être aussi exactes que possible. Ce qui n'apparaît que dans des copies plus tardives se retrouve alors souvent en note de bas de page.
+
+Ainsi, 1 Jean 5:7-8 comporte du texte supplémentaire dans la King James Version (KJV), l'une des premières traductions anglaises de la Bible :
+
+> 7 Car il y en a trois qui rendent témoignage dans le ciel : le Père, la Parole et le Saint-Esprit ; et ces trois-là sont un.
+> 8 Et il y en a trois qui rendent témoignage sur la terre : l'Esprit, l'eau et le sang ; et ces trois-là s'accordent.
+
+La New American Standard Bible (NASB) omet ces phrases pour rester fidèle aux copies les plus anciennes du texte :
+> 7 Car il y en a trois qui rendent témoignage : 8 l'Esprit, l'eau et le sang ; et les trois s'accordent.
+
+La NASB *signale tout de même* ces ajouts tardifs en note de bas de page, afin qu'on en ait connaissance.
+
+Un exemple très net de divergence entre traductions apparaît lorsqu'une traduction est révisée pour suivre l'évolution de la langue. La NASB a été révisée en 2020 ; la révision précédente datait de 1995.
+
+La Lockman Foundation, qui édite la NASB, explique [sur son site](https://www.lockman.org/nasb-bible-info/) comment et pourquoi elle a mis à jour la traduction après 25 ans.
+
+La NASB2020 a introduit de légères modifications pour préciser de qui parle le texte dans certains versets, car le grec d'origine traite le genre autrement que l'anglais d'aujourd'hui.
+
+En anglais, « brothers » désigne toujours des frères de sexe masculin. En grec biblique, il n'existe pas de mot générique pour « frères et sœurs » : seulement « frère » et « sœur ». Pour parler à la fois des frères *et* des sœurs, on employait quand même « frères », et chacun comprenait que tout le monde était inclus. Pour ne désigner que les frères, il fallait dire « frères mâles ».
+
+Les traducteurs de la NASB ont estimé qu'un lecteur anglophone d'aujourd'hui comprendrait mal le grec d'origine. Ils ont donc remplacé certains « brothers » par « brothers and sisters » pour lever l'ambiguïté.
+
+Grâce à cette distinction, on repère désormais les endroits où les auteurs parlaient des hommes *et* des femmes, et ceux où ils ne parlaient *que* des hommes.
+
+### À vous de jouer
+
+Cherchez des versets où la NASB95 dit « brothers » et voyez s'ils sont devenus « brothers and sisters » dans la NASB2020, ou s'ils désignaient bel et bien les seuls hommes.
+
+<div class="mbl-button-group">
+  <a class="mbl-button mbl-button--light" href="/fr/notes">Aller à la page Notes</a>
+  <a class="mbl-button mbl-button--light" href="/fr/tags">Aller à la page Tags</a>
+</div>
+
+## 6. Versets à mémoriser
+
+Rassemblez les versets que vous voulez apprendre par cœur, et révisez-les.
+
+De nombreux passages disent la valeur et l'importance des Écritures :
+
+* Psaumes 19:7-11
+* Psaumes 119:9-12
+* Psaumes 119:105
+* Psaumes 119:140
+* Psaumes 119:151
 * Luc 24:44
 * Jean 17:17
 * Romains 15:4
@@ -148,38 +148,38 @@ Il y a de nombreux passages dans la Bible qui partagent l'importance et la valeu
 * Hébreux 4:12
 * 1 Jean 5:13
 
-### Agir
+### À vous de jouer
 
-Créez un tag pour suivre vos versets mémorisés. Choisissez au moins 3 de ces passages et taguez-les comme versets de mémoire.
-
-<div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/fr/notes">Aller à la page des Notes</a>
-  <a class="mbl-button mbl-button--light" href="/fr/tags">Aller à la page des Tags</a>
-</div>
-
-## 7. Journal et Prière
-
-Écrivez vos réflexions sur votre lecture chaque jour. Suivez ce que vous espérez et priez pour, ainsi que comment vous voulez grandir, apprendre et mieux servir les autres.
-
-Vous pouvez également utiliser la fonctionnalité des notes pour suivre les demandes de prière et les prières exaucées. Ce sont des éléments importants mais faciles à perdre de vue sans un système d'organisation.
-
-Chacun de ceux-ci pourrait être un tag :
-* Demande de Prière
-* Prière Exaucée
-
-Utilisez le tag **Demande de Prière** pour soulever les choses pour lesquelles vous voulez prier.
-
-Utilisez le tag **Prière Exaucée** pour faire ressortir les choses encourageantes que Dieu a accomplies dans votre vie et dans la vie des autres.
-
-### Agir
-
-Créez un tag pour suivre les entrées de votre journal. Commencez par écrire votre première note de journal et taguez-la.
+Créez un tag pour vos versets à mémoriser. Choisissez-en au moins 3 dans cette liste et taguez-les.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/fr/notes">Aller à la page des Notes</a>
-  <a class="mbl-button mbl-button--light" href="/fr/tags">Aller à la page des Tags</a>
+  <a class="mbl-button mbl-button--light" href="/fr/notes">Aller à la page Notes</a>
+  <a class="mbl-button mbl-button--light" href="/fr/tags">Aller à la page Tags</a>
 </div>
 
-## Conclusion
+## 7. Journal et prière
 
-Ce ne sont que quelques-unes des nombreuses façons d'utiliser des notes organisées et des tags pour tirer davantage de votre temps de lecture biblique. Une fois que vous commencez à utiliser ces fonctionnalités, vous développerez rapidement vos propres idées sur la manière de les appliquer.
+Écrivez chaque jour ce que votre lecture vous laisse. Notez ce que vous espérez, ce pour quoi vous priez, et la manière dont vous voulez grandir, apprendre et mieux servir les autres.
+
+Les notes servent aussi à garder trace des sujets de prière et des prières exaucées. Ce sont des choses importantes, et pourtant faciles à perdre de vue sans un minimum d'organisation.
+
+Chacune peut devenir un tag :
+* Sujet de prière
+* Prière exaucée
+
+Le tag **Sujet de prière** vous remet sous les yeux tout ce pour quoi vous voulez prier.
+
+Le tag **Prière exaucée** vous rappelle d'un coup d'œil ce que Dieu a fait dans votre vie et dans celle des autres.
+
+### À vous de jouer
+
+Créez un tag pour vos entrées de journal et rédigez la première dans la foulée.
+
+<div class="mbl-button-group">
+  <a class="mbl-button mbl-button--light" href="/fr/notes">Aller à la page Notes</a>
+  <a class="mbl-button mbl-button--light" href="/fr/tags">Aller à la page Tags</a>
+</div>
+
+## Pour conclure
+
+Ce ne sont là que quelques-unes des nombreuses façons d'utiliser notes et tags pour tirer davantage de votre temps dans la Bible. Dès que vous vous y mettrez, vos propres idées viendront vite.

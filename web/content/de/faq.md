@@ -1,10 +1,10 @@
 ---
 seo:
   title: My Bible Log - häufige Fragen (FAQ)
-  description: Antworten auf häufige Fragen zu My Bible Log, dem kostenlosen Bibellese-Tracker: Funktionen, Leseziele, Notizen, Datenschutz, Konto und wie Sie Ihren Lesefortschritt festhalten.
+  description: Antworten auf häufige Fragen zu My Bible Log, dem kostenlosen Bibellese-Tracker — Funktionen, Leseziele, Notizen, Datenschutz, Konto und wie Sie Ihren Lesefortschritt festhalten.
 og:
   title: My Bible Log - häufige Fragen (FAQ)
-  description: Antworten auf häufige Fragen zu My Bible Log, dem kostenlosen Bibellese-Tracker: Funktionen, Leseziele, Notizen, Datenschutz, Konto und wie Sie Ihren Lesefortschritt festhalten.
+  description: Antworten auf häufige Fragen zu My Bible Log, dem kostenlosen Bibellese-Tracker — Funktionen, Leseziele, Notizen, Datenschutz, Konto und wie Sie Ihren Lesefortschritt festhalten.
 ---
 
 ## Häufige Fragen

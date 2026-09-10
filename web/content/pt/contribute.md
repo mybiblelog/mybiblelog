@@ -1,10 +1,10 @@
 ---
 seo:
   title: Como contribuir com o My Bible Log
-  description: Jeitos de apoiar o My Bible Log: divulgar, mandar feedback, traduzir, contribuir com código ou ajudar financeiramente
+  description: Jeitos de apoiar o My Bible Log — divulgar, mandar feedback, traduzir, contribuir com código ou ajudar financeiramente
 og:
   title: Como contribuir com o My Bible Log
-  description: Jeitos de apoiar o My Bible Log: divulgar, mandar feedback, traduzir, contribuir com código ou ajudar financeiramente
+  description: Jeitos de apoiar o My Bible Log — divulgar, mandar feedback, traduzir, contribuir com código ou ajudar financeiramente
 ---
 
 # Contribuir

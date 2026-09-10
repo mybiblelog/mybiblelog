@@ -1,10 +1,10 @@
 ---
 seo:
   title: Comment contribuer à My Bible Log
-  description: Les façons de soutenir My Bible Log : en parler autour de vous, envoyer vos retours, traduire, contribuer au code ou faire un don
+  description: Les façons de soutenir My Bible Log — en parler autour de vous, envoyer vos retours, traduire, contribuer au code ou faire un don
 og:
   title: Comment contribuer à My Bible Log
-  description: Les façons de soutenir My Bible Log : en parler autour de vous, envoyer vos retours, traduire, contribuer au code ou faire un don
+  description: Les façons de soutenir My Bible Log — en parler autour de vous, envoyer vos retours, traduire, contribuer au code ou faire un don
 ---
 
 # Contribuer

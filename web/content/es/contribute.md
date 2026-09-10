@@ -1,10 +1,10 @@
 ---
 seo:
   title: Cómo colaborar con My Bible Log
-  description: Formas de apoyar a My Bible Log: contarlo, mandar comentarios, traducir, aportar código o ayudar económicamente
+  description: Formas de apoyar a My Bible Log — contarlo, mandar comentarios, traducir, aportar código o ayudar económicamente
 og:
   title: Cómo colaborar con My Bible Log
-  description: Formas de apoyar a My Bible Log: contarlo, mandar comentarios, traducir, aportar código o ayudar económicamente
+  description: Formas de apoyar a My Bible Log — contarlo, mandar comentarios, traducir, aportar código o ayudar económicamente
 ---
 
 # Colaborar

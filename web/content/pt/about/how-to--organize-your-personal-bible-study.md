@@ -1,142 +1,142 @@
 ---
 seo:
-  title: 7 Maneiras de Organizar Seu Estudo Bíblico Pessoal
-  description: Como alavancar os recursos poderosos de notas e tags do My Bible Log para obter o máximo do seu tempo de estudo bíblico pessoal.
+  title: 7 maneiras de organizar seu estudo bíblico pessoal
+  description: Como aproveitar as notas e tags do My Bible Log para tirar mais proveito do seu tempo de estudo bíblico pessoal
 og:
-  title: 7 Maneiras de Organizar Seu Estudo Bíblico Pessoal
-  description: Como alavancar os recursos poderosos de notas e tags do My Bible Log para obter o máximo do seu tempo de estudo bíblico pessoal.
+  title: 7 maneiras de organizar seu estudo bíblico pessoal
+  description: Como aproveitar as notas e tags do My Bible Log para tirar mais proveito do seu tempo de estudo bíblico pessoal
 ---
 
 ![](/share.jpg)
 
-# 7 Maneiras de Organizar Seu Estudo Bíblico Pessoal
+# 7 maneiras de organizar seu estudo bíblico pessoal
 
-O recurso de Notas do My Bible Log é especialmente poderoso. Existem muitas maneiras diferentes de criar tags e organizar notas para possibilitar diferentes fluxos de trabalho.
+A função de notas do My Bible Log rende bastante. Com tags próprias dá para organizar as notas de jeitos bem diferentes, conforme o seu modo de estudar.
 
-Aqui estão 7 ideias para usar o recurso de notas e obter o máximo do seu estudo bíblico pessoal.
+Aqui vão 7 ideias para tirar mais proveito da sua leitura pessoal da Bíblia.
 
-## 1. Perguntas em Aberto
+## 1. Perguntas em aberto
 
-Registre todas as suas perguntas enquanto lê, sem parar, para depois voltar a elas. Quando se sentar para ler, revise suas notas com essa tag. Você pode encontrar uma resposta ou informações relevantes enquanto lê.
+Anote as dúvidas que forem surgindo, sem interromper a leitura, e volte a elas depois. Da próxima vez que sentar para ler, dê uma olhada nas notas com essa tag: talvez a resposta apareça justamente ali.
 
-### Ação
+### Mãos à obra
 
-Crie uma tag para pelo menos 3 perguntas que deseja pesquisar na Bíblia. Você consegue responder a essas 3 perguntas exemplo?
+Crie uma tag para pelo menos 3 perguntas que você queira investigar na Bíblia. Consegue responder estas três?
 
-* Como alguém pode ser "salvo" e o que significa ser salvo? Tag sugerida: Salvação
-* Todas as regras nos livros do Antigo Testamento, como Levítico, se aplicam a nós hoje? Tag sugerida: Regras do AT
-* Como a Bíblia fala sobre igreja? Quem ou o que conta como igreja? A Bíblia nos ordena a "ir à igreja"? Tag sugerida: Igreja
-
-<div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/pt/notes">Ir para a página de Notas</a>
-  <a class="mbl-button mbl-button--light" href="/pt/tags">Ir para a página de Tags</a>
-</div>
-
-## 2. Discipulado / Pontos de Conversa 1:1
-
-Muitas pessoas estudam a Bíblia com um amigo ou mentor. Mentores podem se reunir para estudar a Bíblia ao longo da semana com várias pessoas em relacionamentos de discipulado. Criar uma tag para cada pessoa com quem você estuda pode ajudar a manter sua conversa bíblica em andamento. Essas tags podem ajudar a acompanhar perguntas, respostas e tópicos importantes para o tempo de estudo.
-
-### Ação
-
-Crie uma tag para cada pessoa com quem você estuda ou pode conversar sobre a Bíblia. Para cada pessoa, crie pelo menos uma nota com algo que você deseja conversar com ela.
+* Como alguém é "salvo" e o que significa ser salvo? Tag sugerida: Salvação
+* Todas as regras de livros do Antigo Testamento, como Levítico, valem para nós hoje? Tag sugerida: Leis AT
+* Como a Bíblia fala de igreja? Quem ou o que é uma igreja? A Bíblia manda "ir à igreja"? Tag sugerida: Igreja
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/pt/notas">Ir para a página de Notas</a>
-  <a class="mbl-button mbl-button--light" href="/pt/tags">Ir para a página de Tags</a>
+  <a class="mbl-button mbl-button--light" href="/pt/notes">Ir para a página Notas</a>
+  <a class="mbl-button mbl-button--light" href="/pt/tags">Ir para a página Tags</a>
 </div>
 
-## 3. Estudo por Tópicos
+## 2. Discipulado e conversas a dois
 
-Crie uma tag para um assunto específico e depois pesquise sobre ele. Ajuda "carregar" perguntas consigo. Você pode perceber que, ao ler a Bíblia, diferentes passagens ajudam a entender melhor um tópico ou responder uma pergunta que você tinha.
+Muita gente estuda a Bíblia com um amigo ou um mentor. Quem acompanha outras pessoas talvez se encontre durante a semana com várias delas. Criar uma tag para cada uma ajuda a não perder o fio da conversa de um encontro para o outro: ficam guardadas ali as perguntas, as respostas e os assuntos importantes.
 
-Um ótimo tópico para esse tipo de estudo é "oração". Você pode acompanhar versículos que ajudam a entender a oração e ter a mentalidade correta para falar com Deus. Veja como as pessoas falaram com Deus de Gênesis a Apocalipse. Veja como Deus falou com pessoas e as promessas que Ele fez para nós.
+### Mãos à obra
 
-### Ação
+Crie uma tag para cada pessoa com quem você estuda a Bíblia ou pode conversar sobre ela. Para cada uma, escreva pelo menos uma nota com algo que você queira levantar.
 
-A Bíblia está repleta de temas interessantes, mas não é um livro didático. Não há um glossário no final com cada assunto ou questão que desejamos pesquisar. Bem, às vezes há, mas é impossível abranger tudo! Escolha um tema da Bíblia que lhe interesse e crie uma tag para organizar suas notas sobre esse tema.
+<div class="mbl-button-group">
+  <a class="mbl-button mbl-button--light" href="/pt/notes">Ir para a página Notas</a>
+  <a class="mbl-button mbl-button--light" href="/pt/tags">Ir para a página Tags</a>
+</div>
 
-Use esta lista para se inspirar:
+## 3. Estudo por temas
+
+Crie uma tag para um assunto específico e vá juntando ali o que encontrar. Vale muito a pena "carregar" uma pergunta com você por um tempo: lendo, aparecem passagens que iluminam um tema ou respondem algo que estava na sua cabeça.
+
+Um tema ótimo para isso é a oração. Dá para ir guardando versículos que ajudem a entender o que é orar e com que atitude falar com Deus. Repare como as pessoas falaram com Deus de Gênesis a Apocalipse, como Deus falou com elas e que promessas deixou para nós.
+
+### Mãos à obra
+
+A Bíblia é cheia de temas interessantes, mas não é livro didático: no fim não vem um índice com todo assunto que a gente gostaria de pesquisar. Às vezes vem, claro, mas não teria como cobrir tudo. Escolha um tema bíblico que te interesse e crie uma tag para organizar suas notas sobre ele.
+
+Para inspirar:
 
 * Pecado
 * Salvação
 * Batismo
-* Comunhão
-* Liderança na Igreja
+* Ceia
+* Liderança na igreja
 * Céu
-* Dons Espirituais
+* Dons espirituais
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/pt/notas">Ir para a página de Notas</a>
-  <a class="mbl-button mbl-button--light" href="/pt/tags">Ir para a página de Tags</a>
+  <a class="mbl-button mbl-button--light" href="/pt/notes">Ir para a página Notas</a>
+  <a class="mbl-button mbl-button--light" href="/pt/tags">Ir para a página Tags</a>
 </div>
 
-## 4. Idioma Original
+## 4. Língua original
 
-Você pode estar familiarizado com as diferenças entre as palavras originais em Hebraico e Grego das que você está lendo. Acompanhe os versículos que deseja pesquisar em seu idioma original para compreendê-los completamente.
+Talvez você já saiba que o hebraico e o grego originais dizem algumas coisas de um jeito diferente da tradução que está na sua frente. Guarde os versículos que quiser conferir na língua original para entendê-los por inteiro.
 
-### Ação
+### Mãos à obra
 
-Muitas palavras têm nuances diferentes em idiomas diferentes. Por exemplo, em inglês, há apenas uma palavra para "amor", mas no antigo grego (o idioma do Novo Testamento) há sete palavras diferentes para "amor" que possuem significados ligeiramente diferentes.
+Cada língua dá seus próprios matizes às palavras. Em português temos basicamente uma palavra para "amor"; no grego antigo, língua do Novo Testamento, são sete, cada uma com um sentido um pouco diferente.
 
-Crie uma tag para passagens que deseja pesquisar no idioma original, como "Idioma Original". Encontre pelo menos 3 versículos diferentes com a palavra "amor" e marque-os com essa nova tag. Você pode pesquisar esses versículos em seu idioma original em sites como [Blue Letter Bible](https://www.blueletterbible.org/study.cfm).
+Crie uma tag para as passagens que você quer ver no original, algo como "Língua orig.". Procure pelo menos 3 versículos com a palavra "amor" e marque-os com ela. Depois dá para consultá-los em sites como o [Blue Letter Bible](https://www.blueletterbible.org/study.cfm).
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/pt/notas">Ir para a página de Notas</a>
-  <a class="mbl-button mbl-button--light" href="/pt/tags">Ir para a página de Tags</a>
+  <a class="mbl-button mbl-button--light" href="/pt/notes">Ir para a página Notas</a>
+  <a class="mbl-button mbl-button--light" href="/pt/tags">Ir para a página Tags</a>
 </div>
 
-## 5. Comparar Traduções
+## 5. Comparar traduções
 
-Tem uma tradução favorita? Talvez queira ver como outras traduções lidaram com o mesmo versículo para pegar mais nuances do significado do autor original.
+Tem uma tradução preferida? Às vezes vale ver como outras resolveram o mesmo versículo, para captar mais nuances do que o autor original quis dizer.
 
-Ocasionalmente, um estudo lado a lado de traduções mostrará que certas frases ou seções só existem em uma tradução. Isso ocorre frequentemente porque essas diferenças aparecem em algumas cópias dos manuscritos originais que temos hoje.
+De vez em quando, comparando lado a lado, aparecem frases ou até trechos inteiros que só existem em uma tradução. Isso costuma acontecer porque essas diferenças só estão em parte dos manuscritos que chegaram até nós.
 
-Com mais frequência, comparar traduções revelará diferenças menores na escolha de palavras e frases.
+Mais comum, porém, são pequenas diferenças de vocabulário e de construção das frases.
 
-Traduções mais recentes da Bíblia tendem a seguir os manuscritos mais antigos e estabelecidos para garantir a maior precisão possível. As frases que foram copiadas em manuscritos posteriores podem aparecer como notas de rodapé nessas traduções mais recentes.
+As traduções mais recentes costumam seguir os manuscritos mais antigos e mais bem atestados, para serem o mais exatas possível. O que aparece só em cópias posteriores geralmente fica numa nota de rodapé.
 
-Como exemplo, 1 João 5:7-8 tem algumas palavras extras na Versão King James (KJV), uma das primeiras traduções em inglês da Bíblia:
+Por exemplo, 1 João 5:7-8 traz texto a mais na King James Version (KJV), uma das primeiras traduções da Bíblia para o inglês:
 
-> 7 Porque três são os que testificam no céu: o Pai, a Palavra e o Espírito Santo; e estes três são um.
-> 8 E três são os que testificam na terra: o Espírito, a água e o sangue; e os três concordam em um.
+> 7 Porque três são os que dão testemunho no céu: o Pai, a Palavra e o Espírito Santo; e estes três são um.
+> 8 E três são os que dão testemunho na terra: o Espírito, a água e o sangue; e estes três concordam.
 
-A Bíblia de Estudo Almeida (BEA) omite essas frases para manter-se fiel às cópias mais antigas do texto:
-> 7 Porque três são os que testificam: 8 o Espírito, a água e o sangue; e os três concordam.
+A New American Standard Bible (NASB) omite essas frases para se manter fiel às cópias mais antigas do texto:
+> 7 Porque três são os que dão testemunho: 8 o Espírito, a água e o sangue; e os três estão de acordo.
 
-No entanto, a BEA *inclui* as adições posteriores dos manuscritos como nota de rodapé, para que ainda possamos estar cientes delas.
+Ainda assim, a NASB *traz* esses acréscimos posteriores em nota de rodapé, para que a gente saiba deles.
 
-Um exemplo muito claro de como as traduções podem diferir é quando uma determinada tradução recebe uma atualização para acompanhar as mudanças na língua inglesa. A BEA foi atualizada em 2020 após a última atualização em 1995.
+Um caso bem claro de como as traduções podem divergir aparece quando uma delas é revisada para acompanhar as mudanças do idioma. A NASB foi revisada em 2020; a revisão anterior era de 1995.
 
-A SBB, que é responsável pela BEA, explica [em seu site](https://www.sbb.org/bea-biblia-info/) como e por que eles atualizaram a tradução após 25 anos.
+A Lockman Foundation, responsável pela NASB, explica [no site deles](https://www.lockman.org/nasb-bible-info/) como e por que atualizaram a tradução depois de 25 anos.
 
-A BEA2020 fez pequenas atualizações para tornar o gênero mais claro em certos versículos. Isso ocorre porque a língua grega original trata o gênero de maneira diferente do inglês moderno.
+A NASB2020 fez pequenos ajustes para deixar mais claro a quem o texto se refere em certos versículos, porque o grego original lida com gênero de um jeito diferente do inglês atual.
 
-Em inglês, a palavra "irmãos" sempre se refere a irmãos do sexo masculino. No grego bíblico, não há uma palavra para "irmão", apenas "irmão" e "irmã". Para falar sobre irmãos *e* irmãs, você ainda usaria a palavra "irmãos" e as pessoas entenderiam que você está se referindo a todos. Se você quisesse falar apenas sobre seus irmãos do sexo masculino no grego bíblico, teria que dizer "homens irmãos".
+Em inglês, "brothers" sempre significa irmãos homens. No grego bíblico não existe uma palavra geral para "irmãos e irmãs": só "irmão" e "irmã". Para falar de irmãos *e* irmãs ao mesmo tempo, usava-se "irmãos" mesmo, e todo mundo entendia que estavam todos incluídos. Para falar só dos homens, era preciso dizer "irmãos homens".
 
-Os tradutores da BEA determinaram que os leitores modernos de inglês poderiam fazer suposições falsas sobre o que o grego original estava dizendo, então eles atualizaram algumas instâncias de "irmãos" para "irmãos e irmãs" para garantir uma compreensão clara.
+Os tradutores da NASB concluíram que um leitor de inglês de hoje entenderia mal o grego original, então trocaram alguns "brothers" por "brothers and sisters" para não deixar dúvida.
 
-Com essa distinção, agora podemos saber quando os autores originais estavam falando sobre homens *e* mulheres, além de quando estavam se referindo apenas a homens.
+Com essa distinção, agora dá para perceber quando os autores falavam de homens *e* mulheres e quando se referiam *só* a homens.
 
-### Ação
+### Mãos à obra
 
-Encontre versículos que dizem "irmãos" na BEA95 e veja se foram atualizados para "irmãos e irmãs" na BEA2020, ou se esses versículos realmente se referiam apenas a homens.
+Procure versículos que digam "brothers" na NASB95 e veja se na NASB2020 viraram "brothers and sisters", ou se ali realmente se falava só de homens.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/pt/notas">Ir para a página de Notas</a>
-  <a class="mbl-button mbl-button--light" href="/pt/tags">Ir para a página de Tags</a>
+  <a class="mbl-button mbl-button--light" href="/pt/notes">Ir para a página Notas</a>
+  <a class="mbl-button mbl-button--light" href="/pt/tags">Ir para a página Tags</a>
 </div>
 
-## 6. Versículos de Memória
+## 6. Versículos para memorizar
 
-Acompanhe os versículos que deseja guardar no coração e pratique-os.
+Junte os versículos que você quer guardar de cor e vá repassando.
 
-Há muitos trechos na Bíblia que compartilham a importância e valor da Escritura:
+Muitas passagens falam do valor e da importância das Escrituras:
 
-* Salmo 19:7-11
-* Salmo 119:9-12
-* Salmo 119:105
-* Salmo 119:140
-* Salmo 119:151
+* Salmos 19:7-11
+* Salmos 119:9-12
+* Salmos 119:105
+* Salmos 119:140
+* Salmos 119:151
 * Lucas 24:44
 * João 17:17
 * Romanos 15:4
@@ -148,38 +148,38 @@ Há muitos trechos na Bíblia que compartilham a importância e valor da Escritu
 * Hebreus 4:12
 * 1 João 5:13
 
-### Ação
+### Mãos à obra
 
-Crie uma tag para acompanhar seus versículos de memória. Escolha pelo menos 3 desses trechos e os marque como versículos de memória.
-
-<div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/pt/notas">Ir para a página de Notas</a>
-  <a class="mbl-button mbl-button--light" href="/pt/tags">Ir para a página de Tags</a>
-</div>
-
-## 7. Diário e Oração
-
-Escreva suas reflexões sobre sua leitura a cada dia. Acompanhe as coisas pelas quais você está esperando e orando, e como deseja crescer, aprender e servir melhor aos outros.
-
-Você também pode usar o recurso de notas para acompanhar pedidos de oração e orações respondidas. Essas são importantes, mas fáceis de perder de vista sem um sistema de organização.
-
-Cada uma destas pode ser uma tag:
-* Pedido de Oração
-* Oração Respondida
-
-Use a tag **Pedido de Oração** para trazer à tona as coisas pelas quais deseja orar.
-
-Use a tag **Oração Respondida** para trazer à tona as coisas encorajadoras que Deus fez em sua vida e na vida dos outros.
-
-### Ação
-
-Crie uma tag para acompanhar entradas de diário. Comece escrevendo sua primeira nota de diário e etiquetando-a.
+Crie uma tag para seus versículos de memória. Escolha pelo menos 3 dessas passagens e marque-as.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/pt/notas">Ir para a página de Notas</a>
-  <a class="mbl-button mbl-button--light" href="/pt/tags">Ir para a página de Tags</a>
+  <a class="mbl-button mbl-button--light" href="/pt/notes">Ir para a página Notas</a>
+  <a class="mbl-button mbl-button--light" href="/pt/tags">Ir para a página Tags</a>
 </div>
 
-## Conclusão
+## 7. Diário e oração
 
-Essas são apenas algumas das muitas maneiras pelas quais você pode usar notas e tags organizadas para obter mais do seu tempo de leitura da Bíblia. Uma vez que você comece a usar esses recursos, rapidamente desenvolverá suas próprias ideias sobre como aplicá-los.
+Escreva a cada dia o que a leitura deixou em você. Anote o que você espera, aquilo pelo que ora e em que quer crescer, aprender e servir melhor às pessoas.
+
+As notas também servem para guardar pedidos de oração e orações respondidas. São coisas importantes que, sem um pouco de organização, somem de vista rapidinho.
+
+Cada uma pode virar uma tag:
+* Pedido de oração
+* Oração respondida
+
+Com **Pedido de oração** você tem à mão tudo aquilo pelo que quer orar.
+
+Com **Oração respondida** você vê de uma olhada o que Deus fez na sua vida e na vida de outras pessoas.
+
+### Mãos à obra
+
+Crie uma tag para as entradas do seu diário e escreva ali mesmo a primeira.
+
+<div class="mbl-button-group">
+  <a class="mbl-button mbl-button--light" href="/pt/notes">Ir para a página Notas</a>
+  <a class="mbl-button mbl-button--light" href="/pt/tags">Ir para a página Tags</a>
+</div>
+
+## Para fechar
+
+Essas são só algumas das muitas formas de usar notas e tags para aproveitar melhor seu tempo na Bíblia. Assim que você começar, vão surgir ideias suas.

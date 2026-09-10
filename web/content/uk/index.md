@@ -22,11 +22,11 @@ ld_json:
 heading: Доступно у вебі та на Android
 subheading: My Bible Log чудово працює просто у браузері - а тепер є й додаток для Android.
 web-title: У браузері
-web-description: Читайте й ведіть записи прямо тут, у браузері: усі можливості, цілком безкоштовно.
+web-description: Читайте й ведіть записи прямо тут, у браузері - усі можливості, цілком безкоштовно.
 web-button-text: Почати безкоштовно
 web-button-destination: /register
 android-title: На Android
-android-description: Спробуйте наш новий додаток для Android: записуйте прочитане офлайн і подивіться, як він працює, без облікового запису.
+android-description: Спробуйте наш новий додаток для Android - записуйте прочитане офлайн і подивіться, як він працює, без облікового запису.
 android-button-text: Спробувати бета-версію
 android-button-destination: /android-app
 ---

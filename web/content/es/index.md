@@ -1,7 +1,7 @@
 ---
 seo:
   title: My Bible Log - registro gratuito de lectura bíblica
-  description: Lleva el registro de tu lectura de la Biblia con My Bible Log, una herramienta en línea gratuita. Ponte metas diarias, toma notas y mira tu avance en los 66 libros. Sin anuncios, sin suscripciones: totalmente gratis.
+  description: Lleva el registro de tu lectura de la Biblia con My Bible Log, una herramienta en línea gratuita. Ponte metas diarias, toma notas y mira tu avance en los 66 libros. Sin anuncios, sin suscripciones, totalmente gratis.
 og:
   title: My Bible Log - registro gratuito de lectura bíblica
   description: Lee la Biblia a tu propio ritmo y registra tu avance con My Bible Log. Ponte metas diarias, toma notas y avanza hacia leer la Biblia completa. Gratis, sin anuncios y sin suscripciones.
@@ -22,11 +22,11 @@ ld_json:
 heading: Disponible en la web y en Android
 subheading: My Bible Log funciona muy bien aquí mismo en tu navegador, y ahora también tiene app para Android.
 web-title: En la web
-web-description: Sigue leyendo y registrando desde tu navegador: la experiencia completa, totalmente gratis.
+web-description: Sigue leyendo y registrando desde tu navegador, con la experiencia completa y totalmente gratis.
 web-button-text: Empieza gratis
 web-button-destination: /register
 android-title: En Android
-android-description: Prueba nuestra nueva app para Android: registra tu lectura sin conexión y explórala sin crear cuenta.
+android-description: Prueba nuestra nueva app para Android, registra tu lectura sin conexión y explórala sin crear cuenta.
 android-button-text: Probar la app beta
 android-button-destination: /android-app
 ---

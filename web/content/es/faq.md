@@ -1,10 +1,10 @@
 ---
 seo:
   title: My Bible Log - preguntas frecuentes
-  description: Respuestas a las preguntas más comunes sobre My Bible Log, el registro gratuito de lectura bíblica: funciones, metas de lectura, notas, privacidad, cuenta y cómo seguir tu avance.
+  description: Respuestas a las preguntas más comunes sobre My Bible Log, el registro gratuito de lectura bíblica — funciones, metas de lectura, notas, privacidad, cuenta y cómo seguir tu avance.
 og:
   title: My Bible Log - preguntas frecuentes
-  description: Respuestas a las preguntas más comunes sobre My Bible Log, el registro gratuito de lectura bíblica: funciones, metas de lectura, notas, privacidad, cuenta y cómo seguir tu avance.
+  description: Respuestas a las preguntas más comunes sobre My Bible Log, el registro gratuito de lectura bíblica — funciones, metas de lectura, notas, privacidad, cuenta y cómo seguir tu avance.
 ---
 
 ## Preguntas frecuentes

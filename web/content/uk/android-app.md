@@ -1,6 +1,6 @@
 ---
 seo:
-  title: My Bible Log для Android — безкоштовний застосунок для обліку читання Біблії
+  title: My Bible Log для Android — безкоштовний додаток для обліку читання Біблії
   description: Завантажте безкоштовний додаток My Bible Log для Android. Записуйте прочитане офлайн, спробуйте без облікового запису та синхронізуйтеся з mybiblelog.com автоматично.
 og:
   title: My Bible Log для Android

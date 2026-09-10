@@ -22,11 +22,11 @@ ld_json:
 heading: Sur le web et sur Android
 subheading: My Bible Log fonctionne parfaitement ici même, dans votre navigateur - et il existe désormais une application Android.
 web-title: Sur le web
-web-description: Lisez et notez directement dans votre navigateur : toutes les fonctionnalités, entièrement gratuites.
+web-description: Lisez et notez directement dans votre navigateur, avec toutes les fonctionnalités et entièrement gratuitement.
 web-button-text: Commencer gratuitement
 web-button-destination: /register
 android-title: Sur Android
-android-description: Essayez notre nouvelle application Android : notez vos lectures hors ligne et découvrez-la sans créer de compte.
+android-description: Essayez notre nouvelle application Android, notez vos lectures hors ligne et découvrez-la sans créer de compte.
 android-button-text: Essayer la bêta
 android-button-destination: /android-app
 ---
