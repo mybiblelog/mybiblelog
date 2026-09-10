@@ -47,6 +47,22 @@ appId: com.mybiblelog.app
 - tapOn:
     id: "language.option-${LOCALE}"
 
+# --- Insights: activity heatmap (sc15) + trend chart (sc16) ------------------
+- back
+- tapOn:
+    id: "settings.insights-link"
+- assertVisible:
+    id: "insights.heatmap-grid"
+- takeScreenshot: ${OUTPUT_DIR}/sc15-insights-activity
+- tapOn:
+    id: "insights.tab-trend"
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible:
+    id: "insights.trend-chart"
+- takeScreenshot: ${OUTPUT_DIR}/sc16-insights-trend
+- back
+
 # --- Notes (sc10) + Tags (sc11) ---------------------------------------------
 - tapOn:
     id: "tab.notes"

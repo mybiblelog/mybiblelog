@@ -90,6 +90,25 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/de/sc15-insights-activity.webp
+image-alt: Die My Bible Log Insights-Seite zeigt ein GitHub-artiges Aktivitätsdiagramm des täglichen Bibellesens
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: Visualisiere Deine Lese-Streaks
+subtitle: GitHub-Artiges Aktivitätsdiagramm
+description: >-
+  Sieh deine gesamte Lesegeschichte auf einen Blick mit einem <strong>GitHub-artigen Beitragsdiagramm</strong>. Jedes Quadrat ist ein Tag — je grüner das Quadrat, desto mehr hast du an diesem Tag gelesen.
+list:
+  - Erkenne Muster in deinen Lesegewohnheiten
+  - Feiere lange Lese-Streaks
+  - Sieh ein ganzes Jahr Aktivität auf einen Blick
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/de/sc9-calendar.webp
 image-alt: Der My Bible Log Kalender zeigt einen Monat, in dem viele Daten einen Stern für das Erreichen des täglichen Leseziels erhalten haben
 image-width: "750"

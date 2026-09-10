@@ -90,6 +90,25 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/uk/sc15-insights-activity.webp
+image-alt: Сторінка Аналітики My Bible Log показує графік активності у стилі GitHub для щоденного читання Біблії
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: Візуалізуйте Свої Серії Читання
+subtitle: Графік Активності у Стилі GitHub
+description: >-
+  Переглядайте всю історію свого читання одразу за допомогою <strong>графіка внесків у стилі GitHub</strong>. Кожен квадрат — це день: чим зеленіший квадрат, тим більше ви прочитали того дня.
+list:
+  - Помічайте закономірності у своїх звичках читання
+  - Відзначайте довгі серії читання
+  - Переглядайте цілий рік активності в одному вигляді
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/uk/sc9-calendar.webp
 image-alt: Календар My Bible Log показує місяць, де багато дат отримали зірку за досягнення щоденної мети читання
 image-width: "750"

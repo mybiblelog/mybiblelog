@@ -104,6 +104,16 @@ async function prepareDailyGoal(page: Page): Promise<void> {
   await page.waitForTimeout(800);
 }
 
+async function prepareInsightsActivity(page: Page): Promise<void> {
+  // Log entries load async — wait for the heatmap's day cells to render
+  await page.waitForSelector('.heatmap__cell', { timeout: 10000 });
+}
+
+async function prepareInsightsTrend(page: Page): Promise<void> {
+  // Log entries load async — wait for the trend chart's line to render
+  await page.waitForSelector('.trend__line', { timeout: 10000 });
+}
+
 async function prepareChecklist(page: Page): Promise<void> {
   await page.waitForFunction(
     () => document.querySelectorAll('.book-card').length >= 66,
@@ -142,6 +152,10 @@ const SCREENS: Screen[] = [
   { slug: 'sc12-checklist', path: '/checklist', prepare: prepareChecklist },
   // Reading progress stats page — full page
   { slug: 'sc13-progress', path: '/progress' },
+  // Insights page — GitHub-style activity heatmap
+  { slug: 'sc15-insights-activity', path: '/insights', prepare: prepareInsightsActivity },
+  // Insights page — daily verses trend chart
+  { slug: 'sc16-insights-trend', path: '/insights/trend', prepare: prepareInsightsTrend },
 ];
 
 // --- Screenshot helpers ---

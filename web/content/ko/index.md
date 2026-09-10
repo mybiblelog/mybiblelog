@@ -90,6 +90,25 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/ko/sc15-insights-activity.webp
+image-alt: 매일의 성경읽기 활동을 GitHub 스타일 그래프로 보여주는 My Bible Log 통계 페이지
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: 나의 읽기 연속 기록 한눈에 보기
+subtitle: GitHub 스타일 활동 그래프
+description: >-
+  <strong>GitHub 스타일의 기여 그래프</strong>로 전체 읽기 기록을 한눈에 확인하세요. 각 칸은 하루를 나타내며, 초록색이 진할수록 그날 더 많이 읽었다는 뜻입니다.
+list:
+  - 읽기 습관의 패턴을 발견할 수 있습니다
+  - 긴 연속 읽기 기록을 기념할 수 있습니다
+  - 1년치 활동을 한 화면에서 볼 수 있습니다
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/ko/sc9-calendar.webp
 image-alt: 일일 읽기 목표를 달성한 일자에 별을 달아주는 My Bible Log 달력
 image-width: "750"

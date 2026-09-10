@@ -90,6 +90,25 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/es/sc15-insights-activity.webp
+image-alt: La página de Estadísticas de My Bible Log mostrando un mapa de actividad al estilo GitHub de la lectura bíblica diaria
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: Visualiza Tus Rachas de Lectura
+subtitle: Gráfico de Actividad al Estilo GitHub
+description: >-
+  Ve todo tu historial de lectura de un vistazo con un <strong>gráfico de contribuciones al estilo GitHub</strong>. Cada cuadro es un día — cuanto más verde sea el cuadro, más leíste ese día.
+list:
+  - Detecta patrones en tus hábitos de lectura
+  - Celebra rachas de lectura largas
+  - Ve un año completo de actividad en una sola vista
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/es/sc9-calendar.webp
 image-alt: El calendario My Bible Log mostrando un mes donde muchas fechas han ganado una estrella por alcanzar el objetivo de lectura diaria
 image-width: "750"
