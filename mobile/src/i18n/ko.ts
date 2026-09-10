@@ -167,6 +167,7 @@ export const ko = {
 
   verses: "구절",
 
+  log_entry_actions: "기록 작업",
   menu_edit: "편집",
   menu_delete: "삭제",
   menu_open_in_bible: "성경에서 열기",

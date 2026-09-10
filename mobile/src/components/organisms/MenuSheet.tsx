@@ -1,8 +1,8 @@
-import { Fragment } from "react";
 import { StyleSheet, View } from "react-native";
-import { spacing, useScalePress, useTheme } from "@/src/design";
+import { spacing, useScalePress } from "@/src/design";
 import type { ThemeColors } from "@/src/design";
 import { AnimatedPressable } from "../atoms/AnimatedPressable";
+import { Icon, type IconName } from "../atoms/Icon";
 import { Text } from "../atoms/Text";
 import { BottomSheet } from "./BottomSheet";
 
@@ -11,7 +11,12 @@ export type MenuAction = {
   onPress: () => void;
   /** Title color (e.g. `destructive` for a delete action). */
   color?: keyof ThemeColors;
+  /** Leading icon. Rows without one still align their label to rows that have it. */
+  icon?: IconName;
 };
+
+// Fixed so a row with no icon still lines its label up under rows that have one.
+const ICON_SLOT_WIDTH = 24;
 
 function MenuRow({ action, onClose }: { action: MenuAction; onClose: () => void }) {
   const press = useScalePress({ scaleTo: 0.98, opacityTo: 0.9 });
@@ -27,6 +32,11 @@ function MenuRow({ action, onClose }: { action: MenuAction; onClose: () => void 
       onPressOut={press.onPressOut}
       style={[styles.item, press.animatedStyle]}
     >
+      <View style={styles.iconSlot}>
+        {action.icon ? (
+          <Icon name={action.icon} size={20} color={action.color ?? "mutedText"} />
+        ) : null}
+      </View>
       <Text variant="bodyStrong" color={action.color ?? "text"}>
         {action.label}
       </Text>
@@ -34,38 +44,46 @@ function MenuRow({ action, onClose }: { action: MenuAction; onClose: () => void 
   );
 }
 
-/** Bottom-sheet action menu: a list of tappable actions + optional cancel. */
+/** Bottom-sheet action menu: an optional title, a list of tappable actions, + optional cancel. */
 export function MenuSheet({
   visible,
   onClose,
+  title,
   actions,
   cancelLabel,
 }: {
   visible: boolean;
   onClose: () => void;
+  /** Shown above the actions, same size as an option's label but bold. No icon. */
+  title?: string;
   actions: MenuAction[];
   cancelLabel?: string;
 }) {
-  const { colors } = useTheme();
   return (
     <BottomSheet visible={visible} onClose={onClose} padded={false}>
-      {actions.map((action, i) => (
-        <Fragment key={action.label}>
-          {i > 0 ? <View style={[styles.divider, { backgroundColor: colors.border }]} /> : null}
-          <MenuRow action={action} onClose={onClose} />
-        </Fragment>
+      {title ? (
+        <Text variant="bodyStrong" style={styles.title}>
+          {title}
+        </Text>
+      ) : null}
+      {actions.map((action) => (
+        <MenuRow key={action.label} action={action} onClose={onClose} />
       ))}
       {cancelLabel ? (
-        <>
-          <View style={[styles.divider, { backgroundColor: colors.border }]} />
-          <MenuRow action={{ label: cancelLabel, onPress: () => {} }} onClose={onClose} />
-        </>
+        <MenuRow action={{ label: cancelLabel, onPress: () => {} }} onClose={onClose} />
       ) : null}
     </BottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
-  item: { paddingHorizontal: spacing.md, paddingVertical: spacing.md },
-  divider: { height: StyleSheet.hairlineWidth },
+  title: { paddingHorizontal: spacing.md, paddingTop: spacing.sm, paddingBottom: spacing.xs },
+  item: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing["2xs"],
+  },
+  iconSlot: { width: ICON_SLOT_WIDTH, alignItems: "center" },
 });

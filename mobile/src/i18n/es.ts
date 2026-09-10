@@ -169,6 +169,7 @@ export const es = {
 
   verses: "Versículos",
 
+  log_entry_actions: "Acciones del registro",
   menu_edit: "Editar",
   menu_delete: "Eliminar",
   menu_open_in_bible: "Abrir en la Biblia",

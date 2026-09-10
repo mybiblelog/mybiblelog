@@ -169,6 +169,7 @@ export const uk = {
 
   verses: "Вірші",
 
+  log_entry_actions: "Дії із записом",
   menu_edit: "Редагувати",
   menu_delete: "Видалити",
   menu_open_in_bible: "Відкрити в Біблії",

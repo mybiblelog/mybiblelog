@@ -171,6 +171,7 @@ export const fr = {
 
   verses: "Versets",
 
+  log_entry_actions: "Actions de l'entrée",
   menu_edit: "Modifier",
   menu_delete: "Supprimer",
   menu_open_in_bible: "Ouvrir dans la Bible",

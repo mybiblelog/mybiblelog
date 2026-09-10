@@ -67,11 +67,13 @@ export function useNoteOverlays(): NoteOverlaysApi {
       <MenuSheet
         visible={menuNote !== null}
         onClose={() => setMenuNote(null)}
+        title={t("note_actions")}
         cancelLabel={t("cancel")}
         actions={[
-          { label: t("edit"), onPress: () => setEditingNote(menuNote) },
+          { label: t("edit"), icon: "pencil-outline", onPress: () => setEditingNote(menuNote) },
           {
             label: t("delete"),
+            icon: "trash-outline",
             color: "destructive",
             onPress: () => setDeletingNote(menuNote),
           },

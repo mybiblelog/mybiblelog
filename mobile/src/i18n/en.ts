@@ -163,6 +163,7 @@ export const en = {
 
   verses: "Verses",
 
+  log_entry_actions: "Log entry actions",
   menu_edit: "Edit",
   menu_delete: "Delete",
   menu_open_in_bible: "Open in Bible",

@@ -171,6 +171,20 @@ export function BottomSheet({
 
   if (!mounted) return null;
 
+  // Grabber gap is decoupled from `padded`: an unpadded sheet still needs top
+  // clearance so the affordance line doesn't sit flush against the rounded
+  // edge, and every anchored sheet gets a little extra room at the bottom so
+  // options aren't flush against the screen edge / home indicator.
+  const paddedAnchoredStyle = {
+    padding: spacing.md,
+    paddingTop: isSheet ? spacing.sm : spacing.md,
+    paddingBottom: spacing.md + spacing.sm + insets.bottom,
+  };
+  const unpaddedAnchoredStyle = {
+    paddingTop: isSheet ? spacing.sm : 0,
+    paddingBottom: insets.bottom + spacing.sm,
+  };
+
   return (
     <Modal visible transparent animationType="none" statusBarTranslucent onRequestClose={onClose}>
       <View style={styles.root}>
@@ -210,11 +224,8 @@ export function BottomSheet({
                   isCenter ? styles.centerSurface : styles.sheetSurface,
                   variant === "full" ? styles.surfaceFull : null,
                   { backgroundColor: colors.surface },
-                  padded &&
-                    (isCenter
-                      ? styles.centerPadding
-                      : { padding: spacing.md, paddingBottom: spacing.md + insets.bottom }),
-                  !isCenter && !padded ? { paddingBottom: insets.bottom } : null,
+                  padded && (isCenter ? styles.centerPadding : paddedAnchoredStyle),
+                  !isCenter && !padded ? unpaddedAnchoredStyle : null,
                   contentStyle,
                 ]}
               >
