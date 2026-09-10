@@ -385,6 +385,10 @@ export const uk = {
   onboarding_finish_description: "Все налаштовано! Час почати читати.",
   onboarding_finish_button: "Поїхали",
   settings_reset_onboarding: "Скинути онбординг (Dev)",
+  settings_hide_dev_tools_button: "Сховати кнопку інструментів розробника (Dev)",
+  settings_show_dev_tools_button: "Показати кнопку інструментів розробника (Dev)",
+  settings_dev_tools_button_unsupported:
+    "expo-dev-menu цієї збірки не має перемикача плаваючої кнопки — скористайтеся розділом Tools у меню розробника.",
 
   calendar_today: "Сьогодні",
   calendar_no_entries: "Немає записів",

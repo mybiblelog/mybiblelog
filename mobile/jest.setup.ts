@@ -81,6 +81,12 @@ jest.mock('@sentry/react-native', () => ({
   Native: {},
 }));
 
+// expo-dev-menu — ships with expo-dev-client, so it's only linked into dev
+// builds; stub the setter the dev tools toggle calls.
+jest.mock('expo-dev-menu', () => ({
+  setToolsButtonVisible: jest.fn(),
+}));
+
 // expo-haptics — no-op.
 jest.mock('expo-haptics', () => ({
   impactAsync: jest.fn(),

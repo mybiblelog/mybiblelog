@@ -13,6 +13,7 @@ import {
   stackTransition,
   useTheme,
 } from "@/src/design";
+import { initDevToolsButton } from "@/src/dev/devToolsButton";
 import { initStores } from "@/src/stores/init";
 import { useOnboardingStatus } from "@/src/stores/onboarding";
 import { ToastProvider } from "@/src/toast/ToastProvider";
@@ -38,6 +39,9 @@ function RootLayout() {
   useEffect(() => {
     if (MISSING_CONFIG.length > 0) return;
     initStores();
+    // Re-apply the dev tools button preference chosen in Settings → About, so
+    // a button hidden for screenshots stays hidden across reloads.
+    initDevToolsButton();
   }, []);
 
   const onboarding = useOnboardingStatus();

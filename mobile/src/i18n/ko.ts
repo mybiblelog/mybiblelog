@@ -376,6 +376,10 @@ export const ko = {
   onboarding_finish_description: "준비가 모두 끝났습니다! 이제 성경을 읽기 시작할 시간이에요.",
   onboarding_finish_button: "시작해볼까요?",
   settings_reset_onboarding: "온보딩 재설정 (개발용)",
+  settings_hide_dev_tools_button: "개발 도구 버튼 숨기기 (개발용)",
+  settings_show_dev_tools_button: "개발 도구 버튼 표시 (개발용)",
+  settings_dev_tools_button_unsupported:
+    "이 빌드의 expo-dev-menu에는 플로팅 버튼 전환 기능이 없습니다. 개발 메뉴의 Tools 섹션을 사용하세요.",
 
   calendar_today: "오늘",
   calendar_no_entries: "기록 없음",

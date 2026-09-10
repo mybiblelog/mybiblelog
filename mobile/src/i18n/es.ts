@@ -387,6 +387,10 @@ export const es = {
   onboarding_finish_description: "¡Todo está listo! Es hora de comenzar a leer.",
   onboarding_finish_button: "Vamos",
   settings_reset_onboarding: "Restablecer incorporación (Dev)",
+  settings_hide_dev_tools_button: "Ocultar botón de herramientas de desarrollo (Dev)",
+  settings_show_dev_tools_button: "Mostrar botón de herramientas de desarrollo (Dev)",
+  settings_dev_tools_button_unsupported:
+    "El expo-dev-menu de esta compilación no tiene un interruptor para el botón flotante: usa la sección Tools del menú de desarrollo.",
 
   calendar_today: "Hoy",
   calendar_no_entries: "No hay entradas",

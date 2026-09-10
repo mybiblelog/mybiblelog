@@ -49,6 +49,12 @@ export const appStorage = createTypedStorage(
     themeMode: defineKey<ThemeMode>("themeMode.v1"),
     locale: defineKey<SupportedLocale>("locale.v1"),
     forceUpgradeStatus: defineKey<ForceUpgradeCache>("forceUpgradeStatus.v1"),
+    /**
+     * Dev-only: whether `expo-dev-menu`'s floating dev tools button is shown.
+     * Written only by development builds (see `src/dev/devToolsButton.ts`);
+     * a production build never reads or writes it.
+     */
+    devToolsButtonVisible: defineKey<boolean>("devToolsButtonVisible.v1"),
     logEntries: defineKey<StoredLogEntry[]>("logEntries.v1"),
     logEntryMutations: defineKey<PendingLogEntryMutation[]>("logEntries.mutations.v1"),
     passageNotes: defineKey<StoredLocalNote[]>("passageNotes.local.v1"),

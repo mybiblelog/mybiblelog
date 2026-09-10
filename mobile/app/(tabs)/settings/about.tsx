@@ -14,6 +14,7 @@ import {
   ScreenHeader,
   Text,
 } from "@/src/components";
+import { useDevToolsButton } from "@/src/dev/devToolsButton";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { resetOnboardingForTesting } from "@/src/stores/onboarding";
 import { useToast } from "@/src/toast/ToastProvider";
@@ -23,6 +24,7 @@ export default function AboutSettings() {
   const t = useT();
   const { colors } = useTheme();
   const { showToast } = useToast();
+  const devToolsButton = useDevToolsButton();
 
   // Prefer the build-time version from app config; fall back to the native
   // application version when available (e.g. on a standalone build).
@@ -82,15 +84,35 @@ export default function AboutSettings() {
         </Card>
 
         {__DEV__ ? (
-          <Button
-            label={t("settings_reset_onboarding")}
-            variant="secondary"
-            size="sm"
-            style={styles.devReset}
-            onPress={() => {
-              void resetOnboardingForTesting().then(() => router.replace("/onboarding"));
-            }}
-          />
+          <View style={styles.devActions}>
+            <Button
+              label={t("settings_reset_onboarding")}
+              variant="secondary"
+              size="sm"
+              onPress={() => {
+                void resetOnboardingForTesting().then(() => router.replace("/onboarding"));
+              }}
+            />
+            {/* Screenshot aid: the floating dev tools button overlays every
+                screen, so hiding it is the only way to capture a clean one. */}
+            <Button
+              label={
+                devToolsButton.visible
+                  ? t("settings_hide_dev_tools_button")
+                  : t("settings_show_dev_tools_button")
+              }
+              variant="secondary"
+              size="sm"
+              testID="about.devToolsButtonToggle"
+              onPress={() => {
+                if (!devToolsButton.supported) {
+                  showToast({ type: "error", message: t("settings_dev_tools_button_unsupported") });
+                  return;
+                }
+                devToolsButton.toggle();
+              }}
+            />
+          </View>
         ) : null}
       </ScrollView>
     </Screen>
@@ -106,5 +128,5 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   divider: { height: StyleSheet.hairlineWidth, marginLeft: spacing.xl + spacing.md },
-  devReset: { marginTop: spacing.lg, alignSelf: "flex-start" },
+  devActions: { marginTop: spacing.lg, alignItems: "flex-start", gap: spacing.sm },
 });

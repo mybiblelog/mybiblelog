@@ -412,6 +412,10 @@ export const en = {
   onboarding_finish_description: "You're all set up! It's time to start reading.",
   onboarding_finish_button: "Let's Go",
   settings_reset_onboarding: "Reset Onboarding (Dev)",
+  settings_hide_dev_tools_button: "Hide Dev Tools Button (Dev)",
+  settings_show_dev_tools_button: "Show Dev Tools Button (Dev)",
+  settings_dev_tools_button_unsupported:
+    "This build’s expo-dev-menu has no toggle for the floating button — use the Tools section of the dev menu instead.",
 
   calendar_today: "Today",
   calendar_no_entries: "No Entries",

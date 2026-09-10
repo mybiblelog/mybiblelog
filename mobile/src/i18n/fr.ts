@@ -389,6 +389,10 @@ export const fr = {
   onboarding_finish_description: "Tout est prêt ! Il est temps de commencer à lire.",
   onboarding_finish_button: "Allons-y",
   settings_reset_onboarding: "Réinitialiser l'intégration (Dev)",
+  settings_hide_dev_tools_button: "Masquer le bouton des outils de développement (Dev)",
+  settings_show_dev_tools_button: "Afficher le bouton des outils de développement (Dev)",
+  settings_dev_tools_button_unsupported:
+    "L’expo-dev-menu de ce build n’a pas de bascule pour le bouton flottant — utilisez la section Tools du menu de développement.",
 
   calendar_today: "Aujourd'hui",
   calendar_no_entries: "Aucune entrée",

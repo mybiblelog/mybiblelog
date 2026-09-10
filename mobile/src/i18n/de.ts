@@ -391,6 +391,10 @@ export const de = {
     "Sie sind fertig eingerichtet! Es ist Zeit, mit dem Lesen zu beginnen.",
   onboarding_finish_button: "Los geht's",
   settings_reset_onboarding: "Onboarding zurücksetzen (Dev)",
+  settings_hide_dev_tools_button: "Dev-Tools-Schaltfläche ausblenden (Dev)",
+  settings_show_dev_tools_button: "Dev-Tools-Schaltfläche einblenden (Dev)",
+  settings_dev_tools_button_unsupported:
+    "Das expo-dev-menu dieses Builds bietet keinen Schalter für die schwebende Schaltfläche — nutze stattdessen den Bereich „Tools“ im Dev-Menü.",
 
   calendar_today: "Heute",
   calendar_no_entries: "Keine Einträge",
