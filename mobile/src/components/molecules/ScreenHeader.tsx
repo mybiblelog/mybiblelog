@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
 import { router } from "expo-router";
-import { spacing } from "@/src/design";
+import { spacing, TOUCH_TARGET } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { IconButton, Text } from "../atoms";
 
@@ -80,6 +80,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.sm,
+    // Reserve the full touch-target height even when `right`/`back` is
+    // absent or shorter than that (e.g. a Spinner), so the row doesn't
+    // shrink to the title's line height on screens without a tall control —
+    // that shrink is what causes a layout jump when navigating to/from a
+    // screen that does have one (e.g. Books' Progress button vs Checklist).
+    minHeight: TOUCH_TARGET,
   },
   padded: {
     paddingHorizontal: spacing.pageGutter,
