@@ -306,6 +306,45 @@ test.describe('Notes page', () => {
     await expect(page.getByTestId('passage-note')).toHaveCount(2);
   });
 
+  test('back navigation with unsaved changes prompts before closing the editor', async ({ page }) => {
+    // Two history entries so `goBack()` has somewhere to return to.
+    await page.goto('/tags');
+    await page.goto('/notes');
+
+    await page.getByRole('button', { name: 'New' }).click();
+    const editor = page.getByTestId('note-editor');
+    await expect(editor).toBeVisible();
+    await page.getByTestId('note-editor-content').fill('Started typing a note');
+
+    // Cancel: stay on /notes with the editor still open and the draft intact.
+    await page.goBack();
+    await expect(page.getByTestId('dialog-cancel')).toBeVisible();
+    await page.getByTestId('dialog-cancel').click();
+    await expect(page).toHaveURL(/\/notes/);
+    await expect(editor).toBeVisible();
+    await expect(page.getByTestId('note-editor-content')).toHaveValue('Started typing a note');
+
+    // Confirm: the back navigation completes and the editor closes.
+    await page.goBack();
+    await expect(page.getByTestId('dialog-confirm')).toBeVisible();
+    await page.getByTestId('dialog-confirm').click();
+    await expect(page).toHaveURL(/\/tags/);
+    await expect(editor).toBeHidden();
+  });
+
+  test('back navigation closes an untouched editor without prompting', async ({ page }) => {
+    await page.goto('/tags');
+    await page.goto('/notes');
+
+    await page.getByRole('button', { name: 'New' }).click();
+    const editor = page.getByTestId('note-editor');
+    await expect(editor).toBeVisible();
+
+    await page.goBack();
+    await expect(page).toHaveURL(/\/tags/);
+    await expect(editor).toBeHidden();
+  });
+
   test('mobile users can filter via the view options modal', async ({ page, api }) => {
     await seedNote(api, { content: 'Alpha note about creation', passages: [] });
     await seedNote(api, { content: 'Beta note about exodus', passages: [] });
