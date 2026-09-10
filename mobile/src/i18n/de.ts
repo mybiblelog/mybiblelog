@@ -220,6 +220,10 @@ export const de = {
     "Ihre Offline-Daten auf diesem Gerät werden erst mit Ihrem Konto synchronisiert, wenn Sie online und angemeldet sind.",
   auth_login_requires_connection: "Für die Anmeldung ist eine Internetverbindung erforderlich.",
   auth_login_requires_server: "Für die Anmeldung muss der My-Bible-Log-Server erreichbar sein.",
+  auth_register_requires_connection:
+    "Für die Registrierung ist eine Internetverbindung erforderlich.",
+  auth_register_requires_server:
+    "Für die Registrierung muss der My-Bible-Log-Server erreichbar sein.",
   auth_login: "Anmelden",
   auth_create_account: "Konto erstellen",
   auth_logout: "Abmelden",

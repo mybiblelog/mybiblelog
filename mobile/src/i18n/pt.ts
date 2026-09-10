@@ -219,6 +219,8 @@ export const pt = {
     "Seus dados offline neste dispositivo não serão sincronizados com sua conta até que você esteja online e conectado.",
   auth_login_requires_connection: "Fazer login requer uma conexão com a internet.",
   auth_login_requires_server: "Fazer login exige acesso ao servidor do My Bible Log.",
+  auth_register_requires_connection: "Cadastrar-se requer uma conexão com a internet.",
+  auth_register_requires_server: "Cadastrar-se exige acesso ao servidor do My Bible Log.",
   auth_login: "Entrar",
   auth_create_account: "Criar conta",
   auth_logout: "Sair",

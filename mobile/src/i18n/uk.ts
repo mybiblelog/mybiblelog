@@ -219,6 +219,8 @@ export const uk = {
     "Ваші офлайн-дані на цьому пристрої не синхронізуються з вашим обліковим записом, доки ви не будете онлайн і не увійдете в систему.",
   auth_login_requires_connection: "Для входу потрібне підключення до інтернету.",
   auth_login_requires_server: "Для входу потрібен доступ до сервера My Bible Log.",
+  auth_register_requires_connection: "Для реєстрації потрібне підключення до інтернету.",
+  auth_register_requires_server: "Для реєстрації потрібен доступ до сервера My Bible Log.",
   auth_login: "Увійти",
   auth_create_account: "Створити обліковий запис",
   auth_logout: "Вийти",
