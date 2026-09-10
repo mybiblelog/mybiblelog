@@ -4,6 +4,7 @@ export { default as BrowserCache } from './platform/browser-cache';
 
 // Utility exports
 export * from './bible/apps';
+export * from './bible/translations';
 export * from './platform/device';
 export * from './platform/date-helpers';
 export { computeDateVerseCounts, type DateVerseCounts, type DateVerseCountsMap, type DateVerseCountLogEntry } from './insights/date-verse-counts';
