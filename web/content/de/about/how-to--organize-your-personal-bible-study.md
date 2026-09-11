@@ -1,136 +1,136 @@
 ---
 seo:
-  title: 7 Möglichkeiten, um Ihr persönliches Bibelstudium zu organisieren
-  description: Nutzen Sie die leistungsstarken Notiz- und Tag-Funktionen von My Bible Log optimal, um das Beste aus Ihrer persönlichen Bibelstudienzeit herauszuholen.
+  title: 7 Wege, Ihr persönliches Bibelstudium zu organisieren
+  description: Wie Sie die Notizen und Tags von My Bible Log nutzen, um mehr aus Ihrer persönlichen Bibelstudienzeit herauszuholen
 og:
-  title: 7 Möglichkeiten, um Ihr persönliches Bibelstudium zu organisieren
-  description: Nutzen Sie die leistungsstarken Notiz- und Tag-Funktionen von My Bible Log optimal, um das Beste aus Ihrer persönlichen Bibelstudienzeit herauszuholen.
+  title: 7 Wege, Ihr persönliches Bibelstudium zu organisieren
+  description: Wie Sie die Notizen und Tags von My Bible Log nutzen, um mehr aus Ihrer persönlichen Bibelstudienzeit herauszuholen
 ---
 
 ![](/share.jpg)
 
-# 7 Möglichkeiten, um Ihr persönliches Bibelstudium zu organisieren
+# 7 Wege, Ihr persönliches Bibelstudium zu organisieren
 
-Die Notizfunktion von My Bible Log ist besonders leistungsstark. Es gibt viele verschiedene Möglichkeiten, Tags zu erstellen und Notizen zu organisieren, um verschiedene Arbeitsabläufe zu ermöglichen.
+Die Notizfunktion von My Bible Log kann eine Menge. Mit eigenen Tags lassen sich Notizen ganz unterschiedlich ordnen – je nachdem, wie Sie arbeiten.
 
-Hier sind 7 Ideen für die Verwendung der Notizfunktion, um das Beste aus Ihrem persönlichen Bibellesen herauszuholen.
+Hier sind 7 Ideen, wie Sie mit Notizen mehr aus Ihrem Bibellesen herausholen.
 
 ## 1. Offene Fragen
 
-Verfolgen Sie alle Ihre Fragen, während Sie weitermachen, ohne anzuhalten, und kommen Sie dann darauf zurück. Wenn Sie sich hinsetzen, um zu lesen, überprüfen Sie Ihre Notizen, die dieses Tag haben. Sie können eine Antwort oder relevante Informationen finden, während Sie lesen.
+Halten Sie Ihre Fragen fest, während Sie lesen, ohne den Lesefluss zu unterbrechen – und kommen Sie später darauf zurück. Wenn Sie sich das nächste Mal hinsetzen, schauen Sie kurz auf die Notizen mit diesem Tag. Womöglich stoßen Sie beim Lesen genau auf eine Antwort.
 
-### Handeln Sie
+### Probieren Sie es aus
 
-Erstellen Sie einen Tag für mindestens 3 Fragen, die Sie in der Bibel recherchieren möchten. Können Sie diese 3 Beispielfragen beantworten?
+Legen Sie einen Tag für mindestens 3 Fragen an, denen Sie in der Bibel nachgehen möchten. Wie steht es mit diesen drei?
 
-* Wie kann jemand "gerettet" werden, und was bedeutet es, gerettet zu sein? Vorgeschlagener Tag: Rettung
-* Gelten alle Regeln in Alten Testament Büchern wie Levitikus auch für uns heute? Vorgeschlagener Tag: AT Regeln
-* Wie spricht die Bibel über die Kirche? Wer oder was zählt als Kirche? Gebietet uns die Bibel, "in die Kirche zu gehen"? Vorgeschlagener Tag: Kirche
-
-<div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/de/notes">Gehe zur Notizseite</a>
-  <a class="mbl-button mbl-button--light" href="/de/tags">Gehe zur Tags Seite</a>
-</div>
-
-## 2. Jüngerschaft / Eins-zu-Eins-Gesprächsthemen
-
-Viele Menschen studieren die Bibel mit einem Freund oder Mentor. Mentoren können sich treffen, um die Bibel während der Woche mit mehreren Personen in Jüngerschaftsbeziehungen zu studieren. Das Erstellen eines Tags für jede Person, mit der Sie studieren, kann Ihnen helfen, Ihr fortlaufendes Bibelgespräch aufrechtzuerhalten. Diese Tags können Ihnen helfen, Fragen, Antworten und wichtige Themen für Ihre Studienzeit im Auge zu behalten.
-
-### Handeln Sie
-
-Erstellen Sie einen Tag für jede Person, mit der Sie studieren oder über die Bibel sprechen können. Für jede Person erstellen Sie mindestens eine Notiz mit etwas, über das Sie mit dieser Person sprechen möchten.
+* Wie wird ein Mensch „gerettet", und was bedeutet das überhaupt? Tag-Vorschlag: Erlösung
+* Gelten alle Vorschriften aus alttestamentlichen Büchern wie 3. Mose auch heute noch für uns? Tag-Vorschlag: AT-Gebote
+* Wie spricht die Bibel über Gemeinde? Wer oder was gilt als Gemeinde? Gebietet uns die Bibel, „in die Kirche zu gehen"? Tag-Vorschlag: Gemeinde
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/de/notes">Gehe zur Notizseite</a>
-  <a class="mbl-button mbl-button--light" href="/de/tags">Gehe zur Tags Seite</a>
+  <a class="mbl-button mbl-button--light" href="/de/notes">Zur Notizseite</a>
+  <a class="mbl-button mbl-button--light" href="/de/tags">Zur Tags-Seite</a>
 </div>
 
-## 3. Thematisches Studium
+## 2. Jüngerschaft und Zweiergespräche
 
-Erstellen Sie einen Tag für ein bestimmtes Thema und suchen Sie danach. Es hilft, Fragen mit sich zu "tragen". Möglicherweise stellen Sie fest, dass Ihnen beim Lesen der Bibel verschiedene Passagen helfen, ein Thema besser zu verstehen oder eine Frage zu beantworten, die Sie hatten.
+Viele studieren die Bibel gemeinsam mit einer Freundin, einem Freund oder einem Mentor. Wer andere begleitet, trifft sich unter der Woche womöglich mit mehreren Menschen. Ein eigener Tag pro Person hilft, das Gespräch über die Zeit hinweg lebendig zu halten – mit allen Fragen, Antworten und Themen, die dazugehören.
 
-Ein großartiges Thema für diese Art des Studiums ist "Gebet". Sie können Bibelverse verfolgen, die Ihnen helfen, das Gebet zu verstehen und die richtige Einstellung für das Gespräch mit Gott zu haben. Sehen Sie, wie Menschen von der Genesis bis zur Offenbarung mit Gott gesprochen haben. Sehen Sie, wie Gott mit Menschen gesprochen hat und die Verheißungen, die er uns gemacht hat.
+### Probieren Sie es aus
 
-### Handeln Sie
+Legen Sie für jede Person, mit der Sie die Bibel lesen oder über sie sprechen können, einen Tag an. Schreiben Sie zu jeder mindestens eine Notiz mit etwas, das Sie beim nächsten Mal ansprechen möchten.
 
-Die Bibel ist voller interessanter Themen, aber sie ist kein Lehrbuch. Am Ende gibt es kein Glossar mit jedem möglichen Thema oder Problem, das wir erforschen möchten. Nun, manchmal schon, aber sie können unmöglich alles abdecken! Wählen Sie ein Thema aus der Bibel, das Sie interessiert, und erstellen Sie einen Tag, um Ihre Notizen zu diesem Thema zu organisieren.
+<div class="mbl-button-group">
+  <a class="mbl-button mbl-button--light" href="/de/notes">Zur Notizseite</a>
+  <a class="mbl-button mbl-button--light" href="/de/tags">Zur Tags-Seite</a>
+</div>
 
-Verwenden Sie diese Liste zur Inspiration:
+## 3. Themenstudium
+
+Legen Sie einen Tag für ein bestimmtes Thema an und sammeln Sie darunter alles, was Ihnen begegnet. Es lohnt sich, eine Frage eine Weile „mit sich zu tragen": Beim Lesen tauchen immer wieder Stellen auf, die ein Thema erhellen oder eine alte Frage beantworten.
+
+Ein dankbares Thema ist zum Beispiel das Gebet. Sammeln Sie Verse, die zeigen, was Beten ist und mit welcher Haltung man mit Gott spricht. Verfolgen Sie von 1. Mose bis zur Offenbarung, wie Menschen mit Gott geredet haben – und wie Gott mit ihnen geredet und was er uns zugesagt hat.
+
+### Probieren Sie es aus
+
+Die Bibel steckt voller spannender Themen, ist aber kein Lehrbuch: Hinten gibt es kein Stichwortverzeichnis mit jeder Frage, die uns umtreibt. Manchmal schon – aber alles kann so ein Verzeichnis unmöglich abdecken. Wählen Sie ein Thema, das Sie interessiert, und legen Sie dafür einen Tag an.
+
+Als Anregung:
 
 * Sünde
-* Rettung
+* Erlösung
 * Taufe
 * Abendmahl
-* Kirchenleitung
+* Gemeindeleitung
 * Himmel
-* Geistliche Gaben
+* Geistesgaben
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/de/notes">Gehe zur Notizseite</a>
-  <a class="mbl-button mbl-button--light" href="/de/tags">Gehe zur Tags Seite</a>
+  <a class="mbl-button mbl-button--light" href="/de/notes">Zur Notizseite</a>
+  <a class="mbl-button mbl-button--light" href="/de/tags">Zur Tags-Seite</a>
 </div>
 
-## 4. Ursprüngliche Sprache
+## 4. Ursprungssprache
 
-Sie sind vielleicht mit einigen Unterschieden zwischen dem Original-Hebräisch und Griechisch und den Wörtern vertraut, die Sie lesen. Halten Sie Verse fest, die Sie in ihrer ursprünglichen Sprache recherchieren möchten, damit Sie sie vollständig verstehen können.
+Vielleicht wissen Sie schon, dass Hebräisch und Griechisch an manchen Stellen anders klingen als die Worte, die Sie vor sich haben. Merken Sie sich die Verse, die Sie in der Ursprungssprache nachschlagen möchten, um sie ganz zu verstehen.
 
-### Handeln Sie
+### Probieren Sie es aus
 
-Viele Wörter haben in verschiedenen Sprachen unterschiedliche Nuancen. Zum Beispiel gibt es im Englischen nur ein Wort für "Liebe", aber im antiken Griechisch (die Sprache des Neuen Testaments) gibt es sieben verschiedene Wörter für "Liebe", die alle leicht unterschiedliche Bedeutungen haben.
+Wörter tragen in jeder Sprache eigene Nuancen. Im Deutschen gibt es für „Liebe" im Grunde ein Wort; im Altgriechischen, der Sprache des Neuen Testaments, sind es sieben – jedes mit einer etwas anderen Bedeutung.
 
-Erstellen Sie einen Tag für Passagen, die Sie in der originalen Sprache nachschlagen möchten, z.B. "Urspr. Sprache". Finden Sie mindestens 3 verschiedene Verse mit dem Wort "Liebe" und versehen Sie sie mit diesem neuen Tag. Sie können diese Verse in ihrer ursprünglichen Sprache auf Websites wie [Blue Letter Bible](https://www.blueletterbible.org/study.cfm) recherchieren.
+Legen Sie einen Tag für Stellen an, die Sie im Urtext nachlesen wollen, etwa „Urtext". Suchen Sie mindestens 3 Verse mit dem Wort „Liebe" und versehen Sie sie damit. Nachschlagen können Sie diese Verse zum Beispiel auf [Blue Letter Bible](https://www.blueletterbible.org/study.cfm).
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/de/notes">Gehe zur Notizseite</a>
-  <a class="mbl-button mbl-button--light" href="/de/tags">Gehe zur Tags Seite</a>
+  <a class="mbl-button mbl-button--light" href="/de/notes">Zur Notizseite</a>
+  <a class="mbl-button mbl-button--light" href="/de/tags">Zur Tags-Seite</a>
 </div>
 
 ## 5. Übersetzungen vergleichen
 
-Haben Sie eine Lieblingsübersetzung? Vielleicht möchten Sie sehen, wie andere Übersetzungen denselben Vers behandelt haben, um mehr Nuancen der Bedeutung des Originalautors zu erfassen.
+Haben Sie eine Lieblingsübersetzung? Dann lohnt manchmal ein Blick darauf, wie andere denselben Vers wiedergeben – so bekommen Sie mehr von dem mit, was der ursprüngliche Autor sagen wollte.
 
-Gelegentlich zeigt ein seitliches Studium von Übersetzungen, dass bestimmte Phrasen oder ganze Abschnitte nur in einer Übersetzung existieren. Dies liegt oft daran, dass diese Unterschiede in einigen Kopien der Originalmanuskripte vorkommen, die uns heute vorliegen.
+Ab und zu zeigt ein Vergleich nebeneinander, dass einzelne Wendungen oder ganze Abschnitte nur in einer Übersetzung stehen. Meist liegt das daran, dass sie nur in einem Teil der heute erhaltenen Handschriften vorkommen.
 
-Oft zeigen Vergleiche von Übersetzungen geringfügige Unterschiede in der Wortwahl und Formulierung.
+Häufiger fallen beim Vergleich aber nur kleine Unterschiede in Wortwahl und Satzbau auf.
 
-Neuere Bibelübersetzungen folgen in der Regel den ältesten und etabliertesten Manuskripten, um eine möglichst hohe Genauigkeit sicherzustellen. Die Phrasen, die in späteren Manuskripten kopiert wurden, können in diesen neueren Übersetzungen als Fußnoten erscheinen.
+Neuere Übersetzungen halten sich in der Regel an die ältesten und am besten bezeugten Handschriften, um so genau wie möglich zu sein. Was erst in späteren Abschriften auftaucht, findet sich dann oft in einer Fußnote.
 
-Als Beispiel enthält 1. Johannes 5,7-8 in der King James Version (KJV) einige zusätzliche Formulierungen, eine der ersten englischen Übersetzungen der Bibel:
+Ein Beispiel: In 1. Johannes 5,7-8 steht in der King James Version (KJV), einer der ersten englischen Bibelübersetzungen, mehr Text als anderswo:
 
 > 7 Denn drei sind, die da zeugen im Himmel: der Vater, das Wort und der Heilige Geist; und diese drei sind eins.
 > 8 Und drei sind, die da zeugen auf Erden: der Geist und das Wasser und das Blut; und diese drei stimmen überein.
 
-Die New American Standard Bible (NASB) lässt diese Phrasen aus, um den frühesten Textkopien treu zu bleiben:
+Die New American Standard Bible (NASB) lässt diese Wendungen weg, um den frühesten Textzeugen treu zu bleiben:
 > 7 Denn drei sind, die Zeugnis ablegen: 8 der Geist und das Wasser und das Blut; und die drei sind einmütig.
 
-Die NASB *enthält jedoch* die späteren Manuskriptzusätze als Fußnoten, damit wir immer noch von ihnen Kenntnis haben.
+Die späteren Zusätze führt sie *dennoch* als Fußnote auf, damit man von ihnen weiß.
 
-Ein sehr deutliches Beispiel dafür, wie sich Übersetzungen unterscheiden können, liegt vor, wenn eine bestimmte Übersetzung ein Update erhält, um mit den Veränderungen in der englischen Sprache Schritt zu halten. Die NASB wurde 2020 aktualisiert, nachdem sie zuletzt 1995 aktualisiert wurde.
+Besonders anschaulich wird das, wenn eine Übersetzung überarbeitet wird, um mit der Sprache Schritt zu halten. Die NASB wurde 2020 überarbeitet – zuletzt davor 1995.
 
-Die Lockman-Stiftung, die für die NASB verantwortlich ist, erklärt [auf ihrer Website](https://www.lockman.org/nasb-bible-info/), wie und warum sie die Übersetzung nach 25 Jahren aktualisiert haben.
+Die Lockman Foundation, die hinter der NASB steht, erklärt [auf ihrer Website](https://www.lockman.org/nasb-bible-info/), wie und warum sie die Übersetzung nach 25 Jahren überarbeitet hat.
 
-Die NASB2020 hat kleine Aktualisierungen vorgenommen, um das Geschlecht in bestimmten Versen klarer darzustellen. Dies liegt daran, dass die ursprüngliche griechische Sprache das Geschlecht anders behandelt als das moderne Englisch.
+Die NASB2020 macht an einigen Stellen deutlicher, wer gemeint ist. Denn das Griechische geht mit dem Geschlecht anders um als das heutige Englisch.
 
-Im Englischen bedeutet das Wort "Brüder" immer männliche Geschwister. Im biblischen Griechisch gibt es kein Wort für "Geschwister", nur "Bruder" und "Schwester". Um sowohl Brüder *und* Schwestern zu erwähnen, würde man immer noch das Wort "Brüder" verwenden, und die Menschen würden verstehen, dass Sie alle meinten. Wenn Sie nur über Ihre männlichen Geschwister im biblischen Griechisch sprechen wollten, müssten Sie "männliche Brüder" sagen.
+Im Englischen meint „brothers" immer männliche Geschwister. Im biblischen Griechisch gibt es kein Wort für „Geschwister", sondern nur „Bruder" und „Schwester". Wollte man Brüder *und* Schwestern zusammen ansprechen, sagte man trotzdem „Brüder", und alle verstanden, dass alle gemeint waren. Ging es wirklich nur um die männlichen Geschwister, musste man „männliche Brüder" sagen.
 
-Die Übersetzer der NASB haben festgestellt, dass moderne englischsprachige Leser falsche Annahmen darüber treffen würden, was das ursprüngliche Griechisch aussagt. Deshalb haben sie einige Instanzen von "Brüder" in "Brüder und Schwestern" aktualisiert, um ein klares Verständnis sicherzustellen.
+Die NASB-Übersetzer kamen zu dem Schluss, dass heutige englischsprachige Leser den griechischen Text hier falsch verstehen würden. Deshalb machten sie aus manchen „brothers" ein „brothers and sisters".
 
-Durch diese Unterscheidung können wir nun erkennen, wann die ursprünglichen Autoren sowohl von Männern *und* Frauen gesprochen haben, sowie wann sie *nur* von Männern gesprochen haben.
+Dank dieser Unterscheidung erkennt man nun, wo die Autoren Männer *und* Frauen meinten – und wo tatsächlich *nur* Männer.
 
-### Handeln Sie
+### Probieren Sie es aus
 
-Finden Sie Verse, die in der NASB95 "Brüder" sagen, und prüfen Sie, ob sie in der NASB2020 in "Brüder und Schwestern" aktualisiert wurden oder ob diese Verse wirklich nur Männer betrafen.
+Suchen Sie Verse, in denen die NASB95 „brothers" schreibt, und sehen Sie nach, ob die NASB2020 daraus „brothers and sisters" gemacht hat – oder ob dort wirklich nur von Männern die Rede war.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/de/notes">Gehe zur Notizseite</a>
-  <a class="mbl-button mbl-button--light" href="/de/tags">Gehe zur Tags Seite</a>
+  <a class="mbl-button mbl-button--light" href="/de/notes">Zur Notizseite</a>
+  <a class="mbl-button mbl-button--light" href="/de/tags">Zur Tags-Seite</a>
 </div>
 
 ## 6. Merkverse
 
-Verfolgen Sie Verse, die Sie auswendig lernen möchten, und üben Sie diese.
+Sammeln Sie die Verse, die Sie auswendig lernen möchten, und üben Sie sie regelmäßig.
 
-Es gibt viele Passagen in der Bibel, die die Bedeutung und den Wert der Schrift teilen:
+Viele Stellen der Bibel sprechen davon, wie wertvoll das Wort Gottes ist:
 
 * Psalm 19,7-11
 * Psalm 119,9-12
@@ -148,38 +148,38 @@ Es gibt viele Passagen in der Bibel, die die Bedeutung und den Wert der Schrift 
 * Hebräer 4,12
 * 1. Johannes 5,13
 
-### Handeln Sie
+### Probieren Sie es aus
 
-Erstellen Sie einen Tag, um Ihre Merkverse im Auge zu behalten. Wählen Sie mindestens 3 dieser Passagen aus und versehen Sie sie mit dem Tag "Merkverse".
+Legen Sie einen Tag für Ihre Merkverse an. Wählen Sie mindestens 3 dieser Stellen aus und versehen Sie sie damit.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/de/notes">Gehe zur Notizseite</a>
-  <a class="mbl-button mbl-button--light" href="/de/tags">Gehe zur Tags Seite</a>
+  <a class="mbl-button mbl-button--light" href="/de/notes">Zur Notizseite</a>
+  <a class="mbl-button mbl-button--light" href="/de/tags">Zur Tags-Seite</a>
 </div>
 
 ## 7. Tagebuch und Gebet
 
-Schreiben Sie täglich Ihre Gedanken zu Ihrem Lesen auf. Verfolgen Sie die Dinge, für die Sie sich hoffen und beten, und wie Sie wachsen, lernen und anderen besser dienen wollen.
+Halten Sie täglich fest, was Ihnen beim Lesen durch den Kopf geht. Notieren Sie, worauf Sie hoffen, wofür Sie beten und wie Sie wachsen, dazulernen und anderen besser dienen möchten.
 
-Sie können die Notizfunktion auch verwenden, um Gebetsanfragen und erhörte Gebete festzuhalten. Diese sind wichtig, aber leicht aus den Augen zu verlieren, wenn es kein Organisationssystem gibt.
+Auch Gebetsanliegen und erhörte Gebete lassen sich hier festhalten. Beides ist wichtig – und beides gerät ohne ein bisschen Ordnung schnell aus dem Blick.
 
-Jede davon könnte ein Tag sein:
-* Gebetsanfrage
+Zwei Tags bieten sich an:
+* Gebetsanliegen
 * Erhörtes Gebet
 
-Verwenden Sie den **Gebetsanfrage**-Tag, um die Dinge zu besprechen, über die Sie beten möchten.
+Unter **Gebetsanliegen** finden Sie alles wieder, wofür Sie beten möchten.
 
-Verwenden Sie den **Erhörtes Gebet**-Tag, um die ermutigenden Dinge, die Gott in Ihrem Leben und im Leben anderer getan hat, hervorzubringen.
+Unter **Erhörtes Gebet** sehen Sie auf einen Blick, was Gott in Ihrem Leben und im Leben anderer getan hat.
 
-### Handeln Sie
+### Probieren Sie es aus
 
-Erstellen Sie einen Tag, um Ihre Tagebucheinträge im Auge zu behalten. Fangen Sie an, Ihren ersten Tagebuch-Eintrag zu schreiben und versehen Sie ihn mit einem Tag.
+Legen Sie einen Tag für Ihre Tagebucheinträge an – und schreiben Sie gleich den ersten.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/de/notes">Gehe zur Notizseite</a>
-  <a class="mbl-button mbl-button--light" href="/de/tags">Gehe zur Tags Seite</a>
+  <a class="mbl-button mbl-button--light" href="/de/notes">Zur Notizseite</a>
+  <a class="mbl-button mbl-button--light" href="/de/tags">Zur Tags-Seite</a>
 </div>
 
 ## Fazit
 
-Dies sind nur einige der vielen Möglichkeiten, wie Sie organisierte Notizen und Tags nutzen können, um mehr aus Ihrer Bibellesenzeit herauszuholen. Sobald Sie diese Funktionen zu nutzen beginnen, werden Sie schnell eigene Ideen entwickeln, wie Sie sie anwenden können.
+Das sind nur einige der vielen Möglichkeiten, mit geordneten Notizen und Tags mehr aus Ihrer Zeit in der Bibel zu holen. Sobald Sie damit anfangen, kommen Sie schnell auf eigene Ideen.

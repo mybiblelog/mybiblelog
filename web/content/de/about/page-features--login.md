@@ -1,47 +1,47 @@
 ---
 seo:
-  title: Kontoerstellung
-  description: So erstellen Sie ein Konto auf My Bible Log
+  title: Konto erstellen
+  description: So erstellen Sie ein Konto bei My Bible Log
 og:
-  title: Kontoerstellung
-  description: So erstellen Sie ein Konto auf My Bible Log
+  title: Konto erstellen
+  description: So erstellen Sie ein Konto bei My Bible Log
 ---
 
 ![](/share.jpg)
 
-# Kontoerstellung
+# Konto erstellen
 
-My Bible Log unterstützt mehrere Methoden der Authentifizierung, um den Einstieg zu erleichtern.
+Damit der Einstieg leichtfällt, bietet My Bible Log mehrere Anmeldemöglichkeiten.
 
-## Soziale Anmeldung
+## Anmeldung mit Google
 
-Benutzer mit einem Google-Konto können es zur Anmeldung verwenden. Auf der Anmeldeseite befindet sich eine "Mit Google anmelden"-Schaltfläche, die Sie zur Anmeldung bei Google weiterleitet.
+Wenn Sie ein Google-Konto haben, können Sie sich damit anmelden. Auf der Anmeldeseite finden Sie die Schaltfläche „Mit Google anmelden", die Sie zu Google weiterleitet.
 
-Benutzer geben ihr Google-Passwort nie bei My Bible Log ein. Sobald sich ein Benutzer bei Google angemeldet hat, wird Google zurückspringen zu My Bible Log und die Bestätigung weitergeben, dass Sie sich auf dieser Website angemeldet haben.
+Ihr Google-Passwort geben Sie dabei nie bei My Bible Log ein. Sobald Sie sich bei Google angemeldet haben, leitet Google Sie zurück und bestätigt My Bible Log, dass die Anmeldung erfolgreich war.
 
-## Lokale Kontenerstellung
+## Eigenes Konto anlegen
 
-Benutzerkonten sind an E-Mail-Adressen gebunden. Die Anmeldung mit Google ist eine Möglichkeit, eine E-Mail-Adresse zu überprüfen.
+Jedes Konto ist an eine E-Mail-Adresse gebunden. Die Anmeldung mit Google ist eine Möglichkeit, diese Adresse zu bestätigen.
 
-Benutzer, die sich direkt bei My Bible Log anmelden möchten, können sich auf der Website registrieren. Geben Sie dazu eine E-Mail-Adresse und ein Passwort an. Ein Bestätigungslink wird an die angegebene E-Mail-Adresse gesendet, und die E-Mail-Adresse muss mit diesem Link bestätigt werden, bevor sich ein Benutzer anmelden kann.
+Sie können sich aber auch direkt auf der Website registrieren: Geben Sie einfach eine E-Mail-Adresse und ein Passwort an. Anschließend schicken wir Ihnen einen Bestätigungslink an diese Adresse. Erst wenn Sie darauf geklickt haben, können Sie sich anmelden.
 
-Durch die Überprüfung von E-Mail-Adressen verhindert My Bible Log das Missbrauchen von Serverressourcen durch Spam-Konten und stellt sicher, dass die Website für alle Benutzer schnell und leistungsfähig bleibt.
+Diese Bestätigung sorgt dafür, dass keine Spam-Konten die Serverressourcen belasten – so bleibt die Seite für alle schnell und zuverlässig.
 
-## Ändern der Anmeldemethoden
+## Anmeldemethode wechseln
 
-Benutzer können auch zwischen Authentifizierungsmethoden wechseln. Da eine E-Mail-Adresse das Konto identifiziert, können Sie sich mit Google oder Ihrem lokalen Passwort bei demselben Konto anmelden.
+Sie können jederzeit zwischen den Anmeldemethoden wechseln. Da Ihr Konto über die E-Mail-Adresse erkannt wird, gelangen Sie mit Google genauso hinein wie mit Ihrem eigenen Passwort.
 
-Benutzer, die zuvor die soziale Anmeldung genutzt haben und kein Passwort haben, können eines erstellen:
+Wenn Sie sich bisher nur über Google angemeldet haben und noch kein Passwort besitzen, legen Sie eines so an:
 
-- Gehen Sie zur Anmeldeseite
-- Klicken Sie auf "Anmelden" (keine Eingabe der E-Mail-Adresse oder des Passworts erforderlich)
-- Ein Link erscheint, der Ihnen anbietet, Ihr Passwort über E-Mail zurückzusetzen. Klicken Sie darauf.
-- Öffnen Sie die E-Mail und klicken Sie auf den Link.
-- Sie können nun ein Passwort für My Bible Log erstellen.
-- Sobald Ihr Passwort erstellt ist, werden Sie automatisch angemeldet.
+- Öffnen Sie die Anmeldeseite.
+- Klicken Sie auf „Anmelden" (E-Mail-Adresse und Passwort können Sie leer lassen).
+- Es erscheint ein Link, um das Passwort per E-Mail zurückzusetzen. Klicken Sie darauf.
+- Öffnen Sie die E-Mail und folgen Sie dem Link.
+- Nun können Sie ein Passwort für My Bible Log festlegen.
+- Sobald das Passwort gespeichert ist, sind Sie automatisch angemeldet.
 
-## Ändern der E-Mail-Adresse des Kontos
+## E-Mail-Adresse des Kontos ändern
 
-Benutzer können ihre E-Mail-Adresse von der Einstellungsseite aus ändern.
+Ihre E-Mail-Adresse ändern Sie auf der Einstellungsseite.
 
-Unter dem Abschnitt "Konto" gibt es eine Schaltfläche "E-Mail ändern".
+Im Abschnitt „Konto" finden Sie die Schaltfläche „E-Mail ändern".

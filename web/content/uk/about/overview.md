@@ -1,25 +1,25 @@
 ---
 seo:
-  title: Мій Біблійний Щоденник (My Bible Log) - Ваш особистий помічник для читання Біблії
-  description: Мій Біблійний Щоденник (My Bible Log) - це безкоштовний онлайн-інструмент, який допомагає вам відстежувати та організовувати ваш шлях читання Біблії
+  title: My Bible Log - ваш особистий помічник у читанні Біблії
+  description: My Bible Log - це безкоштовний онлайн-інструмент, який допоможе вам стежити за своїм читанням Біблії та впорядкувати його
 og:
-  title: Мій Біблійний Щоденник (My Bible Log) - Ваш особистий помічник для читання Біблії
-  description: Мій Біблійний Щоденник (My Bible Log) - це безкоштовний онлайн-інструмент, який допомагає вам відстежувати та організовувати ваш шлях читання Біблії
+  title: My Bible Log - ваш особистий помічник у читанні Біблії
+  description: My Bible Log - це безкоштовний онлайн-інструмент, який допоможе вам стежити за своїм читанням Біблії та впорядкувати його
 ---
 
 <h1>
-  <img src="/share.jpg" alt="Мій Біблійний Щоденник (My Bible Log)">
+  <img src="/share.jpg" alt="My Bible Log">
 </h1>
 
-## Надіслати відгук
+## Відгуки
 
-Ви можете подати запит на функцію, повідомити про помилку чи інше повідомлення за [цією формою](/uk/feedback).
+Запропонувати нову функцію, повідомити про помилку чи написати нам щось інше можна через [цю форму](/uk/feedback).
 
-## Внесок
+## Долучитися
 
-My Bible Log є відкритим кодом! Ви можете знайти вихідний код на GitHub: [My Bible Log Repository](https://github.com/mybiblelog/mybiblelog)
+My Bible Log має відкритий код! Вихідний код доступний на GitHub: [My Bible Log Repository](https://github.com/mybiblelog/mybiblelog)
 
-Будь-хто може скопіювати код, модифікувати його для власного використання, розмістити власний екземпляр My Bible Log та внести свій внесок у оригінальну кодову базу.
+Будь-хто може скопіювати код, змінити його під власні потреби, розгорнути власну копію My Bible Log і долучитися до розвитку початкового проєкту.
 
 ## Початок роботи з My Bible Log
 
@@ -28,24 +28,24 @@ My Bible Log є відкритим кодом! Ви можете знайти в
 
 ## Сторінки
 
-* [Сторінка "Сьогодні"](/uk/about/page-features--today)
-* [Сторінка книг Біблії](/uk/about/page-features--bible-books)
-* [Сторінка прогресу](/uk/about/page-features--progress)
-* [Сторінка переліку глав](/uk/about/page-features--chapter-checklist)
-* [Сторінка календаря](/uk/about/page-features--calendar)
-* [Сторінка нотаток](/uk/about/page-features--notes)
-* [Сторінка налаштувань](/uk/about/page-features--settings)
+* [Сторінка «Сьогодні»](/uk/about/page-features--today)
+* [Сторінка «Книги Біблії»](/uk/about/page-features--bible-books)
+* [Сторінка «Прогрес»](/uk/about/page-features--progress)
+* [Сторінка «Список розділів»](/uk/about/page-features--chapter-checklist)
+* [Сторінка «Календар»](/uk/about/page-features--calendar)
+* [Сторінка «Нотатки»](/uk/about/page-features--notes)
+* [Сторінка «Налаштування»](/uk/about/page-features--settings)
 
 ## Статті
 
-* [Як прочитати Біблію протягом року](/uk/about/how-to--read-the-bible-in-a-year)
-* [7 способів організувати своє особисте читання Біблії](/uk/about/how-to--organize-your-personal-bible-study)
+* [Як прочитати Біблію за рік](/uk/about/how-to--read-the-bible-in-a-year)
+* [7 способів упорядкувати особисте вивчення Біблії](/uk/about/how-to--organize-your-personal-bible-study)
 
 <!--
 * [Як прочитати Новий Завіт за 90 днів](/uk/about/how-to--read-the-new-testament-in-90-days)
-* [Як сформувати міцну звичку читання Біблії](/uk/about/how-to--build-a-strong-bible-reading-habit)
+* [Як виробити міцну звичку читати Біблію](/uk/about/how-to--build-a-strong-bible-reading-habit)
 -->
 
 ## Ресурси
 
-* [Друкований відстежувач читання Біблії](/uk/resources/printable-bible-reading-tracker)
+* [Трекер читання Біблії для друку](/uk/resources/printable-bible-reading-tracker)

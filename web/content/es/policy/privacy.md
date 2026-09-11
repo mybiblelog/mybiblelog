@@ -1,50 +1,50 @@
-# Política de Privacidad de My Bible Log
+# Política de privacidad de My Bible Log
 
-Esta Política de Privacidad explica cómo se maneja tu información personal cuando usas [https://www.mybiblelog.com](https://www.mybiblelog.com) (el "Sitio").
+Esta política de privacidad explica cómo se manejan tus datos personales cuando usas [https://www.mybiblelog.com](https://www.mybiblelog.com) (el «Sitio»).
 
-## Información Recopilada
+## Qué información se recopila
 
-Cuando visitas el Sitio, se recopila automáticamente información básica sobre tu dispositivo, incluyendo tu navegador web, dirección IP, zona horaria y cookies. Esto nos ayuda a entender cómo los visitantes usan el Sitio y mejorar tu experiencia. Llamamos a esto "Información del Dispositivo".
+Al visitar el Sitio se recopilan automáticamente algunos datos básicos de tu dispositivo: tu navegador, tu dirección IP, tu zona horaria y las cookies. Eso nos ayuda a entender cómo se usa el Sitio y a mejorarlo. A estos datos los llamamos «Información del dispositivo».
 
-La Información del Dispositivo se recopila usando:
+La Información del dispositivo se recopila mediante:
 
-* Cookies - pequeños archivos de datos que ayudan al Sitio a funcionar correctamente
-* Archivos de registro - que rastrean el uso básico del sitio
-* Web beacons - que nos ayudan a entender cómo interactúas con el Sitio
+* Cookies: pequeños archivos que permiten que el Sitio funcione bien
+* Archivos de registro: que anotan el uso básico del Sitio
+* Web beacons: que muestran cómo interactúas con el Sitio
 
-## Cómo se Usa tu Información
+## Para qué usamos tu información
 
-La información recopilada nos ayuda a:
+Los datos recopilados nos sirven para:
 
-* Proporcionar y mejorar las características del Sitio
-* Entender cómo los visitantes usan el Sitio
-* Comunicarnos contigo cuando sea necesario (como restablecimientos de contraseña)
+* ofrecer y mejorar las funciones del Sitio
+* entender cómo lo usan los visitantes
+* escribirte cuando haga falta (por ejemplo, para restablecer una contraseña)
 
-## Compartir Información
+## Con quién se comparte
 
-Tu información solo se comparte en estos casos específicos:
+Tu información se comparte únicamente en estos casos:
 
-* Con Google Analytics para ayudarnos a entender el uso del sitio
+* Con Google Analytics, para poder analizar el uso del Sitio
   * Puedes leer la política de privacidad de Google aquí: [https://www.google.com/intl/es/policies/privacy/](https://www.google.com/intl/es/policies/privacy/)
-  * Puedes optar por no participar en Google Analytics aquí: [https://tools.google.com/dlpage/gaoptout](https://tools.google.com/dlpage/gaoptout)
-* Cuando lo requiera la ley (como responder a solicitudes legales)
+  * Puedes desactivar Google Analytics aquí: [https://tools.google.com/dlpage/gaoptout](https://tools.google.com/dlpage/gaoptout)
+* Cuando la ley lo exige (por ejemplo, al responder un requerimiento legal)
 
-Tu información nunca será vendida a nadie.
+Tu información nunca se vende a nadie.
 
-## Gestionar tus Datos
+## Cómo administrar tus datos
 
-Tienes control total sobre tus datos. Puedes eliminar tu cuenta y todos los datos asociados en cualquier momento:
+Tú tienes el control total de tus datos y puedes eliminar tu cuenta, con todo lo asociado a ella, cuando quieras:
 
-1. Ve a la página "Configuración"
-2. Encuentra la sección "Eliminar Cuenta"
-3. Sigue los pasos simples para eliminar permanentemente tu cuenta
+1. Entra a la página «Configuración».
+2. Busca la sección «Eliminar cuenta».
+3. Sigue los pocos pasos que aparecen para eliminarla de forma definitiva.
 
-Por favor, ten en cuenta: La eliminación de la cuenta es permanente y no se puede deshacer.
+Ten en cuenta que eliminar la cuenta es definitivo: no hay forma de deshacerlo.
 
-## No Rastrear
+## No rastrear
 
-El Sitio no cambia sus prácticas de recopilación de datos cuando ve una señal de No Rastrear de tu navegador.
+El Sitio no cambia la manera en que recopila datos cuando recibe una señal de «No rastrear» de tu navegador.
 
-## Actualizaciones de esta Política
+## Cambios en esta política
 
-Esta política de privacidad puede actualizarse ocasionalmente para reflejar cambios en cómo opera el Sitio o para cumplir con requisitos legales.
+Esta política de privacidad se actualiza de vez en cuando, ya sea porque cambia el funcionamiento del Sitio o porque la ley así lo exige.

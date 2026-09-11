@@ -3,19 +3,18 @@ export type LocaleCode = 'en' | 'de' | 'es' | 'fr' | 'ko' | 'pt' | 'uk';
 
 export interface Locale {
   code: LocaleCode;
-  iso: string;
   name: string;
 }
 
 export const locales: Locale[] = [
   // The only place where English is hoisted out of alphabetical order
-  { code: 'en', iso: 'en-US', name: 'English' },
-  { code: 'de', iso: 'de-DE', name: 'Deutsch' },
-  { code: 'es', iso: 'es-ES', name: 'Español' },
-  { code: 'fr', iso: 'fr-FR', name: 'Français' },
-  { code: 'ko', iso: 'ko-KR', name: '한국어' },
-  { code: 'pt', iso: 'pt-BR', name: 'Português' },
-  { code: 'uk', iso: 'uk-UA', name: 'українська' },
+  { code: 'en', name: 'English' },
+  { code: 'de', name: 'Deutsch' },
+  { code: 'es', name: 'Español' },
+  { code: 'fr', name: 'Français' },
+  { code: 'ko', name: '한국어' },
+  { code: 'pt', name: 'Português' },
+  { code: 'uk', name: 'українська' },
 ];
 
 export const defaultLocale: LocaleCode = 'en';

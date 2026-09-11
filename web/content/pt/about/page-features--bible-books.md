@@ -1,49 +1,49 @@
 ---
 seo:
-  title: Acompanhe o Progresso da Sua Leitura da Bíblia por Livro e Capítulo
-  description: Saiba como usar a página de Livros da Bíblia do My Bible Log para acompanhar seu progresso de leitura através de cada livro e capítulo da Bíblia
+  title: Acompanhe sua leitura da Bíblia livro por livro e capítulo por capítulo
+  description: Como usar a página Livros da Bíblia do My Bible Log para acompanhar sua leitura em cada livro e capítulo da Bíblia
 og:
-  title: Acompanhe o Progresso da Sua Leitura da Bíblia por Livro e Capítulo
-  description: Saiba como usar a página de Livros da Bíblia do My Bible Log para acompanhar seu progresso de leitura através de cada livro e capítulo da Bíblia
+  title: Acompanhe sua leitura da Bíblia livro por livro e capítulo por capítulo
+  description: Como usar a página Livros da Bíblia do My Bible Log para acompanhar sua leitura em cada livro e capítulo da Bíblia
 ---
 
 ![](/share.jpg)
 
-# Página de Livros da Bíblia
+# Página Livros da Bíblia
 
 <div class="phone-frame">
-  <img alt="Captura de Tela da Página de Livros da Bíblia do My Bible Log" src="/screenshots/pt/sc7-bible-progress.webp" />
+  <img alt="Captura de tela da página Livros da Bíblia do My Bible Log" src="/screenshots/pt/sc7-bible-progress.webp" />
 </div>
 
-A página de Livros da Bíblia ajuda você a acompanhar seu progresso de leitura por toda a Bíblia. No topo, você verá uma barra de progresso visual que mostra quais partes da Bíblia você leu. Ao contrário de uma simples barra de progresso da esquerda para a direita, esta preenche exatamente onde você leu - seja no início, meio ou final da Bíblia.
+A página Livros da Bíblia mostra como está sua leitura da Bíblia inteira. No topo há uma barra de progresso que marca exatamente as partes que você já leu. Diferente de uma barra comum, ela não se enche da esquerda para a direita: ela colore justo onde você leu, seja no começo, no meio ou no fim da Bíblia.
 
-Pense nela como a borda de uma Bíblia em papel: se as páginas que você leu se tornassem azuis, isso é o que você veria.
+Imagine o corte lateral de uma Bíblia impressa: se as páginas já lidas ficassem azuis, a aparência seria essa.
 
-Abaixo da barra de progresso, você encontrará uma lista de todos os livros da Bíblia. Cada livro possui:
+Abaixo da barra fica a lista de todos os livros da Bíblia. Cada livro traz:
 
-* Uma estrela cinza que se torna dourada quando você completa o livro
-* Sua própria barra de progresso mostrando quanto desse livro você leu
+* uma estrela cinza que fica dourada quando você termina o livro
+* uma barra de progresso própria, mostrando quanto daquele livro você já leu
 
-## Páginas Individuais dos Livros
+## As páginas de cada livro
 
 <div class="phone-frame">
-  <img alt="Captura de Tela da Página de Livros Individual do My Bible Log" src="/screenshots/pt/sc6-book-chapter-progress.webp" />
+  <img alt="Captura de tela da página de um livro no My Bible Log" src="/screenshots/pt/sc6-book-chapter-progress.webp" />
 </div>
 
-Clique em qualquer livro para ver sua página detalhada de progresso. Aqui você encontrará:
+Clique em qualquer livro para abrir a página detalhada dele. Lá você encontra:
 
-* A mesma barra de progresso em toda a Bíblia no topo
-* Uma grade de capítulos para aquele livro
-* Barras de progresso e estrelas de conclusão para cada capítulo
-* Contagens de versículos mostrando quantos versículos você leu em cada capítulo
+* no topo, a mesma barra de progresso da Bíblia inteira
+* uma grade com os capítulos daquele livro
+* uma barra de progresso e uma estrela para cada capítulo
+* a quantidade de versículos que você leu em cada capítulo
 
-Para cada capítulo, você tem duas opções:
+Para cada capítulo há duas opções:
 
-* **Abrir** - Abre o capítulo no seu aplicativo de Bíblia preferido (YouVersion em dispositivos móveis, BibleGateway no desktop)
-* **Acompanhar** - Cria uma nova entrada de registro de leitura para aquele capítulo. Você pode ajustar a entrada antes de salvar, o que é útil se você:
-  * Só leu parte do capítulo
-  * Deseja registrar vários capítulos de uma vez
+* **Ler na Bíblia** — abre o capítulo no seu app de Bíblia preferido (YouVersion no celular, BibleGateway no computador)
+* **Adicionar leitura a registro** — cria um registro novo para aquele capítulo. Dá para ajustar antes de salvar, o que ajuda bastante quando você:
+  * leu só uma parte do capítulo
+  * quer registrar vários capítulos de uma vez
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/pt/books">Ir para a página de Livros</a>
+  <a class="mbl-button mbl-button--light" href="/pt/books">Ir para a página Livros da Bíblia</a>
 </div>

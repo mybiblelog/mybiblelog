@@ -1,50 +1,50 @@
-# Política de Privacidade do My Bible Log
+# Política de privacidade do My Bible Log
 
-Esta Política de Privacidade explica como suas informações pessoais são tratadas quando você usa [https://www.mybiblelog.com](https://www.mybiblelog.com) (o "Site").
+Esta política de privacidade explica como seus dados pessoais são tratados quando você usa o [https://www.mybiblelog.com](https://www.mybiblelog.com) (o "Site").
 
-## Informações Coletadas
+## Que informações são coletadas
 
-Quando você visita o Site, algumas informações básicas são coletadas automaticamente sobre o seu dispositivo, incluindo seu navegador da web, endereço IP, fuso horário e cookies. Isso nos ajuda a entender como os visitantes usam o Site e a melhorar sua experiência. Chamamos isso de "Informações do Dispositivo".
+Quando você visita o Site, alguns dados básicos do seu dispositivo são coletados automaticamente: navegador, endereço IP, fuso horário e cookies. Isso nos ajuda a entender como o Site é usado e a melhorá-lo. Chamamos esses dados de "Informações do dispositivo".
 
-As Informações do Dispositivo são coletadas usando:
+As Informações do dispositivo são coletadas por meio de:
 
-* Cookies - arquivos de dados pequenos que ajudam o Site a funcionar corretamente
-* Arquivos de log - que rastreiam o uso básico do site
-* Web beacons - que nos ajudam a entender como você interage com o Site
+* Cookies — pequenos arquivos que fazem o Site funcionar direito
+* Arquivos de log — que registram o uso básico do Site
+* Web beacons — que mostram como você interage com o Site
 
-## Como Suas Informações São Utilizadas
+## Para que usamos suas informações
 
-As informações coletadas nos ajudam a:
+Os dados coletados servem para:
 
-* Fornecer e melhorar os recursos do Site
-* Entender como os visitantes usam o Site
-* Comunicar-se com você quando necessário (como redefinições de senha)
+* oferecer e melhorar os recursos do Site
+* entender como os visitantes usam o Site
+* falar com você quando for necessário (numa redefinição de senha, por exemplo)
 
-## Compartilhamento de Informações
+## Com quem compartilhamos
 
-Suas informações são compartilhadas apenas nestes casos específicos:
+Suas informações só são compartilhadas nestes casos:
 
-* Com o Google Analytics para nos ajudar a entender o uso do site
-  * Você pode ler a política de privacidade do Google aqui: [https://www.google.com/intl/en/policies/privacy/](https://www.google.com/intl/en/policies/privacy/)
-  * Você pode cancelar a participação no Google Analytics aqui: [https://tools.google.com/dlpage/gaoptout](https://tools.google.com/dlpage/gaoptout)
-* Quando exigido por lei (como resposta a solicitações legais)
+* Com o Google Analytics, para que possamos analisar o uso do Site
+  * A política de privacidade do Google está aqui: [https://www.google.com/intl/pt-BR/policies/privacy/](https://www.google.com/intl/pt-BR/policies/privacy/)
+  * Você pode desativar o Google Analytics aqui: [https://tools.google.com/dlpage/gaoptout](https://tools.google.com/dlpage/gaoptout)
+* Quando a lei exigir (para responder a uma solicitação judicial, por exemplo)
 
-Suas informações nunca serão vendidas para ninguém.
+Suas informações nunca são vendidas para ninguém.
 
-## Gerenciando Seus Dados
+## Como gerenciar seus dados
 
-Você tem controle total sobre seus dados. Você pode excluir sua conta e todos os dados associados a qualquer momento:
+O controle dos seus dados é todo seu, e você pode excluir sua conta, com tudo o que está ligado a ela, quando quiser:
 
-1. Vá para a página "Configurações"
-2. Localize a seção "Excluir Conta"
-3. Siga as etapas simples para excluir permanentemente sua conta
+1. Abra a página "Configurações".
+2. Procure a seção "Excluir conta".
+3. Siga os poucos passos indicados para excluir a conta em definitivo.
 
-Por favor, observe: A exclusão da conta é permanente e não pode ser desfeita.
+Atenção: a exclusão da conta é definitiva e não tem como ser desfeita.
 
-## Não Rastrear
+## Não rastrear
 
-O Site não altera suas práticas de coleta de dados quando detecta um sinal de Não Rastrear do seu navegador.
+O Site não muda a forma como coleta dados ao receber um sinal de "Não rastrear" do seu navegador.
 
-## Atualizações a Esta Política
+## Mudanças nesta política
 
-Esta política de privacidade pode ser atualizada ocasionalmente para refletir as mudanças na forma como o Site opera ou para cumprir requisitos legais.
+Esta política de privacidade pode ser atualizada de tempos em tempos, seja porque o funcionamento do Site mudou, seja para atender a exigências legais.

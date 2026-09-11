@@ -1,68 +1,63 @@
 ---
 seo:
-  title: Page de progression
-  description: Documentation sur les fonctionnalités de suivi de progression et de définition d'objectifs de My Bible Log
+  title: Page Progression
+  description: Vue d'ensemble de votre avancement, prévisions et objectifs de lecture dans My Bible Log
 og:
-  title: Page de progression
-  description: Documentation sur les fonctionnalités de suivi de progression et de définition d'objectifs de My Bible Log
+  title: Page Progression
+  description: Vue d'ensemble de votre avancement, prévisions et objectifs de lecture dans My Bible Log
 ---
 
 ![](/share.jpg)
 
-## Page de progression
+# Page Progression
 
 <div class="phone-frame">
-  <img alt="Capture d'écran de la page de progression My Bible Log" src="/screenshots/fr/sc13-progress.webp" />
+  <img alt="Capture d'écran de la page Progression de My Bible Log" src="/screenshots/fr/sc13-progress.webp" />
 </div>
 
-La page de progression est accessible en allant sur la page des livres de la Bible et en cliquant sur le bouton "Progression" en haut.
+Pour accéder à la page Progression, rendez-vous sur la page Livres de la Bible et cliquez sur le bouton « Progression » en haut.
 
-La page de progression vous offre un aperçu global de votre progression de lecture.
+Vous y voyez d'un coup d'œil où vous en êtes dans votre lecture.
 
-### Paramètres de lecture
+## Paramètres de lecture
 
-Vous pouvez voir vos paramètres de lecture, y compris votre "date de retour en arrière" et votre "objectif de nombre de versets quotidiens".
-Vous pouvez également voir combien de versets vous avez lus jusqu'à présent et le pourcentage de la Bible que vous avez lue.
+Vous retrouvez vos paramètres de lecture, dont votre « date de consultation précédente » et votre « objectif quotidien de versets ».
+Vous voyez aussi combien de versets vous avez lus jusqu'ici et la part de la Bible que cela représente.
 
-### Prévisions de lecture
+## Prévisions de lecture
 
-Cette page utilisera vos habitudes de lecture pour prédire quand vous aurez fini de lire la Bible.
-Elle détermine d'abord combien de versets vous lisez en moyenne chaque jour, puis utilise cette vitesse de lecture
-pour calculer combien de temps il vous faudra pour lire les versets restants.
+À partir de vos habitudes, la page estime la date à laquelle vous aurez terminé la Bible.
+Elle calcule d'abord le nombre moyen de versets que vous lisez par jour, puis applique ce rythme aux versets qu'il vous reste.
 
-Vous pouvez voir quatre prévisions distinctes, chacune basée sur votre progression de lecture sur une période de temps spécifique :
+Quatre prévisions vous sont proposées, chacune fondée sur une période différente de votre lecture :
 
-**Votre vision historique :**
-Cette estimation utilise votre progression depuis votre date de retour en arrière (la date à laquelle vous avez commencé à utiliser My Bible Log, ou la date que vous avez spécifiquement choisie ultérieurement).
+**Prévision globale :**
+Elle se fonde sur votre progression depuis votre date de consultation précédente, c'est-à-dire depuis le jour où vous avez commencé à utiliser My Bible Log, ou depuis la date que vous avez choisie par la suite.
 
-**Votre vision à 30 jours :**
-Cette estimation utilise votre progression au cours des 30 derniers jours, soit environ le mois passé.
-Comme elle prend en compte plus de quatre semaines d'historique de lecture, cette estimation peut être plus précise que la vision quotidienne ou hebdomadaire.
+**Prévision sur 30 jours :**
+Elle se fonde sur les 30 derniers jours, soit environ le mois écoulé.
+Comme elle tient compte de plus de quatre semaines de lecture, elle est souvent plus fiable que la prévision quotidienne ou hebdomadaire.
 
-De plus, si vous avez fait une pause dans votre lecture à un moment donné, cette pause pourrait avoir un impact négatif sur votre vision historique.
-Cependant, si vous maintenez votre habitude de lecture pendant 30 jours, cela vous donnera malgré tout une estimation solide de quand vous aurez fini de lire.
+Par ailleurs, si vous avez fait une pause à un moment donné, cette pause tire votre prévision globale vers le bas.
+En revanche, si vous tenez votre habitude pendant 30 jours, cette prévision vous donne malgré tout une estimation solide de votre date de fin.
 
-**Votre vision à 7 jours :**
-Cette estimation utilise votre progression au cours des 7 derniers jours, soit la semaine passée.
-Les différents jours de la semaine rendent la lecture de la Bible plus facile ou plus difficile.
-Cette vision peut être plus précise que la vision d'aujourd'hui, car elle vous aide à avoir une vue équilibrée
-de combien de temps il vous faudra pour finir de lire la Bible, même si certains jours rendent la lecture plus difficile que d'autres.
+**Prévision sur 7 jours :**
+Elle se fonde sur les 7 derniers jours, soit la semaine écoulée.
+Certains jours de la semaine se prêtent mieux que d'autres à la lecture.
+Cette prévision est donc généralement plus juste que celle du jour : elle compense les journées calmes et les journées chargées.
 
-**La vision d'aujourd'hui :**
-Cette estimation utilise votre progression pour aujourd'hui.
-Si vous commencez ou reprenez tout juste votre habitude de lecture de la Bible, cette estimation facilite la tâche
-de déterminer combien de temps il vous faudra pour finir la Bible si vous maintenez le rythme d'aujourd'hui.
+**Prévision du jour :**
+Elle se fonde uniquement sur votre lecture d'aujourd'hui.
+Si vous démarrez, ou reprenez, votre habitude de lecture, elle vous montre immédiatement le temps qu'il vous faudrait pour finir la Bible en gardant le rythme du jour.
 
-## Définir un objectif
+## Se fixer un objectif
 
-La page de progression vous permet également de définir une date d'objectif pour terminer la lecture de la Bible.
+La page Progression vous permet aussi de choisir la date à laquelle vous souhaitez avoir terminé la Bible.
 
-My Bible Log travaillera en sens inverse à partir de cette date butoir pour déterminer combien de versets vous devez lire chaque jour
-pour terminer la lecture de la Bible à la date d'objectif.
+My Bible Log part de cette date et remonte le calcul pour vous indiquer combien de versets lire chaque jour afin d'y arriver.
 
-C'est un excellent moyen de déterminer combien de lectures vous devez effectuer pour finir la Bible d'ici la fin de l'année,
-ou pour toute autre date butoir que vous choisissez.
+C'est une excellente façon de savoir quel rythme adopter pour finir la Bible avant la fin de l'année, ou avant toute autre échéance que vous vous fixez.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/fr/progress">Aller à la page de progression</a>
+  <a class="mbl-button mbl-button--light" href="/fr/progress">Aller à la page Progression</a>
 </div>

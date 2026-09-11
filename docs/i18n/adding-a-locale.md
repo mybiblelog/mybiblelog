@@ -9,7 +9,8 @@ Steps 1–5 cover the JSON UI strings (the bulk of Crowdin's work); steps 6+ cov
 **[`shared/platform/i18n.ts`](../../shared/platform/i18n.ts)**
 
 - Add the code to the `LocaleCode` union type.
-- Insert `{ code, iso, name }` into the `locales` array after `en`, in alphabetical order by `code` (use the correct BCP 47 `iso` for `hreflang` and metadata). See the comment in that file: English is the only locale not sorted with the rest.
+- Insert `{ code, name }` into the `locales` array after `en`, in alphabetical order by `code`. See the comment in that file: English is the only locale not sorted with the rest.
+- Add a row to the [dialect table in overview.md](overview.md#supported-locales-and-language-tags) recording the BCP 47 tag this code represents (e.g. a Latin American vs. European variant). Nothing in the code reads this tag today, but it keeps future localization work — Crowdin target language, Bible translation defaults, date formatting — pointed at the correct dialect.
 
 ## 2. Nuxt i18n module
 
