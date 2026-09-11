@@ -11,8 +11,8 @@ import {
   Text,
 } from "@/src/components";
 import { spacing } from "@/src/design";
-import { useT } from "@/src/i18n/LocaleProvider";
-import { bibleVersionOptions } from "@/src/settings/bibleVersionOptions";
+import { useLocale, useT } from "@/src/i18n/LocaleProvider";
+import { bibleVersionOptions, getBibleVersionSections } from "@/src/settings/bibleVersionOptions";
 import { DAILY_GOAL_RANGE } from "@/src/settings/dailyGoalRange";
 import type { LocalUserSettings } from "@/src/settings/userSettingsStorage";
 import {
@@ -75,6 +75,7 @@ export default function ReadingSettings() {
 
 function ReadingSettingsForm({ settings }: { settings: LocalUserSettings }) {
   const t = useT();
+  const { locale } = useLocale();
   const isAuthenticated = useIsAuthenticated();
   const { setLocalSettings, updateServerSettings } = userSettingsActions;
   const { showToast } = useToast();
@@ -116,6 +117,8 @@ function ReadingSettingsForm({ settings }: { settings: LocalUserSettings }) {
     () => Object.entries(bibleAppNames).map(([value, label]) => ({ value, label })),
     []
   );
+
+  const bibleVersionSections = useMemo(() => getBibleVersionSections(locale), [locale]);
 
   const bibleVersionLabel =
     bibleVersionOptions.find((o) => o.value === drafts.preferredBibleVersion)?.label ??
@@ -282,7 +285,7 @@ function ReadingSettingsForm({ settings }: { settings: LocalUserSettings }) {
       <SelectSheet
         visible={bibleVersionOpen}
         title={t("settings_reading_preferred_bible_version_title")}
-        options={bibleVersionOptions}
+        sections={bibleVersionSections}
         selectedValue={drafts.preferredBibleVersion || null}
         onSelect={(v) => setDraft("preferredBibleVersion", String(v))}
         onClose={() => setBibleVersionOpen(false)}
