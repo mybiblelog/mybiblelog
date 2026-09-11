@@ -9,6 +9,8 @@
 import ContentPageFooter from '~/components/content/PageFooter.vue';
 import { useAuthStore } from '~/stores/auth';
 
+definePageMeta({ contentPage: true });
+
 const authStore = useAuthStore();
 const localePath = useLocalePath();
 const { locale } = useI18n();
