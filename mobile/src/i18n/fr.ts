@@ -221,6 +221,8 @@ export const fr = {
     "Vos données hors ligne sur cet appareil ne seront pas synchronisées avec votre compte tant que vous n'êtes pas en ligne et connecté.",
   auth_login_requires_connection: "La connexion nécessite une connexion internet.",
   auth_login_requires_server: "La connexion nécessite de joindre le serveur My Bible Log.",
+  auth_register_requires_connection: "L'inscription nécessite une connexion internet.",
+  auth_register_requires_server: "L'inscription nécessite de joindre le serveur My Bible Log.",
   auth_login: "Connexion",
   auth_create_account: "Créer un compte",
   auth_logout: "Déconnexion",

@@ -219,6 +219,9 @@ export const es = {
   auth_login_requires_connection: "Para iniciar sesión necesitas conexión a internet.",
   auth_login_requires_server:
     "Para iniciar sesión hay que poder conectar con el servidor de My Bible Log.",
+  auth_register_requires_connection: "Para registrarte necesitas conexión a internet.",
+  auth_register_requires_server:
+    "Para registrarte hay que poder conectar con el servidor de My Bible Log.",
   auth_login: "Iniciar sesión",
   auth_create_account: "Crear cuenta",
   auth_logout: "Cerrar sesión",

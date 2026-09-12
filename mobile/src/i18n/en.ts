@@ -213,6 +213,8 @@ export const en = {
     "Your offline data on this device will not sync to your account until you are online and logged in.",
   auth_login_requires_connection: "Logging in requires an internet connection.",
   auth_login_requires_server: "Logging in requires reaching the My Bible Log server.",
+  auth_register_requires_connection: "Signing up requires an internet connection.",
+  auth_register_requires_server: "Signing up requires reaching the My Bible Log server.",
   auth_login: "Login",
   auth_create_account: "Create account",
   auth_logout: "Logout",
