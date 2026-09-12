@@ -169,6 +169,8 @@ export const uk = {
 
   verses: "Вірші",
 
+  log_entry_menu_title: "Читання: %{passage}",
+  suggestion_menu_title: "Пропозиція: %{passage}",
   menu_edit: "Редагувати",
   menu_delete: "Видалити",
   menu_open_in_bible: "Відкрити в Біблії",
@@ -421,6 +423,9 @@ export const uk = {
   notes_signin_text:
     "Ви не увійшли в систему. Увійдіть, щоб синхронізувати нотатки з цього пристрою та бачити всі свої нотатки.",
   note_actions: "Дії з нотаткою",
+  note_menu_title_passage: "Нотатка про %{passage}",
+  note_menu_title_passage_multiple: "Нотатка про %{passage}…",
+  note_menu_title_content: "Нотатка: '%{content}'",
   note_editor_new: "Нова нотатка",
   note_editor_edit: "Редагувати нотатку",
   note_passages: "Уривки",

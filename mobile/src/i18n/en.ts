@@ -163,6 +163,8 @@ export const en = {
 
   verses: "Verses",
 
+  log_entry_menu_title: "Reading: %{passage}",
+  suggestion_menu_title: "Suggestion: %{passage}",
   menu_edit: "Edit",
   menu_delete: "Delete",
   menu_open_in_bible: "Open in Bible",
@@ -452,6 +454,9 @@ export const en = {
   notes_signin_text:
     "You’re not signed in. Log in to sync notes from this device and see all your notes.",
   note_actions: "Note actions",
+  note_menu_title_passage: "Note on %{passage}",
+  note_menu_title_passage_multiple: "Note on %{passage}…",
+  note_menu_title_content: "Note: '%{content}'",
   note_editor_new: "New Note",
   note_editor_edit: "Edit Note",
   note_passages: "Passages",

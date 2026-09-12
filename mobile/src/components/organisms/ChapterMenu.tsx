@@ -4,6 +4,7 @@ import { MenuSheet } from "./MenuSheet";
 type Props = {
   visible: boolean;
   onClose: () => void;
+  title: string;
   onOpenInBible: () => void;
   onLogReading: () => void;
   onTakeNote: () => void;
@@ -14,6 +15,7 @@ type Props = {
 export function ChapterMenu({
   visible,
   onClose,
+  title,
   onOpenInBible,
   onLogReading,
   onTakeNote,
@@ -24,12 +26,13 @@ export function ChapterMenu({
     <MenuSheet
       visible={visible}
       onClose={onClose}
+      title={title}
       cancelLabel={t("cancel")}
       actions={[
-        { label: t("menu_open_in_bible"), onPress: onOpenInBible },
-        { label: t("menu_log_reading"), onPress: onLogReading },
-        { label: t("menu_take_note"), onPress: onTakeNote },
-        { label: t("menu_view_notes"), onPress: onViewNotes },
+        { label: t("menu_open_in_bible"), icon: "book-outline", onPress: onOpenInBible },
+        { label: t("menu_log_reading"), icon: "add-circle-outline", onPress: onLogReading },
+        { label: t("menu_take_note"), icon: "create-outline", onPress: onTakeNote },
+        { label: t("menu_view_notes"), icon: "list-outline", onPress: onViewNotes },
       ]}
     />
   );

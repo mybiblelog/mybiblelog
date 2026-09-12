@@ -167,6 +167,8 @@ export const ko = {
 
   verses: "구절",
 
+  log_entry_menu_title: "읽기: %{passage}",
+  suggestion_menu_title: "추천: %{passage}",
   menu_edit: "편집",
   menu_delete: "삭제",
   menu_open_in_bible: "성경에서 열기",
@@ -410,6 +412,9 @@ export const ko = {
   notes_signin_text:
     "로그인하지 않았습니다. 로그인하면 이 기기의 노트를 동기화하고 모든 노트를 볼 수 있습니다.",
   note_actions: "노트 작업",
+  note_menu_title_passage: "%{passage} 관련 노트",
+  note_menu_title_passage_multiple: "%{passage} 관련 노트…",
+  note_menu_title_content: "노트: '%{content}'",
   note_editor_new: "새 노트",
   note_editor_edit: "노트 편집",
   note_passages: "구절",

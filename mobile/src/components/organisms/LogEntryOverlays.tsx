@@ -4,7 +4,7 @@ import { Bible } from "@mybiblelog/shared";
 import type { NotePassage } from "@/src/api/notesApi";
 import type { StoredLogEntry } from "@/src/storage/logEntries";
 import { openPassageInBible } from "@/src/bible/openInBible";
-import { useT } from "@/src/i18n/LocaleProvider";
+import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { logEntryActions } from "@/src/stores/logEntries";
 import { notesActions } from "@/src/stores/passageNotes";
 import { tagActions } from "@/src/stores/passageNoteTags";
@@ -51,6 +51,7 @@ export function useLogEntryOverlays({
   updateDate,
 }: Options): LogEntryOverlaysApi {
   const t = useT();
+  const { locale } = useLocale();
   const { showToast } = useToast();
   const settings = useSettingsValue();
 
@@ -67,6 +68,12 @@ export function useLogEntryOverlays({
   const menuEntry = findEntry(menuClientId);
   const editingEntry = findEntry(editingClientId);
   const deletingEntry = findEntry(deletingClientId);
+
+  const menuTitle = menuEntry
+    ? t("log_entry_menu_title", {
+        passage: Bible.displayVerseRange(menuEntry.startVerseId, menuEntry.endVerseId, locale),
+      })
+    : undefined;
 
   const openAdd = useCallback(() => setIsAddOpen(true), []);
   const openMenu = useCallback((entry: StoredLogEntry) => setMenuClientId(entry.clientId), []);
@@ -146,6 +153,7 @@ export function useLogEntryOverlays({
       <LogEntryMenu
         visible={menuEntry !== undefined}
         onClose={() => setMenuClientId(null)}
+        title={menuTitle}
         onOpenInBible={handleOpenInBible}
         onContinueReading={nextVerseId ? handleContinueReading : undefined}
         onTakeNote={handleTakeNote}

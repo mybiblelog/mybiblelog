@@ -207,6 +207,7 @@ export default function BibleBookScreen() {
       <ChapterMenu
         visible={selectedChapter !== undefined}
         onClose={() => setSelectedChapterIndex(null)}
+        title={selectedChapter ? `${bookName} ${selectedChapter.chapterIndex}` : ""}
         onOpenInBible={() => {
           if (!selectedChapter) return;
           const { startVerseId, endVerseId } = selectedChapter;
@@ -244,10 +245,12 @@ export default function BibleBookScreen() {
       <MenuSheet
         visible={bookMenuOpen}
         onClose={() => setBookMenuOpen(false)}
+        title={bookName}
         cancelLabel={t("cancel")}
         actions={[
           {
             label: t("menu_take_note"),
+            icon: "create-outline",
             onPress: () =>
               openNoteEditor([
                 {
@@ -258,6 +261,7 @@ export default function BibleBookScreen() {
           },
           {
             label: t("menu_view_notes"),
+            icon: "list-outline",
             onPress: () =>
               openNotesForRange(
                 Bible.getFirstBookVerseId(bookIndex),

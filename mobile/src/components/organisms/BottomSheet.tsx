@@ -171,6 +171,20 @@ export function BottomSheet({
 
   if (!mounted) return null;
 
+  // Grabber gap is decoupled from `padded`: an unpadded sheet still needs top
+  // clearance so the affordance line doesn't sit flush against the rounded
+  // edge, and every anchored sheet gets a little extra room at the bottom so
+  // options aren't flush against the screen edge / home indicator.
+  const paddedAnchoredStyle = {
+    padding: spacing.md,
+    paddingTop: isSheet ? spacing.sm : spacing.md,
+    paddingBottom: spacing.md + spacing.sm + insets.bottom,
+  };
+  const unpaddedAnchoredStyle = {
+    paddingTop: isSheet ? spacing.sm : 0,
+    paddingBottom: insets.bottom + spacing.sm,
+  };
+
   return (
     <Modal visible transparent animationType="none" statusBarTranslucent onRequestClose={onClose}>
       <View style={styles.root}>
@@ -210,11 +224,8 @@ export function BottomSheet({
                   isCenter ? styles.centerSurface : styles.sheetSurface,
                   variant === "full" ? styles.surfaceFull : null,
                   { backgroundColor: colors.surface },
-                  padded &&
-                    (isCenter
-                      ? styles.centerPadding
-                      : { padding: spacing.md, paddingBottom: spacing.md + insets.bottom }),
-                  !isCenter && !padded ? { paddingBottom: insets.bottom } : null,
+                  padded && (isCenter ? styles.centerPadding : paddedAnchoredStyle),
+                  !isCenter && !padded ? unpaddedAnchoredStyle : null,
                   contentStyle,
                 ]}
               >
@@ -232,15 +243,18 @@ export function BottomSheet({
 }
 
 const styles = StyleSheet.create({
+  // --- Screen-spanning layers (backdrop + the flex box that positions the sheet) ---
   root: { flex: 1 },
   backdrop: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0 },
   layout: { flex: 1 },
   layoutAnchored: { justifyContent: "flex-end" },
   layoutCenter: { justifyContent: "center", paddingHorizontal: spacing.md },
+  // --- Wrapper: carries elevation/shadow and clamps sheet height (see comment above) ---
   // RN defaults flexShrink to 0 (unlike web), so without this a tall sheet
   // overflows its container instead of fitting the space the root leaves it.
   wrap: { width: "100%", flexShrink: 1 },
   wrapFull: { flex: 1 },
+  // --- Surface: the visible rounded panel; `content*Style` props above add padding on top of these ---
   sheetSurface: {
     borderTopLeftRadius: radius.sheet,
     borderTopRightRadius: radius.sheet,
@@ -250,6 +264,7 @@ const styles = StyleSheet.create({
   surfaceFull: { flex: 1 },
   centerSurface: { borderRadius: radius.card, overflow: "hidden", flexShrink: 1 },
   centerPadding: { padding: spacing.md },
+  // --- Grabber affordance drawn inside the surface for `sheet` variant only ---
   grabber: {
     alignSelf: "center",
     width: 36,
