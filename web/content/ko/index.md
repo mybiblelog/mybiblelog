@@ -90,6 +90,25 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/ko/sc15-insights-activity.webp
+image-alt: 매일의 성경읽기 활동을 GitHub 스타일 그래프로 보여주는 My Bible Log 통계 페이지
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: 나의 읽기 연속 기록 한눈에 보기
+subtitle: GitHub 스타일 활동 그래프
+description: >-
+  <strong>GitHub 스타일의 기여 그래프</strong>로 전체 읽기 기록을 한눈에 확인하세요. 각 칸은 하루를 나타내며, 초록색이 진할수록 그날 더 많이 읽었다는 뜻입니다.
+list:
+  - 읽기 습관의 패턴을 발견할 수 있습니다
+  - 긴 연속 읽기 기록을 기념할 수 있습니다
+  - 1년치 활동을 한 화면에서 볼 수 있습니다
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/ko/sc9-calendar.webp
 image-alt: 일일 읽기 목표를 달성한 일자에 별을 달아주는 My Bible Log 달력
 image-width: "750"
@@ -104,7 +123,7 @@ list:
   - 언제든지 읽기 기록을 내보내거나 불러올 수 있습니다
 button-text: 무료로 시작하기
 button-destination: /register
-reverse: false
+reverse: true
 ---
 ::
 
@@ -119,7 +138,7 @@ title: 읽으며 바로 메모
 subtitle: 유연한 성경 읽기 노트
 description: >-
   성경을 공부하면서 떠오르는 질문, 통찰, 묵상을 기록하세요. <strong>사용자 정의 태그</strong>로 노트를 정리하면 자신만의 공부 스타일에 맞게 활용할 수 있습니다. 암송구절, 주제별 정리, 열린 질문 등 다양하게 활용해 보세요.
-reverse: true
+reverse: false
 ---
 ::
 
@@ -134,7 +153,7 @@ title: 기록은 몇 초 컷
 subtitle: 빠른 장별 기록
 description: >-
   시간이 부족한가요? <strong>클릭 한 번</strong>으로 읽은 장을 표시할 수 있습니다. 타이핑이 필요 없습니다.
-reverse: false
+reverse: true
 ---
 ::
 
@@ -153,6 +172,6 @@ list:
   - 무료입니다
 button-text: 무료로 시작하기
 button-destination: /register
-reverse: true
+reverse: false
 ---
 ::

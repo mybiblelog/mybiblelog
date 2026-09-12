@@ -6,6 +6,7 @@ import { Text } from "../atoms/Text";
 export type SegmentedControlOption<T extends string | number> = {
   value: T;
   label: string;
+  testID?: string;
 };
 
 type Props<T extends string | number> = {
@@ -39,6 +40,7 @@ export function SegmentedControl<T extends string | number>({
           return (
             <AnimatedPressable
               key={String(option.value)}
+              testID={option.testID}
               accessibilityRole="button"
               accessibilityLabel={option.label}
               accessibilityState={{ selected }}

@@ -90,6 +90,25 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/es/sc15-insights-activity.webp
+image-alt: La página de Estadísticas de My Bible Log mostrando un mapa de actividad al estilo GitHub de la lectura bíblica diaria
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: Visualiza Tus Rachas de Lectura
+subtitle: Gráfico de Actividad al Estilo GitHub
+description: >-
+  Ve todo tu historial de lectura de un vistazo con un <strong>gráfico de contribuciones al estilo GitHub</strong>. Cada cuadro es un día — cuanto más verde sea el cuadro, más leíste ese día.
+list:
+  - Detecta patrones en tus hábitos de lectura
+  - Celebra rachas de lectura largas
+  - Ve un año completo de actividad en una sola vista
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/es/sc9-calendar.webp
 image-alt: El calendario My Bible Log mostrando un mes donde muchas fechas han ganado una estrella por alcanzar el objetivo de lectura diaria
 image-width: "750"
@@ -104,7 +123,7 @@ list:
   - Exporta o importa tu registro de lectura en cualquier momento
 button-text: Comenzar gratis
 button-destination: /register
-reverse: false
+reverse: true
 ---
 ::
 
@@ -119,7 +138,7 @@ title: Toma Notas Mientras Lees
 subtitle: Notas Flexibles de Lectura Bíblica
 description: >-
   Anota preguntas, ideas o reflexiones mientras estudias. Organiza notas con <strong>etiquetas personalizadas</strong> para que coincidan con tu estilo de estudio personal — versículos para memorizar, temas, preguntas sin respuesta y más.
-reverse: true
+reverse: false
 ---
 ::
 
@@ -134,7 +153,7 @@ title: Registra la Lectura en Segundos
 subtitle: Registro Rápido de Capítulos
 description: >-
   ¿Poco tiempo? Marca capítulos como leídos con <strong>un solo clic</strong> — no se requiere escritura.
-reverse: false
+reverse: true
 ---
 ::
 
@@ -153,6 +172,6 @@ list:
   - Gratis de usar
 button-text: Comenzar gratis
 button-destination: /register
-reverse: true
+reverse: false
 ---
 ::

@@ -90,6 +90,25 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/fr/sc15-insights-activity.webp
+image-alt: La page Analyses de My Bible Log montrant un graphique d'activité de style GitHub de la lecture biblique quotidienne
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: Visualisez Vos Séries de Lecture
+subtitle: Graphique d'Activité de Style GitHub
+description: >-
+  Voyez tout votre historique de lecture en un coup d'œil avec un <strong>graphique de contributions de style GitHub</strong>. Chaque carré est un jour — plus le carré est vert, plus vous avez lu ce jour-là.
+list:
+  - Repérez des tendances dans vos habitudes de lecture
+  - Célébrez vos longues séries de lecture
+  - Voyez une année entière d'activité en une seule vue
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/fr/sc9-calendar.webp
 image-alt: Le calendrier My Bible Log montrant un mois où de nombreuses dates ont gagné une étoile pour avoir atteint l'objectif de lecture quotidienne
 image-width: "750"
@@ -104,7 +123,7 @@ list:
   - Exportez ou importez votre journal de lecture à tout moment
 button-text: Commencer gratuitement
 button-destination: /register
-reverse: false
+reverse: true
 ---
 ::
 
@@ -119,7 +138,7 @@ title: Prenez des Notes Pendant Que Vous Lisez
 subtitle: Notes de Lecture Biblique Flexibles
 description: >-
   Notez des questions, des idées ou des réflexions pendant que vous étudiez. Organisez vos notes avec des <strong>tags personnalisés</strong> pour correspondre à votre style d'étude personnel — versets à mémoriser, sujets, questions sans réponse, et plus encore.
-reverse: true
+reverse: false
 ---
 ::
 
@@ -134,7 +153,7 @@ title: Enregistrez la Lecture en Quelques Secondes
 subtitle: Enregistrement Rapide de Chapitres
 description: >-
   Manque de temps ? Marquez les chapitres comme lus avec <strong>un seul clic</strong> — aucune saisie requise.
-reverse: false
+reverse: true
 ---
 ::
 
@@ -153,6 +172,6 @@ list:
   - Gratuit à utiliser
 button-text: Commencer gratuitement
 button-destination: /register
-reverse: true
+reverse: false
 ---
 ::

@@ -90,6 +90,25 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/uk/sc15-insights-activity.webp
+image-alt: Сторінка Аналітики My Bible Log показує графік активності у стилі GitHub для щоденного читання Біблії
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: Візуалізуйте Свої Серії Читання
+subtitle: Графік Активності у Стилі GitHub
+description: >-
+  Переглядайте всю історію свого читання одразу за допомогою <strong>графіка внесків у стилі GitHub</strong>. Кожен квадрат — це день: чим зеленіший квадрат, тим більше ви прочитали того дня.
+list:
+  - Помічайте закономірності у своїх звичках читання
+  - Відзначайте довгі серії читання
+  - Переглядайте цілий рік активності в одному вигляді
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/uk/sc9-calendar.webp
 image-alt: Календар My Bible Log показує місяць, де багато дат отримали зірку за досягнення щоденної мети читання
 image-width: "750"
@@ -104,7 +123,7 @@ list:
   - Експортуйте або імпортуйте свій журнал читання в будь-який час
 button-text: Почніть безкоштовно
 button-destination: /register
-reverse: false
+reverse: true
 ---
 ::
 
@@ -119,7 +138,7 @@ title: Робіть Нотатки Під Час Читання
 subtitle: Гнучкі Нотатки для Читання Біблії
 description: >-
   Записуйте питання, уявлення або роздуми під час вивчення. Організуйте нотатки за допомогою <strong>користувацьких тегів</strong>, щоб відповідати вашому особистому стилю вивчення — вірші для запам'ятовування, теми, питання без відповідей та інше.
-reverse: true
+reverse: false
 ---
 ::
 
@@ -134,7 +153,7 @@ title: Реєструйте Читання за Секунди
 subtitle: Швидке Реєстрування Розділів
 description: >-
   Не вистачає часу? Позначайте розділи як прочитані <strong>одним кліком</strong> — без необхідності введення тексту.
-reverse: false
+reverse: true
 ---
 ::
 
@@ -153,6 +172,6 @@ list:
   - Безкоштовно для використання
 button-text: Почніть безкоштовно
 button-destination: /register
-reverse: true
+reverse: false
 ---
 ::

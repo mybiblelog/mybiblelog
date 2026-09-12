@@ -90,6 +90,25 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/pt/sc15-insights-activity.webp
+image-alt: A página de Estatísticas do My Bible Log mostrando um mapa de atividade estilo GitHub da leitura bíblica diária
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: Visualize Suas Sequências de Leitura
+subtitle: Gráfico de Atividade Estilo GitHub
+description: >-
+  Veja todo o seu histórico de leitura em um relance com um <strong>gráfico de contribuições estilo GitHub</strong>. Cada quadrado é um dia — quanto mais verde o quadrado, mais você leu naquele dia.
+list:
+  - Identifique padrões nos seus hábitos de leitura
+  - Comemore longas sequências de leitura
+  - Veja um ano inteiro de atividade em uma única visualização
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/pt/sc9-calendar.webp
 image-alt: O calendário My Bible Log mostrando um mês onde muitas datas ganharam uma estrela por atingir a meta de leitura diária
 image-width: "750"
@@ -104,7 +123,7 @@ list:
   - Exporte ou importe seu registro de leitura a qualquer momento
 button-text: Começar grátis
 button-destination: /register
-reverse: false
+reverse: true
 ---
 ::
 
@@ -119,7 +138,7 @@ title: Faça Anotações Enquanto Lê
 subtitle: Anotações Flexíveis de Leitura Bíblica
 description: >-
   Anote perguntas, ideias ou reflexões enquanto estuda. Organize anotações com <strong>tags personalizadas</strong> para corresponder ao seu estilo de estudo pessoal — versículos para memorizar, tópicos, perguntas sem resposta e muito mais.
-reverse: true
+reverse: false
 ---
 ::
 
@@ -134,7 +153,7 @@ title: Registre a Leitura em Segundos
 subtitle: Registro Rápido de Capítulos
 description: >-
   Sem tempo? Marque capítulos como lidos com <strong>um único clique</strong> — sem necessidade de digitação.
-reverse: false
+reverse: true
 ---
 ::
 
@@ -153,6 +172,6 @@ list:
   - Gratuito para usar
 button-text: Começar grátis
 button-destination: /register
-reverse: true
+reverse: false
 ---
 ::

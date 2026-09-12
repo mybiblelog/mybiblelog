@@ -3,7 +3,7 @@
  *
  * Both the web script (`scripts/take-web-screenshots.ts`, Playwright) and the mobile
  * script (`scripts/take-mobile-screenshots.ts`, Maestro/Android) drive the app
- * against an identical demo dataset: a screenshot user with a 30-day reading
+ * against an identical demo dataset: a screenshot user with a 270-day reading
  * history plus locale-translated notes and tags. This module owns the DB side of
  * that dataset so the two entry scripts stay in sync.
  *
@@ -28,42 +28,6 @@ export const SCREENSHOT_PASSWORD = process.env.SCREENSHOT_PASSWORD ?? 'password'
 export const LOCALES = ['en', 'de', 'es', 'fr', 'ko', 'pt', 'uk'] as const;
 export type Locale = typeof LOCALES[number];
 
-// Active reading days over a 30-day window. Intentionally skips some days to look like a real
-// user. Counts are higher than the original so most active days exceed the 86-verse daily goal.
-// Today (daysAgo: 0) is omitted — today's entries are seeded per-screenshot for sc4.
-export const DAY_PLANS: { daysAgo: number; count: number }[] = [
-  { daysAgo: 30, count: 3 },
-  { daysAgo: 29, count: 3 },
-  { daysAgo: 28, count: 3 },
-  { daysAgo: 27, count: 4 },
-  // skip 26
-  { daysAgo: 25, count: 3 },
-  { daysAgo: 24, count: 3 },
-  { daysAgo: 23, count: 3 },
-  { daysAgo: 22, count: 4 },
-  // skip 21
-  { daysAgo: 20, count: 3 },
-  { daysAgo: 19, count: 3 },
-  { daysAgo: 18, count: 3 },
-  { daysAgo: 17, count: 3 },
-  { daysAgo: 16, count: 3 },
-  // skip 15
-  { daysAgo: 14, count: 3 },
-  { daysAgo: 13, count: 3 },
-  { daysAgo: 12, count: 4 },
-  { daysAgo: 11, count: 3 },
-  // skip 10
-  { daysAgo: 9, count: 3 },
-  { daysAgo: 8, count: 3 },
-  { daysAgo: 7, count: 3 },
-  { daysAgo: 6, count: 4 },
-  // skip 5
-  { daysAgo: 4, count: 3 },
-  { daysAgo: 3, count: 3 },
-  { daysAgo: 2, count: 3 },
-  // skip 1 and 0
-];
-
 export function dateString(daysAgo: number): string {
   const d = new Date();
   d.setDate(d.getDate() - daysAgo);
@@ -72,6 +36,132 @@ export function dateString(daysAgo: number): string {
   const day = String(d.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
+
+function dayOfWeek(daysAgo: number): number {
+  const d = new Date();
+  d.setDate(d.getDate() - daysAgo);
+  return d.getDay();
+}
+
+// --- Reading-history generation ---
+//
+// The window is built in three layers:
+//  1. General history (daysAgo > RECENT_WINDOW_DAYS): several concurrent "in progress" books,
+//     each advanced at its own pace on active days, with weekday- and recency-weighted skips and
+//     occasional one-off passages outside the regular tracks.
+//  2. The last few days (daysAgo 1..RECENT_WINDOW_DAYS): curated multi-book reading so
+//     `getReadingSuggestions` (shared/insights/reading-suggestions.ts) has distinct "continue"
+//     books to suggest.
+//  3. Today (daysAgo 0): a small persistent set of varied passages so the Today page's own
+//     entries list looks real — separate from `seedTodayGoalEntries`'s temporary daily-goal block.
+
+const HISTORY_WINDOW_DAYS = 270;
+const RECENT_WINDOW_DAYS = 3;
+
+type TrackCursor = { book: number; chapter: number; verse: number };
+
+// Concurrent "in progress" books, each read at its own pace over the window.
+function createTracks(): TrackCursor[] {
+  return [
+    { book: 1, chapter: 1, verse: 1 }, // OT narrative: Genesis onward
+    { book: 19, chapter: 1, verse: 1 }, // Wisdom: Psalms onward
+    { book: 40, chapter: 1, verse: 1 }, // Gospels: Matthew onward
+    { book: 45, chapter: 1, verse: 1 }, // Epistles: Romans onward
+  ];
+}
+
+type EntrySize = 'few' | 'chapter' | 'chapterPlus';
+
+function pickEntrySize(): EntrySize {
+  const roll = Math.random();
+  if (roll < 0.2) return 'few';
+  if (roll < 0.85) return 'chapter';
+  return 'chapterPlus';
+}
+
+/** Reads forward from a track's cursor, mutating it past what was read, and returns the range read. */
+function advanceTrack(track: TrackCursor): { startVerseId: number; endVerseId: number } {
+  const startVerseId = Bible.makeVerseId(track.book, track.chapter, track.verse);
+  const size = pickEntrySize();
+
+  let endVerseId: number;
+  if (size === 'few') {
+    // A short partial read (2-8 verses) that doesn't necessarily finish the chapter.
+    const chapterVerseCount = Bible.getChapterVerseCount(track.book, track.chapter);
+    const available = chapterVerseCount - track.verse + 1;
+    const verseCount = Math.max(1, Math.min(available, 2 + Math.floor(Math.random() * 7)));
+    endVerseId = Bible.makeVerseId(track.book, track.chapter, track.verse + verseCount - 1);
+  }
+  else {
+    // A full chapter, or two ("chapterPlus") when the book has another one to give.
+    let chapter = track.chapter;
+    if (size === 'chapterPlus' && chapter < Bible.getBookChapterCount(track.book)) {
+      chapter++;
+    }
+    endVerseId = Bible.makeVerseId(track.book, chapter, Bible.getChapterVerseCount(track.book, chapter));
+  }
+
+  // Advance the cursor past what was read, skipping Exodus 27-29 (reserved for
+  // seedTodayGoalEntries) if the OT track walks into it.
+  let next = Bible.parseVerseId(Bible.getNextVerseId(endVerseId, true) || Bible.makeVerseId(1, 1, 1));
+  if (next.book === 2 && next.chapter >= 27 && next.chapter <= 29) {
+    next = Bible.parseVerseId(Bible.makeVerseId(2, 30, 1));
+  }
+  track.book = next.book;
+  track.chapter = next.chapter;
+  track.verse = next.verse;
+
+  return { startVerseId, endVerseId };
+}
+
+// Relative skip likelihood by day-of-week (index 0 = Sunday, matching Date#getDay()).
+// Highest to lowest: Saturday, Friday, Sunday, Thursday, then Mon/Tue/Wed equally (least likely).
+const WEEKDAY_SKIP_WEIGHT = [0.2, 0.2, 0.4, 0.6, 0.7, 0.9, 0.5];
+
+/** Skip probability rises with `daysAgo`, as if the habit has grown more consistent recently. */
+function skipProbability(daysAgo: number): number {
+  const t = Math.min(1, Math.max(0, (daysAgo - RECENT_WINDOW_DAYS) / (HISTORY_WINDOW_DAYS - RECENT_WINDOW_DAYS)));
+  const recency = 0.75 + t * 0.55;
+  return WEEKDAY_SKIP_WEIGHT[dayOfWeek(daysAgo)]! * recency;
+}
+
+// A handful of passages outside the regular tracks, occasionally logged to look "off script".
+const OFF_PATTERN_CHAPTERS: [number, number][] = [
+  [23, 40], // Isaiah 40
+  [66, 1], // Revelation 1
+  [3, 19], // Leviticus 19
+  [17, 4], // Esther 4
+  [6, 24], // Joshua 24
+  [43, 15], // John 15
+  [50, 2], // Philippians 2
+];
+
+function randomOffPatternRange(): { startVerseId: number; endVerseId: number } {
+  const [book, chapter] = OFF_PATTERN_CHAPTERS[Math.floor(Math.random() * OFF_PATTERN_CHAPTERS.length)]!;
+  const chapterVerseCount = Bible.getChapterVerseCount(book, chapter);
+  const verseCount = Math.max(1, Math.min(chapterVerseCount, 2 + Math.floor(Math.random() * 5)));
+  const startVerse = 1 + Math.floor(Math.random() * Math.max(1, chapterVerseCount - verseCount + 1));
+  return {
+    startVerseId: Bible.makeVerseId(book, chapter, startVerse),
+    endVerseId: Bible.makeVerseId(book, chapter, startVerse + verseCount - 1),
+  };
+}
+
+// Curated so `getReadingSuggestions` has 3+ distinct books to build "continue reading"
+// suggestions from over its 3-day look-back window (READING_DAYS_TO_LOOK_BACK).
+const RECENT_DAY_CHAPTERS: { daysAgo: number; chapters: [number, number][] }[] = [
+  { daysAgo: 3, chapters: [[19, 23], [43, 3]] }, // Psalm 23; John 3
+  { daysAgo: 2, chapters: [[45, 8], [20, 3]] }, // Romans 8; Proverbs 3
+  { daysAgo: 1, chapters: [[40, 5], [19, 100]] }, // Matthew 5; Psalm 100
+];
+
+// Persisted for the whole run (not cleaned up like seedTodayGoalEntries's temporary block) so
+// the Today page's own entries list has realistic, varied content on every screenshot.
+const TODAY_PASSAGES: { book: number; chapter: number; startVerse?: number; endVerse?: number }[] = [
+  { book: 51, chapter: 3, startVerse: 1, endVerse: 4 }, // Colossians 3:1-4
+  { book: 41, chapter: 1 }, // Mark 1
+  { book: 59, chapter: 1, startVerse: 2, endVerse: 8 }, // James 1:2-8
+];
 
 // --- Locale seed data ---
 
@@ -237,21 +327,39 @@ export async function setupUser(): Promise<void> {
     emailVerificationCode: '', // empty code marks the account as already verified
   });
   // Backdate the look-back window so calendar/progress views show history.
-  await repositories.users.updateSettings(user.id, { lookBackDate: dateString(30) });
+  await repositories.users.updateSettings(user.id, { lookBackDate: dateString(HISTORY_WINDOW_DAYS) });
   screenshotUserId = user.id;
   console.log(`Created screenshot user: ${SCREENSHOT_EMAIL}`);
 
-  // Sequential chapter readings: Genesis 1-50, then Exodus 1-26 (76 chapters total)
-  const chapters: [number, number][] = [];
-  for (let ch = 1; ch <= 50; ch++) chapters.push([1, ch]);
-  for (let ch = 1; ch <= 26; ch++) chapters.push([2, ch]);
-
-  let chapterIdx = 0;
   let logEntryCount = 0;
-  for (const { daysAgo, count } of DAY_PLANS) {
+
+  // General history: several concurrent "in progress" books advanced at varying paces, with
+  // a weekday-and-recency-weighted skip pattern and occasional off-pattern passages.
+  const tracks = createTracks();
+  for (let daysAgo = HISTORY_WINDOW_DAYS; daysAgo > RECENT_WINDOW_DAYS; daysAgo--) {
+    if (Math.random() < skipProbability(daysAgo)) continue;
     const date = dateString(daysAgo);
-    for (let i = 0; i < count && chapterIdx < chapters.length; i++) {
-      const [book, chapter] = chapters[chapterIdx++];
+
+    const activeTrackCount = 1 + Math.floor(Math.random() * 2); // 1-2 tracks per active day
+    const shuffledTracks = [...tracks].sort(() => Math.random() - 0.5);
+    for (const track of shuffledTracks.slice(0, activeTrackCount)) {
+      const { startVerseId, endVerseId } = advanceTrack(track);
+      await repositories.logEntries.create(screenshotUserId, { date, startVerseId, endVerseId });
+      logEntryCount++;
+    }
+
+    if (Math.random() < 0.12) {
+      const { startVerseId, endVerseId } = randomOffPatternRange();
+      await repositories.logEntries.create(screenshotUserId, { date, startVerseId, endVerseId });
+      logEntryCount++;
+    }
+  }
+
+  // Last few days: curated multi-book reading so reading suggestions have distinct
+  // "continue where you left off" books to offer.
+  for (const { daysAgo, chapters } of RECENT_DAY_CHAPTERS) {
+    const date = dateString(daysAgo);
+    for (const [book, chapter] of chapters) {
       const startVerseId = Bible.makeVerseId(book, chapter, 1);
       const endVerseId = Bible.makeVerseId(book, chapter, Bible.getChapterVerseCount(book, chapter));
       await repositories.logEntries.create(screenshotUserId, { date, startVerseId, endVerseId });
@@ -259,7 +367,21 @@ export async function setupUser(): Promise<void> {
     }
   }
 
-  console.log(`Created ${logEntryCount} log entries across ${DAY_PLANS.length} active days`);
+  // Today: a small persistent set of varied passages, separate from seedTodayGoalEntries's
+  // temporary daily-goal block, so the Today page's own entries list looks real.
+  const today = dateString(0);
+  for (const passage of TODAY_PASSAGES) {
+    const startVerse = passage.startVerse ?? 1;
+    const endVerse = passage.endVerse ?? Bible.getChapterVerseCount(passage.book, passage.chapter);
+    await repositories.logEntries.create(screenshotUserId, {
+      date: today,
+      startVerseId: Bible.makeVerseId(passage.book, passage.chapter, startVerse),
+      endVerseId: Bible.makeVerseId(passage.book, passage.chapter, endVerse),
+    });
+    logEntryCount++;
+  }
+
+  console.log(`Created ${logEntryCount} log entries across the ${HISTORY_WINDOW_DAYS}-day history`);
 }
 
 export async function resetLocaleData(): Promise<void> {

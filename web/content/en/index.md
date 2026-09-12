@@ -105,6 +105,25 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/en/sc15-insights-activity.webp
+image-alt: The My Bible Log Insights page showing a GitHub-style activity heatmap of daily Bible reading
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: Visualize Your Reading Streaks
+subtitle: GitHub-Style Activity Chart
+description: >-
+  See your entire reading history at a glance with a <strong>GitHub-style contribution graph</strong>. Every square is a day — the greener the square, the more you read that day.
+list:
+  - Spot patterns in your reading habits
+  - Celebrate long reading streaks
+  - See a full year of activity in one view
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/en/sc9-calendar.webp
 image-alt: The My Bible Log calendar showing a month where many dates have earned a star for meeting the daily reading goal
 image-width: "750"
@@ -119,7 +138,7 @@ list:
   - Export or import your reading log anytime
 button-text: Get Started Free
 button-destination: /register
-reverse: false
+reverse: true
 ---
 ::
 
@@ -134,7 +153,7 @@ title: Take Notes as You Read
 subtitle: Flexible Bible Reading Notes
 description: >-
   Write down questions, insights, or reflections as you study. Organize notes with <strong>custom tags</strong> to match your personal study style — memory verses, topics, unanswered questions, and more.
-reverse: true
+reverse: false
 ---
 ::
 
@@ -149,7 +168,7 @@ title: Log Reading in Seconds
 subtitle: Quick Chapter Logging
 description: >-
   Short on time? Mark chapters as read with <strong>a single click</strong> — no typing required.
-reverse: false
+reverse: true
 ---
 ::
 
@@ -168,6 +187,6 @@ list:
   - Free to use
 button-text: Get Started Free
 button-destination: /register
-reverse: true
+reverse: false
 ---
 ::
