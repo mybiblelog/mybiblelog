@@ -422,6 +422,7 @@ export const ko = {
   note_no_tags_selected: "선택된 태그가 없습니다.",
   note_manage_tags: "태그 선택",
   note_could_not_save: "노트를 저장할 수 없습니다.",
+  note_saved_offline: "이 기기에 저장됨 — 온라인 상태로 로그인하면 동기화됩니다.",
   note_could_not_delete: "노트를 삭제할 수 없습니다.",
   note_delete_confirm_title: "노트를 삭제할까요?",
   note_delete_confirm_message: "이 작업은 되돌릴 수 없습니다.",

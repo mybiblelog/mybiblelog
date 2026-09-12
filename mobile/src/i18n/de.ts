@@ -441,6 +441,8 @@ export const de = {
   note_no_tags_selected: "Keine Tags ausgewählt.",
   note_manage_tags: "Tags wählen",
   note_could_not_save: "Die Notiz konnte nicht gespeichert werden.",
+  note_saved_offline:
+    "Auf diesem Gerät gespeichert — wird synchronisiert, sobald Sie online und angemeldet sind.",
   note_could_not_delete: "Die Notiz konnte nicht gelöscht werden.",
   note_delete_confirm_title: "Notiz löschen?",
   note_delete_confirm_message: "Dies kann nicht rückgängig gemacht werden.",
