@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
 import { router } from "expo-router";
-import { spacing } from "@/src/design";
+import { spacing, TOUCH_TARGET } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { IconButton, Text } from "../atoms";
 
@@ -45,38 +45,51 @@ export function ScreenHeader({
   const t = useT();
 
   return (
-    <View style={[styles.row, padded && styles.padded, style]}>
-      {back ? (
-        <IconButton
-          name="chevron-back"
-          color="text"
-          accessibilityLabel={t("back")}
-          testID="screen-header.back"
-          onPress={onBack ?? (() => router.back())}
-          // The 44pt touch box is wider than the glyph, so pull it left to keep
-          // the chevron optically on the page gutter.
-          style={styles.back}
-        />
-      ) : null}
-
-      <View style={styles.titleWrap}>
-        <Text variant="title" numberOfLines={1}>
-          {title}
-        </Text>
-        {subtitle ? (
-          <Text variant="subtitle" color="mutedText" style={styles.subtitle}>
-            {subtitle}
-          </Text>
+    <View style={[padded && styles.padded, style]}>
+      <View style={styles.row}>
+        {back ? (
+          <IconButton
+            name="chevron-back"
+            color="text"
+            accessibilityLabel={t("back")}
+            testID="screen-header.back"
+            onPress={onBack ?? (() => router.back())}
+            // The 44pt touch box is wider than the glyph, so pull it left to keep
+            // the chevron optically on the page gutter.
+            style={styles.back}
+          />
         ) : null}
-      </View>
 
-      {right}
+        <View style={styles.titleWrap}>
+          <Text variant="title" numberOfLines={1}>
+            {title}
+          </Text>
+          {subtitle ? (
+            <Text variant="subtitle" color="mutedText" style={styles.subtitle}>
+              {subtitle}
+            </Text>
+          ) : null}
+        </View>
+
+        <View style={styles.trailing}>{right}</View>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   row: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+  },
+  // Always rendered — even with no `right` — so the row's height is driven
+  // by one fixed-size box on every screen. Controls passed as `right` (e.g.
+  // Button) only *floor* their height at TOUCH_TARGET and can render a touch
+  // taller once padding/border are added, which nudged the title down a
+  // couple points on screens with a button versus screens without one.
+  trailing: {
+    height: TOUCH_TARGET,
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.sm,
