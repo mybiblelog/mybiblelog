@@ -529,6 +529,7 @@ export const en = {
   tag_unavailable_signed_out: "Sign in to use tags. Your note will still be saved on this device.",
   tag_notes_count: "%{count} notes",
   tag_view_notes: "View notes (%{count})",
+  tag_actions: "Tag actions",
   tag_sort_by: "Sort",
   tag_sort_label_ascending: "Label (A-Z)",
   tag_sort_createdAt_descending: "Newest First",

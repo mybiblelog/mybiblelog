@@ -513,6 +513,7 @@ export const de = {
     "Melden Sie sich an, um Tags zu verwenden. Ihre Notiz wird trotzdem auf diesem Gerät gespeichert.",
   tag_notes_count: "%{count} Notizen",
   tag_view_notes: "Notizen ansehen (%{count})",
+  tag_actions: "Tag-Aktionen",
   tag_sort_by: "Sortieren",
   tag_sort_label_ascending: "Bezeichnung (A-Z)",
   tag_sort_createdAt_descending: "Neueste zuerst",

@@ -505,6 +505,7 @@ export const es = {
     "Inicia sesión para usar etiquetas. Tu nota se guardará igualmente en este dispositivo.",
   tag_notes_count: "%{count} notas",
   tag_view_notes: "Ver notas (%{count})",
+  tag_actions: "Acciones de la etiqueta",
   tag_sort_by: "Ordenar",
   tag_sort_label_ascending: "Nombre (A-Z)",
   tag_sort_createdAt_descending: "Más recientes primero",

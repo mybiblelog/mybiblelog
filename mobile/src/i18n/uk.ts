@@ -501,6 +501,7 @@ export const uk = {
     "Увійдіть, щоб використовувати теги. Ваша нотатка все одно збережеться на цьому пристрої.",
   tag_notes_count: "%{count} нотаток",
   tag_view_notes: "Переглянути нотатки (%{count})",
+  tag_actions: "Дії з тегом",
   tag_sort_by: "Сортування",
   tag_sort_label_ascending: "Назва (А-Я)",
   tag_sort_createdAt_descending: "Спочатку нові",

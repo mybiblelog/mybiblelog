@@ -507,6 +507,7 @@ export const fr = {
     "Connectez-vous pour utiliser les tags. Votre note sera tout de même enregistrée sur cet appareil.",
   tag_notes_count: "%{count} notes",
   tag_view_notes: "Voir les notes (%{count})",
+  tag_actions: "Actions de l'étiquette",
   tag_sort_by: "Trier",
   tag_sort_label_ascending: "Nom (A-Z)",
   tag_sort_createdAt_descending: "Plus récents en premier",

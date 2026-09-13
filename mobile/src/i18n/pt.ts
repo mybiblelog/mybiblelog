@@ -503,6 +503,7 @@ export const pt = {
     "Entre na sua conta para usar tags. Sua nota será salva neste dispositivo mesmo assim.",
   tag_notes_count: "%{count} notas",
   tag_view_notes: "Ver notas (%{count})",
+  tag_actions: "Ações da etiqueta",
   tag_sort_by: "Ordenar",
   tag_sort_label_ascending: "Nome (A-Z)",
   tag_sort_createdAt_descending: "Mais recentes primeiro",

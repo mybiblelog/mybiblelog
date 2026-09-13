@@ -487,6 +487,7 @@ export const ko = {
   tag_unavailable_signed_out: "태그를 사용하려면 로그인하세요. 메모는 이 기기에 저장됩니다.",
   tag_notes_count: "노트 %{count}개",
   tag_view_notes: "노트 보기 (%{count})",
+  tag_actions: "태그 작업",
   tag_sort_by: "정렬",
   tag_sort_label_ascending: "이름 (A-Z)",
   tag_sort_createdAt_descending: "최신순",
