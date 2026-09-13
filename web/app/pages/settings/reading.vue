@@ -74,9 +74,11 @@
             <option value="" disabled>
               {{ t('select_an_option') }}
             </option>
-            <option v-for="option in sortedBibleVersionOptions" :key="option.value" :value="option.value">
-              {{ option.text }}
-            </option>
+            <optgroup v-for="group in groupedBibleVersionOptions" :key="group.locale" :label="group.label">
+              <option v-for="option in group.options" :key="option.value" :value="option.value">
+                {{ option.text }}
+              </option>
+            </optgroup>
           </select>
         </div>
       </div>
@@ -127,7 +129,8 @@
 </template>
 
 <script setup lang="ts">
-import { bibleVersionOptions as allBibleVersionOptions, bibleAppOptions, localeVersionGroups, displayDate } from '@mybiblelog/shared';
+import type { LocaleCode } from '@mybiblelog/shared';
+import { bibleVersionNames, bibleAppOptions, localeVersionGroups, displayDate } from '@mybiblelog/shared';
 import { useUserSettingsStore } from '~/stores/user-settings';
 import { useLogEntriesStore } from '~/stores/log-entries';
 
@@ -139,7 +142,7 @@ useHead({ meta: [{ name: 'robots', content: 'noindex' }] });
 const hydrated = useHydrated();
 const saving = ref(false);
 
-const { t, locale } = useI18n();
+const { t, locale, locales } = useI18n();
 const userSettingsStore = useUserSettingsStore();
 const logEntriesStore = useLogEntriesStore();
 
@@ -159,14 +162,21 @@ watch(settings, (s) => {
   form.preferredBibleApp = s.preferredBibleApp;
 }, { immediate: true });
 
-const sortedBibleVersionOptions = computed(() => {
-  const group = localeVersionGroups[locale.value as keyof typeof localeVersionGroups] || [];
-  return [...allBibleVersionOptions].sort((a, b) => {
-    const aLocal = group.includes(a.value);
-    const bLocal = group.includes(b.value);
-    if (aLocal === bLocal) { return 0; }
-    return aLocal ? -1 : 1;
-  });
+const groupedBibleVersionOptions = computed(() => {
+  const localeNames = new Map((locales.value as Array<{ code: LocaleCode; name: string }>).map(l => [l.code, l.name]));
+  const localeCodes = Object.keys(localeVersionGroups) as LocaleCode[];
+
+  return [...localeCodes]
+    .sort((a, b) => {
+      if (a === locale.value) { return -1; }
+      if (b === locale.value) { return 1; }
+      return 0;
+    })
+    .map(localeCode => ({
+      locale: localeCode,
+      label: localeNames.get(localeCode) ?? localeCode,
+      options: localeVersionGroups[localeCode].map(value => ({ value, text: bibleVersionNames[value as keyof typeof bibleVersionNames] })),
+    }));
 });
 
 const bibleReadingDays = computed(() => {
