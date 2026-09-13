@@ -50,8 +50,9 @@ describe("Button", () => {
     expect(screen.getByLabelText("Close dialog")).toBeTruthy();
   });
 
-  // The neutral fill matches `surfaceElevated` in dark mode, so the border is
-  // the only thing separating a secondary button from the card behind it.
+  // The translucent secondary fill needs its own border to read against a
+  // same-colored surface. Disabled drops the accent tint for a neutral
+  // border instead, so it no longer matches the enabled secondary border.
   it("outlines the secondary variant and keeps accent variants borderless", () => {
     renderWithProviders(
       <>
@@ -63,7 +64,7 @@ describe("Button", () => {
     );
     expect(borderOf("secondary")).toMatchObject({ borderWidth: 1 });
     expect(borderOf("secondary").borderColor).not.toBe("transparent");
-    expect(borderOf("disabled").borderColor).toBe(borderOf("secondary").borderColor);
+    expect(borderOf("disabled").borderColor).not.toBe("transparent");
     expect(borderOf("primary").borderColor).toBe("transparent");
     expect(borderOf("ghost").borderColor).toBe("transparent");
   });

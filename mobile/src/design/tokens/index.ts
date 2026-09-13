@@ -1,5 +1,7 @@
 export { brand, colorsByScheme, recencyByScheme } from "./colors";
 export type { ColorSchemeName, ThemeColors } from "./colors";
+export { gradientsByScheme } from "./gradients";
+export type { Gradient, Gradients } from "./gradients";
 export { spacing, TOUCH_TARGET } from "./spacing";
 export { radius } from "./radius";
 export { typography } from "./typography";

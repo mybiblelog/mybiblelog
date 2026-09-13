@@ -2,12 +2,14 @@ import type { ReactNode } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { spacing, useTheme } from "@/src/design";
+import { BackgroundPattern } from "../molecules/BackgroundPattern";
 import { StatusBanner } from "../molecules/StatusBanner";
 
 type Edge = "top" | "bottom";
 
 /**
- * Standard screen container: paints the themed background and applies
+ * Standard screen container: paints the themed background, layers a
+ * `BackgroundPattern` that fades out toward the bottom, and applies
  * safe-area insets so content never collides with the status bar / notch
  * or the home indicator.
  *
@@ -45,6 +47,7 @@ export function Screen({
         style,
       ]}
     >
+      <BackgroundPattern />
       {/* Full-bleed: never inset by `padded`, so it always spans the screen width. */}
       <StatusBanner />
       <View style={[styles.body, padded && styles.padded]}>{children}</View>

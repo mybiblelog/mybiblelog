@@ -53,6 +53,15 @@ export type ThemeColors = {
   /** Text/icon on a solid `info` fill (web `--mbl-on-accent`). */
   onInfo: string;
   onPrimary: string;
+  /**
+   * Translucent secondary-button fill — neutral gray in light (where a
+   * primary tint reads too close to an active/link state), primary-tinted in
+   * dark (where a flat gray fill disappears against `surfaceMuted`). Mobile-
+   * only; no web equivalent.
+   */
+  secondarySoftBg: string;
+  /** Translucent secondary-button border, paired with `secondarySoftBg`. */
+  secondarySoftBorder: string;
   destructive: string;
   onDestructive: string;
   /** Interactive accent (web `--mbl-link`). */
@@ -115,6 +124,8 @@ export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
     info: "#3298dc",
     onInfo: "#ffffff",
     onPrimary: "#ffffff",
+    secondarySoftBg: "rgba(122,122,122,0.10)",
+    secondarySoftBorder: "rgba(122,122,122,0.35)",
     destructive: "#f14668",
     onDestructive: "#ffffff",
     link: brand.secondary,
@@ -162,6 +173,8 @@ export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
     info: "#3298dc",
     onInfo: "#ffffff",
     onPrimary: "#ffffff",
+    secondarySoftBg: "rgba(0,170,249,0.18)",
+    secondarySoftBorder: "rgba(0,170,249,0.45)",
     destructive: "#f14668",
     onDestructive: "#ffffff",
     link: "#64a8ff", // web lifts this in dark; brand secondary reads too dim
