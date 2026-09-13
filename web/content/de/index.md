@@ -105,6 +105,25 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/de/sc15-insights-activity.webp
+image-alt: Die My Bible Log Insights-Seite zeigt ein GitHub-artiges Aktivitätsdiagramm des täglichen Bibellesens
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: Visualisiere Deine Lese-Streaks
+subtitle: GitHub-Artiges Aktivitätsdiagramm
+description: >-
+  Sieh deine gesamte Lesegeschichte auf einen Blick mit einem <strong>GitHub-artigen Beitragsdiagramm</strong>. Jedes Quadrat ist ein Tag — je grüner das Quadrat, desto mehr hast du an diesem Tag gelesen.
+list:
+  - Erkenne Muster in deinen Lesegewohnheiten
+  - Feiere lange Lese-Streaks
+  - Sieh ein ganzes Jahr Aktivität auf einen Blick
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/de/sc9-calendar.webp
 image-alt: Der My Bible Log Kalender zeigt einen Monat, in dem viele Tage einen Stern fürs erreichte Tagesziel tragen
 image-width: "750"
@@ -119,7 +138,7 @@ list:
   - Leseprotokoll jederzeit exportieren oder importieren
 button-text: Kostenlos loslegen
 button-destination: /register
-reverse: false
+reverse: true
 ---
 ::
 
@@ -134,7 +153,7 @@ title: Notizen machen, während Sie lesen
 subtitle: Bibelnotizen ganz nach Ihrem Stil
 description: >-
   Halten Sie Fragen, Einsichten und Gedanken fest, während Sie lesen. Mit <strong>eigenen Tags</strong> ordnen Sie Ihre Notizen so, wie Sie arbeiten — Merkverse, Themen, offene Fragen und mehr.
-reverse: true
+reverse: false
 ---
 ::
 
@@ -149,7 +168,7 @@ title: In Sekunden eingetragen
 subtitle: Kapitel schnell abhaken
 description: >-
   Wenig Zeit? Markieren Sie Kapitel mit <strong>einem einzigen Klick</strong> als gelesen — ganz ohne Tippen.
-reverse: false
+reverse: true
 ---
 ::
 
@@ -168,6 +187,6 @@ list:
   - Kostenlos
 button-text: Kostenlos loslegen
 button-destination: /register
-reverse: true
+reverse: false
 ---
 ::

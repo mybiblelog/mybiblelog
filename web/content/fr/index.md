@@ -105,6 +105,25 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/fr/sc15-insights-activity.webp
+image-alt: La page Analyses de My Bible Log montrant un graphique d'activité de style GitHub de la lecture biblique quotidienne
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: Visualisez Vos Séries de Lecture
+subtitle: Graphique d'Activité de Style GitHub
+description: >-
+  Voyez tout votre historique de lecture en un coup d'œil avec un <strong>graphique de contributions de style GitHub</strong>. Chaque carré est un jour — plus le carré est vert, plus vous avez lu ce jour-là.
+list:
+  - Repérez des tendances dans vos habitudes de lecture
+  - Célébrez vos longues séries de lecture
+  - Voyez une année entière d'activité en une seule vue
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/fr/sc9-calendar.webp
 image-alt: Le calendrier My Bible Log montrant un mois où de nombreux jours ont décroché une étoile pour l'objectif quotidien atteint
 image-width: "750"
@@ -119,7 +138,7 @@ list:
   - Exportez ou importez votre journal quand vous voulez
 button-text: Commencer gratuitement
 button-destination: /register
-reverse: false
+reverse: true
 ---
 ::
 
@@ -134,7 +153,7 @@ title: Prenez des notes en lisant
 subtitle: Des notes bibliques souples
 description: >-
   Notez vos questions, vos découvertes et vos réflexions au fil de l'étude. Classez vos notes avec <strong>vos propres tags</strong>, selon votre façon de travailler : versets à mémoriser, thèmes, questions en suspens, et tout ce que vous voudrez.
-reverse: true
+reverse: false
 ---
 ::
 
@@ -149,7 +168,7 @@ title: Notez vos lectures en quelques secondes
 subtitle: Cocher un chapitre, c'est tout
 description: >-
   Peu de temps ? Marquez un chapitre comme lu <strong>en un seul clic</strong>, sans rien taper.
-reverse: false
+reverse: true
 ---
 ::
 
@@ -168,6 +187,6 @@ list:
   - Gratuit
 button-text: Commencer gratuitement
 button-destination: /register
-reverse: true
+reverse: false
 ---
 ::
