@@ -1,10 +1,18 @@
 import { mapFormErrors } from "@/src/api/apiError";
 import { useAuth } from "@/src/stores/auth";
+import { useCanReachServer } from "@/src/stores/connectivity";
 import { signInWithGoogle } from "@/src/auth/googleSignIn";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { translateApiError } from "@/src/i18n/translateApiError";
 import { spacing, useTheme } from "@/src/design";
-import { AuthCodeForm, Button, GoogleSignInButton, InputField, Text } from "@/src/components";
+import {
+  AuthCodeForm,
+  Button,
+  ConnectionNotice,
+  GoogleSignInButton,
+  InputField,
+  Text,
+} from "@/src/components";
 import { router } from "expo-router";
 import { useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native";
@@ -14,6 +22,7 @@ export default function Login() {
   const { locale } = useLocale();
   const { colors } = useTheme();
   const { state: authState, finishGoogleLogin, loginWithEmailPassword } = useAuth();
+  const canReachServer = useCanReachServer();
   const lastEmail =
     authState.status === "unauthenticated" ? (authState.lastLoggedInEmail ?? null) : null;
 
@@ -32,7 +41,7 @@ export default function Login() {
   }
 
   async function onEmailLogin() {
-    if (isSubmitting) return;
+    if (isSubmitting || !canReachServer) return;
     setError(null);
     setEmailError(null);
     setPasswordError(null);
@@ -86,7 +95,7 @@ export default function Login() {
   }
 
   async function onGoogleLogin() {
-    if (isSubmitting) return;
+    if (isSubmitting || !canReachServer) return;
     setError(null);
     setEmailError(null);
     setPasswordError(null);
@@ -180,11 +189,18 @@ export default function Login() {
               />
             </View>
 
+            <ConnectionNotice
+              testID="login.connection-notice"
+              offlineText={t("auth_login_requires_connection")}
+              unreachableText={t("auth_login_requires_server")}
+            />
+
             <Button
               label={t("login_with_email")}
               testID="login.submit"
               onPress={onEmailLogin}
               loading={isSubmitting}
+              disabled={!canReachServer}
               fullWidth
             />
 
@@ -200,7 +216,7 @@ export default function Login() {
               label={t("login_with_google")}
               testID="login.google"
               onPress={onGoogleLogin}
-              disabled={isSubmitting}
+              disabled={isSubmitting || !canReachServer}
               fullWidth
             />
 

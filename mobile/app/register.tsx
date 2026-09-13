@@ -1,11 +1,19 @@
 import { mapFormErrors } from "@/src/api/apiError";
 import { register } from "@/src/api/authApi";
 import { useAuth } from "@/src/stores/auth";
+import { useCanReachServer } from "@/src/stores/connectivity";
 import { signInWithGoogle } from "@/src/auth/googleSignIn";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { translateApiError } from "@/src/i18n/translateApiError";
 import { spacing, useTheme } from "@/src/design";
-import { AuthCodeForm, Button, GoogleSignInButton, InputField, Text } from "@/src/components";
+import {
+  AuthCodeForm,
+  Button,
+  ConnectionNotice,
+  GoogleSignInButton,
+  InputField,
+  Text,
+} from "@/src/components";
 import { router } from "expo-router";
 import { useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native";
@@ -15,6 +23,7 @@ export default function Register() {
   const { locale } = useLocale();
   const { colors } = useTheme();
   const { loginWithEmailPassword, finishGoogleLogin } = useAuth();
+  const canReachServer = useCanReachServer();
 
   const [step, setStep] = useState<"form" | "verify">("form");
   const [email, setEmail] = useState("");
@@ -31,7 +40,7 @@ export default function Register() {
   // Signing up with Google creates the account on first sign-in, so the same
   // flow serves both new and returning users (mirrors the login screen).
   async function onGoogleLogin() {
-    if (isSubmitting) return;
+    if (isSubmitting || !canReachServer) return;
     setError(null);
     setEmailError(null);
     setPasswordError(null);
@@ -63,7 +72,7 @@ export default function Register() {
   }
 
   async function onRegister() {
-    if (isSubmitting) return;
+    if (isSubmitting || !canReachServer) return;
     setError(null);
     setEmailError(null);
     setPasswordError(null);
@@ -164,11 +173,18 @@ export default function Register() {
               />
             </View>
 
+            <ConnectionNotice
+              testID="register.connection-notice"
+              offlineText={t("auth_register_requires_connection")}
+              unreachableText={t("auth_register_requires_server")}
+            />
+
             <Button
               label={t("register_submit")}
               testID="register.submit"
               onPress={onRegister}
               loading={isSubmitting}
+              disabled={!canReachServer}
               fullWidth
             />
 
@@ -184,7 +200,7 @@ export default function Register() {
               label={t("login_with_google")}
               testID="register.google"
               onPress={onGoogleLogin}
-              disabled={isSubmitting}
+              disabled={isSubmitting || !canReachServer}
               fullWidth
             />
 
