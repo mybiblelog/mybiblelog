@@ -3,7 +3,8 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import type { PassageNote } from "@/src/api/notesApi";
 import { spacing } from "@/src/design";
-import { useT } from "@/src/i18n/LocaleProvider";
+import { useLocale, useT } from "@/src/i18n/LocaleProvider";
+import { getNoteMenuTitle } from "@/src/notes/noteMenuTitle";
 import { useRecentNotes } from "@/src/notes/useRecentNotes";
 import { useIsUnauthenticated } from "@/src/stores/auth";
 import { useConnectionStatus } from "@/src/stores/connectivity";
@@ -28,6 +29,7 @@ import { NoteEditorModal } from "./NoteEditorModal";
  */
 export function RecentNotesSection() {
   const t = useT();
+  const { locale } = useLocale();
   const { showToast } = useToast();
   const { status, notes, refresh } = useRecentNotes();
   const isUnauthenticated = useIsUnauthenticated();
@@ -42,6 +44,7 @@ export function RecentNotesSection() {
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [menuNote, setMenuNote] = useState<PassageNote | null>(null);
+  const menuTitle = menuNote ? getNoteMenuTitle(menuNote, t, locale) : undefined;
   const [editingNote, setEditingNote] = useState<PassageNote | null>(null);
   const [deletingNote, setDeletingNote] = useState<PassageNote | null>(null);
 
@@ -116,12 +119,13 @@ export function RecentNotesSection() {
       <MenuSheet
         visible={menuNote !== null}
         onClose={() => setMenuNote(null)}
+        title={menuTitle}
         cancelLabel={t("cancel")}
         actions={[
-          { label: t("edit"), onPress: () => setEditingNote(menuNote) },
+          { label: t("edit"), icon: "pencil-outline", onPress: () => setEditingNote(menuNote) },
           {
             label: t("delete"),
-            color: "destructive",
+            icon: "trash-outline",
             onPress: () => setDeletingNote(menuNote),
           },
         ]}

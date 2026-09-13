@@ -1,6 +1,7 @@
 import { type ReactNode, useCallback, useState } from "react";
 import type { PassageNote } from "@/src/api/notesApi";
-import { useT } from "@/src/i18n/LocaleProvider";
+import { useLocale, useT } from "@/src/i18n/LocaleProvider";
+import { getNoteMenuTitle } from "@/src/notes/noteMenuTitle";
 import { notesActions, useNotesQuery } from "@/src/stores/passageNotes";
 import { useToast } from "@/src/toast/ToastProvider";
 import { ConfirmDialog } from "./ConfirmDialog";
@@ -26,11 +27,13 @@ type NoteOverlaysApi = {
  */
 export function useNoteOverlays(): NoteOverlaysApi {
   const t = useT();
+  const { locale } = useLocale();
   const { showToast } = useToast();
   const query = useNotesQuery();
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [menuNote, setMenuNote] = useState<PassageNote | null>(null);
+  const menuTitle = menuNote ? getNoteMenuTitle(menuNote, t, locale) : undefined;
   const [editingNote, setEditingNote] = useState<PassageNote | null>(null);
   const [deletingNote, setDeletingNote] = useState<PassageNote | null>(null);
   const [isQueryOpen, setIsQueryOpen] = useState(false);
@@ -67,12 +70,13 @@ export function useNoteOverlays(): NoteOverlaysApi {
       <MenuSheet
         visible={menuNote !== null}
         onClose={() => setMenuNote(null)}
+        title={menuTitle}
         cancelLabel={t("cancel")}
         actions={[
-          { label: t("edit"), onPress: () => setEditingNote(menuNote) },
+          { label: t("edit"), icon: "pencil-outline", onPress: () => setEditingNote(menuNote) },
           {
             label: t("delete"),
-            color: "destructive",
+            icon: "trash-outline",
             onPress: () => setDeletingNote(menuNote),
           },
         ]}

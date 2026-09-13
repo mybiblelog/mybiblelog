@@ -9,7 +9,7 @@ function setup() {
     onTakeNote: jest.fn(),
     onViewNotes: jest.fn(),
   };
-  const utils = renderWithProviders(<ChapterMenu visible {...handlers} />);
+  const utils = renderWithProviders(<ChapterMenu visible title="Genesis 1" {...handlers} />);
   return { handlers, ...utils };
 }
 

@@ -169,6 +169,8 @@ export const es = {
 
   verses: "Versículos",
 
+  log_entry_menu_title: "Lectura: %{passage}",
+  suggestion_menu_title: "Sugerencia: %{passage}",
   menu_edit: "Editar",
   menu_delete: "Eliminar",
   menu_open_in_bible: "Abrir en la Biblia",
@@ -424,6 +426,9 @@ export const es = {
   notes_signin_text:
     "No has iniciado sesión. Inicia sesión para sincronizar las notas de este dispositivo y ver todas tus notas.",
   note_actions: "Acciones de la nota",
+  note_menu_title_passage: "Nota sobre %{passage}",
+  note_menu_title_passage_multiple: "Nota sobre %{passage}…",
+  note_menu_title_content: "Nota: '%{content}'",
   note_editor_new: "Nueva nota",
   note_editor_edit: "Editar nota",
   note_passages: "Pasajes",

@@ -171,6 +171,8 @@ export const fr = {
 
   verses: "Versets",
 
+  log_entry_menu_title: "Lecture : %{passage}",
+  suggestion_menu_title: "Suggestion : %{passage}",
   menu_edit: "Modifier",
   menu_delete: "Supprimer",
   menu_open_in_bible: "Ouvrir dans la Bible",
@@ -427,6 +429,9 @@ export const fr = {
   notes_signin_text:
     "Vous n'êtes pas connecté. Connectez-vous pour synchroniser les notes de cet appareil et voir toutes vos notes.",
   note_actions: "Actions de la note",
+  note_menu_title_passage: "Note sur %{passage}",
+  note_menu_title_passage_multiple: "Note sur %{passage}…",
+  note_menu_title_content: "Note : '%{content}'",
   note_editor_new: "Nouvelle note",
   note_editor_edit: "Modifier la note",
   note_passages: "Passages",

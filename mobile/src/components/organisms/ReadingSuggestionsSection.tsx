@@ -91,16 +91,23 @@ export function ReadingSuggestionsSection({ suggestions, today, loading = false 
       <MenuSheet
         visible={menuSuggestion !== null}
         onClose={() => setMenuSuggestion(null)}
+        title={
+          menuSuggestion
+            ? t("suggestion_menu_title", { passage: menuSuggestion.passageLabel })
+            : undefined
+        }
         cancelLabel={t("cancel")}
         actions={[
           {
             label: t("menu_open_in_bible"),
+            icon: "book-outline",
             onPress: () => {
               if (menuSuggestion) handleOpenInBible(menuSuggestion);
             },
           },
           {
             label: t("menu_log_reading"),
+            icon: "add-circle-outline",
             onPress: () => setLoggingSuggestion(menuSuggestion),
           },
         ]}
