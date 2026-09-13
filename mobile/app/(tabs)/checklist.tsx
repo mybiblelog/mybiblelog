@@ -76,8 +76,8 @@ const ChapterCell = memo(function ChapterCell({
           <Spinner size="small" color={chapter.complete ? "mutedText" : "success"} />
         ) : (
           <Icon
-            name={chapter.complete ? "checkmark-circle" : "ellipse-outline"}
-            size={18}
+            name={chapter.complete ? "checkmark" : "ellipse-outline"}
+            size={28}
             color={chapter.complete ? "success" : "border"}
           />
         )}
@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing["2xs"],
   },
   chapterIndicator: {
-    height: 18,
+    height: 28,
     alignItems: "center",
     justifyContent: "center",
   },
