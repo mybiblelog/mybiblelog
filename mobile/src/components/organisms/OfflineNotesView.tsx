@@ -19,7 +19,7 @@ import { NoteCard } from "./NoteCard";
 import { useLocalNoteOverlays } from "./LocalNoteOverlays";
 
 /** Present a local note as a `PassageNote` for the shared card/editor (id = clientId). */
-function toCardNote(note: StoredLocalNote): PassageNote {
+export function toCardNote(note: StoredLocalNote): PassageNote {
   return {
     id: note.clientId,
     content: note.content,

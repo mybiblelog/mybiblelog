@@ -5,7 +5,7 @@ import { reportHandledError } from "@/src/observability/sentry";
 import { initialNotesQuery } from "@/src/stores/passageNotes";
 import { tagActions } from "@/src/stores/passageNoteTags";
 
-const RECENT_NOTES_LIMIT = 3;
+export const RECENT_NOTES_LIMIT = 3;
 
 export type RecentNotesState =
   | { status: "loading"; notes: PassageNote[] }

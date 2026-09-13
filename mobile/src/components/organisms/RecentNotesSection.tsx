@@ -5,10 +5,10 @@ import type { PassageNote } from "@/src/api/notesApi";
 import { spacing } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { getNoteMenuTitle } from "@/src/notes/noteMenuTitle";
-import { useRecentNotes } from "@/src/notes/useRecentNotes";
+import { RECENT_NOTES_LIMIT, useRecentNotes } from "@/src/notes/useRecentNotes";
 import { useIsUnauthenticated } from "@/src/stores/auth";
 import { useConnectionStatus } from "@/src/stores/connectivity";
-import { offlineNoteActions } from "@/src/stores/offlineNotes";
+import { offlineNoteActions, useLocalNotes } from "@/src/stores/offlineNotes";
 import { notesActions } from "@/src/stores/passageNotes";
 import { useToast } from "@/src/toast/ToastProvider";
 import { Button } from "../atoms/Button";
@@ -18,6 +18,7 @@ import { ConfirmDialog } from "./ConfirmDialog";
 import { MenuSheet } from "./MenuSheet";
 import { NoteCard } from "./NoteCard";
 import { NoteEditorModal } from "./NoteEditorModal";
+import { toCardNote } from "./OfflineNotesView";
 
 /**
  * The Today screen's "Recent Notes" section (web `today.vue` equivalent):
@@ -26,21 +27,34 @@ import { NoteEditorModal } from "./NoteEditorModal";
  * so the Notes tab's query state is never disturbed; mutations go through
  * `notesActions` (keeping the notes store and note counts coherent) and then
  * refresh the local list.
+ *
+ * When the API can't be reached (or the user is signed out), it switches to
+ * `useLocalNotes()` instead — same `showLocalView` gate as the Notes tab's
+ * `OfflineNotesView` — so notes staged offline (which only ever land in
+ * `useOfflineNotesStore`, never the online list `useRecentNotes` fetches)
+ * actually show up here, and edits/deletes route through `offlineNoteActions`.
  */
 export function RecentNotesSection() {
   const t = useT();
   const { locale } = useLocale();
   const { showToast } = useToast();
-  const { status, notes, refresh } = useRecentNotes();
+  const { status: remoteStatus, notes: remoteNotes, refresh } = useRecentNotes();
+  const localNotes = useLocalNotes();
   const isUnauthenticated = useIsUnauthenticated();
   const connectionStatus = useConnectionStatus();
   // Mirror the Notes tab's local-view gating (app/(tabs)/notes/index.tsx):
   // when we can't reach the API, a new note must be staged offline instead
-  // of going through the online-only `notesActions.create`, or it's lost.
+  // of going through the online-only `notesActions.create`, or it's lost —
+  // and the section must render from the local store too, or staged notes
+  // never show up here (they only ever land in `useOfflineNotesStore`).
   const showLocalView =
     isUnauthenticated ||
     connectionStatus === "device-offline" ||
     connectionStatus === "server-unreachable";
+  const status = showLocalView ? "ready" : remoteStatus;
+  const notes = showLocalView
+    ? localNotes.slice(0, RECENT_NOTES_LIMIT).map(toCardNote)
+    : remoteNotes;
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [menuNote, setMenuNote] = useState<PassageNote | null>(null);
@@ -108,10 +122,16 @@ export function RecentNotesSection() {
         onClose={() => setEditingNote(null)}
         onSubmit={(input) => {
           if (!editingNote) return;
-          void notesActions.update({ ...input, id: editingNote.id }).then((saved) => {
-            if (!saved) showToast({ type: "error", message: t("note_could_not_save") });
-            else refresh();
-          });
+          if (showLocalView) {
+            void offlineNoteActions.updateNote(editingNote.id, input).then((saved) => {
+              if (!saved) showToast({ type: "error", message: t("note_could_not_save") });
+            });
+          } else {
+            void notesActions.update({ ...input, id: editingNote.id }).then((saved) => {
+              if (!saved) showToast({ type: "error", message: t("note_could_not_save") });
+              else refresh();
+            });
+          }
           setEditingNote(null);
         }}
       />
@@ -142,10 +162,16 @@ export function RecentNotesSection() {
           const note = deletingNote;
           setDeletingNote(null);
           if (!note) return;
-          void notesActions.remove(note.id).then((deleted) => {
-            if (!deleted) showToast({ type: "error", message: t("note_could_not_delete") });
-            else refresh();
-          });
+          if (showLocalView) {
+            void offlineNoteActions.deleteNote(note.id).then((deleted) => {
+              if (!deleted) showToast({ type: "error", message: t("note_could_not_delete") });
+            });
+          } else {
+            void notesActions.remove(note.id).then((deleted) => {
+              if (!deleted) showToast({ type: "error", message: t("note_could_not_delete") });
+              else refresh();
+            });
+          }
         }}
       />
     </View>
