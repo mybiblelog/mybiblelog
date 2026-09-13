@@ -1,3 +1,4 @@
+export { BackgroundPattern } from "./BackgroundPattern";
 export { Card } from "./Card";
 export type { CardPadding, CardTone } from "./Card";
 export { CheckboxRow } from "./CheckboxRow";

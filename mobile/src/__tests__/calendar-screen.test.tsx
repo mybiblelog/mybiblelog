@@ -61,8 +61,7 @@ describe("Calendar grid", () => {
     );
   });
 
-  // Borders are collapsed by painting the container and letting it show through
-  // 1px gaps. A border back on a cell would double every rule between cells.
+  // Cells are shaped by background color + radius, not table-style borders.
   it("draws no border on the day cells themselves", () => {
     renderWithProviders(<Calendar />);
 
@@ -73,10 +72,10 @@ describe("Calendar grid", () => {
     }
   });
 
-  // The frame is the container's background showing through a 1px inset, so a
-  // square corner cell clips the curve and the rule reads as a blunt diagonal
-  // cut. The four corner cells have to carry the frame's radius, less the rule.
-  it("rounds the four corner cells to follow the frame", () => {
+  // Every cell is "somewhat rounded" on every corner, but the four corners of
+  // the whole month (the outward-facing corner of each of the 4 corner cells)
+  // get an extra-large radius so the grid reads as one rounded block.
+  it("rounds every cell, with extra rounding on the four outer corners", () => {
     renderWithProviders(<Calendar />);
 
     const rows = screen.getAllByTestId("calendar.week-row");
@@ -85,29 +84,26 @@ describe("Calendar grid", () => {
 
     const first = rows[0];
     const last = rows[rows.length - 1];
-    expect(cornerOf(first, 0).borderTopLeftRadius).toBeGreaterThan(0);
-    expect(cornerOf(first, 6).borderTopRightRadius).toBeGreaterThan(0);
-    expect(cornerOf(last, 0).borderBottomLeftRadius).toBeGreaterThan(0);
-    expect(cornerOf(last, 6).borderBottomRightRadius).toBeGreaterThan(0);
+    const outerTopLeft = cornerOf(first, 0).borderTopLeftRadius as number;
+    const outerTopRight = cornerOf(first, 6).borderTopRightRadius as number;
+    const outerBottomLeft = cornerOf(last, 0).borderBottomLeftRadius as number;
+    const outerBottomRight = cornerOf(last, 6).borderBottomRightRadius as number;
+    expect(outerTopLeft).toBeGreaterThan(0);
+    expect(outerTopRight).toBeGreaterThan(0);
+    expect(outerBottomLeft).toBeGreaterThan(0);
+    expect(outerBottomRight).toBeGreaterThan(0);
 
-    // ...and only those four. An interior cell stays square on every corner.
+    // An interior cell is still rounded on every corner, but by less.
     const interior = cornerOf(rows[1], 0);
-    expect(interior.borderTopLeftRadius).toBe(0);
-    expect(interior.borderBottomLeftRadius).toBe(0);
-  });
+    expect(interior.borderTopLeftRadius).toBeGreaterThan(0);
+    expect(interior.borderTopLeftRadius).toBeLessThan(outerTopLeft);
+    expect(interior.borderBottomLeftRadius).toBeGreaterThan(0);
+    expect(interior.borderBottomLeftRadius).toBeLessThan(outerTopLeft);
 
-  // The container no longer clips, so nothing hides a cell that overflows it.
-  it("keeps the corner radius smaller than the frame's", () => {
-    renderWithProviders(<Calendar />);
-
-    const gridStyle = StyleSheet.flatten(screen.getByTestId("calendar.days-grid").props.style);
-    const corner = StyleSheet.flatten(
-      within(screen.getAllByTestId("calendar.week-row")[0]).getAllByTestId(DAY_CELL)[0].props
-        .style as ViewStyle
-    );
-    expect(corner.borderTopLeftRadius).toBe(
-      (gridStyle.borderRadius as number) - (gridStyle.padding as number)
-    );
+    // Even the corner cells stay small on their inward-facing corners.
+    const topLeftCell = cornerOf(first, 0);
+    expect(topLeftCell.borderTopRightRadius).toBe(interior.borderTopLeftRadius);
+    expect(topLeftCell.borderBottomLeftRadius).toBe(interior.borderTopLeftRadius);
   });
 
   // The header used a fixed pixel width while the cells carried an extra
@@ -122,7 +118,7 @@ describe("Calendar grid", () => {
     const gridStyle = StyleSheet.flatten(screen.getByTestId("calendar.days-grid").props.style);
 
     expect(headerStyle.gap).toBe(weekStyle.gap);
-    expect(headerStyle.paddingHorizontal).toBe(gridStyle.padding);
+    expect(headerStyle.gap).toBe(gridStyle.gap);
     expect(headerStyle.marginHorizontal).toBe(gridStyle.marginHorizontal);
 
     const labels = header.children as ReactTestInstance[];

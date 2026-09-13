@@ -9,13 +9,9 @@ import {
   useState,
 } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import Animated, {
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { scheduleOnRN } from "react-native-worklets";
 import { type ThemeColors, durations, radius, spacing, useTheme, zIndex } from "@/src/design";
 
 export type ToastType = "success" | "error" | "info";
@@ -78,7 +74,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     translateY.value = withTiming(-ENTER_OFFSET, { duration: durations.fast });
     // eslint-disable-next-line react-hooks/immutability
     opacity.value = withTiming(0, { duration: durations.fast }, (finished) => {
-      if (finished) runOnJS(clearToast)();
+      if (finished) scheduleOnRN(clearToast);
     });
   }, [clearToast, opacity, translateY]);
 

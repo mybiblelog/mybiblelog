@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { spacing, useScalePress } from "@/src/design";
 import type { ThemeColors } from "@/src/design";
@@ -37,7 +38,7 @@ function MenuRow({ action, onClose }: { action: MenuAction; onClose: () => void 
           <Icon name={action.icon} size={20} color={action.color ?? "mutedText"} />
         ) : null}
       </View>
-      <Text variant="bodyStrong" color={action.color ?? "text"}>
+      <Text variant="body" color={action.color ?? "text"}>
         {action.label}
       </Text>
     </AnimatedPressable>
@@ -59,11 +60,18 @@ export function MenuSheet({
   actions: MenuAction[];
   cancelLabel?: string;
 }) {
+  // Callers often derive `title` from a selection that's cleared the instant
+  // `onClose` fires (e.g. `setMenuNote(null)`), which would otherwise unmount
+  // the title mid-animation while the (unrelated) action rows keep rendering.
+  // Hold the last non-empty title until the sheet is shown again.
+  const [displayTitle, setDisplayTitle] = useState(title);
+  if (visible && displayTitle !== title) setDisplayTitle(title);
+
   return (
     <BottomSheet visible={visible} onClose={onClose} padded={false}>
-      {title ? (
+      {displayTitle ? (
         <Text variant="bodyStrong" style={styles.sheetTitle}>
-          {title}
+          {displayTitle}
         </Text>
       ) : null}
       {actions.map((action) => (

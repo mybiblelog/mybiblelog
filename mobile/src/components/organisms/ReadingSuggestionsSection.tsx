@@ -137,7 +137,7 @@ export function ReadingSuggestionsSection({ suggestions, today, loading = false 
 }
 
 const styles = StyleSheet.create({
-  section: { marginTop: spacing.md },
+  section: { marginTop: spacing.xl },
   sectionTitle: { marginBottom: spacing.md },
   list: { gap: spacing.sm },
 });

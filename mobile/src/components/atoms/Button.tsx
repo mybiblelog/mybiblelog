@@ -1,3 +1,4 @@
+import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
 import { radius, spacing, TOUCH_TARGET, useScalePress, useTheme } from "@/src/design";
 import type { ThemeColors } from "@/src/design";
@@ -46,7 +47,7 @@ export function Button({
   testID,
   style,
 }: ButtonProps) {
-  const { colors } = useTheme();
+  const { colors, gradients } = useTheme();
   const isInteractive = !disabled && !loading;
   const press = useScalePress({ disabled: !isInteractive });
 
@@ -54,10 +55,12 @@ export function Button({
   // (accent fills just make it transparent) so the neutral `secondary` fill
   // stays visible against a same-colored surface — in dark mode `surfaceMuted`
   // and `surfaceElevated` are the same value, so without the border a secondary
-  // button inside a card disappears.
+  // button inside a card disappears. Primary fills with a diagonal brand
+  // gradient (rendered separately below) instead of a flat color; secondary
+  // trades the flat neutral fill for a translucent primary tint.
   const palette: Record<ButtonVariant, { bg: string; border: string; fg: keyof ThemeColors }> = {
-    primary: { bg: colors.primary, border: "transparent", fg: "onPrimary" },
-    secondary: { bg: colors.surfaceMuted, border: colors.border, fg: "text" },
+    primary: { bg: "transparent", border: "transparent", fg: "onPrimary" },
+    secondary: { bg: colors.secondarySoftBg, border: colors.secondarySoftBorder, fg: "text" },
     destructive: { bg: colors.destructive, border: "transparent", fg: "onDestructive" },
     ghost: { bg: "transparent", border: "transparent", fg: "primary" },
   };
@@ -73,6 +76,7 @@ export function Button({
         fg: "mutedText" as const,
       }
     : palette[variant];
+  const showGradient = variant === "primary" && !showDisabled;
 
   return (
     <AnimatedPressable
@@ -97,6 +101,14 @@ export function Button({
         style,
       ]}
     >
+      {showGradient ? (
+        <LinearGradient
+          colors={gradients.primary}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[StyleSheet.absoluteFill, { borderRadius: radius.button }]}
+        />
+      ) : null}
       {loading ? (
         <Spinner color={fg} />
       ) : (
@@ -120,6 +132,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
+    overflow: "hidden",
   },
   sizeMd: {
     minHeight: TOUCH_TARGET,

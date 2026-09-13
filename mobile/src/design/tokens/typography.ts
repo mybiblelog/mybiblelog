@@ -20,6 +20,8 @@ export const typography = {
   subtitle: { fontSize: 13, fontWeight: "700", lineHeight: 18 } as TextStyle,
   /** Default body copy. */
   body: { fontSize: 15, fontWeight: "500", lineHeight: 21 } as TextStyle,
+  /** Lighter-weight body copy, for longer free-form text (note/tag content). */
+  bodyRegular: { fontSize: 15, fontWeight: "400", lineHeight: 21 } as TextStyle,
   /** Emphasized body copy. */
   bodyStrong: { fontSize: 15, fontWeight: "700", lineHeight: 21 } as TextStyle,
   /** Grouping label above cards / inputs. */
@@ -36,4 +38,12 @@ export const typography = {
 } as const;
 
 export type TypographyVariant =
-  "title" | "heading" | "subtitle" | "body" | "bodyStrong" | "label" | "caption" | "button";
+  | "title"
+  | "heading"
+  | "subtitle"
+  | "body"
+  | "bodyRegular"
+  | "bodyStrong"
+  | "label"
+  | "caption"
+  | "button";

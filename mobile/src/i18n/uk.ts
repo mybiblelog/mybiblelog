@@ -169,7 +169,7 @@ export const uk = {
 
   verses: "Вірші",
 
-  log_entry_menu_title: "Читання: %{passage}",
+  log_entry_menu_title: "%{passage} (%{date})",
   suggestion_menu_title: "Пропозиція: %{passage}",
   menu_edit: "Редагувати",
   menu_delete: "Видалити",
@@ -427,7 +427,7 @@ export const uk = {
   note_actions: "Дії з нотаткою",
   note_menu_title_passage: "Нотатка про %{passage}",
   note_menu_title_passage_multiple: "Нотатка про %{passage}…",
-  note_menu_title_content: "Нотатка: '%{content}'",
+  note_menu_title_date: "Нотатка від %{date}",
   note_editor_new: "Нова нотатка",
   note_editor_edit: "Редагувати нотатку",
   note_passages: "Уривки",
@@ -501,6 +501,7 @@ export const uk = {
     "Увійдіть, щоб використовувати теги. Ваша нотатка все одно збережеться на цьому пристрої.",
   tag_notes_count: "%{count} нотаток",
   tag_view_notes: "Переглянути нотатки (%{count})",
+  tag_actions: "Дії з тегом",
   tag_sort_by: "Сортування",
   tag_sort_label_ascending: "Назва (А-Я)",
   tag_sort_createdAt_descending: "Спочатку нові",

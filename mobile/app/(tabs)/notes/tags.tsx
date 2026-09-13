@@ -8,6 +8,7 @@ import {
   ConfirmDialog,
   EmptyState,
   ErrorState,
+  IconButton,
   ListItem,
   MenuSheet,
   Screen,
@@ -104,9 +105,19 @@ export default function Tags() {
           <ListItem
             title={<TagPill label={item.label} color={item.color} />}
             subtitle={item.description || undefined}
+            subtitleVariant="bodyRegular"
+            subtitleColor="text"
+            subtitleStyle={styles.tagDescription}
             meta={t("tag_notes_count", { count: item.noteCount })}
-            chevron
             onPress={() => setMenuTag(item)}
+            trailing={
+              <IconButton
+                name="ellipsis-vertical"
+                size={18}
+                accessibilityLabel={t("tag_actions")}
+                onPress={() => setMenuTag(item)}
+              />
+            }
           />
         )}
         ItemSeparatorComponent={Separator}
@@ -168,16 +179,18 @@ export default function Tags() {
       <MenuSheet
         visible={menuTag !== null}
         onClose={() => setMenuTag(null)}
+        title={menuTag?.label}
         cancelLabel={t("cancel")}
         actions={[
           {
             label: t("tag_view_notes", { count: menuTag?.noteCount ?? 0 }),
+            icon: "list-outline",
             onPress: () => menuTag && showNotes(menuTag),
           },
-          { label: t("edit"), onPress: () => setEditingTag(menuTag) },
+          { label: t("edit"), icon: "pencil-outline", onPress: () => setEditingTag(menuTag) },
           {
             label: t("delete"),
-            color: "destructive",
+            icon: "trash-outline",
             onPress: () => menuTag && requestDelete(menuTag),
           },
         ]}
@@ -223,6 +236,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   listContent: { paddingBottom: spacing.listBottom },
+  tagDescription: { marginTop: spacing.xs },
   listContentEmpty: { flexGrow: 1 },
   separator: { height: spacing.sm },
   loadingContainer: {

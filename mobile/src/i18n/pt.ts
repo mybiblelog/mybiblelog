@@ -169,7 +169,7 @@ export const pt = {
 
   verses: "Versículos",
 
-  log_entry_menu_title: "Leitura: %{passage}",
+  log_entry_menu_title: "%{passage} (%{date})",
   suggestion_menu_title: "Sugestão: %{passage}",
   menu_edit: "Editar",
   menu_delete: "Excluir",
@@ -429,7 +429,7 @@ export const pt = {
   note_actions: "Ações da nota",
   note_menu_title_passage: "Nota sobre %{passage}",
   note_menu_title_passage_multiple: "Nota sobre %{passage}…",
-  note_menu_title_content: "Nota: '%{content}'",
+  note_menu_title_date: "Nota de %{date}",
   note_editor_new: "Nova Nota",
   note_editor_edit: "Editar Nota",
   note_passages: "Passagens",
@@ -503,6 +503,7 @@ export const pt = {
     "Entre na sua conta para usar tags. Sua nota será salva neste dispositivo mesmo assim.",
   tag_notes_count: "%{count} notas",
   tag_view_notes: "Ver notas (%{count})",
+  tag_actions: "Ações da etiqueta",
   tag_sort_by: "Ordenar",
   tag_sort_label_ascending: "Nome (A-Z)",
   tag_sort_createdAt_descending: "Mais recentes primeiro",

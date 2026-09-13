@@ -2,6 +2,7 @@ import { type ReactNode, createContext, useContext, useEffect, useMemo, useState
 import { useColorScheme } from "react-native";
 import { appStorage } from "@/src/storage/keys";
 import { type ColorSchemeName, colorsByScheme } from "./tokens/colors";
+import { type Gradients, gradientsByScheme } from "./tokens/gradients";
 import { type Shadows, makeShadows } from "./tokens/shadows";
 
 export type ThemeMode = "system" | "light" | "dark";
@@ -16,6 +17,7 @@ type ThemeContextValue = {
    * unlike spacing/radius these can't be imported statically — see `shadows.ts`.
    */
   shadows: Shadows;
+  gradients: Gradients;
 };
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -66,6 +68,7 @@ export function ThemeProvider({
 
   const scheme = resolveScheme(mode, systemScheme);
   const colors = colorsByScheme[scheme];
+  const gradients = gradientsByScheme[scheme];
   const shadows = useMemo(() => makeShadows(colors), [colors]);
 
   const value = useMemo<ThemeContextValue>(
@@ -75,8 +78,9 @@ export function ThemeProvider({
       scheme,
       colors,
       shadows,
+      gradients,
     }),
-    [colors, mode, scheme, shadows]
+    [colors, gradients, mode, scheme, shadows]
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

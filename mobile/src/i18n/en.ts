@@ -163,7 +163,7 @@ export const en = {
 
   verses: "Verses",
 
-  log_entry_menu_title: "Reading: %{passage}",
+  log_entry_menu_title: "%{passage} (%{date})",
   suggestion_menu_title: "Suggestion: %{passage}",
   menu_edit: "Edit",
   menu_delete: "Delete",
@@ -458,7 +458,7 @@ export const en = {
   note_actions: "Note actions",
   note_menu_title_passage: "Note on %{passage}",
   note_menu_title_passage_multiple: "Note on %{passage}…",
-  note_menu_title_content: "Note: '%{content}'",
+  note_menu_title_date: "Note from %{date}",
   note_editor_new: "New Note",
   note_editor_edit: "Edit Note",
   note_passages: "Passages",
@@ -529,6 +529,7 @@ export const en = {
   tag_unavailable_signed_out: "Sign in to use tags. Your note will still be saved on this device.",
   tag_notes_count: "%{count} notes",
   tag_view_notes: "View notes (%{count})",
+  tag_actions: "Tag actions",
   tag_sort_by: "Sort",
   tag_sort_label_ascending: "Label (A-Z)",
   tag_sort_createdAt_descending: "Newest First",

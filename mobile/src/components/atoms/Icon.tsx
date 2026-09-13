@@ -12,8 +12,11 @@ export type IconName = keyof typeof Ionicons.glyphMap;
  * path is stroked here so both clients render the same mark. Entries are keyed
  * by the Ionicons name they stand in for, so call sites don't change.
  */
-const LOCAL_GLYPHS: Partial<Record<IconName, string>> = {
-  add: "M12 5V19M5 12H19",
+const LOCAL_GLYPHS: Partial<Record<IconName, { d: string; strokeWidth?: number }>> = {
+  add: { d: "M12 5V19M5 12H19" },
+  // Heavier stroke than the default — the Ionicons "checkmark" glyph reads as
+  // too thin at the sizes the chapter checklist uses it at.
+  checkmark: { d: "M5 13L9 17L19 7", strokeWidth: 3.5 },
 };
 
 const LOCAL_GLYPH_VIEWBOX = "0 0 24 24";
@@ -36,10 +39,11 @@ export function Icon({
     return (
       <Svg width={size} height={size} viewBox={LOCAL_GLYPH_VIEWBOX} fill="none">
         <Path
-          d={localGlyph}
+          d={localGlyph.d}
           stroke={colors[color]}
-          strokeWidth={LOCAL_GLYPH_STROKE_WIDTH}
+          strokeWidth={localGlyph.strokeWidth ?? LOCAL_GLYPH_STROKE_WIDTH}
           strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </Svg>
     );

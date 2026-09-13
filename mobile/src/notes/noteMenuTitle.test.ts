@@ -44,26 +44,16 @@ describe("getNoteMenuTitle", () => {
     expect(result).toBe(`note_menu_title_passage_multiple:${JSON.stringify({ passage })}`);
   });
 
-  it("previews short content unmodified", () => {
-    const result = getNoteMenuTitle(note({ content: "Short note" }), t, "en");
-    expect(result).toBe(`note_menu_title_content:${JSON.stringify({ content: "Short note" })}`);
-  });
-
-  it("does not truncate content at exactly 30 characters", () => {
-    const content = "x".repeat(30);
-    const result = getNoteMenuTitle(note({ content }), t, "en");
-    expect(result).toBe(`note_menu_title_content:${JSON.stringify({ content })}`);
-  });
-
-  it("truncates content over 30 characters with an ellipsis", () => {
-    const content = "x".repeat(40);
-    const result = getNoteMenuTitle(note({ content }), t, "en");
-    expect(result).toBe(
-      `note_menu_title_content:${JSON.stringify({ content: `${"x".repeat(30)}…` })}`
+  it("names the created date when there are no passages", () => {
+    const result = getNoteMenuTitle(
+      note({ content: "Short note", createdAt: "2026-07-02T12:00:00.000Z" }),
+      t,
+      "en"
     );
+    expect(result).toBe(`note_menu_title_date:${JSON.stringify({ date: "July 2, 2026" })}`);
   });
 
-  it("returns undefined for a note with no passages and no content", () => {
-    expect(getNoteMenuTitle(note({ content: "   " }), t, "en")).toBeUndefined();
+  it("returns undefined for a note with no passages and no created date", () => {
+    expect(getNoteMenuTitle(note({ content: "Short note" }), t, "en")).toBeUndefined();
   });
 });

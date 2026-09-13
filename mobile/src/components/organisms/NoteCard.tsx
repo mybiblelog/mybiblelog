@@ -84,7 +84,7 @@ export function NoteCard({ note, onPressMenu, testID }: Props) {
         />
       </View>
 
-      {note.content ? <Text variant="body">{note.content}</Text> : null}
+      {note.content ? <Text variant="bodyRegular">{note.content}</Text> : null}
 
       {noteTags.length > 0 ? (
         <View style={styles.pillRow}>

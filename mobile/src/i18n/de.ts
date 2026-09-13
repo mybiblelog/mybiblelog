@@ -171,7 +171,7 @@ export const de = {
 
   verses: "Verse",
 
-  log_entry_menu_title: "Lesung: %{passage}",
+  log_entry_menu_title: "%{passage} (%{date})",
   suggestion_menu_title: "Vorschlag: %{passage}",
   menu_edit: "Bearbeiten",
   menu_delete: "Löschen",
@@ -437,7 +437,7 @@ export const de = {
   note_actions: "Notizaktionen",
   note_menu_title_passage: "Notiz zu %{passage}",
   note_menu_title_passage_multiple: "Notiz zu %{passage}…",
-  note_menu_title_content: "Notiz: '%{content}'",
+  note_menu_title_date: "Notiz vom %{date}",
   note_editor_new: "Neue Notiz",
   note_editor_edit: "Notiz bearbeiten",
   note_passages: "Textstellen",
@@ -513,6 +513,7 @@ export const de = {
     "Melden Sie sich an, um Tags zu verwenden. Ihre Notiz wird trotzdem auf diesem Gerät gespeichert.",
   tag_notes_count: "%{count} Notizen",
   tag_view_notes: "Notizen ansehen (%{count})",
+  tag_actions: "Tag-Aktionen",
   tag_sort_by: "Sortieren",
   tag_sort_label_ascending: "Bezeichnung (A-Z)",
   tag_sort_createdAt_descending: "Neueste zuerst",
