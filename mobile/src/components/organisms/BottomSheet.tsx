@@ -9,13 +9,9 @@ import {
   type ViewStyle,
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, {
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { scheduleOnRN } from "react-native-worklets";
 import { durations, easings, radius, spacing, useTheme } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { AnimatedPressable } from "../atoms/AnimatedPressable";
@@ -92,7 +88,7 @@ export function BottomSheet({
         0,
         { duration: durations.fast, easing: easings.accelerate },
         (finished) => {
-          if (finished) runOnJS(finishClose)();
+          if (finished) scheduleOnRN(finishClose);
         }
       );
     }
@@ -162,7 +158,7 @@ export function BottomSheet({
     })
     .onEnd((e) => {
       if (e.translationY > DISMISS_DISTANCE || e.velocityY > 800) {
-        runOnJS(onClose)();
+        scheduleOnRN(onClose);
       } else {
         // eslint-disable-next-line react-hooks/immutability
         dragY.value = withTiming(0, { duration: durations.fast });
