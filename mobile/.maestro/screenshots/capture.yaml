@@ -9,13 +9,62 @@
 # ${OUTPUT_DIR}/<slug>.png (Maestro appends the extension). An absolute
 # OUTPUT_DIR avoids any cwd ambiguity.
 #
-# Resumes the already-running release build (no clearState). The seeded reading
-# history + notes/tags come from the orchestrator's shared DB seed; only the
-# per-locale notes/tags need a pull-to-refresh to appear.
+# Resumes the already-running dev-client build (no clearState). The seeded
+# reading history + notes/tags come from the orchestrator's shared DB seed;
+# only the per-locale notes/tags need a pull-to-refresh to appear.
 appId: com.mybiblelog.app
 ---
 - launchApp:
     stopApp: false
+# On every locale after the first, the app is already resumed at the tab bar
+# and none of this preamble applies — `tab.settings` gates it the same way
+# common/resume.yaml gates its own re-login. Only a truly fresh dev-client
+# install (first-ever run of this suite, or the orchestrator's force-stop
+# catching a device that was never launched before) falls through here.
+- runFlow:
+    when:
+      notVisible:
+        id: "tab.settings"
+    commands:
+      # Deep-link straight to the adb-reversed Metro bundle (see
+      # common/login.yaml) rather than relying on flaky LAN server discovery.
+      - extendedWaitUntil:
+          optional: true
+          visible: "DEVELOPMENT SERVERS"
+          timeout: 20000
+      - openLink: "biblelog://expo-development-client/?url=http%3A%2F%2F127.0.0.1%3A8081"
+      # The first load after that pops the developer-menu intro sheet over the
+      # bundle-loading spinner; dismiss it before the app UI can appear. The
+      # floating Tools button itself is already hidden via the orchestrator's
+      # SharedPreferences write, so no gear-button drag-out is needed here.
+      - extendedWaitUntil:
+          optional: true
+          visible: "This is the developer menu.*"
+          timeout: 45000
+      - runFlow:
+          when:
+            visible: "This is the developer menu.*"
+          commands:
+            - tapOn: "Continue"
+            - extendedWaitUntil:
+                visible: "Reload"
+                timeout: 10000
+            - back
+      # Onboarding: a dev-client the developer has already used for regular
+      # development will already have it completed on-device, so this guard
+      # is a no-op there too. `WelcomeStep`'s skip button (app/onboarding.tsx)
+      # calls `finishOnboarding()` directly, which marks onboarding complete
+      # and routes to "/" — the shortest path through it.
+      - runFlow:
+          when:
+            visible:
+              id: "onboarding.choice-new"
+          commands:
+            - tapOn:
+                id: "onboarding.choice-new"
+            - tapOn:
+                id: "onboarding.welcome-skip"
+
 # Resumes on whatever tab the previous locale's run left (a fresh install opens
 # on Today) — both show the tab bar, so wait for that rather than a Today-only
 # element.
@@ -24,19 +73,46 @@ appId: com.mybiblelog.app
       id: "tab.settings"
     timeout: 90000
 
-# --- Auth: log in on the first locale (skipped on later locales) -------------
+# --- Auth: always (re-)establish the demo-account session -------------------
+# A dev-client the developer already uses for regular development may already
+# be authenticated as some *other* account — "already logged in" doesn't mean
+# "logged in as the seeded screenshot demo user". Force a logout first (only
+# does anything on a dev-client with a pre-existing foreign session; a no-op
+# on every later locale, which is already the demo account from here), then
+# always log back in — cheap relative to the rest of the flow, and the only
+# way to guarantee the seeded data actually belongs to whoever's logged in.
 - tapOn:
     id: "tab.settings"
 - tapOn:
     id: "settings.account-link"
-# Let the auth card resolve out of its brief "loading" state before deciding
-# whether to log in (otherwise neither login nor logout button is visible yet).
-- waitForAnimationToEnd:
-    timeout: 3000
+# The auth card resolves asynchronously (token check, possibly a network call)
+# before it shows either button — a fixed animation-only wait isn't enough on
+# a cold/fresh launch, where this can take longer than a warm resume. Wait
+# (optionally) for the logged-in outcome specifically, rather than guessing a
+# delay; if it never shows up within the timeout, we're already logged out.
+- extendedWaitUntil:
+    optional: true
+    visible:
+      id: "settings.logout"
+    timeout: 15000
 - runFlow:
     when:
       visible:
-        id: "settings.login"
+        id: "settings.logout"
+    commands:
+      # Logout is gated behind a ConfirmDialog (account.tsx) — tapping the
+      # button alone only opens it; the actual `logout()` call happens on its
+      # confirm button, which needs its own testID since ConfirmDialog reuses
+      # the same "auth_logout" label as the button that opened it.
+      - tapOn:
+          id: "settings.logout"
+      - tapOn:
+          id: "settings.logout-confirm"
+- extendedWaitUntil:
+    visible:
+      id: "settings.login"
+    timeout: 15000
+- runFlow:
     file: login.yaml
 # Back out of Account to the Settings root for the language switch.
 - back

@@ -158,6 +158,7 @@ export default function AccountSettings() {
           message={t("auth_logout_confirm_message")}
           confirmLabel={t("auth_logout")}
           cancelLabel={t("cancel")}
+          confirmTestID="settings.logout-confirm"
           onConfirm={() => {
             setLogoutConfirmVisible(false);
             void logout();
