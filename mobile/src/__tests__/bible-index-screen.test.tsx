@@ -30,10 +30,20 @@ beforeEach(() => {
 });
 
 describe("Bible Books screen", () => {
-  it("shows no note badges before any book has notes", () => {
+  it("hides note badges before any book has notes", () => {
     useNoteCountsStore.setState({ counts: { 1: 0, 2: 0 } });
-    const { queryByText } = renderWithProviders(<BibleIndex />);
+    const { queryByText, getAllByText } = renderWithProviders(<BibleIndex />);
+    // Hidden from accessibility (and from a default query), but not unmounted:
+    // it stays in the tree at zero opacity so its layout space is reserved.
     expect(queryByText("0 notes")).toBeNull();
+    const badges = getAllByText("0 notes", { includeHiddenElements: true });
+    expect(badges.length).toBeGreaterThan(0);
+    for (const badge of badges) {
+      // badge -> host Text -> RN's Text wrapper -> our `Text` atom -> badge View.
+      const badgeContainer = badge.parent!.parent!.parent!;
+      expect(badgeContainer).toHaveProp("accessibilityElementsHidden", true);
+      expect(badgeContainer).toHaveStyle({ opacity: 0 });
+    }
   });
 
   it("shows per-book badges once any book has notes", () => {

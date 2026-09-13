@@ -433,6 +433,8 @@ export const uk = {
   note_no_tags_selected: "Теги не вибрано.",
   note_manage_tags: "Вибрати теги",
   note_could_not_save: "Не вдалося зберегти нотатку.",
+  note_saved_offline:
+    "Збережено на цьому пристрої — синхронізується, коли ви онлайн і увійшли в систему.",
   note_could_not_delete: "Не вдалося видалити нотатку.",
   note_delete_confirm_title: "Видалити нотатку?",
   note_delete_confirm_message: "Цю дію не можна скасувати.",

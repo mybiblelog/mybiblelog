@@ -436,6 +436,8 @@ export const es = {
   note_no_tags_selected: "Sin etiquetas seleccionadas.",
   note_manage_tags: "Elegir etiquetas",
   note_could_not_save: "No se pudo guardar la nota.",
+  note_saved_offline:
+    "Guardada en este dispositivo: se sincronizará cuando tengas conexión y sesión iniciada.",
   note_could_not_delete: "No se pudo eliminar la nota.",
   note_delete_confirm_title: "¿Eliminar la nota?",
   note_delete_confirm_message: "Esta acción no se puede deshacer.",

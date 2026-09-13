@@ -464,6 +464,7 @@ export const en = {
   note_no_tags_selected: "No tags selected.",
   note_manage_tags: "Choose Tags",
   note_could_not_save: "Unable to save the note.",
+  note_saved_offline: "Saved on this device — it’ll sync when you’re online and signed in.",
   note_could_not_delete: "Unable to delete the note.",
   note_delete_confirm_title: "Delete note?",
   note_delete_confirm_message: "This cannot be undone.",
