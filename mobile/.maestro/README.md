@@ -134,54 +134,50 @@ dataset as the web `npm run screenshots` (shared `scripts/lib/screenshot-seed.ts
 then runs `capture.yaml` once per locale, writing PNGs to
 `mobile/screenshots/<locale>/`. Prerequisites:
 
-- **Release build on the emulator** (not a dev-client build, which shows the
-  floating dev-menu button and needs Metro):
+- **Dev-client build on the emulator**:
   ```bash
-  SENTRY_DISABLE_AUTO_UPLOAD=true \
-    EXPO_PUBLIC_API_BASE_URL=http://localhost:8080 \
-    npx expo run:android --variant release
+  cd mobile && npx expo run:android --device
   ```
-  `SENTRY_DISABLE_AUTO_UPLOAD=true` is required locally: release builds run
-  Sentry's source-map upload, which fails without the org/project/token that
-  only EAS production builds have (`sentry-cli: An organization ID or slug is
-  required`). The flag skips just the upload; production/EAS uploads are
-  unaffected.
-- **`npm run dev` at the repo root** (API on :8080; the orchestrator runs
-  `adb reverse tcp:8080 tcp:8080`).
+  Metro must stay running (started by the command above, or `npx expo start`
+  separately) — a dev-client loads its JS bundle from it, unlike a release
+  build.
+- **`npm run dev` at the repo root** (API on :8080, web on :3000). The mobile
+  app's own `EXPO_PUBLIC_API_BASE_URL` (`mobile/.env`) points at :3000 — the
+  web dev server's `/api` proxy, not the API port directly — so both must be
+  running. The orchestrator runs `adb reverse` for `tcp:8080`, `tcp:3000`, and
+  Metro's `tcp:8081`.
 - **`SCREENSHOT_EMAIL` / `SCREENSHOT_PASSWORD`** in the repo-root `.env`
   (defaults `demo@example.com` / `password`), plus the Mongo connection the web
   script uses.
 
+The floating dev-menu "Tools" button and its Performance Monitor overlay would
+otherwise show up in every screenshot; the orchestrator force-stops the app
+first, then suppresses both before the first launch:
+- Tools button: writes `showFab=false` directly into `expo-dev-menu`'s native
+  SharedPreferences — the same preference the dev-menu's own Settings screen
+  toggles, so it works regardless of what that package's JS API exposes.
+- Performance monitor: revokes the app's "draw over other apps"
+  (`SYSTEM_ALERT_WINDOW`) permission via `adb shell appops set ... deny`. Both
+  React Native's legacy FPS overlay and expo-dev-menu's own toggle render this
+  as a real system overlay gated on that permission, so revoking it blocks the
+  overlay outright — more reliable than toggling its `fps_debug` pref, which
+  can already be `true` on-device from a developer's own use of the toggle and
+  isn't guaranteed to be picked up in time when rewritten via `run-as` from
+  outside the app process. The orchestrator restores whatever permission state
+  predated the run once every locale is done.
+
+`capture.yaml` also auto-dismisses the onboarding wizard (`app/onboarding.tsx`)
+if the install is fresh enough to still show it.
+
 The orchestrator also zeroes animation scales and enables SystemUI demo mode
 (fixed 09:00 clock, full battery, full wifi, no notifications) for a clean
 status bar, then restores both and deletes the demo user on exit. The capture
-flow logs in on the first locale only (conditional on `settings.login`), switches
-language via `settings.language-link`, and pull-to-refreshes Notes so each
-locale's freshly seeded notes/tags appear.
-
-### Troubleshooting
-
-**`INSTALL_FAILED_INSUFFICIENT_STORAGE` on install.** The release APK is ~120 MB
-and Expo installs with `adb install -r -d`, which stages the new APK *alongside*
-the old one — so a near-full emulator `/data` partition can't fit both even when
-the app is already installed.
-
-- **Quick fix** — uninstall first so there's no overlapping copy, then re-run the
-  build:
-  ```bash
-  adb uninstall com.mybiblelog.app
-  ```
-  Safe here: every screenshot run seeds a fresh demo user, so on-device data is
-  disposable.
-- **Durable fix** — give the AVD a bigger userdata partition. The default Expo/
-  Studio AVDs ship ~6 GB (`disk.dataPartition.size=6G`), which fills up fast with
-  a 120 MB app plus system data. In Android Studio → Device Manager → Edit device
-  → Show Advanced Settings → **Internal Storage**, raise it (e.g. 16 GB), or edit
-  `~/.android/avd/<name>.avd/config.ini` (`disk.dataPartition.size=16G`). Either
-  way the change only takes effect after a data wipe:
-  ```bash
-  emulator -avd <name> -wipe-data   # e.g. Medium_Phone_API_36.1; erases the emulator
-  ```
+flow force-logs-out and back in as the demo account on every locale (a
+dev-client the developer already uses for regular development may already be
+signed into some other account — "already logged in" alone doesn't mean
+"logged in as the seeded demo user"), switches language via
+`settings.language-link`, and pull-to-refreshes Notes so each locale's freshly
+seeded notes/tags appear.
 
 ## testID convention
 

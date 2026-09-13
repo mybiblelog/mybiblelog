@@ -14,6 +14,8 @@ type Props = {
   destructive?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
+  confirmTestID?: string;
+  cancelTestID?: string;
 };
 
 /** Centered confirmation dialog built on BottomSheet. */
@@ -26,6 +28,8 @@ export function ConfirmDialog({
   destructive = true,
   onConfirm,
   onCancel,
+  confirmTestID,
+  cancelTestID,
 }: Props) {
   return (
     <BottomSheet visible={visible} onClose={onCancel} variant="center">
@@ -38,9 +42,15 @@ export function ConfirmDialog({
         </Text>
       )}
       <View style={styles.actions}>
-        <Button label={cancelLabel} variant="secondary" onPress={onCancel} />
+        <Button
+          label={cancelLabel}
+          testID={cancelTestID}
+          variant="secondary"
+          onPress={onCancel}
+        />
         <Button
           label={confirmLabel}
+          testID={confirmTestID}
           variant={destructive ? "destructive" : "primary"}
           onPress={onConfirm}
         />
