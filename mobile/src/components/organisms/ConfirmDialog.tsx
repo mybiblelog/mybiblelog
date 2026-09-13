@@ -42,12 +42,7 @@ export function ConfirmDialog({
         </Text>
       )}
       <View style={styles.actions}>
-        <Button
-          label={cancelLabel}
-          testID={cancelTestID}
-          variant="secondary"
-          onPress={onCancel}
-        />
+        <Button label={cancelLabel} testID={cancelTestID} variant="secondary" onPress={onCancel} />
         <Button
           label={confirmLabel}
           testID={confirmTestID}
