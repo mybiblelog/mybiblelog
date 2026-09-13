@@ -1,46 +1,46 @@
 ---
 seo:
-  title: Page de la liste de chapitres
-  description: Documentation des fonctionnalités de la liste de chapitres de My Bible Log
+  title: Page Liste de chapitres
+  description: Comment fonctionne la liste de chapitres de My Bible Log
 og:
-  title: Page de la liste de chapitres
-  description: Documentation des fonctionnalités de la liste de chapitres de My Bible Log
+  title: Page Liste de chapitres
+  description: Comment fonctionne la liste de chapitres de My Bible Log
 ---
 
 ![](/share.jpg)
 
-# Page de la liste de chapitres
+# Page Liste de chapitres
 
 <div class="phone-frame">
-  <img alt="Capture d'écran de la page de liste de chapitres de My Bible Log" src="/screenshots/fr/sc12-checklist.webp" />
+  <img alt="Capture d'écran de la page Liste de chapitres de My Bible Log" src="/screenshots/fr/sc12-checklist.webp" />
 </div>
 
-La page de la liste de chapitres est le moyen le plus simple et le plus rapide de suivre votre lecture, car elle vous permet de marquer un chapitre comme "lu" en un seul clic ou tapotement.
+La liste de chapitres est la façon la plus simple et la plus rapide de noter vos lectures : un clic ou une pression suffit pour marquer un chapitre comme « lu ».
 
-Vous pouvez cliquer ou tapoter à nouveau un chapitre pour le marquer comme "non lu" si vous faites une erreur.
+Vous vous êtes trompé ? Touchez le chapitre une seconde fois et il redevient « non lu ».
 
-En coulisses, la liste de contrôle créera une entrée de journal de lecture pour vous. Cela signifie que votre lecture apparaîtra également sur toutes les autres pages du site.
+En coulisses, la liste crée pour vous une entrée dans le journal de lecture. Ce que vous cochez ici apparaît donc aussi sur toutes les autres pages du site.
 
-## Une liste de lecture de chapitres de la Bible pratique et complète
+## Une liste pratique pour toute la Bible
 
-La page de la liste de chapitres couvre les 1 189 chapitres de la Bible.
+La liste de chapitres couvre les 1 189 chapitres de la Bible.
 
-Vous pouvez trouver de nombreuses listes de lecture de chapitres imprimables sur Internet, mais elles couvrent souvent plus d'une feuille de papier car il y a tellement de chapitres dans la Bible.
+On trouve sur Internet quantité de listes de chapitres à imprimer, mais comme la Bible compte énormément de chapitres, elles tiennent rarement sur une seule feuille.
 
-Il serait facile de perdre ou d'endommager une pièce de papier aussi importante. Au lieu de cela, vous pouvez utiliser My Bible Log pour ne pas avoir à vous inquiéter de perdre votre progression ou d'oublier ce que vous avez lu.
+Et une feuille pareille est vite perdue ou abîmée. Avec My Bible Log, la question ne se pose plus : votre progression est conservée et vous n'oubliez jamais ce que vous avez lu.
 
 ## Comment lire la Bible en un an
 
-Si vous souhaitez lire la Bible en un an, vous devez savoir combien lire chaque jour.
+Pour lire la Bible en un an, encore faut-il savoir combien lire chaque jour.
 
-Si vous comptez les versets que vous lisez chaque jour, vous devez lire en moyenne 86 versets pour finir de lire la Bible en 365 jours.
+Si vous comptez en versets, il en faut 86 par jour en moyenne pour venir à bout de la Bible en 365 jours.
 
-Pour les chapitres, les mathématiques ne sont pas aussi simples. Si vous divisez les 1 189 chapitres par 365 jours, vous obtenez un peu plus de 3,25 chapitres par jour. Cela signifie que si vous voulez lire le même nombre de chapitres chaque jour, vous devrez lire quatre chapitres par jour.
+Avec les chapitres, le calcul tombe moins juste. En divisant 1 189 chapitres par 365 jours, on obtient un peu plus de 3,25 chapitres par jour. Autrement dit, pour lire toujours la même quantité, il faudrait en lire quatre chaque jour.
 
-Cependant, lire quatre chapitres chaque jour signifiera que vous finirez la Bible en 298 jours - plus de deux mois en avance ! C'est beaucoup de lecture supplémentaire pour garder le rythme.
+Sauf qu'à quatre chapitres par jour, vous terminez la Bible en 298 jours - plus de deux mois d'avance ! Cela fait beaucoup de lecture en plus.
 
-Au lieu de cela, lisez au moins 3 chapitres par jour, mais assurez-vous de lire ce quatrième chapitre supplémentaire une ou deux fois par semaine pour garder le rythme. Si vous lisez 23 chapitres par semaine, vous finirez la Bible en un an.
+Lisez plutôt au moins 3 chapitres par jour, en ajoutant un quatrième chapitre une ou deux fois par semaine pour tenir le rythme. À 23 chapitres par semaine, vous bouclez la Bible en un an tout juste.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/fr/checklist">Aller à la page de liste de chapitres</a>
+  <a class="mbl-button mbl-button--light" href="/fr/checklist">Aller à la page Liste de chapitres</a>
 </div>

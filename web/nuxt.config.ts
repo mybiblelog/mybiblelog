@@ -1,6 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { resolve } from 'node:path';
 import { config as loadEnv } from 'dotenv';
+import { locales as sharedLocales, getLocaleCodes } from '../shared/platform/i18n';
 
 loadEnv({
   path: resolve(__dirname, '../.env'),
@@ -36,7 +37,7 @@ export default defineNuxtConfig({
     public: {
       siteUrl: process.env.SITE_URL || '',
       requireEmailVerification: process.env.REQUIRE_EMAIL_VERIFICATION !== 'false',
-      locales: ['en', 'de', 'es', 'fr', 'ko', 'pt', 'uk'],
+      locales: getLocaleCodes(),
     },
   },
 
@@ -99,15 +100,7 @@ export default defineNuxtConfig({
 
   i18n: {
     baseUrl: process.env.SITE_URL,
-    locales: [
-      { code: 'en', iso: 'en-US', name: 'English' },
-      { code: 'de', iso: 'de-DE', name: 'Deutsch' },
-      { code: 'es', iso: 'es-ES', name: 'Español' },
-      { code: 'fr', iso: 'fr-FR', name: 'Français' },
-      { code: 'ko', iso: 'ko-KR', name: '한국어' },
-      { code: 'pt', iso: 'pt-BR', name: 'Português' },
-      { code: 'uk', iso: 'uk-UA', name: 'українська' },
-    ],
+    locales: sharedLocales.map(({ code, name }) => ({ code, name })),
     defaultLocale: 'en',
     strategy: 'prefix_except_default',
     detectBrowserLanguage: {

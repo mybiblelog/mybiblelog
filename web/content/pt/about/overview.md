@@ -1,10 +1,10 @@
 ---
 seo:
-  title: My Bible Log - Seu Companheiro Pessoal de Leitura da Bíblia
-  description: My Bible Log é uma ferramenta online gratuita para ajudá-lo a acompanhar e organizar sua jornada de leitura da Bíblia
+  title: My Bible Log - Seu companheiro pessoal de leitura da Bíblia
+  description: My Bible Log é uma ferramenta online gratuita para você acompanhar e organizar sua leitura da Bíblia
 og:
-  title: My Bible Log - Seu Companheiro Pessoal de Leitura da Bíblia
-  description: My Bible Log é uma ferramenta online gratuita para ajudá-lo a acompanhar e organizar sua jornada de leitura da Bíblia
+  title: My Bible Log - Seu companheiro pessoal de leitura da Bíblia
+  description: My Bible Log é uma ferramenta online gratuita para você acompanhar e organizar sua leitura da Bíblia
 ---
 
 <h1>
@@ -13,39 +13,39 @@ og:
 
 ## Feedback
 
-Você pode enviar uma solicitação de recurso, relatório de bug ou outra mensagem com [este formulário](/pt/feedback).
+Você pode sugerir uma funcionalidade, relatar um bug ou nos enviar qualquer outra mensagem por [este formulário](/pt/feedback).
 
 ## Contribuir
 
-My Bible Log é open source! Você pode encontrar o código-fonte no GitHub: [My Bible Log Repository](https://github.com/mybiblelog/mybiblelog)
+O My Bible Log é open source! O código-fonte está no GitHub: [My Bible Log Repository](https://github.com/mybiblelog/mybiblelog)
 
-Qualquer pessoa é bem-vinda para copiar o código, modificá-lo para seu próprio uso, hospedar sua própria instância do My Bible Log e contribuir para o código base original.
+Qualquer pessoa pode copiar o código, adaptá-lo às suas necessidades, hospedar a própria instância do My Bible Log e contribuir com o projeto original.
 
-## Começando com My Bible Log
+## Primeiros passos no My Bible Log
 
-* [Crie Sua Conta Gratuita](/pt/about/page-features--login)
-* [Instale em Qualquer Dispositivo](/pt/about/page-features--install)
+* [Crie sua conta gratuita](/pt/about/page-features--login)
+* [Instale em qualquer dispositivo](/pt/about/page-features--install)
 
 ## Páginas
 
-* [Página de Hoje](/pt/about/page-features--today)
-* [Página de Livros da Bíblia](/pt/about/page-features--bible-books)
-* [Página de Progresso](/pt/about/page-features--progress)
-* [Página de Lista de Capítulos](/pt/about/page-features--chapter-checklist)
-* [Página de Calendário](/pt/about/page-features--calendar)
-* [Página de Notas](/pt/about/page-features--notes)
-* [Página de Configurações](/pt/about/page-features--settings)
+* [Página Hoje](/pt/about/page-features--today)
+* [Página Livros da Bíblia](/pt/about/page-features--bible-books)
+* [Página Progresso](/pt/about/page-features--progress)
+* [Página Lista de Capítulos](/pt/about/page-features--chapter-checklist)
+* [Página Calendário](/pt/about/page-features--calendar)
+* [Página Notas](/pt/about/page-features--notes)
+* [Página Configurações](/pt/about/page-features--settings)
 
 ## Artigos
 
 * [Como ler a Bíblia em um ano](/pt/about/how-to--read-the-bible-in-a-year)
-* [7 Maneiras de Organizar Seu Estudo Pessoal da Bíblia](/pt/about/how-to--organize-your-personal-bible-study)
+* [7 maneiras de organizar seu estudo bíblico pessoal](/pt/about/how-to--organize-your-personal-bible-study)
 
 <!--
 * [Como ler o Novo Testamento em 90 dias](/pt/about/how-to--read-the-new-testament-in-90-days)
-* [Como desenvolver um hábito forte de leitura da Bíblia](/pt/about/how-to--build-a-strong-bible-reading-habit)
+* [Como criar um hábito firme de leitura da Bíblia](/pt/about/how-to--build-a-strong-bible-reading-habit)
 -->
 
 ## Recursos
 
-* [Rastreador Imprimível de Leitura da Bíblia](/pt/resources/printable-bible-reading-tracker)
+* [Registro de leitura da Bíblia para imprimir](/pt/resources/printable-bible-reading-tracker)

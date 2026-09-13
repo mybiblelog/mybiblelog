@@ -1,46 +1,46 @@
 ---
 seo:
-  title: Kapitellisten-Seite
-  description: Dokumentation der Kapitellistenfunktionen von My Bible Log
+  title: Kapitel-Checkliste
+  description: So funktioniert die Kapitel-Checkliste von My Bible Log
 og:
-  title: Kapitellisten-Seite
-  description: Dokumentation der Kapitellistenfunktionen von My Bible Log
+  title: Kapitel-Checkliste
+  description: So funktioniert die Kapitel-Checkliste von My Bible Log
 ---
 
 ![](/share.jpg)
 
-# Kapitellisten-Seite
+# Kapitel-Checkliste
 
 <div class="phone-frame">
-  <img alt="Screenshot der Kapitellisten-Seite von My Bible Log" src="/screenshots/de/sc12-checklist.webp" />
+  <img alt="Screenshot der Kapitel-Checkliste von My Bible Log" src="/screenshots/de/sc12-checklist.webp" />
 </div>
 
-Die Kapitellisten-Seite ist der einfachste und schnellste Weg, um Ihr Lesen zu verfolgen, da Sie ein Kapitel mit einem einzigen Klick oder Tippen als "gelesen" markieren können.
+Die Kapitel-Checkliste ist der schnellste Weg, Ihr Lesen festzuhalten: Ein Klick oder Fingertipp genügt, und ein Kapitel gilt als „gelesen".
 
-Sie können ein Kapitel erneut anklicken oder antippen, um es als "ungelesen" zu markieren, falls Sie einen Fehler gemacht haben.
+Haben Sie sich vertan, tippen Sie das Kapitel einfach noch einmal an – dann ist es wieder „ungelesen".
 
-Im Hintergrund wird die Liste ein Lese-Logbuch für Sie erstellen. Das bedeutet, dass Ihr Lesen auch auf jeder anderen Seite der Website angezeigt wird.
+Im Hintergrund legt die Checkliste dabei einen Eintrag in Ihrem Leseprotokoll an. Ihr Lesen erscheint also auch auf allen anderen Seiten der Website.
 
-## Eine praktische Kapitelliste zum Lesen des gesamten Bibelbuchs
+## Eine Checkliste für die ganze Bibel
 
-Die Kapitellisten-Seite umfasst alle 1.189 Kapitel der Bibel.
+Die Kapitel-Checkliste umfasst alle 1.189 Kapitel der Bibel.
 
-Im Internet finden Sie viele druckbare Kapitellisten, aber sie umfassen oft mehr als ein Blatt Papier, da es so viele Kapitel in der Bibel gibt.
+Im Internet gibt es viele Kapitellisten zum Ausdrucken. Weil die Bibel so viele Kapitel hat, passen sie aber selten auf ein einziges Blatt.
 
-Es wäre einfach, ein so wertvolles Stück Papier zu verlieren oder zu beschädigen. Nutzen Sie stattdessen My Bible Log, damit Sie sich keine Sorgen machen müssen, Ihren Fortschritt zu verlieren oder zu vergessen, was Sie gelesen haben.
+Und so ein wertvolles Blatt ist schnell verloren oder zerknittert. Mit My Bible Log müssen Sie sich darum keine Gedanken machen: Ihr Fortschritt bleibt erhalten, und Sie vergessen nie, was Sie schon gelesen haben.
 
-## Wie man die Bibel in einem Jahr liest
+## So lesen Sie die Bibel in einem Jahr
 
-Wenn Sie die Bibel in einem Jahr lesen möchten, müssen Sie wissen, wie viel Sie jeden Tag lesen müssen.
+Wer die Bibel in einem Jahr lesen will, muss wissen, wie viel pro Tag dazugehört.
 
-Wenn Sie die Verse zählen, die Sie täglich lesen, müssen Sie im Durchschnitt 86 Verse lesen, um die Bibel in 365 Tagen durchzulesen.
+Zählen Sie in Versen, sind es im Schnitt 86 Verse am Tag, um in 365 Tagen durch die ganze Bibel zu kommen.
 
-Bei Kapiteln ist die Mathematik nicht so einfach. Wenn Sie 1.189 Kapitel durch 365 Tage teilen, erhalten Sie etwas über 3,25 Kapitel pro Tag. Das bedeutet, wenn Sie jeden Tag die gleiche Anzahl von Kapiteln lesen möchten, müssen Sie täglich vier Kapitel lesen.
+Bei Kapiteln ist die Rechnung weniger glatt. 1.189 Kapitel geteilt durch 365 Tage ergibt gut 3,25 Kapitel pro Tag. Wollen Sie jeden Tag gleich viel lesen, wären das also vier Kapitel täglich.
 
-Lesen Sie jedoch täglich vier Kapitel, bedeutet dies, dass Sie die Bibel nach 298 Tagen fertigstellen - über zwei Monate zu früh! Das ist viel zusätzliches Lesen, um Schritt zu halten.
+Mit vier Kapiteln am Tag sind Sie allerdings schon nach 298 Tagen fertig – über zwei Monate zu früh. Das ist ein ganzes Stück Mehrarbeit.
 
-Stattdessen lesen Sie mindestens 3 Kapitel pro Tag, aber stellen Sie sicher, dass Sie dieses zusätzliche vierte Kapitel einmal oder zweimal pro Woche lesen, um das Tempo zu halten. Wenn Sie 23 Kapitel pro Woche lesen, werden Sie die Bibel in einem Jahr durchlesen.
+Lesen Sie stattdessen mindestens drei Kapitel pro Tag und legen Sie ein- bis zweimal die Woche ein viertes obendrauf. Mit 23 Kapiteln pro Woche schaffen Sie die Bibel genau in einem Jahr.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/de/checklist">Zur Kapitellisten-Seite</a>
+  <a class="mbl-button mbl-button--light" href="/de/checklist">Zur Kapitel-Checkliste</a>
 </div>

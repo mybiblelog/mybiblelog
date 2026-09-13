@@ -1,33 +1,33 @@
 ---
 seo:
-  title: Página do Calendário
-  description: Documentação para o calendário de leitura mensal do My Bible Log e recursos de relatório de metas diárias
+  title: Página Calendário
+  description: Como funcionam o calendário mensal de leitura e a meta diária no My Bible Log
 og:
-  title: Página do Calendário
-  description: Documentação para o calendário de leitura mensal do My Bible Log e recursos de relatório de metas diárias
+  title: Página Calendário
+  description: Como funcionam o calendário mensal de leitura e a meta diária no My Bible Log
 ---
 
 ![](/share.jpg)
 
-# Página do Calendário
+# Página Calendário
 
 <div class="phone-frame">
-  <img alt="Captura de tela da Página de Calendário do My Bible Log" src="/screenshots/pt/sc9-calendar.webp" />
+  <img alt="Captura de tela da página Calendário do My Bible Log" src="/screenshots/pt/sc9-calendar.webp" />
 </div>
 
-A página do calendário apresenta um calendário da sua leitura da Bíblia ao longo do tempo.
+A página Calendário mostra sua leitura da Bíblia ao longo do tempo.
 
-Clique em qualquer data para ver as entradas de log daquele dia. Você também pode adicionar entradas de log para essa data, tornando fácil atualizar uma data anterior, se necessário.
+Clique em qualquer data para ver os registros daquele dia. Você também pode adicionar registros nessa data, então colocar um dia anterior em dia é bem simples.
 
-Cada data no calendário mostra uma barra de progresso, semelhante à página de Hoje. A barra de progresso será preenchida com duas cores: um azul vibrante e um azul mais escuro:
+Cada data do calendário tem sua própria barra de progresso, igual à da página Hoje. A barra é preenchida com dois tons de azul:
 
-* O azul vibrante representa os versículos novos lidos naquele dia (desde a sua data de referência).
-* O azul mais escuro representa o total de versículos lidos naquele dia. Se todos os versículos que você leu naquela data forem novos, a barra azul mais escura permanecerá oculta atrás da barra azul vibrante.
+* O azul vibrante representa os versículos novos que você leu naquele dia (contando a partir da sua Data de Revisão).
+* O azul mais escuro representa o total de versículos lidos naquele dia. Se todos eles forem novos, a barra azul escura fica escondida atrás da azul vibrante.
 
-A barra será preenchida com base na sua meta diária de contagem de versículos. Se a sua meta diária de contagem de versículos for de 86 versículos e você ler 43 versículos novos naquele dia, a cor azul vibrante que representa os versículos novos preencherá a barra de progresso pela metade.
+O preenchimento da barra segue sua meta diária de versículos. Se a meta for de 86 versículos e você ler 43 novos naquele dia, o azul vibrante vai até a metade da barra.
 
-Se você alcançar sua meta diária de contagem de versículos lendo versículos suficientes, uma estrela azul escura aparecerá para essa data. Se você alcançar sua meta diária de contagem de versículos lendo versículos novos, uma estrela dourada aparecerá em vez disso.
+Quando você bate a meta diária lendo versículos suficientes, aparece uma estrela azul-escura naquela data. Se bater lendo versículos novos, a estrela vem dourada.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/pt/calendar">Ir para a página do Calendário</a>
+  <a class="mbl-button mbl-button--light" href="/pt/calendar">Ir para a página Calendário</a>
 </div>

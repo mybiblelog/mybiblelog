@@ -1,136 +1,136 @@
 ---
 seo:
-  title: Como Ler a Bíblia em Um Ano
-  description: Como ler a Bíblia em um ano e acompanhar o seu progresso com o seu próprio plano pessoal de leitura da Bíblia
+  title: Como ler a Bíblia em um ano
+  description: Como ler a Bíblia em um ano e acompanhar seu progresso com um plano de leitura só seu
 og:
-  title: Como Ler a Bíblia em Um Ano
-  description: Como ler a Bíblia em um ano e acompanhar o seu progresso com o seu próprio plano pessoal de leitura da Bíblia
+  title: Como ler a Bíblia em um ano
+  description: Como ler a Bíblia em um ano e acompanhar seu progresso com um plano de leitura só seu
 ---
 
 ![](/share.jpg)
 
-# Como Ler a Bíblia em Um Ano
+# Como ler a Bíblia em um ano
 
-A Bíblia é um clássico entre os clássicos - um livro que moldou a cultura e a literatura por séculos. De acordo com o Guinness World Records, a Bíblia é o livro mais vendido de todos os tempos, com cerca de 5 bilhões de cópias vendidas e distribuídas.
+A Bíblia é um clássico entre os clássicos: um livro que há séculos molda a cultura e a literatura. Segundo o Guinness World Records, é o livro mais vendido de todos os tempos, com cerca de 5 bilhões de exemplares vendidos e distribuídos.
 
-Você, assim como muitas pessoas, pode ver um livro tão importante quanto a Bíblia como leitura obrigatória. A única questão que resta é: como você vai conseguir ler o livro inteiro?
+Como muita gente, talvez você ache que um livro desses é leitura obrigatória. Fica só uma dúvida: como dar conta de ler tudo?
 
-Acontece que há um método simples para ler a Bíblia inteira, e você pode ler a Bíblia inteira em um ano ou menos.
+Acontece que existe um jeito simples de ler a Bíblia inteira — e dá para terminar em um ano ou até menos.
 
-## Quão grande é a Bíblia?
+## Qual é o tamanho da Bíblia?
 
-O maior desafio ao ler a Bíblia é que é um **enorme** livro.
+A maior dificuldade para ler a Bíblia é justamente o tamanho: é um livro **enorme**.
 
-Tecnicamente, a Bíblia é uma antologia de 66 livros, que foram escritos ao longo de talvez 1500 anos por pelo menos 40 autores diferentes. Esses 66 livros foram posteriormente organizados em capítulos e versículos, sendo que um versículo é basicamente uma frase.
+Tecnicamente, a Bíblia é uma coletânea de 66 livros escritos ao longo de talvez 1.500 anos por pelo menos 40 autores diferentes. Só depois esses livros foram divididos em capítulos e versículos, sendo o versículo mais ou menos uma frase.
 
-A Bíblia contém um total de 31.102 versículos. Embora o número de palavras na Bíblia varie de acordo com a tradução que você está lendo, ela facilmente ultrapassa 750.000 palavras.
+No total, a Bíblia tem 31.102 versículos. A contagem de palavras muda conforme a tradução, mas passa fácil de 750 mil.
 
-Isso parece ser muita leitura, mas a popular série de livros Harry Potter contém mais de 1.000.000 palavras - mais de 30% a mais de palavras - e muitas pessoas leram esses sete livros. Na verdade, muitas pessoas os leram todos em um único ano.
+Parece muita coisa, mas a série Harry Potter passa de 1 milhão de palavras — mais de 30% a mais — e um monte de gente leu os sete livros, boa parte em um único ano.
 
-Quando colocamos em perspectiva, a Bíblia é longa, mas é absolutamente razoável lê-la em um único ano.
+Colocando nessa perspectiva, a Bíblia é longa, sim, mas lê-la em um ano é totalmente possível.
 
-## Quanto da Bíblia devo ler por dia?
+## Quanto eu devo ler por dia?
 
-Para ler a Bíblia em um ano, precisamos apenas dividir em 365 pedaços e ler um pedaço por dia. Então, quão grande é um dia de leitura da Bíblia?
+Para ler a Bíblia em um ano, basta dividi-la em 365 pedaços e ler um por dia. De que tamanho é cada pedaço?
 
-Como a Bíblia é organizada em versículos, vamos usá-los para ver o quanto precisamos ler. Existem 31.102 versículos na Bíblia. Se dividirmos isso por 365 dias e arredondarmos para o número inteiro mais próximo, obtemos 86.
+Vamos contar em versículos: 31.102 divididos por 365 dias, arredondando para cima, dá 86.
 
-Se você ler 86 versículos novos por dia, você terminará de ler a Bíblia inteira em um único ano.
+Lendo 86 versículos novos por dia, você termina a Bíblia inteira em um ano.
 
-## Quantos capítulos devo ler por dia?
+## Quantos capítulos eu devo ler por dia?
 
-Também podemos ler um certo número de capítulos por dia. Esta abordagem é popular entre pessoas que só leem uma Bíblia impressa em papel e acompanham sua leitura com um marcador físico.
+Também dá para definir uma quantidade de capítulos por dia. Isso é comum entre quem lê só a Bíblia impressa e marca o avanço com um marcador de página.
 
-Existem 1.189 capítulos no total na Bíblia. Se dividirmos isso por 365 dias e arredondarmos para o número inteiro mais próximo, obtemos 4. Se você ler pelo menos 4 capítulos por dia, terminará de ler a Bíblia inteira em um ano.
+A Bíblia tem 1.189 capítulos. Divididos por 365 dias e arredondando para cima, dá 4. Lendo pelo menos 4 capítulos por dia, você termina a Bíblia em um ano.
 
-Uma coisa a ter em mente é que a matemática não é tão suave quando lemos capítulos inteiros. Por exemplo, os capítulos têm tamanhos diferentes. Se você ler 4 capítulos curtos em um dia e 4 capítulos longos em outro dia, você pode acabar lendo o dobro em certos dias!
+Só que, com capítulos inteiros, a conta não fecha tão certinha: os capítulos têm tamanhos bem diferentes. Se num dia você lê 4 capítulos curtos e no outro 4 longos, pode acabar lendo o dobro.
 
-Além disso, se você ler 4 capítulos por dia, terminará de ler a Bíblia em pouco menos de 300 dias... em menos de 10 meses! Seguir essa abordagem pode resultar em estresse adicional e não aproveitar tanto a leitura.
+Além disso, a 4 capítulos por dia você termina a Bíblia em pouco menos de 300 dias — menos de 10 meses! Esse ritmo acaba pesando e às vezes faz você aproveitar menos a leitura.
 
-Para se programar melhor, você pode ler pelo menos 4 capítulos por dia durante 6 dias da semana e tirar um dia de folga da leitura por semana (ou usá-lo para colocar em dia a leitura que perdeu). Se seguir essa abordagem, você estará lendo 24 capítulos por semana, e mesmo que não precise ler todos os dias, você ainda conseguirá terminar a Bíblia em um ano.
+Para dosar melhor, leia pelo menos 4 capítulos por dia em 6 dias da semana e tire um dia de folga (ou use esse dia para colocar a leitura em dia). Assim você fecha 24 capítulos por semana: não precisa ler todo dia e ainda termina a Bíblia em um ano.
 
-## Quantas páginas da Bíblia devo ler por dia?
+## Quantas páginas eu devo ler por dia?
 
-Se você quiser ler sua Bíblia de capa a capa, pode escolher ler um certo número de páginas por dia para ler a Bíblia em um ano.
+Se você quer ler sua Bíblia da primeira à última página, também pode se guiar por um número de páginas por dia.
 
-Para realizar isso, encontre o número total de páginas na sua cópia da Bíblia e divida por 365. Esse é o número de páginas que você precisa ler por dia para terminar a Bíblia em um ano. Certifique-se de arredondar para o número inteiro mais próximo para não ficar aquém no final do ano.
+Veja quantas páginas tem o seu exemplar e divida por 365. Esse é o número de páginas diárias. Arredonde para cima para não ficar devendo no fim do ano.
 
-## Como devo acompanhar minha leitura da Bíblia?
+## Como acompanhar minha leitura?
 
-As pessoas acompanham sua leitura da Bíblia de maneiras diferentes.
+Cada pessoa faz de um jeito.
 
-Algumas pessoas usam apenas uma Bíblia de papel para ler, o que significa que podem usar um marcador para acompanhar seu progresso. No entanto, há desvantagens nessa abordagem:
+Tem quem leia só no papel e marque o ponto com um marcador de página. Esse método tem seus problemas:
 
-* Se o marcador cair ou você perder sua Bíblia, perderá seu progresso
-* Você precisa ler os livros da Bíblia na ordem em que foram publicados, o que muitas pessoas acham entediante ou maçante (a maioria dos planos de leitura tenta fornecer uma variedade de diferentes livros para que você não fique entediado)
+* Se o marcador cair ou você perder a Bíblia de vista, perde o progresso.
+* Você lê os livros na ordem impressa, o que muita gente acha chato ou cansativo. Quase todo plano de leitura mistura livros diferentes justamente para evitar isso.
 
-Para melhorar essa abordagem, algumas pessoas imprimem uma lista de verificação de capítulos da leitura da Bíblia. Essas listas mostram uma lista de todos os capítulos da Bíblia para que você possa marcar cada um conforme lê, e você pode lê-los na ordem que escolher.
+Uma melhora é imprimir uma lista de capítulos. Ela traz todos os capítulos da Bíblia para você ir riscando conforme lê, na ordem que quiser.
 
-No entanto, as listas de verificação em papel compartilham uma desvantagem-chave com os marcadores de papel: se você perder a lista, perderá todo o seu progresso.
+Só que as listas de papel têm o mesmo problema do marcador: se a folha se perde, some todo o progresso.
 
-Uma ótima maneira de acompanhar sua leitura da Bíblia é usar um aplicativo específico para isso. Esses aplicativos podem ter listas de verificação de capítulos que funcionam como listas de verificação em papel, mas você não precisa acompanhar um pedaço de papel.
+Por isso vale usar um app feito para isso. Esses apps têm listas de capítulos que funcionam igual às de papel, sem depender de um papel.
 
-Se você usar a lista de verificação de capítulos no **My Bible Log** para acompanhar sua leitura, você poderá ver insights adicionais sobre sua leitura. **My Bible Log** pode responder a muitas perguntas sobre seu progresso de leitura, como:
+Se você registrar sua leitura na Lista de Capítulos do **My Bible Log**, ainda ganha respostas para perguntas como:
 
-* Quantos versículos você leu hoje?
-* Você atingiu sua meta de leitura todos os dias nesta semana?
-* Quais livros você terminou de ler?
-* Com base em seus hábitos de leitura até agora, quanto tempo falta para terminar de ler a Bíblia?
-* Quantos versículos você precisa ler por dia para terminar de ler a Bíblia até o final do ano? E no próximo mês?
+* Quantos versículos eu li hoje?
+* Bati minha meta todos os dias desta semana?
+* Que livros eu já terminei?
+* No ritmo em que venho lendo, quanto falta para terminar a Bíblia?
+* Quantos versículos preciso ler por dia para terminar até o fim do ano? E até o mês que vem?
 
-Usar um aplicativo como **My Bible Log** também torna mais fácil fazer anotações sobre sua leitura para que seu tempo de estudo pessoal da Bíblia seja mais eficaz.
+Um app como o **My Bible Log** também facilita anotar o que você percebe, o que torna seu estudo pessoal mais proveitoso.
 
-## Qual tradução da Bíblia devo ler?
+## Que tradução da Bíblia eu devo ler?
 
-Existem algumas traduções que são populares e amplamente reconhecidas. Use uma delas.
+Existem algumas traduções conhecidas e amplamente aceitas. Use uma delas.
 
-Para simplificar, há uma razão pela qual essas traduções são tão conhecidas e têm uma ampla aprovação. Muitas pessoas trabalharam muito para traduzir os textos originais para uma linguagem moderna clara.
+Elas não são tão conhecidas e respeitadas por acaso: muita gente trabalhou muito para passar os textos originais para uma linguagem clara e atual.
 
-Além disso, há vários lugares na Bíblia onde as pessoas são alertadas sobre buscar conhecimento secreto e seguir teorias da conspiração para entender a verdadeira natureza do mundo espiritual. Os livros da Bíblia geralmente deixam claro que estão tentando ser muito diretos e fáceis de entender. Eles não estão tentando enviar mensagens secretas ou esconder a verdade.
+Além disso, a Bíblia adverte em várias passagens contra a busca por conhecimento secreto e contra seguir teorias conspiratórias para entender a natureza do mundo espiritual. Os livros bíblicos deixam bem claro que querem ser diretos e compreensíveis: não escondem mensagens cifradas nem a verdade.
 
-Com isso em mente, não faria muito sentido procurar por uma tradução nova e estranha que afirma ter uma compreensão especial do que os autores estavam dizendo.
+Sendo assim, não faz muito sentido sair atrás de uma tradução estranha e recente que alegue ter entendido o que os autores "realmente" quiseram dizer.
 
-## Por onde devo começar a ler a Bíblia? Qual livro devo ler primeiro?
+## Por onde eu começo? Que livro leio primeiro?
 
-Como a Bíblia é uma coleção de 66 livros diferentes que *não* foram originalmente escritos para serem publicados juntos, temos alguma liberdade para lê-los na ordem que escolhermos.
+Como a Bíblia reúne 66 livros diferentes que *não* foram escritos originalmente para serem publicados juntos, temos bastante liberdade para lê-los na ordem que quisermos.
 
-É claro que algumas ordens são melhores do que outras, e alguns livros são melhores para começar do que outros. Alguns livros se destacam como bons lugares para começar a ler:
+Claro que algumas ordens funcionam melhor, e alguns livros são melhores para começar:
 
-* **Mateus**, **Marcos**, **Lucas** e **João** são todos evangelhos. Cada um conta a história de Jesus e seus discípulos, mas de pontos de vista um pouco diferentes. A vida e a mensagem de Jesus são o coração da Bíblia, o que ajudará a colocar tudo em perspectiva. Comece com Lucas se quiser uma conta mais histórica da vida e obras de Jesus. Comece com João se estiver procurando uma perspectiva mais mística.
-* **Gênesis** começa com a história da criação e inclui Abraão e a origem dos hebreus, o povo escolhido por Deus. Esses são começos importantes, tornando Gênesis um bom lugar para começar a ler o Antigo Testamento.
-* O livro de **Atos** é um registro da igreja primitiva escrito por Lucas, o mesmo homem que escreveu o evangelho de Lucas.
-* **Romanos** é uma carta, também conhecida como epístola, escrita para a igreja primitiva em Roma. Esta carta esboça a história e a relação atual entre Deus e toda a humanidade, e o que isso significa para nós como indivíduos. Inclui instruções sobre como ser reconciliado com Deus e como devemos viver uma vez reconciliados.
+* **Mateus**, **Marcos**, **Lucas** e **João** são os quatro evangelhos. Todos contam a história de Jesus e dos discípulos, mas de ângulos um pouco diferentes. A vida e a mensagem de Jesus são o coração da Bíblia e ajudam a situar todo o resto. Comece por Lucas se quiser um relato mais histórico da vida e da obra de Jesus; comece por João se procura um olhar mais místico.
+* **Gênesis** abre com o relato da criação e segue com Abraão e a origem dos hebreus, o povo escolhido por Deus. São começos decisivos, o que faz de Gênesis um bom ponto de partida no Antigo Testamento.
+* **Atos** é o registro da igreja primitiva, escrito por Lucas, o mesmo autor do evangelho.
+* **Romanos** é uma carta — também chamada de epístola — endereçada à jovem igreja de Roma. Ela expõe a história e o estado da relação entre Deus e toda a humanidade, e o que isso significa para cada pessoa. Inclui como alguém se reconcilia com Deus e como deve viver depois disso.
 
 ## Em que ordem devo ler os livros da Bíblia?
 
-Existem muitos tipos de literatura na Bíblia. Portanto, se ler diferentes livros e seções da Bíblia, é provável que você aproveite mais sua leitura. Por exemplo, alguns livros contêm história, alguns contêm poesia, alguns contêm provérbios ou canções, alguns estão repletos de regras e leis, e alguns são cartas escritas para igrejas ou pessoas específicas.
+A Bíblia reúne muitos tipos de literatura, então alternar entre livros e seções costuma deixar a leitura mais gostosa. Há livros de história, de poesia, de provérbios ou cânticos, livros cheios de regras e leis, e cartas dirigidas a igrejas ou pessoas específicas.
 
-Dado que muitos livros semelhantes aparecem lado a lado na Bíblia, ler a Bíblia de capa a capa pode ser maçante e tedioso. Quem quer ler dois ou três livros de leis seguidos? Em vez disso, é mais interessante ler algo diferente após um livro de leis e depois retornar a outros livros de leis posteriormente.
+Como muitos livros parecidos ficam lado a lado, ler a Bíblia direto do começo ao fim pode ficar cansativo. Quem quer ler dois ou três livros de leis em sequência? É mais interessante ler outra coisa depois de um livro de leis e voltar aos demais mais adiante.
 
-Uma maneira de lidar com isso é seguir um plano de leitura da Bíblia de um ano ou de toda a Bíblia que equilibra a leitura em diferentes partes da Bíblia e diz o que ler a cada dia. Esta é uma ótima maneira de manter as coisas interessantes sem deixar de garantir que você não pule nada importante.
+Um jeito de resolver isso é seguir um plano anual, ou de Bíblia inteira, que equilibre as diferentes partes e diga o que ler a cada dia. Assim a leitura continua interessante e nada importante fica de fora.
 
-Existem vários tipos diferentes de planos de leitura da Bíblia inteira:
+Existem vários tipos de plano de Bíblia inteira:
 
-* Planos cronológicos são baseados na ordem em que os eventos ocorreram
-* Alguns planos são baseados na ordem em que os livros foram escritos
-* Outros planos são baseados na ordem em que os cristãos primitivos ou judeus teriam recebido e experimentado os livros da Bíblia
+* os cronológicos, organizados pela época em que os fatos aconteceram
+* alguns seguem a ordem em que os livros foram escritos
+* outros seguem a ordem em que os primeiros cristãos ou os judeus teriam recebido e vivido esses livros
 
-Esses planos podem ser ótimas ferramentas para algumas pessoas e resolvem o problema de ter que ler a Bíblia do início ao fim.
+Para muita gente esses planos são ótimas ferramentas, e resolvem o problema de ter que ler a Bíblia do início ao fim.
 
-Se você não estiver seguindo um plano específico, leia o que ainda não leu e que você achar mais interessante agora!
+E se você não estiver seguindo nenhum plano? Leia o que ainda não leu e que estiver mais interessante para você agora!
 
-## Como posso me manter motivado para ler a Bíblia inteira em um ano?
+## Como me manter motivado durante o ano todo?
 
-Ler a Bíblia inteira é uma tarefa enorme. Não se esqueça de quão grande é esse projeto! Você merece crédito por assumi-lo e deve se parabenizar por seguir em frente dia após dia.
+Ler a Bíblia inteira é um projeto grande. Não perca isso de vista! Só o fato de você encarar já tem valor, e cada dia em que você mantém o hábito merece um parabéns.
 
-Manter-se em dia com um grande objetivo pode ser difícil. É quase garantido que você perderá um dia ou ficará para trás por algum motivo. Isso é normal! Atualize assim que tiver uma chance.
+Sustentar uma meta desse tamanho é difícil. É quase certo que em algum momento você pule um dia ou fique para trás. Tudo bem: retome assim que der.
 
-Uma ótima maneira de se manter motivado é acompanhar seu progresso conforme lê a Bíblia. É gratificante ver seu progresso crescer com o tempo, de 1% da Bíblia para 10% para 100%. Usar um rastreador de leitura da Bíblia como **My Bible Log** é uma ótima maneira de se manter motivado.
+Uma coisa que ajuda muito é ver seu progresso enquanto lê. É gostoso acompanhar a barra sair de 1% da Bíblia para 10% e depois para 100%. Um registro de leitura como o **My Bible Log** mantém essa motivação viva.
 
-Uma outra ótima maneira de continuar em direção ao seu objetivo é falar sobre isso com amigos. Todos nós nos sentimos recompensados quando alguém mais sabe sobre nossos objetivos e quanta progresso estamos fazendo. Compartilhe seu plano com um amigo ou até mesmo um grupo, e peça para eles verificar como você está de tempos em tempos. Melhor ainda, peça para eles se juntarem a você na leitura da Bíblia inteira! Será gratificante e encorajador ter alguém com quem conversar sobre o que você está lendo.
+Outra coisa que empurra é falar sobre isso. Todo mundo se anima quando alguém sabe da nossa meta e do quanto já andamos. Conte seu plano para um amigo ou para um grupo e peça que perguntem de vez em quando como está indo. Melhor ainda: convide essas pessoas a ler a Bíblia com você. Ter com quem conversar sobre o que se lê faz muita diferença.
 
-Finalmente, aproveite tudo que o motiva a ler a Bíblia. Se você encontrar um trecho interessante durante um estudo bíblico, um sermão ou sua devoção diária, continue lendo! Você não precisa parar em um certo número de versículos ou capítulos todos os dias. Quando encontrar um livro ou seção da Bíblia inspirador, aproveite o seu impulso e leia o quanto quiser!
+Por fim, aproveite tudo o que despertar sua vontade de ler. Se numa aula, numa pregação ou no seu devocional você esbarrar num trecho interessante, continue lendo! Você não é obrigado a parar num certo número de versículos ou capítulos. Quando um livro te pega, aproveite o embalo e leia o quanto quiser.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/pt/today">Começar</a>
+  <a class="mbl-button mbl-button--light" href="/pt/today">Comece agora</a>
 </div>

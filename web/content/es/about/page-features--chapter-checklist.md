@@ -1,47 +1,46 @@
 ---
 seo:
-  title: Página de Lista de Capítulos
-  description: Documentación para la lista de capítulos de My Bible Log
+  title: Página Lista de Capítulos
+  description: Cómo funciona la lista de capítulos de My Bible Log
 og:
-  title: Página de Lista de Capítulos
-  description: Documentación para la lista de capítulos de My Bible Log
+  title: Página Lista de Capítulos
+  description: Cómo funciona la lista de capítulos de My Bible Log
 ---
 
 ![](/share.jpg)
 
-# Página de Lista de Capítulos
+# Página Lista de Capítulos
 
 <div class="phone-frame">
-  <img alt="Captura de pantalla de la Página de Lista de Capítulos de My Bible Log" src="/screenshots/es/sc12-checklist.webp" />
+  <img alt="Captura de pantalla de la página Lista de Capítulos de My Bible Log" src="/screenshots/es/sc12-checklist.webp" />
 </div>
 
-La página de Lista de Capítulos es la forma más sencilla y rápida de realizar un seguimiento de tu lectura, ya que te permite marcar un capítulo como "leído" con un solo clic o toque.
+La página Lista de Capítulos es la manera más simple y rápida de registrar tu lectura: con un solo clic o toque marcas un capítulo como «leído».
 
-Puedes hacer clic o tocar un capítulo nuevamente para marcarlo como "no leído" si cometes un error.
+Si te equivocaste, vuelve a tocar el capítulo y queda otra vez como «no leído».
 
-En segundo plano, la lista de verificación creará una entrada en tu registro de lectura.
-Esto significa que tu lectura se mostrará en todas las demás páginas del sitio también.
+Por detrás, la lista crea un registro de lectura por ti, así que lo que marcas aquí también aparece en el resto de las páginas del sitio.
 
-## Una Práctica Lista de Lectura de Capítulos de Toda la Biblia
+## Una lista práctica para toda la Biblia
 
-La página de Lista de Capítulos abarca los 1.189 capítulos de la Biblia.
+La página Lista de Capítulos abarca los 1.189 capítulos de la Biblia.
 
-Puedes encontrar muchas listas de verificación de lectura de capítulos imprimibles en Internet, pero a menudo cubren más de una hoja de papel debido a la gran cantidad de capítulos en la Biblia.
+En internet hay muchas listas de capítulos para imprimir, pero como la Biblia tiene tantos capítulos, casi nunca entran en una sola hoja.
 
-Sería fácil perder o dañar un papel tan valioso. En cambio, puedes usar My Bible Log para no preocuparte por perder tu progreso o olvidar lo que has leído.
+Y una hoja así se pierde o se arruina con facilidad. Con My Bible Log no tienes que preocuparte: tu avance queda guardado y nunca olvidas lo que ya leíste.
 
-## Cómo Leer la Biblia en un Año
+## Cómo leer la Biblia en un año
 
-Si deseas leer la Biblia en un año, necesitas saber cuánto leer cada día.
+Si quieres leer la Biblia en un año, primero hay que saber cuánto toca cada día.
 
-Si estás contando los versículos que lees cada día, entonces necesitas leer un promedio de 86 versículos para terminar de leer la Biblia en 365 días.
+Si cuentas versículos, necesitas leer 86 en promedio para terminar la Biblia en 365 días.
 
-En cuanto a los capítulos, las matemáticas no son tan fáciles. Si divides 1.189 capítulos entre 365 días, obtienes un poco más de 3.25 capítulos por día. Eso significa que si deseas leer la misma cantidad de capítulos cada día, deberás leer cuatro capítulos diarios.
+Con los capítulos la cuenta no sale tan redonda. Al dividir 1.189 capítulos entre 365 días te dan poco más de 3,25 capítulos diarios. O sea que, si quieres leer siempre la misma cantidad, tendrías que leer cuatro por día.
 
-Sin embargo, leer cuatro capítulos cada día significa que terminarás la Biblia en 298 días, ¡más de dos meses antes! Eso es mucha lectura adicional para mantener el ritmo.
+El problema es que con cuatro capítulos diarios terminas la Biblia en 298 días, ¡más de dos meses antes de tiempo! Es bastante lectura de más.
 
-En cambio, lee al menos 3 capítulos por día, pero asegúrate de leer ese cuarto capítulo adicional una o dos veces por semana para mantener el ritmo. Si lees 23 capítulos a la semana, terminarás la Biblia en un año.
+Mejor lee al menos 3 capítulos al día y suma un cuarto capítulo una o dos veces por semana para no atrasarte. Con 23 capítulos por semana terminas la Biblia en un año exacto.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/es/checklist">Ir a la página de Lista de Capítulos</a>
+  <a class="mbl-button mbl-button--light" href="/es/checklist">Ir a la página Lista de Capítulos</a>
 </div>

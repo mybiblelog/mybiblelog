@@ -1,135 +1,135 @@
 ---
 seo:
   title: Comment lire la Bible en un an
-  description: Comment lire la Bible en un an et suivre vos progrès avec votre propre plan de lecture biblique personnel
+  description: Comment lire la Bible en un an et suivre votre progression avec votre propre plan de lecture
 og:
   title: Comment lire la Bible en un an
-  description: Comment lire la Bible en un an et suivre vos progrès avec votre propre plan de lecture biblique personnel
+  description: Comment lire la Bible en un an et suivre votre progression avec votre propre plan de lecture
 ---
 
 ![](/share.jpg)
 
 # Comment lire la Bible en un an
 
-La Bible est un classique parmi les classiques - un livre qui a façonné la culture et la littérature depuis des siècles. Selon le Livre Guinness des Records, la Bible est le livre le plus vendu de tous les temps avec environ 5 milliards d'exemplaires vendus et distribués.
+La Bible est un classique parmi les classiques : un livre qui façonne la culture et la littérature depuis des siècles. Selon le Guinness World Records, c'est l'ouvrage le plus vendu de tous les temps, avec environ 5 milliards d'exemplaires vendus et distribués.
 
-Vous, comme beaucoup de gens, pouvez considerer un livre aussi important que la Bible comme une lecture nécessaire. La seule question qui reste est : comment pourrez-vous lire l'ensemble du texte?
+Comme beaucoup, vous voyez peut-être un livre d'une telle importance comme une lecture incontournable. Reste une question : comment venir à bout d'un tel volume ?
 
-En fait, il existe une méthode simple pour lire l'intégralité de la Bible, et vous pouvez lire l'intégralité de la Bible en un an ou moins.
+Il existe pourtant une méthode toute simple pour lire la Bible en entier, et vous pouvez y arriver en un an, voire moins.
 
-## Quelle est la longueur de la Bible?
+## Quelle est la longueur de la Bible ?
 
-Le plus grand défi de la lecture de la Bible est que c'est un **gros** livre.
+La principale difficulté tient tout simplement au volume : la Bible est un livre **énorme**.
 
-Techniquement, la Bible est une anthologie de 66 livres, écrits sur une période d'environ 1500 ans par au moins 40 auteurs différents. Ces 66 livres ont ensuite été organisés en chapitres et versets, un verset étant essentiellement une phrase.
+Techniquement, c'est un recueil de 66 livres, rédigés sur quelque 1 500 ans par au moins 40 auteurs différents. Ce n'est que plus tard qu'on les a découpés en chapitres et en versets, un verset correspondant à peu près à une phrase.
 
-La Bible contient un total de 31 102 versets. Bien que le nombre de mots de l'ensemble de la Bible varie en fonction de la traduction que vous lisez, elle contient facilement plus de 750 000 mots.
+Au total, la Bible compte 31 102 versets. Le nombre de mots varie selon la traduction, mais dépasse largement les 750 000.
 
-Cela semble être beaucoup de lecture, mais la populaire série de livres Harry Potter contient plus de 1 000 000 de mots - c'est plus de 30% de mots en plus - et beaucoup de gens ont lu ces sept livres. En fait, beaucoup de gens les ont tous lus en une seule année.
+Cela paraît beaucoup. Pourtant, la série Harry Potter dépasse le million de mots - plus de 30 % de plus - et d'innombrables lecteurs ont lu les sept tomes, souvent en une seule année.
 
-Mis en perspective, la Bible est longue, mais il est tout à fait raisonnable de la lire en une seule année.
+Remise dans ce contexte, la Bible est longue, certes, mais la lire en un an n'a rien de déraisonnable.
 
-## Combien de la Bible devrais-je lire chaque jour?
+## Combien dois-je lire chaque jour ?
 
-Pour lire la Bible en un an, il suffit de la diviser en 365 morceaux et de lire un morceau par jour. Alors, quelle est l'étendue d'une journée de lecture biblique?
+Pour lire la Bible en un an, il suffit de la découper en 365 portions et d'en lire une par jour. De quelle taille est une portion ?
 
-Étant donné que la Bible est organisée en versets, utilisons-les pour voir combien il nous faut lire. Il y a 31 102 versets dans la Bible. En le divisant par 365 jours et en arrondissant au nombre entier supérieur, on obtient 86.
+Comptons en versets : 31 102 versets divisés par 365 jours, arrondis à l'entier supérieur, donnent 86.
 
-Si vous lisez 86 nouveaux versets chaque jour, vous finirez de lire l'intégralité de la Bible en une seule année.
+En lisant 86 versets nouveaux par jour, vous aurez lu toute la Bible en un an.
 
-## Combien de chapitres devrais-je lire chaque jour?
+## Combien de chapitres par jour ?
 
-Nous pouvons aussi lire un certain nombre de chapitres chaque jour. Cette approche est populaire auprès des personnes qui lisent uniquement une Bible papier imprimée et qui suivent leur lecture avec un signet physique.
+Vous pouvez aussi vous fixer un nombre de chapitres quotidiens. Cette approche a la faveur de ceux qui lisent uniquement une Bible papier et suivent leur avancée avec un marque-page.
 
-Il y a un total de 1 189 chapitres dans la Bible. Si on divise cela par 365 jours et qu'on arrondit au nombre entier supérieur, on obtient 4. Si vous lisez au moins 4 chapitres par jour, vous finirez de lire l'intégralité de la Bible en une année.
+La Bible compte 1 189 chapitres. Divisés par 365 jours et arrondis à l'entier supérieur, cela fait 4. En lisant au moins 4 chapitres par jour, vous bouclez la Bible en un an.
 
-Une chose à garder à l'esprit est que les mathématiques ne sont pas aussi simples lorsque nous lisons des chapitres entiers. Par exemple, les chapitres ont des longueurs différentes. Si vous lisez 4 courts chapitres un jour et 4 longs chapitres un autre jour, vous pourriez vous retrouver à lire le double certaines journées !
+Attention toutefois : avec des chapitres entiers, le calcul tombe moins juste, car les chapitres sont de longueurs très variables. Si vous lisez 4 chapitres courts un jour et 4 chapitres longs le lendemain, vous pouvez lire deux fois plus.
 
-De plus, si vous lisez 4 chapitres chaque jour, vous finirez de lire la Bible en un peu moins de 300 jours... c'est en moins de 10 mois ! Prendre cette approche pourrait causer plus de stress et ne pas vous permettre de tirer autant de votre lecture.
+Autre point : à 4 chapitres par jour, vous terminez la Bible en un peu moins de 300 jours, soit moins de 10 mois ! Ce rythme ajoute une pression inutile et l'on retient souvent moins de sa lecture.
 
-Pour mieux vous organiser, vous pouvez lire au moins 4 chapitres par jour pendant 6 jours de la semaine, et prendre un jour de congé de la lecture chaque semaine (ou l'utiliser pour rattraper les lectures manquées). En adoptant cette approche, vous lirez 24 chapitres chaque semaine, et même si vous n'aurez pas à lire tous les jours, vous pourrez quand même finir la Bible en une année.
+Pour mieux doser, lisez au moins 4 chapitres par jour 6 jours sur 7 et gardez une journée de repos - ou servez-vous-en pour rattraper ce que vous avez manqué. Cela fait 24 chapitres par semaine : vous n'êtes pas obligé de lire tous les jours et vous terminez malgré tout la Bible en un an.
 
-## Combien de pages de la Bible devrais-je lire chaque jour?
+## Combien de pages par jour ?
 
-Si vous souhaitez lire entièrement votre Bible de la première à la dernière page, vous pouvez choisir de lire un certain nombre de pages chaque jour pour lire la Bible en un an.
+Si vous voulez lire votre Bible d'un bout à l'autre, vous pouvez aussi vous fixer un nombre de pages quotidiennes.
 
-Pour ce faire, trouvez le nombre total de pages dans votre exemplaire de la Bible et divisez cela par 365. C'est le nombre de pages que vous devez lire chaque jour pour finir la Bible en un an. Assurez-vous d'arrondir au nombre entier supérieur pour ne pas vous retrouver en fin d'année avec du retard.
+Regardez le nombre total de pages de votre exemplaire et divisez-le par 365. Voilà votre quota journalier. Arrondissez à l'entier supérieur pour ne pas être court en fin d'année.
 
-## Comment puis-je suivre ma lecture de la Bible?
+## Comment suivre mes lectures ?
 
-Les gens suivent leur lecture de la Bible de différentes manières.
+Chacun s'y prend à sa façon.
 
-Certains ne lisent qu'une Bible papier, ce qui signifie qu'ils peuvent simplement utiliser un signet pour suivre leur progression. Cependant, cette approche présente des inconvénients :
+Certains lisent uniquement sur papier et repèrent leur avancée avec un marque-page. Cette méthode a ses inconvénients :
 
-* Si le signet tombe ou si vous égarez votre Bible, vous perdez votre progression
-* Vous devez lire les livres de la Bible dans leur ordre de publication, ce que beaucoup de personnes trouveront ennuyeux ou fastidieux (la plupart des plans de lecture essaient de vous proposer une variété de livres différents pour éviter l'ennui)
+* si le marque-page tombe ou si vous égarez votre Bible, votre progression disparaît ;
+* vous lisez les livres dans l'ordre imprimé, ce que beaucoup trouvent ennuyeux à la longue. La plupart des plans de lecture alternent volontairement les livres pour éviter cela.
 
-Pour améliorer cette approche, certaines personnes impriment une check-list de chapitres de lecture biblique. Ces feuilles montrent une liste de tous les chapitres de la Bible afin que vous puissiez cocher chacun d'eux lorsque vous les lisez, et vous pouvez les lire dans l'ordre que vous préférez.
+Un cran au-dessus : imprimer une liste des chapitres. Elle recense tous les chapitres de la Bible, vous les cochez au fur et à mesure et vous choisissez librement l'ordre.
 
-Cependant, les check-lists papier partagent un inconvénient clé avec les signets papier : si vous égarez la liste, vous perdez toute votre progression.
+Sauf que les listes papier partagent un défaut majeur avec le marque-page : si vous perdez la feuille, vous perdez toute votre progression.
 
-Une excellente manière de suivre votre lecture de la Bible est d'utiliser une application spécialement conçue à cet effet. Ces applications peuvent avoir des check-lists de chapitres qui fonctionnent comme des check-lists papier, mais vous n'avez pas besoin de garder une feuille de papier.
+D'où l'intérêt d'une application conçue pour cela. Ces applications proposent des listes de chapitres qui fonctionnent comme celles en papier, sans le papier à surveiller.
 
-Si vous utilisez la check-list de chapitres sur **My Bible Log** pour suivre votre lecture, vous pourrez voir des informations supplémentaires sur votre progression de lecture. **My Bible Log** peut répondre à de nombreuses questions sur votre progression de lecture, telles que :
+Si vous notez vos lectures dans la liste de chapitres de **My Bible Log**, vous obtenez en prime des réponses à des questions comme :
 
-* Combien de versets avez-vous lus aujourd'hui ?
-* Avez-vous atteint votre objectif de lecture chaque jour cette semaine ?
-* Quels livres avez-vous terminés de lire ?
-* En fonction de vos habitudes de lecture jusqu'à présent, combien de temps vous reste-t-il pour finir de lire la Bible ?
-* Combien de versets devez-vous lire chaque jour pour finir de lire la Bible à la fin de l'année ? Et le mois prochain ?
+* Combien de versets ai-je lus aujourd'hui ?
+* Ai-je atteint mon objectif chaque jour cette semaine ?
+* Quels livres ai-je déjà terminés ?
+* Au rythme où je vais, combien de temps me reste-t-il avant de finir la Bible ?
+* Combien de versets dois-je lire par jour pour terminer d'ici la fin de l'année ? Et d'ici le mois prochain ?
 
-Utiliser une application comme **My Bible Log** facilite également la prise de notes sur votre lecture pour que votre temps d'étude biblique personnel soit plus efficace.
+Une application comme **My Bible Log** facilite aussi la prise de notes, ce qui rend votre étude personnelle plus fructueuse.
 
-## Quelle traduction de la Bible devrais-je lire?
+## Quelle traduction de la Bible choisir ?
 
-Il existe quelques traductions populaires et largement reconnues. Utilisez l'une d'entre elles.
+Il existe une poignée de traductions répandues et largement reconnues. Prenez-en une.
 
-Pour dire les choses simplement, ces traductions sont bien connues et largement approuvées pour une raison. Beaucoup de personnes ont travaillé dur pour traduire les textes originaux dans un langage moderne et clair.
+Si elles sont à ce point connues et approuvées, ce n'est pas un hasard : beaucoup de gens ont beaucoup travaillé pour rendre les textes d'origine dans une langue claire et actuelle.
 
-De plus, il y a plusieurs endroits dans la Bible où les gens sont mis en garde contre la quête de connaissances secrètes et la poursuite de théories du complot pour comprendre la vraie nature du monde spirituel. Les livres de la Bible indiquent généralement qu'ils essaient d'être très directs et faciles à comprendre. Ils n'essaient pas de transmettre des messages secrets ou de cacher la vérité.
+Par ailleurs, la Bible met en garde à plusieurs reprises contre la recherche d'un savoir secret et contre les théories du complot censées révéler la vraie nature du monde spirituel. Ses livres se veulent manifestement directs et compréhensibles : ils ne cachent ni message codé ni vérité dissimulée.
 
-En gardant cela à l'esprit, il ne serait pas logique de rechercher une nouvelle traduction étrange prétendant avoir une compréhension spéciale de ce que les auteurs disaient.
+Dans ces conditions, il n'y a guère d'intérêt à partir en quête d'une traduction inhabituelle qui prétendrait seule avoir saisi ce que les auteurs voulaient dire.
 
-## Où devrais-je commencer à lire la Bible ? Quel livre devrais-je lire en premier ?
+## Par où commencer ? Quel livre lire en premier ?
 
-Puisque la Bible est une collection de 66 livres différents qui n'ont *pas* été initialement écrits pour être publiés ensemble, nous avons une certaine liberté de les lire dans l'ordre que nous souhaitons.
+La Bible réunit 66 livres différents qui, à l'origine, n'ont *pas* été écrits pour être publiés ensemble. Nous sommes donc assez libres de les lire dans l'ordre que nous voulons.
 
-Bien sûr, certains ordres sont meilleurs que d'autres, et certains livres sont meilleurs pour commencer que d'autres. Quelques livres se démarquent comme de bons points de départ pour la lecture :
+Certains ordres valent mieux que d'autres, bien sûr, et certains livres font de meilleurs points de départ :
 
-* **Matthieu**, **Marc**, **Luc** et **Jean** sont tous des évangiles. Chacun raconte l'histoire de Jésus et de ses disciples, mais d'un point de vue légèrement différent. La vie et le message de Jésus sont au cœur de la Bible, ce qui aidera à mettre tout le reste en perspective. Commencez par Luc si vous voulez un compte plus historique de la vie et des œuvres de Jésus. Commencez par Jean si vous recherchez une perspective plus mystique.
-* **Genèse** commence par l'histoire de la création et inclut également Abraham et l'origine des Hébreux, le peuple choisi de Dieu. Ce sont des débuts importants, ce qui fait de Genèse un bon point de départ pour la lecture de l'Ancien Testament.
-* Le livre des **Actes** est un enregistrement des débuts de l'Église, écrit par Luc, le même homme qui a écrit l'évangile de Luc.
-* **Romains** est une lettre, aussi connue sous le nom d'épître, écrite à l'Église primitive de Rome. Cette lettre établit l'histoire et la relation actuelle entre Dieu et toute l'humanité, et ce que cela signifie pour nous en tant qu'individus. Elle inclut des instructions sur la façon d'être réconcilié avec Dieu et comment nous devrions vivre une fois réconciliés.
+* **Matthieu**, **Marc**, **Luc** et **Jean** sont les quatre évangiles. Chacun raconte l'histoire de Jésus et de ses disciples, mais sous un angle un peu différent. La vie et le message de Jésus sont au cœur de la Bible et permettent de situer tout le reste. Commencez par Luc pour un récit plus historique de la vie et de l'œuvre de Jésus, ou par Jean pour une approche plus mystique.
+* **Genèse** s'ouvre sur le récit de la création, puis raconte Abraham et l'origine des Hébreux, le peuple choisi par Dieu. Ce sont des commencements décisifs, et donc une bonne porte d'entrée dans l'Ancien Testament.
+* **Actes** retrace les débuts de l'Église, sous la plume de Luc, l'auteur de l'évangile du même nom.
+* **Romains** est une lettre - une épître - adressée à la jeune Église de Rome. Elle expose l'histoire et l'état de la relation entre Dieu et l'humanité tout entière, et ce que cela signifie pour chacun, y compris comment se réconcilier avec Dieu et comment vivre une fois réconcilié.
 
-## Dans quel ordre devrais-je lire les livres de la Bible ?
+## Dans quel ordre lire les livres de la Bible ?
 
-Il y a plusieurs types de littérature dans la Bible, alors si vous lisez des livres et des sections différents de la Bible, vous apprécierez probablement davantage votre lecture. Par exemple, certains livres contiennent de l'histoire, certains contiennent de la poésie, certains contiennent des proverbes ou des chants, certains regorgent de règles et de lois, et certains sont des lettres écrites à des églises ou des personnes spécifiques.
+La Bible rassemble des genres littéraires très divers : alterner entre les livres et les sections rend donc la lecture plus agréable. Certains livres racontent l'histoire, d'autres sont de la poésie, des proverbes ou des chants, d'autres encore sont remplis de règles et de lois, et quelques-uns sont des lettres adressées à des Églises ou à des personnes précises.
 
-Comme de nombreux livres similaires apparaissent côte à côte dans la Bible, la lecture de la Bible de la première à la dernière page peut être ennuyeuse et fastidieuse. Qui veut lire deux ou trois livres de règles l'un après l'autre ? Il est en fait plus intéressant de lire autre chose après avoir lu un livre de lois, puis de revenir à d'autres livres de lois plus tard.
+Comme les livres de même nature se suivent souvent, lire la Bible d'une traite peut vite devenir pénible. Qui a envie d'enchaîner deux ou trois livres de lois ? Mieux vaut lire autre chose après un livre de loi, quitte à revenir plus tard aux suivants.
 
-Une façon de gérer cela est de suivre un plan de lecture biblique annuel ou tout au long de la Bible qui équilibre la lecture dans différentes parties de la Bible et vous indique ce qu'il faut lire chaque jour. C'est un excellent moyen de garder les choses intéressantes tout en veillant à ce que vous ne passiez pas à côté de quelque chose d'important.
+Une solution consiste à suivre un plan annuel, ou un plan couvrant toute la Bible, qui répartit les lectures entre les différentes parties et vous indique quoi lire chaque jour. La lecture reste ainsi variée, sans rien laisser d'important de côté.
 
-Il existe plusieurs types de plans de lecture de la Bible dans son intégralité :
+Il existe plusieurs sortes de plans de lecture intégrale :
 
-* Les plans chronologiques sont basés sur l'ordre chronologique des événements
-* Certains plans se basent sur l'ordre dans lequel les livres ont été écrits
-* D'autres plans sont basés sur l'ordre dans lequel les premiers chrétiens ou Juifs auraient reçu et expérimenté les livres de la Bible
+* les plans chronologiques, fondés sur la date des événements ;
+* certains suivent l'ordre de rédaction des livres ;
+* d'autres suivent l'ordre dans lequel les premiers chrétiens ou les juifs auraient reçu et vécu ces livres.
 
-Ces plans peuvent être d'excellents outils pour certaines personnes, et ils résolvent le problème de devoir lire la Bible du début à la fin.
+Ces plans rendent de grands services à beaucoup de lecteurs, et ils règlent le problème de la lecture du début à la fin.
 
-Si vous ne suivez pas un plan spécifique, alors lisez ce que vous n'avez pas encore lu et trouvez cela le plus intéressant en ce moment !
+Et si vous ne suivez aucun plan précis ? Lisez simplement, parmi ce que vous n'avez pas encore lu, ce qui vous attire le plus en ce moment !
 
-## Comment puis-je rester motivé pour lire l'intégralité de la Bible en un an?
+## Comment rester motivé toute une année ?
 
-Lire toute la Bible est une tâche ardue. N'oubliez pas la taille de ce projet ! Vous méritez des félicitations pour l'avoir entrepris, et vous devriez vous féliciter pour le mener jour après jour.
+Lire la Bible en entier, c'est un grand projet. Ne perdez pas de vue son ampleur ! Rien que de vous y attaquer mérite d'être salué, et chaque journée où vous tenez bon mérite un mot d'encouragement que vous pouvez vous adresser à vous-même.
 
-Maintenir un gros objectif peut être difficile. Il est presque garanti que vous manquerez un jour ou prendrez du retard pour une raison ou une autre. Ce n'est pas grave ! Rattrapez-vous dès que vous en aurez l'opportunité.
+Tenir un objectif aussi vaste n'a rien d'évident. Il est quasi certain que vous sauterez un jour ou prendrez du retard pour une raison ou une autre. Ce n'est pas grave : rattrapez dès que possible.
 
-Une excellente façon de rester motivé est de suivre vos progrès pendant que vous lisez la Bible. C'est gratifiant de voir vos progrès croître avec le temps, passant de 1% de la Bible à 10% puis à 100%. Utiliser un suivi de lecture de la Bible comme **My Bible Log** est un excellent moyen de rester motivé.
+Suivre sa progression aide énormément. Il est réjouissant de voir la barre passer de 1 % de la Bible à 10 %, puis à 100 %. Un outil de suivi comme **My Bible Log** entretient cette motivation.
 
-Une autre bonne manière de continuer à avancer vers votre objectif est d'en parler avec des amis. Nous sommes tous récompensés lorsque quelqu'un d'autre connaît nos objectifs et connaît notre progression. Partagez votre plan avec un ami ou même un groupe, et demandez-leur de vérifier de temps en temps comment vous vous en sortez. Encore mieux, demandez-leur de vous rejoindre dans la lecture de toute la Bible ! Il sera gratifiant et encourageant d'avoir quelqu'un avec qui discuter de ce que vous lisez.
+En parler autour de soi aide tout autant. Nous avançons mieux quand quelqu'un connaît notre objectif et suit nos progrès. Racontez votre projet à un ami ou à un groupe, et demandez-leur de prendre de vos nouvelles de temps en temps. Mieux encore : proposez-leur de lire la Bible avec vous. Pouvoir échanger sur ses lectures est très encourageant.
 
-Enfin, profitez de tout ce qui vous intéresse à lire la Bible. Si vous trouvez un passage intéressant lors d'une étude biblique, d'un sermon ou de votre dévotion quotidienne, continuez de lire ! Vous n'êtes pas obligé de vous arrêter à un certain nombre de versets ou de chapitres chaque jour. Lorsque vous trouvez vraiment un livre ou une section de la Bible inspirante, profitez de votre élan et lisez autant que vous le souhaitez !
+Enfin, profitez de tout ce qui éveille votre envie de lire. Si une étude biblique, une prédication ou votre méditation quotidienne vous fait tomber sur un passage passionnant, poursuivez ! Rien ne vous oblige à vous arrêter à un nombre précis de versets ou de chapitres. Quand un livre vous captive, profitez de l'élan et lisez autant que vous le souhaitez.
 
 <div class="mbl-button-group">
   <a class="mbl-button mbl-button--light" href="/fr/today">Commencer</a>
