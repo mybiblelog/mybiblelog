@@ -439,6 +439,8 @@ export const fr = {
   note_no_tags_selected: "Aucun tag sélectionné.",
   note_manage_tags: "Choisir les tags",
   note_could_not_save: "Impossible d'enregistrer la note.",
+  note_saved_offline:
+    "Enregistrée sur cet appareil — elle se synchronisera lorsque vous serez en ligne et connecté.",
   note_could_not_delete: "Impossible de supprimer la note.",
   note_delete_confirm_title: "Supprimer la note ?",
   note_delete_confirm_message: "Cette action ne peut pas être annulée.",

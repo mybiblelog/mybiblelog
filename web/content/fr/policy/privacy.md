@@ -1,50 +1,50 @@
 # Politique de confidentialité de My Bible Log
 
-Cette politique de confidentialité explique comment vos informations personnelles sont traitées lorsque vous utilisez [https://www.mybiblelog.com](https://www.mybiblelog.com) (le "Site").
+Cette politique de confidentialité explique comment vos données personnelles sont traitées lorsque vous utilisez [https://www.mybiblelog.com](https://www.mybiblelog.com) (le « Site »).
 
-## Informations collectées
+## Les informations collectées
 
-Lorsque vous visitez le Site, certaines informations de base sont automatiquement collectées sur votre appareil, notamment votre navigateur web, votre adresse IP, votre fuseau horaire et les cookies. Cela nous aide à comprendre comment les visiteurs utilisent le Site et à améliorer votre expérience. Nous appelons cela les "Informations sur l'appareil".
+Lorsque vous visitez le Site, quelques informations de base sur votre appareil sont collectées automatiquement : votre navigateur, votre adresse IP, votre fuseau horaire et les cookies. Elles nous aident à comprendre comment le Site est utilisé et à l'améliorer. Nous les appelons les « informations sur l'appareil ».
 
-Les Informations sur l'appareil sont collectées à l'aide de :
+Ces informations sont collectées au moyen de :
 
-* Cookies - petits fichiers de données qui aident le Site à fonctionner correctement
-* Fichiers journaux - qui suivent l'utilisation de base du site
-* Balises web - qui nous aident à comprendre comment vous interagissez avec le Site
+* cookies - de petits fichiers qui permettent au Site de fonctionner correctement
+* fichiers journaux - qui enregistrent l'utilisation de base du Site
+* balises web - qui montrent comment vous interagissez avec le Site
 
-## Utilisation de vos informations
+## L'usage qui en est fait
 
-Les informations collectées nous aident à :
+Les informations collectées nous servent à :
 
-* Fournir et améliorer les fonctionnalités du Site
-* Comprendre comment les visiteurs utilisent le Site
-* Communiquer avec vous lorsque nécessaire (comme les réinitialisations de mot de passe)
+* proposer et améliorer les fonctionnalités du Site
+* comprendre comment les visiteurs l'utilisent
+* vous écrire lorsque c'est nécessaire (pour une réinitialisation de mot de passe, par exemple)
 
-## Partage des informations
+## Le partage des informations
 
-Vos informations ne sont partagées que dans ces cas spécifiques :
+Vos informations ne sont partagées que dans les cas suivants :
 
-* Avec Google Analytics pour nous aider à comprendre l'utilisation du site
-  * Vous pouvez lire la politique de confidentialité de Google ici : [https://www.google.com/intl/fr/policies/privacy/](https://www.google.com/intl/fr/policies/privacy/)
-  * Vous pouvez vous désinscrire de Google Analytics ici : [https://tools.google.com/dlpage/gaoptout](https://tools.google.com/dlpage/gaoptout)
-* Lorsque requis par la loi (comme répondre à des demandes légales)
+* avec Google Analytics, afin que nous puissions analyser l'utilisation du Site
+  * La politique de confidentialité de Google est consultable ici : [https://www.google.com/intl/fr/policies/privacy/](https://www.google.com/intl/fr/policies/privacy/)
+  * Vous pouvez désactiver Google Analytics ici : [https://tools.google.com/dlpage/gaoptout](https://tools.google.com/dlpage/gaoptout)
+* lorsque la loi l'exige (pour répondre à une demande des autorités, par exemple)
 
-Vos informations ne seront jamais vendues à qui que ce soit.
+Vos informations ne sont jamais vendues, à personne.
 
-## Gestion de vos données
+## La gestion de vos données
 
-Vous avez un contrôle total sur vos données. Vous pouvez supprimer votre compte et toutes les données associées à tout moment :
+Vous gardez la maîtrise complète de vos données et pouvez supprimer votre compte, ainsi que tout ce qui s'y rattache, à tout moment :
 
-1. Allez sur la page "Paramètres"
-2. Trouvez la section "Supprimer le compte"
-3. Suivez les étapes simples pour supprimer définitivement votre compte
+1. Ouvrez la page « Paramètres ».
+2. Rendez-vous dans la section « Supprimer le compte ».
+3. Suivez les quelques étapes indiquées pour supprimer définitivement votre compte.
 
-Veuillez noter : La suppression du compte est permanente et ne peut pas être annulée.
+Attention : la suppression du compte est définitive et ne peut pas être annulée.
 
-## Ne pas suivre
+## Ne pas me suivre
 
-Le Site ne modifie pas ses pratiques de collecte de données lorsqu'il reçoit un signal "Ne pas suivre" de votre navigateur.
+Le Site ne modifie pas sa collecte de données lorsqu'il reçoit un signal « Ne pas me suivre » de votre navigateur.
 
-## Mises à jour de cette politique
+## Modifications de cette politique
 
-Cette politique de confidentialité peut être mise à jour occasionnellement pour refléter les changements dans le fonctionnement du Site ou pour se conformer aux exigences légales.
+Cette politique de confidentialité est mise à jour de temps à autre, soit parce que le fonctionnement du Site évolue, soit pour répondre à des obligations légales.

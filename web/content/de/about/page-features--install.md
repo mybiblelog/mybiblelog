@@ -1,23 +1,23 @@
 ---
 seo:
   title: Überall installieren
-  description: So installieren und verwenden Sie My Bible Log auf jedem Gerät
+  description: So installieren und nutzen Sie My Bible Log auf jedem Gerät
 og:
   title: Überall installieren
-  description: So installieren und verwenden Sie My Bible Log auf jedem Gerät
+  description: So installieren und nutzen Sie My Bible Log auf jedem Gerät
 ---
 
 ![](/share.jpg)
 
 # Überall installieren
 
-My Bible Log ist eine Website. Es ist auch eine "Progressive Web App" (PWA), was bedeutet, dass sie als eigenständige App auf jedem Gerät installiert werden kann.
+My Bible Log ist eine Website – und zugleich eine „Progressive Web App" (PWA). Das heißt: Sie lässt sich auf jedem Gerät wie eine eigenständige App installieren.
 
 <div style="margin: 1rem">
   <img alt="Screenshot der My Bible Log Desktop-App" src="/screenshots/de/sc8-install-anywhere.webp" />
 </div>
 
-Als Beispiel kann Google Chrome verwendet werden, um eine PWA auf diese Arten von Geräten zu installieren:
+Mit Google Chrome können Sie eine PWA zum Beispiel auf diesen Geräten installieren:
 
 * Windows
 * Mac OS
@@ -25,21 +25,21 @@ Als Beispiel kann Google Chrome verwendet werden, um eine PWA auf diese Arten vo
 * Android
 * iOS
 
-Um eine PWA zu installieren, öffnen Sie zunächst die Website in Ihrem Browser. Anleitungen zur Installation einer PWA in Chrome finden Sie hier:
+Öffnen Sie dazu zuerst die Website in Ihrem Browser. Eine Anleitung für Chrome finden Sie hier:
 
-[Installieren einer PWA in Chrome](https://support.google.com/chrome/answer/9658361)
+[PWA in Chrome installieren](https://support.google.com/chrome/answer/9658361)
 
-## Tastaturfreie Dateneingabe
+## Eingabe ohne Tastatur
 
-My Bible Log ist darauf ausgelegt, auf mobilen Geräten einfach zu bedienen zu sein, da viele Menschen die Bibel beim Reisen lesen oder ihre mobilen Geräte zur Hand haben, wo immer sie lesen können.
+My Bible Log ist für die Bedienung am Handy gemacht – denn viele lesen die Bibel unterwegs oder haben ihr Gerät ohnehin griffbereit.
 
-Benutzer können Bibelpassagen ohne Tippen auswählen, sodass die App auf Mobiltelefonen, Tablets und anderen Touchscreen-Geräten einfacher zu verwenden ist.
+Bibelstellen wählen Sie ganz ohne Tippen aus. Das macht die App auf Smartphones, Tablets und anderen Touchgeräten besonders angenehm.
 
-## Auf dem neuesten Stand bleiben
+## Immer auf dem neuesten Stand
 
-Wenn es um Aktualisierungen geht, verhält sich My Bible Log wie eine Website.
+Bei Updates verhält sich My Bible Log wie eine ganz normale Website.
 
-Aktualisieren Sie einfach die Seite, um sicherzustellen, dass Sie die neueste Version der App verwenden.
+Laden Sie die Seite einfach neu – schon nutzen Sie die aktuellste Version.
 
 <div class="mbl-button-group">
   <a class="mbl-button mbl-button--light" href="/de/today">Loslegen</a>

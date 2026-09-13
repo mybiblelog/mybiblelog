@@ -33,4 +33,4 @@ export { TagCreationNotice, useCanCreateTags } from "./TagCreationGate";
 export { TagEditorSheet } from "./TagEditorSheet";
 export { TagSelectorSheet } from "./TagSelectorSheet";
 export { SelectSheet } from "./SelectSheet";
-export type { SelectOption } from "./SelectSheet";
+export type { SelectOption, SelectSection } from "./SelectSheet";

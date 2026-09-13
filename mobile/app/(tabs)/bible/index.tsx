@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
-import { memo, useCallback, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { Bible, type BookProgress, type TestamentFilter } from "@mybiblelog/shared";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import {
@@ -14,7 +15,7 @@ import {
   Spinner,
   Text,
 } from "@/src/components";
-import { radius, spacing, useTheme } from "@/src/design";
+import { durations, easings, radius, spacing, useTheme } from "@/src/design";
 import { useBibleProgress } from "@/src/stores/bibleProgress";
 import {
   noteCountsActions,
@@ -41,6 +42,19 @@ const BookRow = memo(function BookRow({
 }) {
   const { colors } = useTheme();
   const t = useT();
+
+  // Badge stays mounted so its layout space is always reserved; only its
+  // opacity animates in once note-count data is ready, avoiding the reflow
+  // that a mount/unmount pop-in across every row at once would cause.
+  const opacity = useSharedValue(showBadge ? 1 : 0);
+  useEffect(() => {
+    opacity.value = withTiming(showBadge ? 1 : 0, {
+      duration: durations.base,
+      easing: easings.decelerate,
+    });
+  }, [showBadge, opacity]);
+  const badgeStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
+
   return (
     <Pressable
       testID={`bible.book-${book.bookIndex}`}
@@ -61,15 +75,17 @@ const BookRow = memo(function BookRow({
         <Text variant="bodyStrong" style={styles.bookName} numberOfLines={1}>
           {bookName}
         </Text>
-        {showBadge ? (
-          <View style={[styles.noteBadge, { backgroundColor: colors.surface }]}>
-            <Text variant="caption" color="mutedText">
-              {notesCount === 1
-                ? t("book_note_count_one")
-                : t("book_note_count_other", { count: notesCount })}
-            </Text>
-          </View>
-        ) : null}
+        <Animated.View
+          style={[styles.noteBadge, { backgroundColor: colors.surface }, badgeStyle]}
+          importantForAccessibility={showBadge ? "auto" : "no-hide-descendants"}
+          accessibilityElementsHidden={!showBadge}
+        >
+          <Text variant="caption" color="mutedText">
+            {notesCount === 1
+              ? t("book_note_count_one")
+              : t("book_note_count_other", { count: notesCount })}
+          </Text>
+        </Animated.View>
         <Text variant="caption" color="mutedText" style={styles.percent}>
           {book.percentage}%
         </Text>

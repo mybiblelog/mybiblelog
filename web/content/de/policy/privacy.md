@@ -1,50 +1,50 @@
-# My Bible Log Datenschutzrichtlinie
+# Datenschutzerklärung von My Bible Log
 
-Diese Datenschutzrichtlinie erläutert, wie Ihre persönlichen Informationen behandelt werden, wenn Sie [https://www.mybiblelog.com](https://www.mybiblelog.com) (die "Website") verwenden.
+Diese Datenschutzerklärung erklärt, wie mit Ihren personenbezogenen Daten umgegangen wird, wenn Sie [https://www.mybiblelog.com](https://www.mybiblelog.com) (die „Website") nutzen.
 
-## Gesammelte Informationen
+## Welche Daten erfasst werden
 
-Wenn Sie die Website besuchen, werden automatisch einige grundlegende Informationen über Ihr Gerät erfasst, einschließlich Ihres Web-Browsers, Ihrer IP-Adresse, Ihrer Zeitzone und Cookies. Dies hilft uns zu verstehen, wie Besucher die Website nutzen, und verbessert Ihre Erfahrung. Wir nennen dies "Geräteinformationen".
+Beim Besuch der Website werden automatisch einige grundlegende Angaben zu Ihrem Gerät erfasst: Ihr Browser, Ihre IP-Adresse, Ihre Zeitzone und Cookies. So verstehen wir besser, wie die Website genutzt wird, und können sie weiter verbessern. Wir nennen diese Angaben „Gerätedaten".
 
-Geräteinformationen werden mit folgenden Mitteln erfasst:
+Gerätedaten werden erfasst über:
 
-- Cookies – kleine Dateien, die der ordnungsgemäßen Funktion der Website dienen
-- Logdateien – die grundlegende Nutzung der Website verfolgen
-- Web-Beacons – die uns helfen zu verstehen, wie Sie mit der Website interagieren
+- Cookies – kleine Dateien, die für das reibungslose Funktionieren der Website sorgen
+- Logdateien – die die grundlegende Nutzung der Website festhalten
+- Web-Beacons – die zeigen, wie Sie mit der Website umgehen
 
-## Verwendung Ihrer Informationen
+## Wofür Ihre Daten verwendet werden
 
-Die gesammelten Informationen helfen uns dabei:
+Die erfassten Daten helfen uns dabei,
 
-- Die Funktionen der Website bereitzustellen und zu verbessern
-- Zu verstehen, wie Besucher die Website nutzen
-- Mit Ihnen zu kommunizieren, wenn erforderlich (z.B. bei Passwortrücksetzungen)
+- die Funktionen der Website bereitzustellen und zu verbessern,
+- nachzuvollziehen, wie Besucher die Website nutzen,
+- Ihnen bei Bedarf zu schreiben (etwa beim Zurücksetzen eines Passworts).
 
-## Informationen teilen
+## Weitergabe Ihrer Daten
 
-Ihre Informationen werden nur in diesen spezifischen Fällen geteilt:
+Ihre Daten geben wir ausschließlich in diesen Fällen weiter:
 
-- Mit Google Analytics, um uns bei der Analyse der Website-Nutzung zu helfen
-  - Sie können die Datenschutzrichtlinie von Google hier lesen: [https://www.google.com/intl/en/policies/privacy/](https://www.google.com/intl/en/policies/privacy/)
-  - Sie können Google Analytics hier deaktivieren: [https://tools.google.com/dlpage/gaoptout](https://tools.google.com/dlpage/gaoptout)
-- Wenn dies gesetzlich vorgeschrieben ist (z.B. bei der Beantwortung von rechtlichen Anfragen)
+- an Google Analytics, damit wir die Nutzung der Website auswerten können
+  - Die Datenschutzerklärung von Google finden Sie hier: [https://www.google.com/intl/de/policies/privacy/](https://www.google.com/intl/de/policies/privacy/)
+  - Google Analytics können Sie hier deaktivieren: [https://tools.google.com/dlpage/gaoptout](https://tools.google.com/dlpage/gaoptout)
+- wenn das Gesetz es verlangt (etwa bei behördlichen Auskunftsersuchen)
 
-Ihre Informationen werden niemals an Dritte verkauft.
+Verkauft werden Ihre Daten niemals – an niemanden.
 
-## Verwaltung Ihrer Daten
+## Ihre Daten verwalten
 
-Sie haben die volle Kontrolle über Ihre Daten. Sie können Ihr Konto und alle zugehörigen Daten jederzeit löschen:
+Sie behalten die volle Kontrolle über Ihre Daten und können Ihr Konto samt allen dazugehörigen Daten jederzeit löschen:
 
-1. Gehen Sie zur Seite "Einstellungen"
-2. Suchen Sie den Abschnitt "Konto löschen"
-3. Befolgen Sie die einfachen Schritte, um Ihr Konto dauerhaft zu löschen
+1. Öffnen Sie die Seite „Einstellungen".
+2. Gehen Sie zum Abschnitt „Konto löschen".
+3. Folgen Sie den wenigen Schritten, um Ihr Konto endgültig zu löschen.
 
-Bitte beachten Sie: Die Löschung des Kontos ist endgültig und kann nicht rückgängig gemacht werden.
+Bitte bedenken Sie: Eine Kontolöschung ist endgültig und lässt sich nicht rückgängig machen.
 
 ## Do Not Track
 
-Die Website ändert ihre Datensammlungspraktiken nicht, wenn sie ein "Do Not Track"-Signal Ihres Browsers erkennt.
+An der Datenerfassung ändert sich nichts, wenn die Website ein „Do Not Track"-Signal Ihres Browsers erhält.
 
-## Aktualisierungen dieser Richtlinie
+## Änderungen dieser Erklärung
 
-Diese Datenschutzrichtlinie kann gelegentlich aktualisiert werden, um Änderungen in der Funktionsweise der Website widerzuspiegeln oder gesetzlichen Anforderungen zu entsprechen.
+Diese Datenschutzerklärung wird gelegentlich angepasst – etwa wenn sich die Website verändert oder gesetzliche Vorgaben es erfordern.

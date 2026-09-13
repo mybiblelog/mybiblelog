@@ -78,7 +78,11 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '~/stores/auth';
+
 const { t } = useI18n();
+const route = useRoute();
+const authStore = useAuthStore();
 
 // $pwa is injected by @vite-pwa/nuxt on the client only; it's undefined during
 // SSR and until the plugin runs, so every access is optional-chained.
@@ -94,7 +98,9 @@ const promptKind = computed<PwaPromptKind>(() => {
   // leftover registration reports `isExternal`/`waiting` and trips the prompt. There is
   // no such thing as a new release in dev, so never offer the reload there.
   if (pwa?.needRefresh && !import.meta.dev) { return 'refresh'; }
-  if (pwa?.offlineReady) { return 'offline-ready'; }
+  // Offline readiness is meaningless without an account (nothing's been logged
+  // yet) and out of place on content pages (marketing/legal pages, not the app).
+  if (pwa?.offlineReady && authStore.loggedIn && !route.meta?.contentPage) { return 'offline-ready'; }
   if (pwa?.showInstallPrompt) { return 'install'; }
   return null;
 });

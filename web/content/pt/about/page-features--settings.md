@@ -1,90 +1,90 @@
 ---
 seo:
-  title: Página de Configurações
-  description: Documentação para configurações de leitura, relatório e conta do My Bible Log
+  title: Página Configurações
+  description: Ajustes de leitura, lembretes e conta no My Bible Log
 og:
-  title: Página de Configurações
-  description: Documentação para configurações de leitura, relatório e conta do My Bible Log
+  title: Página Configurações
+  description: Ajustes de leitura, lembretes e conta no My Bible Log
 ---
 
 ![](/share.jpg)
 
-# Página de Configurações
+# Página Configurações
 
-A página de configurações está organizada em vários painéis:
+A página Configurações é dividida em vários painéis:
 
 * Conta
 * Leitura
-* E-mails de Lembrete Diário
+* E-mails de lembrete diário
 * Exportar
 * Importar
 
 ## Conta
 
-Quando a página de Configurações é aberta pela primeira vez, o painel de Conta será exibido.
+Ao abrir a página Configurações, o primeiro painel que aparece é o de Conta.
 
-Aqui você pode:
+Dali você pode:
 
-* mudar seu endereço de e-mail
+* alterar seu e-mail
 * excluir sua conta
 
 ## Leitura
 
-O painel de Leitura permite ajustar configurações relacionadas à leitura da Bíblia. Estas incluem sua **Meta Diária de Versículos** e **Data de Revisão**.
+No painel Leitura você ajusta tudo o que tem a ver com a leitura da Bíblia, a começar pela sua **meta diária de versículos** e pela sua **Data de Revisão**.
 
-### Meta Diária de Versículos
+### Meta diária de versículos
 
-Sua meta diária de versículos é o número de versículos da Bíblia que você deseja ler a cada dia. Esta configuração afeta o comportamento das barras de progresso na página de Hoje e na página do Calendário.
+A meta diária de versículos é quanto você quer ler por dia. É ela que define como as barras de progresso se comportam na página Hoje e na página Calendário.
 
-Para ajudá-lo a decidir qual deve ser sua meta diária de versículos, esta seção mostra quantos dias levará para ler a Bíblia se você alcançar sua meta de versículos a cada dia. Por padrão, esse valor é 86, o que permitirá que você leia toda a Bíblia em menos de 365 dias.
+Para ajudar na escolha do número, esta seção mostra quantos dias você levaria para ler a Bíblia inteira batendo a meta todos os dias. O valor padrão é 86, que fecha a Bíblia em menos de 365 dias.
 
 ### Data de Revisão
 
-Sua data de revisão determina até quando o My Bible Log analisará seu progresso em seu registro de leitura. Sua data de revisão começa na data em que você começou a usar o My Bible Log.
+A Data de Revisão define até onde o My Bible Log olha no seu registro de leitura ao calcular seu progresso. No começo, ela é o dia em que você passou a usar o My Bible Log.
 
-Entradas no registro antes desta data são ignoradas. Como exemplo, a página de Livros da Bíblia não exibirá a leitura que você fez antes de sua data de revisão.
+Tudo o que vem antes dessa data fica de fora: a página Livros da Bíblia, por exemplo, não mostra o que você leu antes dela.
 
-Se você ler toda a Bíblia e quiser recomeçar e ler todos os livros novamente, definir a data de revisão como a data atual limpará seu progresso na página de Livros da Bíblia e permitirá que suas entradas de log sejam consideradas versículos "novos" novamente na página de Hoje e na página do Calendário.
+Se terminou a Bíblia inteira e quer recomeçar do zero, é só colocar a Data de Revisão no dia de hoje. Assim seu progresso na página Livros da Bíblia zera e suas leituras voltam a contar como versículos "novos" nas páginas Hoje e Calendário.
 
-Alterar sua data de revisão não apagará nenhum dado do My Bible Log. Todas as suas entradas de log ainda existem e podem ser visualizadas a qualquer momento na página do Calendário.
+Nada é apagado. Todos os seus registros continuam lá e podem ser vistos a qualquer momento pela página Calendário.
 
-### Versão Preferida da Bíblia
+### Versão preferida da Bíblia
 
-Você pode escolher uma tradução que prefere usar para leitura. Links de leitura externos abrirão esta tradução da Bíblia em seu aplicativo de leitura preferido.
+Você pode escolher a tradução que prefere usar na leitura. Os links de leitura vão abrir exatamente essa tradução no seu aplicativo.
 
-Se uma tradução que você deseja usar não estiver listada, por favor solicite-a por meio [deste formulário](/pt/feedback).
+Não encontrou a tradução que você usa? Peça por [este formulário](/pt/feedback).
 
-### Aplicativo Preferido da Bíblia
+### Aplicativo de Bíblia preferido
 
-Você pode escolher o aplicativo ou site que será aberto ao clicar em um link de leitura.
+Você pode escolher qual aplicativo ou site abre quando você clica em um link de leitura.
 
-Essa configuração é armazenada no dispositivo em vez de em sua conta, permitindo que você use diferentes aplicativos ou sites em dispositivos diferentes.
+Esse ajuste fica salvo no aparelho, e não na sua conta, então dá para usar um aplicativo no celular e outro no computador.
 
-Se um site ou aplicativo que você deseja usar não estiver listado, por favor solicite-o por meio [deste formulário](/pt/feedback).
+Não encontrou o aplicativo ou site que você usa? Peça por [este formulário](/pt/feedback).
 
-## E-mails de Lembrete Diário
+## E-mails de lembrete diário
 
-Você pode optar por receber um lembrete diário por e-mail do My Bible Log. O e-mail chegará em um horário de sua escolha.
+Se quiser, o My Bible Log envia um lembrete diário por e-mail, no horário que você escolher.
 
-### Opt-in
+### Ativação
 
-Você deve confirmar que deseja receber um e-mail de lembrete diário. O My Bible Log não envia e-mails não solicitados.
+Você precisa confirmar que quer receber o lembrete: o My Bible Log não manda e-mail que ninguém pediu.
 
-Você pode desativar os e-mails de lembrete de suas configurações a qualquer momento. Cada e-mail também contém um link de cancelamento de inscrição instantâneo.
+Dá para desativar nas configurações quando quiser, e todo e-mail traz um link para cancelar na hora.
 
-### Horário do Lembrete
+### Horário do lembrete
 
-Você deve escolher um horário para receber seu e-mail de lembrete diário. Isso permite que os lembretes sejam uma parte útil e intencional de sua rotina diária.
+Você define o horário em que o lembrete chega, para que ele se encaixe naturalmente na sua rotina.
 
 ## Exportar
 
-### Registro de Leitura (CSV)
+### Registro de leitura (CSV)
 
-Seu registro de leitura pode ser exportado como uma planilha (no formato de arquivo CSV). Isso permite que você trabalhe com seus dados da maneira que desejar.
+Seu registro de leitura pode ser exportado como planilha em formato CSV, então você pode trabalhar com os dados do jeito que quiser.
 
-Se você tiver habilidades de programação ou conhece alguém que tenha, poderá usar esses dados para criar novos gráficos e gráficos. Você poderia até mesmo combinar os dados de exportação do My Bible Log de várias pessoas.
+Se você programa, ou conhece alguém que programa, dá para montar gráficos e análises com esses dados. Até mesmo juntar as exportações de várias pessoas.
 
-Abaixo está um exemplo de como se parece uma planilha de exportação do My Bible Log. Os cabeçalhos "Data" e "Passagem" não aparecerão no arquivo.
+Veja como fica uma planilha exportada do My Bible Log. Os títulos "Data" e "Passagem" não aparecem no arquivo.
 
 |Data|Passagem|
 |---|---|
@@ -96,33 +96,33 @@ Abaixo está um exemplo de como se parece uma planilha de exportação do My Bib
 |2020-07-24|Mateus 18-21|
 |2020-07-24|Mateus 22-28|
 
-Abaixo está como o arquivo CSV se parece em um editor de texto. Note como uma vírgula aparece entre a data e a passagem, já que este é um arquivo de Valores Separados por Vírgula (CSV).
+E é assim que o mesmo arquivo CSV aparece num editor de texto. Repare na vírgula entre a data e a passagem: é daí que vem o nome "Comma Separated Values".
 
 ```csv
-2020-07-21,Matheus 1-3
-2020-07-22,Matheus 4-9
-2020-07-22,Matheus 10-11
-2020-07-23,Matheus 12-13
-2020-07-23,Matheus 14-17
-2020-07-24,Matheus 18-21
-2020-07-24,Matheus 22-28
+2020-07-21,Mateus 1-3
+2020-07-22,Mateus 4-9
+2020-07-22,Mateus 10-11
+2020-07-23,Mateus 12-13
+2020-07-23,Mateus 14-17
+2020-07-24,Mateus 18-21
+2020-07-24,Mateus 22-28
 ```
 
-### Notas e Etiquetas (Arquivo de Texto)
+### Notas e tags (arquivo de texto)
 
-Você pode exportar suas notas e etiquetas em um arquivo de texto.
+Suas notas e tags são exportadas em um arquivo de texto.
 
-Enquanto a exportação do registro de leitura (arquivo CSV) pode ser importada de volta automaticamente para o My Bible Log, a exportação de notas não pode ser importada automaticamente.
-No entanto, você sempre pode recriar manualmente notas e etiquetas a partir de seu arquivo de exportação se precisar recuperar seus dados.
+O registro de leitura (CSV) pode ser importado de volta automaticamente, mas as notas não.
+Ainda assim, sempre dá para recriá-las à mão a partir do arquivo exportado, caso precise recuperar seus dados.
 
 ## Importar
 
-Você pode importar uma planilha de registro de leitura (no formato de arquivo CSV) para o My Bible Log. Você pode importar uma planilha criada por você mesmo, ou importar uma planilha que você exportou anteriormente do My Bible Log.
+Você pode importar para o My Bible Log uma planilha de leitura em formato CSV: pode ser uma que você mesmo montou ou uma que exportou daqui antes.
 
-O recurso de importação de registro de leitura usa o mesmo formato de arquivo que o recurso de exportação de registro de leitura.
+A importação usa exatamente o mesmo formato de arquivo da exportação.
 
-Ao importar uma planilha, o progresso da importação será exibido na página. O My Bible Log não recriará entradas de registro que já existem. Se você leu Gênesis 1 em 1 de janeiro e rastreou no My Bible Log, e depois importou uma planilha que incluía uma entrada de log para aquela mesma passagem e data, o My Bible Log a ignoraria.
+Durante a importação, o progresso aparece na própria página. O My Bible Log não duplica registros que já existem: se você leu Gênesis 1 no dia 1º de janeiro e registrou, e depois importa uma planilha com essa mesma passagem e data, o registro é ignorado.
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/pt/settings">Ir para página de Configurações</a>
+  <a class="mbl-button mbl-button--light" href="/pt/settings">Ir para a página Configurações</a>
 </div>

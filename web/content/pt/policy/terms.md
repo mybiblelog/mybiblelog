@@ -1,77 +1,77 @@
-# Termos de Serviço
+# Termos de serviço
 
 ---
 
-## Visão Geral
+## Visão geral
 
-My Bible Log é uma ferramenta online gratuita para ajudá-lo a acompanhar sua leitura da Bíblia. Ao usar este site, você concorda com estes termos. Se você não concorda com estes termos, por favor, não use o site.
+O My Bible Log é uma ferramenta online gratuita para você acompanhar sua leitura da Bíblia. Ao usar este site, você concorda com estes termos. Se não concordar com eles, por favor não use o site.
 
-Podemos atualizar esses termos ocasionalmente. Quando o fizermos, iremos postar as mudanças aqui. O seu uso contínuo do site após a publicação das alterações significa que você aceita os novos termos.
+De vez em quando podemos atualizar estes termos e, quando isso acontecer, publicaremos as mudanças aqui. Se você continuar usando o site depois disso, entendemos que aceitou os novos termos.
 
-## Requisitos de Idade e Responsabilidades do Usuário
+## Idade mínima e responsabilidades do usuário
 
-Para usar o My Bible Log, você deve ter pelo menos 13 anos de idade ou ter permissão de um pai ou responsável. Se você for menor de idade em seu estado ou província de residência, você deve ter o consentimento dos pais para usar este site.
+Para usar o My Bible Log, você precisa ter pelo menos 13 anos ou a permissão de um pai, mãe ou responsável. Se ainda não tiver a maioridade no seu estado ou província de residência, é necessário o consentimento dos pais para usar o site.
 
-Por favor, use o site de forma responsável e legal. Você concorda em não:
+Use o site de forma responsável e dentro da lei. Você se compromete a não:
 
-- Violar leis ou regulamentos
-- Compartilhar conteúdo prejudicial, vírus ou códigos maliciosos
-- Tentar acessar contas de outros usuários
-- Assediar, abusar ou discriminar outras pessoas
-- Compartilhar informações falsas ou enganosas
-- Interferir na segurança ou operação do site
-- Coletar ou rastrear informações pessoais de outras pessoas
-- Utilizar o site para qualquer propósito obsceno ou imoral
-- Reproduzir, duplicar, copiar, vender ou explorar qualquer parte do serviço sem permissão
+- descumprir leis ou regulamentos
+- espalhar conteúdo nocivo, vírus ou código malicioso
+- tentar entrar na conta de outros usuários
+- assediar, maltratar ou discriminar outras pessoas
+- espalhar informações falsas ou enganosas
+- interferir na segurança ou no funcionamento do site
+- coletar ou rastrear dados pessoais de terceiros
+- usar o site para fins obscenos ou imorais
+- reproduzir, duplicar, copiar, vender ou explorar qualquer parte do serviço sem permissão
 
-## Seu Conteúdo e Privacidade
+## Seu conteúdo e sua privacidade
 
-O conteúdo que você cria no My Bible Log (como notas e progresso de leitura) pertence a você. Nós o manteremos privado e não o compartilharemos sem sua permissão, exceto conforme descrito em nossa [Política de Privacidade](/pt/policy/privacy).
+O que você cria no My Bible Log — notas, progresso de leitura e afins — pertence a você. Mantemos tudo em sigilo e não compartilhamos sem a sua permissão, exceto nos casos descritos na nossa [Política de privacidade](/pt/policy/privacy).
 
-Sua submissão de informações pessoais através do site é regida pela nossa Política de Privacidade. Podemos transferir seu conteúdo de forma não criptografada por várias redes e adaptá-lo aos requisitos técnicos de redes ou dispositivos de conexão.
+Os dados pessoais que você envia pelo site seguem essa mesma Política de privacidade. Podemos transmitir seu conteúdo sem criptografia por diferentes redes e adaptá-lo às exigências técnicas das redes ou aparelhos por onde ele passa.
 
-## Disponibilidade do Site e Modificações
+## Disponibilidade do site e mudanças
 
-Nós tentamos manter o My Bible Log funcionando sem problemas, mas não podemos garantir um serviço ininterrupto, pontual, seguro ou livre de erros. Reservamo-nos o direito de:
+Fazemos o possível para manter o My Bible Log funcionando bem, mas não temos como garantir um serviço ininterrupto, pontual, seguro ou livre de erros. Reservamo-nos o direito de:
 
-- Modificar ou interromper o serviço a qualquer momento
-- Tirar o site do ar para manutenção
-- Atualizar ou alterar qualquer informação no site
-- Recusar o serviço a qualquer pessoa por qualquer motivo
+- alterar ou encerrar o serviço a qualquer momento
+- tirar o site do ar para manutenção
+- atualizar ou modificar qualquer informação do site
+- recusar atendimento a qualquer pessoa, por qualquer motivo
 
-Não somos responsáveis se as informações no site não forem precisas, completas ou atualizadas. O material é fornecido apenas para informações gerais e não deve ser confiado como a única base para tomada de decisões.
+Não nos responsabilizamos caso alguma informação do site esteja imprecisa, incompleta ou desatualizada. O material tem caráter apenas informativo e não deve ser a única base para tomar decisões.
 
-## Serviços e Links de Terceiros
+## Serviços e links de terceiros
 
-O My Bible Log utiliza serviços de terceiros e pode fornecer links para sites de terceiros. Nós:
+O My Bible Log usa serviços de terceiros e pode trazer links para sites externos. Nós:
 
-- Não somos responsáveis pelo conteúdo ou precisão de terceiros
-- Não garantimos ou temos responsabilidade por materiais ou sites de terceiros
-- Fornecemos acesso a ferramentas de terceiros "como estão" sem garantias
-- Podemos oferecer novos serviços e recursos no futuro
+- não nos responsabilizamos pelo conteúdo de terceiros nem pela exatidão dele
+- não damos garantias nem assumimos responsabilidade por materiais ou sites de terceiros
+- damos acesso a ferramentas de terceiros "no estado em que se encontram", sem garantias
+- podemos oferecer novos serviços e recursos no futuro
 
-## Isenção de Garantias e Limitação de Responsabilidade
+## Isenção de garantias e limitação de responsabilidade
 
-O serviço é fornecido "como está" e "conforme disponível" sem quaisquer garantias ou condições de qualquer tipo. Não garantimos que:
+O serviço é fornecido "no estado em que se encontra" e "conforme disponível", sem garantias ou condições de qualquer natureza. Em especial, não garantimos que:
 
-- O serviço atenderá às suas expectativas
-- O serviço será ininterrupto ou livre de erros
-- Resultados obtidos a partir do serviço serão precisos ou confiáveis
+- o serviço atenda às suas expectativas
+- o serviço funcione sem interrupções ou sem erros
+- os resultados obtidos pelo serviço sejam exatos ou confiáveis
 
-Em nenhum caso o My Bible Log, nossos diretores, funcionários, afiliados, agentes, contratados, estagiários, fornecedores, provedores de serviços ou licenciantes serão responsáveis por qualquer lesão, perda, reclamação ou quaisquer danos diretos, indiretos, incidentais, punitivos, especiais ou consequentes de qualquer tipo.
+Em nenhuma hipótese o My Bible Log, nossos diretores, administradores, funcionários, empresas afiliadas, agentes, prestadores, estagiários, fornecedores, provedores de serviços ou licenciadores serão responsáveis por lesões, perdas, reclamações ou por danos diretos, indiretos, incidentais, punitivos, especiais ou consequentes de qualquer natureza.
 
 ## Indenização
 
-Você concorda em indenizar, defender e proteger o My Bible Log e nossos afiliados, parceiros, diretores, agentes, contratados e funcionários de qualquer reivindicação ou demanda, incluindo honorários advocatícios razoáveis, decorrentes da sua violação destes Termos de Serviço ou da violação de qualquer lei ou direitos de terceiros.
+Você se compromete a indenizar, defender e isentar de responsabilidade o My Bible Log e nossas afiliadas, parceiros, administradores, diretores, agentes, prestadores e funcionários diante de qualquer reclamação ou exigência — incluindo honorários advocatícios razoáveis — decorrente do descumprimento destes Termos de serviço por você ou da violação de qualquer lei ou direito de terceiros.
 
-## Rescisão
+## Encerramento
 
-Você pode parar de usar o My Bible Log a qualquer momento. Podemos encerrar seu acesso se você violar estes termos. As obrigações e responsabilidades contraídas antes da rescisão sobreviverão.
+Você pode parar de usar o My Bible Log quando quiser. Nós podemos encerrar seu acesso se você descumprir estes termos. As obrigações e responsabilidades assumidas antes do encerramento continuam valendo.
 
-## Lei Aplicável e Exequibilidade
+## Lei aplicável e independência das cláusulas
 
-Estes Termos de Serviço são regidos pelas leis de Columbus, OH, Estados Unidos. Se alguma disposição for considerada ilegal, nula ou inexequível, ela será aplicada na extensão máxima permitida por lei, e as disposições restantes permanecerão em pleno vigor e efeito.
+Estes Termos de serviço são regidos pelas leis de Columbus, Ohio, Estados Unidos. Se alguma cláusula for considerada ilegal, nula ou inexequível, ela será aplicada na maior extensão permitida por lei, e as demais cláusulas continuarão plenamente em vigor.
 
-## Alterações nos Termos
+## Alterações nos termos
 
-Reservamos o direito de atualizar, alterar ou substituir qualquer parte destes Termos de Serviço ao publicar atualizações em nosso site. É sua responsabilidade verificar as mudanças. Seu uso contínuo do site após quaisquer alterações constitui aceitação dessas alterações.
+Reservamo-nos o direito de atualizar, alterar ou substituir qualquer parte destes Termos de serviço publicando as atualizações no nosso site. Acompanhar essas mudanças é responsabilidade sua. Se você continuar usando o site depois de uma alteração, entendemos que a aceitou.

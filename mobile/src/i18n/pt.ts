@@ -435,6 +435,8 @@ export const pt = {
   note_no_tags_selected: "Nenhuma tag selecionada.",
   note_manage_tags: "Escolher Tags",
   note_could_not_save: "Não foi possível salvar a nota.",
+  note_saved_offline:
+    "Salva neste dispositivo — será sincronizada quando você estiver online e conectado.",
   note_could_not_delete: "Não foi possível excluir a nota.",
   note_delete_confirm_title: "Excluir nota?",
   note_delete_confirm_message: "Esta ação não pode ser desfeita.",

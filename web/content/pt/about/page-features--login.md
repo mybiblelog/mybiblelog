@@ -1,47 +1,47 @@
 ---
 seo:
-  title: Criação de Conta
-  description: Como Criar uma Conta no Meu Diário da Bíblia
+  title: Criar uma conta
+  description: Como criar uma conta e entrar no My Bible Log
 og:
-  title: Criação de Conta
-  description: Como Criar uma Conta no Meu Diário da Bíblia
+  title: Criar uma conta
+  description: Como criar uma conta e entrar no My Bible Log
 ---
 
 ![](/share.jpg)
 
-# Criação de Conta
+# Criar uma conta
 
-O Meu Diário da Bíblia suporta vários métodos de autenticação para facilitar o início.
+Para facilitar o começo, o My Bible Log oferece várias formas de entrar.
 
-## Login Social
+## Entrar com o Google
 
-Usuários que possuem uma conta do Google podem utilizá-la para fazer login. A página de login possui um botão "Entrar com o Google" que redirecionará para o Google para que você possa fazer o login.
+Se você tem uma conta do Google, pode usá-la para entrar. Na página de login há o botão "Entrar com o Google", que leva você até o Google para fazer o login por lá.
 
-Os usuários nunca inserem sua senha do Google no Meu Diário da Bíblia. Depois que um usuário faz o login no Google, o Google redirecionará para o Meu Diário da Bíblia e passará a verificação de que você fez o login naquele site.
+Sua senha do Google nunca é digitada no My Bible Log. Depois que você entra no Google, ele traz você de volta e confirma ao My Bible Log que o login deu certo.
 
-## Criação de Conta Local
+## Criar uma conta própria
 
-As contas de usuários estão vinculadas a endereços de e-mail. Fazer login com o Google é uma maneira de verificar um endereço de e-mail.
+Toda conta está ligada a um e-mail, e entrar com o Google é uma das formas de confirmar esse endereço.
 
-Usuários que desejam fazer login diretamente no Meu Diário da Bíblia podem se cadastrar no site. Para isso, forneça um endereço de e-mail e uma senha. Um link de verificação será enviado para o endereço de e-mail fornecido, e o endereço de e-mail deve ser verificado com este link antes que um usuário possa fazer login.
+Se preferir entrar direto no My Bible Log, é só se cadastrar no site informando um e-mail e uma senha. Enviaremos um link de verificação para esse e-mail, e só depois de abri-lo você consegue fazer login.
 
-Ao verificar os endereços de e-mail, o Meu Diário da Bíblia evita que contas de spam abusem dos recursos do servidor e garante que o site permaneça rápido e eficiente para todos os usuários.
+Confirmar o e-mail impede que contas de spam consumam os recursos do servidor e mantém o site rápido para todo mundo.
 
-## Alterando Métodos de Login
+## Trocar a forma de login
 
-Os usuários também podem alternar entre métodos de autenticação. Como um endereço de e-mail é o que identifica uma conta, você pode fazer login na mesma conta usando o Google ou sua senha local.
+Você pode alternar entre os métodos quando quiser. Como é o e-mail que identifica a sua conta, você chega à mesma conta tanto pelo Google quanto pela sua própria senha.
 
-Usuários que antes usavam o login social e não têm uma senha podem criar uma:
+Se até agora você só entrava pelo Google e ainda não tem senha, dá para criar uma assim:
 
-* Acesse a página de login
-* Clique em "Entrar" (não é necessário preencher o e-mail ou senha)
-* Um link aparecerá oferecendo redefinir sua senha por e-mail. Clique nele.
-* Abra o e-mail e clique no link.
-* Agora você pode criar uma senha no Meu Diário da Bíblia.
-* Depois de criar sua senha, você será automaticamente conectado.
+* Abra a página de login.
+* Clique em "Entrar" (não precisa preencher e-mail nem senha).
+* Vai aparecer um link para redefinir sua senha por e-mail. Clique nele.
+* Abra o e-mail e siga o link.
+* Agora você já pode criar uma senha no My Bible Log.
+* Assim que ela for salva, o login acontece automaticamente.
 
-## Alterar o Endereço de E-mail da Conta
+## Alterar o e-mail da conta
 
-Os usuários podem alterar seu endereço de e-mail na página de Configurações.
+Você pode alterar seu e-mail na página Configurações.
 
-Na seção "Conta" há um botão "Alterar E-mail".
+Na seção "Conta" há o botão "Alterar e-mail".

@@ -16,6 +16,8 @@
 <script setup lang="ts">
 import ContentPageFooter from '~/components/content/PageFooter.vue';
 
+definePageMeta({ contentPage: true });
+
 const route = useRoute();
 const { t, locale } = useI18n();
 const localePath = useLocalePath();

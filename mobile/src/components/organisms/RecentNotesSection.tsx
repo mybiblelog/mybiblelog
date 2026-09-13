@@ -5,6 +5,9 @@ import type { PassageNote } from "@/src/api/notesApi";
 import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { useRecentNotes } from "@/src/notes/useRecentNotes";
+import { useIsUnauthenticated } from "@/src/stores/auth";
+import { useConnectionStatus } from "@/src/stores/connectivity";
+import { offlineNoteActions } from "@/src/stores/offlineNotes";
 import { notesActions } from "@/src/stores/passageNotes";
 import { useToast } from "@/src/toast/ToastProvider";
 import { Button } from "../atoms/Button";
@@ -27,6 +30,15 @@ export function RecentNotesSection() {
   const t = useT();
   const { showToast } = useToast();
   const { status, notes, refresh } = useRecentNotes();
+  const isUnauthenticated = useIsUnauthenticated();
+  const connectionStatus = useConnectionStatus();
+  // Mirror the Notes tab's local-view gating (app/(tabs)/notes/index.tsx):
+  // when we can't reach the API, a new note must be staged offline instead
+  // of going through the online-only `notesActions.create`, or it's lost.
+  const showLocalView =
+    isUnauthenticated ||
+    connectionStatus === "device-offline" ||
+    connectionStatus === "server-unreachable";
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [menuNote, setMenuNote] = useState<PassageNote | null>(null);
@@ -73,6 +85,13 @@ export function RecentNotesSection() {
         visible={isAddOpen}
         onClose={() => setIsAddOpen(false)}
         onSubmit={(input) => {
+          if (showLocalView) {
+            void offlineNoteActions.createNote(input).then((created) => {
+              if (!created) showToast({ type: "error", message: t("note_could_not_save") });
+              else showToast({ type: "success", message: t("note_saved_offline") });
+            });
+            return;
+          }
           void notesActions.create(input).then((created) => {
             if (!created) showToast({ type: "error", message: t("note_could_not_save") });
             else refresh();

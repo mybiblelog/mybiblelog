@@ -91,11 +91,11 @@ The repository includes [`crowdin.yml`](../../crowdin.yml) at the **root**. It d
 - **Source:** `web/i18n/locales/crowdin/en.json` (merged bundle: `global`, `components`, `pages`)
 - **Translation:** `web/i18n/locales/crowdin/%two_letters_code%.json`
 
-It sets **`languages_mapping`** so Crowdin **`pt-BR`** maps to **`pt.json`**, matching [`shared/platform/i18n.ts`](../../shared/platform/i18n.ts).
+It sets **`languages_mapping`** so Crowdin **`pt-BR`** maps to **`pt.json`**, matching the repo's locale code `pt` in [`shared/platform/i18n.ts`](../../shared/platform/i18n.ts).
 
 ### Portuguese: `pt` in the repo vs `pt-BR` in Crowdin
 
-The app uses locale code **`pt`** (see [`shared/platform/i18n.ts`](../../shared/platform/i18n.ts); `iso` is `pt-BR` for URLs/metadata). Crowdin often uses **`pt-BR`** as the language code.
+The app uses locale code **`pt`** (see [`shared/platform/i18n.ts`](../../shared/platform/i18n.ts)), which is **Brazilian** Portuguese — see the [dialect table in overview.md](overview.md#supported-locales-and-language-tags). Crowdin often uses **`pt-BR`** as the language code.
 
 If downloads would otherwise create `pt-BR.json`, use **language mapping** so the file lands as **`web/i18n/locales/crowdin/pt.json`**, matching the app locale code **`pt`**.
 
