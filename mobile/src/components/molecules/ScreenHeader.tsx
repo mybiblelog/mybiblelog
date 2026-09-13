@@ -8,6 +8,12 @@ import { IconButton, Text } from "../atoms";
 export type ScreenHeaderProps = {
   /** The screen's one top-level heading. */
   title: string;
+  /**
+   * Optional small line above the title (e.g. a year above a month name).
+   * When set, the title itself shrinks so the combined block stays roughly
+   * the height of a single-line title elsewhere.
+   */
+  eyebrow?: string;
   /** Optional orienting line under the title (e.g. Today's date). */
   subtitle?: string;
   /** Renders the leading back chevron. */
@@ -35,6 +41,7 @@ export type ScreenHeaderProps = {
  */
 export function ScreenHeader({
   title,
+  eyebrow,
   subtitle,
   back = false,
   onBack,
@@ -61,7 +68,12 @@ export function ScreenHeader({
         ) : null}
 
         <View style={styles.titleWrap}>
-          <Text variant="title" numberOfLines={1}>
+          {eyebrow ? (
+            <Text variant="label" color="mutedText" numberOfLines={1} style={styles.eyebrow}>
+              {eyebrow}
+            </Text>
+          ) : null}
+          <Text variant="title" numberOfLines={1} style={eyebrow ? styles.titleShrunk : undefined}>
             {title}
           </Text>
           {subtitle ? (
@@ -103,5 +115,10 @@ const styles = StyleSheet.create({
     marginRight: -spacing.xs,
   },
   titleWrap: { flex: 1 },
+  // Sums to 34 — the single-line title's own line-height — so a stacked
+  // eyebrow+title block takes up the same space and the row's height stays
+  // governed by `trailing`, unchanged from screens with a plain title.
+  eyebrow: { fontSize: 12, lineHeight: 14 },
+  titleShrunk: { fontSize: 20, lineHeight: 20 },
   subtitle: { marginTop: spacing["3xs"] },
 });

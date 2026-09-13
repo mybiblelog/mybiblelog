@@ -104,6 +104,9 @@ export default function Tags() {
           <ListItem
             title={<TagPill label={item.label} color={item.color} />}
             subtitle={item.description || undefined}
+            subtitleVariant="bodyRegular"
+            subtitleColor="text"
+            subtitleStyle={styles.tagDescription}
             meta={t("tag_notes_count", { count: item.noteCount })}
             chevron
             onPress={() => setMenuTag(item)}
@@ -223,6 +226,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   listContent: { paddingBottom: spacing.listBottom },
+  tagDescription: { marginTop: spacing.xs },
   listContentEmpty: { flexGrow: 1 },
   separator: { height: spacing.sm },
   loadingContainer: {

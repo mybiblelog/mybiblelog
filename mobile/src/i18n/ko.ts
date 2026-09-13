@@ -167,7 +167,7 @@ export const ko = {
 
   verses: "구절",
 
-  log_entry_menu_title: "읽기: %{passage}",
+  log_entry_menu_title: "%{passage} (%{date})",
   suggestion_menu_title: "추천: %{passage}",
   menu_edit: "편집",
   menu_delete: "삭제",
@@ -416,7 +416,7 @@ export const ko = {
   note_actions: "노트 작업",
   note_menu_title_passage: "%{passage} 관련 노트",
   note_menu_title_passage_multiple: "%{passage} 관련 노트…",
-  note_menu_title_content: "노트: '%{content}'",
+  note_menu_title_date: "%{date} 노트",
   note_editor_new: "새 노트",
   note_editor_edit: "노트 편집",
   note_passages: "구절",

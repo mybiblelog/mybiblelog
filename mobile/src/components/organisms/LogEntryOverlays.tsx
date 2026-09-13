@@ -4,6 +4,7 @@ import { Bible } from "@mybiblelog/shared";
 import type { NotePassage } from "@/src/api/notesApi";
 import type { StoredLogEntry } from "@/src/storage/logEntries";
 import { openPassageInBible } from "@/src/bible/openInBible";
+import { formatLongDate } from "@/src/i18n/date";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { logEntryActions } from "@/src/stores/logEntries";
 import { notesActions } from "@/src/stores/passageNotes";
@@ -72,6 +73,7 @@ export function useLogEntryOverlays({
   const menuTitle = menuEntry
     ? t("log_entry_menu_title", {
         passage: Bible.displayVerseRange(menuEntry.startVerseId, menuEntry.endVerseId, locale),
+        date: formatLongDate(menuEntry.date, locale),
       })
     : undefined;
 

@@ -171,7 +171,7 @@ export const fr = {
 
   verses: "Versets",
 
-  log_entry_menu_title: "Lecture : %{passage}",
+  log_entry_menu_title: "%{passage} (%{date})",
   suggestion_menu_title: "Suggestion : %{passage}",
   menu_edit: "Modifier",
   menu_delete: "Supprimer",
@@ -433,7 +433,7 @@ export const fr = {
   note_actions: "Actions de la note",
   note_menu_title_passage: "Note sur %{passage}",
   note_menu_title_passage_multiple: "Note sur %{passage}…",
-  note_menu_title_content: "Note : '%{content}'",
+  note_menu_title_date: "Note du %{date}",
   note_editor_new: "Nouvelle note",
   note_editor_edit: "Modifier la note",
   note_passages: "Passages",

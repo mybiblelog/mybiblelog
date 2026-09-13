@@ -153,7 +153,7 @@ export function RecentNotesSection() {
 }
 
 const styles = StyleSheet.create({
-  section: { marginTop: spacing.md },
+  section: { marginTop: spacing.xl },
   header: {
     flexDirection: "row",
     alignItems: "center",

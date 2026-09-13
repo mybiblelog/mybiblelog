@@ -35,22 +35,16 @@ function getWeekdayLabels(locale: string): string[] {
   ];
 }
 
-/**
- * The rule between day cells. Cells draw no borders of their own — the grid
- * container is painted `colors.border` and shows through 1px gaps, so any two
- * neighbours share exactly one line and can never double it or drift apart.
- * Same technique as web's `.days-grid`. It's a hairline rule, not spacing, so
- * it deliberately isn't a spacing token.
- */
-const GRID_RULE = 1;
+/** Gap between cells — real spacing now that cells carry their own shape
+ * (background + rounded corners) instead of a painted border line. */
+const GRID_GAP = spacing["2xs"];
 
-/**
- * The frame's outer radius, and the radius the four corner cells take so they
- * follow its curve. Without matching the cells, the container clips their
- * square corners and the 1px rule reads as a blunt diagonal cut.
- */
-const GRID_RADIUS = radius.sm;
-const CELL_RADIUS = GRID_RADIUS - GRID_RULE;
+/** Every cell is rounded by this much on every corner... */
+const CELL_RADIUS_BASE = radius.sm;
+/** ...except the one corner facing the grid's outer edge on each of the 4
+ * corner cells, which takes this larger radius so the whole month reads as
+ * an extra-rounded block rather than four small rounded squares. */
+const CELL_RADIUS_OUTER = radius.xl;
 
 type DayCell = {
   date: string;
@@ -64,6 +58,13 @@ const EntrySeparator = () => <View style={styles.entrySeparator} />;
 
 export default function Calendar() {
   const { colors } = useTheme();
+  // Light's `surface` is defined identical to `background` (both flatten onto
+  // one white canvas), so a cell filled with `surface` has no contrast against
+  // the page and its rounded shape disappears. Dark's `surface` already lifts
+  // above `background`, so this only changes anything in light.
+  const cellBg = colors.surface === colors.background ? colors.surfaceMuted : colors.surface;
+  const adjacentCellBg =
+    colors.surface === colors.background ? colors.surfaceSubtle : colors.surfaceMuted;
   const t = useT();
   const { locale } = useLocale();
   const entries = useLogEntryList();
@@ -76,12 +77,13 @@ export default function Calendar() {
 
   const dailyGoal = settings?.dailyVerseCountGoal ?? 0;
 
-  // Month label like Nuxt CalendarDateIndicator.
-  const monthLabel = useMemo(() => {
-    const jsDate = selectedMonth.toDate();
-    const monthName = jsDate.toLocaleString(locale, { month: "long" });
-    return `${monthName} ${jsDate.getFullYear()}`;
-  }, [locale, selectedMonth]);
+  // Month/year split so the header can stack year above month name (see
+  // ScreenHeader's `eyebrow`) instead of truncating long localized month names.
+  const monthName = useMemo(
+    () => selectedMonth.toDate().toLocaleString(locale, { month: "long" }),
+    [locale, selectedMonth]
+  );
+  const yearLabel = useMemo(() => String(selectedMonth.year()), [selectedMonth]);
 
   // Per-date verse counts come from the dateVerseCounts store, which computes
   // the full map (earliest entry → today) via shared `computeDateVerseCounts`
@@ -173,7 +175,8 @@ export default function Calendar() {
                 title rather than a section heading above one. */}
             <ScreenHeader
               padded
-              title={monthLabel}
+              eyebrow={yearLabel}
+              title={monthName}
               style={styles.monthHeader}
               right={
                 <View style={styles.monthNav}>
@@ -220,16 +223,7 @@ export default function Calendar() {
               ))}
             </View>
 
-            {/* borderRadius rides with the inline backgroundColor on purpose:
-                on Android a background-only update drops a separately
-                registered radius. */}
-            <View
-              testID="calendar.days-grid"
-              style={[
-                styles.daysGrid,
-                { backgroundColor: colors.border, borderRadius: GRID_RADIUS },
-              ]}
-            >
+            <View testID="calendar.days-grid" style={styles.daysGrid}>
               {weeks.map((week, weekIndex) => (
                 <View key={week[0].date} testID="calendar.week-row" style={styles.weekRow}>
                   {week.map((d, dayIndex) => {
@@ -259,46 +253,51 @@ export default function Calendar() {
                         style={[
                           styles.dayCell,
                           {
-                            backgroundColor: d.isCurrentMonth
-                              ? colors.surface
-                              : colors.surfaceMuted,
-                            borderTopLeftRadius: isTopRow && isFirstColumn ? CELL_RADIUS : 0,
-                            borderTopRightRadius: isTopRow && isLastColumn ? CELL_RADIUS : 0,
-                            borderBottomLeftRadius: isBottomRow && isFirstColumn ? CELL_RADIUS : 0,
-                            borderBottomRightRadius: isBottomRow && isLastColumn ? CELL_RADIUS : 0,
+                            backgroundColor: d.isCurrentMonth ? cellBg : adjacentCellBg,
+                            borderTopLeftRadius:
+                              isTopRow && isFirstColumn ? CELL_RADIUS_OUTER : CELL_RADIUS_BASE,
+                            borderTopRightRadius:
+                              isTopRow && isLastColumn ? CELL_RADIUS_OUTER : CELL_RADIUS_BASE,
+                            borderBottomLeftRadius:
+                              isBottomRow && isFirstColumn ? CELL_RADIUS_OUTER : CELL_RADIUS_BASE,
+                            borderBottomRightRadius:
+                              isBottomRow && isLastColumn ? CELL_RADIUS_OUTER : CELL_RADIUS_BASE,
                           },
                         ]}
                       >
-                        <View
-                          style={[
-                            styles.dayNumberCircle,
-                            {
-                              backgroundColor: isSelected
-                                ? colors.primary
-                                : isToday
-                                  ? colors.border
-                                  : "transparent",
-                            },
-                          ]}
-                        >
-                          <Text
-                            variant="label"
-                            color={
-                              isSelected ? "onPrimary" : d.isCurrentMonth ? "text" : "mutedText"
-                            }
+                        <View style={styles.dayCellContent}>
+                          <View
+                            style={[
+                              styles.dayNumberCircle,
+                              {
+                                backgroundColor: isSelected
+                                  ? colors.primary
+                                  : isToday
+                                    ? colors.border
+                                    : "transparent",
+                              },
+                            ]}
                           >
-                            {d.dayNumber}
-                          </Text>
-                        </View>
+                            <Text
+                              variant="label"
+                              color={
+                                isSelected ? "onPrimary" : d.isCurrentMonth ? "text" : "mutedText"
+                              }
+                            >
+                              {d.dayNumber}
+                            </Text>
+                          </View>
 
-                        {(showGoldStar || showBlueStar) && (
-                          <Ionicons
-                            name="star"
-                            size={16}
-                            color={showGoldStar ? colors.starGold : colors.secondary}
-                            style={styles.dayStar}
-                          />
-                        )}
+                          <View style={styles.dayStarSlot}>
+                            {(showGoldStar || showBlueStar) && (
+                              <Ionicons
+                                name="star"
+                                size={16}
+                                color={showGoldStar ? colors.starGold : colors.secondary}
+                              />
+                            )}
+                          </View>
+                        </View>
 
                         {d.isCurrentMonth && (
                           <View
@@ -373,8 +372,8 @@ const styles = StyleSheet.create({
   weekdaysRow: {
     flexDirection: "row",
     marginHorizontal: spacing.pageGutter,
-    paddingHorizontal: GRID_RULE,
-    gap: GRID_RULE,
+    paddingHorizontal: GRID_GAP,
+    gap: GRID_GAP,
     paddingBottom: spacing["2xs"],
   },
   weekdayCell: {
@@ -386,12 +385,11 @@ const styles = StyleSheet.create({
   daysGrid: {
     marginHorizontal: spacing.pageGutter,
     marginBottom: spacing.sm,
-    padding: GRID_RULE,
-    gap: GRID_RULE,
+    gap: GRID_GAP,
   },
   weekRow: {
     flexDirection: "row",
-    gap: GRID_RULE,
+    gap: GRID_GAP,
   },
   dayCell: {
     position: "relative",
@@ -399,6 +397,12 @@ const styles = StyleSheet.create({
     minWidth: 0,
     minHeight: 70,
     padding: spacing["2xs"],
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  dayCellContent: {
+    alignItems: "center",
+    justifyContent: "center",
   },
   dayNumberCircle: {
     width: 28,
@@ -408,10 +412,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     overflow: "hidden",
   },
-  dayStar: {
-    position: "absolute",
-    top: 6,
-    right: 6,
+  dayStarSlot: {
+    height: 16,
+    marginTop: spacing["3xs"],
+    alignItems: "center",
+    justifyContent: "center",
   },
   dayProgressTrack: {
     position: "absolute",

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import { StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
+import { StyleSheet, View, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
 import { radius, spacing, useScalePress } from "@/src/design";
-import type { ThemeColors } from "@/src/design";
+import type { ThemeColors, TypographyVariant } from "@/src/design";
 import { AnimatedPressable } from "../atoms/AnimatedPressable";
 import { Icon, type IconName } from "../atoms/Icon";
 import { Text } from "../atoms/Text";
@@ -15,6 +15,11 @@ export type ListItemProps = {
   /** Semantic color for the title (ignored when `title` is a node). */
   titleColor?: keyof ThemeColors;
   subtitle?: string;
+  /** Override the subtitle's type style. Default `subtitle`/`mutedText` (a metadata line). */
+  subtitleVariant?: TypographyVariant;
+  subtitleColor?: keyof ThemeColors;
+  /** Extra style merged onto the subtitle (e.g. to widen its top margin). */
+  subtitleStyle?: StyleProp<TextStyle>;
   meta?: string;
   leading?: ReactNode;
   leadingIcon?: IconName;
@@ -46,6 +51,9 @@ export function ListItem({
   title,
   titleColor = "text",
   subtitle,
+  subtitleVariant = "subtitle",
+  subtitleColor = "mutedText",
+  subtitleStyle,
   meta,
   leading,
   leadingIcon,
@@ -75,7 +83,11 @@ export function ListItem({
           title
         )}
         {!!subtitle && (
-          <Text variant="subtitle" color="mutedText" style={styles.subtitle}>
+          <Text
+            variant={subtitleVariant}
+            color={subtitleColor}
+            style={[styles.subtitle, subtitleStyle]}
+          >
             {subtitle}
           </Text>
         )}
