@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
     marginTop: spacing["3xs"],
   },
   addButton: {
-    borderRadius: radius.xl,
+    borderRadius: radius.pill,
   },
   emptyWrap: { paddingVertical: spacing.md },
   noEntries: {
