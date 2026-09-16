@@ -1,0 +1,81 @@
+# Onboarding wizard: walk the full flow end-to-end on a fresh install.
+#
+# Not tagged smoke (opt-in via --include-tags onboarding) since it's slow
+# (its own cold boot) and orthogonal to the rest of the suite. Deliberately
+# does NOT use common/login.yaml or common/open-app.yaml — both now
+# auto-skip onboarding — nor common/resume.yaml, since this flow's
+# clearState cold boot would invalidate the warm session 02-06 reuse.
+appId: com.mybiblelog.app
+tags:
+  - onboarding
+---
+- runFlow:
+    file: ../common/cold-launch.yaml
+- extendedWaitUntil:
+    visible:
+      id: "onboarding.choice-new"
+    timeout: 90000
+
+# --- Choice step: "Get Started" -> Welcome ------------------------------
+- tapOn:
+    id: "onboarding.choice-new"
+- assertVisible:
+    id: "onboarding.welcome-next"
+
+# --- Welcome step: exercise Back, then proceed via Next (not Skip, which
+# other flows already cover as the default onboarding-dismiss path) -----
+- tapOn: "Back"
+- assertVisible:
+    id: "onboarding.choice-new"
+- tapOn:
+    id: "onboarding.choice-new"
+- tapOn:
+    id: "onboarding.welcome-next"
+
+# --- Goal step: verify prefilled value, adjust via steppers, exercise Back
+- assertVisible:
+    id: "onboarding.goal-verses-input"
+- tapOn:
+    id: "onboarding.goal-increase"
+- tapOn:
+    id: "onboarding.goal-decrease"
+- tapOn: "Back"
+- assertVisible:
+    id: "onboarding.welcome-next"
+- tapOn:
+    id: "onboarding.welcome-next"
+- tapOn:
+    id: "onboarding.goal-next"
+
+# --- Bible step: exercise Back first (BibleStep's selections are local
+# state, so re-entering via Back+Next would lose them — test navigation
+# before picking, not after) ---------------------------------------------
+- assertVisible:
+    id: "onboarding.bible-version-select"
+- tapOn: "Back"
+- assertVisible:
+    id: "onboarding.goal-next"
+- tapOn:
+    id: "onboarding.goal-next"
+
+# Pick a translation + reading app, then proceed.
+- assertVisible:
+    id: "onboarding.bible-version-select"
+- tapOn:
+    id: "onboarding.bible-version-select"
+- tapOn: "English Standard Version (ESV)"
+- tapOn:
+    id: "onboarding.bible-app-select"
+- tapOn: "Bible Gateway"
+- tapOn:
+    id: "onboarding.bible-next"
+
+# --- Finish step: complete onboarding, land on Today (logged out) ------
+- assertVisible:
+    id: "onboarding.finish"
+- tapOn:
+    id: "onboarding.finish"
+- extendedWaitUntil:
+    visible:
+      id: "today.add-entry"
+    timeout: 15000

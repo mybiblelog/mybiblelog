@@ -1,6 +1,7 @@
 import { test, expect } from '../../fixtures';
 import { seedNote, seedTag } from '../../helpers/seed';
 import { verseId, BOOK } from '../../helpers/passages';
+import { waitForHydration } from '../../helpers/hydration';
 
 test.describe('Notes page', () => {
   test('user can create a note via the editor modal', async ({ page }) => {
@@ -307,9 +308,18 @@ test.describe('Notes page', () => {
   });
 
   test('back navigation with unsaved changes prompts before closing the editor', async ({ page }) => {
-    // Two history entries so `goBack()` has somewhere to return to.
+    // Two history entries so `goBack()` has somewhere to return to. The second
+    // hop must be an in-app (client-side) navigation: a real browser back from
+    // a `page.goto`-loaded document is a cross-document navigation the app's
+    // router middleware can never intercept, so the confirm dialog wouldn't
+    // have anywhere to run.
     await page.goto('/tags');
-    await page.goto('/notes');
+    await waitForHydration(page);
+    await page.getByLabel('main navigation').getByRole('link', { name: 'Notes' }).click();
+    await expect(page).toHaveURL(/\/notes/);
+    // The URL updates on push before the async /notes page component finishes
+    // rendering; without this, "New" still hits the old /tags page underneath.
+    await expect(page.getByRole('heading', { name: 'Notes' })).toBeVisible();
 
     await page.getByRole('button', { name: 'New' }).click();
     const editor = page.getByTestId('note-editor');

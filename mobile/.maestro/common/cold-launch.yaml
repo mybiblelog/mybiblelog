@@ -1,0 +1,34 @@
+# Reusable cold boot: clear state, get the dev-client past the Expo launcher
+# and developer-menu intro sheet, and land on whatever screen the app opens
+# to next (Today, or the onboarding wizard on a genuinely fresh install).
+# Callers are responsible for handling onboarding and waiting for their own
+# target screen — this file only gets the JS bundle running.
+appId: com.mybiblelog.app
+---
+- launchApp:
+    clearState: true
+# Dev-client builds land on the Expo launcher after a state clear. Its LAN
+# server discovery is flaky, so once the launcher is up, deep-link straight
+# to the adb-reversed localhost dev server (run.mjs sets `adb reverse
+# tcp:8081`). Deep-linking before the launcher settles gets swallowed.
+- extendedWaitUntil:
+    optional: true
+    visible: "DEVELOPMENT SERVERS"
+    timeout: 20000
+- openLink: "biblelog://expo-development-client/?url=http%3A%2F%2F127.0.0.1%3A8081"
+# The first launch after a state clear pops the developer-menu intro sheet
+# over the bundle-loading spinner; dismiss it before the app UI can appear.
+# "Continue" swaps the intro for the actual dev-tools sheet; back closes it.
+- extendedWaitUntil:
+    optional: true
+    visible: "This is the developer menu.*"
+    timeout: 45000
+- runFlow:
+    when:
+      visible: "This is the developer menu.*"
+    commands:
+      - tapOn: "Continue"
+      - extendedWaitUntil:
+          visible: "Reload"
+          timeout: 10000
+      - back

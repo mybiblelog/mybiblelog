@@ -44,11 +44,18 @@ tags:
 - assertTrue: ${output.code != null}
 - tapOn:
     id: "change-email.code.code"
-# Typing the full code auto-submits; the app returns to the Account screen.
+# Typing the full code auto-submits and navigates back to the Account screen on
+# its own, which unmounts the code field and dismisses the keyboard. Don't
+# hideKeyboard here: Maestro dismisses the keyboard on Android with a back-press,
+# and once the code screen has already unmounted that back-press instead pops
+# the Account screen itself, landing on the top-level Settings screen (see the
+# identical note in 08-reset-password.yaml).
 - inputText: ${output.code}
-- hideKeyboard
 - extendedWaitUntil:
     visible: "Logout"
     timeout: 20000
-# The Account screen now shows the new address.
-- assertVisible: ${output.newEmail}
+# The Account screen now shows the new address, as part of the combined
+# "Signed in as <email>" text node. Maestro anchors assertVisible text (full
+# match, see the identical note in 02-add-entry.yaml), so match with wildcards
+# rather than the bare address.
+- assertVisible: ".*${output.newEmail}.*"
