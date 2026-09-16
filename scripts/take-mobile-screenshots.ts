@@ -86,8 +86,15 @@ function writeBooleanPref(relativeFile: string, key: string, value: boolean): vo
     '<map>\n' +
     `    <boolean name="${key}" value="${value}" />\n` +
     '</map>\n';
+  // `adb shell` rejoins its argv with plain spaces before handing the result
+  // to the device's shell (it doesn't preserve argv boundaries the way
+  // execFileSync does locally) — so a multi-word `sh -c` script passed as its
+  // own array element loses its quoting in transit and gets split back into
+  // separate words (`sh -c mkdir` with `-p shared_prefs && cat > ...` as
+  // trailing, ignored argv). Wrapping the script in its own single quotes
+  // inside one combined string survives that rejoin.
   adb(
-    ['shell', 'run-as', ANDROID_PACKAGE, 'sh', '-c', `mkdir -p shared_prefs && cat > ${relativeFile}`],
+    ['shell', `run-as ${ANDROID_PACKAGE} sh -c 'mkdir -p shared_prefs && cat > ${relativeFile}'`],
     { allowFail: true, input: prefsXml },
   );
 }
