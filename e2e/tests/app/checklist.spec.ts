@@ -1,5 +1,5 @@
 import { test, expect } from '../../fixtures';
-import { seedLogEntries, getLogEntries } from '../../helpers/seed';
+import { seedLogEntries, getLogEntries, setSettings } from '../../helpers/seed';
 import { chapterRange, chapterVerseCount, verseId, BOOK } from '../../helpers/passages';
 import { today, daysAgo } from '../../helpers/dates';
 
@@ -92,6 +92,9 @@ test.describe('Chapter Checklist', () => {
   });
 
   test('a chapter logged on a previous date explains it was logged before today', async ({ page, api }) => {
+    // lookBackDate defaults to today (signup date), which would hide a
+    // yesterday-dated entry entirely — push it back so the entry counts.
+    await setSettings(api, { lookBackDate: daysAgo(7) });
     await seedLogEntries(api, [{ date: daysAgo(1), ...chapterRange(BOOK.GENESIS, 1) }]);
 
     await page.goto('/checklist');

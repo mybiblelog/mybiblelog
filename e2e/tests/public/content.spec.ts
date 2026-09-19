@@ -62,6 +62,6 @@ test.describe('Content pages', () => {
   test('German homepage renders localized hero content', async ({ page, context, baseURL }) => {
     await context.addCookies([{ name: 'i18n_redirected', value: 'de', url: baseURL! }]);
     await page.goto('/de');
-    await expect(page.getByText('Lies die ganze Bibel — auf deine Weise.')).toBeVisible();
+    await expect(page.getByText('Die ganze Bibel lesen — auf Ihre Weise.')).toBeVisible();
   });
 });

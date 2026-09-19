@@ -20,3 +20,6 @@ executionOrder:
     - 07-register-verify
     - 08-reset-password
     - 09-change-email
+    # Onboarding runs last: its own clearState cold boot would invalidate the
+    # warm session 02-06 reuse via common/resume.yaml if run earlier.
+    - 10-onboarding

@@ -42,14 +42,12 @@ export const indexOfWeekday = (year: number, month: number, date: number) => {
  * @param {number} date 1, 2, 3, etc.
  */
 export const weekFromDate = (year: number, month: number, date: number) => {
-  // Start at noon on the given day
+  // Use noon to avoid DST rollover issues when shifting days below
   const referenceDate = new Date(year, month, date, 12);
 
-  // Move the day back to Sunday
   const daysSinceSunday = referenceDate.getDay();
   referenceDate.setDate(referenceDate.getDate() - daysSinceSunday);
 
-  // For each day of the week, capture the date and increment
   const result = [];
   for (let i = 0; i < 7; i++) {
     const dayDate = dayjs(referenceDate).format('YYYY-MM-DD');

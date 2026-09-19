@@ -17,16 +17,13 @@ const getBrowserCache = (key: string) => {
   }
 
   const itemString = sessionStorage.getItem(key);
-  // If the item doesn't exist, return null
   if (!itemString) {
     return null;
   }
   try {
     const item = JSON.parse(itemString);
     const now = new Date();
-    // Compare the current time with the expiration time
     if (now.getTime() > item.expiration) {
-      // If the item has expired, remove it from storage and return null
       sessionStorage.removeItem(key);
       return null;
     }

@@ -4,26 +4,27 @@
 # start from a clean, logged-out app.
 appId: com.mybiblelog.app
 ---
-- launchApp:
-    clearState: true
+- runFlow:
+    file: ./cold-launch.yaml
+# A genuinely fresh install lands on the onboarding wizard instead of Today.
+# Dismiss it via its shortest path (Skip, on the Welcome step) so e2e flows
+# don't have to care about onboarding; `screenshots/capture.yaml` uses the
+# same guard. A dev-client already used for regular development will already
+# have onboarding completed, making this a no-op there.
 - extendedWaitUntil:
     optional: true
-    visible: "DEVELOPMENT SERVERS"
-    timeout: 20000
-- openLink: "biblelog://expo-development-client/?url=http%3A%2F%2F127.0.0.1%3A8081"
-- extendedWaitUntil:
-    optional: true
-    visible: "This is the developer menu.*"
-    timeout: 45000
+    visible:
+      id: "onboarding.choice-new"
+    timeout: 90000
 - runFlow:
     when:
-      visible: "This is the developer menu.*"
+      visible:
+        id: "onboarding.choice-new"
     commands:
-      - tapOn: "Continue"
-      - extendedWaitUntil:
-          visible: "Reload"
-          timeout: 10000
-      - back
+      - tapOn:
+          id: "onboarding.choice-new"
+      - tapOn:
+          id: "onboarding.welcome-skip"
 - extendedWaitUntil:
     visible:
       id: "today.add-entry"

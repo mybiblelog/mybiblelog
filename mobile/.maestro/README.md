@@ -65,6 +65,7 @@ one tag, one note — works for every flow) and `empty`.
 | `04-notes-tags` | smoke | Tag + note creation, search filtering, and filters clearing when the Notes tab loses focus. |
 | `05-bible-progress` | smoke | Bible Books renders seeded progress and links to the Progress page. |
 | `06-insights` | smoke | Settings links to Insights; all four views (Activity/Books/Frequency/Trend) render. |
+| `10-onboarding` | onboarding | Walks the onboarding wizard end-to-end (Choice → Welcome → Goal → Bible → Finish), including Back navigation between steps. Not tagged `smoke`; run explicitly via `--include-tags onboarding`. `common/login.yaml`/`common/open-app.yaml` auto-skip onboarding via its `Welcome` step's Skip button, so this is the only flow that exercises the wizard itself. |
 
 Future candidates: settings language round-trip (es→en), checklist chapter
 toggles. Calendar flows were skipped as date-brittle.
