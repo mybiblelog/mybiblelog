@@ -11,10 +11,11 @@ allowed-tools: [Bash, Read, Edit, Write]
 Perform a thorough code review of changes in this repository, checking them against the project's architectural rules, style conventions, and quality standards. Produce a prioritized list of findings with fix guidance.
 
 ## Project Overview
-My Bible Log is a monorepo with three packages:
-- **`api/`** — Express 5 + TypeScript + Mongoose REST API. Framework-agnostic route tables, handlers, errors, and helpers live under `api/http/` (`api/http/routes/*.ts`, `api/http/handlers/*.ts`, `api/http/errors/`, `api/http/helpers/`); the Express wiring that mounts them lives in `api/express/router.ts`. Validation uses Zod. Errors use typed classes (`ValidationError`, `InvalidRequestError`, `UnauthorizedError`, `NotFoundError`). All endpoints return `ApiResponse` from `api/http/response.ts`.
+My Bible Log is a monorepo with four packages:
+- **`api/`** — Express 5 + TypeScript REST API, the single backend for both `web/` and `mobile/`. Data access goes through a **repository layer over the native `mongodb` driver** (`api/repositories/*.repository.ts`, composed by `api/repositories/useRepositories.ts`) — there is no Mongoose. Route handlers are **framework-agnostic**: `api/http/handlers/*.ts` are pure `(req, deps) => HttpResult` functions that never touch Express's `req`/`res` directly; the Express-specific translation (including cookies) lives only in `api/http/adapters/express.ts`, wired up via `api/express/router.ts`. Route tables live in `api/http/routes/*.ts`. Validation uses Zod (`api/validation/`). Errors use typed `AppError` subclasses from `api/http/errors/` (`ValidationError`, `UnauthenticatedError`, `UnauthorizedError`, `NotFoundError`, `TooManyRequestsError`). All endpoints return `ApiResponse` from `api/http/response.ts`. See `.claude/rules/api.md` for the full convention reference.
 - **`web/`** — Vue 3 + Nuxt 4 frontend (TypeScript). Source lives under `web/app/`. Components are `.vue` SFCs using `<script setup lang="ts">` (Composition API). State is managed exclusively via **Pinia** stores in `web/app/stores/`. Styling uses global CSS classes (`mbl-*` prefix) and CSS custom properties — no SCSS modules.
-- **`shared/`** — `@mybiblelog/shared` package consumed by both `api/` and `web/`. Contains domain utilities (`Bible`, `SimpleDate`, etc.).
+- **`mobile/`** — Expo / React Native (TypeScript) client, an independent frontend on the same `api/` backend as `web/`. Source lives under `mobile/src/` (design tokens and components under `src/design`/`src/components`, screens under `app/` via Expo Router). It does not share `web/`'s Vue/Pinia/CSS-token conventions — it has its own design system and its own typed local-storage layer (`src/**/keys.ts`) analogous to but separate from web's `app-storage.ts`. It consumes `@mybiblelog/shared` the same way `web/` and `api/` do. Review mobile changes against mobile-specific conventions, not the Nuxt/Vue or CSS-token checklists below, which apply to `web/` only.
+- **`shared/`** — `@mybiblelog/shared` package consumed by `api/`, `web/`, and `mobile/`. Contains domain utilities (`Bible`, `SimpleDate`, etc.).
 
 ## Instructions
 
@@ -86,10 +87,12 @@ For each finding, record:
 ### Architecture — API routes
 
 - [ ] New routes are added to the appropriate route table under `api/http/routes/`. Route files are scoped by domain (e.g. `log-entries.ts`, `auth.ts`). Do not add unrelated logic to a route file.
-- [ ] All request body / query parameter inputs are validated with **Zod** before use. Raw `req.body` values must not be passed to Mongoose queries without validation.
-- [ ] Errors are thrown using the typed error classes (`ValidationError`, `InvalidRequestError`, `UnauthorizedError`, `NotFoundError`) from `api/http/errors/`. Do not send raw `res.status(4xx).json(...)` responses — use the error middleware.
+- [ ] All request body / query parameter inputs are validated with **Zod** via the shared `validate(req, {...})` helper (`api/validation/validate.ts`) before use. Handlers use the validated return value, not `req.body`/`req.query` directly. Raw validated values must not bypass a repository method to reach the database directly.
+- [ ] Data access goes through `deps.repositories.x` (the repository layer over the native MongoDB driver — see `.claude/rules/api.md`), not a direct MongoDB driver call from a handler. Direct driver access is reserved for `api/repositories/*` and `api/scripts/*`.
+- [ ] Handlers stay framework-agnostic: typed `RouteHandler = (req, deps) => Promise<HttpResult>`, no direct `req`/`res` (Express) access, no direct imports of repositories/auth (must come through `deps`).
+- [ ] Errors are thrown using the typed `AppError` subclasses (`ValidationError`, `UnauthenticatedError`, `UnauthorizedError`, `NotFoundError`, `TooManyRequestsError`) from `api/http/errors/`. Do not send raw `res.status(4xx).json(...)` responses or return an error `HttpResult` by hand — throw and let the adapter/error middleware handle it.
 - [ ] All responses follow the `ApiResponse` shape from `api/http/response.ts`. Success responses have a `data` key; error responses flow through the error middleware.
-- [ ] Protected routes call `authCurrentUser` middleware before the handler. New admin-only routes must verify the `isAdmin` flag on the resolved user.
+- [ ] Protected routes call `deps.authenticate(req)` (backed by `authCurrentUser`) before using `currentUser`. New admin-only routes pass `adminOnly: true` rather than checking `isAdmin` ad hoc in the handler body.
 - [ ] No sensitive data (passwords, tokens, full user objects) appears in API response bodies beyond what is explicitly required.
 
 ### Routing (Nuxt)
@@ -139,7 +142,7 @@ For each finding, record:
 
 ### Tests
 
-- [ ] New API route handlers have corresponding Jest integration tests in `api/test/`. Tests use `requestApi` (supertest) to exercise the real route, with real test-user setup via `createTestUser` / `deleteTestUser`. Do not mock the database — integration tests hit the real (test) database.
+- [ ] New API route handlers have test coverage in one or both of the two Vitest styles used in `api/test/`: integration tests (`api/test/*.test.ts`) using `requestApi` (supertest against a live running server) with real test-user setup via `createTestUser` / `deleteTestUser`, and/or handler unit tests (`api/test/*.handlers.test.ts`) that call the handler directly with fake `RouteDependencies`/`HttpRequest` — no DB/server. Prefer the handler-unit style for new business logic; integration tests remain the source of truth for HTTP-contract coverage. Do not mock the database in integration tests — they hit the real (test) database.
 - [ ] New utility functions in `shared/` have Jest unit tests co-located as `*.test.ts` files.
 - [ ] New significant user-facing flows have a Playwright e2e spec added to `e2e/`. Tests use role-based or label-based selectors (`getByRole`, `getByLabel`) over CSS selectors where possible.
 - [ ] `data-testid` attributes are added to interactive elements that Playwright tests need to target (e.g. `data-testid="log-entries"`, `data-testid="reading-suggestions"`).
