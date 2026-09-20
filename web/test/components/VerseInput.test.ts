@@ -33,4 +33,27 @@ describe('VerseInput (single-verse mode)', () => {
     await wrapper.get('.verse-input__clear').trigger('click');
     expect(wrapper.emitted('update:modelValue')!.at(-1)![0]).toBeNull();
   });
+
+  it('emits enter on Enter keydown once the text is a valid reference', async () => {
+    const wrapper = mount(VerseInput);
+    const input = wrapper.get('input.verse-input__input');
+    await input.setValue(john316Text);
+    await input.trigger('keydown.enter');
+    expect(wrapper.emitted('enter')).toBeTruthy();
+  });
+
+  it('does not emit enter on Enter keydown while the text is invalid', async () => {
+    const wrapper = mount(VerseInput);
+    const input = wrapper.get('input.verse-input__input');
+    await input.setValue('not a verse');
+    await input.trigger('keydown.enter');
+    expect(wrapper.emitted('enter')).toBeUndefined();
+  });
+
+  it('emits enter on Enter keydown when the field is empty', async () => {
+    const wrapper = mount(VerseInput);
+    const input = wrapper.get('input.verse-input__input');
+    await input.trigger('keydown.enter');
+    expect(wrapper.emitted('enter')).toBeTruthy();
+  });
 });

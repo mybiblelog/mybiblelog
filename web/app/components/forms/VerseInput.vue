@@ -13,6 +13,7 @@
           @input="onTextInput"
           @focus="onFocus"
           @blur="onBlurNormalize"
+          @keydown.enter.prevent="onKeydownEnter"
         >
         <button
           v-if="hasText"
@@ -141,7 +142,13 @@ const props = withDefaults(defineProps<{
   inputTestId: '',
 });
 
-const emit = defineEmits<{ 'update:modelValue': [value: { startVerseId: number; endVerseId: number } | null] }>();
+const emit = defineEmits<{
+  'update:modelValue': [value: { startVerseId: number; endVerseId: number } | null];
+  // Fired on Enter, but only when the current text is empty or already a valid
+  // reference — callers can wire this straight into their existing submit/apply
+  // action without re-checking validity themselves.
+  enter: [];
+}>();
 
 const { t, locale } = useI18n();
 
@@ -261,6 +268,13 @@ function onTextInput(e: Event) {
 }
 
 function onFocus() { isEditing.value = true; }
+
+function onKeydownEnter() {
+  // showInvalid already drives the visible error state below the field; if it's
+  // showing, Enter should do nothing rather than bypass it and submit anyway.
+  if (showInvalid.value) { return; }
+  emit('enter');
+}
 
 function clear() {
   localText.value = '';

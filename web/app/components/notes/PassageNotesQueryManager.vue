@@ -1,5 +1,5 @@
 <template>
-  <div class="passage-notes-query-manager">
+  <form class="passage-notes-query-manager" novalidate @submit.prevent="onSubmit">
     <div class="mbl-field">
       <label class="mbl-label">{{ t('search_text') }}</label>
       <div class="mbl-control">
@@ -9,6 +9,7 @@
           type="text"
           data-testid="notes-query-search"
           :placeholder="t('search_placeholder')"
+          @keydown.enter.prevent="onSubmit"
         >
       </div>
     </div>
@@ -77,7 +78,7 @@
 
     <div class="mbl-field">
       <label class="mbl-label">{{ t('passage') }}</label>
-      <verse-input v-model="passageRangeModel" :multi-verse="true" input-test-id="notes-query-passage" />
+      <verse-input v-model="passageRangeModel" :multi-verse="true" input-test-id="notes-query-passage" @enter="onSubmit" />
     </div>
 
     <div v-if="hasSelectedPassage" class="mbl-field">
@@ -166,7 +167,7 @@
         </button>
       </template>
     </app-modal>
-  </div>
+  </form>
 </template>
 
 <script setup lang="ts">
@@ -321,6 +322,15 @@ function onTagIdsChange(tagIds: Array<string | number>) {
     return;
   }
   setDraft({ filterTags: nextTagIds });
+}
+
+// Enter in the search-text field or the passage VerseInput lands here (the
+// VerseInput itself withholds its `enter` event while its text is invalid, so
+// by the time we get here there's nothing left to validate) — it just reuses
+// the same apply path as the Apply button, gated by the same dirty check.
+function onSubmit() {
+  if (!isDirty.value) { return; }
+  applyDraft();
 }
 
 </script>
