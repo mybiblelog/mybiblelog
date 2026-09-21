@@ -3,6 +3,11 @@
  * itself comes from `insights.computeDailyVerseSeries` (or any `{ count }`
  * series); this module only does the coordinate math, so the same output can
  * feed a Vue `<svg>`, a React component, or a snapshot test.
+ *
+ * `buildLineChartGeometry` plots one series against its own y-scale.
+ * `buildMultiLineChartGeometry` plots several named series that share a
+ * single y-scale (and therefore a single y-axis), for charts comparing
+ * multiple metrics over the same date range.
  */
 
 export type ChartSeriesPoint = {
@@ -103,4 +108,70 @@ export const buildLineChartGeometry = (
   }
 
   return { points, linePoints, areaPath, yTicks, maxCount };
+};
+
+export type NamedChartSeries = {
+  key: string;
+  points: ReadonlyArray<ChartSeriesPoint>;
+};
+
+export type MultiLineSeriesGeometry = {
+  key: string;
+  points: ChartPoint[];
+  /** Space-separated "x,y" pairs for an SVG <polyline>. */
+  linePoints: string;
+};
+
+export type MultiLineChartGeometry = {
+  series: MultiLineSeriesGeometry[];
+  yTicks: ChartYTick[];
+  maxCount: number;
+};
+
+/**
+ * Maps several named series onto one shared y-scale, so multiple metrics can
+ * be compared on a single chart instead of each getting its own axis. Series
+ * are assumed to share the same date axis (same length/order); x-positions
+ * are spaced using the longest series. No area path is produced — overlapping
+ * fills from several series muddy rather than clarify, so multi-line charts
+ * render lines only.
+ */
+export const buildMultiLineChartGeometry = (
+  seriesList: ReadonlyArray<NamedChartSeries>,
+  dimensions: Partial<ChartDimensions> = {},
+  yTickSteps = 4,
+): MultiLineChartGeometry => {
+  const { width, height, padLeft, padRight, padTop, padBottom } = {
+    ...DEFAULT_CHART_DIMENSIONS,
+    ...dimensions,
+  };
+
+  const innerW = width - padLeft - padRight;
+  const innerH = height - padTop - padBottom;
+  const maxCount = Math.max(1, ...seriesList.flatMap(s => s.points.map(p => p.count)));
+  const n = Math.max(...seriesList.map(s => s.points.length), 0);
+
+  const series: MultiLineSeriesGeometry[] = seriesList.map(({ key, points: seriesPoints }) => {
+    const mapped: ChartPoint[] = seriesPoints.map((p, i) => {
+      const x = n <= 1 ? padLeft + innerW / 2 : padLeft + (i / (n - 1)) * innerW;
+      const y = padTop + innerH - (p.count / maxCount) * innerH;
+      return { date: p.date, count: p.count, x, y };
+    });
+    const linePoints = mapped.map(p => `${p.x},${p.y}`).join(' ');
+    return { key, points: mapped, linePoints };
+  });
+
+  // See buildLineChartGeometry: cap the tick ladder at maxCount so a small
+  // shared maximum doesn't round to repeated labels on evenly spaced lines.
+  const steps = Math.min(yTickSteps, maxCount);
+
+  const yTicks: ChartYTick[] = [];
+  for (let i = 0; i <= steps; i++) {
+    yTicks.push({
+      value: Math.round((maxCount / steps) * i),
+      y: padTop + innerH - (i / steps) * innerH,
+    });
+  }
+
+  return { series, yTicks, maxCount };
 };

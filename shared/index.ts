@@ -52,12 +52,16 @@ export {
 } from './insights/calendar';
 export {
   buildLineChartGeometry,
+  buildMultiLineChartGeometry,
   DEFAULT_CHART_DIMENSIONS,
   type ChartSeriesPoint,
   type ChartDimensions,
   type ChartPoint,
   type ChartYTick,
   type LineChartGeometry,
+  type NamedChartSeries,
+  type MultiLineSeriesGeometry,
+  type MultiLineChartGeometry,
 } from './insights/charts';
 export {
   getBookIndexFromVerseId,
