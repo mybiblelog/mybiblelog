@@ -62,6 +62,51 @@ test.describe('Notes page', () => {
     await expect(page.getByTestId('passage-note')).toContainText('Beta note about exodus');
   });
 
+  test('pressing Enter in the search text field applies the filter', async ({ page, api }) => {
+    await seedNote(api, { content: 'Alpha note about creation', passages: [] });
+    await seedNote(api, { content: 'Beta note about exodus', passages: [] });
+
+    await page.goto('/notes');
+    await expect(page.getByTestId('passage-note')).toHaveCount(2);
+
+    const sidebar = page.locator('.notes-page__sidebar');
+    await sidebar.getByTestId('notes-query-search').fill('exodus');
+    await sidebar.getByTestId('notes-query-search').press('Enter');
+
+    await expect(page.getByTestId('passage-note')).toHaveCount(1);
+    await expect(page.getByTestId('passage-note')).toContainText('Beta note about exodus');
+  });
+
+  test('pressing Enter in the passage field applies a valid filter, but not an invalid one', async ({ page, api }) => {
+    await seedNote(api, {
+      content: 'Genesis note',
+      passages: [{ startVerseId: verseId(BOOK.GENESIS, 1, 1), endVerseId: verseId(BOOK.GENESIS, 1, 5) }],
+    });
+    await seedNote(api, {
+      content: 'John note',
+      passages: [{ startVerseId: verseId(BOOK.JOHN, 3, 16), endVerseId: verseId(BOOK.JOHN, 3, 16) }],
+    });
+
+    await page.goto('/notes');
+    await expect(page.getByTestId('passage-note')).toHaveCount(2);
+
+    const sidebar = page.locator('.notes-page__sidebar');
+    const passageInput = sidebar.getByTestId('notes-query-passage');
+
+    // Invalid reference: Enter must not apply the filter or hit the API, and
+    // the field's own invalid-reference hint should be showing.
+    await passageInput.fill('not a passage');
+    await passageInput.press('Enter');
+    await expect(page.locator('.verse-input__help')).toBeVisible();
+    await expect(page.getByTestId('passage-note')).toHaveCount(2);
+
+    // Valid reference: Enter applies it the same as clicking Apply would.
+    await passageInput.fill('Genesis 1:1-31');
+    await passageInput.press('Enter');
+    await expect(page.getByTestId('passage-note')).toHaveCount(1);
+    await expect(page.getByTestId('passage-note')).toContainText('Genesis note');
+  });
+
   test('tag filter narrows results', async ({ page, api }) => {
     const tag = await seedTag(api, { label: 'Favorites', color: '#dd3344' });
     await seedNote(api, { content: 'Tagged note', passages: [], tags: [tag.id] });
