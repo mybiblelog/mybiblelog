@@ -962,7 +962,7 @@ describe('auth handlers (unit)', () => {
         audience: 'aud',
       });
       const existing = { ...verifiedUser, googleId: null } as unknown as UserRecord;
-      const linkGoogleAccount = vi.fn(async () => existing);
+      const linkGoogleAccount = vi.fn(async () => {});
       const create = vi.fn();
       const deps = makeDeps({
         users: { findByEmail: async () => existing, linkGoogleAccount, create },
@@ -972,7 +972,7 @@ describe('auth handlers (unit)', () => {
 
       expect(linkGoogleAccount).toHaveBeenCalledWith(USER_ID, 'g-sub-1');
       expect(create).not.toHaveBeenCalled();
-      expect(typeof (result.body.data as { token: string }).token).toBe('string');
+      expect(typeof (result.body?.data as { token: string }).token).toBe('string');
       expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
 
@@ -1013,7 +1013,7 @@ describe('auth handlers (unit)', () => {
         googleId: 'g-sub-2',
         locale: 'en',
       });
-      expect(typeof (result.body.data as { token: string }).token).toBe('string');
+      expect(typeof (result.body?.data as { token: string }).token).toBe('string');
       expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
 
@@ -1031,7 +1031,7 @@ describe('auth handlers (unit)', () => {
         deps,
       );
 
-      expect((result.body.data as { token?: string }).token).toBeUndefined();
+      expect((result.body?.data as { token?: string })?.token).toBeUndefined();
       expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
 
