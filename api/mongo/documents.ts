@@ -51,6 +51,12 @@ export interface UserDocument {
   // over otherwise-stateless tokens.
   tokenVersion: number;
   settings: UserSettingsDocument;
+  /**
+   * Which platform(s) this user has ever logged in/registered from, keyed by
+   * value from `ALLOWED_PLATFORMS` (`api/http/helpers/platform.ts`). Only ever
+   * gains `true` keys (set on successful login/register); never cleared.
+   */
+  platforms: Record<string, boolean>;
   createdAt: Date;
   updatedAt: Date;
 }

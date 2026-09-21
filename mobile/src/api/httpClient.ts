@@ -23,7 +23,11 @@ import { reportApiReachability } from "@/src/stores/connectivity";
 type Method = "GET" | "POST" | "PATCH" | "DELETE";
 
 async function request<T>(method: Method, path: string, body?: unknown): Promise<ApiResponse<T>> {
-  const headers: Record<string, string> = { Accept: "application/json" };
+  // Hardcoded rather than detected: this app currently ships Android only, and
+  // the API records this value verbatim into a platform allowlist (see
+  // `api/http/helpers/platform.ts`) on login/register — it must stay exactly
+  // "Android" (not e.g. a generic "mobile") to match that list.
+  const headers: Record<string, string> = { Accept: "application/json", "X-Platform": "Android" };
   const token = getAuthToken();
   if (token) headers.Authorization = `Bearer ${token}`;
   if (body !== undefined) headers["Content-Type"] = "application/json";
