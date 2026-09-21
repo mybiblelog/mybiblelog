@@ -73,7 +73,7 @@ describe('listRecentEmails handler', () => {
 
     expect(result.status).toBe(200);
     expect(result.body?.data).toHaveLength(1);
-    expect((result.body?.data as EmailRecord[])[0].subject).toBe('Reset Password');
+    expect((result.body?.data as EmailRecord[])[0]?.subject).toBe('Reset Password');
     // `to` is lower-cased by the schema before reaching the repository.
     expect(find).toHaveBeenCalledWith('user@example.com', { subject: undefined, limit: undefined });
   });

@@ -84,7 +84,7 @@ describe('email.repository', () => {
       const results = await emails.findRecentByRecipient('dana@example.com', { subject: 'reset' });
 
       expect(results).toHaveLength(1);
-      expect(results[0].subject).toBe('Reset Password');
+      expect(results[0]?.subject).toBe('Reset Password');
     });
 
     it('treats subject filter characters literally (no regex injection)', async () => {
