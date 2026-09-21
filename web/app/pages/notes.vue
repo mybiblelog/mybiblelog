@@ -234,8 +234,20 @@ function actionsForNote(note: PassageNoteListItem) {
 }
 
 // The note editor itself is a global modal mounted in the default layout; pages
-// just drive it through the store.
+// just drive it through the store. When a passage filter is currently applied to
+// the notes list, prefill the new note with that same passage instead of opening
+// empty — mirrors the pattern used when adding a note from a specific passage
+// elsewhere in the app (see today.vue/log.vue).
 function openNewNoteEditor() {
+  const q = passageNotesStore.query || {};
+  const hasPassageFilter = Boolean(q.filterPassageStartVerseId && q.filterPassageEndVerseId);
+  if (hasPassageFilter) {
+    passageNoteEditorStore.openEditor({
+      passages: [{ startVerseId: q.filterPassageStartVerseId, endVerseId: q.filterPassageEndVerseId }],
+      content: '',
+    });
+    return;
+  }
   passageNoteEditorStore.openEditor(null);
 }
 
