@@ -46,6 +46,16 @@ export function useNoteOverlays(): NoteOverlaysApi {
     <>
       <NoteEditorModal
         visible={isAddOpen}
+        initialPassages={
+          query.filterPassageStartVerseId && query.filterPassageEndVerseId
+            ? [
+                {
+                  startVerseId: query.filterPassageStartVerseId,
+                  endVerseId: query.filterPassageEndVerseId,
+                },
+              ]
+            : undefined
+        }
         onClose={() => setIsAddOpen(false)}
         onSubmit={(input) => {
           void notesActions.create(input).then((created) => {

@@ -95,6 +95,30 @@ describe("Notes screen", () => {
     expect(getByText("Choose Tags")).toBeTruthy();
   });
 
+  it("prefills the new note editor with the active passage filter", () => {
+    setNotes([]);
+    useNotesStore.setState({
+      query: {
+        ...initialNotesQuery,
+        filterTags: [],
+        filterPassageStartVerseId: 101001001,
+        filterPassageEndVerseId: 101001005,
+      },
+    });
+    const { getByText, getAllByText } = renderWithProviders(<Notes />);
+    fireEvent.press(getAllByText("New")[0]);
+    expect(getByText("New Note")).toBeTruthy();
+    expect(getByText("Genesis 1:1-5")).toBeTruthy();
+  });
+
+  it("opens the new note editor empty when no passage filter is applied", () => {
+    setNotes([]);
+    const { getByText, getAllByText } = renderWithProviders(<Notes />);
+    fireEvent.press(getAllByText("New")[0]);
+    expect(getByText("New Note")).toBeTruthy();
+    expect(getByText("Add Passage")).toBeTruthy();
+  });
+
   it("opens the card menu with edit and delete actions", () => {
     setNotes([
       {
