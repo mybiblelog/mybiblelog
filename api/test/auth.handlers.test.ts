@@ -202,11 +202,11 @@ describe('auth handlers (unit)', () => {
       const deps = makeDeps({ users: { verifyLogin: async () => verifiedUser, recordPlatform } });
 
       await login(
-        makeRequest({ body: { email: 'a@b.com', password: 'pw' }, headers: { 'x-platform': 'Android' } }),
+        makeRequest({ body: { email: 'a@b.com', password: 'pw' }, headers: { 'x-platform': 'android' } }),
         deps,
       );
 
-      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'Android');
+      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'android');
     });
 
     it('does not record an unrecognized X-Platform header value', async () => {
@@ -359,12 +359,12 @@ describe('auth handlers (unit)', () => {
       await register(
         makeRequest({
           body: { email: 'new@example.com', password: 'password123', locale: 'en' },
-          headers: { 'x-platform': 'iOS' },
+          headers: { 'x-platform': 'ios' },
         }),
         deps,
       );
 
-      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'iOS');
+      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'ios');
     });
 
     it('does not record an unrecognized X-Platform header value on register', async () => {
@@ -908,11 +908,11 @@ describe('auth handlers (unit)', () => {
       });
 
       await verifyGoogleOauth(
-        makeRequest({ body: { code: 'c', state: 'ok', locale: 'en' }, headers: { 'x-platform': 'Android' } }),
+        makeRequest({ body: { code: 'c', state: 'ok', locale: 'en' }, headers: { 'x-platform': 'android' } }),
         deps,
       );
 
-      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'Android');
+      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'android');
     });
 
     it('does not record an unrecognized X-Platform header on Google login', async () => {
@@ -1046,11 +1046,11 @@ describe('auth handlers (unit)', () => {
       const deps = makeDeps({ users: { findByEmail: async () => existing, recordPlatform } });
 
       await googleIdTokenLogin(
-        makeRequest({ body: { idToken: 'good' }, headers: { 'x-platform': 'Android' } }),
+        makeRequest({ body: { idToken: 'good' }, headers: { 'x-platform': 'android' } }),
         deps,
       );
 
-      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'Android');
+      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'android');
     });
 
     it('records an allowed X-Platform header against a newly created id-token account', async () => {
@@ -1066,11 +1066,11 @@ describe('auth handlers (unit)', () => {
       });
 
       await googleIdTokenLogin(
-        makeRequest({ body: { idToken: 'good', locale: 'en' }, headers: { 'x-platform': 'iOS' } }),
+        makeRequest({ body: { idToken: 'good', locale: 'en' }, headers: { 'x-platform': 'ios' } }),
         deps,
       );
 
-      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'iOS');
+      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'ios');
     });
 
     it('does not record an unrecognized X-Platform header on id-token login', async () => {
