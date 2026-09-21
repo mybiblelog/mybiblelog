@@ -347,6 +347,20 @@ describe('user.repository', () => {
       const to = new Date(Date.now() + 60 * 60 * 1000);
       expect(await users.countCreatedBetween(from, to)).toBe(2);
     });
+
+    it('countCreatedBetweenByPlatform breaks down new users by recorded platform', async () => {
+      const { users } = await getRepos();
+      const web = await createUser();
+      const android = await createUser();
+      await createUser(); // no platform recorded
+
+      await users.recordPlatform(web.id, 'web');
+      await users.recordPlatform(android.id, 'android');
+
+      const from = new Date(Date.now() - 60 * 60 * 1000);
+      const to = new Date(Date.now() + 60 * 60 * 1000);
+      expect(await users.countCreatedBetweenByPlatform(from, to)).toEqual({ web: 1, android: 1, ios: 0 });
+    });
   });
 
   describe('listAdminUsers', () => {

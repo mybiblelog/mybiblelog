@@ -375,6 +375,11 @@ describe('admin.test.js', () => {
         expect(response.body.data.length).toBe(7); // Last 7 days
         expect(response.body.data[0]).toHaveProperty('date');
         expect(response.body.data[0]).toHaveProperty('newUserAccounts');
+        expect(response.body.data[0].newUserAccountsByPlatform).toEqual({
+          web: expect.any(Number),
+          android: expect.any(Number),
+          ios: expect.any(Number),
+        });
         expect(response.body.data[0]).toHaveProperty('usersWithLogEntry');
         expect(response.body.data[0]).toHaveProperty('usersWithNote');
       }

@@ -5,6 +5,7 @@ import type { UserDocument, UserSettingsDocument } from '../mongo/documents';
 import { ApiErrorDetailCode } from '../http/errors/error-codes';
 import { NotFoundError } from '../http/errors/http-errors';
 import { ValidationError } from '../http/errors/validation-errors';
+import { ALLOWED_PLATFORMS, type Platform } from '../http/helpers/platform';
 import { isDuplicateKeyError } from './helpers/duplicate-key-error';
 import { hashPassword } from './helpers/user-auth';
 import { buildDefaultUserSettings } from './helpers/user-settings';
@@ -480,6 +481,25 @@ export const createUserRepository = ({ users }: Collections) => {
           $lte: end,
         },
       });
+    },
+
+    /**
+     * New-account counts for `[start, end]`, broken down by the platform
+     * recorded against each user (see `recordPlatform`/`ALLOWED_PLATFORMS`).
+     * `trackPlatform` runs immediately after `users.create`, so a new user
+     * normally has exactly one platform flag set at this point — but a user
+     * who registered and then logged in from a second platform before `end`
+     * will be counted under both, so the per-platform counts can sum to more
+     * than the plain `countCreatedBetween` total.
+     */
+    async countCreatedBetweenByPlatform(start: Date, end: Date): Promise<Record<Platform, number>> {
+      const counts = await Promise.all(
+        ALLOWED_PLATFORMS.map((platform) => users.countDocuments({
+          createdAt: { $gte: start, $lte: end },
+          [`platforms.${platform}`]: true,
+        })),
+      );
+      return Object.fromEntries(ALLOWED_PLATFORMS.map((platform, i) => [platform, counts[i]])) as Record<Platform, number>;
     },
 
     async listAdminUsers(query: AdminUserListQuery): Promise<{ users: AdminUserListItem[]; total: number }> {
