@@ -9,10 +9,10 @@ import { type HttpRequest, type RouteDependencies } from '../types';
  * header value not in this list is treated as absent.
  *
  * - `web` is sent by the Nuxt app (`web/app/plugins/http.ts`).
- * - `Android` is sent by the Expo app (`mobile/src/api/httpClient.ts`).
- * - `iOS` is reserved for a future Expo iOS build; nothing sends it yet.
+ * - `android` is sent by the Expo app (`mobile/src/api/httpClient.ts`).
+ * - `ios` is reserved for a future Expo iOS build; nothing sends it yet.
  */
-export const ALLOWED_PLATFORMS = ['web', 'Android', 'iOS'] as const;
+export const ALLOWED_PLATFORMS = ['web', 'android', 'ios'] as const;
 
 export type Platform = (typeof ALLOWED_PLATFORMS)[number];
 
