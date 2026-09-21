@@ -196,6 +196,54 @@ describe('auth handlers (unit)', () => {
       expect(typeof (result.body?.data as { token: string }).token).toBe('string');
       expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
+
+    it('records an allowed X-Platform header against the user', async () => {
+      const recordPlatform = vi.fn(async () => {});
+      const deps = makeDeps({ users: { verifyLogin: async () => verifiedUser, recordPlatform } });
+
+      await login(
+        makeRequest({ body: { email: 'a@b.com', password: 'pw' }, headers: { 'x-platform': 'Android' } }),
+        deps,
+      );
+
+      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'Android');
+    });
+
+    it('does not record an unrecognized X-Platform header value', async () => {
+      const recordPlatform = vi.fn(async () => {});
+      const deps = makeDeps({ users: { verifyLogin: async () => verifiedUser, recordPlatform } });
+
+      const result = await login(
+        makeRequest({ body: { email: 'a@b.com', password: 'pw' }, headers: { 'x-platform': "'; DROP TABLE users;--" } }),
+        deps,
+      );
+
+      expect(result.status).toBe(200);
+      expect(recordPlatform).not.toHaveBeenCalled();
+    });
+
+    it('succeeds without recording a platform when the header is missing', async () => {
+      const recordPlatform = vi.fn(async () => {});
+      const deps = makeDeps({ users: { verifyLogin: async () => verifiedUser, recordPlatform } });
+
+      const result = await login(makeRequest({ body: { email: 'a@b.com', password: 'pw' } }), deps);
+
+      expect(result.status).toBe(200);
+      expect(recordPlatform).not.toHaveBeenCalled();
+    });
+
+    it('does not fail login when recording the platform throws', async () => {
+      const recordPlatform = vi.fn(async () => { throw new Error('db down'); });
+      const deps = makeDeps({ users: { verifyLogin: async () => verifiedUser, recordPlatform } });
+
+      const result = await login(
+        makeRequest({ body: { email: 'a@b.com', password: 'pw' }, headers: { 'x-platform': 'web' } }),
+        deps,
+      );
+
+      expect(result.status).toBe(200);
+      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'web');
+    });
   });
 
   describe('logout', () => {
@@ -297,6 +345,65 @@ describe('auth handlers (unit)', () => {
       expect(result.body).toEqual({ data: { success: true } });
       expect(create).toHaveBeenCalledWith({ email: 'new@example.com', password: 'password123', locale: 'en' });
       expect(queueUserEmailVerification).toHaveBeenCalledWith('new@example.com', 'CODE123', 'en');
+    });
+
+    it('records an allowed X-Platform header against the newly created user', async () => {
+      const created = { ...verifiedUser, emailVerificationCode: 'CODE123' } as UserRecord;
+      const create = vi.fn(async () => created);
+      const recordPlatform = vi.fn(async () => {});
+      const deps = makeDeps({
+        users: { create, recordPlatform },
+        emailService: { queueUserEmailVerification: vi.fn() },
+      });
+
+      await register(
+        makeRequest({
+          body: { email: 'new@example.com', password: 'password123', locale: 'en' },
+          headers: { 'x-platform': 'iOS' },
+        }),
+        deps,
+      );
+
+      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'iOS');
+    });
+
+    it('does not record an unrecognized X-Platform header value on register', async () => {
+      const created = { ...verifiedUser, emailVerificationCode: 'CODE123' } as UserRecord;
+      const create = vi.fn(async () => created);
+      const recordPlatform = vi.fn(async () => {});
+      const deps = makeDeps({
+        users: { create, recordPlatform },
+        emailService: { queueUserEmailVerification: vi.fn() },
+      });
+
+      const result = await register(
+        makeRequest({
+          body: { email: 'new@example.com', password: 'password123', locale: 'en' },
+          headers: { 'x-platform': 'admin' },
+        }),
+        deps,
+      );
+
+      expect(result.body).toEqual({ data: { success: true } });
+      expect(recordPlatform).not.toHaveBeenCalled();
+    });
+
+    it('succeeds without recording a platform on register when the header is missing', async () => {
+      const created = { ...verifiedUser, emailVerificationCode: 'CODE123' } as UserRecord;
+      const create = vi.fn(async () => created);
+      const recordPlatform = vi.fn(async () => {});
+      const deps = makeDeps({
+        users: { create, recordPlatform },
+        emailService: { queueUserEmailVerification: vi.fn() },
+      });
+
+      const result = await register(
+        makeRequest({ body: { email: 'new@example.com', password: 'password123', locale: 'en' } }),
+        deps,
+      );
+
+      expect(result.body).toEqual({ data: { success: true } });
+      expect(recordPlatform).not.toHaveBeenCalled();
     });
 
     it('returns generic success and notifies the account holder when the email is already registered', async () => {
@@ -777,6 +884,50 @@ describe('auth handlers (unit)', () => {
       expect((result.body?.data as { token?: string })?.token).toBeUndefined();
       expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
+
+    it('records an allowed X-Platform header against an existing user logging in via Google', async () => {
+      mockVerifyState.mockReturnValue(true);
+      const existing = { ...verifiedUser, email: 'g@example.com', googleId: 'already-linked' } as unknown as UserRecord;
+      const recordPlatform = vi.fn(async () => {});
+      const deps = makeDeps({ users: { findByEmail: async () => existing, recordPlatform } });
+
+      await verifyGoogleOauth(
+        makeRequest({ body: { code: 'c', state: 'ok', locale: 'en' }, headers: { 'x-platform': 'web' } }),
+        deps,
+      );
+
+      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'web');
+    });
+
+    it('records an allowed X-Platform header against a newly created Google account', async () => {
+      mockVerifyState.mockReturnValue(true);
+      const created = { ...verifiedUser, email: 'g@example.com' } as unknown as UserRecord;
+      const recordPlatform = vi.fn(async () => {});
+      const deps = makeDeps({
+        users: { findByEmail: async () => null, create: async () => created, recordPlatform },
+      });
+
+      await verifyGoogleOauth(
+        makeRequest({ body: { code: 'c', state: 'ok', locale: 'en' }, headers: { 'x-platform': 'Android' } }),
+        deps,
+      );
+
+      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'Android');
+    });
+
+    it('does not record an unrecognized X-Platform header on Google login', async () => {
+      mockVerifyState.mockReturnValue(true);
+      const existing = { ...verifiedUser, email: 'g@example.com', googleId: 'already-linked' } as unknown as UserRecord;
+      const recordPlatform = vi.fn(async () => {});
+      const deps = makeDeps({ users: { findByEmail: async () => existing, recordPlatform } });
+
+      await verifyGoogleOauth(
+        makeRequest({ body: { code: 'c', state: 'ok', locale: 'en' }, headers: { 'x-platform': 'desktop' } }),
+        deps,
+      );
+
+      expect(recordPlatform).not.toHaveBeenCalled();
+    });
   });
 
   describe('googleIdTokenLogin', () => {
@@ -882,6 +1033,62 @@ describe('auth handlers (unit)', () => {
 
       expect((result.body.data as { token?: string }).token).toBeUndefined();
       expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
+    });
+
+    it('records an allowed X-Platform header against an existing user logging in via id-token', async () => {
+      mockedVerifyIdToken.mockResolvedValue({
+        googleUserId: 'g-sub-1',
+        email: 'user@example.com',
+        audience: 'aud',
+      });
+      const existing = { ...verifiedUser, googleId: 'already-linked' } as unknown as UserRecord;
+      const recordPlatform = vi.fn(async () => {});
+      const deps = makeDeps({ users: { findByEmail: async () => existing, recordPlatform } });
+
+      await googleIdTokenLogin(
+        makeRequest({ body: { idToken: 'good' }, headers: { 'x-platform': 'Android' } }),
+        deps,
+      );
+
+      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'Android');
+    });
+
+    it('records an allowed X-Platform header against a newly created id-token account', async () => {
+      mockedVerifyIdToken.mockResolvedValue({
+        googleUserId: 'g-sub-2',
+        email: 'new@example.com',
+        audience: 'aud',
+      });
+      const created = { ...verifiedUser, email: 'new@example.com', hasLocalAccount: false } as unknown as UserRecord;
+      const recordPlatform = vi.fn(async () => {});
+      const deps = makeDeps({
+        users: { findByEmail: async () => null, create: async () => created, recordPlatform },
+      });
+
+      await googleIdTokenLogin(
+        makeRequest({ body: { idToken: 'good', locale: 'en' }, headers: { 'x-platform': 'iOS' } }),
+        deps,
+      );
+
+      expect(recordPlatform).toHaveBeenCalledWith(USER_ID, 'iOS');
+    });
+
+    it('does not record an unrecognized X-Platform header on id-token login', async () => {
+      mockedVerifyIdToken.mockResolvedValue({
+        googleUserId: 'g-sub-1',
+        email: 'user@example.com',
+        audience: 'aud',
+      });
+      const existing = { ...verifiedUser, googleId: 'already-linked' } as unknown as UserRecord;
+      const recordPlatform = vi.fn(async () => {});
+      const deps = makeDeps({ users: { findByEmail: async () => existing, recordPlatform } });
+
+      await googleIdTokenLogin(
+        makeRequest({ body: { idToken: 'good' }, headers: { 'x-platform': 'desktop' } }),
+        deps,
+      );
+
+      expect(recordPlatform).not.toHaveBeenCalled();
     });
   });
 });

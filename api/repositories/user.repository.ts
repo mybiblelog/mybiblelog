@@ -65,6 +65,8 @@ const toUserRecord = (user: UserDocument): UserRecord => {
     // still-valid tokens (which also carry no version) continue to match.
     tokenVersion: user.tokenVersion ?? 0,
     settings: toUserSettingsRecord(user.settings),
+    // Default legacy documents (created before this field existed) to {}.
+    platforms: user.platforms ?? {},
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   };
@@ -170,6 +172,7 @@ export const createUserRepository = ({ users }: Collections) => {
         passwordResetAttempts: 0,
         tokenVersion: 0,
         settings: buildDefaultUserSettings(input.locale),
+        platforms: {},
         createdAt: now,
         updatedAt: now,
       };
@@ -429,6 +432,20 @@ export const createUserRepository = ({ users }: Collections) => {
       const user = await requireDocById(userId);
       user.googleId = googleId;
       await persist(user, { googleId: user.googleId });
+    },
+
+    /**
+     * Marks `platform` as one this user has logged in/registered from. Only
+     * ever sets the flag to `true` — it never clears an existing platform key
+     * — and leaves every other platform key untouched. Callers are expected to
+     * pass an already-validated value from `ALLOWED_PLATFORMS`
+     * (`api/http/helpers/platform.ts`); this is a plain, unconditional `$set`.
+     */
+    async recordPlatform(userId: string, platform: string): Promise<void> {
+      await users.updateOne(
+        { _id: new ObjectId(userId) },
+        { $set: { [`platforms.${platform}`]: true, updatedAt: new Date() } },
+      );
     },
 
     async updateSettings(userId: string, patch: Partial<UserSettingsRecord>): Promise<UserSettingsRecord> {
