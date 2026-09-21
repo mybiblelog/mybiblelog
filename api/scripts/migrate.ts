@@ -166,6 +166,13 @@ const main = async (): Promise<void> => {
     }
   }
 
+  // users without a platforms map need one, defaulting to web (original client before platform tracking existed)
+  const usersWithoutPlatforms = await users.find({ platforms: { $exists: false } }).toArray();
+  for (const user of usersWithoutPlatforms) {
+    console.log(`Migrating user ${user.email} to platforms: { web: true }...`);
+    await users.updateOne({ _id: user._id }, { $set: { platforms: { web: true } } });
+  }
+
   // close connection
   await closeConnection();
 };
