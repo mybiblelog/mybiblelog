@@ -37,6 +37,7 @@ const columns = computed(() => [
   [
     { text: t('home'), destination: '/' },
     { text: t('faq'), destination: '/faq' },
+    { text: t('guides'), destination: '/about/overview' },
   ],
   [
     { text: t('give_feedback'), destination: '/feedback' },
@@ -134,6 +135,7 @@ function isExternal(url: string): boolean {
   "en": {
     "home": "Home",
     "faq": "FAQ",
+    "guides": "Features & Guides",
     "give_feedback": "Give Feedback",
     "contribute": "Contribute",
     "android_app": "Android App",
@@ -144,6 +146,7 @@ function isExternal(url: string): boolean {
   "de": {
     "home": "Startseite",
     "faq": "FAQ",
+    "guides": "Funktionen & Anleitungen",
     "give_feedback": "Feedback geben",
     "contribute": "Mitwirken",
     "android_app": "Android-App",
@@ -154,6 +157,7 @@ function isExternal(url: string): boolean {
   "es": {
     "home": "Inicio",
     "faq": "FAQ",
+    "guides": "Funciones y guías",
     "give_feedback": "Enviar feedback",
     "contribute": "Contribuir",
     "android_app": "App para Android",
@@ -164,6 +168,7 @@ function isExternal(url: string): boolean {
   "fr": {
     "home": "Accueil",
     "faq": "FAQ",
+    "guides": "Fonctionnalités et guides",
     "give_feedback": "Donner un feedback",
     "contribute": "Contribuer",
     "android_app": "Application Android",
@@ -174,6 +179,7 @@ function isExternal(url: string): boolean {
   "ko": {
     "home": "홈페이지",
     "faq": "자주 묻는 질문",
+    "guides": "기능 및 가이드",
     "give_feedback": "피드백 보내기",
     "contribute": "기여하기",
     "android_app": "안드로이드 앱",
@@ -184,6 +190,7 @@ function isExternal(url: string): boolean {
   "pt": {
     "home": "Início",
     "faq": "FAQ",
+    "guides": "Recursos e guias",
     "give_feedback": "Enviar feedback",
     "contribute": "Contribuir",
     "android_app": "App para Android",
@@ -194,6 +201,7 @@ function isExternal(url: string): boolean {
   "uk": {
     "home": "Головна",
     "faq": "FAQ",
+    "guides": "Функції та посібники",
     "give_feedback": "Надіслати відгук",
     "contribute": "Допомога",
     "android_app": "Android-додаток",

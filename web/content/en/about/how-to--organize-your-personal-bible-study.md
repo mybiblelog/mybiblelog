@@ -1,17 +1,16 @@
 ---
+dateModified: "2026-09-23"
 seo:
-  title: 7 Ways to Organize Your Personal Bible Study
-  description: How to leverage My Bible Log powerful note and tag features to get the most out of your personal Bible study time.
+  title: "7 Ways to Organize Your Personal Bible Study"
+  description: "Seven practical ways to organize your personal Bible study notes with tags: open questions, topical study, memory verses, prayer journaling, and more."
 og:
-  title: 7 Ways to Organize Your Personal Bible Study
-  description: How to leverage My Bible Log powerful note and tag features to get the most out of your personal Bible study time.
+  title: "7 Ways to Organize Your Personal Bible Study"
+  description: "Seven practical ways to organize your personal Bible study notes with tags: open questions, topical study, memory verses, prayer journaling, and more."
 ---
-
-![](/share.jpg)
 
 # 7 Ways to Organize Your Personal Bible Study
 
-My Bible Log's Notes feature is especially powerful. There are many different ways to create tags and organize notes to enable different workflows.
+My Bible Log's [Notes feature](/about/page-features--notes) is especially powerful. There are many different ways to create tags and organize notes to enable different workflows.
 
 Here are 7 ideas for using the notes feature to get the most out of your personal Bible reading.
 
@@ -183,3 +182,9 @@ Create a tag to keep track of journal entries. Start by writing your first journ
 ## Conclusion
 
 These are just a few of the many ways you can use organized notes and tags to get more out of your Bible reading time. Once you start using these features, you'll quickly develop your own ideas for how to apply them.
+
+If you're planning to read through the whole Bible, see [How to Read the Bible in a Year](/about/how-to--read-the-bible-in-a-year).
+
+<div class="mbl-button-group">
+  <a class="mbl-button mbl-button--light" href="/register">Start Your Free Bible Study Log</a>
+</div>

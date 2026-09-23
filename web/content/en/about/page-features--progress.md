@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-23"
 seo:
-  title: Progress Page
-  description: Documentation for My Bible Log progress tracking and goal setting features
+  title: "Bible Reading Goal Calculator: Set a Finish Date"
+  description: "See how much of the Bible you've read, predict when you'll finish, and calculate how many verses per day you need to read the whole Bible by your target date."
 og:
-  title: Progress Page
-  description: Documentation for My Bible Log progress tracking and goal setting features
+  title: "Bible Reading Goal Calculator: Set a Finish Date"
+  description: "See how much of the Bible you've read, predict when you'll finish, and calculate how many verses per day you need to read the whole Bible by your target date."
 ---
-
-![](/share.jpg)
 
 # Progress Page
 

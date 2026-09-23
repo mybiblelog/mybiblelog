@@ -45,5 +45,37 @@ describe('Sitemap routes', () => {
     expect(urls.some((url: string) => url.includes('/pt/'))).toBe(true);
     expect(urls.some((url: string) => url.includes('/uk/'))).toBe(true);
   });
-});
 
+  test('GET /api/sitemap.xml (includes Vue-rendered resource pages)', async () => {
+    // Act
+    const res = await requestApi
+      .get('/api/sitemap.xml');
+
+    // Assert
+    const parser = new xml2js.Parser();
+    const result = await parser.parseStringPromise(res.text);
+    const urls = result.urlset.url.map((url: any) => url.loc[0]);
+    expect(urls.some((url: string) => url.endsWith('/resources/printable-bible-reading-tracker'))).toBe(true);
+    expect(urls.some((url: string) => url.endsWith('/de/resources/printable-bible-reading-tracker'))).toBe(true);
+  });
+
+  test('GET /api/sitemap.xml (lastmod comes from frontmatter, not the current date)', async () => {
+    // Act
+    const res = await requestApi
+      .get('/api/sitemap.xml');
+
+    // Assert
+    const parser = new xml2js.Parser();
+    const result = await parser.parseStringPromise(res.text);
+    const entries: { loc: string; lastmod?: string }[] = result.urlset.url.map((url: any) => ({
+      loc: url.loc[0],
+      lastmod: url.lastmod?.[0],
+    }));
+
+    const overview = entries.find((entry) => entry.loc.endsWith('/about/overview') && !/\/[a-z]{2}\/about\//.test(entry.loc));
+    expect(overview?.lastmod).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+
+    // pages without a dateModified field omit <lastmod> rather than claiming "today"
+    expect(entries.some((entry) => entry.lastmod === undefined)).toBe(true);
+  });
+});

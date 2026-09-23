@@ -6,6 +6,8 @@ export default defineContentConfig({
       type: 'page',
       source: '**/*.md',
       schema: z.object({
+        // ISO date (YYYY-MM-DD); feeds Article structured data and sitemap <lastmod>
+        dateModified: z.string().optional(),
         seo: z.object({
           title: z.string().optional(),
           description: z.string().optional(),

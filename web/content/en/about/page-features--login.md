@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-23"
 seo:
-  title: Account Creation
-  description: How to Create an Account on My Bible Log
+  title: "Create a Free Account"
+  description: "Create a free My Bible Log account with Google or email to start tracking your Bible reading. No ads, no subscriptions."
 og:
-  title: Account Creation
-  description: How to Create an Account on My Bible Log
+  title: "Create a Free Account"
+  description: "Create a free My Bible Log account with Google or email to start tracking your Bible reading. No ads, no subscriptions."
 ---
-
-![](/share.jpg)
 
 # Account Creation
 

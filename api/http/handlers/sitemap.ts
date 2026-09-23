@@ -10,7 +10,7 @@ import { type RouteHandler } from '../types';
  *
  * The sitemap is a public, non-JSON endpoint: it enumerates the localized site
  * URLs (top-level content pages such as the homepage/FAQ/android-app, generated
- * /about pages, and the printable reading tracker PDFs) and returns the result
+ * /about pages, and the printable reading tracker page and PDFs) and returns the result
  * as an XML string via `HttpResult.raw`, bypassing the standard JSON envelope.
  * It needs no auth or repositories.
  */
@@ -25,9 +25,20 @@ const repoRoot = __dirname.includes('dist') ?
   path.resolve(__dirname, '../../../..') :
   path.resolve(__dirname, '../../..');
 
+// Reads a `dateModified: "YYYY-MM-DD"` frontmatter field for <lastmod>. Pages
+// without one get no <lastmod> at all: stamping every URL with today's date
+// teaches crawlers to ignore the field entirely.
+const readDateModified = (filePath: string): string | undefined => {
+  const source = fs.readFileSync(filePath, 'utf8');
+  const frontmatter = source.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '';
+  return frontmatter.match(/^dateModified:\s*["']?(\d{4}-\d{2}-\d{2})["']?\s*$/m)?.[1];
+};
+
+type SitemapEntry = { url: string; lastmod?: string };
+
 // GET /sitemap.xml - Localized sitemap in XML format
 export const getSitemap: RouteHandler = async () => {
-  const relativeUrls: string[] = [];
+  const entries: SitemapEntry[] = [];
 
   // iterate through the top-level *.md files inside each /content/{locale} directory
   // (index.md -> homepage, everything else -> /{slug}); about/ and policy/ are
@@ -43,7 +54,7 @@ export const getSitemap: RouteHandler = async () => {
     for (const file of topLevelFiles) {
       const slug = file.name.replace('.md', '');
       const url = slug === 'index' ? localePrefix : `${localePrefix}/${slug}`;
-      relativeUrls.push(url);
+      entries.push({ url, lastmod: readDateModified(path.join(localeContentDir, file.name)) });
     }
   }
 
@@ -56,12 +67,18 @@ export const getSitemap: RouteHandler = async () => {
     for (const file of aboutPageFiles) {
       const slug = file.replace('.md', '');
       const url = `${localePrefix}/about/${slug}`;
-      relativeUrls.push(url);
+      entries.push({ url, lastmod: readDateModified(path.join(aboutDir, file)) });
     }
   }
 
+  // Vue-rendered (non-markdown) public pages, which the content scans above can't discover
+  for (const locale of siteLocales) {
+    const localePrefix = locale === 'en' ? '' : `/${locale}`;
+    entries.push({ url: `${localePrefix}/resources/printable-bible-reading-tracker` });
+  }
+
   // add the printable reading tracker PDF of each locale
-  relativeUrls.push(
+  const pdfUrls = [
     // these are static files that have non-locale-specific URLs
     '/downloads/druckbare-bibel-lesetrack.pdf',
     '/downloads/printable-bible-reading-tracker.pdf',
@@ -70,14 +87,14 @@ export const getSitemap: RouteHandler = async () => {
     '/downloads/drukovanyy-vidstezhuvach-chytannya-bibliyi.pdf',
     '/downloads/rastreador-de-leitura-da-biblia-para-imprimir.pdf',
     '/downloads/인쇄용 성경 읽기 추적표.pdf',
-  );
+  ];
+  entries.push(...pdfUrls.map((url) => ({ url })));
 
-  const urls = relativeUrls.map((url) => getConfig().siteUrl + url);
-
-  const sitemapItems = urls.map((url) => ({
+  const sitemapItems = entries.map(({ url, lastmod }) => ({
     url: [
-      { loc: url },
-      { lastmod: new Date().toISOString().split('T')[0] },
+      // encodeURI: <loc> must be a valid URL (the Korean PDF name has spaces and non-ASCII)
+      { loc: encodeURI(getConfig().siteUrl + url) },
+      ...(lastmod ? [{ lastmod }] : []),
       { changefreq: 'monthly' },
       { priority: 0.8 },
     ],

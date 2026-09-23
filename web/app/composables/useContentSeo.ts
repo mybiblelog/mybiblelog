@@ -10,7 +10,8 @@ export function useContentSeo(options: {
   ogTitle?: string | null;
   ogDescription?: string | null;
   noIndex?: boolean;
-  structuredData?: Record<string, unknown> | null;
+  ogType?: 'website' | 'article';
+  structuredData?: Record<string, unknown> | Record<string, unknown>[] | null;
 }) {
   const config = useRuntimeConfig();
   const { locale } = options;
@@ -54,10 +55,16 @@ export function useContentSeo(options: {
     headMeta.push({ property: 'og:description', content: options.ogDescription });
   }
   headMeta.push({ property: 'og:image', content: `${siteUrl}/share.jpg` });
+  headMeta.push({ property: 'og:type', content: options.ogType ?? 'website' });
+  headMeta.push({ name: 'twitter:card', content: 'summary_large_image' });
 
-  const scripts = options.structuredData
-    ? [{ type: 'application/ld+json' as const, innerHTML: JSON.stringify(options.structuredData) }]
+  const structuredData = options.structuredData
+    ? (Array.isArray(options.structuredData) ? options.structuredData : [options.structuredData])
     : [];
+  const scripts = structuredData.map(data => ({
+    type: 'application/ld+json' as const,
+    innerHTML: JSON.stringify(data),
+  }));
 
   useHead(() => ({
     title: options.seoTitle ?? undefined,
@@ -65,7 +72,7 @@ export function useContentSeo(options: {
       { rel: 'canonical', href: canonicalHref.value },
       ...hreflangLinks.value,
     ],
-    meta: headMeta,
+    meta: [...headMeta, { property: 'og:url', content: canonicalHref.value }],
     script: scripts,
   }));
 }

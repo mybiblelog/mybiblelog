@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-23"
 seo:
-  title: How to Read the Bible in a Year
-  description: How to read the Bible in a year and keep track of your progress with your own personal Bible reading plan
+  title: "How to Read the Bible in a Year: Chapters Per Day & Tips"
+  description: "How to read the Bible in a year: how many chapters and verses to read each day, where to start, which order to read in, and how to track your progress."
 og:
-  title: How to Read the Bible in a Year
-  description: How to read the Bible in a year and keep track of your progress with your own personal Bible reading plan
+  title: "How to Read the Bible in a Year: Chapters Per Day & Tips"
+  description: "How to read the Bible in a year: how many chapters and verses to read each day, where to start, which order to read in, and how to track your progress."
 ---
-
-![](/share.jpg)
 
 # How to Read the Bible in a Year
 
@@ -64,21 +63,21 @@ Some people only use a paper Bible to read, which means they can just use a book
 * If the bookmark falls out or you misplace your Bible, you lose your progress
 * You have to read the books of the Bible in their published order, which many people will find boring or tedious (most reading plans try to give you a variety of different books so you don't get bored)
 
-To improve on that approach, some people print out a Bible reading chapter checklist. These printouts show a list of all the chapters in the Bible so you can check each one off as you read it, and you can read them in any order you choose.
+To improve on that approach, some people print out a Bible reading chapter checklist, like our free [printable Bible reading tracker](/resources/printable-bible-reading-tracker). These printouts show a list of all the chapters in the Bible so you can check each one off as you read it, and you can read them in any order you choose.
 
 However, paper checklists share one key disadvantage with paper bookmarks: if you misplace the checklist, you lose all of your progress.
 
 One great way to keep track of your Bible reading is to use an app that was specifically designed for it. These apps might have chapter checklists that work just like paper checklists, but you don't have to keep track of a piece of paper.
 
-If you use the chapter checklist on **My Bible Log** to track your reading, you'll be able to see additional insights on your reading. **My Bible Log** can answer many questions about your reading progress, like:
+If you use the [chapter checklist](/about/page-features--chapter-checklist) on **My Bible Log** to track your reading, you'll be able to see additional insights on your reading. **My Bible Log** can answer many questions about your reading progress, like:
 
 * How many verses did you read today?
 * Have you met your reading goal every day this week?
 * Which books have you finished reading?
 * Based on your reading habits so far, how much longer until you finish reading the Bible?
-* How many verses do you need to read each day to finish reading the Bible by the end of the year? What about next month?
+* How many verses do you need to read each day to finish reading the Bible by the end of the year? What about next month? (See the [Progress page](/about/page-features--progress).)
 
-Using an app like **My Bible Log** also makes it easier to take notes on your reading so your personal Bible study time is more effective.
+Using an app like **My Bible Log** also makes it easier to take notes on your reading so your personal Bible study time is more effective. Here are [7 ways to organize your personal Bible study](/about/how-to--organize-your-personal-bible-study).
 
 ## Which Bible translation should I read?
 
@@ -132,5 +131,5 @@ Another great way to keep moving toward your goal is to talk about it with frien
 Finally, take advantage of anything that makes you interested in reading the Bible. If you find an interesting passage during a Bible study, a sermon, or your daily devotional, keep reading! You don't have to stop at a certain number of verses or chapters each day. When you really find a book or section of the Bible inspiring, take advantage of your momentum and read as much as you want!
 
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/today">Get Started</a>
+  <a class="mbl-button mbl-button--light" href="/register">Start Tracking Your Reading Free</a>
 </div>

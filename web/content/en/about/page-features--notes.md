@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-23"
 seo:
-  title: Notes and Tags Pages
-  description: Documentation for My Bible Log freeform Bible notes and custom tags features
+  title: "Bible Study Notes & Tags: Organize What You Learn"
+  description: "Take Bible study notes linked to the passages you read, and organize them with custom tags to find questions, prayers, and insights later."
 og:
-  title: Notes and Tags Pages
-  description: Documentation for My Bible Log freeform Bible notes and custom tags features
+  title: "Bible Study Notes & Tags: Organize What You Learn"
+  description: "Take Bible study notes linked to the passages you read, and organize them with custom tags to find questions, prayers, and insights later."
 ---
-
-![](/share.jpg)
 
 # Notes Page
 

@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-23"
 seo:
-  title: Calendar Page
-  description: Documentation for My Bible Log monthly reading calendar and daily goal reporting features
+  title: "Bible Reading Log & Calendar: See Every Day You Read"
+  description: "Keep a Bible reading log on a monthly calendar. See which days you read, whether you met your daily goal, and add entries for past dates."
 og:
-  title: Calendar Page
-  description: Documentation for My Bible Log monthly reading calendar and daily goal reporting features
+  title: "Bible Reading Log & Calendar: See Every Day You Read"
+  description: "Keep a Bible reading log on a monthly calendar. See which days you read, whether you met your daily goal, and add entries for past dates."
 ---
-
-![](/share.jpg)
 
 # Calendar Page
 
