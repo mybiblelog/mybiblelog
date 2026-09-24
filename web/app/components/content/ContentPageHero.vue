@@ -68,7 +68,7 @@ const localePath = useLocalePath();
 .hero-description {
   font-size: var(--mbl-text-lead);
   line-height: 1.7;
-  color: var(--mbl-text-soft);
+  color: var(--mbl-text-body);
   margin-bottom: var(--mbl-space-2xl);
   max-width: 700px;
   margin-left: auto;

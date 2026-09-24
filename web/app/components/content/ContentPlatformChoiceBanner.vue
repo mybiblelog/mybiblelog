@@ -69,7 +69,7 @@ const localePath = useLocalePath();
 
 .platform-choice-subheading {
   font-size: var(--mbl-text-lead);
-  color: var(--mbl-text-soft);
+  color: var(--mbl-text-body);
   max-width: 640px;
   margin: 0 auto var(--mbl-space-xl);
 }
@@ -117,7 +117,7 @@ const localePath = useLocalePath();
 }
 
 .platform-choice-card--web .platform-choice-card-description {
-  color: var(--mbl-text-soft);
+  color: var(--mbl-text-body);
 }
 
 .platform-choice-card--android {

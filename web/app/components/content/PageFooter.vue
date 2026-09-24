@@ -100,7 +100,7 @@ function isExternal(url: string): boolean {
 .footer-link-item { margin: 0; }
 
 .footer-link {
-  color: var(--mbl-text-soft);
+  color: var(--mbl-text-body);
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
