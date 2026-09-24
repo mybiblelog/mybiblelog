@@ -140,3 +140,23 @@
 .mbl-text-warning { color: var(--mbl-warning-fg); }
 .mbl-text-muted { color: var(--mbl-text-muted); }
 .mbl-text-small { font-size: 0.85rem; }
+
+/* Markdown tables in content pages (guides) */
+.mbl-content table {
+  width: 100%;
+  margin: 1em 0;
+  font-size: 0.95em;
+}
+
+.mbl-content th,
+.mbl-content td {
+  padding: 0.4em 0.75em;
+  border-bottom: 1px solid var(--mbl-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.mbl-content thead th {
+  border-bottom-width: 2px;
+  color: var(--mbl-text-strong);
+}

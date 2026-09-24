@@ -11,13 +11,16 @@ export function useContentSeo(options: {
   ogDescription?: string | null;
   noIndex?: boolean;
   ogType?: 'website' | 'article';
+  // Locales this page exists in; limits the hreflang alternates so English-only
+  // pages don't point search engines at 404s. Defaults to every site locale.
+  locales?: string[];
   structuredData?: Record<string, unknown> | Record<string, unknown>[] | null;
 }) {
   const config = useRuntimeConfig();
   const { locale } = options;
 
   const siteUrl = config.public.siteUrl as string;
-  const siteLocales = config.public.locales as string[];
+  const siteLocales = options.locales ?? (config.public.locales as string[]);
 
   const localePathSegment = computed(() =>
     locale.value === 'en' ? '' : `/${locale.value}`,
@@ -35,7 +38,9 @@ export function useContentSeo(options: {
         const seg = loc === 'en' ? '' : `/${loc}`;
         return { rel: 'alternate' as const, hreflang: loc, href: `${siteUrl}${seg}${options.path}` };
       }),
-      { rel: 'alternate' as const, hreflang: 'x-default', href: `${siteUrl}${options.path}` },
+      ...(siteLocales.includes('en')
+        ? [{ rel: 'alternate' as const, hreflang: 'x-default', href: `${siteUrl}${options.path}` }]
+        : []),
     ],
   );
 

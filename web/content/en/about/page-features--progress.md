@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-23"
+dateModified: "2026-09-24"
 seo:
   title: "Bible Reading Goal Calculator: Set a Finish Date"
   description: "See how much of the Bible you've read, predict when you'll finish, and calculate how many verses per day you need to read the whole Bible by your target date."
@@ -61,6 +61,8 @@ to finish reading the Bible by your goal date.
 
 This is a great way to determine how much reading you need to do to finish reading the Bible by the end of the year,
 or by any other goal date you choose.
+
+Not sure what goal to set? See how many minutes a day it takes to read the Bible in [6 months](/about/how-to--read-the-bible-in-6-months), [1 year](/about/how-to--read-the-bible-in-a-year), or [2 years](/about/how-to--read-the-bible-in-2-years), or check [how long each book of the Bible takes to read](/about/guide--how-long-does-it-take-to-read-the-bible).
 
 <div class="mbl-button-group">
   <a class="mbl-button mbl-button--light" href="/progress">Go to Progress page</a>

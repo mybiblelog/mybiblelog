@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-23"
+dateModified: "2026-09-24"
 seo:
   title: "Bible Reading Checklist: Check Off Every Chapter You Read"
   description: "A free, interactive Bible reading checklist with all 1,189 chapters. Tap a chapter to mark it read and see your progress through every book of the Bible."
@@ -23,7 +23,7 @@ This means your reading will show up on every other page of the site as well.
 
 ## A Convenient, Whole Bible Chapter Reading Checklist
 
-The Chapter Checklist page covers all 1,189 chapters of the Bible.
+The Chapter Checklist page covers all 1,189 chapters of the Bible. See how many chapters and verses are in each of the [66 books of the Bible](/books-of-the-bible).
 
 You can find many printable chapter reading checklists on the internet, but they often cover more than one sheet of paper because there are so many chapters in the Bible.
 
@@ -31,7 +31,7 @@ It would be easy to lose or damage such a valuable piece of paper. Instead, you 
 
 ## How to Read the Bible in a Year
 
-If you want to read the Bible in a year, you need to know how much to read each day. (For a complete guide, see [How to Read the Bible in a Year](/about/how-to--read-the-bible-in-a-year). Prefer paper? Download the free [printable Bible reading tracker](/resources/printable-bible-reading-tracker).)
+If you want to read the Bible in a year, you need to know how much to read each day. (For a complete guide, see [How to Read the Bible in a Year](/about/how-to--read-the-bible-in-a-year). Prefer paper? Download the free [printable Bible reading tracker](/resources/printable-bible-reading-tracker), or compare [printable and app trackers](/about/guide--printable-vs-app-bible-reading-tracker).)
 
 If you are counting the verses you read each day, then you need to read 86 verses on average to finish reading the Bible in 365 days.
 

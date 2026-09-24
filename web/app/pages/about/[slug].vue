@@ -44,11 +44,26 @@ if (error.value || !page.value) {
   throw createError({ statusCode: 404, message: 'Page not found' });
 }
 
+// Some pages (e.g. newer English guides) aren't translated yet; only list the
+// locales that actually have this page as hreflang alternates.
+const { data: pageLocales } = await useAsyncData(
+  () => `about-locales-${slug}`,
+  async () => {
+    const docs = await queryCollection('content')
+      .where('path', 'LIKE', `%/about/${contentSlug}`)
+      .select('path')
+      .all();
+    return docs
+      .map(doc => doc.path.split('/')[1])
+      .filter((code): code is string => !!code);
+  },
+);
+
 const config = useRuntimeConfig();
 const siteUrl = config.public.siteUrl as string;
 const localeSegment = locale.value === 'en' ? '' : `/${locale.value}`;
 const pageUrl = `${siteUrl}${localeSegment}/about/${slug}`;
-const isArticle = slug.startsWith('how-to--');
+const isArticle = slug.startsWith('how-to--') || slug.startsWith('guide--');
 const headline = page.value?.seo?.title || page.value?.title;
 
 const breadcrumbItems = [
@@ -87,6 +102,7 @@ useContentSeo({
   path: `/about/${slug}`,
   locale,
   ogType: isArticle ? 'article' : 'website',
+  locales: pageLocales.value?.length ? pageLocales.value : undefined,
   structuredData,
   seoTitle: page.value?.seo?.title,
   seoDescription: page.value?.seo?.description,

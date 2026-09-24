@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-23"
+dateModified: "2026-09-24"
 seo:
   title: "How to Read the Bible in a Year: Chapters Per Day & Tips"
   description: "How to read the Bible in a year: how many chapters and verses to read each day, where to start, which order to read in, and how to track your progress."
@@ -26,7 +26,7 @@ The Bible contains a grand total of 31,102 verses. Although the word count of th
 
 That sounds like a lot of reading, but the popular Harry Potter book series contains over 1,000,000 words - that's over 30% more words - and plenty of people have read those seven books. In fact, many people have read them all in a single year.
 
-When you put it into perspective, the Bible is long, but it is absolutely reasonable to read it in a single year.
+When you put it into perspective, the Bible is long, but it is absolutely reasonable to read it in a single year. In total, reading the whole Bible takes most people about 51 to 75 hours — see [How Long Does It Take to Read the Bible?](/about/guide--how-long-does-it-take-to-read-the-bible) for a breakdown of all 66 books.
 
 ## How much of the Bible should I read each day?
 
@@ -110,13 +110,13 @@ One way to manage this is to follow a year-long or whole-Bible reading plan that
 
 There are several different kinds of whole Bible reading plans:
 
-* Chronological plans are based on when events took place
+* [Chronological plans](/about/how-to--read-the-bible-chronologically) are based on when events took place
 * Some plans are based on the order that the books were written
 * Other plans are based on the order in which early Christians or Jews would have received and experienced the books of the Bible
 
-These plans can be great tools for some people, and they solve the problem of having to read the Bible from beginning to end.
+These plans can be great tools for some people, and they solve the problem of having to read the Bible from beginning to end. See [Bible Reading Plans Compared](/about/guide--bible-reading-plans-compared) to find one that fits you.
 
-If you're not following a specific plan, then read whatever you haven't read that you find most interesting right now!
+If you're not following a specific plan, then read whatever you haven't read that you find most interesting right now! Our [Books of the Bible](/books-of-the-bible) pages give a short overview of every book to help you choose.
 
 ## How can I stay motivated to read the whole Bible in a year?
 
@@ -129,6 +129,8 @@ A great way to stay motivated is to track your progress as you read the Bible. I
 Another great way to keep moving toward your goal is to talk about it with friends. We all feel rewarded when someone else knows about our goals and how much progress we're making. Share your plan with a friend or even a group, and ask them to check in on how you're doing from time to time. Better yet, ask them to join you in reading the whole Bible! It will be rewarding and encouraging to have someone you can talk to about what you're reading.
 
 Finally, take advantage of anything that makes you interested in reading the Bible. If you find an interesting passage during a Bible study, a sermon, or your daily devotional, keep reading! You don't have to stop at a certain number of verses or chapters each day. When you really find a book or section of the Bible inspiring, take advantage of your momentum and read as much as you want!
+
+For practical ways to keep going, see [How to Build a Strong Bible Reading Habit](/about/how-to--build-a-strong-bible-reading-habit). If a year feels too fast or too slow, try reading [the Bible in 6 months](/about/how-to--read-the-bible-in-6-months), [the Bible in 2 years](/about/how-to--read-the-bible-in-2-years), or start with [the New Testament in 90 days](/about/how-to--read-the-new-testament-in-90-days).
 
 <div class="mbl-button-group">
   <a class="mbl-button mbl-button--light" href="/register">Start Tracking Your Reading Free</a>

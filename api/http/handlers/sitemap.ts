@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import xml from 'xml';
-import { locales } from '@mybiblelog/shared';
+import { Bible, locales } from '@mybiblelog/shared';
 import { getConfig } from '../../config';
 import { type RouteHandler } from '../types';
 
@@ -75,6 +75,12 @@ export const getSitemap: RouteHandler = async () => {
   for (const locale of siteLocales) {
     const localePrefix = locale === 'en' ? '' : `/${locale}`;
     entries.push({ url: `${localePrefix}/resources/printable-bible-reading-tracker` });
+  }
+
+  // English-only Books of the Bible guide pages
+  entries.push({ url: '/books-of-the-bible' });
+  for (const book of Bible.getBooks()) {
+    entries.push({ url: `/books-of-the-bible/${Bible.getBookSlug(book.bibleOrder)}` });
   }
 
   // add the printable reading tracker PDF of each locale

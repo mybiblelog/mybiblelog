@@ -78,4 +78,21 @@ describe('Sitemap routes', () => {
     // pages without a dateModified field omit <lastmod> rather than claiming "today"
     expect(entries.some((entry) => entry.lastmod === undefined)).toBe(true);
   });
+
+  test('GET /api/sitemap.xml (includes English-only Books of the Bible pages)', async () => {
+    // Act
+    const res = await requestApi
+      .get('/api/sitemap.xml');
+
+    // Assert
+    const parser = new xml2js.Parser();
+    const result = await parser.parseStringPromise(res.text);
+    const urls: string[] = result.urlset.url.map((url: any) => url.loc[0]);
+    const bookUrls = urls.filter((url) => url.includes('/books-of-the-bible'));
+    expect(bookUrls.some((url) => url.endsWith('/books-of-the-bible'))).toBe(true);
+    expect(bookUrls.some((url) => url.endsWith('/books-of-the-bible/genesis'))).toBe(true);
+    expect(bookUrls.some((url) => url.endsWith('/books-of-the-bible/song-of-songs'))).toBe(true);
+    expect(bookUrls).toHaveLength(67);
+    expect(bookUrls.some((url) => /\/(de|es|fr|ko|pt|uk)\/books-of-the-bible/.test(url))).toBe(false);
+  });
 });
