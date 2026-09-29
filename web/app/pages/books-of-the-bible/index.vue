@@ -96,7 +96,8 @@ const { t, locale } = useI18n();
 const localePath = useLocalePath();
 const config = useRuntimeConfig();
 
-const formatNumber = (n: number) => n.toLocaleString(locale.value);
+// 'always' keeps the separator on 4-digit numbers (Spanish would otherwise print 1533, unlike the rest of the site)
+const formatNumber = (n: number) => n.toLocaleString(locale.value, { useGrouping: 'always' });
 const booksText = (n: number) => t('books_count', { n: formatNumber(n) }, n);
 const chaptersText = (n: number) => t('chapters_count', { n: formatNumber(n) }, n);
 const versesText = (n: number) => t('verses_count', { n: formatNumber(n) }, n);
