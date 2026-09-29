@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Einstellungsseite
-  description: Lese-, Erinnerungs- und Kontoeinstellungen in My Bible Log
+  title: "Einstellungen: Tagesziel, Erinnerungen & Export"
+  description: "Tagesziel festlegen, Übersetzung und Bibel-App wählen, Erinnerungs-E-Mails aktivieren und Ihr Leseprotokoll exportieren oder importieren."
 og:
-  title: Einstellungsseite
-  description: Lese-, Erinnerungs- und Kontoeinstellungen in My Bible Log
+  title: "Einstellungen: Tagesziel, Erinnerungen & Export"
+  description: "Tagesziel festlegen, Übersetzung und Bibel-App wählen, Erinnerungs-E-Mails aktivieren und Ihr Leseprotokoll exportieren oder importieren."
 ---
-
-![](/share.jpg)
 
 # Einstellungsseite
 

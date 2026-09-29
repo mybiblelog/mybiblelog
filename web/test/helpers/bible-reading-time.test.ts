@@ -31,6 +31,7 @@ describe('bible reading time', () => {
     expect(formatReadingTime(148)).toBe('2 hr 30 min');
     expect(formatReadingTime(121)).toBe('2 hr');
     expect(formatReadingTime(65, { hour: 'Std.', minute: 'Min.' })).toBe('1 Std. 5 Min.');
+    expect(formatReadingTime(150, { hour: '시간', minute: '분', separator: '' })).toBe('2시간 30분');
   });
 
   it('computes days at a reading pace', () => {

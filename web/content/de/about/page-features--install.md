@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Überall installieren
-  description: So installieren und nutzen Sie My Bible Log auf jedem Gerät
+  title: "Den Bibellese-Tracker auf jedem Gerät installieren"
+  description: "Installieren Sie My Bible Log als App auf Smartphone, Tablet oder Computer. Halten Sie Ihr Bibellesen überall fest – ganz ohne App-Store."
 og:
-  title: Überall installieren
-  description: So installieren und nutzen Sie My Bible Log auf jedem Gerät
+  title: "Den Bibellese-Tracker auf jedem Gerät installieren"
+  description: "Installieren Sie My Bible Log als App auf Smartphone, Tablet oder Computer. Halten Sie Ihr Bibellesen überall fest – ganz ohne App-Store."
 ---
-
-![](/share.jpg)
 
 # Überall installieren
 

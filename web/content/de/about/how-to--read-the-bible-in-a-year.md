@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: So lesen Sie die Bibel in einem Jahr
-  description: Wie Sie die Bibel in einem Jahr lesen und Ihren Fortschritt mit einem ganz persönlichen Bibelleseplan im Blick behalten
+  title: "Die Bibel in einem Jahr lesen: Kapitel pro Tag & Tipps"
+  description: "Die Bibel in einem Jahr lesen: wie viele Kapitel und Verse pro Tag, wo Sie anfangen, in welcher Reihenfolge Sie lesen und wie Sie Ihren Fortschritt festhalten."
 og:
-  title: So lesen Sie die Bibel in einem Jahr
-  description: Wie Sie die Bibel in einem Jahr lesen und Ihren Fortschritt mit einem ganz persönlichen Bibelleseplan im Blick behalten
+  title: "Die Bibel in einem Jahr lesen: Kapitel pro Tag & Tipps"
+  description: "Die Bibel in einem Jahr lesen: wie viele Kapitel und Verse pro Tag, wo Sie anfangen, in welcher Reihenfolge Sie lesen und wie Sie Ihren Fortschritt festhalten."
 ---
-
-![](/share.jpg)
 
 # So lesen Sie die Bibel in einem Jahr
 
@@ -27,7 +26,7 @@ Insgesamt enthält die Bibel 31.102 Verse. Die Wortzahl hängt von der Übersetz
 
 Das klingt nach viel. Zum Vergleich: Die Harry-Potter-Reihe kommt auf über 1.000.000 Wörter – gut 30 Prozent mehr – und unzählige Menschen haben alle sieben Bände gelesen, viele davon in einem einzigen Jahr.
 
-In diesem Licht betrachtet ist die Bibel zwar lang, aber sie in einem Jahr zu lesen ist alles andere als abwegig.
+In diesem Licht betrachtet ist die Bibel zwar lang, aber sie in einem Jahr zu lesen ist alles andere als abwegig. Insgesamt dauert das Lesen der ganzen Bibel für die meisten etwa 51 bis 75 Stunden – eine Aufschlüsselung aller 66 Bücher finden Sie unter [Wie lange dauert es, die Bibel zu lesen?](/de/about/guide--how-long-does-it-take-to-read-the-bible)
 
 ## Wie viel sollte ich täglich lesen?
 
@@ -64,21 +63,21 @@ Manche lesen ausschließlich in einer gedruckten Bibel und markieren ihren Stand
 * Fällt das Lesezeichen heraus oder verlegen Sie die Bibel, ist Ihr Fortschritt weg.
 * Sie lesen die Bücher in der gedruckten Reihenfolge, was viele auf Dauer langweilig oder zäh finden. Die meisten Lesepläne mischen bewusst verschiedene Bücher, damit genau das nicht passiert.
 
-Etwas besser klappt es mit einer ausgedruckten Kapitelliste. Darauf stehen alle Kapitel der Bibel, Sie haken jedes ab, sobald Sie es gelesen haben, und die Reihenfolge bestimmen Sie selbst.
+Etwas besser klappt es mit einer ausgedruckten Kapitelliste. Darauf stehen alle Kapitel der Bibel, Sie haken jedes ab, sobald Sie es gelesen haben, und die Reihenfolge bestimmen Sie selbst. Solche Listen gibt es auch als kostenlosen [Bibellese-Tracker zum Ausdrucken](/de/resources/printable-bible-reading-tracker).
 
 Nur teilen Papierlisten einen entscheidenden Nachteil mit dem Lesezeichen: Geht das Blatt verloren, ist der ganze Fortschritt dahin.
 
 Deshalb lohnt sich eine App, die genau dafür gemacht ist. Solche Apps bieten Kapitellisten, die wie die Papiervariante funktionieren – nur ohne Zettelwirtschaft.
 
-Wenn Sie Ihr Lesen mit der Kapitel-Checkliste von **My Bible Log** festhalten, bekommen Sie zusätzlich Antworten auf Fragen wie:
+Wenn Sie Ihr Lesen mit der [Kapitel-Checkliste](/de/about/page-features--chapter-checklist) von **My Bible Log** festhalten, bekommen Sie zusätzlich Antworten auf Fragen wie:
 
 * Wie viele Verse habe ich heute gelesen?
 * Habe ich diese Woche jeden Tag mein Leseziel erreicht?
 * Welche Bücher habe ich schon durch?
 * Wie lange brauche ich bei meinem bisherigen Tempo noch bis zur letzten Seite?
-* Wie viele Verse muss ich täglich lesen, um bis Jahresende fertig zu sein? Und bis nächsten Monat?
+* Wie viele Verse muss ich täglich lesen, um bis Jahresende fertig zu sein? Und bis nächsten Monat? (Siehe die [Fortschrittsseite](/de/about/page-features--progress).)
 
-Mit einer App wie **My Bible Log** lassen sich außerdem leicht Notizen festhalten, was Ihr persönliches Bibelstudium fruchtbarer macht.
+Mit einer App wie **My Bible Log** lassen sich außerdem leicht Notizen festhalten, was Ihr persönliches Bibelstudium fruchtbarer macht. Hier sind [7 Wege, Ihr persönliches Bibelstudium zu organisieren](/de/about/how-to--organize-your-personal-bible-study).
 
 ## Welche Bibelübersetzung sollte ich lesen?
 
@@ -111,13 +110,13 @@ Ein Weg dahin ist ein Jahres- oder Gesamtbibelleseplan, der die Abschnitte gut m
 
 Von solchen Plänen gibt es mehrere Sorten:
 
-* Chronologische Pläne richten sich danach, wann die Ereignisse stattfanden.
+* [Chronologische Pläne](/de/about/how-to--read-the-bible-chronologically) richten sich danach, wann die Ereignisse stattfanden.
 * Andere folgen der Reihenfolge, in der die Bücher entstanden sind.
 * Wieder andere folgen der Reihenfolge, in der die ersten Christen oder Juden die Bücher kennengelernt hätten.
 
-Für viele sind solche Pläne eine große Hilfe – und sie lösen das Problem, die Bibel von vorne bis hinten durcharbeiten zu müssen.
+Für viele sind solche Pläne eine große Hilfe – und sie lösen das Problem, die Bibel von vorne bis hinten durcharbeiten zu müssen. Im [Bibelleseplan-Vergleich](/de/about/guide--bible-reading-plans-compared) finden Sie den Plan, der zu Ihnen passt.
 
-Und wenn Sie keinem festen Plan folgen? Dann lesen Sie einfach das, was Sie noch nicht kennen und was Sie gerade am meisten reizt.
+Und wenn Sie keinem festen Plan folgen? Dann lesen Sie einfach das, was Sie noch nicht kennen und was Sie gerade am meisten reizt. Unsere Seiten [Bücher der Bibel](/de/books-of-the-bible) geben Ihnen einen kurzen Überblick über jedes Buch – als Entscheidungshilfe.
 
 ## Wie bleibe ich ein ganzes Jahr lang motiviert?
 
@@ -131,6 +130,8 @@ Genauso hilft es, mit anderen darüber zu sprechen. Wir alle bleiben eher am Bal
 
 Und schließlich: Nutzen Sie jeden Funken Interesse. Stoßen Sie in einer Bibelstunde, einer Predigt oder Ihrer Andacht auf eine spannende Stelle, dann lesen Sie einfach weiter. Sie müssen nicht bei einer bestimmten Zahl von Versen oder Kapiteln aufhören. Wenn ein Buch Sie packt, nehmen Sie den Schwung mit und lesen Sie, so viel Sie mögen.
 
+Praktische Tipps, um dranzubleiben, finden Sie unter [So entwickeln Sie eine feste Gewohnheit beim Bibellesen](/de/about/how-to--build-a-strong-bible-reading-habit). Wenn Ihnen ein Jahr zu schnell oder zu langsam ist, lesen Sie [die Bibel in 6 Monaten](/de/about/how-to--read-the-bible-in-6-months), [in 2 Jahren](/de/about/how-to--read-the-bible-in-2-years) oder beginnen Sie mit dem [Neuen Testament in 90 Tagen](/de/about/how-to--read-the-new-testament-in-90-days).
+
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/de/today">Los geht's</a>
+  <a class="mbl-button mbl-button--light" href="/de/register">Lesen kostenlos festhalten</a>
 </div>

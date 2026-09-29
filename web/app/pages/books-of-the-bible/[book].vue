@@ -168,7 +168,7 @@ const chapterCount = Bible.getBookChapterCount(bookIndex);
 const verseCount = Bible.getBookVerseCount(bookIndex);
 const wordCount = getBookWordCount(bookIndex);
 const readingMinutes = getBookReadingMinutes(bookIndex);
-const readingTime = formatReadingTime(readingMinutes, { hour: t('units.hour'), minute: t('units.minute') });
+const readingTime = formatReadingTime(readingMinutes, { hour: t('units.hour'), minute: t('units.minute'), separator: locale.value === 'ko' ? '' : ' ' });
 const keyPassages = guide.keyPassages.map(ref => formatKeyPassage(bookIndex, ref, locale.value));
 
 // Only this book's overview goes into the page payload (the locale's full set is code-split).

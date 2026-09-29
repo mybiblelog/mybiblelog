@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Fortschrittsseite
-  description: Fortschrittsübersicht, Prognosen und Zielsetzung in My Bible Log
+  title: "Bibelleseziel-Rechner: Enddatum festlegen"
+  description: "Sehen Sie, wie viel der Bibel Sie gelesen haben, lassen Sie berechnen, wann Sie fertig sind, und wie viele Verse pro Tag Sie bis zu Ihrem Zieldatum brauchen."
 og:
-  title: Fortschrittsseite
-  description: Fortschrittsübersicht, Prognosen und Zielsetzung in My Bible Log
+  title: "Bibelleseziel-Rechner: Enddatum festlegen"
+  description: "Sehen Sie, wie viel der Bibel Sie gelesen haben, lassen Sie berechnen, wann Sie fertig sind, und wie viele Verse pro Tag Sie bis zu Ihrem Zieldatum brauchen."
 ---
-
-![](/share.jpg)
 
 # Fortschrittsseite
 
@@ -58,6 +57,8 @@ Auf der Fortschrittsseite können Sie außerdem festlegen, bis wann Sie die Bibe
 My Bible Log rechnet von diesem Zieldatum zurück und sagt Ihnen, wie viele Verse Sie dafür täglich lesen müssen.
 
 So finden Sie schnell heraus, welches Pensum nötig ist, um die Bibel bis zum Jahresende – oder bis zu jedem anderen Wunschtermin – zu schaffen.
+
+Sie wissen nicht, welches Ziel Sie setzen sollen? Sehen Sie, wie viele Minuten am Tag das Lesen der Bibel in [6 Monaten](/de/about/how-to--read-the-bible-in-6-months), [einem Jahr](/de/about/how-to--read-the-bible-in-a-year) oder [2 Jahren](/de/about/how-to--read-the-bible-in-2-years) braucht, oder prüfen Sie, [wie lange jedes Buch der Bibel zu lesen dauert](/de/about/guide--how-long-does-it-take-to-read-the-bible).
 
 <div class="mbl-button-group">
   <a class="mbl-button mbl-button--light" href="/de/progress">Zur Fortschrittsseite</a>

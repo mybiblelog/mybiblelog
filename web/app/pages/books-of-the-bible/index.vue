@@ -101,7 +101,7 @@ const booksText = (n: number) => t('books_count', { n: formatNumber(n) }, n);
 const chaptersText = (n: number) => t('chapters_count', { n: formatNumber(n) }, n);
 const versesText = (n: number) => t('verses_count', { n: formatNumber(n) }, n);
 
-const units = { hour: t('units.hour'), minute: t('units.minute') };
+const units = { hour: t('units.hour'), minute: t('units.minute'), separator: locale.value === 'ko' ? '' : ' ' };
 
 const books = Bible.getBooks().map(book => ({
   index: book.bibleOrder,

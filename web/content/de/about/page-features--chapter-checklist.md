@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Kapitel-Checkliste
-  description: So funktioniert die Kapitel-Checkliste von My Bible Log
+  title: "Bibellese-Checkliste: Jedes gelesene Kapitel abhaken"
+  description: "Kostenlose, interaktive Bibellese-Checkliste mit allen 1.189 Kapiteln. Tippen Sie ein Kapitel an, um es als gelesen zu markieren, und sehen Sie Ihren Fortschritt."
 og:
-  title: Kapitel-Checkliste
-  description: So funktioniert die Kapitel-Checkliste von My Bible Log
+  title: "Bibellese-Checkliste: Jedes gelesene Kapitel abhaken"
+  description: "Kostenlose, interaktive Bibellese-Checkliste mit allen 1.189 Kapiteln. Tippen Sie ein Kapitel an, um es als gelesen zu markieren, und sehen Sie Ihren Fortschritt."
 ---
-
-![](/share.jpg)
 
 # Kapitel-Checkliste
 
@@ -23,7 +22,7 @@ Im Hintergrund legt die Checkliste dabei einen Eintrag in Ihrem Leseprotokoll an
 
 ## Eine Checkliste für die ganze Bibel
 
-Die Kapitel-Checkliste umfasst alle 1.189 Kapitel der Bibel.
+Die Kapitel-Checkliste umfasst alle 1.189 Kapitel der Bibel. Wie viele Kapitel und Verse jedes der [66 Bücher der Bibel](/de/books-of-the-bible) hat, sehen Sie dort.
 
 Im Internet gibt es viele Kapitellisten zum Ausdrucken. Weil die Bibel so viele Kapitel hat, passen sie aber selten auf ein einziges Blatt.
 
@@ -31,7 +30,7 @@ Und so ein wertvolles Blatt ist schnell verloren oder zerknittert. Mit My Bible 
 
 ## So lesen Sie die Bibel in einem Jahr
 
-Wer die Bibel in einem Jahr lesen will, muss wissen, wie viel pro Tag dazugehört.
+Wer die Bibel in einem Jahr lesen will, muss wissen, wie viel pro Tag dazugehört. (Einen vollständigen Leitfaden finden Sie unter [So lesen Sie die Bibel in einem Jahr](/de/about/how-to--read-the-bible-in-a-year). Lieber auf Papier? Laden Sie den kostenlosen [Bibellese-Tracker zum Ausdrucken](/de/resources/printable-bible-reading-tracker) herunter oder vergleichen Sie [Ausdruck und App](/de/about/guide--printable-vs-app-bible-reading-tracker).)
 
 Zählen Sie in Versen, sind es im Schnitt 86 Verse am Tag, um in 365 Tagen durch die ganze Bibel zu kommen.
 

@@ -1,4 +1,5 @@
 ---
+dateModified: "2026-09-29"
 seo:
   title: Lesefortschritt nach Buch und Kapitel verfolgen
   description: So nutzen Sie die Bibelbücher-Seite von My Bible Log, um Ihren Lesefortschritt Buch für Buch und Kapitel für Kapitel zu verfolgen
@@ -6,8 +7,6 @@ og:
   title: Lesefortschritt nach Buch und Kapitel verfolgen
   description: So nutzen Sie die Bibelbücher-Seite von My Bible Log, um Ihren Lesefortschritt Buch für Buch und Kapitel für Kapitel zu verfolgen
 ---
-
-![](/share.jpg)
 
 # Bibelbücher-Seite
 

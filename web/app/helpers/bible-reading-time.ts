@@ -12,19 +12,25 @@ export const getBookReadingMinutes = (bookIndex: number): number =>
 
 export const getTotalWordCount = (): number => bibleBookWordCounts.reduce((sum, count) => sum + count, 0);
 
-export type ReadingTimeUnits = { hour: string; minute: string };
+export type ReadingTimeUnits = {
+  hour: string;
+  minute: string;
+  /** Text between a number and its unit; Korean writes "2시간 30분", so it passes ''. Defaults to a space. */
+  separator?: string;
+};
 
 const ENGLISH_UNITS: ReadingTimeUnits = { hour: 'hr', minute: 'min' };
 
 /** "3 min", "45 min", "1 hr 5 min", "2 hr" (minutes rounded to the nearest 5 above an hour). */
 export const formatReadingTime = (minutes: number, units: ReadingTimeUnits = ENGLISH_UNITS): string => {
+  const sep = units.separator ?? ' ';
   if (minutes < 60) {
-    return `${minutes} ${units.minute}`;
+    return `${minutes}${sep}${units.minute}`;
   }
   const rounded = Math.round(minutes / 5) * 5;
   const hours = Math.floor(rounded / 60);
   const rest = rounded % 60;
-  return rest ? `${hours} ${units.hour} ${rest} ${units.minute}` : `${hours} ${units.hour}`;
+  return rest ? `${hours}${sep}${units.hour} ${rest}${sep}${units.minute}` : `${hours}${sep}${units.hour}`;
 };
 
 /** Days needed to read a book at a given number of chapters per day. */
