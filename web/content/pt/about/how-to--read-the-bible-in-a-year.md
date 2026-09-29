@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Como ler a Bíblia em um ano
-  description: Como ler a Bíblia em um ano e acompanhar seu progresso com um plano de leitura só seu
+  title: "Como ler a Bíblia em um ano: capítulos por dia e dicas"
+  description: "Como ler a Bíblia em um ano: quantos capítulos e versículos ler por dia, por onde começar, em que ordem ler e como acompanhar seu progresso."
 og:
-  title: Como ler a Bíblia em um ano
-  description: Como ler a Bíblia em um ano e acompanhar seu progresso com um plano de leitura só seu
+  title: "Como ler a Bíblia em um ano: capítulos por dia e dicas"
+  description: "Como ler a Bíblia em um ano: quantos capítulos e versículos ler por dia, por onde começar, em que ordem ler e como acompanhar seu progresso."
 ---
-
-![](/share.jpg)
 
 # Como ler a Bíblia em um ano
 
@@ -27,7 +26,7 @@ No total, a Bíblia tem 31.102 versículos. A contagem de palavras muda conforme
 
 Parece muita coisa, mas a série Harry Potter passa de 1 milhão de palavras — mais de 30% a mais — e um monte de gente leu os sete livros, boa parte em um único ano.
 
-Colocando nessa perspectiva, a Bíblia é longa, sim, mas lê-la em um ano é totalmente possível.
+Colocando nessa perspectiva, a Bíblia é longa, sim, mas lê-la em um ano é totalmente possível. No total, ler a Bíblia inteira leva de 51 a 75 horas para a maioria das pessoas; veja [Quanto tempo leva para ler a Bíblia?](/pt/about/guide--how-long-does-it-take-to-read-the-bible) para o detalhamento dos 66 livros.
 
 ## Quanto eu devo ler por dia?
 
@@ -64,21 +63,21 @@ Tem quem leia só no papel e marque o ponto com um marcador de página. Esse mé
 * Se o marcador cair ou você perder a Bíblia de vista, perde o progresso.
 * Você lê os livros na ordem impressa, o que muita gente acha chato ou cansativo. Quase todo plano de leitura mistura livros diferentes justamente para evitar isso.
 
-Uma melhora é imprimir uma lista de capítulos. Ela traz todos os capítulos da Bíblia para você ir riscando conforme lê, na ordem que quiser.
+Uma melhora é imprimir uma lista de capítulos. Ela traz todos os capítulos da Bíblia para você ir riscando conforme lê, na ordem que quiser. Você pode usar, por exemplo, nosso [registro de leitura da Bíblia para imprimir](/pt/resources/printable-bible-reading-tracker) gratuito.
 
 Só que as listas de papel têm o mesmo problema do marcador: se a folha se perde, some todo o progresso.
 
 Por isso vale usar um app feito para isso. Esses apps têm listas de capítulos que funcionam igual às de papel, sem depender de um papel.
 
-Se você registrar sua leitura na Lista de Capítulos do **My Bible Log**, ainda ganha respostas para perguntas como:
+Se você registrar sua leitura na [Lista de Capítulos](/pt/about/page-features--chapter-checklist) do **My Bible Log**, ainda ganha respostas para perguntas como:
 
 * Quantos versículos eu li hoje?
 * Bati minha meta todos os dias desta semana?
 * Que livros eu já terminei?
 * No ritmo em que venho lendo, quanto falta para terminar a Bíblia?
-* Quantos versículos preciso ler por dia para terminar até o fim do ano? E até o mês que vem?
+* Quantos versículos preciso ler por dia para terminar até o fim do ano? E até o mês que vem? (Veja a [Página Progresso](/pt/about/page-features--progress).)
 
-Um app como o **My Bible Log** também facilita anotar o que você percebe, o que torna seu estudo pessoal mais proveitoso.
+Um app como o **My Bible Log** também facilita anotar o que você percebe, o que torna seu estudo pessoal mais proveitoso. Aqui estão [7 maneiras de organizar seu estudo bíblico pessoal](/pt/about/how-to--organize-your-personal-bible-study).
 
 ## Que tradução da Bíblia eu devo ler?
 
@@ -111,13 +110,13 @@ Um jeito de resolver isso é seguir um plano anual, ou de Bíblia inteira, que e
 
 Existem vários tipos de plano de Bíblia inteira:
 
-* os cronológicos, organizados pela época em que os fatos aconteceram
+* [os cronológicos](/pt/about/how-to--read-the-bible-chronologically), organizados pela época em que os fatos aconteceram
 * alguns seguem a ordem em que os livros foram escritos
 * outros seguem a ordem em que os primeiros cristãos ou os judeus teriam recebido e vivido esses livros
 
-Para muita gente esses planos são ótimas ferramentas, e resolvem o problema de ter que ler a Bíblia do início ao fim.
+Para muita gente esses planos são ótimas ferramentas, e resolvem o problema de ter que ler a Bíblia do início ao fim. Veja [Planos de leitura da Bíblia comparados](/pt/about/guide--bible-reading-plans-compared) para encontrar o que combina com você.
 
-E se você não estiver seguindo nenhum plano? Leia o que ainda não leu e que estiver mais interessante para você agora!
+E se você não estiver seguindo nenhum plano? Leia o que ainda não leu e que estiver mais interessante para você agora! Nossas páginas de [Livros da Bíblia](/pt/books-of-the-bible) trazem um breve resumo de cada livro para ajudar você a escolher.
 
 ## Como me manter motivado durante o ano todo?
 
@@ -131,6 +130,8 @@ Outra coisa que empurra é falar sobre isso. Todo mundo se anima quando alguém 
 
 Por fim, aproveite tudo o que despertar sua vontade de ler. Se numa aula, numa pregação ou no seu devocional você esbarrar num trecho interessante, continue lendo! Você não é obrigado a parar num certo número de versículos ou capítulos. Quando um livro te pega, aproveite o embalo e leia o quanto quiser.
 
+Para dicas práticas de como manter o ritmo, veja [Como criar um hábito firme de leitura da Bíblia](/pt/about/how-to--build-a-strong-bible-reading-habit). Se um ano parece rápido ou lento demais, experimente ler [a Bíblia em 6 meses](/pt/about/how-to--read-the-bible-in-6-months), [em 2 anos](/pt/about/how-to--read-the-bible-in-2-years) ou comece pelo [Novo Testamento em 90 dias](/pt/about/how-to--read-the-new-testament-in-90-days).
+
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/pt/today">Comece agora</a>
+  <a class="mbl-button mbl-button--light" href="/pt/register">Comece a registrar sua leitura grátis</a>
 </div>

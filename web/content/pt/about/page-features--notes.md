@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Notas e tags
-  description: Notas bíblicas livres e tags personalizadas no My Bible Log
+  title: "Notas e tags de estudo bíblico: organize o que você aprende"
+  description: "Faça anotações de estudo bíblico ligadas às passagens que você lê e organize-as com tags próprias para encontrar depois perguntas, orações e descobertas."
 og:
-  title: Notas e tags
-  description: Notas bíblicas livres e tags personalizadas no My Bible Log
+  title: "Notas e tags de estudo bíblico: organize o que você aprende"
+  description: "Faça anotações de estudo bíblico ligadas às passagens que você lê e organize-as com tags próprias para encontrar depois perguntas, orações e descobertas."
 ---
-
-![](/share.jpg)
 
 # Página Notas
 

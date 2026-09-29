@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Página Lista de Capítulos
-  description: Como funciona a lista de capítulos do My Bible Log
+  title: "Lista de leitura da Bíblia: marque cada capítulo lido"
+  description: "Uma lista de leitura da Bíblia gratuita e interativa com os 1.189 capítulos. Toque em um capítulo para marcá-lo como lido e veja seu progresso em cada livro."
 og:
-  title: Página Lista de Capítulos
-  description: Como funciona a lista de capítulos do My Bible Log
+  title: "Lista de leitura da Bíblia: marque cada capítulo lido"
+  description: "Uma lista de leitura da Bíblia gratuita e interativa com os 1.189 capítulos. Toque em um capítulo para marcá-lo como lido e veja seu progresso em cada livro."
 ---
-
-![](/share.jpg)
 
 # Página Lista de Capítulos
 
@@ -23,7 +22,7 @@ Nos bastidores, a lista cria um registro de leitura para você, então o que voc
 
 ## Uma lista prática para a Bíblia inteira
 
-A página Lista de Capítulos cobre todos os 1.189 capítulos da Bíblia.
+A página Lista de Capítulos cobre todos os 1.189 capítulos da Bíblia. Veja quantos capítulos e versículos tem cada um dos [66 livros da Bíblia](/pt/books-of-the-bible).
 
 Na internet dá para achar muita lista de capítulos para imprimir, mas, como a Bíblia tem capítulos demais, quase nunca cabe tudo em uma folha só.
 
@@ -31,7 +30,7 @@ E uma folha dessas se perde ou se estraga fácil. Com o My Bible Log você não 
 
 ## Como ler a Bíblia em um ano
 
-Para ler a Bíblia em um ano, é preciso saber quanto ler por dia.
+Para ler a Bíblia em um ano, é preciso saber quanto ler por dia. (Para um guia completo, veja [Como ler a Bíblia em um ano](/pt/about/how-to--read-the-bible-in-a-year). Prefere papel? Baixe o [registro de leitura da Bíblia para imprimir](/pt/resources/printable-bible-reading-tracker) gratuito ou compare [impresso e app](/pt/about/guide--printable-vs-app-bible-reading-tracker).)
 
 Contando por versículos, são 86 por dia, em média, para terminar a Bíblia em 365 dias.
 
