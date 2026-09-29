@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: 노트·태그 페이지
-  description: My Bible Log 자유 노트·사용자 태그 기능 안내
+  title: "성경 공부 노트와 태그: 배운 것을 정리하세요"
+  description: "읽은 구절에 연결된 성경 공부 노트를 작성하고 나만의 태그로 정리해 질문, 기도, 깨달음을 나중에 쉽게 찾으세요."
 og:
-  title: 노트·태그 페이지
-  description: My Bible Log 자유 노트·사용자 태그 기능 안내
+  title: "성경 공부 노트와 태그: 배운 것을 정리하세요"
+  description: "읽은 구절에 연결된 성경 공부 노트를 작성하고 나만의 태그로 정리해 질문, 기도, 깨달음을 나중에 쉽게 찾으세요."
 ---
-
-![](/share.jpg)
 
 # 노트 페이지
 

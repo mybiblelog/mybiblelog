@@ -1,4 +1,5 @@
 ---
+dateModified: "2026-09-29"
 seo:
   title: 책·장 단위로 성경 읽기 진행 추적
   description: My Bible Log 성경 책 페이지로 권·장별 읽기 진행을 기록하는 방법
@@ -6,8 +7,6 @@ og:
   title: 책·장 단위로 성경 읽기 진행 추적
   description: My Bible Log 성경 책 페이지로 권·장별 읽기 진행을 기록하는 방법
 ---
-
-![](/share.jpg)
 
 # 성경 일람 페이지
 
