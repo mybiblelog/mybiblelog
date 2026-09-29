@@ -79,7 +79,7 @@ describe('Sitemap routes', () => {
     expect(entries.some((entry) => entry.lastmod === undefined)).toBe(true);
   });
 
-  test('GET /api/sitemap.xml (includes English-only Books of the Bible pages)', async () => {
+  test('GET /api/sitemap.xml (includes Books of the Bible pages in every locale)', async () => {
     // Act
     const res = await requestApi
       .get('/api/sitemap.xml');
@@ -92,7 +92,10 @@ describe('Sitemap routes', () => {
     expect(bookUrls.some((url) => url.endsWith('/books-of-the-bible'))).toBe(true);
     expect(bookUrls.some((url) => url.endsWith('/books-of-the-bible/genesis'))).toBe(true);
     expect(bookUrls.some((url) => url.endsWith('/books-of-the-bible/song-of-songs'))).toBe(true);
-    expect(bookUrls).toHaveLength(67);
-    expect(bookUrls.some((url) => /\/(de|es|fr|ko|pt|uk)\/books-of-the-bible/.test(url))).toBe(false);
+    // 1 hub + 66 books, in each of the 7 locales
+    expect(bookUrls).toHaveLength(67 * 7);
+    for (const code of ['de', 'es', 'fr', 'ko', 'pt', 'uk']) {
+      expect(bookUrls.some((url) => url.includes(`/${code}/books-of-the-bible/genesis`))).toBe(true);
+    }
   });
 });

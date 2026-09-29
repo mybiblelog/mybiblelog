@@ -77,10 +77,13 @@ export const getSitemap: RouteHandler = async () => {
     entries.push({ url: `${localePrefix}/resources/printable-bible-reading-tracker` });
   }
 
-  // English-only Books of the Bible guide pages
-  entries.push({ url: '/books-of-the-bible' });
-  for (const book of Bible.getBooks()) {
-    entries.push({ url: `/books-of-the-bible/${Bible.getBookSlug(book.bibleOrder)}` });
+  // Books of the Bible hub and a page per book, in every locale (slugs stay English)
+  for (const locale of siteLocales) {
+    const localePrefix = locale === 'en' ? '' : `/${locale}`;
+    entries.push({ url: `${localePrefix}/books-of-the-bible` });
+    for (const book of Bible.getBooks()) {
+      entries.push({ url: `${localePrefix}/books-of-the-bible/${Bible.getBookSlug(book.bibleOrder)}` });
+    }
   }
 
   // add the printable reading tracker PDF of each locale
