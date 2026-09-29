@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Page Paramètres
-  description: Réglages de lecture, rappels et compte dans My Bible Log
+  title: "Paramètres : objectif quotidien, rappels et export"
+  description: "Fixez votre objectif quotidien, choisissez votre traduction et votre application biblique, activez les e-mails de rappel et exportez ou importez votre journal de lecture."
 og:
-  title: Page Paramètres
-  description: Réglages de lecture, rappels et compte dans My Bible Log
+  title: "Paramètres : objectif quotidien, rappels et export"
+  description: "Fixez votre objectif quotidien, choisissez votre traduction et votre application biblique, activez les e-mails de rappel et exportez ou importez votre journal de lecture."
 ---
-
-![](/share.jpg)
 
 # Page Paramètres
 

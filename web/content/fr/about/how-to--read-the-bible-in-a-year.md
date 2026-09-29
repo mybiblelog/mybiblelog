@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Comment lire la Bible en un an
-  description: Comment lire la Bible en un an et suivre votre progression avec votre propre plan de lecture
+  title: "Lire la Bible en un an : chapitres par jour et conseils"
+  description: "Comment lire la Bible en un an : combien de chapitres et de versets lire chaque jour, par où commencer, dans quel ordre lire et comment suivre votre progression."
 og:
-  title: Comment lire la Bible en un an
-  description: Comment lire la Bible en un an et suivre votre progression avec votre propre plan de lecture
+  title: "Lire la Bible en un an : chapitres par jour et conseils"
+  description: "Comment lire la Bible en un an : combien de chapitres et de versets lire chaque jour, par où commencer, dans quel ordre lire et comment suivre votre progression."
 ---
-
-![](/share.jpg)
 
 # Comment lire la Bible en un an
 
@@ -27,7 +26,7 @@ Au total, la Bible compte 31 102 versets. Le nombre de mots varie selon la tradu
 
 Cela paraît beaucoup. Pourtant, la série Harry Potter dépasse le million de mots - plus de 30 % de plus - et d'innombrables lecteurs ont lu les sept tomes, souvent en une seule année.
 
-Remise dans ce contexte, la Bible est longue, certes, mais la lire en un an n'a rien de déraisonnable.
+Remise dans ce contexte, la Bible est longue, certes, mais la lire en un an n'a rien de déraisonnable. Au total, lire toute la Bible prend à la plupart des gens de 51 à 75 heures ; voyez [Combien de temps faut-il pour lire la Bible ?](/fr/about/guide--how-long-does-it-take-to-read-the-bible) pour le détail des 66 livres.
 
 ## Combien dois-je lire chaque jour ?
 
@@ -64,21 +63,21 @@ Certains lisent uniquement sur papier et repèrent leur avancée avec un marque-
 * si le marque-page tombe ou si vous égarez votre Bible, votre progression disparaît ;
 * vous lisez les livres dans l'ordre imprimé, ce que beaucoup trouvent ennuyeux à la longue. La plupart des plans de lecture alternent volontairement les livres pour éviter cela.
 
-Un cran au-dessus : imprimer une liste des chapitres. Elle recense tous les chapitres de la Bible, vous les cochez au fur et à mesure et vous choisissez librement l'ordre.
+Un cran au-dessus : imprimer une liste des chapitres. Elle recense tous les chapitres de la Bible, vous les cochez au fur et à mesure et vous choisissez librement l'ordre. Vous pouvez par exemple utiliser notre [tableau de lecture biblique à imprimer](/fr/resources/printable-bible-reading-tracker) gratuit.
 
 Sauf que les listes papier partagent un défaut majeur avec le marque-page : si vous perdez la feuille, vous perdez toute votre progression.
 
 D'où l'intérêt d'une application conçue pour cela. Ces applications proposent des listes de chapitres qui fonctionnent comme celles en papier, sans le papier à surveiller.
 
-Si vous notez vos lectures dans la liste de chapitres de **My Bible Log**, vous obtenez en prime des réponses à des questions comme :
+Si vous notez vos lectures dans la [liste de chapitres](/fr/about/page-features--chapter-checklist) de **My Bible Log**, vous obtenez en prime des réponses à des questions comme :
 
 * Combien de versets ai-je lus aujourd'hui ?
 * Ai-je atteint mon objectif chaque jour cette semaine ?
 * Quels livres ai-je déjà terminés ?
 * Au rythme où je vais, combien de temps me reste-t-il avant de finir la Bible ?
-* Combien de versets dois-je lire par jour pour terminer d'ici la fin de l'année ? Et d'ici le mois prochain ?
+* Combien de versets dois-je lire par jour pour terminer d'ici la fin de l'année ? Et d'ici le mois prochain ? (Voir la [Page Progression](/fr/about/page-features--progress).)
 
-Une application comme **My Bible Log** facilite aussi la prise de notes, ce qui rend votre étude personnelle plus fructueuse.
+Une application comme **My Bible Log** facilite aussi la prise de notes, ce qui rend votre étude personnelle plus fructueuse. Voici [7 façons d'organiser votre étude biblique personnelle](/fr/about/how-to--organize-your-personal-bible-study).
 
 ## Quelle traduction de la Bible choisir ?
 
@@ -111,13 +110,13 @@ Une solution consiste à suivre un plan annuel, ou un plan couvrant toute la Bib
 
 Il existe plusieurs sortes de plans de lecture intégrale :
 
-* les plans chronologiques, fondés sur la date des événements ;
+* [les plans chronologiques](/fr/about/how-to--read-the-bible-chronologically), fondés sur la date des événements ;
 * certains suivent l'ordre de rédaction des livres ;
 * d'autres suivent l'ordre dans lequel les premiers chrétiens ou les juifs auraient reçu et vécu ces livres.
 
-Ces plans rendent de grands services à beaucoup de lecteurs, et ils règlent le problème de la lecture du début à la fin.
+Ces plans rendent de grands services à beaucoup de lecteurs, et ils règlent le problème de la lecture du début à la fin. Consultez [Plans de lecture de la Bible comparés](/fr/about/guide--bible-reading-plans-compared) pour trouver celui qui vous convient.
 
-Et si vous ne suivez aucun plan précis ? Lisez simplement, parmi ce que vous n'avez pas encore lu, ce qui vous attire le plus en ce moment !
+Et si vous ne suivez aucun plan précis ? Lisez simplement, parmi ce que vous n'avez pas encore lu, ce qui vous attire le plus en ce moment ! Nos pages [Livres de la Bible](/fr/books-of-the-bible) proposent un bref aperçu de chaque livre pour vous aider à choisir.
 
 ## Comment rester motivé toute une année ?
 
@@ -131,6 +130,8 @@ En parler autour de soi aide tout autant. Nous avançons mieux quand quelqu'un c
 
 Enfin, profitez de tout ce qui éveille votre envie de lire. Si une étude biblique, une prédication ou votre méditation quotidienne vous fait tomber sur un passage passionnant, poursuivez ! Rien ne vous oblige à vous arrêter à un nombre précis de versets ou de chapitres. Quand un livre vous captive, profitez de l'élan et lisez autant que vous le souhaitez.
 
+Pour des conseils pratiques afin de tenir dans la durée, lisez [Comment ancrer durablement l'habitude de lire la Bible](/fr/about/how-to--build-a-strong-bible-reading-habit). Si un an vous paraît trop rapide ou trop lent, essayez de lire [la Bible en 6 mois](/fr/about/how-to--read-the-bible-in-6-months), [en 2 ans](/fr/about/how-to--read-the-bible-in-2-years) ou commencez par le [Nouveau Testament en 90 jours](/fr/about/how-to--read-the-new-testament-in-90-days).
+
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/fr/today">Commencer</a>
+  <a class="mbl-button mbl-button--light" href="/fr/register">Suivre ma lecture gratuitement</a>
 </div>

@@ -1,4 +1,5 @@
 ---
+dateModified: "2026-09-29"
 seo:
   title: Suivez votre lecture livre par livre et chapitre par chapitre
   description: Comment utiliser la page Livres de la Bible de My Bible Log pour suivre votre lecture dans chaque livre et chaque chapitre
@@ -6,8 +7,6 @@ og:
   title: Suivez votre lecture livre par livre et chapitre par chapitre
   description: Comment utiliser la page Livres de la Bible de My Bible Log pour suivre votre lecture dans chaque livre et chaque chapitre
 ---
-
-![](/share.jpg)
 
 # Page Livres de la Bible
 
