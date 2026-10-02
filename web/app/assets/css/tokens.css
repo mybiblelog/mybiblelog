@@ -348,6 +348,15 @@
   --mbl-recency-3: #ffc53d;
   --mbl-recency-4: #30a14e;
   --mbl-recency-swatch-border: var(--mbl-border-soft);
+
+  /* Admin engagement chart: 6 fixed categorical series (assign by slot,
+     never cycle/reassign — keeps a metric's color stable across charts). */
+  --mbl-chart-series-1: #2a78d6; /* blue */
+  --mbl-chart-series-2: #eb6834; /* orange */
+  --mbl-chart-series-3: #1baf7a; /* aqua */
+  --mbl-chart-series-4: #eda100; /* yellow */
+  --mbl-chart-series-5: #e87ba4; /* magenta */
+  --mbl-chart-series-6: #008300; /* green */
 }
 
 [data-theme="light"] {
@@ -440,6 +449,14 @@
   --mbl-recency-2: #ff8b3d;
   --mbl-recency-3: #ffd15c;
   --mbl-recency-4: #3fb950;
+
+  /* Admin engagement chart: same 6 slots, stepped for the dark surface. */
+  --mbl-chart-series-1: #3987e5;
+  --mbl-chart-series-2: #d95926;
+  --mbl-chart-series-3: #199e70;
+  --mbl-chart-series-4: #c98500;
+  --mbl-chart-series-5: #d55181;
+  --mbl-chart-series-6: #008300;
 }
 
 [data-theme="dark"] {

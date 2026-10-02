@@ -3,6 +3,7 @@ import utc from 'dayjs/plugin/utc';
 import { generateUserJWT } from '../../repositories/helpers/user-auth';
 import { type Repositories } from '../../repositories/useRepositories';
 import { type AdminUserListQuery, type FeedbackStatus } from '../../repositories/helpers/types';
+import { type Platform } from '../helpers/platform';
 import deleteAccount from '../helpers/delete-account';
 import { InvalidRequestError, NotFoundError } from '../errors/http-errors';
 import { ApiErrorDetailCode } from '../errors/error-codes';
@@ -28,6 +29,7 @@ dayjs.extend(utc);
 type PastWeekEngagementData = {
   date: string;
   newUserAccounts: number;
+  newUserAccountsByPlatform: Record<Platform, number>;
   usersWithLogEntry: number;
   usersWithNote: number;
 };
@@ -38,25 +40,25 @@ const getPastWeekEngagement = async (
 ): Promise<PastWeekEngagementData[]> => {
   const { users, logEntries, passageNotes } = repositories;
 
-  const countNewUserAccountsForDate = async (date: string, hoursOffset = 0) => {
-    const startDate = dayjs.utc(date).startOf('day').add(hoursOffset, 'hour').toDate();
-    const endDate = dayjs.utc(date).endOf('day').add(hoursOffset, 'hour').toDate();
-    return users.countCreatedBetween(startDate, endDate);
-  };
+  const dayRange = (date: string, hoursOffset = 0) => ({
+    startDate: dayjs.utc(date).startOf('day').add(hoursOffset, 'hour').toDate(),
+    endDate: dayjs.utc(date).endOf('day').add(hoursOffset, 'hour').toDate(),
+  });
 
   const countUsersWithNoteForDate = async (date: string, hoursOffset = 0) => {
-    const startDate = dayjs.utc(date).startOf('day').add(hoursOffset, 'hour').toDate();
-    const endDate = dayjs.utc(date).endOf('day').add(hoursOffset, 'hour').toDate();
+    const { startDate, endDate } = dayRange(date, hoursOffset);
     return passageNotes.countDistinctOwnersCreatedBetween(startDate, endDate);
   };
 
   const getEngagementForDate = async (date: string): Promise<PastWeekEngagementData> => {
-    const [newUserAccounts, usersWithLogEntry, usersWithNote] = await Promise.all([
-      countNewUserAccountsForDate(date),
+    const { startDate, endDate } = dayRange(date);
+    const [newUserAccounts, newUserAccountsByPlatform, usersWithLogEntry, usersWithNote] = await Promise.all([
+      users.countCreatedBetween(startDate, endDate),
+      users.countCreatedBetweenByPlatform(startDate, endDate),
       logEntries.countDistinctOwnersOnDate(date),
       countUsersWithNoteForDate(date),
     ]);
-    return { date, newUserAccounts, usersWithLogEntry, usersWithNote };
+    return { date, newUserAccounts, newUserAccountsByPlatform, usersWithLogEntry, usersWithNote };
   };
 
   const dates: string[] = [];

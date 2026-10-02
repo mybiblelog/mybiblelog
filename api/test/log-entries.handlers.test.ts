@@ -7,7 +7,7 @@ import {
   deleteLogEntry,
 } from '../http/handlers/log-entries';
 import { type HttpRequest, type RouteDependencies } from '../http/types';
-import { type LogEntryRecord, type UserRecord } from '../repositories/types';
+import { type LogEntryRecord, type UserRecord } from '../repositories/helpers/types';
 import { ValidationError } from '../http/errors/validation-errors';
 import { NotFoundError } from '../http/errors/http-errors';
 import { UnauthenticatedError } from '../http/errors/http-errors';
@@ -48,6 +48,8 @@ const makeDeps = (overrides: {
       logEntries: (overrides.logEntries ?? {}) as RouteDependencies['repositories']['logEntries'],
     } as RouteDependencies['repositories'],
     authenticate: overrides.authenticate ?? (async () => fakeUser),
+    emailService: {} as RouteDependencies['emailService'],
+    rateLimiter: { check: async () => {} } as unknown as RouteDependencies['rateLimiter'],
   };
 };
 

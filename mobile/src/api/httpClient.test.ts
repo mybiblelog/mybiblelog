@@ -36,6 +36,13 @@ describe("httpClient", () => {
     expect(init.headers.Authorization).toBe("Bearer secret-token");
   });
 
+  it("sends X-Platform: Android on every request", async () => {
+    mockFetchOnce({ data: {} });
+    await httpClient.get("/api/me");
+    const [, init] = (global.fetch as jest.Mock).mock.calls[0];
+    expect(init.headers["X-Platform"]).toBe("Android");
+  });
+
   it("omits the Authorization header when there is no token", async () => {
     mockFetchOnce({ data: {} });
     await httpClient.get("/api/me");

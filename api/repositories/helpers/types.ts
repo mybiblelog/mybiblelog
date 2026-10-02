@@ -42,6 +42,8 @@ export interface UserRecord {
   /** Bumped to revoke all previously issued JWTs; embedded in and checked against each token. */
   tokenVersion: number;
   settings: UserSettingsRecord;
+  /** Which platform(s) this user has ever logged in/registered from (see `ALLOWED_PLATFORMS`). */
+  platforms: Record<string, boolean>;
   createdAt: Date;
   updatedAt: Date;
 }
