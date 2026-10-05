@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { Button } from "@/src/components";
 import { colorsByScheme, spacing } from "@/src/design";
-import { fireEvent, renderWithProviders, screen } from "@/src/test-utils/renderWithProviders";
+import { act, fireEvent, renderWithProviders, screen } from "@/src/test-utils/renderWithProviders";
 import { useToast, type ToastType } from "./ToastProvider";
 
 function Trigger({ type }: { type: ToastType }) {
@@ -9,8 +9,23 @@ function Trigger({ type }: { type: ToastType }) {
   return <Button label="show" onPress={() => showToast({ type, message: "Heads up" })} />;
 }
 
+function ProminentTrigger({ durationMs }: { durationMs?: number | null }) {
+  const { showToast } = useToast();
+  return (
+    <Button
+      label="show"
+      onPress={() => showToast({ type: "info", message: "Heads up", prominent: true, durationMs })}
+    />
+  );
+}
+
 function show(type: ToastType, scheme: "light" | "dark") {
   renderWithProviders(<Trigger type={type} />, { scheme });
+  fireEvent.press(screen.getByText("show"));
+}
+
+function showProminent(durationMs?: number | null) {
+  renderWithProviders(<ProminentTrigger durationMs={durationMs} />);
   fireEvent.press(screen.getByText("show"));
 }
 
@@ -42,5 +57,41 @@ describe("ToastProvider", () => {
     const wrap = flatten("toast.wrap");
     expect(wrap.top).toBe(spacing.xs); // safe-area top is 0 in tests
     expect(wrap.bottom).toBeUndefined();
+  });
+
+  describe("prominent toasts", () => {
+    beforeEach(() => jest.useFakeTimers());
+    afterEach(() => {
+      act(() => jest.runOnlyPendingTimers());
+      jest.useRealTimers();
+    });
+
+    it("does not auto-dismiss when durationMs is null", () => {
+      showProminent(null);
+      expect(screen.getByTestId("toast.message")).toBeTruthy();
+      act(() => jest.advanceTimersByTime(60_000));
+      expect(screen.getByTestId("toast.message")).toBeTruthy();
+    });
+
+    it("shows a close button that dismisses it", () => {
+      showProminent(null);
+      fireEvent.press(screen.getByTestId("toast.close"));
+      act(() => jest.advanceTimersByTime(1000)); // let the fade-out finish
+      expect(screen.queryByTestId("toast.message")).toBeNull();
+    });
+
+    it("uses more generous padding and a larger, left-aligned message than the compact toast", () => {
+      showProminent(null);
+      const container = flatten("toast.container");
+      const text = flatten("toast.message");
+      expect(container.paddingHorizontal).toBe(spacing.lg);
+      expect(text.fontSize).toBeGreaterThan(14);
+      expect(text.textAlign).toBe("left");
+    });
+  });
+
+  it("does not show a close button on the compact (non-prominent) toast", () => {
+    show("info", "light");
+    expect(screen.queryByTestId("toast.close")).toBeNull();
   });
 });
