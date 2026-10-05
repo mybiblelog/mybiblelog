@@ -222,3 +222,15 @@ export const recencyByScheme: Record<
   light: ["#1a1a1a", "#e5484d", "#f76b15", "#ffc53d", "#30a14e"],
   dark: ["#2a2a2e", "#ff6369", "#ff8b3d", "#ffd15c", "#3fb950"],
 };
+
+/**
+ * Insights activity heatmap ramp, indexed by level 1–4 (level 0 is the empty
+ * cell, drawn with `colors.surfaceMuted`). Matches web's `--mbl-heat-1..4`
+ * (`web/app/assets/css/tokens.css`) except dark level 1, which is brighter than
+ * web's `#0e4429` because mobile's dark `surfaceMuted` (`#242424`) is lighter
+ * than web's empty cell and needs more separation.
+ */
+export const heatByScheme: Record<ColorSchemeName, readonly [string, string, string, string]> = {
+  light: ["#9be9a8", "#40c463", "#30a14e", "#216e39"],
+  dark: ["#0f5c30", "#006d32", "#26a641", "#39d353"],
+};

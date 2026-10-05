@@ -7,7 +7,7 @@ import {
   type HeatmapWeek,
   type InsightsLogEntry,
 } from "@mybiblelog/shared";
-import { radius, spacing, useTheme } from "@/src/design";
+import { heatByScheme, radius, spacing, useTheme } from "@/src/design";
 import type { ThemeColors } from "@/src/design";
 import { Text } from "../atoms/Text";
 import { formatLongDate } from "@/src/i18n/date";
@@ -21,16 +21,22 @@ const WEEKDAY_COLUMN = 28;
 const LABEL_GUTTER = WEEKDAY_COLUMN + spacing["2xs"];
 const WEEKDAY_LABEL_OFFSETS = [1, 3, 5]; // Mon, Wed, Fri
 
-const HEAT_LEVEL_OPACITY = [0, 0.28, 0.52, 0.76, 1] as const;
-
 // A phone can't show the whole year at a legible cell size, so the range is
 // split into two stacked grids of this many months each (most recent on top).
 const NARROW_MONTHS = 6;
 
-function heatCellStyle(level: number, future: boolean, colors: ThemeColors) {
-  if (future) return { backgroundColor: "transparent" };
-  if (level === 0) return { backgroundColor: colors.surfaceMuted };
-  return { backgroundColor: colors.success, opacity: HEAT_LEVEL_OPACITY[level] };
+// Level colors come from the heat ramp (see `heatByScheme`, which follows web's
+// --mbl-heat-* tokens). Populated cells border in their own fill color so only
+// empty cells show an outline.
+function heatCellStyle(
+  level: number,
+  future: boolean,
+  colors: ThemeColors,
+  heat: readonly [string, string, string, string]
+) {
+  if (future) return { backgroundColor: "transparent", borderColor: colors.border };
+  if (level === 0) return { backgroundColor: colors.surfaceMuted, borderColor: colors.border };
+  return { backgroundColor: heat[level - 1], borderColor: heat[level - 1] };
 }
 
 const monthFormatters = new Map<string, Intl.DateTimeFormat>();
@@ -87,7 +93,8 @@ function buildMonthSegments(weeks: HeatmapWeek[], locale: string): MonthSegment[
 export function ActivityHeatmap({ entries }: { entries: InsightsLogEntry[] }) {
   const t = useT();
   const { locale } = useLocale();
-  const { colors } = useTheme();
+  const { colors, scheme } = useTheme();
+  const heat = heatByScheme[scheme];
   const [selected, setSelected] = useState<HeatmapCell | null>(null);
 
   const calendar = useMemo(() => buildContributionCalendar(entries), [entries]);
@@ -180,8 +187,7 @@ export function ActivityHeatmap({ entries }: { entries: InsightsLogEntry[] }) {
                       onPress={() => setSelected(cell)}
                       style={[
                         styles.gridCell,
-                        heatCellStyle(cell.level, cell.future, colors),
-                        { borderColor: colors.border },
+                        heatCellStyle(cell.level, cell.future, colors, heat),
                       ]}
                     />
                   ))}
@@ -197,14 +203,7 @@ export function ActivityHeatmap({ entries }: { entries: InsightsLogEntry[] }) {
           {t("insights_heatmap_less")}
         </Text>
         {[0, 1, 2, 3, 4].map((level) => (
-          <View
-            key={level}
-            style={[
-              styles.cell,
-              heatCellStyle(level, false, colors),
-              { borderColor: colors.border },
-            ]}
-          />
+          <View key={level} style={[styles.cell, heatCellStyle(level, false, colors, heat)]} />
         ))}
         <Text variant="caption" color="mutedText">
           {t("insights_heatmap_more")}
