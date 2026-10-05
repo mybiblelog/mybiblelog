@@ -23,4 +23,5 @@ export type { SegmentedControlOption } from "./SegmentedControl";
 export { SelectRow } from "./SelectRow";
 export { SkeletonList } from "./SkeletonList";
 export { StepProgressDots } from "./StepProgressDots";
+export { TabBarIcon } from "./TabBarIcon";
 export type { SkeletonListVariant } from "./SkeletonList";
