@@ -160,7 +160,7 @@ export default function Index() {
             // up to the header button.
             <EmptyState
               icon="book-outline"
-              background="surfaceMuted"
+              pops
               iconColor="primary"
               title={t("today_empty_title")}
               text={t("today_empty_text")}

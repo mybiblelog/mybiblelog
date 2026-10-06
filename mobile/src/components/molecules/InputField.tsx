@@ -60,6 +60,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.sm,
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "400",
   },
 });

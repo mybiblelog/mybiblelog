@@ -21,12 +21,17 @@ type Props<T extends string | number> = {
 /** Inset of the track's inner edge from its own border (matches web's thumb inset). */
 const TRACK_PADDING = 3;
 const SEGMENT_GAP = 3;
+/** Height of the sliding underline bar beneath the active tab's label. */
+const UNDERLINE_HEIGHT = 3;
+/** Horizontal inset of the underline from its segment's edges, so it reads as a short bar under the label rather than spanning the full segment width. */
+const UNDERLINE_INSET = 10;
 
 /**
  * Inline segmented control for small mutually-exclusive option sets (the
- * mobile stand-in for the web query manager's radio groups). The selection
- * indicator is a single absolutely-positioned pill that slides between
- * segments, mirroring web's `TestamentToggle` thumb.
+ * mobile stand-in for the web query manager's radio groups). Styled like a
+ * classic tab bar: a subtle, low-contrast track with a short rounded
+ * underline bar that slides beneath the active tab's label, rather than a
+ * solid pill filling the whole segment.
  */
 export function SegmentedControl<T extends string | number>({
   label,
@@ -56,9 +61,11 @@ export function SegmentedControl<T extends string | number>({
     });
   }, [indicatorX, segmentWidth, selectedIndex]);
 
+  const underlineWidth = Math.max(segmentWidth - UNDERLINE_INSET * 2, 0);
+
   const indicatorStyle = useAnimatedStyle(() => ({
-    width: segmentWidth,
-    transform: [{ translateX: indicatorX.value }],
+    width: underlineWidth,
+    transform: [{ translateX: indicatorX.value + UNDERLINE_INSET }],
   }));
 
   const handleTrackLayout = (e: LayoutChangeEvent) => {
@@ -73,7 +80,7 @@ export function SegmentedControl<T extends string | number>({
         </Text>
       )}
       <View
-        style={[styles.track, { backgroundColor: colors.surfaceMuted }]}
+        style={[styles.track, { backgroundColor: colors.surfaceSubtleTranslucent }]}
         onLayout={handleTrackLayout}
       >
         {!!segmentWidth && (
@@ -93,7 +100,7 @@ export function SegmentedControl<T extends string | number>({
               onPress={() => onChange(option.value)}
               style={styles.segment}
             >
-              <Text variant="label" color={selected ? "onPrimary" : "mutedText"} numberOfLines={1}>
+              <Text variant="label" color={selected ? "primary" : "mutedText"} numberOfLines={1}>
                 {option.label}
               </Text>
             </AnimatedPressable>
@@ -109,15 +116,15 @@ const styles = StyleSheet.create({
   track: {
     position: "relative",
     flexDirection: "row",
-    borderRadius: radius.pill,
+    borderRadius: radius.lg,
     padding: TRACK_PADDING,
     gap: SEGMENT_GAP,
   },
   indicator: {
     position: "absolute",
-    top: TRACK_PADDING,
     bottom: TRACK_PADDING,
     left: TRACK_PADDING,
+    height: UNDERLINE_HEIGHT,
     borderRadius: radius.pill,
   },
   segment: {

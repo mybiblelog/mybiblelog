@@ -1,4 +1,4 @@
-export { brand, colorsByScheme, recencyByScheme } from "./colors";
+export { brand, colorsByScheme, heatByScheme, recencyByScheme } from "./colors";
 export type { ColorSchemeName, ThemeColors } from "./colors";
 export { gradientsByScheme } from "./gradients";
 export type { Gradient, Gradients } from "./gradients";

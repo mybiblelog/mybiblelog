@@ -7,10 +7,12 @@ import { translateApiError } from "@/src/i18n/translateApiError";
 import { spacing, useTheme } from "@/src/design";
 import {
   AuthCodeForm,
+  BackgroundPattern,
   Button,
   ConnectionNotice,
   GoogleSignInButton,
   InputField,
+  OnboardingFrame,
   Text,
 } from "@/src/components";
 import { router } from "expo-router";
@@ -127,121 +129,124 @@ export default function Login() {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={[styles.flex, { backgroundColor: colors.background }]}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <Text variant="title" style={styles.title}>
-          {t("login_title")}
-        </Text>
-        <Text variant="body" color="mutedText" style={styles.subtitle}>
-          {needsVerify
-            ? t("auth_verify_needed_hint")
-            : lastEmail
-              ? t("login_sign_in_again_as", { email: lastEmail })
-              : t("auth_login_hint")}
-        </Text>
+    <OnboardingFrame>
+      <BackgroundPattern />
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+      >
+        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+          <Text variant="title" style={styles.title}>
+            {t("login_title")}
+          </Text>
+          <Text variant="body" color="mutedText" style={styles.subtitle}>
+            {needsVerify
+              ? t("auth_verify_needed_hint")
+              : lastEmail
+                ? t("login_sign_in_again_as", { email: lastEmail })
+                : t("auth_login_hint")}
+          </Text>
 
-        {needsVerify ? (
-          <AuthCodeForm
-            flow="verify-email"
-            email={email.trim()}
-            onDone={goAfterAuth}
-            testIDPrefix="login.verify"
-          />
-        ) : (
-          <>
-            {!!error && (
-              <Text variant="bodyStrong" color="destructive" style={styles.error}>
-                {error}
-              </Text>
-            )}
+          {needsVerify ? (
+            <AuthCodeForm
+              flow="verify-email"
+              email={email.trim()}
+              onDone={goAfterAuth}
+              testIDPrefix="login.verify"
+            />
+          ) : (
+            <>
+              {!!error && (
+                <Text variant="bodyStrong" color="destructive" style={styles.error}>
+                  {error}
+                </Text>
+              )}
 
-            <View style={styles.form}>
-              <InputField
-                label={t("auth_email")}
-                testID="login.email"
-                value={email}
-                onChangeText={setEmail}
-                autoCapitalize="none"
-                autoComplete="email"
-                autoCorrect={false}
-                keyboardType="email-address"
-                textContentType="emailAddress"
-                editable={!isSubmitting}
-                error={emailError ?? undefined}
+              <View style={styles.form}>
+                <InputField
+                  label={t("auth_email")}
+                  testID="login.email"
+                  value={email}
+                  onChangeText={setEmail}
+                  autoCapitalize="none"
+                  autoComplete="email"
+                  autoCorrect={false}
+                  keyboardType="email-address"
+                  textContentType="emailAddress"
+                  editable={!isSubmitting}
+                  error={emailError ?? undefined}
+                />
+                <InputField
+                  label={t("auth_password")}
+                  testID="login.password"
+                  value={password}
+                  onChangeText={setPassword}
+                  autoCapitalize="none"
+                  autoComplete="password"
+                  autoCorrect={false}
+                  secureTextEntry
+                  textContentType="password"
+                  editable={!isSubmitting}
+                  onSubmitEditing={onEmailLogin}
+                  returnKeyType="go"
+                  error={passwordError ?? undefined}
+                />
+              </View>
+
+              <ConnectionNotice
+                testID="login.connection-notice"
+                offlineText={t("auth_login_requires_connection")}
+                unreachableText={t("auth_login_requires_server")}
               />
-              <InputField
-                label={t("auth_password")}
-                testID="login.password"
-                value={password}
-                onChangeText={setPassword}
-                autoCapitalize="none"
-                autoComplete="password"
-                autoCorrect={false}
-                secureTextEntry
-                textContentType="password"
-                editable={!isSubmitting}
-                onSubmitEditing={onEmailLogin}
-                returnKeyType="go"
-                error={passwordError ?? undefined}
-              />
-            </View>
 
-            <ConnectionNotice
-              testID="login.connection-notice"
-              offlineText={t("auth_login_requires_connection")}
-              unreachableText={t("auth_login_requires_server")}
-            />
-
-            <Button
-              label={t("login_with_email")}
-              testID="login.submit"
-              onPress={onEmailLogin}
-              loading={isSubmitting}
-              disabled={!canReachServer}
-              fullWidth
-            />
-
-            <View style={styles.divider}>
-              <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
-              <Text variant="caption" color="mutedText" style={styles.dividerText}>
-                {t("login_divider_or")}
-              </Text>
-              <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
-            </View>
-
-            <GoogleSignInButton
-              label={t("login_with_google")}
-              testID="login.google"
-              onPress={onGoogleLogin}
-              disabled={isSubmitting || !canReachServer}
-              fullWidth
-            />
-
-            <View style={styles.links}>
               <Button
-                label={t("login_forgot_password")}
-                testID="login.forgot-password"
-                variant="ghost"
-                size="sm"
-                disabled={isSubmitting}
-                onPress={() => router.push("/forgot-password")}
+                label={t("login_with_email")}
+                testID="login.submit"
+                onPress={onEmailLogin}
+                loading={isSubmitting}
+                disabled={!canReachServer}
+                fullWidth
               />
-              <Button
-                label={t("login_create_account")}
-                testID="login.register"
-                variant="ghost"
-                size="sm"
-                disabled={isSubmitting}
-                onPress={() => router.push("/register")}
+
+              <View style={styles.divider}>
+                <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+                <Text variant="caption" color="mutedText" style={styles.dividerText}>
+                  {t("login_divider_or")}
+                </Text>
+                <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+              </View>
+
+              <GoogleSignInButton
+                label={t("login_with_google")}
+                testID="login.google"
+                onPress={onGoogleLogin}
+                disabled={isSubmitting || !canReachServer}
+                fullWidth
               />
-            </View>
-          </>
-        )}
-      </ScrollView>
-    </KeyboardAvoidingView>
+
+              <View style={styles.links}>
+                <Button
+                  label={t("login_forgot_password")}
+                  testID="login.forgot-password"
+                  variant="ghost"
+                  size="sm"
+                  disabled={isSubmitting}
+                  onPress={() => router.push("/forgot-password")}
+                />
+                <Button
+                  label={t("login_create_account")}
+                  testID="login.register"
+                  variant="ghost"
+                  size="sm"
+                  disabled={isSubmitting}
+                  onPress={() => router.push("/register")}
+                />
+              </View>
+            </>
+          )}
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </OnboardingFrame>
   );
 }
 

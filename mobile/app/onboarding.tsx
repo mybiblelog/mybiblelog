@@ -8,6 +8,7 @@ import {
   Card,
   IconButton,
   InputField,
+  OnboardingFrame,
   Screen,
   SelectRow,
   SelectSheet,
@@ -38,43 +39,45 @@ export default function Onboarding() {
   const settings = useSettingsValue();
 
   return (
-    <Screen edges={["top", "bottom"]} padded>
-      {step !== "choice" && step !== "finish" ? (
-        <Image
-          source={require("../assets/images/splash-icon.png")}
-          style={styles.logo}
-          resizeMode="contain"
-          accessibilityIgnoresInvertColors
-        />
-      ) : null}
+    <OnboardingFrame>
+      <Screen edges={["top", "bottom"]} padded>
+        {step !== "choice" && step !== "finish" ? (
+          <Image
+            source={require("../assets/images/splash-icon.png")}
+            style={styles.logo}
+            resizeMode="contain"
+            accessibilityIgnoresInvertColors
+          />
+        ) : null}
 
-      {STEP_INDEX[step] !== undefined ? (
-        <View style={styles.progress}>
-          <StepProgressDots currentStep={STEP_INDEX[step]!} totalSteps={TOTAL_STEPS} />
-        </View>
-      ) : null}
+        {STEP_INDEX[step] !== undefined ? (
+          <View style={styles.progress}>
+            <StepProgressDots currentStep={STEP_INDEX[step]!} totalSteps={TOTAL_STEPS} />
+          </View>
+        ) : null}
 
-      {step === "choice" ? <ChoiceStep onNew={() => setStep("welcome")} /> : null}
-      {step === "welcome" ? (
-        <WelcomeStep
-          onNext={() => setStep("goal")}
-          onSkip={() => void finishOnboarding()}
-          onBack={() => setStep("choice")}
-        />
-      ) : null}
-      {step === "goal" ? (
-        <GoalStep onBack={() => setStep("welcome")} onNext={() => setStep("bible")} />
-      ) : null}
-      {step === "bible" ? (
-        <BibleStep
-          initialVersion={settings?.preferredBibleVersion ?? ""}
-          initialApp={settings?.preferredBibleApp ?? ""}
-          onBack={() => setStep("goal")}
-          onNext={() => setStep("finish")}
-        />
-      ) : null}
-      {step === "finish" ? <FinishStep onDone={() => void finishOnboarding()} /> : null}
-    </Screen>
+        {step === "choice" ? <ChoiceStep onNew={() => setStep("welcome")} /> : null}
+        {step === "welcome" ? (
+          <WelcomeStep
+            onNext={() => setStep("goal")}
+            onSkip={() => void finishOnboarding()}
+            onBack={() => setStep("choice")}
+          />
+        ) : null}
+        {step === "goal" ? (
+          <GoalStep onBack={() => setStep("welcome")} onNext={() => setStep("bible")} />
+        ) : null}
+        {step === "bible" ? (
+          <BibleStep
+            initialVersion={settings?.preferredBibleVersion ?? ""}
+            initialApp={settings?.preferredBibleApp ?? ""}
+            onBack={() => setStep("goal")}
+            onNext={() => setStep("finish")}
+          />
+        ) : null}
+        {step === "finish" ? <FinishStep onDone={() => void finishOnboarding()} /> : null}
+      </Screen>
+    </OnboardingFrame>
   );
 }
 

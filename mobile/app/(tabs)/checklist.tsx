@@ -255,10 +255,20 @@ export default function Checklist() {
                 chapterIndex,
                 logEntries.filter((e) => e.date === date)
               ).length > 0;
-            showToast({
-              type: "info",
-              message: t(loggedToday ? "logged_in_longer_passage" : "logged_before_today"),
-            });
+            showToast(
+              loggedToday
+                ? { type: "info", message: t("logged_in_longer_passage") }
+                : {
+                    type: "info",
+                    message: t("logged_before_today"),
+                    // This explains why the tap did nothing and points the
+                    // user at where to actually make the change — worth
+                    // reading in full rather than glancing at, so it gets the
+                    // larger, manually-dismissed presentation.
+                    prominent: true,
+                    durationMs: null,
+                  }
+            );
           }
         } else {
           await logEntryActions.createEntry({ date, startVerseId, endVerseId });

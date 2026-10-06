@@ -30,6 +30,8 @@ export type ThemeColors = {
   surfaceMuted: string;
   /** Barely-there fill (web `--mbl-bg-subtle`). */
   surfaceSubtle: string;
+  /** `surfaceSubtle` at partial opacity, so backgrounds show through. Mobile-only. */
+  surfaceSubtleTranslucent: string;
   /** Primary text (web `--mbl-text`). */
   text: string;
   /** Body copy, a step softer than `text` (web `--mbl-text-body`). */
@@ -108,6 +110,7 @@ export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
     surfaceElevated: "#ffffff", // == --mbl-bg in light
     surfaceMuted: "#f5f5f5", // --neutral-100
     surfaceSubtle: "#fafafa", // --neutral-50
+    surfaceSubtleTranslucent: "rgba(250,250,250,0.6)",
     text: "#363636", // --neutral-700
     textBody: "#4a4a4a", // --neutral-600
     mutedText: "#7a7a7a",
@@ -157,6 +160,7 @@ export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
     surfaceElevated: "#242424", // == --mbl-bg-muted, so cards read on the #000 canvas
     surfaceMuted: "#242424",
     surfaceSubtle: "#1f1f1f",
+    surfaceSubtleTranslucent: "rgba(31,31,31,0.6)",
     text: "#f5f5f5", // --neutral-100
     textBody: "#dbdbdb", // --neutral-200
     mutedText: "#a8a8a8",
@@ -221,4 +225,16 @@ export const recencyByScheme: Record<
 > = {
   light: ["#1a1a1a", "#e5484d", "#f76b15", "#ffc53d", "#30a14e"],
   dark: ["#2a2a2e", "#ff6369", "#ff8b3d", "#ffd15c", "#3fb950"],
+};
+
+/**
+ * Insights activity heatmap ramp, indexed by level 1–4 (level 0 is the empty
+ * cell, drawn with `colors.surfaceMuted`). Matches web's `--mbl-heat-1..4`
+ * (`web/app/assets/css/tokens.css`) except dark level 1, which is brighter than
+ * web's `#0e4429` because mobile's dark `surfaceMuted` (`#242424`) is lighter
+ * than web's empty cell and needs more separation.
+ */
+export const heatByScheme: Record<ColorSchemeName, readonly [string, string, string, string]> = {
+  light: ["#9be9a8", "#40c463", "#30a14e", "#216e39"],
+  dark: ["#0f5c30", "#006d32", "#26a641", "#39d353"],
 };

@@ -11,6 +11,7 @@ export { ProgressBar } from "./ProgressBar";
 export { Skeleton } from "./Skeleton";
 export { Spacer } from "./Spacer";
 export { Spinner } from "./Spinner";
+export { TabBarButton } from "./TabBarButton";
 export { TagPill } from "./TagPill";
 export type { TagPillProps } from "./TagPill";
 export { Text } from "./Text";

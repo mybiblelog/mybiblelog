@@ -5,6 +5,8 @@ import { Button } from "../atoms/Button";
 import { Icon, type IconName } from "../atoms/Icon";
 import { Text } from "../atoms/Text";
 
+const ICON_SIZE = 40;
+
 /**
  * Centered empty-list state: optional icon, title, supporting text, and an
  * optional CTA. Fades in so it doesn't pop when a list finishes loading empty.
@@ -13,11 +15,17 @@ import { Text } from "../atoms/Text";
  * the whole state apart from the screen — pair it with `iconColor` (defaults
  * to `mutedText`, which reads flat against a tinted card) so the icon still
  * stands out from its own backdrop.
+ *
+ * `pops` fills the card with `surfaceMuted` and adds a muted primary-color
+ * circle behind the content, near the top — used where a flat fill reads like
+ * an unfinished placeholder.
+ * Takes precedence over `background` when both are set.
  */
 export function EmptyState({
   icon,
   iconColor = "mutedText",
   background,
+  pops = false,
   title,
   text,
   ctaLabel,
@@ -26,23 +34,34 @@ export function EmptyState({
   icon?: IconName;
   iconColor?: keyof ThemeColors;
   background?: keyof ThemeColors;
+  pops?: boolean;
   title: string;
   text?: string;
   ctaLabel?: string;
   onPressCta?: () => void;
 }) {
   const { colors } = useTheme();
+  const filled = pops || !!background;
   return (
     <Animated.View entering={fadeIn()} style={styles.container}>
       <View
         style={[
           styles.card,
-          background && [styles.cardFilled, { backgroundColor: colors[background] }],
+          filled && [
+            styles.cardFilled,
+            (background || pops) && {
+              backgroundColor: colors[pops ? "surfaceMuted" : background!],
+            },
+          ],
+          pops && styles.cardPops,
         ]}
       >
+        {pops ? (
+          <View pointerEvents="none" style={[styles.pop, { backgroundColor: colors.backdrop }]} />
+        ) : null}
         {icon ? (
           <View style={styles.icon}>
-            <Icon name={icon} size={40} color={iconColor} />
+            <Icon name={icon} size={ICON_SIZE} color={iconColor} />
           </View>
         ) : null}
         <Text variant="heading" style={styles.title}>
@@ -73,6 +92,18 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xl,
     paddingHorizontal: spacing.lg,
     borderRadius: radius.card,
+  },
+  cardPops: { overflow: "hidden" },
+  // Two-thirds of the card width, centered on the icon (card padding + half the 40px icon).
+  pop: {
+    position: "absolute",
+    bottom: spacing.xl + ICON_SIZE / 2,
+    transform: [{ translateY: "50%" }],
+    alignSelf: "center",
+    width: "130%",
+    aspectRatio: 1,
+    borderRadius: radius.pill,
+    opacity: 0.18,
   },
   icon: { marginBottom: spacing.sm, opacity: 0.7 },
   title: { marginBottom: spacing["2xs"], textAlign: "center" },

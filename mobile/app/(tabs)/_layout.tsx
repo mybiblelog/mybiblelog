@@ -3,7 +3,7 @@ import { Tabs } from "expo-router";
 import { View } from "react-native";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { useTheme } from "@/src/design";
-import { AttentionDot } from "@/src/components";
+import { AttentionDot, TabBarButton, TabBarIcon } from "@/src/components";
 import { useIsUnauthenticated } from "@/src/stores/auth";
 
 export default function TabsLayout() {
@@ -23,6 +23,7 @@ export default function TabsLayout() {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
         },
+        tabBarButton: (props) => <TabBarButton {...props} />,
       }}
     >
       <Tabs.Screen
@@ -30,8 +31,10 @@ export default function TabsLayout() {
         options={{
           tabBarButtonTestID: "tab.today",
           title: t("tab_today"),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="today-outline" color={color} size={size} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabBarIcon focused={focused}>
+              <Ionicons name="today-outline" color={color} size={size} />
+            </TabBarIcon>
           ),
         }}
       />
@@ -40,8 +43,10 @@ export default function TabsLayout() {
         options={{
           tabBarButtonTestID: "tab.bible",
           title: t("tab_bible"),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="book-outline" color={color} size={size} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabBarIcon focused={focused}>
+              <Ionicons name="book-outline" color={color} size={size} />
+            </TabBarIcon>
           ),
         }}
       />
@@ -53,8 +58,10 @@ export default function TabsLayout() {
         options={{
           tabBarButtonTestID: "tab.checklist",
           title: t("tab_checklist"),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="checkbox-outline" color={color} size={size} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabBarIcon focused={focused}>
+              <Ionicons name="checkbox-outline" color={color} size={size} />
+            </TabBarIcon>
           ),
         }}
       />
@@ -63,8 +70,10 @@ export default function TabsLayout() {
         options={{
           tabBarButtonTestID: "tab.notes",
           title: t("notes_tab_title"),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="document-text-outline" color={color} size={size} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabBarIcon focused={focused}>
+              <Ionicons name="document-text-outline" color={color} size={size} />
+            </TabBarIcon>
           ),
         }}
       />
@@ -73,11 +82,13 @@ export default function TabsLayout() {
         options={{
           tabBarButtonTestID: "tab.settings",
           title: t("settings_tab_title"),
-          tabBarIcon: ({ color, size }) => (
-            <View>
-              <Ionicons name="settings-outline" color={color} size={size} />
-              {showSignInAlert && <AttentionDot />}
-            </View>
+          tabBarIcon: ({ color, size, focused }) => (
+            <TabBarIcon focused={focused}>
+              <View>
+                <Ionicons name="settings-outline" color={color} size={size} />
+                {showSignInAlert && <AttentionDot />}
+              </View>
+            </TabBarIcon>
           ),
         }}
       />
