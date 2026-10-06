@@ -8,8 +8,7 @@ import { validate } from '../../../validation/validate';
 import { registerBodySchema } from '../../../validation/schemas/auth';
 import { LocaleCode } from '@mybiblelog/shared';
 import { authCookie, clearAuthCookie } from '../../helpers/auth-cookie';
-import { isWebClient } from '../../helpers/client-type';
-import { trackPlatform } from '../../helpers/platform';
+import { isWebClient, trackClientActivity } from '../../helpers/platform';
 import { type RouteHandler } from '../../types';
 import { asRecord } from './shared';
 
@@ -60,7 +59,7 @@ export const login: RouteHandler = async (req, deps) => {
     throw new UnauthorizedError([{ code: ApiErrorDetailCode.VerifyEmail, field: null, properties: { email: user.email } }]);
   }
 
-  await trackPlatform(users, req, user.id);
+  await trackClientActivity(users, req, user, { force: true });
 
   const token = generateUserJWT(user);
   return {
@@ -101,7 +100,7 @@ export const register: RouteHandler = async (req, deps) => {
 
   try {
     const user = await users.create(input);
-    await trackPlatform(users, req, user.id);
+    await trackClientActivity(users, req, user, { force: true });
     // Enqueue a verification email (returns immediately; send happens off-queue).
     deps.emailService.queueUserEmailVerification(email, user.emailVerificationCode, locale as LocaleCode);
   }

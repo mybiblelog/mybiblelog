@@ -1,3 +1,4 @@
+import { execSync } from 'node:child_process';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { resolve } from 'node:path';
 import { config as loadEnv } from 'dotenv';
@@ -7,6 +8,22 @@ loadEnv({
   path: resolve(__dirname, '../.env'),
   quiet: true,
 });
+
+// The web app's version is the short git SHA it was built from. Heroku exposes
+// the commit as SOURCE_VERSION during the build (and has no .git there); local
+// builds fall back to git, then to 'dev'. Baked in at build time and sent as
+// `X-App-Version` (see `app/plugins/http.ts`).
+const resolveAppVersion = (): string => {
+  if (process.env.SOURCE_VERSION) {
+    return process.env.SOURCE_VERSION.slice(0, 7);
+  }
+  try {
+    return execSync('git rev-parse --short=7 HEAD', { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
+  }
+  catch {
+    return 'dev';
+  }
+};
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -38,6 +55,7 @@ export default defineNuxtConfig({
       siteUrl: process.env.SITE_URL || '',
       requireEmailVerification: process.env.REQUIRE_EMAIL_VERIFICATION !== 'false',
       locales: getLocaleCodes(),
+      appVersion: resolveAppVersion(),
     },
   },
 

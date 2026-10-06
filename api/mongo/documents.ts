@@ -18,6 +18,15 @@ export interface UserSettingsDocument {
   locale: string;
 }
 
+export interface PlatformActivityDocument {
+  /** First time the user was seen on this platform. */
+  firstSeenAt: Date;
+  /** Most recent (throttled) time the user was seen on this platform. */
+  lastSeenAt: Date;
+  /** App version most recently reported on this platform; `null` if none/invalid. */
+  appVersion: string | null;
+}
+
 export interface UserDocument {
   _id: ObjectId;
   email: string;
@@ -52,11 +61,12 @@ export interface UserDocument {
   tokenVersion: number;
   settings: UserSettingsDocument;
   /**
-   * Which platform(s) this user has ever logged in/registered from, keyed by
-   * value from `ALLOWED_PLATFORMS` (`api/http/helpers/platform.ts`). Only ever
-   * gains `true` keys (set on successful login/register); never cleared.
+   * Per-platform client activity, keyed by value from `ALLOWED_PLATFORMS`
+   * (`api/http/helpers/platform.ts`). An entry is added the first time the user
+   * is seen on that platform (login/register or any authenticated request) and
+   * refreshed thereafter; entries are never removed.
    */
-  platforms: Record<string, boolean>;
+  platforms: Record<string, PlatformActivityDocument>;
   createdAt: Date;
   updatedAt: Date;
 }

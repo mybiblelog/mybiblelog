@@ -1058,7 +1058,7 @@ describe('admin.test.js', () => {
         const response = await requestApi
           .get(`/api/admin/users/${testUser.email}/login`)
           .set('Authorization', `Bearer ${admin.token}`)
-          .set('X-Client', 'web');
+          .set('X-Platform', 'web');
         expect(response.status).toBe(200);
         expect(response.body.data).not.toHaveProperty('token');
         expect(response.headers['set-cookie']?.[0]).toContain('auth_token=');

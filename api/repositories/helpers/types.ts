@@ -15,6 +15,13 @@ export interface UserSettingsRecord {
   locale: string;
 }
 
+export interface PlatformActivityRecord {
+  firstSeenAt: Date;
+  lastSeenAt: Date;
+  /** App version most recently reported on this platform; `null` if none/invalid. */
+  appVersion: string | null;
+}
+
 export interface UserRecord {
   id: string;
   email: string;
@@ -42,8 +49,8 @@ export interface UserRecord {
   /** Bumped to revoke all previously issued JWTs; embedded in and checked against each token. */
   tokenVersion: number;
   settings: UserSettingsRecord;
-  /** Which platform(s) this user has ever logged in/registered from (see `ALLOWED_PLATFORMS`). */
-  platforms: Record<string, boolean>;
+  /** Per-platform client activity, keyed by `ALLOWED_PLATFORMS` value (see `UserDocument.platforms`). */
+  platforms: Record<string, PlatformActivityRecord>;
   createdAt: Date;
   updatedAt: Date;
 }

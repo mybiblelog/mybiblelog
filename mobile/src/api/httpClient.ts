@@ -1,5 +1,6 @@
 import type { ApiResponse, HttpClient } from "@mybiblelog/shared";
 import { getApiOrigin } from "@/src/api/apiBase";
+import { getAppVersion, getPlatform } from "@/src/api/appSupportApi";
 import { ApiError, parseApiErrorBody } from "@/src/api/apiError";
 import { fetchWithTimeout } from "@/src/api/fetchWithTimeout";
 import { getAuthToken } from "@/src/stores/auth";
@@ -23,11 +24,14 @@ import { reportApiReachability } from "@/src/stores/connectivity";
 type Method = "GET" | "POST" | "PATCH" | "DELETE";
 
 async function request<T>(method: Method, path: string, body?: unknown): Promise<ApiResponse<T>> {
-  // Hardcoded rather than detected: this app currently ships Android only, and
-  // the API records this value verbatim into a platform allowlist (see
-  // `api/http/helpers/platform.ts`) on login/register — it must stay exactly
-  // "Android" (not e.g. a generic "mobile") to match that list.
-  const headers: Record<string, string> = { Accept: "application/json", "X-Platform": "Android" };
+  const headers: Record<string, string> = { Accept: "application/json" };
+  // Used by the API to record which platform(s) and app version a user is on
+  // (see `api/http/helpers/platform.ts`). `getPlatform()` yields the lowercase
+  // `android`/`ios` values the API's platform allowlist expects.
+  const platform = getPlatform();
+  if (platform) headers["X-Platform"] = platform;
+  const appVersion = getAppVersion();
+  if (appVersion) headers["X-App-Version"] = appVersion;
   const token = getAuthToken();
   if (token) headers.Authorization = `Bearer ${token}`;
   if (body !== undefined) headers["Content-Type"] = "application/json";

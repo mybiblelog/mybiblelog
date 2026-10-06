@@ -3,6 +3,10 @@ import { ApiError } from "./apiError";
 // Control the auth token the client injects.
 jest.mock("@/src/stores/auth", () => ({ getAuthToken: jest.fn() }));
 jest.mock("@/src/stores/connectivity", () => ({ reportApiReachability: jest.fn() }));
+jest.mock("@/src/api/appSupportApi", () => ({
+  getPlatform: () => "android",
+  getAppVersion: () => "1.2.3",
+}));
 import { getAuthToken } from "@/src/stores/auth";
 import { reportApiReachability } from "@/src/stores/connectivity";
 import { httpClient } from "./httpClient";
@@ -36,11 +40,12 @@ describe("httpClient", () => {
     expect(init.headers.Authorization).toBe("Bearer secret-token");
   });
 
-  it("sends X-Platform: Android on every request", async () => {
+  it("sends the platform and app version on every request", async () => {
     mockFetchOnce({ data: {} });
     await httpClient.get("/api/me");
     const [, init] = (global.fetch as jest.Mock).mock.calls[0];
-    expect(init.headers["X-Platform"]).toBe("Android");
+    expect(init.headers["X-Platform"]).toBe("android");
+    expect(init.headers["X-App-Version"]).toBe("1.2.3");
   });
 
   it("omits the Authorization header when there is no token", async () => {

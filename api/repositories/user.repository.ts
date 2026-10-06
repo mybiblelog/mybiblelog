@@ -436,16 +436,23 @@ export const createUserRepository = ({ users }: Collections) => {
     },
 
     /**
-     * Marks `platform` as one this user has logged in/registered from. Only
-     * ever sets the flag to `true` — it never clears an existing platform key
-     * — and leaves every other platform key untouched. Callers are expected to
-     * pass an already-validated value from `ALLOWED_PLATFORMS`
-     * (`api/http/helpers/platform.ts`); this is a plain, unconditional `$set`.
+     * Records that this user was seen on `platform` running `appVersion`:
+     * refreshes `lastSeenAt`/`appVersion` and sets `firstSeenAt` only if it's
+     * not already earlier. Leaves every other platform entry untouched, and
+     * deliberately does not bump `updatedAt` (activity isn't a profile edit).
+     * Callers are expected to pass an already-validated value from
+     * `ALLOWED_PLATFORMS` (`api/http/helpers/platform.ts`).
      */
-    async recordPlatform(userId: string, platform: string): Promise<void> {
+    async recordClientActivity(userId: string, platform: string, appVersion: string | null, now = new Date()): Promise<void> {
       await users.updateOne(
         { _id: new ObjectId(userId) },
-        { $set: { [`platforms.${platform}`]: true, updatedAt: new Date() } },
+        {
+          $set: {
+            [`platforms.${platform}.lastSeenAt`]: now,
+            [`platforms.${platform}.appVersion`]: appVersion,
+          },
+          $min: { [`platforms.${platform}.firstSeenAt`]: now },
+        },
       );
     },
 
@@ -485,9 +492,9 @@ export const createUserRepository = ({ users }: Collections) => {
 
     /**
      * New-account counts for `[start, end]`, broken down by the platform
-     * recorded against each user (see `recordPlatform`/`ALLOWED_PLATFORMS`).
-     * `trackPlatform` runs immediately after `users.create`, so a new user
-     * normally has exactly one platform flag set at this point — but a user
+     * recorded against each user (see `recordClientActivity`/`ALLOWED_PLATFORMS`).
+     * `trackClientActivity` runs immediately after `users.create`, so a new user
+     * normally has exactly one platform entry at this point — but a user
      * who registered and then logged in from a second platform before `end`
      * will be counted under both, so the per-platform counts can sum to more
      * than the plain `countCreatedBetween` total.
@@ -496,7 +503,7 @@ export const createUserRepository = ({ users }: Collections) => {
       const counts = await Promise.all(
         ALLOWED_PLATFORMS.map((platform) => users.countDocuments({
           createdAt: { $gte: start, $lte: end },
-          [`platforms.${platform}`]: true,
+          [`platforms.${platform}`]: { $exists: true },
         })),
       );
       return Object.fromEntries(ALLOWED_PLATFORMS.map((platform, i) => [platform, counts[i]])) as Record<Platform, number>;
