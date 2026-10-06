@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Créer un compte
-  description: Comment créer un compte et se connecter à My Bible Log
+  title: "Créer un compte gratuit"
+  description: "Créez un compte My Bible Log gratuit avec Google ou par e-mail pour suivre votre lecture de la Bible. Sans publicité, sans abonnement."
 og:
-  title: Créer un compte
-  description: Comment créer un compte et se connecter à My Bible Log
+  title: "Créer un compte gratuit"
+  description: "Créez un compte My Bible Log gratuit avec Google ou par e-mail pour suivre votre lecture de la Bible. Sans publicité, sans abonnement."
 ---
-
-![](/share.jpg)
 
 # Créer un compte
 

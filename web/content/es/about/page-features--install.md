@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Instálalo donde quieras
-  description: Cómo instalar y usar My Bible Log en cualquier dispositivo
+  title: "Instala el registro de lectura bíblica en cualquier dispositivo"
+  description: "Instala My Bible Log como app en tu móvil, tableta u ordenador. Registra tu lectura bíblica donde quieras, sin necesidad de una tienda de aplicaciones."
 og:
-  title: Instálalo donde quieras
-  description: Cómo instalar y usar My Bible Log en cualquier dispositivo
+  title: "Instala el registro de lectura bíblica en cualquier dispositivo"
+  description: "Instala My Bible Log como app en tu móvil, tableta u ordenador. Registra tu lectura bíblica donde quieras, sin necesidad de una tienda de aplicaciones."
 ---
-
-![](/share.jpg)
 
 # Instálalo donde quieras
 

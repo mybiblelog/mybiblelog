@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Página Lista de Capítulos
-  description: Cómo funciona la lista de capítulos de My Bible Log
+  title: "Lista de lectura bíblica: marca cada capítulo que leas"
+  description: "Una lista de lectura bíblica gratuita e interactiva con los 1.189 capítulos. Toca un capítulo para marcarlo como leído y mira tu avance en cada libro de la Biblia."
 og:
-  title: Página Lista de Capítulos
-  description: Cómo funciona la lista de capítulos de My Bible Log
+  title: "Lista de lectura bíblica: marca cada capítulo que leas"
+  description: "Una lista de lectura bíblica gratuita e interactiva con los 1.189 capítulos. Toca un capítulo para marcarlo como leído y mira tu avance en cada libro de la Biblia."
 ---
-
-![](/share.jpg)
 
 # Página Lista de Capítulos
 
@@ -23,7 +22,7 @@ Por detrás, la lista crea un registro de lectura por ti, así que lo que marcas
 
 ## Una lista práctica para toda la Biblia
 
-La página Lista de Capítulos abarca los 1.189 capítulos de la Biblia.
+La página Lista de Capítulos abarca los 1.189 capítulos de la Biblia. Consulta cuántos capítulos y versículos tiene cada uno de los [66 libros de la Biblia](/es/books-of-the-bible).
 
 En internet hay muchas listas de capítulos para imprimir, pero como la Biblia tiene tantos capítulos, casi nunca entran en una sola hoja.
 
@@ -31,7 +30,7 @@ Y una hoja así se pierde o se arruina con facilidad. Con My Bible Log no tienes
 
 ## Cómo leer la Biblia en un año
 
-Si quieres leer la Biblia en un año, primero hay que saber cuánto toca cada día.
+Si quieres leer la Biblia en un año, primero hay que saber cuánto toca cada día. (Para una guía completa, consulta [Cómo leer la Biblia en un año](/es/about/how-to--read-the-bible-in-a-year). ¿Prefieres papel? Descarga el [registro de lectura bíblica para imprimir](/es/resources/printable-bible-reading-tracker) gratuito o compara [imprimible y app](/es/about/guide--printable-vs-app-bible-reading-tracker).)
 
 Si cuentas versículos, necesitas leer 86 en promedio para terminar la Biblia en 365 días.
 

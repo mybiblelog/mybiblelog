@@ -66,6 +66,20 @@ export const getBookBlbCode = (bookIndex: number): string => {
   return targetBook.blbCode;
 };
 
+/**
+ * Returns a URL slug built from the English book name (e.g. "1 Samuel" →
+ * "1-samuel", "Song of Songs" → "song-of-songs"), or an empty string for an
+ * invalid book index. Used by the public book guide pages and the sitemap.
+ */
+export const getBookSlug = (bookIndex: number): string =>
+  getBookName(bookIndex, 'en').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+/** Inverse of getBookSlug; returns -1 when no book has this slug. */
+export const getBookIndexBySlug = (slug: string): number => {
+  const targetBook = bibleBooks.find((b) => getBookSlug(b.bibleOrder) === slug);
+  return targetBook ? targetBook.bibleOrder : -1;
+};
+
 export const getBookVerseCount = (bookIndex: number): number => {
   const bookChapterCount = getBookChapterCount(bookIndex);
   let totalVerses = 0;

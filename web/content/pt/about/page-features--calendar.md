@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Página Calendário
-  description: Como funcionam o calendário mensal de leitura e a meta diária no My Bible Log
+  title: "Registro de leitura da Bíblia e calendário: cada dia que você leu"
+  description: "Mantenha um registro de leitura da Bíblia em um calendário mensal. Veja em quais dias você leu, se cumpriu a meta diária e acrescente leituras de datas passadas."
 og:
-  title: Página Calendário
-  description: Como funcionam o calendário mensal de leitura e a meta diária no My Bible Log
+  title: "Registro de leitura da Bíblia e calendário: cada dia que você leu"
+  description: "Mantenha um registro de leitura da Bíblia em um calendário mensal. Veja em quais dias você leu, se cumpriu a meta diária e acrescente leituras de datas passadas."
 ---
-
-![](/share.jpg)
 
 # Página Calendário
 

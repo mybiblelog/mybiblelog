@@ -1,4 +1,5 @@
 ---
+dateModified: "2026-09-29"
 seo:
   title: Acompanhe sua leitura diária da Bíblia
   description: Como usar a página Hoje do My Bible Log para acompanhar sua meta diária e descobrir novas passagens para ler
@@ -6,8 +7,6 @@ og:
   title: Acompanhe sua leitura diária da Bíblia
   description: Como usar a página Hoje do My Bible Log para acompanhar sua meta diária e descobrir novas passagens para ler
 ---
-
-![](/share.jpg)
 
 # Página Hoje
 

@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Installez-le partout
-  description: Comment installer et utiliser My Bible Log sur n'importe quel appareil
+  title: "Installer le suivi de lecture biblique sur tous vos appareils"
+  description: "Installez My Bible Log comme une application sur votre téléphone, votre tablette ou votre ordinateur. Suivez votre lecture biblique partout, sans boutique d'applications."
 og:
-  title: Installez-le partout
-  description: Comment installer et utiliser My Bible Log sur n'importe quel appareil
+  title: "Installer le suivi de lecture biblique sur tous vos appareils"
+  description: "Installez My Bible Log comme une application sur votre téléphone, votre tablette ou votre ordinateur. Suivez votre lecture biblique partout, sans boutique d'applications."
 ---
-
-![](/share.jpg)
 
 # Installez-le partout
 

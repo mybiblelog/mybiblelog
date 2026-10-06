@@ -10,13 +10,17 @@ export function useContentSeo(options: {
   ogTitle?: string | null;
   ogDescription?: string | null;
   noIndex?: boolean;
-  structuredData?: Record<string, unknown> | null;
+  ogType?: 'website' | 'article';
+  // Locales this page exists in; limits the hreflang alternates so English-only
+  // pages don't point search engines at 404s. Defaults to every site locale.
+  locales?: string[];
+  structuredData?: Record<string, unknown> | Record<string, unknown>[] | null;
 }) {
   const config = useRuntimeConfig();
   const { locale } = options;
 
   const siteUrl = config.public.siteUrl as string;
-  const siteLocales = config.public.locales as string[];
+  const siteLocales = options.locales ?? (config.public.locales as string[]);
 
   const localePathSegment = computed(() =>
     locale.value === 'en' ? '' : `/${locale.value}`,
@@ -34,7 +38,9 @@ export function useContentSeo(options: {
         const seg = loc === 'en' ? '' : `/${loc}`;
         return { rel: 'alternate' as const, hreflang: loc, href: `${siteUrl}${seg}${options.path}` };
       }),
-      { rel: 'alternate' as const, hreflang: 'x-default', href: `${siteUrl}${options.path}` },
+      ...(siteLocales.includes('en')
+        ? [{ rel: 'alternate' as const, hreflang: 'x-default', href: `${siteUrl}${options.path}` }]
+        : []),
     ],
   );
 
@@ -54,10 +60,16 @@ export function useContentSeo(options: {
     headMeta.push({ property: 'og:description', content: options.ogDescription });
   }
   headMeta.push({ property: 'og:image', content: `${siteUrl}/share.jpg` });
+  headMeta.push({ property: 'og:type', content: options.ogType ?? 'website' });
+  headMeta.push({ name: 'twitter:card', content: 'summary_large_image' });
 
-  const scripts = options.structuredData
-    ? [{ type: 'application/ld+json' as const, innerHTML: JSON.stringify(options.structuredData) }]
+  const structuredData = options.structuredData
+    ? (Array.isArray(options.structuredData) ? options.structuredData : [options.structuredData])
     : [];
+  const scripts = structuredData.map(data => ({
+    type: 'application/ld+json' as const,
+    innerHTML: JSON.stringify(data),
+  }));
 
   useHead(() => ({
     title: options.seoTitle ?? undefined,
@@ -65,7 +77,7 @@ export function useContentSeo(options: {
       { rel: 'canonical', href: canonicalHref.value },
       ...hreflangLinks.value,
     ],
-    meta: headMeta,
+    meta: [...headMeta, { property: 'og:url', content: canonicalHref.value }],
     script: scripts,
   }));
 }

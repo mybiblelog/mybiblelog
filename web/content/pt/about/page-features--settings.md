@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Página Configurações
-  description: Ajustes de leitura, lembretes e conta no My Bible Log
+  title: "Configurações: meta diária, lembretes e exportação"
+  description: "Defina sua meta diária de leitura, escolha sua tradução e seu app de Bíblia preferidos, ative e-mails de lembrete e exporte ou importe seu registro de leitura."
 og:
-  title: Página Configurações
-  description: Ajustes de leitura, lembretes e conta no My Bible Log
+  title: "Configurações: meta diária, lembretes e exportação"
+  description: "Defina sua meta diária de leitura, escolha sua tradução e seu app de Bíblia preferidos, ative e-mails de lembrete e exporte ou importe seu registro de leitura."
 ---
-
-![](/share.jpg)
 
 # Página Configurações
 

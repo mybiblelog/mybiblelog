@@ -132,7 +132,7 @@ const localePath = useLocalePath();
 .fifty-fifty-description {
   font-size: var(--mbl-text-lead);
   line-height: 1.7;
-  color: var(--mbl-text-soft);
+  color: var(--mbl-text-body);
   margin-bottom: var(--mbl-space-xs);
 }
 
@@ -145,7 +145,7 @@ const localePath = useLocalePath();
 .fifty-fifty-list li {
   font-size: var(--mbl-text-lead);
   line-height: 1.7;
-  color: var(--mbl-text-soft);
+  color: var(--mbl-text-body);
   padding: var(--mbl-space-xs) 0 var(--mbl-space-xs) var(--mbl-space-xl);
   position: relative;
 }

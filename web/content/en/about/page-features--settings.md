@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-23"
 seo:
-  title: Settings Page
-  description: Documentation for My Bible Log reading, reporting, and account settings
+  title: "Settings: Daily Bible Reading Goal, Reminders & Export"
+  description: "Set your daily Bible reading goal, choose your preferred Bible translation and app, get daily reminder emails, and export or import your reading log."
 og:
-  title: Settings Page
-  description: Documentation for My Bible Log reading, reporting, and account settings
+  title: "Settings: Daily Bible Reading Goal, Reminders & Export"
+  description: "Set your daily Bible reading goal, choose your preferred Bible translation and app, get daily reminder emails, and export or import your reading log."
 ---
-
-![](/share.jpg)
 
 # Settings Page
 

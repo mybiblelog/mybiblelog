@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-23"
 seo:
-  title: Install Anywhere
-  description: How to Install and Use My Bible Log on Any Device
+  title: "Install the Bible Reading Tracker on Any Device"
+  description: "Install My Bible Log as an app on your phone, tablet, or computer. Track your Bible reading anywhere, with no app store required."
 og:
-  title: Install Anywhere
-  description: How to Install and Use My Bible Log on Any Device
+  title: "Install the Bible Reading Tracker on Any Device"
+  description: "Install My Bible Log as an app on your phone, tablet, or computer. Track your Bible reading anywhere, with no app store required."
 ---
-
-![](/share.jpg)
 
 # Install Anywhere
 

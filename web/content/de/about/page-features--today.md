@@ -1,4 +1,5 @@
 ---
+dateModified: "2026-09-29"
 seo:
   title: Ihren täglichen Bibellesefortschritt im Blick behalten
   description: So nutzen Sie die Heute-Seite von My Bible Log, um Ihr Tagesziel zu verfolgen und neue Bibelstellen zu entdecken
@@ -6,8 +7,6 @@ og:
   title: Ihren täglichen Bibellesefortschritt im Blick behalten
   description: So nutzen Sie die Heute-Seite von My Bible Log, um Ihr Tagesziel zu verfolgen und neue Bibelstellen zu entdecken
 ---
-
-![](/share.jpg)
 
 # Heute-Seite
 

@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Page Liste de chapitres
-  description: Comment fonctionne la liste de chapitres de My Bible Log
+  title: "Liste de lecture biblique : cochez chaque chapitre lu"
+  description: "Une liste de lecture biblique gratuite et interactive avec les 1 189 chapitres. Touchez un chapitre pour le marquer comme lu et suivez votre progression dans chaque livre."
 og:
-  title: Page Liste de chapitres
-  description: Comment fonctionne la liste de chapitres de My Bible Log
+  title: "Liste de lecture biblique : cochez chaque chapitre lu"
+  description: "Une liste de lecture biblique gratuite et interactive avec les 1 189 chapitres. Touchez un chapitre pour le marquer comme lu et suivez votre progression dans chaque livre."
 ---
-
-![](/share.jpg)
 
 # Page Liste de chapitres
 
@@ -23,7 +22,7 @@ En coulisses, la liste crée pour vous une entrée dans le journal de lecture. C
 
 ## Une liste pratique pour toute la Bible
 
-La liste de chapitres couvre les 1 189 chapitres de la Bible.
+La liste de chapitres couvre les 1 189 chapitres de la Bible. Voyez combien de chapitres et de versets compte chacun des [66 livres de la Bible](/fr/books-of-the-bible).
 
 On trouve sur Internet quantité de listes de chapitres à imprimer, mais comme la Bible compte énormément de chapitres, elles tiennent rarement sur une seule feuille.
 
@@ -31,7 +30,7 @@ Et une feuille pareille est vite perdue ou abîmée. Avec My Bible Log, la quest
 
 ## Comment lire la Bible en un an
 
-Pour lire la Bible en un an, encore faut-il savoir combien lire chaque jour.
+Pour lire la Bible en un an, encore faut-il savoir combien lire chaque jour. (Pour un guide complet, lisez [Comment lire la Bible en un an](/fr/about/how-to--read-the-bible-in-a-year). Vous préférez le papier ? Téléchargez le [tableau de lecture biblique à imprimer](/fr/resources/printable-bible-reading-tracker) gratuit ou comparez [tableau imprimé et application](/fr/about/guide--printable-vs-app-bible-reading-tracker).)
 
 Si vous comptez en versets, il en faut 86 par jour en moyenne pour venir à bout de la Bible en 365 jours.
 

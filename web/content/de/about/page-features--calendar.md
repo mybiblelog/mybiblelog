@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Kalenderseite
-  description: So funktionieren der Monatskalender und die Tagesziel-Anzeige von My Bible Log
+  title: "Bibelleseprotokoll & Kalender: Jeder Lesetag auf einen Blick"
+  description: "Führen Sie ein Bibelleseprotokoll im Monatskalender. Sehen Sie, an welchen Tagen Sie gelesen und Ihr Tagesziel erreicht haben, und tragen Sie vergangene Tage nach."
 og:
-  title: Kalenderseite
-  description: So funktionieren der Monatskalender und die Tagesziel-Anzeige von My Bible Log
+  title: "Bibelleseprotokoll & Kalender: Jeder Lesetag auf einen Blick"
+  description: "Führen Sie ein Bibelleseprotokoll im Monatskalender. Sehen Sie, an welchen Tagen Sie gelesen und Ihr Tagesziel erreicht haben, und tragen Sie vergangene Tage nach."
 ---
-
-![](/share.jpg)
 
 # Kalenderseite
 

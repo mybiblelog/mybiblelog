@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Cómo leer la Biblia en un año
-  description: Cómo leer la Biblia en un año y llevar el registro de tu avance con tu propio plan de lectura
+  title: "Cómo leer la Biblia en un año: capítulos al día y consejos"
+  description: "Cómo leer la Biblia en un año: cuántos capítulos y versículos leer cada día, por dónde empezar, en qué orden leer y cómo llevar un registro de tu avance."
 og:
-  title: Cómo leer la Biblia en un año
-  description: Cómo leer la Biblia en un año y llevar el registro de tu avance con tu propio plan de lectura
+  title: "Cómo leer la Biblia en un año: capítulos al día y consejos"
+  description: "Cómo leer la Biblia en un año: cuántos capítulos y versículos leer cada día, por dónde empezar, en qué orden leer y cómo llevar un registro de tu avance."
 ---
-
-![](/share.jpg)
 
 # Cómo leer la Biblia en un año
 
@@ -27,7 +26,7 @@ En total, la Biblia tiene 31.102 versículos. La cantidad de palabras varía seg
 
 Suena a mucho, pero la saga de Harry Potter supera el millón de palabras —más de un 30 % más— y muchísima gente leyó los siete libros, buena parte de ellos en un solo año.
 
-Visto así, la Biblia es larga, sí, pero leerla en un año es de lo más razonable.
+Visto así, la Biblia es larga, sí, pero leerla en un año es de lo más razonable. En total, leer toda la Biblia lleva a la mayoría de las personas de 51 a 75 horas; consulta [¿Cuánto se tarda en leer la Biblia?](/es/about/guide--how-long-does-it-take-to-read-the-bible) para ver el desglose de los 66 libros.
 
 ## ¿Cuánto debo leer por día?
 
@@ -64,21 +63,21 @@ Hay quienes leen solo en papel y marcan su avance con un separador. Ese método 
 * Si el separador se cae o pierdes de vista la Biblia, pierdes el avance.
 * Lees los libros en el orden en que vienen impresos, algo que a mucha gente le resulta aburrido o pesado. Casi todos los planes de lectura mezclan libros distintos justamente para evitarlo.
 
-Una mejora es imprimir una lista de capítulos. Trae todos los capítulos de la Biblia para ir tachándolos a medida que los lees, y en el orden que tú quieras.
+Una mejora es imprimir una lista de capítulos. Trae todos los capítulos de la Biblia para ir tachándolos a medida que los lees, y en el orden que tú quieras. Puedes usar, por ejemplo, nuestro [registro de lectura bíblica para imprimir](/es/resources/printable-bible-reading-tracker) gratuito.
 
 Pero las listas en papel comparten un problema clave con el separador: si pierdes la hoja, pierdes todo el avance.
 
 Por eso conviene usar una app pensada para esto. Estas apps tienen listas de capítulos que funcionan igual que las de papel, sin depender de un papel.
 
-Si usas la Lista de Capítulos de **My Bible Log** para registrar tu lectura, además obtienes respuestas a preguntas como:
+Si usas la [Lista de Capítulos](/es/about/page-features--chapter-checklist) de **My Bible Log** para registrar tu lectura, además obtienes respuestas a preguntas como:
 
 * ¿Cuántos versículos leí hoy?
 * ¿Cumplí mi meta todos los días de esta semana?
 * ¿Qué libros ya terminé?
 * Al ritmo que vengo, ¿cuánto me falta para terminar la Biblia?
-* ¿Cuántos versículos tengo que leer por día para terminarla antes de fin de año? ¿Y el mes que viene?
+* ¿Cuántos versículos tengo que leer por día para terminarla antes de fin de año? ¿Y el mes que viene? (Consulta la [Página Progreso](/es/about/page-features--progress).)
 
-Una app como **My Bible Log** también facilita tomar notas mientras lees, lo que hace más provechoso tu estudio personal.
+Una app como **My Bible Log** también facilita tomar notas mientras lees, lo que hace más provechoso tu estudio personal. Aquí tienes [7 maneras de organizar tu estudio bíblico personal](/es/about/how-to--organize-your-personal-bible-study).
 
 ## ¿Qué traducción de la Biblia debo leer?
 
@@ -111,13 +110,13 @@ Una forma de resolverlo es seguir un plan anual o de Biblia completa que equilib
 
 Hay varios tipos de planes de Biblia completa:
 
-* los cronológicos, ordenados según cuándo ocurrieron los hechos
+* [los cronológicos](/es/about/how-to--read-the-bible-chronologically), ordenados según cuándo ocurrieron los hechos
 * algunos siguen el orden en que se escribieron los libros
 * otros siguen el orden en que los primeros cristianos o los judíos habrían recibido y vivido esos libros
 
-Para mucha gente son herramientas excelentes, y resuelven el problema de tener que leer la Biblia de principio a fin.
+Para mucha gente son herramientas excelentes, y resuelven el problema de tener que leer la Biblia de principio a fin. Consulta [Planes de lectura bíblica comparados](/es/about/guide--bible-reading-plans-compared) para encontrar el que te convenga.
 
-Y si no sigues ningún plan en particular: ¡lee lo que no hayas leído y más te llame la atención ahora mismo!
+Y si no sigues ningún plan en particular: ¡lee lo que no hayas leído y más te llame la atención ahora mismo! Nuestras páginas de [Libros de la Biblia](/es/books-of-the-bible) ofrecen un breve resumen de cada libro para ayudarte a elegir.
 
 ## ¿Cómo me mantengo motivado durante todo un año?
 
@@ -131,6 +130,8 @@ Otra cosa que empuja es contarlo. A todos nos hace bien que alguien sepa cuál e
 
 Y por último, aprovecha cualquier cosa que te den ganas de leer. Si en un estudio bíblico, en una predicación o en tu devocional te topas con un pasaje que te atrapa, sigue leyendo. No estás obligado a frenar en cierta cantidad de versículos o capítulos. Cuando un libro te entusiasma, aprovecha el impulso y lee todo lo que quieras.
 
+Para conocer formas prácticas de mantener el ritmo, consulta [Cómo formar un hábito sólido de lectura bíblica](/es/about/how-to--build-a-strong-bible-reading-habit). Si un año te parece demasiado rápido o demasiado lento, prueba [la Biblia en 6 meses](/es/about/how-to--read-the-bible-in-6-months), [en 2 años](/es/about/how-to--read-the-bible-in-2-years) o empieza con el [Nuevo Testamento en 90 días](/es/about/how-to--read-the-new-testament-in-90-days).
+
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/es/today">Comenzar</a>
+  <a class="mbl-button mbl-button--light" href="/es/register">Empieza a registrar tu lectura gratis</a>
 </div>

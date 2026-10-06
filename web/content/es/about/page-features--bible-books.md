@@ -1,4 +1,5 @@
 ---
+dateModified: "2026-09-29"
 seo:
   title: Sigue tu avance en la Biblia libro por libro y capítulo por capítulo
   description: Cómo usar la página Libros Bíblicos de My Bible Log para seguir tu avance en cada libro y capítulo de la Biblia
@@ -6,8 +7,6 @@ og:
   title: Sigue tu avance en la Biblia libro por libro y capítulo por capítulo
   description: Cómo usar la página Libros Bíblicos de My Bible Log para seguir tu avance en cada libro y capítulo de la Biblia
 ---
-
-![](/share.jpg)
 
 # Página Libros Bíblicos
 

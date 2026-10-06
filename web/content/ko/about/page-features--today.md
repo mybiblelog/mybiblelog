@@ -1,4 +1,5 @@
 ---
+dateModified: "2026-09-29"
 seo:
   title: 매일 성경읽기 진도 기록하기
   description: My Bible Log 오늘 페이지로 일일 읽기 목표를 추적하고 새로 읽을 구절을 찾는 방법
@@ -6,8 +7,6 @@ og:
   title: 매일 성경읽기 진도 기록하기
   description: My Bible Log 오늘 페이지로 일일 읽기 목표를 추적하고 새로 읽을 구절을 찾는 방법
 ---
-
-![](/share.jpg)
 
 # 오늘의 성경 페이지
 
