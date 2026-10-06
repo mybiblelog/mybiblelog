@@ -1,4 +1,5 @@
 ---
+dateModified: "2026-10-05"
 seo:
   title: My Bible Log - безкоштовний трекер читання Біблії
   description: Стежте за своїм читанням Біблії з My Bible Log - безкоштовним онлайн-трекером. Ставте щоденні цілі, робіть нотатки й бачте свій поступ у всіх 66 книгах. Без реклами й підписок, цілком безкоштовно.
@@ -27,7 +28,7 @@ web-button-text: Почати безкоштовно
 web-button-destination: /register
 android-title: На Android
 android-description: Спробуйте наш новий додаток для Android - записуйте прочитане офлайн і подивіться, як він працює, без облікового запису.
-android-button-text: Спробувати бета-версію
+android-button-text: Отримати додаток для Android
 android-button-destination: /android-app
 ---
 ::

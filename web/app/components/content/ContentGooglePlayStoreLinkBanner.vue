@@ -5,14 +5,6 @@
     </p>
     <div class="mbl-button-group mbl-button-group--center">
       <a
-        :href="betaUrl"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="mbl-button mbl-button--light"
-      >
-        {{ t('join_the_beta') }}
-      </a>
-      <a
         :href="productionUrl"
         target="_blank"
         rel="noopener noreferrer"
@@ -25,7 +17,6 @@
 </template>
 
 <script setup lang="ts">
-const betaUrl = 'https://play.google.com/apps/testing/com.mybiblelog.app';
 const productionUrl = 'https://play.google.com/store/apps/details?id=com.mybiblelog.app';
 
 const { t } = useI18n();
@@ -56,20 +47,8 @@ const { t } = useI18n();
 }
 
 /* Overrides the shared .mbl-button modifiers only within this banner's
-   scope, since the vivid gradient backdrop needs light-on-color buttons
-   rather than the design system's default surface-colored ones. */
-.play-store-banner :deep(.mbl-button--light) {
-  background-color: rgb(255 255 255 / 15%);
-  border: 2px solid rgb(255 255 255 / 60%);
-  color: var(--mbl-on-accent);
-}
-
-.play-store-banner :deep(.mbl-button--light:hover) {
-  background-color: rgb(255 255 255 / 25%);
-  border-color: var(--mbl-on-accent);
-  color: var(--mbl-on-accent);
-}
-
+   scope, since the vivid gradient backdrop needs a light-on-color button
+   rather than the design system's default surface-colored one. */
 .play-store-banner :deep(.mbl-button--primary.mbl-button--glow) {
   background-color: var(--mbl-on-accent);
   border-color: var(--mbl-on-accent);
@@ -85,38 +64,31 @@ const { t } = useI18n();
 <i18n lang="json">
 {
   "en": {
-    "title": "Now in Open Beta on the Play Store",
-    "join_the_beta": "Join the Beta",
+    "title": "Now Available on Google Play",
     "get_the_app": "Get the App"
   },
   "de": {
-    "title": "Jetzt in der offenen Beta im Play Store",
-    "join_the_beta": "An der Beta teilnehmen",
+    "title": "Jetzt bei Google Play erhältlich",
     "get_the_app": "App herunterladen"
   },
   "es": {
-    "title": "Ya disponible en beta abierta en Play Store",
-    "join_the_beta": "Unirse a la beta",
+    "title": "Ya disponible en Google Play",
     "get_the_app": "Obtener la app"
   },
   "fr": {
-    "title": "Désormais en bêta ouverte sur le Play Store",
-    "join_the_beta": "Rejoindre la bêta",
+    "title": "Désormais disponible sur Google Play",
     "get_the_app": "Obtenir l'application"
   },
   "ko": {
-    "title": "지금 Play 스토어에서 오픈 베타 이용 가능",
-    "join_the_beta": "베타 참여하기",
+    "title": "지금 Google Play에서 이용 가능",
     "get_the_app": "앱 받기"
   },
   "pt": {
-    "title": "Agora em beta aberto na Play Store",
-    "join_the_beta": "Participar do beta",
+    "title": "Já disponível no Google Play",
     "get_the_app": "Baixar o app"
   },
   "uk": {
-    "title": "Тепер у відкритому бета-тесті в Play Store",
-    "join_the_beta": "Приєднатися до бета-тесту",
+    "title": "Тепер доступно в Google Play",
     "get_the_app": "Отримати додаток"
   }
 }

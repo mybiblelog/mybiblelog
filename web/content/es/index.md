@@ -1,4 +1,5 @@
 ---
+dateModified: "2026-10-05"
 seo:
   title: My Bible Log - registro gratuito de lectura bíblica
   description: Lleva el registro de tu lectura de la Biblia con My Bible Log, una herramienta en línea gratuita. Ponte metas diarias, toma notas y mira tu avance en los 66 libros. Sin anuncios, sin suscripciones, totalmente gratis.
@@ -27,7 +28,7 @@ web-button-text: Empieza gratis
 web-button-destination: /register
 android-title: En Android
 android-description: Prueba nuestra nueva app para Android, registra tu lectura sin conexión y explórala sin crear cuenta.
-android-button-text: Probar la app beta
+android-button-text: Obtener la app para Android
 android-button-destination: /android-app
 ---
 ::

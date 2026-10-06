@@ -1,4 +1,5 @@
 ---
+dateModified: "2026-10-05"
 seo:
   title: My Bible Log - suivi de lecture biblique gratuit
   description: Suivez votre lecture de la Bible avec My Bible Log, un outil en ligne gratuit. Fixez un objectif quotidien, prenez des notes et visualisez votre progression dans les 66 livres. Sans publicité ni abonnement, entièrement gratuit.
@@ -27,7 +28,7 @@ web-button-text: Commencer gratuitement
 web-button-destination: /register
 android-title: Sur Android
 android-description: Essayez notre nouvelle application Android, notez vos lectures hors ligne et découvrez-la sans créer de compte.
-android-button-text: Essayer la bêta
+android-button-text: Obtenir l'application Android
 android-button-destination: /android-app
 ---
 ::
