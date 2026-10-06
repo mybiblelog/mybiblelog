@@ -1,4 +1,5 @@
 ---
+dateModified: "2026-10-05"
 seo:
   title: My Bible Log - kostenloser Bibellese-Tracker
   description: Halten Sie Ihr Bibellesen mit My Bible Log fest, dem kostenlosen Online-Tracker. Tagesziele setzen, Notizen machen und den Fortschritt durch alle 66 Bücher sehen. Keine Werbung, kein Abo — völlig kostenlos.
@@ -27,7 +28,7 @@ web-button-text: Kostenlos loslegen
 web-button-destination: /register
 android-title: Auf Android
 android-description: Probieren Sie unsere neue Android-App aus — Lesen offline eintragen und ganz ohne Konto erkunden.
-android-button-text: Beta-App ausprobieren
+android-button-text: Android-App herunterladen
 android-button-destination: /android-app
 ---
 ::

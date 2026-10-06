@@ -1,4 +1,5 @@
 ---
+dateModified: "2026-10-05"
 seo:
   title: My Bible Log pour Android — application gratuite de suivi de lecture biblique
   description: Téléchargez gratuitement l'application My Bible Log pour Android. Notez vos lectures hors ligne, essayez-la sans compte et synchronisez automatiquement avec mybiblelog.com.
@@ -9,7 +10,7 @@ og:
 
 # My Bible Log pour Android
 
-My Bible Log a désormais sa propre application Android, pour l'instant en bêta ouverte sur le Play Store. Et c'est déjà, de loin, la façon la plus rapide et la plus souple de suivre votre lecture de la Bible : vous notez un chapitre en quelques secondes, vous l'emportez partout et, sur le web, vous reprenez exactement là où vous vous étiez arrêté. Nous la faisons évoluer en continu, attendez-vous donc à des mises à jour fréquentes.
+My Bible Log a désormais sa propre application Android, disponible sur Google Play. Et c'est, de loin, la façon la plus rapide et la plus souple de suivre votre lecture de la Bible : vous notez un chapitre en quelques secondes, vous l'emportez partout et, sur le web, vous reprenez exactement là où vous vous étiez arrêté. Nous la faisons évoluer en continu, attendez-vous donc à des mises à jour fréquentes.
 
 <content-google-play-store-link-banner></content-google-play-store-link-banner>
 

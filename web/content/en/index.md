@@ -1,4 +1,5 @@
 ---
+dateModified: "2026-10-05"
 seo:
   title: My Bible Log - Free Bible Reading Tracker
   description: Track your Bible reading progress with My Bible Log, a free online Bible reading tracker. Set daily goals, take notes, and see your progress across all 66 books. No ads, no subscriptions — completely free.
@@ -27,7 +28,7 @@ web-button-text: Get Started Free
 web-button-destination: /register
 android-title: On Android
 android-description: Try our new native Android app — log your reading offline and explore it without an account.
-android-button-text: Try the Beta App
+android-button-text: Get the Android App
 android-button-destination: /android-app
 ---
 ::

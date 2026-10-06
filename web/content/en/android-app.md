@@ -1,4 +1,5 @@
 ---
+dateModified: "2026-10-05"
 seo:
   title: My Bible Log for Android — Free Bible Reading Tracker App
   description: Get the free My Bible Log app for Android. Log your Bible reading offline, try it without an account, and sync automatically with mybiblelog.com.
@@ -9,7 +10,7 @@ og:
 
 # My Bible Log for Android
 
-My Bible Log is now available as a native Android app, currently in open beta on the Play Store — and it's already the fastest, most flexible way to track your Bible reading yet. Log chapters in seconds, take it with you anywhere, and pick up right where you left off on the web. It's under active development, so expect frequent updates as we continue refining it.
+My Bible Log is now available as a native Android app on Google Play — and it's the fastest, most flexible way to track your Bible reading yet. Log chapters in seconds, take it with you anywhere, and pick up right where you left off on the web. It's under active development, so expect frequent updates as we continue refining it.
 
 <content-google-play-store-link-banner></content-google-play-store-link-banner>
 

@@ -1,4 +1,5 @@
 ---
+dateModified: "2026-10-05"
 seo:
   title: My Bible Log für Android — kostenlose App fürs Bibellesen
   description: Holen Sie sich die kostenlose My Bible Log App für Android. Lesen offline eintragen, ohne Konto ausprobieren und automatisch mit mybiblelog.com abgleichen.
@@ -9,7 +10,7 @@ og:
 
 # My Bible Log für Android
 
-My Bible Log gibt es jetzt auch als echte Android-App – derzeit als offene Beta im Play Store. Und sie ist schon jetzt der schnellste und flexibelste Weg, Ihr Bibellesen festzuhalten. Kapitel tragen Sie in Sekunden ein, die App ist überall dabei, und im Web machen Sie genau dort weiter, wo Sie aufgehört haben. Wir entwickeln sie laufend weiter, es kommen also regelmäßig Updates.
+My Bible Log gibt es jetzt auch als echte Android-App bei Google Play. Und sie ist der schnellste und flexibelste Weg, Ihr Bibellesen festzuhalten. Kapitel tragen Sie in Sekunden ein, die App ist überall dabei, und im Web machen Sie genau dort weiter, wo Sie aufgehört haben. Wir entwickeln sie laufend weiter, es kommen also regelmäßig Updates.
 
 <content-google-play-store-link-banner></content-google-play-store-link-banner>
 
