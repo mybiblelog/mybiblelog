@@ -3,9 +3,13 @@ import { StyleSheet, useWindowDimensions, View } from "react-native";
 import Svg, { Circle, Defs, Pattern, Rect } from "react-native-svg";
 import { useTheme } from "@/src/design";
 
-const DOT_SPACING = 17;
+const DOT_SPACING = 12;
 const DOT_RADIUS = 1.4;
-const DOT_OPACITY = 0.22;
+// Dark mode sits on a near-black canvas, so the same opacity that reads fine
+// against white washes out almost completely — bump it up so the grid stays
+// visible without going loud.
+const DOT_OPACITY_LIGHT = 0.1;
+const DOT_OPACITY_DARK = 0.3;
 const HEIGHT_RATIO = 0.55;
 
 /**
@@ -17,6 +21,7 @@ export function BackgroundPattern() {
   const { width } = useWindowDimensions();
   const height = Math.round(width * HEIGHT_RATIO);
   const dotColor = scheme === "dark" ? colors.primary : colors.secondary;
+  const dotOpacity = scheme === "dark" ? DOT_OPACITY_DARK : DOT_OPACITY_LIGHT;
 
   return (
     <View pointerEvents="none" style={[styles.root, { height }]}>
@@ -33,7 +38,7 @@ export function BackgroundPattern() {
               cy={DOT_SPACING / 2}
               r={DOT_RADIUS}
               fill={dotColor}
-              fillOpacity={DOT_OPACITY}
+              fillOpacity={dotOpacity}
             />
           </Pattern>
         </Defs>

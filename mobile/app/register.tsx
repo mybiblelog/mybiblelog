@@ -8,10 +8,12 @@ import { translateApiError } from "@/src/i18n/translateApiError";
 import { spacing, useTheme } from "@/src/design";
 import {
   AuthCodeForm,
+  BackgroundPattern,
   Button,
   ConnectionNotice,
   GoogleSignInButton,
   InputField,
+  OnboardingFrame,
   Text,
 } from "@/src/components";
 import { router } from "expo-router";
@@ -122,105 +124,108 @@ export default function Register() {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={[styles.flex, { backgroundColor: colors.background }]}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-    >
-      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <Text variant="title" style={styles.title}>
-          {t("register_title")}
-        </Text>
+    <OnboardingFrame>
+      <BackgroundPattern />
+      <KeyboardAvoidingView
+        style={styles.flex}
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+      >
+        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+          <Text variant="title" style={styles.title}>
+            {t("register_title")}
+          </Text>
 
-        {step === "form" ? (
-          <>
-            <Text variant="body" color="mutedText" style={styles.subtitle}>
-              {t("register_hint")}
-            </Text>
-
-            {!!error && (
-              <Text variant="bodyStrong" color="destructive" style={styles.error}>
-                {error}
+          {step === "form" ? (
+            <>
+              <Text variant="body" color="mutedText" style={styles.subtitle}>
+                {t("register_hint")}
               </Text>
-            )}
 
-            <View style={styles.form}>
-              <InputField
-                label={t("auth_email")}
-                testID="register.email"
-                value={email}
-                onChangeText={setEmail}
-                autoCapitalize="none"
-                autoComplete="email"
-                autoCorrect={false}
-                keyboardType="email-address"
-                textContentType="emailAddress"
-                editable={!isSubmitting}
-                error={emailError ?? undefined}
+              {!!error && (
+                <Text variant="bodyStrong" color="destructive" style={styles.error}>
+                  {error}
+                </Text>
+              )}
+
+              <View style={styles.form}>
+                <InputField
+                  label={t("auth_email")}
+                  testID="register.email"
+                  value={email}
+                  onChangeText={setEmail}
+                  autoCapitalize="none"
+                  autoComplete="email"
+                  autoCorrect={false}
+                  keyboardType="email-address"
+                  textContentType="emailAddress"
+                  editable={!isSubmitting}
+                  error={emailError ?? undefined}
+                />
+                <InputField
+                  label={t("auth_password")}
+                  testID="register.password"
+                  value={password}
+                  onChangeText={setPassword}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  secureTextEntry
+                  textContentType="newPassword"
+                  editable={!isSubmitting}
+                  onSubmitEditing={onRegister}
+                  returnKeyType="go"
+                  error={passwordError ?? undefined}
+                />
+              </View>
+
+              <ConnectionNotice
+                testID="register.connection-notice"
+                offlineText={t("auth_register_requires_connection")}
+                unreachableText={t("auth_register_requires_server")}
               />
-              <InputField
-                label={t("auth_password")}
-                testID="register.password"
-                value={password}
-                onChangeText={setPassword}
-                autoCapitalize="none"
-                autoCorrect={false}
-                secureTextEntry
-                textContentType="newPassword"
-                editable={!isSubmitting}
-                onSubmitEditing={onRegister}
-                returnKeyType="go"
-                error={passwordError ?? undefined}
+
+              <Button
+                label={t("register_submit")}
+                testID="register.submit"
+                onPress={onRegister}
+                loading={isSubmitting}
+                disabled={!canReachServer}
+                fullWidth
               />
-            </View>
 
-            <ConnectionNotice
-              testID="register.connection-notice"
-              offlineText={t("auth_register_requires_connection")}
-              unreachableText={t("auth_register_requires_server")}
+              <View style={styles.divider}>
+                <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+                <Text variant="caption" color="mutedText" style={styles.dividerText}>
+                  {t("login_divider_or")}
+                </Text>
+                <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
+              </View>
+
+              <GoogleSignInButton
+                label={t("login_with_google")}
+                testID="register.google"
+                onPress={onGoogleLogin}
+                disabled={isSubmitting || !canReachServer}
+                fullWidth
+              />
+
+              <Button
+                label={t("register_have_account")}
+                variant="ghost"
+                onPress={() => router.replace("/login")}
+                style={styles.secondaryButton}
+              />
+            </>
+          ) : (
+            <AuthCodeForm
+              flow="verify-email"
+              email={email.trim()}
+              onDone={goHome}
+              testIDPrefix="register.code"
             />
-
-            <Button
-              label={t("register_submit")}
-              testID="register.submit"
-              onPress={onRegister}
-              loading={isSubmitting}
-              disabled={!canReachServer}
-              fullWidth
-            />
-
-            <View style={styles.divider}>
-              <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
-              <Text variant="caption" color="mutedText" style={styles.dividerText}>
-                {t("login_divider_or")}
-              </Text>
-              <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
-            </View>
-
-            <GoogleSignInButton
-              label={t("login_with_google")}
-              testID="register.google"
-              onPress={onGoogleLogin}
-              disabled={isSubmitting || !canReachServer}
-              fullWidth
-            />
-
-            <Button
-              label={t("register_have_account")}
-              variant="ghost"
-              onPress={() => router.replace("/login")}
-              style={styles.secondaryButton}
-            />
-          </>
-        ) : (
-          <AuthCodeForm
-            flow="verify-email"
-            email={email.trim()}
-            onDone={goHome}
-            testIDPrefix="register.code"
-          />
-        )}
-      </ScrollView>
-    </KeyboardAvoidingView>
+          )}
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </OnboardingFrame>
   );
 }
 
