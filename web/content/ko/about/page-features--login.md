@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: 계정 생성
-  description: My Bible Log 계정 생성 방법
+  title: "무료 계정 만들기"
+  description: "Google 또는 이메일로 무료 My Bible Log 계정을 만들고 성경 읽기 기록을 시작하세요. 광고도 구독도 없습니다."
 og:
-  title: 계정 생성
-  description: My Bible Log 계정 생성 방법
+  title: "무료 계정 만들기"
+  description: "Google 또는 이메일로 무료 My Bible Log 계정을 만들고 성경 읽기 기록을 시작하세요. 광고도 구독도 없습니다."
 ---
-
-![](/share.jpg)
 
 # 계정 생성
 

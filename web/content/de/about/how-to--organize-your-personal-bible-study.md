@@ -1,17 +1,16 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: 7 Wege, Ihr persönliches Bibelstudium zu organisieren
-  description: Wie Sie die Notizen und Tags von My Bible Log nutzen, um mehr aus Ihrer persönlichen Bibelstudienzeit herauszuholen
+  title: "7 Wege, Ihr persönliches Bibelstudium zu organisieren"
+  description: "Sieben praktische Wege, Ihre Notizen zum Bibelstudium mit Tags zu ordnen: offene Fragen, Themenstudium, Memorierverse, Gebetstagebuch und mehr."
 og:
-  title: 7 Wege, Ihr persönliches Bibelstudium zu organisieren
-  description: Wie Sie die Notizen und Tags von My Bible Log nutzen, um mehr aus Ihrer persönlichen Bibelstudienzeit herauszuholen
+  title: "7 Wege, Ihr persönliches Bibelstudium zu organisieren"
+  description: "Sieben praktische Wege, Ihre Notizen zum Bibelstudium mit Tags zu ordnen: offene Fragen, Themenstudium, Memorierverse, Gebetstagebuch und mehr."
 ---
-
-![](/share.jpg)
 
 # 7 Wege, Ihr persönliches Bibelstudium zu organisieren
 
-Die Notizfunktion von My Bible Log kann eine Menge. Mit eigenen Tags lassen sich Notizen ganz unterschiedlich ordnen – je nachdem, wie Sie arbeiten.
+Die [Notizfunktion](/de/about/page-features--notes) von My Bible Log kann eine Menge. Mit eigenen Tags lassen sich Notizen ganz unterschiedlich ordnen – je nachdem, wie Sie arbeiten.
 
 Hier sind 7 Ideen, wie Sie mit Notizen mehr aus Ihrem Bibellesen herausholen.
 
@@ -183,3 +182,9 @@ Legen Sie einen Tag für Ihre Tagebucheinträge an – und schreiben Sie gleich 
 ## Fazit
 
 Das sind nur einige der vielen Möglichkeiten, mit geordneten Notizen und Tags mehr aus Ihrer Zeit in der Bibel zu holen. Sobald Sie damit anfangen, kommen Sie schnell auf eigene Ideen.
+
+Wenn Sie planen, die ganze Bibel durchzulesen, lesen Sie [So lesen Sie die Bibel in einem Jahr](/de/about/how-to--read-the-bible-in-a-year).
+
+<div class="mbl-button-group">
+  <a class="mbl-button mbl-button--light" href="/de/register">Kostenloses Bibelstudien-Protokoll starten</a>
+</div>

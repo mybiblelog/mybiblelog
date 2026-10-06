@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Página Progresso
-  description: Visão geral do avanço, previsões e metas de leitura no My Bible Log
+  title: "Calculadora de metas de leitura da Bíblia: defina uma data"
+  description: "Veja quanto da Bíblia você já leu, preveja quando vai terminar e calcule quantos versículos por dia precisa ler para concluir até a data-alvo."
 og:
-  title: Página Progresso
-  description: Visão geral do avanço, previsões e metas de leitura no My Bible Log
+  title: "Calculadora de metas de leitura da Bíblia: defina uma data"
+  description: "Veja quanto da Bíblia você já leu, preveja quando vai terminar e calcule quantos versículos por dia precisa ler para concluir até a data-alvo."
 ---
-
-![](/share.jpg)
 
 # Página Progresso
 
@@ -57,6 +56,8 @@ Na página Progresso você também pode marcar a data em que quer terminar de le
 O My Bible Log calcula de trás para frente a partir dessa data e diz quantos versículos você precisa ler por dia para chegar lá.
 
 É um jeito prático de descobrir qual ritmo seguir para terminar a Bíblia até o fim do ano, ou até qualquer outra data que você escolher.
+
+Não sabe que meta definir? Veja quantos minutos por dia são necessários para ler a Bíblia em [6 meses](/pt/about/how-to--read-the-bible-in-6-months), [1 ano](/pt/about/how-to--read-the-bible-in-a-year) ou [2 anos](/pt/about/how-to--read-the-bible-in-2-years), ou confira [quanto tempo leva para ler cada livro da Bíblia](/pt/about/guide--how-long-does-it-take-to-read-the-bible).
 
 <div class="mbl-button-group">
   <a class="mbl-button mbl-button--light" href="/pt/progress">Ir para a página Progresso</a>

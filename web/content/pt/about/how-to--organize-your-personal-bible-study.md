@@ -1,17 +1,16 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: 7 maneiras de organizar seu estudo bíblico pessoal
-  description: Como aproveitar as notas e tags do My Bible Log para tirar mais proveito do seu tempo de estudo bíblico pessoal
+  title: "7 maneiras de organizar seu estudo bíblico pessoal"
+  description: "Sete formas práticas de organizar suas anotações de estudo bíblico com tags: perguntas em aberto, estudo por tema, versículos para memorizar, diário de oração e mais."
 og:
-  title: 7 maneiras de organizar seu estudo bíblico pessoal
-  description: Como aproveitar as notas e tags do My Bible Log para tirar mais proveito do seu tempo de estudo bíblico pessoal
+  title: "7 maneiras de organizar seu estudo bíblico pessoal"
+  description: "Sete formas práticas de organizar suas anotações de estudo bíblico com tags: perguntas em aberto, estudo por tema, versículos para memorizar, diário de oração e mais."
 ---
-
-![](/share.jpg)
 
 # 7 maneiras de organizar seu estudo bíblico pessoal
 
-A função de notas do My Bible Log rende bastante. Com tags próprias dá para organizar as notas de jeitos bem diferentes, conforme o seu modo de estudar.
+A [função de notas](/pt/about/page-features--notes) do My Bible Log rende bastante. Com tags próprias dá para organizar as notas de jeitos bem diferentes, conforme o seu modo de estudar.
 
 Aqui vão 7 ideias para tirar mais proveito da sua leitura pessoal da Bíblia.
 
@@ -183,3 +182,9 @@ Crie uma tag para as entradas do seu diário e escreva ali mesmo a primeira.
 ## Para fechar
 
 Essas são só algumas das muitas formas de usar notas e tags para aproveitar melhor seu tempo na Bíblia. Assim que você começar, vão surgir ideias suas.
+
+Se você pretende ler a Bíblia inteira, veja [Como ler a Bíblia em um ano](/pt/about/how-to--read-the-bible-in-a-year).
+
+<div class="mbl-button-group">
+  <a class="mbl-button mbl-button--light" href="/pt/register">Comece grátis seu registro de estudo bíblico</a>
+</div>

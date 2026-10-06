@@ -355,10 +355,10 @@ const bibleBooks: BibleBook[] = [
         ],
       },
       uk: {
-        name: 'Єгова',
+        name: 'Ісус Навин',
         abbreviations: [
-          'Єг.',
-          'Єгов.',
+          'Нав.',
+          'Ісус Н.',
         ],
       },
     },

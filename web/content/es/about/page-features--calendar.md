@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Página Calendario
-  description: Cómo funcionan el calendario mensual de lectura y la meta diaria en My Bible Log
+  title: "Registro de lectura bíblica y calendario: cada día que lees"
+  description: "Lleva un registro de lectura bíblica en un calendario mensual. Mira qué días leíste, si cumpliste tu meta diaria y añade lecturas de fechas pasadas."
 og:
-  title: Página Calendario
-  description: Cómo funcionan el calendario mensual de lectura y la meta diaria en My Bible Log
+  title: "Registro de lectura bíblica y calendario: cada día que lees"
+  description: "Lleva un registro de lectura bíblica en un calendario mensual. Mira qué días leíste, si cumpliste tu meta diaria y añade lecturas de fechas pasadas."
 ---
-
-![](/share.jpg)
 
 # Página Calendario
 

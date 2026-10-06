@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-23"
 seo:
-  title: Track Your Bible Reading Progress by Book and Chapter
-  description: Learn how to use My Bible Log's Bible Books page to track your reading progress through each book and chapter of the Bible
+  title: "Track Your Bible Reading Progress by Book and Chapter"
+  description: "Learn how to use My Bible Log's Bible Books page to track your reading progress through each book and chapter of the Bible"
 og:
-  title: Track Your Bible Reading Progress by Book and Chapter
-  description: Learn how to use My Bible Log's Bible Books page to track your reading progress through each book and chapter of the Bible
+  title: "Track Your Bible Reading Progress by Book and Chapter"
+  description: "Learn how to use My Bible Log's Bible Books page to track your reading progress through each book and chapter of the Bible"
 ---
-
-![](/share.jpg)
 
 # Bible Books Page
 

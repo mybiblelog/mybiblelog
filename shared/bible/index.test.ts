@@ -51,6 +51,21 @@ test('should get empty string for nonexistant book names', () => {
   expect(bookName67).toBe('');
 });
 
+test('can convert between book slugs and indexes', () => {
+  expect(Bible.getBookSlug(1)).toBe('genesis');
+  expect(Bible.getBookSlug(9)).toBe('1-samuel');
+  expect(Bible.getBookSlug(22)).toBe('song-of-songs');
+  expect(Bible.getBookSlug(0)).toBe('');
+
+  const slugs = Bible.getBooks().map((book) => Bible.getBookSlug(book.bibleOrder));
+  expect(new Set(slugs).size).toBe(66);
+  slugs.forEach((slug, i) => {
+    expect(slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+    expect(Bible.getBookIndexBySlug(slug)).toBe(i + 1);
+  });
+  expect(Bible.getBookIndexBySlug('nope')).toBe(-1);
+});
+
 test('can identify which testament a book belongs to', () => {
   // Boundary pair: Malachi is the last Old Testament book, Matthew the first New.
   expect(Bible.isNewTestament(1)).toBe(false);

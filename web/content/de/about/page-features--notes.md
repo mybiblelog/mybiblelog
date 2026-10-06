@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Notizen und Tags
-  description: Freie Bibelnotizen und eigene Tags in My Bible Log
+  title: "Notizen und Tags zum Bibelstudium: Ordnen, was Sie lernen"
+  description: "Machen Sie Notizen zu den Bibelstellen, die Sie lesen, und ordnen Sie sie mit eigenen Tags, um Fragen, Gebete und Erkenntnisse später wiederzufinden."
 og:
-  title: Notizen und Tags
-  description: Freie Bibelnotizen und eigene Tags in My Bible Log
+  title: "Notizen und Tags zum Bibelstudium: Ordnen, was Sie lernen"
+  description: "Machen Sie Notizen zu den Bibelstellen, die Sie lesen, und ordnen Sie sie mit eigenen Tags, um Fragen, Gebete und Erkenntnisse später wiederzufinden."
 ---
-
-![](/share.jpg)
 
 # Notizseite
 

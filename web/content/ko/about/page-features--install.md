@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: 어디든 설치해보세요
-  description: 모든 기기에서 My Bible Log 설치·사용 방법
+  title: "어떤 기기에든 성경읽기 기록 서비스 설치하기"
+  description: "My Bible Log를 스마트폰, 태블릿, 컴퓨터에 앱처럼 설치하세요. 앱 스토어 없이 어디서든 성경 읽기를 기록할 수 있습니다."
 og:
-  title: 어디든 설치해보세요
-  description: 모든 기기에서 My Bible Log 설치·사용 방법
+  title: "어떤 기기에든 성경읽기 기록 서비스 설치하기"
+  description: "My Bible Log를 스마트폰, 태블릿, 컴퓨터에 앱처럼 설치하세요. 앱 스토어 없이 어디서든 성경 읽기를 기록할 수 있습니다."
 ---
-
-![](/share.jpg)
 
 # 어디든 설치해보세요
 

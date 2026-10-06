@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Page Progression
-  description: Vue d'ensemble de votre avancement, prévisions et objectifs de lecture dans My Bible Log
+  title: "Calculateur d'objectif de lecture biblique : fixez une date"
+  description: "Voyez quelle part de la Bible vous avez lue, prédisez quand vous aurez fini et calculez combien de versets par jour il vous faut pour terminer avant votre date cible."
 og:
-  title: Page Progression
-  description: Vue d'ensemble de votre avancement, prévisions et objectifs de lecture dans My Bible Log
+  title: "Calculateur d'objectif de lecture biblique : fixez une date"
+  description: "Voyez quelle part de la Bible vous avez lue, prédisez quand vous aurez fini et calculez combien de versets par jour il vous faut pour terminer avant votre date cible."
 ---
-
-![](/share.jpg)
 
 # Page Progression
 
@@ -57,6 +56,8 @@ La page Progression vous permet aussi de choisir la date à laquelle vous souhai
 My Bible Log part de cette date et remonte le calcul pour vous indiquer combien de versets lire chaque jour afin d'y arriver.
 
 C'est une excellente façon de savoir quel rythme adopter pour finir la Bible avant la fin de l'année, ou avant toute autre échéance que vous vous fixez.
+
+Vous ne savez pas quel objectif fixer ? Voyez combien de minutes par jour il faut pour lire la Bible en [6 mois](/fr/about/how-to--read-the-bible-in-6-months), [1 an](/fr/about/how-to--read-the-bible-in-a-year) ou [2 ans](/fr/about/how-to--read-the-bible-in-2-years), ou consultez [la durée de lecture de chaque livre de la Bible](/fr/about/guide--how-long-does-it-take-to-read-the-bible).
 
 <div class="mbl-button-group">
   <a class="mbl-button mbl-button--light" href="/fr/progress">Aller à la page Progression</a>

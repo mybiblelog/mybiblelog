@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Page Calendrier
-  description: Le calendrier mensuel de lecture et le suivi de l'objectif quotidien dans My Bible Log
+  title: "Suivi de lecture biblique et calendrier : chaque jour de lecture"
+  description: "Tenez un suivi de lecture biblique dans un calendrier mensuel. Voyez les jours où vous avez lu, si vous avez atteint votre objectif et ajoutez des lectures à des dates passées."
 og:
-  title: Page Calendrier
-  description: Le calendrier mensuel de lecture et le suivi de l'objectif quotidien dans My Bible Log
+  title: "Suivi de lecture biblique et calendrier : chaque jour de lecture"
+  description: "Tenez un suivi de lecture biblique dans un calendrier mensuel. Voyez les jours où vous avez lu, si vous avez atteint votre objectif et ajoutez des lectures à des dates passées."
 ---
-
-![](/share.jpg)
 
 # Page Calendrier
 

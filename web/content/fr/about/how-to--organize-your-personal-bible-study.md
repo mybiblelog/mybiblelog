@@ -1,17 +1,16 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: 7 façons d'organiser votre étude biblique personnelle
-  description: Comment tirer parti des notes et des tags de My Bible Log pour rendre votre temps d'étude biblique personnelle plus fructueux
+  title: "7 façons d'organiser votre étude biblique personnelle"
+  description: "Sept façons pratiques d'organiser vos notes d'étude biblique avec des tags : questions en suspens, étude thématique, versets à mémoriser, journal de prière et plus encore."
 og:
-  title: 7 façons d'organiser votre étude biblique personnelle
-  description: Comment tirer parti des notes et des tags de My Bible Log pour rendre votre temps d'étude biblique personnelle plus fructueux
+  title: "7 façons d'organiser votre étude biblique personnelle"
+  description: "Sept façons pratiques d'organiser vos notes d'étude biblique avec des tags : questions en suspens, étude thématique, versets à mémoriser, journal de prière et plus encore."
 ---
-
-![](/share.jpg)
 
 # 7 façons d'organiser votre étude biblique personnelle
 
-La fonction Notes de My Bible Log a plus d'un tour dans son sac. Avec vos propres tags, vous pouvez classer vos notes de bien des manières, selon votre façon de travailler.
+La [fonction Notes](/fr/about/page-features--notes) de My Bible Log a plus d'un tour dans son sac. Avec vos propres tags, vous pouvez classer vos notes de bien des manières, selon votre façon de travailler.
 
 Voici 7 idées pour tirer davantage de votre lecture personnelle de la Bible.
 
@@ -183,3 +182,9 @@ Créez un tag pour vos entrées de journal et rédigez la première dans la foul
 ## Pour conclure
 
 Ce ne sont là que quelques-unes des nombreuses façons d'utiliser notes et tags pour tirer davantage de votre temps dans la Bible. Dès que vous vous y mettrez, vos propres idées viendront vite.
+
+Si vous prévoyez de lire toute la Bible, lisez [Comment lire la Bible en un an](/fr/about/how-to--read-the-bible-in-a-year).
+
+<div class="mbl-button-group">
+  <a class="mbl-button mbl-button--light" href="/fr/register">Commencer gratuitement mon journal d'étude biblique</a>
+</div>

@@ -1,4 +1,5 @@
 ---
+dateModified: "2026-09-29"
 seo:
   title: Suivez votre lecture biblique au quotidien
   description: Comment utiliser la page Aujourd'hui de My Bible Log pour suivre votre objectif quotidien et découvrir de nouveaux passages
@@ -6,8 +7,6 @@ og:
   title: Suivez votre lecture biblique au quotidien
   description: Comment utiliser la page Aujourd'hui de My Bible Log pour suivre votre objectif quotidien et découvrir de nouveaux passages
 ---
-
-![](/share.jpg)
 
 # Page Aujourd'hui
 

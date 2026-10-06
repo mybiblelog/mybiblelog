@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Konto erstellen
-  description: So erstellen Sie ein Konto bei My Bible Log
+  title: "Kostenloses Konto erstellen"
+  description: "Erstellen Sie ein kostenloses My-Bible-Log-Konto mit Google oder E-Mail und halten Sie Ihr Bibellesen fest. Keine Werbung, kein Abo."
 og:
-  title: Konto erstellen
-  description: So erstellen Sie ein Konto bei My Bible Log
+  title: "Kostenloses Konto erstellen"
+  description: "Erstellen Sie ein kostenloses My-Bible-Log-Konto mit Google oder E-Mail und halten Sie Ihr Bibellesen fest. Keine Werbung, kein Abo."
 ---
-
-![](/share.jpg)
 
 # Konto erstellen
 

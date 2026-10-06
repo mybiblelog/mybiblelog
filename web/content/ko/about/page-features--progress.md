@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: 진도 페이지
-  description: My Bible Log 진도 관리·목표 설정 기능 안내
+  title: "성경 읽기 목표 계산기: 완독 날짜 정하기"
+  description: "성경을 얼마나 읽었는지 보고, 완독 시점을 예측하고, 목표 날짜까지 하루 몇 절을 읽어야 하는지 계산해 보세요."
 og:
-  title: 진도 페이지
-  description: My Bible Log 진도 관리 ·목표 설정 기능 안내
+  title: "성경 읽기 목표 계산기: 완독 날짜 정하기"
+  description: "성경을 얼마나 읽었는지 보고, 완독 시점을 예측하고, 목표 날짜까지 하루 몇 절을 읽어야 하는지 계산해 보세요."
 ---
-
-![](/share.jpg)
 
 # 진도 페이지
 
@@ -47,6 +46,8 @@ og:
 My Bible Log은 해당 목표 날짜부터 역산하여 목표일까지 성경을 완독하기 위해 매일 읽어야 하는 절 수를 계산합니다.
 
 연말까지 성경을 완독하고 싶거나 특정 날짜까지 완독하고 싶을 때, 하루에 얼마나 읽어야 하는지 파악하기에 매우 유용한 기능입니다.
+
+어떤 목표를 세울지 모르시겠나요? 성경을 [6개월](/ko/about/how-to--read-the-bible-in-6-months), [1년](/ko/about/how-to--read-the-bible-in-a-year), [2년](/ko/about/how-to--read-the-bible-in-2-years)에 읽으려면 하루 몇 분이 필요한지 확인하거나, [성경 각 권을 읽는 데 걸리는 시간](/ko/about/guide--how-long-does-it-take-to-read-the-bible)을 살펴보세요.
 
 <div class="mbl-button-group">
   <a class="mbl-button mbl-button--light" href="/ko/progress">진행 페이지로 가기</a>

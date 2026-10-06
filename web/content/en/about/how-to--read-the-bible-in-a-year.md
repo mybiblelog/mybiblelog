@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-24"
 seo:
-  title: How to Read the Bible in a Year
-  description: How to read the Bible in a year and keep track of your progress with your own personal Bible reading plan
+  title: "How to Read the Bible in a Year: Chapters Per Day & Tips"
+  description: "How to read the Bible in a year: how many chapters and verses to read each day, where to start, which order to read in, and how to track your progress."
 og:
-  title: How to Read the Bible in a Year
-  description: How to read the Bible in a year and keep track of your progress with your own personal Bible reading plan
+  title: "How to Read the Bible in a Year: Chapters Per Day & Tips"
+  description: "How to read the Bible in a year: how many chapters and verses to read each day, where to start, which order to read in, and how to track your progress."
 ---
-
-![](/share.jpg)
 
 # How to Read the Bible in a Year
 
@@ -27,7 +26,7 @@ The Bible contains a grand total of 31,102 verses. Although the word count of th
 
 That sounds like a lot of reading, but the popular Harry Potter book series contains over 1,000,000 words - that's over 30% more words - and plenty of people have read those seven books. In fact, many people have read them all in a single year.
 
-When you put it into perspective, the Bible is long, but it is absolutely reasonable to read it in a single year.
+When you put it into perspective, the Bible is long, but it is absolutely reasonable to read it in a single year. In total, reading the whole Bible takes most people about 51 to 75 hours — see [How Long Does It Take to Read the Bible?](/about/guide--how-long-does-it-take-to-read-the-bible) for a breakdown of all 66 books.
 
 ## How much of the Bible should I read each day?
 
@@ -64,21 +63,21 @@ Some people only use a paper Bible to read, which means they can just use a book
 * If the bookmark falls out or you misplace your Bible, you lose your progress
 * You have to read the books of the Bible in their published order, which many people will find boring or tedious (most reading plans try to give you a variety of different books so you don't get bored)
 
-To improve on that approach, some people print out a Bible reading chapter checklist. These printouts show a list of all the chapters in the Bible so you can check each one off as you read it, and you can read them in any order you choose.
+To improve on that approach, some people print out a Bible reading chapter checklist, like our free [printable Bible reading tracker](/resources/printable-bible-reading-tracker). These printouts show a list of all the chapters in the Bible so you can check each one off as you read it, and you can read them in any order you choose.
 
 However, paper checklists share one key disadvantage with paper bookmarks: if you misplace the checklist, you lose all of your progress.
 
 One great way to keep track of your Bible reading is to use an app that was specifically designed for it. These apps might have chapter checklists that work just like paper checklists, but you don't have to keep track of a piece of paper.
 
-If you use the chapter checklist on **My Bible Log** to track your reading, you'll be able to see additional insights on your reading. **My Bible Log** can answer many questions about your reading progress, like:
+If you use the [chapter checklist](/about/page-features--chapter-checklist) on **My Bible Log** to track your reading, you'll be able to see additional insights on your reading. **My Bible Log** can answer many questions about your reading progress, like:
 
 * How many verses did you read today?
 * Have you met your reading goal every day this week?
 * Which books have you finished reading?
 * Based on your reading habits so far, how much longer until you finish reading the Bible?
-* How many verses do you need to read each day to finish reading the Bible by the end of the year? What about next month?
+* How many verses do you need to read each day to finish reading the Bible by the end of the year? What about next month? (See the [Progress page](/about/page-features--progress).)
 
-Using an app like **My Bible Log** also makes it easier to take notes on your reading so your personal Bible study time is more effective.
+Using an app like **My Bible Log** also makes it easier to take notes on your reading so your personal Bible study time is more effective. Here are [7 ways to organize your personal Bible study](/about/how-to--organize-your-personal-bible-study).
 
 ## Which Bible translation should I read?
 
@@ -111,13 +110,13 @@ One way to manage this is to follow a year-long or whole-Bible reading plan that
 
 There are several different kinds of whole Bible reading plans:
 
-* Chronological plans are based on when events took place
+* [Chronological plans](/about/how-to--read-the-bible-chronologically) are based on when events took place
 * Some plans are based on the order that the books were written
 * Other plans are based on the order in which early Christians or Jews would have received and experienced the books of the Bible
 
-These plans can be great tools for some people, and they solve the problem of having to read the Bible from beginning to end.
+These plans can be great tools for some people, and they solve the problem of having to read the Bible from beginning to end. See [Bible Reading Plans Compared](/about/guide--bible-reading-plans-compared) to find one that fits you.
 
-If you're not following a specific plan, then read whatever you haven't read that you find most interesting right now!
+If you're not following a specific plan, then read whatever you haven't read that you find most interesting right now! Our [Books of the Bible](/books-of-the-bible) pages give a short overview of every book to help you choose.
 
 ## How can I stay motivated to read the whole Bible in a year?
 
@@ -131,6 +130,8 @@ Another great way to keep moving toward your goal is to talk about it with frien
 
 Finally, take advantage of anything that makes you interested in reading the Bible. If you find an interesting passage during a Bible study, a sermon, or your daily devotional, keep reading! You don't have to stop at a certain number of verses or chapters each day. When you really find a book or section of the Bible inspiring, take advantage of your momentum and read as much as you want!
 
+For practical ways to keep going, see [How to Build a Strong Bible Reading Habit](/about/how-to--build-a-strong-bible-reading-habit). If a year feels too fast or too slow, try reading [the Bible in 6 months](/about/how-to--read-the-bible-in-6-months), [the Bible in 2 years](/about/how-to--read-the-bible-in-2-years), or start with [the New Testament in 90 days](/about/how-to--read-the-new-testament-in-90-days).
+
 <div class="mbl-button-group">
-  <a class="mbl-button mbl-button--light" href="/today">Get Started</a>
+  <a class="mbl-button mbl-button--light" href="/register">Start Tracking Your Reading Free</a>
 </div>

@@ -39,9 +39,9 @@ test.describe('Content pages', () => {
     await expect(page.getByRole('link', { name: 'My Bible Log Repository' })).toBeVisible();
   });
 
-  test('missing about page redirects to the overview', async ({ page }) => {
-    await page.goto('/about/no-such-page');
-    await expect(page).toHaveURL(/\/about\/overview/);
+  test('missing about page returns 404', async ({ page }) => {
+    const response = await page.goto('/about/no-such-page');
+    expect(response?.status()).toBe(404);
   });
 
   test('FAQ page renders content', async ({ page }) => {

@@ -1,13 +1,12 @@
 ---
+dateModified: "2026-09-29"
 seo:
-  title: Notas y etiquetas
-  description: Notas bíblicas libres y etiquetas personalizadas en My Bible Log
+  title: "Notas y etiquetas de estudio bíblico: organiza lo que aprendes"
+  description: "Toma notas de estudio bíblico vinculadas a los pasajes que lees y organízalas con etiquetas propias para encontrar después preguntas, oraciones y descubrimientos."
 og:
-  title: Notas y etiquetas
-  description: Notas bíblicas libres y etiquetas personalizadas en My Bible Log
+  title: "Notas y etiquetas de estudio bíblico: organiza lo que aprendes"
+  description: "Toma notas de estudio bíblico vinculadas a los pasajes que lees y organízalas con etiquetas propias para encontrar después preguntas, oraciones y descubrimientos."
 ---
-
-![](/share.jpg)
 
 # Página Notas
 
