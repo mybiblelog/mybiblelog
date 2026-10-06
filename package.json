@@ -63,5 +63,9 @@
     "eslint": "^8.57.1",
     "openai": "^4.54.0",
     "sharp": "^0.34.5"
+  },
+  "overrides": {
+    "vue": "^3.5.42",
+    "@vue/server-renderer": "^3.5.42"
   }
 }

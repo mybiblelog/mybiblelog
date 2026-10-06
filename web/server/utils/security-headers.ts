@@ -44,7 +44,16 @@ export const buildCsp = (nonce: string, analyticsEnabled = false): string => [
 // renderPayloadJsonScript in Nuxt's nitro renderer) and this Nuxt version
 // has no built-in nonce support for it, so it's patched in here rather than
 // widening the CSP to a blanket 'unsafe-inline'.
+//
+// Nuxt 4.5's entry import map (`<script type="importmap">` mapping `#entry`
+// to the hashed entry chunk) is also inline script under CSP. Without the
+// nonce the browser drops it and every chunk importing `#entry` fails to
+// load. Other typed inline scripts (application/json payloads) are data
+// blocks that CSP doesn't govern, so they're left alone.
 const INLINE_SCRIPT_OPEN_TAG = /<script(?![^>]*\bsrc=)(?![^>]*\btype=)>/g;
+const IMPORTMAP_OPEN_TAG = /<script(?![^>]*\bsrc=)(?![^>]*\bnonce=)(?=[^>]*\btype="importmap")/g;
 
 export const injectScriptNonce = (html: string, nonce: string): string =>
-  html.replace(INLINE_SCRIPT_OPEN_TAG, `<script nonce="${nonce}">`);
+  html
+    .replace(INLINE_SCRIPT_OPEN_TAG, `<script nonce="${nonce}">`)
+    .replace(IMPORTMAP_OPEN_TAG, `<script nonce="${nonce}"`);
