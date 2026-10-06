@@ -10,6 +10,7 @@ export default defineNuxtPlugin({
   enforce: 'pre',
   setup() {
     const requestCookies = useRequestHeaders(['cookie']);
+    const appVersion = useRuntimeConfig().public.appVersion;
 
     const getAuthToken = (): string | undefined => {
       if (!import.meta.server || !requestCookies.cookie) { return undefined; }
@@ -18,11 +19,17 @@ export default defineNuxtPlugin({
     };
 
     const buildHeaders = (): Record<string, string> => {
-      // Identifies this request as coming from the web app rather than the
-      // mobile app or a bare API client — auth endpoints use it to omit the
-      // session token from the JSON body, since the browser only needs the
-      // httpOnly cookie (see `api/http/helpers/client-type.ts`).
-      const headers: Record<string, string> = { 'Content-Type': 'application/json', 'X-Client': 'web' };
+      // `X-Platform: web` identifies this request as coming from the web app
+      // rather than the mobile app or a bare API client. Auth endpoints use it
+      // to omit the session token from the JSON body, since the browser only
+      // needs the httpOnly cookie; together with `X-App-Version` it also
+      // records which platform(s) and app version a user is on (see
+      // `api/http/helpers/platform.ts`).
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'X-Platform': 'web',
+        'X-App-Version': appVersion,
+      };
       const token = getAuthToken();
       if (token) { headers.Authorization = `Bearer ${token}`; }
       return headers;

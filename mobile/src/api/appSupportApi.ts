@@ -17,13 +17,13 @@ export type AppSupportStatus = {
 
 type ApiResponse<T> = { data?: T };
 
-function getPlatform(): MobilePlatform | null {
+export function getPlatform(): MobilePlatform | null {
   if (Platform.OS === "ios") return "ios";
   if (Platform.OS === "android") return "android";
   return null;
 }
 
-function getAppVersion(): string | null {
+export function getAppVersion(): string | null {
   const v = Constants.expoConfig?.version;
   return typeof v === "string" && v.trim() ? v.trim() : null;
 }

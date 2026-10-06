@@ -5,7 +5,7 @@ import { generateUserJWT, toAuthJSON } from '../../../repositories/helpers/user-
 import googleOauth2 from '../../helpers/google-oauth2';
 import googleIdToken from '../../helpers/google-id-token';
 import { authCookie } from '../../helpers/auth-cookie';
-import { isWebClient } from '../../helpers/client-type';
+import { isWebClient, trackClientActivity } from '../../helpers/platform';
 import { type RouteHandler } from '../../types';
 import { asRecord } from './shared';
 
@@ -52,6 +52,8 @@ export const verifyGoogleOauth: RouteHandler = async (req, deps) => {
       await users.linkGoogleAccount(existingUser.id, id);
     }
 
+    await trackClientActivity(users, req, existingUser, { force: true });
+
     const token = generateUserJWT(existingUser);
     return {
       status: 200,
@@ -68,6 +70,8 @@ export const verifyGoogleOauth: RouteHandler = async (req, deps) => {
     googleId: id,
     locale: locale as string | undefined,
   });
+
+  await trackClientActivity(users, req, user, { force: true });
 
   const token = generateUserJWT(user);
   return {
@@ -110,6 +114,8 @@ export const googleIdTokenLogin: RouteHandler = async (req, deps) => {
       await users.linkGoogleAccount(existingUser.id, googleUserId);
     }
 
+    await trackClientActivity(users, req, existingUser, { force: true });
+
     const token = generateUserJWT(existingUser);
     return {
       status: 200,
@@ -126,6 +132,8 @@ export const googleIdTokenLogin: RouteHandler = async (req, deps) => {
     googleId: googleUserId,
     locale: locale as string | undefined,
   });
+
+  await trackClientActivity(users, req, user, { force: true });
 
   const token = generateUserJWT(user);
   return {

@@ -375,6 +375,11 @@ describe('admin.test.js', () => {
         expect(response.body.data.length).toBe(7); // Last 7 days
         expect(response.body.data[0]).toHaveProperty('date');
         expect(response.body.data[0]).toHaveProperty('newUserAccounts');
+        expect(response.body.data[0].newUserAccountsByPlatform).toEqual({
+          web: expect.any(Number),
+          android: expect.any(Number),
+          ios: expect.any(Number),
+        });
         expect(response.body.data[0]).toHaveProperty('usersWithLogEntry');
         expect(response.body.data[0]).toHaveProperty('usersWithNote');
       }
@@ -1053,7 +1058,7 @@ describe('admin.test.js', () => {
         const response = await requestApi
           .get(`/api/admin/users/${testUser.email}/login`)
           .set('Authorization', `Bearer ${admin.token}`)
-          .set('X-Client', 'web');
+          .set('X-Platform', 'web');
         expect(response.status).toBe(200);
         expect(response.body.data).not.toHaveProperty('token');
         expect(response.headers['set-cookie']?.[0]).toContain('auth_token=');

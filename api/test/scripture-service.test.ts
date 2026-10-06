@@ -9,7 +9,7 @@ import {
   HELLOAO_DEFAULT_TRANSLATION_ID,
   getHelloaoTranslationId,
 } from '../services/scripture/helloao-translations';
-import { computePassageChunkBounds } from '../services/scripture/scripture.service';
+import { computePassageChunkBounds, type PassageChunkBounds } from '../services/scripture/scripture.service';
 
 describe('helloao-parser', () => {
   it('extractPassageBlocksFromChapter filters verses by range and stamps the chapter', () => {
@@ -153,7 +153,7 @@ describe('computePassageChunkBounds', () => {
   it('walks a three-chapter range to completion via continuation cursors', () => {
     const endVerseId = Bible.makeVerseId(1, 3, 5);
     let cursor = { startVerseId: Bible.makeVerseId(1, 1, 5), endVerseId };
-    const chunks = [];
+    const chunks: PassageChunkBounds[] = [];
     for (let i = 0; i < 10; i += 1) {
       const bounds = computePassageChunkBounds(cursor.startVerseId, cursor.endVerseId);
       chunks.push(bounds);
@@ -162,13 +162,13 @@ describe('computePassageChunkBounds', () => {
     }
     expect(chunks).toHaveLength(3);
     expect(chunks.map((c) => c.chapter)).toEqual([1, 2, 3]);
-    expect(chunks[0].fromVerse).toBe(5);
-    expect(chunks[0].toVerse).toBe(Bible.getChapterVerseCount(1, 1));
-    expect(chunks[1].fromVerse).toBe(1);
-    expect(chunks[1].toVerse).toBe(Bible.getChapterVerseCount(1, 2));
-    expect(chunks[2].fromVerse).toBe(1);
-    expect(chunks[2].toVerse).toBe(5);
-    expect(chunks[2].next).toBeNull();
+    expect(chunks[0]?.fromVerse).toBe(5);
+    expect(chunks[0]?.toVerse).toBe(Bible.getChapterVerseCount(1, 1));
+    expect(chunks[1]?.fromVerse).toBe(1);
+    expect(chunks[1]?.toVerse).toBe(Bible.getChapterVerseCount(1, 2));
+    expect(chunks[2]?.fromVerse).toBe(1);
+    expect(chunks[2]?.toVerse).toBe(5);
+    expect(chunks[2]?.next).toBeNull();
   });
 
   it('throws a ValidationError for a reversed range', () => {

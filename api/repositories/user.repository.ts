@@ -5,6 +5,7 @@ import type { UserDocument, UserSettingsDocument } from '../mongo/documents';
 import { ApiErrorDetailCode } from '../http/errors/error-codes';
 import { NotFoundError } from '../http/errors/http-errors';
 import { ValidationError } from '../http/errors/validation-errors';
+import { ALLOWED_PLATFORMS, type Platform } from '../http/helpers/platform';
 import { isDuplicateKeyError } from './helpers/duplicate-key-error';
 import { hashPassword } from './helpers/user-auth';
 import { buildDefaultUserSettings } from './helpers/user-settings';
@@ -65,6 +66,8 @@ const toUserRecord = (user: UserDocument): UserRecord => {
     // still-valid tokens (which also carry no version) continue to match.
     tokenVersion: user.tokenVersion ?? 0,
     settings: toUserSettingsRecord(user.settings),
+    // Default legacy documents (created before this field existed) to {}.
+    platforms: user.platforms ?? {},
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   };
@@ -170,6 +173,7 @@ export const createUserRepository = ({ users }: Collections) => {
         passwordResetAttempts: 0,
         tokenVersion: 0,
         settings: buildDefaultUserSettings(input.locale),
+        platforms: {},
         createdAt: now,
         updatedAt: now,
       };
@@ -431,6 +435,27 @@ export const createUserRepository = ({ users }: Collections) => {
       await persist(user, { googleId: user.googleId });
     },
 
+    /**
+     * Records that this user was seen on `platform` running `appVersion`:
+     * refreshes `lastSeenAt`/`appVersion` and sets `firstSeenAt` only if it's
+     * not already earlier. Leaves every other platform entry untouched, and
+     * deliberately does not bump `updatedAt` (activity isn't a profile edit).
+     * Callers are expected to pass an already-validated value from
+     * `ALLOWED_PLATFORMS` (`api/http/helpers/platform.ts`).
+     */
+    async recordClientActivity(userId: string, platform: string, appVersion: string | null, now = new Date()): Promise<void> {
+      await users.updateOne(
+        { _id: new ObjectId(userId) },
+        {
+          $set: {
+            [`platforms.${platform}.lastSeenAt`]: now,
+            [`platforms.${platform}.appVersion`]: appVersion,
+          },
+          $min: { [`platforms.${platform}.firstSeenAt`]: now },
+        },
+      );
+    },
+
     async updateSettings(userId: string, patch: Partial<UserSettingsRecord>): Promise<UserSettingsRecord> {
       const set: Record<string, string | number> = {};
       for (const key of USER_SETTINGS_KEYS) {
@@ -463,6 +488,25 @@ export const createUserRepository = ({ users }: Collections) => {
           $lte: end,
         },
       });
+    },
+
+    /**
+     * New-account counts for `[start, end]`, broken down by the platform
+     * recorded against each user (see `recordClientActivity`/`ALLOWED_PLATFORMS`).
+     * `trackClientActivity` runs immediately after `users.create`, so a new user
+     * normally has exactly one platform entry at this point — but a user
+     * who registered and then logged in from a second platform before `end`
+     * will be counted under both, so the per-platform counts can sum to more
+     * than the plain `countCreatedBetween` total.
+     */
+    async countCreatedBetweenByPlatform(start: Date, end: Date): Promise<Record<Platform, number>> {
+      const counts = await Promise.all(
+        ALLOWED_PLATFORMS.map((platform) => users.countDocuments({
+          createdAt: { $gte: start, $lte: end },
+          [`platforms.${platform}`]: { $exists: true },
+        })),
+      );
+      return Object.fromEntries(ALLOWED_PLATFORMS.map((platform, i) => [platform, counts[i]])) as Record<Platform, number>;
     },
 
     async listAdminUsers(query: AdminUserListQuery): Promise<{ users: AdminUserListItem[]; total: number }> {

@@ -4,6 +4,8 @@ import dayjs from 'dayjs';
 import { Collection, Document } from 'mongodb';
 import useCollections, { closeConnection } from '../mongo/useCollections';
 import { CODE_LENGTH } from '../repositories/helpers/verification-codes';
+import { type PlatformActivityDocument } from '../mongo/documents';
+import { ALLOWED_PLATFORMS } from '../http/helpers/platform';
 
 // Main — intentionally left uninvoked; uncomment the `main()` call at the bottom to run.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -164,6 +166,30 @@ const main = async (): Promise<void> => {
         { $set: { [code]: '', [expires]: new Date(0), [attempts]: 0 } },
       );
     }
+  }
+
+  // Users without a platforms map get one, defaulting to web (the original
+  // client before platform tracking existed). Boolean entries from the
+  // pre-activity shape (`platforms: { web: true }`) are converted too. Seeding
+  // `lastSeenAt` with `createdAt` keeps these users out of "recently active"
+  // queries until they're actually seen again.
+  const usersToMigratePlatforms = await users.find({
+    $or: [
+      { platforms: { $exists: false } },
+      ...ALLOWED_PLATFORMS.map(platform => ({ [`platforms.${platform}`]: true })),
+    ],
+  }).toArray();
+  for (const user of usersToMigratePlatforms) {
+    const legacy = (user.platforms ?? { web: true }) as Record<string, unknown>;
+    const seenAt = user.createdAt;
+    const platforms: Record<string, PlatformActivityDocument> = {};
+    for (const [platform, value] of Object.entries(legacy)) {
+      platforms[platform] = value === true
+        ? { firstSeenAt: seenAt, lastSeenAt: seenAt, appVersion: null }
+        : value as PlatformActivityDocument;
+    }
+    console.log(`Migrating platforms for user ${user.email}: ${Object.keys(platforms).join(', ')}...`);
+    await users.updateOne({ _id: user._id }, { $set: { platforms } });
   }
 
   // close connection

@@ -347,6 +347,39 @@ describe('user.repository', () => {
       const to = new Date(Date.now() + 60 * 60 * 1000);
       expect(await users.countCreatedBetween(from, to)).toBe(2);
     });
+
+    it('countCreatedBetweenByPlatform breaks down new users by recorded platform', async () => {
+      const { users } = await getRepos();
+      const web = await createUser();
+      const android = await createUser();
+      await createUser(); // no platform recorded
+
+      await users.recordClientActivity(web.id, 'web', 'f23bfba');
+      await users.recordClientActivity(android.id, 'android', '1.0.0');
+
+      const from = new Date(Date.now() - 60 * 60 * 1000);
+      const to = new Date(Date.now() + 60 * 60 * 1000);
+      expect(await users.countCreatedBetweenByPlatform(from, to)).toEqual({ web: 1, android: 1, ios: 0 });
+    });
+
+    it('recordClientActivity keeps firstSeenAt, refreshes lastSeenAt/appVersion, and leaves other platforms alone', async () => {
+      const { users } = await getRepos();
+      const user = await createUser();
+      const t1 = new Date('2026-01-01T00:00:00Z');
+      const t2 = new Date('2026-02-01T00:00:00Z');
+
+      await users.recordClientActivity(user.id, 'web', 'aaaaaaa', t1);
+      await users.recordClientActivity(user.id, 'android', '1.0.0', t1);
+      await users.recordClientActivity(user.id, 'android', '1.1.0', t2);
+
+      const found = await users.findById(user.id);
+      expect(found?.platforms).toEqual({
+        web: { firstSeenAt: t1, lastSeenAt: t1, appVersion: 'aaaaaaa' },
+        android: { firstSeenAt: t1, lastSeenAt: t2, appVersion: '1.1.0' },
+      });
+      // Activity is not a profile edit.
+      expect(found?.updatedAt).toEqual(user.updatedAt);
+    });
   });
 
   describe('listAdminUsers', () => {

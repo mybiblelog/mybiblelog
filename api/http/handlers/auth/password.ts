@@ -9,7 +9,7 @@ import {
 } from '../../../validation/schemas/auth';
 import { LocaleCode } from '@mybiblelog/shared';
 import { authCookie } from '../../helpers/auth-cookie';
-import { isWebClient } from '../../helpers/client-type';
+import { isWebClient } from '../../helpers/platform';
 import { type RouteHandler } from '../../types';
 import { asRecord } from './shared';
 
