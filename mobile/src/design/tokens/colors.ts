@@ -30,6 +30,8 @@ export type ThemeColors = {
   surfaceMuted: string;
   /** Barely-there fill (web `--mbl-bg-subtle`). */
   surfaceSubtle: string;
+  /** `surfaceSubtle` at partial opacity, so backgrounds show through. Mobile-only. */
+  surfaceSubtleTranslucent: string;
   /** Primary text (web `--mbl-text`). */
   text: string;
   /** Body copy, a step softer than `text` (web `--mbl-text-body`). */
@@ -108,6 +110,7 @@ export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
     surfaceElevated: "#ffffff", // == --mbl-bg in light
     surfaceMuted: "#f5f5f5", // --neutral-100
     surfaceSubtle: "#fafafa", // --neutral-50
+    surfaceSubtleTranslucent: "rgba(250,250,250,0.6)",
     text: "#363636", // --neutral-700
     textBody: "#4a4a4a", // --neutral-600
     mutedText: "#7a7a7a",
@@ -157,6 +160,7 @@ export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
     surfaceElevated: "#242424", // == --mbl-bg-muted, so cards read on the #000 canvas
     surfaceMuted: "#242424",
     surfaceSubtle: "#1f1f1f",
+    surfaceSubtleTranslucent: "rgba(31,31,31,0.6)",
     text: "#f5f5f5", // --neutral-100
     textBody: "#dbdbdb", // --neutral-200
     mutedText: "#a8a8a8",
