@@ -53,6 +53,13 @@ describe('injectScriptNonce', () => {
     expect(injectScriptNonce(html, 'the-nonce')).toBe(html);
   });
 
+  it('adds the nonce to the entry import map', () => {
+    const html = '<script type="importmap">{"imports":{"#entry":"/_nuxt/a.js"}}</script>';
+    expect(injectScriptNonce(html, 'the-nonce')).toBe(
+      '<script nonce="the-nonce" type="importmap">{"imports":{"#entry":"/_nuxt/a.js"}}</script>',
+    );
+  });
+
   it('leaves html with no inline scripts unchanged', () => {
     const html = '<div>no scripts here</div>';
     expect(injectScriptNonce(html, 'the-nonce')).toBe(html);

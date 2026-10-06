@@ -251,17 +251,16 @@ export default defineNuxtConfig({
   // Disable telemetry
   telemetry: false,
 
-  // Held at Nuxt 4.4.x deliberately: 4.5.x cannot produce a working production
-  // build for this app. `experimental.externalVue` defaults to true in 4.5, but
-  // the Nitro trace only copies the `vue/server-renderer` subpath — the bare
-  // `vue` import in the renderer chunk resolves to an uncopied `vue/index.mjs`,
-  // so every SSR route 500s with ERR_MODULE_NOT_FOUND. Setting externalVue:false
-  // fixes that and trades into a second 500 (`nuxtApp.$pinia` is undefined in
-  // @pinia/nuxt's `app:rendered` hook). Both reproduce on the node-server preset
-  // and are independent of the Pinia major and of `asyncContext`; `nuxt dev` is
-  // unaffected, so only the built server shows it. Re-test on the next 4.5.x.
+  // Exactly one copy of `vue` must be installed. With two (e.g. Nuxt requiring a
+  // newer Vue than the hoisted one, so npm nests a second copy under nuxt/), the
+  // Nitro trace splits them into .nitro/vue@x and leaves a top-level `vue/`
+  // without index.mjs: every SSR route 500s with ERR_MODULE_NOT_FOUND, and with
+  // `externalVue: false` Pinia lands on the other copy (`nuxtApp.$pinia`
+  // undefined). Only the built server shows it; `nuxt dev` is unaffected. The
+  // root package.json `overrides` keep vue/@vue/server-renderer on one version
+  // — bump that range together with Nuxt's own `vue` requirement.
   //
-  // Two 4.5 features are also settled as "no", independent of the above:
+  // Two 4.5 features are settled as "no":
   //
   // `experimental.ssrStreaming` — streaming commits status and headers with the
   // first byte, which breaks server/plugins/security-headers.ts: it generates the
