@@ -109,6 +109,107 @@ test.describe('Chapter Checklist', () => {
     await expect(chapter1).toHaveAttribute('data-complete', 'true');
   });
 
+  test('a failed create request re-enables the chapter and shows an error toast', async ({ page }) => {
+    let postCount = 0;
+    await page.route('**/api/log-entries', async (route) => {
+      if (route.request().method() === 'POST') {
+        postCount += 1;
+        // Fail only the first attempt; a later click (proving the chapter
+        // isn't stuck) should go through and succeed normally.
+        if (postCount === 1) {
+          await route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ error: { code: 'server_error' } }) });
+          return;
+        }
+      }
+      await route.continue();
+    });
+
+    await page.goto('/checklist');
+    const genesisCard = page.getByTestId('book-card').first();
+    await genesisCard.getByTestId('book-card-toggle').click();
+
+    const chapter2 = genesisCard.getByTestId('chapter-card').nth(1);
+    await expect(chapter2).toHaveAttribute('data-chapter', '2');
+
+    await chapter2.click();
+
+    await expect(page.getByTestId('toast')).toHaveText(/unable to mark the chapter complete/i);
+    await expect(chapter2).not.toHaveAttribute('data-complete', 'true');
+
+    // Not stuck: `busyChapters` was cleared after the failure, so this click
+    // is accepted (rather than dropped by the re-entrancy guard) and succeeds.
+    await chapter2.click();
+    await expect(chapter2).toHaveAttribute('data-complete', 'true');
+    expect(postCount).toBe(2);
+  });
+
+  test('a failed delete request re-enables the chapter and shows an error toast', async ({ page, api }) => {
+    await seedLogEntries(api, [{ date: today(), ...chapterRange(BOOK.GENESIS, 1) }]);
+
+    let deleteCount = 0;
+    await page.route('**/api/log-entries/*', async (route) => {
+      if (route.request().method() === 'DELETE') {
+        deleteCount += 1;
+        // Fail only the first attempt; a later click (proving the chapter
+        // isn't stuck) should go through and succeed normally.
+        if (deleteCount === 1) {
+          await route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ error: { code: 'server_error' } }) });
+          return;
+        }
+      }
+      await route.continue();
+    });
+
+    await page.goto('/checklist');
+    const genesisCard = page.getByTestId('book-card').first();
+    await genesisCard.getByTestId('book-card-toggle').click();
+
+    const chapter1 = genesisCard.getByTestId('chapter-card').first();
+    await expect(chapter1).toHaveAttribute('data-complete', 'true');
+
+    await chapter1.click();
+
+    await expect(page.getByTestId('toast')).toHaveText(/unable to mark the chapter incomplete/i);
+    await expect(chapter1).toHaveAttribute('data-complete', 'true');
+
+    // Not stuck: `busyChapters` was cleared after the failure, so this click
+    // is accepted (rather than dropped by the re-entrancy guard) and succeeds.
+    await chapter1.click();
+    await expect(chapter1).not.toHaveAttribute('data-complete', 'true');
+    expect(deleteCount).toBe(2);
+  });
+
+  test('a rapid double click on the same chapter only fires one request', async ({ page }) => {
+    let requestCount = 0;
+    await page.route('**/api/log-entries', async (route) => {
+      if (route.request().method() === 'POST') {
+        requestCount += 1;
+        // Hold the response open long enough for a second click to land
+        // while the first request is still in flight.
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+      await route.continue();
+    });
+
+    await page.goto('/checklist');
+    const genesisCard = page.getByTestId('book-card').first();
+    await genesisCard.getByTestId('book-card-toggle').click();
+
+    const chapter2 = genesisCard.getByTestId('chapter-card').nth(1);
+    await expect(chapter2).toHaveAttribute('data-chapter', '2');
+
+    // Fire both clicks before awaiting either, so the second lands while the
+    // first request is still in flight and should be dropped by the
+    // `busyChapters` re-entrancy guard.
+    await Promise.all([
+      chapter2.click(),
+      chapter2.click(),
+    ]);
+
+    await expect(chapter2).toHaveAttribute('data-complete', 'true');
+    expect(requestCount).toBe(1);
+  });
+
   test('testament toggle filters the book list without losing expansion state', async ({ page }) => {
     await page.goto('/checklist');
     const books = page.getByTestId('book-card');

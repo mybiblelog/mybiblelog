@@ -267,47 +267,54 @@ async function toggleChapter(bookIndex: number, chapterIndex: number) {
   const isComplete = bookReports.value
     .find(report => report.bookIndex === bookIndex)?.chapterReports
     .find(chapterReport => chapterReport.chapterIndex === chapterIndex)?.complete === true;
-  if (isComplete) {
-    const matchingLogEntry = logEntriesStore.currentLogEntries.find(logEntry =>
-      logEntry.date === date &&
-      logEntry.startVerseId === startVerseId &&
-      logEntry.endVerseId === endVerseId,
-    );
-    if (matchingLogEntry) {
-      const success = await logEntriesStore.deleteLogEntry(matchingLogEntry.id);
-      if (success) {
-        await getBookReports();
+
+  try {
+    if (isComplete) {
+      const matchingLogEntry = logEntriesStore.currentLogEntries.find(logEntry =>
+        logEntry.date === date &&
+        logEntry.startVerseId === startVerseId &&
+        logEntry.endVerseId === endVerseId,
+      );
+      if (matchingLogEntry) {
+        const success = await logEntriesStore.deleteLogEntry(matchingLogEntry.id);
+        if (success) {
+          await getBookReports();
+        }
+        else {
+          toastStore.add({ type: 'error', text: t('unable_to_mark_incomplete') });
+        }
       }
       else {
-        toastStore.add({ type: 'error', text: t('unable_to_mark_incomplete') });
+        // Completion is verse-coverage based, so a chapter can read as complete
+        // without having an entry of its own to delete. Name the actual reason:
+        // covered by a wider entry logged today, or covered only by earlier dates.
+        const loggedToday = Bible.filterRangesByBookChapter(
+          bookIndex,
+          chapterIndex,
+          logEntriesStore.currentLogEntries.filter(logEntry => logEntry.date === date),
+        ).length > 0;
+        toastStore.add({ type: 'info', text: t(loggedToday ? 'logged_in_longer_passage' : 'logged_before_today') });
       }
     }
     else {
-      // Completion is verse-coverage based, so a chapter can read as complete
-      // without having an entry of its own to delete. Name the actual reason:
-      // covered by a wider entry logged today, or covered only by earlier dates.
-      const loggedToday = Bible.filterRangesByBookChapter(
-        bookIndex,
-        chapterIndex,
-        logEntriesStore.currentLogEntries.filter(logEntry => logEntry.date === date),
-      ).length > 0;
-      toastStore.add({ type: 'info', text: t(loggedToday ? 'logged_in_longer_passage' : 'logged_before_today') });
-    }
-  }
-  else {
-    const createdEntry = await logEntriesStore.createLogEntry({ date, startVerseId, endVerseId });
-    if (createdEntry) {
+      // Throws on failure (handled below), so reaching the next line means it succeeded.
+      await logEntriesStore.createLogEntry({ date, startVerseId, endVerseId });
       await getBookReports();
       // Flagged before the busy flag clears below, so the checkmark replaces the
       // spinner in a single render with `draw` already true — the animation runs
       // off a freshly mounted element rather than a class toggle.
       celebrateChapter(key);
     }
-    else {
-      toastStore.add({ type: 'error', text: t('unable_to_mark_complete') });
-    }
   }
-  busyChapters.value.delete(key);
+  catch {
+    // Create always signals failure by throwing; delete may throw or return false.
+    // Show the failure toast and fall through to `finally` so the chapter doesn't
+    // stay stuck disabled.
+    toastStore.add({ type: 'error', text: t(isComplete ? 'unable_to_mark_incomplete' : 'unable_to_mark_complete') });
+  }
+  finally {
+    busyChapters.value.delete(key);
+  }
 }
 
 onMounted(async () => {
