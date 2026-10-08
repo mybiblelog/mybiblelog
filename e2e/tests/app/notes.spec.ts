@@ -425,6 +425,57 @@ test.describe('Notes page', () => {
     await expect(page.getByTestId('passage-note').first()).toContainText('First seeded note');
   });
 
+  test('explicitly chosen sort survives adding a passage filter', async ({ page, api }) => {
+    // Seeded so creation order and scripture order disagree (the note with the
+    // earlier passage is seeded second), so oldest-first and passage-order
+    // assertions can be told apart.
+    await seedNote(api, {
+      content: 'Middle of the chapter',
+      passages: [{ startVerseId: verseId(BOOK.GENESIS, 1, 10), endVerseId: verseId(BOOK.GENESIS, 1, 12) }],
+    });
+    await seedNote(api, {
+      content: 'Opening and closing',
+      passages: [
+        { startVerseId: verseId(BOOK.GENESIS, 1, 20), endVerseId: verseId(BOOK.GENESIS, 1, 22) },
+        { startVerseId: verseId(BOOK.GENESIS, 1, 2), endVerseId: verseId(BOOK.GENESIS, 1, 3) },
+      ],
+    });
+
+    await page.goto('/notes');
+    // Wait for hydration (both seeded notes rendered) before interacting,
+    // otherwise the fill lands pre-hydration and the query draft stays clean.
+    await expect(page.getByTestId('passage-note')).toHaveCount(2);
+
+    const sidebar = page.locator('.notes-page__sidebar');
+    // Explicitly choose oldest first, before any passage filter is set.
+    await sidebar.getByTestId('notes-query-sort-oldest').check();
+    await sidebar.getByTestId('notes-query-apply').click();
+    await expect(page.getByTestId('passage-note').first()).toContainText('Middle of the chapter');
+    await expect(page).toHaveURL(/sortDirection=ascending/);
+
+    // Adding a passage filter would normally auto-flip to passage order, but
+    // an explicit oldest-first choice must not be stomped.
+    const passageInput = sidebar.getByTestId('notes-query-passage');
+    await passageInput.fill('Genesis 1:1-31');
+    await passageInput.blur();
+
+    await expect(sidebar.getByTestId('notes-query-sort-oldest')).toBeChecked();
+    await expect(sidebar.getByTestId('notes-query-sort-passage')).not.toBeChecked();
+
+    await sidebar.getByTestId('notes-query-apply').click();
+
+    // Still ordered oldest-first (by creation order): if the sort had been
+    // stomped to passage order, "Opening and closing" (earliest passage,
+    // Genesis 1:2) would lead instead.
+    await expect(page.getByTestId('passage-note').first()).toContainText('Middle of the chapter');
+    await expect(page).toHaveURL(/filterPassageStartVerseId=/);
+    // With a passage filter set, the contextual default sort is passage order,
+    // so an unstomped createdAt sort is the one that has to be spelled out in
+    // the URL (sortDirection=ascending is omitted here because it happens to
+    // match the passage-order default too).
+    await expect(page).toHaveURL(/sortOn=createdAt/);
+  });
+
   test('page size can be increased to show more notes', async ({ page, api }) => {
     for (let i = 1; i <= 12; i++) {
       await seedNote(api, { content: `Bulk note ${i}`, passages: [] });
