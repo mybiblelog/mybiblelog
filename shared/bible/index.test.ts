@@ -10,8 +10,8 @@ const deepFreeze = <T>(object: T): T => {
     return object;
   }
   Object.freeze(object);
-  Object.keys(object).forEach((key) => {
-    deepFreeze(object[key]);
+  Object.values(object).forEach((value) => {
+    deepFreeze(value);
   });
   return object;
 };
@@ -66,6 +66,15 @@ test('can convert between book slugs and indexes', () => {
   expect(Bible.getBookIndexBySlug('nope')).toBe(-1);
 });
 
+test('falls back to English book names when a locale has no data for a book', () => {
+  // Exercises the fallback path directly using a locale code with no entry at all.
+  const genesisNameMissing = Bible.getBookName(1, 'xx');
+  const revelationNameMissing = Bible.getBookName(66, 'xx');
+
+  expect(genesisNameMissing).toBe('Genesis');
+  expect(revelationNameMissing).toBe('Revelation');
+});
+
 test('can identify which testament a book belongs to', () => {
   // Boundary pair: Malachi is the last Old Testament book, Matthew the first New.
   expect(Bible.isNewTestament(1)).toBe(false);
@@ -101,6 +110,14 @@ test('can get book index without case sensitivity', () => {
 
   expect(genesisIndex).toBe(1);
   expect(revelationIndex).toBe(66);
+});
+
+test('getBookIndex falls back to English when a locale has no data for a book', () => {
+  const genesisIndexMissing = Bible.getBookIndex('Genesis', 'xx');
+  const revelationIndexMissing = Bible.getBookIndex('Revelation', 'xx');
+
+  expect(genesisIndexMissing).toBe(1);
+  expect(revelationIndexMissing).toBe(66);
 });
 
 test('should fail verse validation if book invalid', () => {

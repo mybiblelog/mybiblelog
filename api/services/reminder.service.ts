@@ -164,13 +164,25 @@ const init = async ({ emailService }: { emailService: EmailService }) => {
     const remindersToTrigger = await dailyReminders.findDue(utcNow);
 
     for (const reminder of remindersToTrigger) {
-      await sendReminder(reminder);
+      try {
+        await sendReminder(reminder);
+      }
+      catch (err) {
+        // Don't let a single failed reminder (e.g. an email send failure)
+        // abort the rest of the batch.
+        console.error(`Failed to send reminder ${reminder.id}:`, err);
+        continue;
+      }
     }
   };
 
   // Check for reminders to send every minute. unref() so the interval never
   // holds the process open once the HTTP server has shut down.
-  setInterval(triggerReminders, 60 * 1000).unref();
+  setInterval(() => {
+    triggerReminders().catch((err) => {
+      console.error('Unhandled error in triggerReminders:', err);
+    });
+  }, 60 * 1000).unref();
   console.log('Reminder Service Started');
 
   return {}; // No public API
