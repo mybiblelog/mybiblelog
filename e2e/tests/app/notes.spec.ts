@@ -1,7 +1,25 @@
+import type { Page } from '@playwright/test';
 import { test, expect } from '../../fixtures';
 import { seedNote, seedTag } from '../../helpers/seed';
-import { verseId, BOOK } from '../../helpers/passages';
+import { verseId, displayVerseRange, BOOK } from '../../helpers/passages';
 import { waitForHydration } from '../../helpers/hydration';
+
+const BOOK_ACTS = 44;
+
+const bookOption = (page: Page, book: number) =>
+  page.locator(`[data-testid="grid-selector-option"][data-value="${book}"]`);
+
+const tapCell = (page: Page, value: number) =>
+  page.locator(`[data-testid="tap-range-selector-option"][data-value="${value}"]`);
+
+async function openPassageSelector(page: Page) {
+  await page.goto('/notes');
+  await page.getByRole('button', { name: 'New' }).click();
+  const editor = page.getByTestId('note-editor');
+  await expect(editor).toBeVisible();
+  await editor.getByTestId('note-editor-add-passage').click();
+  return editor;
+}
 
 test.describe('Notes page', () => {
   test('user can create a note via the editor modal', async ({ page }) => {
@@ -17,6 +35,93 @@ test.describe('Notes page', () => {
     await page.getByTestId('note-editor-submit').click();
 
     await expect(page.getByTestId('passage-note').first()).toContainText('My first note from the e2e suite');
+  });
+
+  test('user can select a passage via the tap-to-select PassageSelector', async ({ page }) => {
+    const editor = await openPassageSelector(page);
+
+    // Book step: the testament and sort toggles must actually change the grid.
+    await editor.getByTestId('passage-selector-book').click();
+    const options = page.getByTestId('grid-selector-option');
+    await expect(options.first()).toHaveAttribute('data-value', String(BOOK.GENESIS));
+    await expect(bookOption(page, BOOK.MATTHEW)).toHaveCount(0);
+
+    await page.getByTestId('passage-selector-testament-new').click();
+    await expect(page.getByTestId('passage-selector-testament-new')).toHaveClass(/active/);
+    await expect(options.first()).toHaveAttribute('data-value', String(BOOK.MATTHEW));
+    await expect(bookOption(page, BOOK.GENESIS)).toHaveCount(0);
+
+    await page.getByTestId('passage-selector-sort-alphabetical').click();
+    await expect(page.getByTestId('passage-selector-sort-alphabetical')).toHaveClass(/active/);
+    await expect(options.first()).toHaveAttribute('data-value', String(BOOK_ACTS));
+
+    await page.getByTestId('passage-selector-testament-old').click();
+    await page.getByTestId('passage-selector-sort-numerical').click();
+    await expect(options.first()).toHaveAttribute('data-value', String(BOOK.GENESIS));
+    await bookOption(page, BOOK.GENESIS).click();
+
+    // Chapter step: tap chapter 1 twice to select it as a single-chapter range.
+    await editor.getByTestId('passage-selector-start-chapter').click();
+    await tapCell(page, 1).click();
+    await tapCell(page, 1).click();
+
+    // Verse step: tap 1 then 3 to select verses 1-3 within the chapter.
+    await editor.getByTestId('passage-selector-start-verse').click();
+    await tapCell(page, 1).click();
+    await tapCell(page, 3).click();
+
+    await expect(editor.getByTestId('passage-selector-book')).toContainText('Genesis');
+    await expect(editor.getByTestId('passage-selector-start-chapter')).toHaveText('1');
+    await expect(editor.getByTestId('passage-selector-start-verse')).toHaveText('1');
+    await expect(editor.getByTestId('passage-selector-end-verse')).toHaveText('3');
+
+    await editor.getByRole('button', { name: 'Done' }).click();
+    await page.getByTestId('note-editor-submit').click();
+
+    await expect(page.getByTestId('passage-note').first().getByTestId('passage-note-passages'))
+      .toContainText(displayVerseRange(verseId(BOOK.GENESIS, 1, 1), verseId(BOOK.GENESIS, 1, 3)));
+  });
+
+  test('user can select a multi-chapter passage via the PassageSelector', async ({ page }) => {
+    const editor = await openPassageSelector(page);
+
+    await editor.getByTestId('passage-selector-book').click();
+    await bookOption(page, BOOK.GENESIS).click();
+
+    // Chapter step: tap 1 then 2 to select a two-chapter range.
+    await editor.getByTestId('passage-selector-start-chapter').click();
+    await tapCell(page, 1).click();
+    await tapCell(page, 2).click();
+    await expect(editor.getByTestId('passage-selector-end-chapter')).toHaveText('2');
+
+    // Multi-chapter ranges pick start and end verse in separate single-tap steps.
+    await editor.getByTestId('passage-selector-start-verse').click();
+    await tapCell(page, 1).click();
+    await editor.getByTestId('passage-selector-end-verse').click();
+    await tapCell(page, 3).click();
+
+    await expect(editor.getByTestId('passage-selector-start-chapter')).toHaveText('1');
+    await expect(editor.getByTestId('passage-selector-start-verse')).toHaveText('1');
+    await expect(editor.getByTestId('passage-selector-end-chapter')).toHaveText('2');
+    await expect(editor.getByTestId('passage-selector-end-verse')).toHaveText('3');
+
+    // Changing the end chapter must clear the now-stale end verse.
+    await editor.getByTestId('passage-selector-end-chapter').click();
+    await tapCell(page, 3).click();
+    await expect(editor.getByTestId('passage-selector-end-chapter')).toHaveText('3');
+    await expect(editor.getByTestId('passage-selector-end-verse')).toHaveText('*');
+
+    // Restore a complete range and save.
+    await editor.getByTestId('passage-selector-end-chapter').click();
+    await tapCell(page, 2).click();
+    await editor.getByTestId('passage-selector-end-verse').click();
+    await tapCell(page, 3).click();
+
+    await editor.getByRole('button', { name: 'Done' }).click();
+    await page.getByTestId('note-editor-submit').click();
+
+    await expect(page.getByTestId('passage-note').first().getByTestId('passage-note-passages'))
+      .toContainText(displayVerseRange(verseId(BOOK.GENESIS, 1, 1), verseId(BOOK.GENESIS, 2, 3)));
   });
 
   test('seeded note shows its passage and tag', async ({ page, api }) => {

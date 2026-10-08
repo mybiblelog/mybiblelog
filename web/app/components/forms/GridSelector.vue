@@ -4,6 +4,8 @@
       v-for="option in options"
       :key="option.value"
       class="grid-selector--option mbl-tap-grid--cell"
+      data-testid="grid-selector-option"
+      :data-value="option.value"
       @click="emit('selection', option.value)"
     >
       {{ option.label }}

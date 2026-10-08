@@ -4,6 +4,8 @@
       v-for="(option, index) in options"
       :key="index"
       class="tap-range-selector--option mbl-tap-grid--cell"
+      data-testid="tap-range-selector-option"
+      :data-value="option"
       :class="tapRangeSelectorOptionClass(option)"
       @click="handleClick(option)"
     >

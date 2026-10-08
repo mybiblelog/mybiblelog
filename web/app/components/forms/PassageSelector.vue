@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="passage-selector">
-      <div class="part" @click="openSelectBook">
+      <div class="part" data-testid="passage-selector-book" @click="openSelectBook">
         <template v-if="!selected.book">
           {{ t('select_book') }}
         </template>
@@ -10,7 +10,7 @@
         </template>
       </div>
       <template v-if="selected.book">
-        <div class="part" @click="openSelectChapters">
+        <div class="part" data-testid="passage-selector-start-chapter" @click="openSelectChapters">
           <template v-if="!selected.startChapter">
             *
           </template>
@@ -20,7 +20,11 @@
         </div>
         <template v-if="selected.startChapter">
           :
-          <div class="part" @click="selected.endChapter === selected.startChapter ? openSelectVerses() : openSelectStartVerse()">
+          <div
+            class="part"
+            data-testid="passage-selector-start-verse"
+            @click="selected.endChapter === selected.startChapter ? openSelectVerses() : openSelectStartVerse()"
+          >
             <template v-if="!selected.startVerse">
               *
             </template>
@@ -30,7 +34,7 @@
           </div>
           <template v-if="selected.endChapter === selected.startChapter && selected.startVerse && selected.endVerse !== selected.startVerse">
             -
-            <div class="part" @click="openSelectEndVerse">
+            <div class="part" data-testid="passage-selector-end-verse" @click="openSelectEndVerse">
               <template v-if="!selected.endVerse">
                 *
               </template>
@@ -42,10 +46,10 @@
         </template>
         <template v-if="selected.endChapter && selected.endChapter !== selected.startChapter">
           -
-          <div class="part" @click="openSelectEndChapter">
+          <div class="part" data-testid="passage-selector-end-chapter" @click="openSelectEndChapter">
             {{ selected.endChapter }}
           </div>:
-          <div class="part" @click="openSelectEndVerse">
+          <div class="part" data-testid="passage-selector-end-verse" @click="openSelectEndVerse">
             <template v-if="!selected.endVerse">
               *
             </template>
@@ -65,6 +69,7 @@
               <button
                 type="button"
                 class="button-group--button button-group--button-left"
+                data-testid="passage-selector-testament-old"
                 :class="{ active: selectedTestament === 'old' }"
                 @click="selectedTestament = 'old'"
               >
@@ -73,6 +78,7 @@
               <button
                 type="button"
                 class="button-group--button button-group--button-right"
+                data-testid="passage-selector-testament-new"
                 :class="{ active: selectedTestament === 'new' }"
                 @click="selectedTestament = 'new'"
               >
@@ -83,6 +89,7 @@
               <button
                 type="button"
                 class="button-group--button button-group--button-left"
+                data-testid="passage-selector-sort-numerical"
                 :class="{ active: bookSortOrder === 'numerical' }"
                 @click="bookSortOrder = 'numerical'"
               >
@@ -91,6 +98,7 @@
               <button
                 type="button"
                 class="button-group--button button-group--button-right"
+                data-testid="passage-selector-sort-alphabetical"
                 :class="{ active: bookSortOrder === 'alphabetical' }"
                 @click="bookSortOrder = 'alphabetical'"
               >
