@@ -115,4 +115,19 @@ test.describe('Import', () => {
     const entries = await getLogEntries(api);
     expect(entries).toHaveLength(2);
   });
+
+  test('CSV row with an unparseable date is flagged invalid and never imported', async ({ page, api }) => {
+    await page.goto('/settings/import');
+    await page.getByTestId('import-file-input').setInputFiles(testDataPath('import-bad-date.csv'));
+
+    const statuses = page.getByTestId('import-row-status');
+    await expect(statuses.filter({ hasText: 'Imported' })).toHaveCount(1);
+    await expect(statuses.filter({ hasText: 'Invalid' })).toHaveCount(1);
+
+    // The row with the malformed date (but a valid verse range) must never
+    // reach the create-log-entry API with a null date.
+    const entries = await getLogEntries(api);
+    expect(entries).toHaveLength(1);
+    expect(entries.every((entry: { date: string | null }) => entry.date !== null)).toBe(true);
+  });
 });

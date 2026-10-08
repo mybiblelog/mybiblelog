@@ -169,7 +169,10 @@ async function createImportedRows() {
   const pendingKeys = new Set<string>();
 
   await runWithConcurrencyLimit(importRows.value, IMPORT_CONCURRENCY, async (row) => {
-    if (row.status === t('status_invalid') || row.startVerseId === null) { return; }
+    if (row.status === t('status_invalid') || row.startVerseId === null || row.date === null) {
+      row.status = t('status_invalid');
+      return;
+    }
     row.status = t('status_checking');
 
     const key = `${row.date}|${row.startVerseId}|${row.endVerseId}`;
@@ -189,7 +192,7 @@ async function createImportedRows() {
     pendingKeys.add(key);
     row.status = t('status_importing');
     await logEntriesStore.createLogEntry({
-      date: row.date as string,
+      date: row.date,
       startVerseId: row.startVerseId as number,
       endVerseId: row.endVerseId as number,
     });
