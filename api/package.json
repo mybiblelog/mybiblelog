@@ -19,6 +19,7 @@
     "clean": "rm -rf node_modules dist",
     "script:seed": "ts-node ./scripts/seed.ts",
     "script:backup": "ts-node ./scripts/backup.ts",
+    "script:restore": "ts-node ./scripts/restore.ts",
     "script:delete-test-users": "ts-node ./scripts/delete-test-users.ts",
     "script:delete-stranded-data": "ts-node ./scripts/delete-stranded-data.ts",
     "script:migrate": "ts-node ./scripts/migrate.ts"

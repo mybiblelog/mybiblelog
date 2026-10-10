@@ -39,6 +39,7 @@
     "test:e2e:ui": "playwright test --ui",
     "script:seed": "npm run -w api script:seed",
     "script:backup": "npm run -w api script:backup",
+    "script:restore": "npm run -w api script:restore",
     "script:delete-test-users": "npm run -w api script:delete-test-users",
     "script:delete-stranded-data": "npm run -w api script:delete-stranded-data",
     "script:migrate": "npm run -w api script:migrate",
