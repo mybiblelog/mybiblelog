@@ -323,6 +323,7 @@ export const pt = {
   about_privacy_policy: "Política de Privacidade",
   about_terms: "Termos e Condições",
   about_website: "Visitar site",
+  about_rate_app: "Avaliar no Google Play",
   about_open_link_failed: "Não foi possível abrir o link.",
 
   // Account deletion

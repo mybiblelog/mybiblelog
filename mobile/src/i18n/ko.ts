@@ -317,6 +317,7 @@ export const ko = {
   about_privacy_policy: "개인정보 처리방침",
   about_terms: "이용약관",
   about_website: "웹사이트 방문",
+  about_rate_app: "Google Play에서 평가하기",
   about_open_link_failed: "링크를 열 수 없습니다.",
 
   // Account deletion
