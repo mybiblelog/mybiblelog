@@ -28,6 +28,12 @@
     "plugins": [
       "expo-router",
       "@react-native-community/datetimepicker",
+      ["expo-build-properties", {
+        "android": {
+          "enableMinifyInReleaseBuilds": true,
+          "enableShrinkResourcesInReleaseBuilds": true
+        }
+      }],
       [
         "expo-splash-screen",
         {
