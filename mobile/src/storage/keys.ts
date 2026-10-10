@@ -20,6 +20,7 @@ import type { ForceUpgradeCache } from "@/src/upgrade/UpgradeGate";
 import type { StoredLogEntry, PendingLogEntryMutation } from "@/src/storage/logEntries";
 import type { StoredLocalNote, PendingNoteMutation } from "@/src/storage/passageNotes";
 import type { AuthSession } from "@/src/auth/authStorage";
+import type { ReviewPromptState } from "@/src/review/reviewPrompt";
 import { createTypedStorage, defineKey } from "./typedStorage";
 import type { StorageHooks } from "./typedStorage";
 import { reportStorageFailure, reportStorageOk } from "./health";
@@ -53,6 +54,7 @@ export const appStorage = createTypedStorage(
     logEntryMutations: defineKey<PendingLogEntryMutation[]>("logEntries.mutations.v1"),
     passageNotes: defineKey<StoredLocalNote[]>("passageNotes.local.v1"),
     passageNoteMutations: defineKey<PendingNoteMutation[]>("passageNotes.mutations.v1"),
+    reviewPrompt: defineKey<ReviewPromptState>("reviewPrompt.v1"),
   },
   healthHooks
 );

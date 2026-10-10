@@ -2,7 +2,7 @@ import * as Application from "expo-application";
 import Constants from "expo-constants";
 import { router } from "expo-router";
 import { Fragment } from "react";
-import { Linking, ScrollView, StyleSheet, View } from "react-native";
+import { Linking, Platform, ScrollView, StyleSheet, View } from "react-native";
 import { spacing, useTheme } from "@/src/design";
 import {
   Button,
@@ -17,7 +17,13 @@ import {
 import { useT } from "@/src/i18n/LocaleProvider";
 import { resetOnboardingForTesting } from "@/src/stores/onboarding";
 import { useToast } from "@/src/toast/ToastProvider";
-import { PRIVACY_POLICY_URL, TERMS_URL, WEBSITE_BASE_URL } from "@/src/constants/links";
+import {
+  PLAY_STORE_URL,
+  PRIVACY_POLICY_URL,
+  TERMS_URL,
+  WEBSITE_BASE_URL,
+} from "@/src/constants/links";
+import { markRatedViaStore } from "@/src/review/reviewPrompt";
 
 export default function AboutSettings() {
   const t = useT();
@@ -39,11 +45,26 @@ export default function AboutSettings() {
     }
   }
 
-  const links: { icon: IconName; label: string; url: string }[] = [
+  const links: { icon: IconName; label: string; url: string; testID?: string }[] = [
     { icon: "shield-checkmark-outline", label: t("about_privacy_policy"), url: PRIVACY_POLICY_URL },
     { icon: "document-text-outline", label: t("about_terms"), url: TERMS_URL },
     { icon: "globe-outline", label: t("about_website"), url: WEBSITE_BASE_URL },
   ];
+  if (Platform.OS === "android") {
+    links.push({
+      icon: "star-outline",
+      label: t("about_rate_app"),
+      url: PLAY_STORE_URL,
+      testID: "about.rate",
+    });
+  }
+
+  function onLinkPress(url: string) {
+    void openUrl(url);
+    // Opening the listing is the only rating signal we get; stop automatic
+    // in-app review requests (see `src/review/reviewPrompt.ts`).
+    if (url === PLAY_STORE_URL) void markRatedViaStore();
+  }
 
   return (
     <Screen>
@@ -75,7 +96,8 @@ export default function AboutSettings() {
                 leadingIcon={link.icon}
                 trailing={<Icon name="open-outline" size={16} color="mutedText" />}
                 variant="plain"
-                onPress={() => void openUrl(link.url)}
+                testID={link.testID}
+                onPress={() => onLinkPress(link.url)}
               />
             </Fragment>
           ))}

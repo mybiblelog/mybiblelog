@@ -11,3 +11,5 @@ export const WEBSITE_BASE_URL = "https://www.mybiblelog.com";
 
 export const PRIVACY_POLICY_URL = `${WEBSITE_BASE_URL}/policy/privacy`;
 export const TERMS_URL = `${WEBSITE_BASE_URL}/policy/terms`;
+
+export const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.mybiblelog.app";

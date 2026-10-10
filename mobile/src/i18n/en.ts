@@ -350,6 +350,7 @@ export const en = {
   about_privacy_policy: "Privacy Policy",
   about_terms: "Terms and Conditions",
   about_website: "Visit website",
+  about_rate_app: "Rate on Google Play",
   about_open_link_failed: "Unable to open link.",
 
   // Account deletion

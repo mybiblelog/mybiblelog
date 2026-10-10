@@ -324,6 +324,7 @@ export const uk = {
   about_privacy_policy: "Політика конфіденційності",
   about_terms: "Умови та положення",
   about_website: "Відвідати вебсайт",
+  about_rate_app: "Оцінити в Google Play",
   about_open_link_failed: "Не вдалося відкрити посилання.",
 
   // Account deletion
