@@ -50,8 +50,15 @@ API_PORT=8080
 # Nuxt proxies /api/* requests here
 API_BASE_URL=http://localhost:8080
 
+# Database backend: mongo (default) or sqlite (see "Running without MongoDB")
+DATABASE_DRIVER=mongo
+
 # Connection URL for MongoDB (example matches docker-compose.yml file)
+# Required only when DATABASE_DRIVER=mongo
 MONGODB_URI=mongodb://root:examplepassword@localhost:27017
+
+# SQLite database file when DATABASE_DRIVER=sqlite (defaults to :memory:)
+SQLITE_PATH=.data/dev.sqlite
 
 # JSON Web Token secret
 JWT_SECRET=xxxxxxxxxx
@@ -154,6 +161,30 @@ npx vitest run ./test/auth.test.ts
 ```
 
 For the full end-to-end test setup (required `.env` vars, running against a deployed app, the parity contract), see [`e2e/README.md`](../e2e/README.md).
+
+### Running without MongoDB (SQLite)
+
+The repository layer has a second implementation on SQLite (`api/repositories/sqlite/`, using Node's built-in `node:sqlite` through Drizzle ORM), selected with `DATABASE_DRIVER=sqlite`. It exists so the API and its tests can run where no database server is available, such as a cloud sandbox, and as groundwork for Cloudflare D1. MongoDB remains the production backend.
+
+```bash
+# Repository tests against an in-memory SQLite database (no .env or server needed)
+$ npm run -w api test:repositories:sqlite
+```
+
+To run the API test suite on SQLite, start the dev API server and the tests with the same database settings. The test process also opens the database directly (for example to promote a test user to admin), so the two processes share a file rather than `:memory:`:
+
+```bash
+# In .env (other required vars can be placeholders; emails are never sent outside production)
+DATABASE_DRIVER=sqlite
+SQLITE_PATH=.data/dev.sqlite   # relative to the api/ working directory; gitignored
+TEST_BYPASS_SECRET=xxxxxxxxxx
+TEST_API_URL=http://localhost:8080
+
+$ npm run dev:api     # terminal 1
+$ npm run test:api    # terminal 2
+```
+
+The schema lives in `api/sqlite/schema.ts`. After changing it, run `npm run -w api db:generate` to add a migration under `api/sqlite/migrations/`; migrations are applied automatically when the database is opened. The full-text index is a hand-written migration because Drizzle can't model FTS5 tables.
 
 ## Custom Scripts
 

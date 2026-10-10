@@ -25,7 +25,14 @@ const envSchema = z.object({
   EMAIL_SENDING_DOMAIN: z.string(),
   EMAIL_UNSUBSCRIBE_ADDRESS: z.email(),
   RESEND_API_KEY: z.string(),
-  MONGODB_URI: z.string(),
+  // Which repository implementation backs the API. `sqlite` needs no external
+  // database, so the API (and its tests) can run in a bare sandbox.
+  DATABASE_DRIVER: z.enum(['mongo', 'sqlite']).default('mongo'),
+  // Required only for the mongo driver (see superRefine below).
+  MONGODB_URI: z.string().optional(),
+  // A file path, or ':memory:' for a throwaway database. Processes that must
+  // share data (a dev server and the API test runner) need a file.
+  SQLITE_PATH: z.string().default(':memory:'),
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
   GOOGLE_REDIRECT: z.string(),
@@ -40,6 +47,10 @@ const envSchema = z.object({
   MOBILE_IOS_STORE_URL: z.string().optional(),
   MOBILE_ANDROID_STORE_URL: z.string().optional(),
   HELLOAO_API_BASE_URL: z.string().url().default('https://bible.helloao.org/api'),
+}).superRefine((env, ctx) => {
+  if (env.DATABASE_DRIVER === 'mongo' && !env.MONGODB_URI) {
+    ctx.addIssue({ code: 'custom', path: ['MONGODB_URI'], message: 'MONGODB_URI is required when DATABASE_DRIVER is mongo' });
+  }
 });
 
 const initConfig = () => {
@@ -60,7 +71,11 @@ const initConfig = () => {
     emailSendingDomain: result.data.EMAIL_SENDING_DOMAIN,
     emailUnsubscribeAddress: result.data.EMAIL_UNSUBSCRIBE_ADDRESS,
     resendApiKey: result.data.RESEND_API_KEY,
-    mongo: { uri: result.data.MONGODB_URI },
+    database: {
+      driver: result.data.DATABASE_DRIVER,
+      sqlitePath: result.data.SQLITE_PATH,
+    },
+    mongo: { uri: result.data.MONGODB_URI ?? '' },
     google: {
       clientId: result.data.GOOGLE_CLIENT_ID,
       clientSecret: result.data.GOOGLE_CLIENT_SECRET,

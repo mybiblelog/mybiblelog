@@ -4,6 +4,7 @@ import type { Collections } from '../mongo/useCollections';
 import type { DailyReminderDocument } from '../mongo/documents';
 import { getNextOccurrence } from './helpers/reminder-schedule';
 import { DailyReminderPatch, DailyReminderRecord } from './helpers/types';
+import { assertValidReminderSchedule } from './helpers/validators';
 
 /**
  * Recomputes a reminder's nextOccurrence from its schedule. The old schema
@@ -15,19 +16,6 @@ const recomputeNextOccurrence = (reminder: DailyReminderDocument): void => {
     minute: reminder.minute,
     timezoneOffset: reminder.timezoneOffset,
   }).getTime();
-};
-
-/** Replaces the DailyReminder schema min/max validators on hour/minute/offset. */
-const assertValidSchedule = (reminder: Pick<DailyReminderDocument, 'hour' | 'minute' | 'timezoneOffset'>): void => {
-  if (reminder.hour < 0 || reminder.hour > 23) {
-    throw new Error('hour must be between 0 and 23');
-  }
-  if (reminder.minute < 0 || reminder.minute > 59) {
-    throw new Error('minute must be between 0 and 59');
-  }
-  if (reminder.timezoneOffset < -12 * 60 || reminder.timezoneOffset > 14 * 60) {
-    throw new Error('timezoneOffset is out of range');
-  }
 };
 
 const toDailyReminderRecord = (reminder: DailyReminderDocument): DailyReminderRecord => {
@@ -118,7 +106,7 @@ export const createDailyReminderRepository = ({ dailyReminders }: Collections) =
         reminder.emailsSentSinceLastEngagement = 0;
       }
 
-      assertValidSchedule(reminder);
+      assertValidReminderSchedule(reminder);
       recomputeNextOccurrence(reminder);
       await persist(reminder);
       return toDailyReminderRecord(reminder);

@@ -1,23 +1,8 @@
 import { ObjectId } from 'mongodb';
-import dayjs from 'dayjs';
-import { Bible } from '@mybiblelog/shared';
 import type { Collections } from '../mongo/useCollections';
 import type { LogEntryDocument } from '../mongo/documents';
 import { LogEntryInput, LogEntryRecord } from './helpers/types';
-
-/** Replaces the LogEntry `date` schema validator. */
-const assertValidDate = (date: string): void => {
-  if (!dayjs(date, 'YYYY-MM-DD', true).isValid()) {
-    throw new Error(`${date} is not a valid date string`);
-  }
-};
-
-/** Replaces the LogEntry pre-validate hook and verse-existence validators. */
-const assertValidRange = (startVerseId: number, endVerseId: number): void => {
-  if (!Bible.validateRange(startVerseId, endVerseId)) {
-    throw new Error('Invalid Verse Range');
-  }
-};
+import { assertValidLogEntryDate, assertValidLogEntryRange } from './helpers/validators';
 
 const toLogEntryRecord = (doc: LogEntryDocument): LogEntryRecord => {
   return {
@@ -63,8 +48,8 @@ export const createLogEntryRepository = ({ logEntries }: Collections) => {
     },
 
     async create(ownerId: string, input: LogEntryInput): Promise<LogEntryRecord> {
-      assertValidDate(input.date);
-      assertValidRange(input.startVerseId, input.endVerseId);
+      assertValidLogEntryDate(input.date);
+      assertValidLogEntryRange(input.startVerseId, input.endVerseId);
       const now = new Date();
       const doc: LogEntryDocument = {
         _id: new ObjectId(),
@@ -85,11 +70,11 @@ export const createLogEntryRepository = ({ logEntries }: Collections) => {
         return null;
       }
 
-      if (patch.date) { assertValidDate(patch.date); doc.date = patch.date; }
+      if (patch.date) { assertValidLogEntryDate(patch.date); doc.date = patch.date; }
       if (patch.startVerseId) { doc.startVerseId = patch.startVerseId; }
       if (patch.endVerseId) { doc.endVerseId = patch.endVerseId; }
 
-      assertValidRange(doc.startVerseId, doc.endVerseId);
+      assertValidLogEntryRange(doc.startVerseId, doc.endVerseId);
       doc.updatedAt = new Date();
       await logEntries.updateOne(
         { _id: doc._id },

@@ -1,41 +1,15 @@
 import { ObjectId } from 'mongodb';
 import type { Collections } from '../mongo/useCollections';
 import type { PassageNoteTagDocument } from '../mongo/documents';
-import { ApiErrorDetailCode } from '../http/errors/error-codes';
-import { ValidationError } from '../http/errors/validation-errors';
 import { isValidObjectId } from './helpers/ids';
 import { isDuplicateKeyError } from './helpers/duplicate-key-error';
 import { PassageNoteTagInput, PassageNoteTagRecord } from './helpers/types';
-
-const HEX_COLOR_PATTERN = /^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/;
-const LABEL_MAX_LENGTH = 32;
-const DESCRIPTION_MAX_LENGTH = 1500;
-
-/**
- * Validates and normalizes tag fields. Replaces the field-level validators
- * (required, trim, length, hex color) that lived on the Mongoose schema.
- */
-const normalizeLabel = (label: string): string => {
-  const trimmed = label.trim();
-  if (trimmed.length < 1 || trimmed.length > LABEL_MAX_LENGTH) {
-    throw new Error('Invalid tag label');
-  }
-  return trimmed;
-};
-
-const validateColor = (color: string): void => {
-  if (!HEX_COLOR_PATTERN.test(color)) {
-    throw new Error(`${color} is not a valid hexadecimal color`);
-  }
-};
-
-const normalizeDescription = (description: string): string => {
-  const trimmed = description.trim();
-  if (trimmed.length > DESCRIPTION_MAX_LENGTH) {
-    throw new Error('Tag description is too long');
-  }
-  return trimmed;
-};
+import {
+  normalizeTagDescription,
+  normalizeTagLabel,
+  tagLabelInUseError,
+  validateTagColor,
+} from './helpers/validators';
 
 const toPassageNoteTagRecord = (doc: PassageNoteTagDocument): PassageNoteTagRecord => {
   return {
@@ -51,9 +25,6 @@ const toPassageNoteTagRecord = (doc: PassageNoteTagDocument): PassageNoteTagReco
   };
 };
 
-const labelInUseError = () =>
-  new ValidationError([{ field: 'label', code: ApiErrorDetailCode.Unique }]);
-
 export const createPassageNoteTagRepository = ({ passageNoteTags }: Collections) => {
   return {
     async listByOwner(ownerId: string): Promise<PassageNoteTagRecord[]> {
@@ -68,15 +39,15 @@ export const createPassageNoteTagRepository = ({ passageNoteTags }: Collections)
 
     async create(ownerId: string, input: PassageNoteTagInput): Promise<PassageNoteTagRecord> {
       const owner = new ObjectId(ownerId);
-      const label = normalizeLabel(input.label ?? '');
-      validateColor(input.color ?? '');
-      const description = normalizeDescription(input.description ?? '');
+      const label = normalizeTagLabel(input.label ?? '');
+      validateTagColor(input.color ?? '');
+      const description = normalizeTagDescription(input.description ?? '');
 
       // Enforce the per-user label uniqueness manually (the unique index
       // remains as a backstop against the read-then-write race below).
       const existing = await passageNoteTags.countDocuments({ owner, label });
       if (existing > 0) {
-        throw labelInUseError();
+        throw tagLabelInUseError();
       }
 
       const now = new Date();
@@ -94,7 +65,7 @@ export const createPassageNoteTagRepository = ({ passageNoteTags }: Collections)
       }
       catch (error) {
         if (isDuplicateKeyError(error)) {
-          throw labelInUseError();
+          throw tagLabelInUseError();
         }
         throw error;
       }
@@ -109,18 +80,18 @@ export const createPassageNoteTagRepository = ({ passageNoteTags }: Collections)
       }
 
       if (patch.label) {
-        const label = normalizeLabel(patch.label);
+        const label = normalizeTagLabel(patch.label);
         // Reject a rename that would collide with another tag owned by this user.
         if (label !== doc.label) {
           const conflict = await passageNoteTags.countDocuments({ owner, label, _id: { $ne: doc._id } });
           if (conflict > 0) {
-            throw labelInUseError();
+            throw tagLabelInUseError();
           }
         }
         doc.label = label;
       }
-      if (patch.color) { validateColor(patch.color); doc.color = patch.color; }
-      if (patch.description) { doc.description = normalizeDescription(patch.description); }
+      if (patch.color) { validateTagColor(patch.color); doc.color = patch.color; }
+      if (patch.description) { doc.description = normalizeTagDescription(patch.description); }
 
       doc.updatedAt = new Date();
       try {
@@ -131,7 +102,7 @@ export const createPassageNoteTagRepository = ({ passageNoteTags }: Collections)
       }
       catch (error) {
         if (isDuplicateKeyError(error)) {
-          throw labelInUseError();
+          throw tagLabelInUseError();
         }
         throw error;
       }

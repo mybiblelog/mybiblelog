@@ -111,3 +111,6 @@ web/i18n/locales/crowdin/
 
 # Mobile screenshots for store listing
 mobile/screenshots
+
+# Local SQLite databases (DATABASE_DRIVER=sqlite)
+api/.data/

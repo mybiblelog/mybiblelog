@@ -2,8 +2,7 @@ import { ObjectId, type Filter } from 'mongodb';
 import type { Collections } from '../mongo/useCollections';
 import type { EmailDocument } from '../mongo/documents';
 import { EmailCreateInput, EmailRecord, EmailStatus } from './helpers/types';
-
-const EMAIL_STATUSES: EmailStatus[] = ['pending', 'sent', 'failed', 'log_only'];
+import { validateEmail } from './helpers/validators';
 
 /** Escapes a string so it can be used as a literal inside a RegExp. */
 const escapeRegExp = (value: string): string => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -33,15 +32,7 @@ export const createEmailRepository = ({ emails }: Collections) => {
      * await this — it records the outcome as a side effect of delivery.
      */
     async create(input: EmailCreateInput): Promise<EmailRecord> {
-      // An email must carry a body in at least one format (replaces the
-      // Email pre-validate hook).
-      if (!input.text && !input.html) {
-        throw new Error('Text or HTML required');
-      }
-      // Replaces the Email `status` enum schema validator.
-      if (!EMAIL_STATUSES.includes(input.status)) {
-        throw new Error(`${input.status} is not a valid email status`);
-      }
+      validateEmail(input);
       const now = new Date();
       const doc: EmailDocument = {
         _id: new ObjectId(),

@@ -3,19 +3,7 @@ import type { Collections } from '../mongo/useCollections';
 import type { FeedbackDocument } from '../mongo/documents';
 import { NotFoundError } from '../http/errors/http-errors';
 import { FeedbackCreateInput, FeedbackPatch, FeedbackRecord, FeedbackStatus } from './helpers/types';
-
-const FEEDBACK_KINDS = ['bug', 'feature', 'comment'];
-const MESSAGE_MAX_LENGTH = 1500; // an average double-spaced page
-
-/** Replaces the Feedback `kind` enum and `message` length schema validators. */
-const validateFeedback = (input: FeedbackCreateInput): void => {
-  if (!FEEDBACK_KINDS.includes(input.kind)) {
-    throw new Error(`${input.kind} is not a valid feedback kind`);
-  }
-  if (input.message.length > MESSAGE_MAX_LENGTH) {
-    throw new Error('Feedback message is too long');
-  }
-};
+import { validateFeedback } from './helpers/validators';
 
 const toFeedbackRecord = (doc: FeedbackDocument): FeedbackRecord => {
   return {

@@ -9,30 +9,7 @@ import {
   PassageNoteSearchResultItem,
   PassageRecord,
 } from './helpers/types';
-
-const CONTENT_MAX_LENGTH = 3000; // an average single-spaced page
-
-/**
- * Validates a passage note's final state. Replaces the two PassageNote
- * pre-validate hooks (per-passage verse range, and content-or-passages
- * required) plus the content max-length validator.
- */
-const assertValidPassageNote = (
-  passages: { startVerseId: number; endVerseId: number }[],
-  content: string,
-): void => {
-  for (const passage of passages) {
-    if (!Bible.validateRange(passage.startVerseId, passage.endVerseId)) {
-      throw new Error('Invalid Verse Range');
-    }
-  }
-  if (content.length > CONTENT_MAX_LENGTH) {
-    throw new Error('Content is too long');
-  }
-  if (!content.length && !passages.length) {
-    throw new Error('One of `passages` or `content` required');
-  }
-};
+import { assertValidPassageNote } from './helpers/validators';
 
 /** Builds passage subdocuments, giving each its own ObjectId (as Mongoose did). */
 const toPassageSubdocuments = (passages: { startVerseId: number; endVerseId: number }[]): PassageSubdocument[] => {

@@ -5,7 +5,7 @@ import { NotFoundError } from '../../http/errors/http-errors';
 import type { UserCreateInput, UserRecord } from '../../repositories/helpers/types';
 import {
   getRepos,
-  getCollections,
+  getStoredPasswordHash,
   ensureIndexes,
   clearCollections,
   uniqueEmail,
@@ -97,14 +97,12 @@ describe('user.repository', () => {
 
   describe('password hashing (pre-save hook)', () => {
     it('stores a bcrypt hash rather than the plaintext password', async () => {
-      const { users } = await getCollections();
-
       const user = await createUser();
 
-      const doc = await users.findOne({ _id: new ObjectId(user.id) });
-      expect(doc?.password).toBeTruthy();
-      expect(doc?.password).not.toBe('password123');
-      expect(doc?.password?.startsWith('$2')).toBe(true);
+      const password = await getStoredPasswordHash(user.id);
+      expect(password).toBeTruthy();
+      expect(password).not.toBe('password123');
+      expect(password?.startsWith('$2')).toBe(true);
     });
 
     it('verifyPassword matches the correct password and rejects a wrong one', async () => {
@@ -307,15 +305,14 @@ describe('user.repository', () => {
   describe('updateSettings', () => {
     it('applies a partial patch without touching the password (no pre-save re-hash)', async () => {
       const { users } = await getRepos();
-      const { users: usersCollection } = await getCollections();
       const created = await createUser();
-      const hashBefore = (await usersCollection.findOne({ _id: new ObjectId(created.id) }))?.password;
+      const hashBefore = await getStoredPasswordHash(created.id);
 
       const settings = await users.updateSettings(created.id, { dailyVerseCountGoal: 100 });
 
       expect(settings.dailyVerseCountGoal).toBe(100);
       expect(settings.locale).toBe('en'); // untouched fields preserved
-      const hashAfter = (await usersCollection.findOne({ _id: new ObjectId(created.id) }))?.password;
+      const hashAfter = await getStoredPasswordHash(created.id);
       expect(hashAfter).toBe(hashBefore);
     });
 

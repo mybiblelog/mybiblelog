@@ -22,6 +22,17 @@ export const hashPassword = (plain: string): Promise<string> => {
   return bcrypt.hash(plain, SALT_WORK_FACTOR);
 };
 
+// A precomputed bcrypt hash used as a constant-time stand-in when an account
+// (or its local password) is absent. Comparing every credential check against a
+// real hash keeps the work — and therefore the response time — identical
+// whether or not the email exists, defeating timing-based user enumeration.
+export const DUMMY_PASSWORD_HASH = bcrypt.hashSync('mybiblelog-timing-safe-dummy-password', 10);
+
+// Wraps bcrypt.compare in a boolean promise, treating any comparison error as a
+// non-match rather than surfacing it.
+export const comparePassword = (plain: string, hash: string): Promise<boolean> =>
+  bcrypt.compare(plain, hash).then((isMatch) => isMatch, () => false);
+
 // JWT lifetime; the auth cookie max age (authCurrentUser.ts) is derived from
 // this so the cookie and the token it carries expire together.
 export const AUTH_TOKEN_TTL_DAYS = 30;

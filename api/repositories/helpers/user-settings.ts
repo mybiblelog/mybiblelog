@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { defaultLocaleBibleVersions } from '@mybiblelog/shared';
 import { UserSettingsDocument } from '../../mongo/documents';
+import { UserSettingsRecord } from './types';
 
 /**
  * Builds a user's default settings document. Replaces the per-field `default`
@@ -18,3 +19,24 @@ export const buildDefaultUserSettings = (locale?: string): UserSettingsDocument 
     locale: resolvedLocale,
   };
 };
+
+export const USER_SETTINGS_KEYS: (keyof UserSettingsRecord)[] = [
+  'dailyVerseCountGoal',
+  'lookBackDate',
+  'preferredBibleVersion',
+  'startPage',
+  'passageNoteTagSortOrder',
+  'locale',
+];
+
+export const toUserSettingsRecord = (settings: UserSettingsDocument): UserSettingsRecord => {
+  return {
+    dailyVerseCountGoal: settings.dailyVerseCountGoal,
+    lookBackDate: settings.lookBackDate,
+    preferredBibleVersion: settings.preferredBibleVersion,
+    startPage: settings.startPage,
+    passageNoteTagSortOrder: settings.passageNoteTagSortOrder,
+    locale: settings.locale,
+  };
+};
+

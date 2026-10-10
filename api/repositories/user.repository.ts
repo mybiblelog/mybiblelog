@@ -1,14 +1,14 @@
-import bcrypt from 'bcrypt';
 import { ObjectId } from 'mongodb';
 import type { Collections } from '../mongo/useCollections';
-import type { UserDocument, UserSettingsDocument } from '../mongo/documents';
+import type { UserDocument } from '../mongo/documents';
 import { ApiErrorDetailCode } from '../http/errors/error-codes';
 import { NotFoundError } from '../http/errors/http-errors';
 import { ValidationError } from '../http/errors/validation-errors';
 import { ALLOWED_PLATFORMS, type Platform } from '../http/helpers/platform';
 import { isDuplicateKeyError } from './helpers/duplicate-key-error';
-import { hashPassword } from './helpers/user-auth';
-import { buildDefaultUserSettings } from './helpers/user-settings';
+import { DUMMY_PASSWORD_HASH, comparePassword, hashPassword } from './helpers/user-auth';
+import { USER_SETTINGS_KEYS, buildDefaultUserSettings, toUserSettingsRecord } from './helpers/user-settings';
+import { emailInUseError } from './helpers/validators';
 import { CODE_TTL_MS, generateVerificationCode } from './helpers/verification-codes';
 import {
   AdminUserListItem,
@@ -17,26 +17,6 @@ import {
   UserRecord,
   UserSettingsRecord,
 } from './helpers/types';
-
-const USER_SETTINGS_KEYS: (keyof UserSettingsRecord)[] = [
-  'dailyVerseCountGoal',
-  'lookBackDate',
-  'preferredBibleVersion',
-  'startPage',
-  'passageNoteTagSortOrder',
-  'locale',
-];
-
-const toUserSettingsRecord = (settings: UserSettingsDocument): UserSettingsRecord => {
-  return {
-    dailyVerseCountGoal: settings.dailyVerseCountGoal,
-    lookBackDate: settings.lookBackDate,
-    preferredBibleVersion: settings.preferredBibleVersion,
-    startPage: settings.startPage,
-    passageNoteTagSortOrder: settings.passageNoteTagSortOrder,
-    locale: settings.locale,
-  };
-};
 
 const toUserRecord = (user: UserDocument): UserRecord => {
   return {
@@ -72,20 +52,6 @@ const toUserRecord = (user: UserDocument): UserRecord => {
     updatedAt: user.updatedAt,
   };
 };
-
-// A precomputed bcrypt hash used as a constant-time stand-in when an account
-// (or its local password) is absent. Comparing every credential check against a
-// real hash keeps the work — and therefore the response time — identical
-// whether or not the email exists, defeating timing-based user enumeration.
-const DUMMY_PASSWORD_HASH = bcrypt.hashSync('mybiblelog-timing-safe-dummy-password', 10);
-
-// Wraps bcrypt.compare in a boolean promise, treating any comparison error as a
-// non-match rather than surfacing it.
-const comparePassword = (plain: string, hash: string): Promise<boolean> =>
-  bcrypt.compare(plain, hash).then((isMatch) => isMatch, () => false);
-
-const emailInUseError = () =>
-  new ValidationError([{ code: ApiErrorDetailCode.EmailInUse, field: 'email' }]);
 
 export const createUserRepository = ({ users }: Collections) => {
   const requireDocById = async (id: string): Promise<UserDocument> => {
