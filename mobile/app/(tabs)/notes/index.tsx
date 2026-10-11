@@ -177,7 +177,9 @@ export default function Notes() {
         ItemSeparatorComponent={Separator}
         onEndReachedThreshold={0.4}
         onEndReached={() => void notesActions.loadMore()}
-        ListFooterComponent={isFetchingMore ? <Spinner size="large" style={styles.footerSpinner} /> : null}
+        ListFooterComponent={
+          isFetchingMore ? <Spinner size="large" style={styles.footerSpinner} /> : null
+        }
         ListEmptyComponent={
           <EmptyState
             icon="document-text-outline"

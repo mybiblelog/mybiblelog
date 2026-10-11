@@ -73,7 +73,9 @@ export function DailyVersesChart({ entries }: { entries: InsightsLogEntry[] }) {
         width="100%"
         height={220}
         viewBox={`0 0 ${width} ${height}`}
-        accessibilityLabel={t(averageWindow > 1 ? "insights_trend_chart_label_avg" : "insights_trend_chart_label")}
+        accessibilityLabel={t(
+          averageWindow > 1 ? "insights_trend_chart_label_avg" : "insights_trend_chart_label"
+        )}
       >
         {/* Ticks are a fixed positional ladder, so they key by index: their
             values are whole verse counts and repeat once the max is small. */}
