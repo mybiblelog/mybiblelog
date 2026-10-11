@@ -1,5 +1,5 @@
 <template>
-  <div class="recency">
+  <div class="recency mbl-box">
     <div class="recency__controls">
       <div class="recency__control">
         <label class="mbl-label" for="recency-timeframe">{{ t('timeframe') }}</label>

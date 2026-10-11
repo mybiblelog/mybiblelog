@@ -1,5 +1,5 @@
 <template>
-  <div class="frequency">
+  <div class="frequency mbl-box">
     <div class="frequency__controls">
       <div class="frequency__control">
         <label class="mbl-label" for="freq-timeframe">{{ t('timeframe') }}</label>
