@@ -1,5 +1,5 @@
-import { Bible, displayTimeSince } from "@mybiblelog/shared";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Bible, displayTimeSince, linkifyText } from "@mybiblelog/shared";
+import { Linking, Pressable, StyleSheet, View } from "react-native";
 import type { PassageNote } from "@/src/api/notesApi";
 import { openPassageInBible } from "@/src/bible/openInBible";
 import { spacing } from "@/src/design";
@@ -84,7 +84,26 @@ export function NoteCard({ note, onPressMenu, testID }: Props) {
         />
       </View>
 
-      {note.content ? <Text variant="bodyRegular">{note.content}</Text> : null}
+      {note.content ? (
+        <Text variant="bodyRegular">
+          {linkifyText(note.content).map((segment, index) =>
+            segment.type === "link" ? (
+              <Text
+                key={index}
+                variant="bodyRegular"
+                color="primary"
+                accessibilityRole="link"
+                style={styles.link}
+                onPress={() => void Linking.openURL(segment.url).catch(() => undefined)}
+              >
+                {segment.text}
+              </Text>
+            ) : (
+              segment.text
+            )
+          )}
+        </Text>
+      ) : null}
 
       {noteTags.length > 0 ? (
         <View style={styles.pillRow}>
@@ -104,6 +123,9 @@ export function NoteCard({ note, onPressMenu, testID }: Props) {
 }
 
 const styles = StyleSheet.create({
+  link: {
+    textDecorationLine: "underline",
+  },
   header: {
     flexDirection: "row",
     alignItems: "flex-start",

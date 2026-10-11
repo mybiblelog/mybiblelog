@@ -13,7 +13,12 @@
       <span class="mbl-text-muted mbl-text-small" :title="noteCreatedAtDisplayTime">{{ timeSince(note.createdAt) }}</span>
     </div>
     <div class="passage-note--content" data-testid="passage-note-content">
-      {{ note.content }}
+      <template v-for="(segment, index) in contentSegments" :key="index">
+        <a v-if="segment.type === 'link'" :href="segment.url" target="_blank" rel="noopener noreferrer">{{ segment.text }}</a>
+        <!-- Single-line so no whitespace is inserted around the text (content is white-space: pre-line) -->
+        <!-- eslint-disable-next-line vue/singleline-html-element-content-newline -->
+        <template v-else>{{ segment.text }}</template>
+      </template>
     </div>
     <div class="passage-note--tags" data-testid="passage-note-tags">
       <passage-note-tag-pill v-for="tag in resolvedTags" :key="tag.id" :tag="tag" />
@@ -34,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { Bible, displayTimeSince } from '@mybiblelog/shared';
+import { Bible, displayTimeSince, linkifyText } from '@mybiblelog/shared';
 import PassageNoteTagPill from '~/components/notes/PassageNoteTagPill.vue';
 
 const props = defineProps<{
@@ -50,6 +55,8 @@ const props = defineProps<{
 }>();
 
 const { locale } = useI18n();
+
+const contentSegments = computed(() => linkifyText(props.note.content ?? ''));
 
 function displayRange(startVerseId: number, endVerseId: number) {
   return Bible.displayVerseRange(startVerseId, endVerseId, locale.value);
