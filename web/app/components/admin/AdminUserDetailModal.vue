@@ -63,6 +63,23 @@
           <dd>{{ stats.noteCount }}</dd>
         </div>
       </dl>
+      <div v-if="stats" class="admin-user-detail__platforms">
+        <p class="mbl-text-small mbl-text-muted">
+          {{ t('platforms') }}
+        </p>
+        <p v-if="!platformEntries.length" class="mbl-text-muted">
+          —
+        </p>
+        <ul v-else class="admin-user-detail__platform-list">
+          <li v-for="entry in platformEntries" :key="entry.platform">
+            <strong>{{ entry.platform }}</strong>
+            · {{ entry.appVersion || t('version_unknown') }}
+            <span class="admin-user-detail__days-ago">
+              {{ t('last_active', { when: daysAgo(entry.lastSeenAt) }) }}
+            </span>
+          </li>
+        </ul>
+      </div>
 
       <div v-if="user" class="admin-user-detail__actions mbl-button-group">
         <button class="mbl-button mbl-button--primary" type="button" :disabled="statsError" @click="signInAsUser">
@@ -101,6 +118,7 @@ interface UserStats {
   logEntryCount: number;
   lastNoteDate?: string;
   noteCount: number;
+  platforms?: Record<string, { firstSeenAt: string; lastSeenAt: string; appVersion: string | null }>;
 }
 
 const props = withDefaults(defineProps<{
@@ -131,6 +149,10 @@ const statsError = ref(false);
 // Bumped on every load/close so a stale response from a rapid reopen (or user switch)
 // can't overwrite state from a request that's since been superseded.
 let statsRequestId = 0;
+
+const platformEntries = computed(() => Object.entries(stats.value?.platforms ?? {})
+  .map(([platform, activity]) => ({ platform, ...activity }))
+  .sort((a, b) => b.lastSeenAt.localeCompare(a.lastSeenAt)));
 
 function daysAgo(dateStr: string) {
   return displayTimeSince(dateStr, locale.value);
@@ -237,6 +259,16 @@ watch(() => props.open, (isOpen) => {
   font-size: 0.875em;
 }
 
+.admin-user-detail__platforms {
+  margin-bottom: var(--mbl-space-lg);
+}
+
+.admin-user-detail__platform-list {
+  margin: var(--mbl-space-2xs) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
 .admin-user-detail__login-methods {
   display: flex;
   gap: var(--mbl-space-xs);
@@ -259,6 +291,9 @@ watch(() => props.open, (isOpen) => {
 {
   "en": {
     "title": "User Details",
+    "platforms": "Platforms",
+    "version_unknown": "unknown version",
+    "last_active": "last active {when}",
     "email": "Email",
     "login_methods": "Login Methods",
     "login_google": "Google",
@@ -283,6 +318,9 @@ watch(() => props.open, (isOpen) => {
   },
   "de": {
     "title": "Benutzerdetails",
+    "platforms": "Plattformen",
+    "version_unknown": "Version unbekannt",
+    "last_active": "zuletzt aktiv {when}",
     "email": "E-Mail",
     "login_methods": "Anmeldemethoden",
     "login_google": "Google",
@@ -307,6 +345,9 @@ watch(() => props.open, (isOpen) => {
   },
   "es": {
     "title": "Detalles del Usuario",
+    "platforms": "Plataformas",
+    "version_unknown": "versión desconocida",
+    "last_active": "última actividad {when}",
     "email": "Correo electrónico",
     "login_methods": "Métodos de Inicio de Sesión",
     "login_google": "Google",
@@ -331,6 +372,9 @@ watch(() => props.open, (isOpen) => {
   },
   "fr": {
     "title": "Détails de l'Utilisateur",
+    "platforms": "Plateformes",
+    "version_unknown": "version inconnue",
+    "last_active": "dernière activité {when}",
     "email": "E-mail",
     "login_methods": "Méthodes de Connexion",
     "login_google": "Google",
@@ -355,6 +399,9 @@ watch(() => props.open, (isOpen) => {
   },
   "ko": {
     "title": "사용자 상세",
+    "platforms": "플랫폼",
+    "version_unknown": "버전 알 수 없음",
+    "last_active": "마지막 활동 {when}",
     "email": "이메일",
     "login_methods": "로그인 방법",
     "login_google": "Google",
@@ -379,6 +426,9 @@ watch(() => props.open, (isOpen) => {
   },
   "pt": {
     "title": "Detalhes do Usuário",
+    "platforms": "Plataformas",
+    "version_unknown": "versão desconhecida",
+    "last_active": "última atividade {when}",
     "email": "E-mail",
     "login_methods": "Métodos de Login",
     "login_google": "Google",
@@ -403,6 +453,9 @@ watch(() => props.open, (isOpen) => {
   },
   "uk": {
     "title": "Деталі користувача",
+    "platforms": "Платформи",
+    "version_unknown": "версія невідома",
+    "last_active": "остання активність {when}",
     "email": "Електронна пошта",
     "login_methods": "Способи входу",
     "login_google": "Google",
