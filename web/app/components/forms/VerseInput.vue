@@ -3,6 +3,7 @@
     <div class="mbl-field mbl-field--addons verse-input__field">
       <div class="mbl-control mbl-control--expanded verse-input__input-control">
         <input
+          ref="inputRef"
           :value="localText"
           class="mbl-input verse-input__input"
           type="text"
@@ -162,6 +163,7 @@ const STEP_TO_TARGET: Record<'book' | 'chapter' | 'verse', SingleSelection> = {
   verse: SINGLE_SELECTION.VERSE,
 };
 
+const inputRef = ref<HTMLInputElement | null>(null);
 const localText = ref('');
 const isEditing = ref(false);
 const selectedTestament = ref<'old' | 'new'>('old');
@@ -280,6 +282,9 @@ function clear() {
   localText.value = '';
   isEditing.value = false;
   emit('update:modelValue', null);
+  // The clear button unmounts once the text is empty, so hand focus to the
+  // input to let the user type a new reference right away.
+  inputRef.value?.focus();
 }
 
 function onBlurNormalize() {
