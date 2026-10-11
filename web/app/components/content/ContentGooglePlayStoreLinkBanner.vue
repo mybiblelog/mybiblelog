@@ -1,5 +1,6 @@
 <template>
   <section class="play-store-banner">
+    <AppTile :size="88" />
     <p class="play-store-banner-title">
       {{ t('title') }}
     </p>

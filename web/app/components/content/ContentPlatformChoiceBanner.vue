@@ -19,6 +19,7 @@
         </NuxtLink>
       </div>
       <div class="platform-choice-card platform-choice-card--android">
+        <AppTile :size="72" />
         <h3 class="platform-choice-card-title">
           {{ androidTitle }}
         </h3>
