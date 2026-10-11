@@ -324,6 +324,23 @@ export const de = {
   settings_section_language_subtitle: "Wählen Sie Ihre Sprache",
   settings_section_about: "Über",
   settings_section_about_subtitle: "Version, Datenschutz und Bedingungen",
+  settings_section_feedback: "Feedback",
+  settings_section_feedback_subtitle: "Fehler melden und Ideen teilen",
+  feedback_title: "Feedback",
+  feedback_intro_1: "Verwenden Sie dieses Formular, um Feedback für My Bible Log einzureichen.",
+  feedback_intro_2: "Fehlerberichte, Funktionsanfragen und allgemeine Kommentare sind willkommen.",
+  feedback_email_label: "Ihre E-Mail",
+  feedback_kind_label: "Welche Art von Feedback reichen Sie ein?",
+  feedback_kind_bug: "Fehlerbericht",
+  feedback_kind_feature: "Funktionsanfrage",
+  feedback_kind_comment: "Allgemeiner Kommentar",
+  feedback_message_label: "Feedback-Details",
+  feedback_submit: "Feedback einreichen",
+  feedback_success: "Feedback erfolgreich übermittelt. Vielen Dank!",
+  feedback_message_required: "Bitte geben Sie Ihr Feedback ein.",
+  feedback_email_invalid: "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+  feedback_offline:
+    "Sie sind offline. Stellen Sie eine Internetverbindung her, um Feedback zu senden.",
 
   // About screen
   about_app_label: "App",
