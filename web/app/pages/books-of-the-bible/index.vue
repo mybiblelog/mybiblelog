@@ -24,29 +24,31 @@
         <h2>{{ t('testament_heading', { testament: group.label, books: booksText(group.books.length) }) }}</h2>
         <template v-for="section in group.sections" :key="section.name">
           <h3>{{ t(`section.${section.name}`) }}</h3>
-          <div class="mbl-table-wrap">
-            <table class="mbl-table mbl-table--striped">
-              <thead>
-                <tr>
-                  <th>{{ t('table.book') }}</th>
-                  <th>{{ t('table.chapters') }}</th>
-                  <th>{{ t('table.verses') }}</th>
-                  <th>{{ t('table.reading_time') }}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="book in section.books" :key="book.index">
-                  <td>
-                    <NuxtLink :to="book.path">
-                      {{ book.name }}
-                    </NuxtLink>
-                  </td>
-                  <td>{{ book.chapters }}</td>
-                  <td>{{ formatNumber(book.verses) }}</td>
-                  <td>{{ book.readingTime }}</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="mbl-box">
+            <div class="mbl-table-wrap">
+              <table class="mbl-table mbl-table--striped">
+                <thead>
+                  <tr>
+                    <th>{{ t('table.book') }}</th>
+                    <th>{{ t('table.chapters') }}</th>
+                    <th>{{ t('table.verses') }}</th>
+                    <th>{{ t('table.reading_time') }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="book in section.books" :key="book.index">
+                    <td>
+                      <NuxtLink :to="book.path">
+                        {{ book.name }}
+                      </NuxtLink>
+                    </td>
+                    <td>{{ book.chapters }}</td>
+                    <td>{{ formatNumber(book.verses) }}</td>
+                    <td>{{ book.readingTime }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </template>
         <content-app-callout

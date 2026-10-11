@@ -1,5 +1,5 @@
 <template>
-  <div ref="gridContainer" class="h3-grid-container">
+  <div ref="gridContainer" class="content-section-grid-container">
     <slot />
   </div>
 </template>
@@ -9,7 +9,7 @@ const gridContainer = ref<HTMLElement | null>(null);
 
 onMounted(() => {
   if (!gridContainer.value) { return; }
-  const hasExplicitTiles = gridContainer.value.querySelectorAll('.h3-grid-item').length > 0;
+  const hasExplicitTiles = gridContainer.value.querySelectorAll('.content-section-grid-item').length > 0;
   if (!hasExplicitTiles) {
     processAutomatic(gridContainer.value);
   }
@@ -46,7 +46,7 @@ function processAutomatic(container: HTMLElement) {
 
   h3Sections.forEach((section) => {
     const gridItem = document.createElement('div');
-    gridItem.className = 'h3-grid-item';
+    gridItem.className = 'content-section-grid-item mbl-box';
 
     const h3 = section.h3;
     const h3Text = h3.textContent || '';
@@ -89,7 +89,7 @@ function processAutomatic(container: HTMLElement) {
 </script>
 
 <style scoped>
-.h3-grid-container {
+.content-section-grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: var(--mbl-space-xl);
@@ -97,22 +97,13 @@ function processAutomatic(container: HTMLElement) {
 }
 
 @mixin mbl-mobile {
-  .h3-grid-container {
+  .content-section-grid-container {
     grid-template-columns: 1fr;
     gap: var(--mbl-space-md);
   }
 }
 
-:deep(.h3-grid-item) {
-  border: 2px solid;
-  border-image-slice: 1;
-  border-image-source: linear-gradient(to right, var(--primary-color) 0%, var(--secondary-color) 100%);
-  padding: var(--mbl-space-xl);
-  position: relative;
-  overflow: hidden;
-}
-
-:deep(.h3-grid-item h3) {
+:deep(.content-section-grid-item h3) {
   margin-top: 0;
   margin-bottom: var(--mbl-space-sm);
   font-size: 1.25rem;
@@ -120,7 +111,7 @@ function processAutomatic(container: HTMLElement) {
   color: var(--secondary-color);
 }
 
-:deep(.h3-grid-item .h3-gradient-text) {
+:deep(.content-section-grid-item .h3-gradient-text) {
   background: linear-gradient(to right, var(--primary-color) 0%, var(--secondary-color) 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -128,26 +119,26 @@ function processAutomatic(container: HTMLElement) {
   color: transparent;
 }
 
-:deep(.h3-grid-item p) {
+:deep(.content-section-grid-item p) {
   margin-bottom: var(--mbl-space-xs);
   color: var(--mbl-text-body);
   line-height: 1.6;
 }
 
-:deep(.h3-grid-item p:last-child) { margin-bottom: 0; }
+:deep(.content-section-grid-item p:last-child) { margin-bottom: 0; }
 
-:deep(.h3-grid-item ul),
-:deep(.h3-grid-item ol) {
+:deep(.content-section-grid-item ul),
+:deep(.content-section-grid-item ol) {
   margin: var(--mbl-space-xs) 0;
   padding-left: var(--mbl-space-xl);
   color: var(--mbl-text-body);
 }
 
-:deep(.h3-grid-item a) {
+:deep(.content-section-grid-item a) {
   color: var(--primary-color);
   text-decoration: none;
   font-weight: 500;
 }
 
-:deep(.h3-grid-item a:hover) { text-decoration: underline; }
+:deep(.content-section-grid-item a:hover) { text-decoration: underline; }
 </style>

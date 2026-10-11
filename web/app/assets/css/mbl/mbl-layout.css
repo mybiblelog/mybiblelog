@@ -18,7 +18,7 @@
   box-shadow: var(--mbl-shadow-card);
   color: var(--mbl-text-body);
   display: block;
-  padding: var(--mbl-space-lg);
+  padding: var(--mbl-box-padding);
 }
 
 a.mbl-box:hover,

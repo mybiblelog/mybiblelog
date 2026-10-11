@@ -1,6 +1,6 @@
 <template>
   <div class="engagement-charts">
-    <div v-for="group in groups" :key="group.key" class="engagement-chart">
+    <div v-for="group in groups" :key="group.key" class="engagement-chart mbl-box">
       <h2 class="engagement-chart__title">
         {{ t(group.titleKey) }}
       </h2>

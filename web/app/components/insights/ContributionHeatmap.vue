@@ -1,5 +1,5 @@
 <template>
-  <div class="heatmap">
+  <div class="heatmap mbl-box">
     <!-- Wide screens show the full year; narrow screens show only the most recent
          months (see recentWeeks) so the same strip layout fits without scrolling. -->
     <div

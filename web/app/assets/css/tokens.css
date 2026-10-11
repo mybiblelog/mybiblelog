@@ -99,6 +99,9 @@
   --mbl-page-gutter: var(--mbl-space-md);
   --mbl-page-top: clamp(1rem, 3vw, 2.5rem);
   --mbl-page-header-gap: clamp(1rem, 2.5vw, 1.5rem);
+  /* .mbl-box inset: 12px at 360px → 20px at 768px. Boxes hold tables and charts
+     that size to their inner width, so a phone shouldn't pay desktop padding. */
+  --mbl-box-padding: clamp(0.75rem, 0.31rem + 1.96vw, 1.25rem);
 
   /*
    * Fluid type scale. Same reasoning as the page spacing above: a 32px page
@@ -164,7 +167,7 @@
    * Viewport / html-body canvas — behind cards and chrome.
    * --mbl-bg is the primary *surface* (cards, nav); it may differ from the outer canvas (e.g. dark: #000 canvas vs #191919 surfaces).
    */
-  --mbl-app-canvas-bg: var(--neutral-0);
+  --mbl-app-canvas-bg: var(--neutral-50);
   --mbl-bg: var(--neutral-0);
   /* List tiles / cards: same as primary surface in light mode */
   --mbl-bg-elevated: var(--mbl-bg);

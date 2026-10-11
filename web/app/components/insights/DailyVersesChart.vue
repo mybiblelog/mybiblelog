@@ -1,5 +1,5 @@
 <template>
-  <div class="trend">
+  <div class="trend mbl-box">
     <div class="trend__controls">
       <label class="mbl-label" for="trend-window">{{ t('window') }}</label>
       <div class="mbl-select mbl-select--sm">
