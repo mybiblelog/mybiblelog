@@ -177,7 +177,7 @@ export default function Notes() {
         ItemSeparatorComponent={Separator}
         onEndReachedThreshold={0.4}
         onEndReached={() => void notesActions.loadMore()}
-        ListFooterComponent={isFetchingMore ? <Spinner style={styles.footerSpinner} /> : null}
+        ListFooterComponent={isFetchingMore ? <Spinner size="large" style={styles.footerSpinner} /> : null}
         ListEmptyComponent={
           <EmptyState
             icon="document-text-outline"
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
   listContent: { paddingBottom: spacing.listBottom },
   listContentEmpty: { flexGrow: 1 },
   separator: { height: spacing.sm },
-  footerSpinner: { marginVertical: spacing.sm },
+  footerSpinner: { alignItems: "center", paddingVertical: spacing.lg },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
