@@ -11,7 +11,7 @@
           </template>
           <template v-else>
             <engagement-chart :rows="engagementData" />
-            <div class="mbl-box">
+            <div class="mbl-box engagement-table-box">
               <div class="mbl-table-wrap">
                 <table class="mbl-table mbl-table--narrow mbl-table--striped engagement-table">
                   <thead>
@@ -39,7 +39,10 @@
                   </thead>
                   <tbody>
                     <tr v-for="(row, index) in engagementData" :key="index">
-                      <td>{{ formatShortDate(row.date) }}</td>
+                      <td>
+                        <span class="engagement-table__weekday">{{ formatWeekday(row.date) }}</span>
+                        {{ formatShortDate(row.date) }}
+                      </td>
                       <td class="engagement-table__num">
                         {{ row.newUserAccounts }}
                       </td>
@@ -93,6 +96,10 @@ const dialogStore = useDialogStore();
 const loading = ref(true);
 const engagementData = ref<EngagementRow[]>([]);
 
+function formatWeekday(date: string) {
+  return dayjs(date).locale(locale.value).format('ddd');
+}
+
 function formatShortDate(date: string) {
   return dayjs(date).locale(locale.value).format('MMM D');
 }
@@ -133,6 +140,18 @@ onMounted(async () => {
 
 .engagement-table tbody tr:nth-child(even) td:first-child {
   background: var(--mbl-bg-subtle);
+}
+
+.engagement-table-box {
+  margin-bottom: var(--mbl-fab-clearance);
+}
+
+.engagement-table__weekday {
+  color: var(--mbl-text-muted);
+  display: block;
+  font-size: 0.7em;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 .engagement-table__num {

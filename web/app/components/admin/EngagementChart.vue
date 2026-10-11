@@ -139,12 +139,15 @@ function formatShortDate(date: string) {
   return dayjs(date).locale(locale.value).format('MMM D');
 }
 
+// The API returns newest-first; charts read oldest → newest, left to right.
+const chronologicalRows = computed(() => [...props.rows].sort((a, b) => a.date.localeCompare(b.date)));
+
 const groups = computed(() => groupDefs.map((groupDef) => {
   const defs = seriesDefs.filter(def => groupDef.seriesKeys.includes(def.key));
   const geometry = buildMultiLineChartGeometry(
     defs.map(def => ({
       key: def.key,
-      points: props.rows.map(row => ({ date: row.date, count: seriesValue(row, def.key) })),
+      points: chronologicalRows.value.map(row => ({ date: row.date, count: seriesValue(row, def.key) })),
     })),
   );
   return {
@@ -237,7 +240,7 @@ const groups = computed(() => groupDefs.map((groupDef) => {
   "en": {
     "group_totals_title": "New & engaged users",
     "group_platforms_title": "New users by platform",
-    "series_new_users_total": "Total",
+    "series_new_users_total": "Total New",
     "series_new_users_web": "Web",
     "series_new_users_android": "Android",
     "series_new_users_ios": "iOS",
