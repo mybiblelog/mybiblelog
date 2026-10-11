@@ -314,14 +314,17 @@
 
   /* Message / notification intent surfaces */
   --mbl-message-info-border: #b8d7f5;
-  --mbl-message-info-bg: #f5faff;
+  /* Tints are strong enough to read against the off-white light canvas */
+  --mbl-message-info-bg: #ebf5ff;
   --mbl-message-info-fg: #1a5080;
   --mbl-message-info-accent: #7ab8e8;
+  --mbl-message-info-icon: #2b7fc0;
 
   --mbl-message-success-border: #a3d9b1;
-  --mbl-message-success-bg: #f0fff4;
+  --mbl-message-success-bg: #e9f9ee;
   --mbl-message-success-fg: #1a6634;
   --mbl-message-success-accent: #48c774;
+  --mbl-message-success-icon: #23874a;
 
   --mbl-notification-info-bg: var(--mbl-info);
   --mbl-notification-info-fg: var(--mbl-on-accent);
@@ -417,11 +420,13 @@
   --mbl-message-info-bg: #11202f;
   --mbl-message-info-fg: #c5e3ff;
   --mbl-message-info-accent: #5b8db8;
+  --mbl-message-info-icon: #6aaee8;
 
   --mbl-message-success-border: #1e4d30;
   --mbl-message-success-bg: #0d2118;
   --mbl-message-success-fg: #b8f5cc;
   --mbl-message-success-accent: #3a9e5c;
+  --mbl-message-success-icon: #4cc779;
   --mbl-scripture-words-of-jesus: #e08a73;
   --mbl-star-earned: #d08a2f;
   /* Visible on #191919 surfaces; was #2c2c2c (too low contrast) */

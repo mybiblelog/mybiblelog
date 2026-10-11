@@ -140,11 +140,11 @@ export const colorsByScheme: Record<ColorSchemeName, ThemeColors> = {
     placeholder: "rgba(0,0,0,0.45)",
     skeleton: "#eeeeee", // == borderSoft, matching web's skeleton bars
     messageInfoBorder: "#b8d7f5",
-    messageInfoBg: "#f5faff",
+    messageInfoBg: "#ebf5ff",
     messageInfoFg: "#1a5080",
     messageInfoAccent: "#7ab8e8",
     messageSuccessBorder: "#a3d9b1",
-    messageSuccessBg: "#f0fff4",
+    messageSuccessBg: "#e9f9ee",
     messageSuccessFg: "#1a6634",
     messageSuccessAccent: "#48c774",
     starGold: "#ffd700",

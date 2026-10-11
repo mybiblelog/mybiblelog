@@ -128,6 +128,28 @@ describe("Card", () => {
       expect(style.borderWidth).toBe(StyleSheet.hairlineWidth);
     });
 
+    it("drops the resting shadow on toned callouts", () => {
+      renderWithProviders(
+        <Card testID="c" tone="info">
+          <Text>x</Text>
+        </Card>
+      );
+      expect(styleOf("c").boxShadow).toBeUndefined();
+    });
+
+    it("renders a note as a flat outline, not a content surface", () => {
+      renderWithProviders(
+        <Card testID="c" tone="note">
+          <Text>x</Text>
+        </Card>
+      );
+      const style = styleOf("c");
+      expect(style.backgroundColor).toBe("transparent");
+      expect(style.borderColor).toBe(colorsByScheme.light.border);
+      expect(style.borderWidth).toBe(StyleSheet.hairlineWidth);
+      expect(style.boxShadow).toBeUndefined();
+    });
+
     it("leaves neutral cards borderless", () => {
       renderWithProviders(
         <Card testID="c">

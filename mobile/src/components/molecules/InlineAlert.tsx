@@ -12,6 +12,7 @@ import { Card, type CardTone } from "./Card";
 type Props = {
   /** Leading icon. */
   icon?: IconName;
+  /** Defaults to the tone's color: muted for "note", else info/success. */
   iconColor?: keyof ThemeColors;
   title: string;
   text?: string;
@@ -30,7 +31,7 @@ type Props = {
    */
   dismissKey?: string;
   dismissMinutes?: number;
-  /** Callout tone, forwarded to Card (web `.mbl-message--info` / `--success`). */
+  /** Callout tone, forwarded to Card (web `.mbl-message` / `--info` / `--success`). */
   tone?: CardTone;
   /** A second action beside the CTA, mirroring web's `.mbl-button-group`. */
   secondaryCtaLabel?: string;
@@ -46,7 +47,7 @@ type Props = {
  */
 export function InlineAlert({
   icon,
-  iconColor = "primary",
+  iconColor,
   title,
   text,
   ctaLabel,
@@ -57,7 +58,7 @@ export function InlineAlert({
   onDismiss,
   dismissKey,
   dismissMinutes = 60 * 24 * 7,
-  tone = "neutral",
+  tone = "note",
   secondaryCtaLabel,
   onPressSecondaryCta,
   ctaDisabled = false,
@@ -95,7 +96,7 @@ export function InlineAlert({
   return (
     <Card testID={testID} tone={tone} style={styles.card}>
       <View style={styles.row}>
-        {icon ? <Icon name={icon} size={22} color={iconColor} /> : null}
+        {icon ? <Icon name={icon} size={22} color={iconColor ?? toneIconColor[tone]} /> : null}
         <View style={styles.textCol}>
           <Text variant="bodyStrong">{title}</Text>
           {text ? (
@@ -140,6 +141,13 @@ export function InlineAlert({
     </Card>
   );
 }
+
+const toneIconColor: Record<CardTone, keyof ThemeColors> = {
+  neutral: "primary",
+  note: "mutedText",
+  info: "info",
+  success: "success",
+};
 
 const styles = StyleSheet.create({
   card: { marginBottom: spacing.sm },

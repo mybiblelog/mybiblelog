@@ -11,8 +11,14 @@ import { AnimatedPressable } from "../atoms/AnimatedPressable";
  */
 export type CardPadding = "content" | "list-item" | "none";
 
-/** Callout tones, mirroring web's `.mbl-message--info` / `--success`. */
-export type CardTone = "neutral" | "info" | "success";
+/**
+ * Surface tones:
+ *   "neutral" — the default elevated content surface (web `.mbl-card` / `.mbl-box`)
+ *   "note"    — flat outlined callout for static notes (web bare `.mbl-message`);
+ *               no fill or shadow, so it can't be mistaken for a content card
+ *   "info" / "success" — tinted callouts (web `.mbl-message--info` / `--success`)
+ */
+export type CardTone = "neutral" | "note" | "info" | "success";
 
 type Props = {
   children: ReactNode;
@@ -58,7 +64,9 @@ export function Card({
       ? { backgroundColor: colors.messageInfoBg, borderColor: colors.messageInfoBorder }
       : tone === "success"
         ? { backgroundColor: colors.messageSuccessBg, borderColor: colors.messageSuccessBorder }
-        : { backgroundColor: colors.surfaceElevated };
+        : tone === "note"
+          ? { backgroundColor: "transparent", borderColor: colors.border }
+          : { backgroundColor: colors.surfaceElevated };
 
   const base: StyleProp<ViewStyle> = [
     styles.card,
@@ -68,7 +76,9 @@ export function Card({
     // background-only style update drops a separately-registered borderRadius.
     { borderRadius: radius.card, ...toneStyle },
     tone !== "neutral" && styles.toned,
-    !flat && shadows.card,
+    // Callouts sit flat on the canvas, as web's .mbl-message does; only the
+    // neutral content surface is elevated.
+    !flat && tone === "neutral" && shadows.card,
     style,
   ];
 
@@ -99,6 +109,6 @@ const styles = StyleSheet.create({
   card: { maxWidth: "100%", position: "relative" },
   paddingContent: { padding: spacing.xl },
   paddingListItem: { paddingVertical: spacing.xs, paddingHorizontal: spacing.md },
-  // Toned callouts carry a visible edge, as web's .mbl-message does.
+  // Callouts carry a visible edge, as web's .mbl-message does.
   toned: { borderWidth: StyleSheet.hairlineWidth },
 });
