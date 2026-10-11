@@ -104,6 +104,7 @@ import AppModal from '~/components/popups/AppModal.vue';
 import { sessionStore } from '~/helpers/app-storage';
 import { useDialogStore } from '~/stores/dialog';
 import { useAuthStore } from '~/stores/auth';
+import { useAppInitStore } from '~/stores/app-init';
 
 interface AdminUser {
   email: string;
@@ -186,6 +187,8 @@ async function signInAsUser() {
     sessionStore.clearAll();
     await $http.get(`/api/admin/users/${props.user!.email}/login`);
     await authStore.refreshUser();
+    // Drop the previous user's cached data so the next page reloads this user's.
+    useAppInitStore().resetUserData();
     emit('close');
     router.push('/start');
   }
