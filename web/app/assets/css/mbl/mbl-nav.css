@@ -90,7 +90,7 @@
 }
 
 .mbl-tabs li a:hover {
-  border-bottom-color: var(--mbl-text);
+  border-bottom-color: var(--mbl-border-strong);
   color: var(--mbl-text);
 }
 
@@ -98,5 +98,7 @@
 .mbl-tabs li a.nuxt-link-active.router-link-exact-active,
 .mbl-tabs li a.router-link-exact-active {
   border-bottom-color: var(--mbl-tab-active);
+  /* stylelint-disable-next-line declaration-property-value-allowed-list -- thickens the active underline to 2px without layout shift */
+  box-shadow: inset 0 -1px 0 var(--mbl-tab-active);
   color: var(--mbl-tab-active);
 }
