@@ -148,6 +148,11 @@ export const fr = {
   insights_trend_window_label: "Fenêtre de temps",
   insights_trend_last_n_days: "%{count} derniers jours",
   insights_trend_chart_label: "Versets lus par jour",
+  insights_trend_metric_label: "Afficher",
+  insights_trend_metric_daily: "Lecture quotidienne",
+  insights_trend_metric_avg3: "Moyenne sur 3 jours",
+  insights_trend_metric_avg7: "Moyenne sur 7 jours",
+  insights_trend_chart_label_avg: "Moyenne de versets lus par jour",
 
   bible_book_title: "Livre",
   whole_bible: "Bible",

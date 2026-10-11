@@ -40,7 +40,9 @@ export type LineChartGeometry = {
   points: ChartPoint[];
   /** Space-separated "x,y" pairs for an SVG <polyline>. */
   linePoints: string;
-  /** SVG path for a filled area below the line. */
+  /** Smooth (monotone cubic) SVG path through the points, for an SVG <path>. */
+  linePath: string;
+  /** SVG path for a filled area below the smooth line. */
   areaPath: string;
   yTicks: ChartYTick[];
   maxCount: number;
@@ -53,6 +55,68 @@ export const DEFAULT_CHART_DIMENSIONS: ChartDimensions = {
   padRight: 12,
   padTop: 12,
   padBottom: 22,
+};
+
+const round = (n: number) => Math.round(n * 100) / 100;
+
+/**
+ * Builds an SVG path ("M x y C ...") that passes through every point as a
+ * smooth curve. Uses monotone cubic interpolation (Fritsch–Carlson), so the
+ * curve never overshoots between points — important for counts, where an
+ * overshoot would dip below zero or above the maximum. Points are assumed to
+ * be ordered by increasing x.
+ */
+export const buildSmoothPath = (points: ReadonlyArray<{ x: number; y: number }>): string => {
+  const n = points.length;
+  if (n === 0) return '';
+  const first = points[0]!;
+  if (n === 1) return `M ${round(first.x)} ${round(first.y)}`;
+
+  const dx: number[] = [];
+  const slope: number[] = [];
+  for (let i = 0; i < n - 1; i++) {
+    const a = points[i]!;
+    const b = points[i + 1]!;
+    dx.push(b.x - a.x);
+    slope.push(b.x === a.x ? 0 : (b.y - a.y) / (b.x - a.x));
+  }
+
+  // Tangent at each point: average of neighbouring slopes, zero at local
+  // extremes, then limited so the curve stays monotone within each segment.
+  const tangent: number[] = new Array(n).fill(0);
+  tangent[0] = slope[0]!;
+  tangent[n - 1] = slope[n - 2]!;
+  for (let i = 1; i < n - 1; i++) {
+    const s0 = slope[i - 1]!;
+    const s1 = slope[i]!;
+    tangent[i] = s0 * s1 <= 0 ? 0 : (s0 + s1) / 2;
+  }
+  for (let i = 0; i < n - 1; i++) {
+    const s = slope[i]!;
+    if (s === 0) {
+      tangent[i] = 0;
+      tangent[i + 1] = 0;
+      continue;
+    }
+    const a = tangent[i]! / s;
+    const b = tangent[i + 1]! / s;
+    const h = Math.hypot(a, b);
+    if (h > 3) {
+      tangent[i] = (3 * a / h) * s;
+      tangent[i + 1] = (3 * b / h) * s;
+    }
+  }
+
+  let d = `M ${round(first.x)} ${round(first.y)}`;
+  for (let i = 0; i < n - 1; i++) {
+    const a = points[i]!;
+    const b = points[i + 1]!;
+    const third = dx[i]! / 3;
+    d += ` C ${round(a.x + third)} ${round(a.y + tangent[i]! * third)}`
+      + ` ${round(b.x - third)} ${round(b.y - tangent[i + 1]! * third)}`
+      + ` ${round(b.x)} ${round(b.y)}`;
+  }
+  return d;
 };
 
 /**
@@ -72,7 +136,9 @@ export const buildLineChartGeometry = (
 
   const innerW = width - padLeft - padRight;
   const innerH = height - padTop - padBottom;
-  const maxCount = Math.max(1, ...series.map(p => p.count));
+  // Rounded up so the tick ladder stays whole numbers when the series holds
+  // fractional values (e.g. rolling averages).
+  const maxCount = Math.max(1, Math.ceil(Math.max(0, ...series.map(p => p.count))));
   const n = series.length;
 
   const points: ChartPoint[] = series.map((p, i) => {
@@ -83,13 +149,16 @@ export const buildLineChartGeometry = (
 
   const linePoints = points.map(p => `${p.x},${p.y}`).join(' ');
 
+  const linePath = buildSmoothPath(points);
+
   let areaPath = '';
   if (points.length > 0) {
     const baseY = height - padBottom;
     const first = points[0]!;
     const last = points[points.length - 1]!;
-    const segments = points.map(p => `L ${p.x} ${p.y}`).join(' ');
-    areaPath = `M ${first.x} ${baseY} ${segments} L ${last.x} ${baseY} Z`;
+    // Reuse the smooth line (minus its leading "M") so the fill hugs the curve.
+    const curve = linePath.replace(/^M [\d.-]+ [\d.-]+/, '');
+    areaPath = `M ${first.x} ${baseY} L ${first.x} ${first.y}${curve} L ${last.x} ${baseY} Z`;
   }
 
   // Tick labels are whole verse counts, so a small maximum can't be split into
@@ -107,7 +176,7 @@ export const buildLineChartGeometry = (
     });
   }
 
-  return { points, linePoints, areaPath, yTicks, maxCount };
+  return { points, linePoints, linePath, areaPath, yTicks, maxCount };
 };
 
 export type NamedChartSeries = {

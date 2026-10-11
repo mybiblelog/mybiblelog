@@ -140,6 +140,11 @@ export const en = {
   insights_trend_window_label: "Time window",
   insights_trend_last_n_days: "Last %{count} days",
   insights_trend_chart_label: "Verses read per day",
+  insights_trend_metric_label: "Show",
+  insights_trend_metric_daily: "Daily reading",
+  insights_trend_metric_avg3: "3-day average",
+  insights_trend_metric_avg7: "7-day average",
+  insights_trend_chart_label_avg: "Average verses read per day",
 
   bible_book_title: "Book",
   whole_bible: "Bible",

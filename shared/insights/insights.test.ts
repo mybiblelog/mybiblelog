@@ -267,3 +267,24 @@ test('computeDailyVerseSeries supports each supported window length', () => {
 test('computeDailyVerseSeries returns an empty array for non-positive days', () => {
   expect(computeDailyVerseSeries([], 0, '2026-06-15')).toEqual([]);
 });
+
+test('computeDailyVerseSeries averages over a trailing window, reading days before the range', () => {
+  const entries = [
+    // 2026-06-08 is before the 7-day window (06-09..06-15) but inside the 3-day lookback of 06-09
+    entry('2026-06-08', Bible.makeVerseId(1, 1, 1), Bible.makeVerseId(1, 1, 6)),
+    entry('2026-06-15', Bible.makeVerseId(1, 1, 1), Bible.makeVerseId(1, 1, 3)),
+  ];
+  const series = computeDailyVerseSeries(entries, 7, '2026-06-15', 3);
+  expect(series).toHaveLength(7);
+  expect(series[0].date).toBe('2026-06-09');
+  expect(series[0].count).toBeCloseTo(2); // (6 + 0 + 0) / 3
+  expect(series[1].count).toBeCloseTo(2); // 06-08..06-10 still includes 06-08
+  expect(series[2].count).toBeCloseTo(0); // 06-08 has dropped out
+  expect(series[6].count).toBeCloseTo(1); // (0 + 0 + 3) / 3
+});
+
+test('computeDailyVerseSeries with averageWindow 1 matches daily totals', () => {
+  const entries = [entry('2026-06-15', Bible.makeVerseId(1, 1, 1), Bible.makeVerseId(1, 1, 4))];
+  expect(computeDailyVerseSeries(entries, 7, '2026-06-15', 1))
+    .toEqual(computeDailyVerseSeries(entries, 7, '2026-06-15'));
+});

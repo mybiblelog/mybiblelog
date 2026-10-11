@@ -146,6 +146,11 @@ export const uk = {
   insights_trend_window_label: "Часовий проміжок",
   insights_trend_last_n_days: "Останні %{count} днів",
   insights_trend_chart_label: "Прочитаних віршів на день",
+  insights_trend_metric_label: "Показати",
+  insights_trend_metric_daily: "Щоденне читання",
+  insights_trend_metric_avg3: "Середнє за 3 дні",
+  insights_trend_metric_avg7: "Середнє за 7 днів",
+  insights_trend_chart_label_avg: "Середня кількість віршів за день",
 
   bible_book_title: "Книга",
   whole_bible: "Біблія",

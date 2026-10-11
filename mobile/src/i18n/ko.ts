@@ -144,6 +144,11 @@ export const ko = {
   insights_trend_window_label: "시간 범위",
   insights_trend_last_n_days: "최근 %{count}일",
   insights_trend_chart_label: "일별 읽은 구절 수",
+  insights_trend_metric_label: "표시",
+  insights_trend_metric_daily: "일일 읽기",
+  insights_trend_metric_avg3: "3일 평균",
+  insights_trend_metric_avg7: "7일 평균",
+  insights_trend_chart_label_avg: "하루 평균 읽은 구절",
 
   bible_book_title: "책",
   whole_bible: "성경",

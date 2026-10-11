@@ -146,6 +146,11 @@ export const pt = {
   insights_trend_window_label: "Janela de tempo",
   insights_trend_last_n_days: "Últimos %{count} dias",
   insights_trend_chart_label: "Versículos lidos por dia",
+  insights_trend_metric_label: "Mostrar",
+  insights_trend_metric_daily: "Leitura diária",
+  insights_trend_metric_avg3: "Média de 3 dias",
+  insights_trend_metric_avg7: "Média de 7 dias",
+  insights_trend_chart_label_avg: "Média de versículos lidos por dia",
 
   bible_book_title: "Livro",
   whole_bible: "Bíblia",

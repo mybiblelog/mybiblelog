@@ -30,4 +30,15 @@ describe("DailyVersesChart", () => {
     fireEvent.press(getByText("Last 7 days"));
     expect(getAllByText("Last 7 days").length).toBeGreaterThan(0);
   });
+
+  it("switches to a rolling average and still renders a curved line", () => {
+    const { getAllByText, getByTestId, getByText } = renderWithProviders(
+      <DailyVersesChart entries={entries} />
+    );
+    expect(getByText("Daily reading")).toBeTruthy();
+    fireEvent.press(getByTestId("insights.trend-metric-row"));
+    fireEvent.press(getByText("7-day average"));
+    expect(getAllByText("7-day average").length).toBeGreaterThan(0);
+    expect(getByTestId("insights.trend-line").props.d).toContain("C");
+  });
 });
