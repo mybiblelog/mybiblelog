@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-23"
+dateModified: "2026-10-12"
 seo:
   title: "Bible Reading Log & Calendar: See Every Day You Read"
   description: "Keep a Bible reading log on a monthly calendar. See which days you read, whether you met your daily goal, and add entries for past dates."
@@ -20,7 +20,7 @@ Click on any date to see log entries for that day. You can add log entries for t
 
 Each date on the calendar shows a progress bar, similar to the Today page. The progress bar will fill with two colors: a bold blue and a darker blue:
 
-* The bold blue represents the new verses read that day (since your look back date).
+* The bold blue represents the new verses read that day (since your tracker start date).
 * The darker blue represents the total verses read that day. If all of the verses you read that date are new, the darker blue bar will remain hidden behind the bold blue bar.
 
 The bar will be filled based on your daily verse count goal. If your daily verse count goal is 86 verses and you read 43 new verses that day, the bold blue color representing new verses will fill the progress bar halfway.

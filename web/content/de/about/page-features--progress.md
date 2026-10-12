@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-29"
+dateModified: "2026-10-12"
 seo:
   title: "Bibelleseziel-Rechner: Enddatum festlegen"
   description: "Sehen Sie, wie viel der Bibel Sie gelesen haben, lassen Sie berechnen, wann Sie fertig sind, und wie viele Verse pro Tag Sie bis zu Ihrem Zieldatum brauchen."
@@ -20,7 +20,7 @@ Die Fortschrittsseite zeigt Ihnen auf einen Blick, wo Sie beim Bibellesen stehen
 
 ## Leseeinstellungen
 
-Hier sehen Sie Ihre Leseeinstellungen, darunter Ihr „Rückblickdatum" und Ihr „tägliches Versziel".
+Hier sehen Sie Ihre Leseeinstellungen, darunter Ihr „Tracker-Startdatum" und Ihr „tägliches Versziel".
 Außerdem sehen Sie, wie viele Verse Sie bisher gelesen haben und welchen Anteil der Bibel das ausmacht.
 
 ## Leseprognosen
@@ -32,7 +32,7 @@ wie lange die verbleibenden Verse noch dauern.
 Sie erhalten vier Prognosen, die jeweils einen anderen Zeitraum Ihres Lesens zugrunde legen:
 
 **Gesamtprognose:**
-Diese Schätzung stützt sich auf Ihren Fortschritt seit Ihrem Rückblickdatum – also seit dem Tag, an dem Sie My Bible Log zum ersten Mal genutzt haben, oder seit einem Datum, das Sie später selbst gewählt haben.
+Diese Schätzung stützt sich auf Ihren Fortschritt seit Ihrem Startdatum – also seit dem Tag, an dem Sie My Bible Log zum ersten Mal genutzt haben, oder seit einem Datum, das Sie später selbst gewählt haben.
 
 **30-Tage-Prognose:**
 Diese Schätzung stützt sich auf die vergangenen 30 Tage, also rund einen Monat.

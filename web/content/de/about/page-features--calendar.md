@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-29"
+dateModified: "2026-10-12"
 seo:
   title: "Bibelleseprotokoll & Kalender: Jeder Lesetag auf einen Blick"
   description: "Führen Sie ein Bibelleseprotokoll im Monatskalender. Sehen Sie, an welchen Tagen Sie gelesen und Ihr Tagesziel erreicht haben, und tragen Sie vergangene Tage nach."
@@ -20,7 +20,7 @@ Klicken Sie auf ein beliebiges Datum, um die Einträge dieses Tages zu sehen. Si
 
 Zu jedem Datum gehört eine Fortschrittsleiste, wie Sie sie von der Heute-Seite kennen. Sie füllt sich in zwei Blautönen:
 
-* Das kräftige Blau steht für die neuen Verse, die Sie an diesem Tag gelesen haben (gerechnet ab Ihrem Rückblickdatum).
+* Das kräftige Blau steht für die neuen Verse, die Sie an diesem Tag gelesen haben (gerechnet ab Ihrem Tracker-Startdatum).
 * Das dunklere Blau steht für alle an diesem Tag gelesenen Verse. Waren alle davon neu, verschwindet das dunklere Blau vollständig hinter dem kräftigen Blau.
 
 Wie weit sich die Leiste füllt, hängt von Ihrem täglichen Versziel ab. Liegt Ihr Ziel bei 86 Versen und Sie lesen an einem Tag 43 neue Verse, ist die Leiste zur Hälfte kräftig blau.

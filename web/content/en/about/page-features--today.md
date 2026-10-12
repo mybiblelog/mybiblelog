@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-23"
+dateModified: "2026-10-12"
 seo:
   title: "Track Your Daily Bible Reading Progress"
   description: "Learn how to use My Bible Log's Today page to track your daily reading goals and discover new passages to read"
@@ -21,7 +21,7 @@ You can also view and manage today's reading log entries here. Need to update yo
 The progress bar uses different colors to show:
 
 * **Bold blue** - New verses you're reading today
-* **Dark blue** - Verses you've read before (since your look-back date)
+* **Dark blue** - Verses you've read before (since your tracker start date)
 * **Shining effect** - Appears when you meet your daily goal with new verses
 
 ## Reading Suggestions

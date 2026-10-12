@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-29"
+dateModified: "2026-10-12"
 seo:
   title: "Registro de leitura da Bíblia e calendário: cada dia que você leu"
   description: "Mantenha um registro de leitura da Bíblia em um calendário mensal. Veja em quais dias você leu, se cumpriu a meta diária e acrescente leituras de datas passadas."
@@ -20,7 +20,7 @@ Clique em qualquer data para ver os registros daquele dia. Você também pode ad
 
 Cada data do calendário tem sua própria barra de progresso, igual à da página Hoje. A barra é preenchida com dois tons de azul:
 
-* O azul vibrante representa os versículos novos que você leu naquele dia (contando a partir da sua Data de Revisão).
+* O azul vibrante representa os versículos novos que você leu naquele dia (contando a partir da sua Data de Início do Rastreador).
 * O azul mais escuro representa o total de versículos lidos naquele dia. Se todos eles forem novos, a barra azul escura fica escondida atrás da azul vibrante.
 
 O preenchimento da barra segue sua meta diária de versículos. Se a meta for de 86 versículos e você ler 43 novos naquele dia, o azul vibrante vai até a metade da barra.

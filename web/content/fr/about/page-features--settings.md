@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-29"
+dateModified: "2026-10-12"
 seo:
   title: "Paramètres : objectif quotidien, rappels et export"
   description: "Fixez votre objectif quotidien, choisissez votre traduction et votre application biblique, activez les e-mails de rappel et exportez ou importez votre journal de lecture."
@@ -29,7 +29,7 @@ Vous pouvez y :
 
 ## Lecture
 
-Le panneau Lecture rassemble tous les réglages liés à votre lecture de la Bible, à commencer par votre **objectif quotidien de versets** et votre **date de consultation précédente**.
+Le panneau Lecture rassemble tous les réglages liés à votre lecture de la Bible, à commencer par votre **objectif quotidien de versets** et votre **date de début du suivi**.
 
 ### Objectif quotidien de versets
 
@@ -37,7 +37,7 @@ Votre objectif quotidien de versets, c'est le nombre de versets que vous souhait
 
 Pour vous aider à fixer ce nombre, cette section vous indique en combien de jours vous liriez toute la Bible en tenant votre objectif chaque jour. La valeur par défaut est de 86 versets, de quoi terminer la Bible en moins de 365 jours.
 
-### Date de consultation précédente
+### Date de début du suivi
 
 Cette date détermine jusqu'où My Bible Log remonte dans votre journal de lecture pour calculer votre progression. Au départ, il s'agit du jour où vous avez commencé à utiliser My Bible Log.
 

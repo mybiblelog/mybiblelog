@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-29"
+dateModified: "2026-10-12"
 seo:
   title: Acompanhe sua leitura diária da Bíblia
   description: Como usar a página Hoje do My Bible Log para acompanhar sua meta diária e descobrir novas passagens para ler
@@ -21,7 +21,7 @@ A página Hoje ajuda você a acompanhar a leitura da Bíblia do dia. Logo no top
 As cores da barra de progresso indicam:
 
 * **Azul vibrante** — versículos que você está lendo hoje pela primeira vez
-* **Azul escuro** — versículos que você já tinha lido antes (a partir da sua Data de Revisão)
+* **Azul escuro** — versículos que você já tinha lido antes (a partir da sua Data de Início do Rastreador)
 * **Efeito brilhante** — aparece quando você bate a meta diária com versículos novos
 
 ## Sugestões de leitura

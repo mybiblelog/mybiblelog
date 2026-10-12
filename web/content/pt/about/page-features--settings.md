@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-29"
+dateModified: "2026-10-12"
 seo:
   title: "Configurações: meta diária, lembretes e exportação"
   description: "Defina sua meta diária de leitura, escolha sua tradução e seu app de Bíblia preferidos, ative e-mails de lembrete e exporte ou importe seu registro de leitura."
@@ -29,7 +29,7 @@ Dali você pode:
 
 ## Leitura
 
-No painel Leitura você ajusta tudo o que tem a ver com a leitura da Bíblia, a começar pela sua **meta diária de versículos** e pela sua **Data de Revisão**.
+No painel Leitura você ajusta tudo o que tem a ver com a leitura da Bíblia, a começar pela sua **meta diária de versículos** e pela sua **Data de Início do Rastreador**.
 
 ### Meta diária de versículos
 
@@ -37,13 +37,13 @@ A meta diária de versículos é quanto você quer ler por dia. É ela que defin
 
 Para ajudar na escolha do número, esta seção mostra quantos dias você levaria para ler a Bíblia inteira batendo a meta todos os dias. O valor padrão é 86, que fecha a Bíblia em menos de 365 dias.
 
-### Data de Revisão
+### Data de Início do Rastreador
 
-A Data de Revisão define até onde o My Bible Log olha no seu registro de leitura ao calcular seu progresso. No começo, ela é o dia em que você passou a usar o My Bible Log.
+A Data de Início define até onde o My Bible Log olha no seu registro de leitura ao calcular seu progresso. No começo, ela é o dia em que você passou a usar o My Bible Log.
 
 Tudo o que vem antes dessa data fica de fora: a página Livros da Bíblia, por exemplo, não mostra o que você leu antes dela.
 
-Se terminou a Bíblia inteira e quer recomeçar do zero, é só colocar a Data de Revisão no dia de hoje. Assim seu progresso na página Livros da Bíblia zera e suas leituras voltam a contar como versículos "novos" nas páginas Hoje e Calendário.
+Se terminou a Bíblia inteira e quer recomeçar do zero, é só colocar a Data de Início no dia de hoje. Assim seu progresso na página Livros da Bíblia zera e suas leituras voltam a contar como versículos "novos" nas páginas Hoje e Calendário.
 
 Nada é apagado. Todos os seus registros continuam lá e podem ser vistos a qualquer momento pela página Calendário.
 

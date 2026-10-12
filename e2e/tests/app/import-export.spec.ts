@@ -69,7 +69,7 @@ test.describe('Export', () => {
 });
 
 test.describe('Import', () => {
-  test('valid CSV imports all rows and offers a look-back-date reset', async ({ page, api }) => {
+  test('valid CSV imports all rows and offers a tracker start date reset', async ({ page, api }) => {
     await page.goto('/settings/import');
     await page.getByTestId('import-file-input').setInputFiles(testDataPath('import-valid.csv'));
 
@@ -84,9 +84,9 @@ test.describe('Import', () => {
       '2024-01-01', '2024-01-02', '2024-01-03',
     ]);
 
-    // Imported dates predate the look-back date (defaults to signup day),
-    // so the reset prompt appears; accepting it moves the look-back date
-    await page.getByRole('button', { name: 'Update Look Back Date' }).click();
+    // Imported dates predate the tracker start date (defaults to signup day),
+    // so the reset prompt appears; accepting it moves the tracker start date
+    await page.getByRole('button', { name: 'Update Tracker Start Date' }).click();
     await expect(async () => {
       const response = await api.get('/api/settings');
       const { data } = await response.json();

@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-29"
+dateModified: "2026-10-12"
 seo:
   title: Ihren täglichen Bibellesefortschritt im Blick behalten
   description: So nutzen Sie die Heute-Seite von My Bible Log, um Ihr Tagesziel zu verfolgen und neue Bibelstellen zu entdecken
@@ -21,7 +21,7 @@ Hier sehen und verwalten Sie auch die heutigen Einträge. Etwas nachzutragen? Ei
 Die Farben der Fortschrittsleiste bedeuten:
 
 * **Kräftiges Blau** – Verse, die Sie heute zum ersten Mal lesen
-* **Dunkelblau** – Verse, die Sie schon einmal gelesen haben (ab Ihrem Rückblickdatum)
+* **Dunkelblau** – Verse, die Sie schon einmal gelesen haben (ab Ihrem Tracker-Startdatum)
 * **Leuchteffekt** – Erscheint, sobald Sie Ihr Tagesziel mit neuen Versen erreichen
 
 ## Lesevorschläge

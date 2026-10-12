@@ -20,14 +20,14 @@
     <hr>
     <div v-if="showLookBackReset" class="mbl-message mbl-message--info">
       <div class="mbl-message__body">
-        <p>{{ t('look_back_message_1') }}</p>
-        <p>{{ t('look_back_message_2', { lookBackDate: earliestDate }) }}</p>
+        <p>{{ t('tracker_start_message_1') }}</p>
+        <p>{{ t('tracker_start_message_2', { startDate: earliestDate }) }}</p>
         <div class="mbl-button-group">
           <button class="mbl-button mbl-button--primary" :disabled="savingLookBackDate" @click="updateLookBackDate">
-            {{ t('update_look_back_date') }}
+            {{ t('update_tracker_start_date') }}
           </button>
           <button class="mbl-button" @click="showLookBackReset = false">
-            {{ t('keep_look_back_date') }}
+            {{ t('keep_tracker_start_date') }}
           </button>
         </div>
       </div>
@@ -251,7 +251,7 @@ async function updateLookBackDate() {
   savingLookBackDate.value = true;
   try {
     await userSettingsStore.updateSettings({ lookBackDate: earliestDate.value! });
-    toastStore.add({ type: 'success', text: t('look_back_updated') });
+    toastStore.add({ type: 'success', text: t('tracker_start_updated') });
     showLookBackReset.value = false;
   }
   finally {
@@ -287,11 +287,11 @@ p { margin-bottom: var(--mbl-space-md); }
     "too_many_rows": "Your file has {count} rows, which is more than the maximum of {max}. Please split it into smaller files and try again.",
     "success": "Successfully processed {count} log entries.",
     "error_creating": "There was a problem creating the log entries.",
-    "look_back_message_1": "Your imported file includes log entries before your Look Back Date. Most pages will ignore these entries when showing your progress.",
-    "look_back_message_2": "Would you like to update your Look Back Date to {lookBackDate} to include these entries?",
-    "update_look_back_date": "Update Look Back Date",
-    "keep_look_back_date": "Keep Current Look Back Date",
-    "look_back_updated": "Look back date updated successfully."
+    "tracker_start_message_1": "Your imported file includes log entries before your Tracker Start Date. Most pages will ignore these entries when showing your progress.",
+    "tracker_start_message_2": "Would you like to update your Tracker Start Date to {startDate} to include these entries?",
+    "update_tracker_start_date": "Update Tracker Start Date",
+    "keep_tracker_start_date": "Keep Current Tracker Start Date",
+    "tracker_start_updated": "Tracker start date updated successfully."
   },
   "de": {
     "import": "Import",
@@ -314,11 +314,11 @@ p { margin-bottom: var(--mbl-space-md); }
     "too_many_rows": "Ihre Datei enthält {count} Zeilen, mehr als das Maximum von {max}. Bitte teilen Sie sie in kleinere Dateien auf und versuchen Sie es erneut.",
     "success": "{count} Einträge verarbeitet.",
     "error_creating": "Fehler beim Erstellen der Einträge.",
-    "look_back_message_1": "Datei enthält Einträge vor dem Rückblickdatum.",
-    "look_back_message_2": "Rückblickdatum auf {lookBackDate} aktualisieren?",
-    "update_look_back_date": "Rückblickdatum aktualisieren",
-    "keep_look_back_date": "Beibehalten",
-    "look_back_updated": "Rückblickdatum aktualisiert."
+    "tracker_start_message_1": "Datei enthält Einträge vor dem Tracker-Startdatum.",
+    "tracker_start_message_2": "Tracker-Startdatum auf {startDate} aktualisieren?",
+    "update_tracker_start_date": "Tracker-Startdatum aktualisieren",
+    "keep_tracker_start_date": "Beibehalten",
+    "tracker_start_updated": "Tracker-Startdatum aktualisiert."
   },
   "es": {
     "import": "Importar",
@@ -341,11 +341,11 @@ p { margin-bottom: var(--mbl-space-md); }
     "too_many_rows": "Su archivo tiene {count} filas, más del máximo de {max}. Divídalo en archivos más pequeños e inténtelo de nuevo.",
     "success": "{count} entradas procesadas.",
     "error_creating": "Error al crear las entradas.",
-    "look_back_message_1": "El archivo incluye entradas anteriores a su Fecha de Retroceso.",
-    "look_back_message_2": "¿Actualizar Fecha de Retroceso a {lookBackDate}?",
-    "update_look_back_date": "Actualizar Fecha de Retroceso",
-    "keep_look_back_date": "Mantener",
-    "look_back_updated": "Fecha actualizada."
+    "tracker_start_message_1": "El archivo incluye entradas anteriores a su Fecha de Inicio del Rastreador.",
+    "tracker_start_message_2": "¿Actualizar Fecha de Inicio del Rastreador a {startDate}?",
+    "update_tracker_start_date": "Actualizar Fecha de Inicio del Rastreador",
+    "keep_tracker_start_date": "Mantener",
+    "tracker_start_updated": "Fecha actualizada."
   },
   "fr": {
     "import": "Importer",
@@ -368,11 +368,11 @@ p { margin-bottom: var(--mbl-space-md); }
     "too_many_rows": "Votre fichier contient {count} lignes, ce qui dépasse le maximum de {max}. Veuillez le diviser en fichiers plus petits et réessayer.",
     "success": "{count} entrées traitées.",
     "error_creating": "Problème lors de la création.",
-    "look_back_message_1": "Le fichier contient des entrées avant votre Date de Rétrospection.",
-    "look_back_message_2": "Mettre à jour la Date de Rétrospection à {lookBackDate}?",
-    "update_look_back_date": "Mettre à jour",
-    "keep_look_back_date": "Conserver",
-    "look_back_updated": "Date mise à jour."
+    "tracker_start_message_1": "Le fichier contient des entrées avant votre Date de Début du Suivi.",
+    "tracker_start_message_2": "Mettre à jour la Date de Début du Suivi à {startDate}?",
+    "update_tracker_start_date": "Mettre à jour",
+    "keep_tracker_start_date": "Conserver",
+    "tracker_start_updated": "Date mise à jour."
   },
   "ko": {
     "import": "불러오기",
@@ -395,11 +395,11 @@ p { margin-bottom: var(--mbl-space-md); }
     "too_many_rows": "파일에 {count}개의 행이 있어 최대 {max}개를 초과합니다. 파일을 더 작게 나누어 다시 시도해 주세요.",
     "success": "{count}개 처리되었습니다.",
     "error_creating": "문제가 발생했습니다.",
-    "look_back_message_1": "기준 시작일 이전 기록이 포함되어 있습니다.",
-    "look_back_message_2": "기준 시작일을 {lookBackDate}로 바꿀까요?",
-    "update_look_back_date": "기준 시작일 업데이트",
-    "keep_look_back_date": "유지",
-    "look_back_updated": "업데이트되었습니다."
+    "tracker_start_message_1": "추적기 시작일 이전 기록이 포함되어 있습니다.",
+    "tracker_start_message_2": "추적기 시작일을 {startDate}로 바꿀까요?",
+    "update_tracker_start_date": "추적기 시작일 업데이트",
+    "keep_tracker_start_date": "유지",
+    "tracker_start_updated": "업데이트되었습니다."
   },
   "pt": {
     "import": "Import",
@@ -422,11 +422,11 @@ p { margin-bottom: var(--mbl-space-md); }
     "too_many_rows": "Seu arquivo tem {count} linhas, mais do que o máximo de {max}. Divida-o em arquivos menores e tente novamente.",
     "success": "{count} entradas processadas.",
     "error_creating": "Houve um problema.",
-    "look_back_message_1": "O arquivo inclui entradas antes da Data de Retrocesso.",
-    "look_back_message_2": "Atualizar Data de Retrocesso para {lookBackDate}?",
-    "update_look_back_date": "Atualizar Data de Retrocesso",
-    "keep_look_back_date": "Manter",
-    "look_back_updated": "Data atualizada."
+    "tracker_start_message_1": "O arquivo inclui entradas antes da Data de Início do Rastreador.",
+    "tracker_start_message_2": "Atualizar Data de Início do Rastreador para {startDate}?",
+    "update_tracker_start_date": "Atualizar Data de Início do Rastreador",
+    "keep_tracker_start_date": "Manter",
+    "tracker_start_updated": "Data atualizada."
   },
   "uk": {
     "import": "Імпорт",
@@ -449,11 +449,11 @@ p { margin-bottom: var(--mbl-space-md); }
     "too_many_rows": "У вашому файлі {count} рядків, що перевищує максимум {max}. Розділіть його на менші файли та спробуйте ще раз.",
     "success": "Оброблено {count} записів.",
     "error_creating": "Виникла проблема.",
-    "look_back_message_1": "Файл містить записи до Дати Огляду.",
-    "look_back_message_2": "Оновити Дату Огляду до {lookBackDate}?",
-    "update_look_back_date": "Оновити Дату Огляду",
-    "keep_look_back_date": "Залишити",
-    "look_back_updated": "Дату оновлено."
+    "tracker_start_message_1": "Файл містить записи до Дати початку відстеження.",
+    "tracker_start_message_2": "Оновити Дату початку відстеження до {startDate}?",
+    "update_tracker_start_date": "Оновити Дату початку відстеження",
+    "keep_tracker_start_date": "Залишити",
+    "tracker_start_updated": "Дату оновлено."
   }
 }
 </i18n>

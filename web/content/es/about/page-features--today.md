@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-29"
+dateModified: "2026-10-12"
 seo:
   title: Lleva el control de tu lectura bíblica diaria
   description: Cómo usar la página Hoy de My Bible Log para seguir tu meta diaria y descubrir nuevos pasajes para leer
@@ -21,7 +21,7 @@ Aquí también ves y administras los registros de hoy. ¿Necesitas corregir algo
 Los colores de la barra de progreso significan lo siguiente:
 
 * **Azul intenso**: versículos que estás leyendo hoy por primera vez
-* **Azul oscuro**: versículos que ya habías leído antes (desde tu Fecha de Revisión)
+* **Azul oscuro**: versículos que ya habías leído antes (desde tu Fecha de Inicio del Rastreador)
 * **Efecto brillante**: aparece cuando alcanzas tu meta diaria con versículos nuevos
 
 ## Sugerencias de lectura

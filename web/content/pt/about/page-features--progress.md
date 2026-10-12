@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-29"
+dateModified: "2026-10-12"
 seo:
   title: "Calculadora de metas de leitura da Bíblia: defina uma data"
   description: "Veja quanto da Bíblia você já leu, preveja quando vai terminar e calcule quantos versículos por dia precisa ler para concluir até a data-alvo."
@@ -20,7 +20,7 @@ Para chegar à página Progresso, entre na página Livros da Bíblia e clique no
 
 ## Configurações de leitura
 
-Você confere suas configurações de leitura, entre elas a "Data de Revisão" e a "meta diária de versículos".
+Você confere suas configurações de leitura, entre elas a "Data de Início do Rastreador" e a "meta diária de versículos".
 Também vê quantos versículos já leu e que porcentagem da Bíblia isso representa.
 
 ## Previsões de leitura
@@ -31,7 +31,7 @@ Primeiro ela descobre quantos versículos você lê por dia, em média, e usa es
 São quatro previsões, cada uma baseada em um período diferente da sua leitura:
 
 **Previsão histórica:**
-Considera seu avanço desde a Data de Revisão, ou seja, desde o dia em que você começou a usar o My Bible Log ou desde a data que você mesmo escolheu depois.
+Considera seu avanço desde a Data de Início, ou seja, desde o dia em que você começou a usar o My Bible Log ou desde a data que você mesmo escolheu depois.
 
 **Previsão de 30 dias:**
 Considera os últimos 30 dias, mais ou menos o último mês.
