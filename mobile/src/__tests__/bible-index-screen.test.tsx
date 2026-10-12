@@ -21,9 +21,11 @@ import { fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/render
 import { useBibleProgressStore } from "@/src/stores/bibleProgress";
 import { useNoteCountsStore } from "@/src/stores/passageNoteCounts";
 import { useNotesStore } from "@/src/stores/passageNotes";
+import { DEFAULT_BOOK_LIST_PREFS, useBookListPrefsStore } from "@/src/stores/bookListPrefs";
 import BibleIndex from "@/app/(tabs)/bible/index";
 
 beforeEach(() => {
+  useBookListPrefsStore.setState({ prefs: DEFAULT_BOOK_LIST_PREFS, touched: false });
   useBibleProgressStore.setState({ progress: computeBibleProgress([]), jobs: 0 });
   useNoteCountsStore.setState({ counts: null });
   (router.push as jest.Mock).mockClear();
@@ -83,5 +85,24 @@ describe("Bible Books screen", () => {
     const { getByText } = renderWithProviders(<BibleIndex />);
     fireEvent.press(getByText("Progress"));
     expect(router.push).toHaveBeenCalledWith("/bible/progress");
+  });
+
+  it("sort toggle flips between traditional and alphabetical order", () => {
+    const { getByTestId, getAllByText } = renderWithProviders(<BibleIndex />);
+    const firstOf = () => getAllByText(/^(Acts|Genesis)$/)[0].props.children;
+    const toggle = getByTestId("bible.sort-toggle");
+
+    expect(firstOf()).toBe("Genesis");
+    expect(toggle).toHaveProp("accessibilityLabel", "Book order: Traditional");
+
+    fireEvent.press(toggle);
+    expect(firstOf()).toBe("Acts");
+    expect(getByTestId("bible.sort-toggle")).toHaveProp(
+      "accessibilityLabel",
+      "Book order: Alphabetical"
+    );
+
+    fireEvent.press(getByTestId("bible.sort-toggle"));
+    expect(firstOf()).toBe("Genesis");
   });
 });

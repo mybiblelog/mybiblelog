@@ -6,6 +6,7 @@ import { initNotes } from "@/src/stores/offlineNotes";
 import { initUserSettings } from "@/src/stores/userSettings";
 import { initDateVerseCounts } from "@/src/stores/dateVerseCounts";
 import { initBibleProgress } from "@/src/stores/bibleProgress";
+import { initBookListPrefs } from "@/src/stores/bookListPrefs";
 import { initStorageHealth } from "@/src/storage/health";
 import { runStorageMigrations } from "@/src/storage/migrations/runner";
 
@@ -51,5 +52,7 @@ export function initStores(): void {
     // Precomputes whole-Bible progress for the bible/checklist screens; subscribes
     // to log entries + look-back date.
     initBibleProgress();
+    // Testament filter + book order shared by the bible/checklist screens.
+    initBookListPrefs();
   })();
 }

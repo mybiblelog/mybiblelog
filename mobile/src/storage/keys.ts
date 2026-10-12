@@ -21,6 +21,7 @@ import type { StoredLogEntry, PendingLogEntryMutation } from "@/src/storage/logE
 import type { StoredLocalNote, PendingNoteMutation } from "@/src/storage/passageNotes";
 import type { AuthSession } from "@/src/auth/authStorage";
 import type { ReviewPromptState } from "@/src/review/reviewPrompt";
+import type { BookListPrefs } from "@/src/stores/bookListPrefs";
 import { createTypedStorage, defineKey } from "./typedStorage";
 import type { StorageHooks } from "./typedStorage";
 import { reportStorageFailure, reportStorageOk } from "./health";
@@ -55,6 +56,7 @@ export const appStorage = createTypedStorage(
     passageNotes: defineKey<StoredLocalNote[]>("passageNotes.local.v1"),
     passageNoteMutations: defineKey<PendingNoteMutation[]>("passageNotes.mutations.v1"),
     reviewPrompt: defineKey<ReviewPromptState>("reviewPrompt.v1"),
+    bookListPrefs: defineKey<BookListPrefs>("bookListPrefs.v1"),
   },
   healthHooks
 );

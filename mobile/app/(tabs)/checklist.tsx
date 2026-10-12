@@ -4,12 +4,7 @@ import { useFocusEffect } from "expo-router";
 import { memo, useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated from "react-native-reanimated";
-import {
-  Bible,
-  type BookProgress,
-  type ChapterProgress,
-  type TestamentFilter,
-} from "@mybiblelog/shared";
+import { Bible, type BookProgress, type ChapterProgress } from "@mybiblelog/shared";
 import {
   AnimatedList,
   Card,
@@ -17,13 +12,15 @@ import {
   ProgressBar,
   Screen,
   ScreenHeader,
-  SegmentedControl,
+  BookListToolbar,
   Spinner,
   Text,
 } from "@/src/components";
 import { fadeIn, radius, spacing, useTheme } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
+import { filterAndSortBooks } from "@/src/bible/bookList";
 import { useBibleProgress } from "@/src/stores/bibleProgress";
+import { bookListPrefsActions, useBookListPrefs } from "@/src/stores/bookListPrefs";
 import { logEntryActions, useLogEntryList } from "@/src/stores/logEntries";
 import { useToast } from "@/src/toast/ToastProvider";
 
@@ -175,20 +172,18 @@ export default function Checklist() {
 
   const [busyChapter, setBusyChapter] = useState<string | null>(null);
   const [expandedBooks, setExpandedBooks] = useState<Record<string, boolean>>({});
-  const [testament, setTestament] = useState<TestamentFilter>("all");
+  const bookListPrefs = useBookListPrefs();
+  const { testament, sortOrder } = bookListPrefs;
   const { width: windowWidth } = useWindowDimensions();
 
-  // Purely a view filter: `progress` and `toggleChapter` keep working off the
-  // full 66-book list, and `expandedBooks` is keyed by absolute book index, so
-  // hiding a testament never disturbs what is expanded or what gets saved.
+  // Purely a view filter and order: `progress` and `toggleChapter` keep working
+  // off the full 66-book list, and `expandedBooks` is keyed by absolute book
+  // index, so hiding a testament or reordering never disturbs what is expanded
+  // or what gets saved.
   const filteredBooks = useMemo(() => {
     if (!progress) return [];
-    return progress.books.filter((book) => {
-      if (testament === "old") return !Bible.isNewTestament(book.bookIndex);
-      if (testament === "new") return Bible.isNewTestament(book.bookIndex);
-      return true;
-    });
-  }, [progress, testament]);
+    return filterAndSortBooks(progress.books, bookListPrefs, locale);
+  }, [progress, bookListPrefs, locale]);
 
   // Tiles expand to fill the card edge-to-edge: derive the column count from a
   // ~54pt minimum tile, then split the available width (minus gaps) evenly.
@@ -293,14 +288,12 @@ export default function Checklist() {
     <Screen padded>
       <View style={styles.header}>
         <ScreenHeader title={t("chapter_checklist")} right={busy ? <Spinner /> : undefined} />
-        <SegmentedControl
-          options={[
-            { value: "all", label: t("whole_bible") },
-            { value: "old", label: t("old_testament_short") },
-            { value: "new", label: t("new_testament_short") },
-          ]}
-          value={testament}
-          onChange={setTestament}
+        <BookListToolbar
+          testament={testament}
+          sortOrder={sortOrder}
+          onTestamentChange={bookListPrefsActions.setTestament}
+          onSortOrderChange={bookListPrefsActions.setSortOrder}
+          testIDPrefix="checklist"
         />
       </View>
 
@@ -312,9 +305,9 @@ export default function Checklist() {
         </Card>
       ) : (
         <AnimatedList
-          // Remounted per filter so the enter animation replays on a switch,
-          // matching the Bible Books list.
-          key={testament}
+          // Remounted per filter/order so the enter animation replays on a
+          // switch, matching the Bible Books list.
+          key={`${testament}-${sortOrder}`}
           data={filteredBooks}
           // Rows expand/collapse in place; the item layout animation leaves
           // sibling books overlapping the expanded chapter grid, so opt out.
