@@ -619,4 +619,10 @@ export const fr = {
   reading_tracker_reset_start_fresh: "Recommencer",
   reading_tracker_reset_success:
     "Votre date de début du suivi est définie sur la date actuelle. Vous suivez maintenant votre lecture de la Bible depuis le début.",
+  guest_backup_title: "Votre journal de lecture est enregistré uniquement sur cet appareil",
+  guest_backup_text:
+    "Créez un compte gratuit pour le sauvegarder et le conserver si vous changez ou réinitialisez votre téléphone.",
+  sync_changes_not_saved_one: "1 modification n’a pas pu être enregistrée dans votre compte.",
+  sync_changes_not_saved_other:
+    "%{count} modifications n’ont pas pu être enregistrées dans votre compte.",
 } as const satisfies Record<keyof typeof en, string>;

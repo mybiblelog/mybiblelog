@@ -7,6 +7,7 @@ import {
   Button,
   DoubleProgressBar,
   EmptyState,
+  GuestBackupAlert,
   LogEntryRow,
   ReadingSuggestionsSection,
   ReadingTrackerResetCard,
@@ -124,6 +125,7 @@ export default function Index() {
       </View>
 
       <ReadingTrackerResetCard hasEntriesToday={todayEntries.length > 0} />
+      <GuestBackupAlert hasEntries={(entries?.length ?? 0) > 0} />
 
       <AnimatedList
         data={loading ? [] : todayEntries}

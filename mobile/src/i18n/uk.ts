@@ -609,4 +609,9 @@ export const uk = {
   reading_tracker_reset_start_fresh: "Почати заново",
   reading_tracker_reset_success:
     "Дата початку вашого трекера встановлена на сьогоднішній день. Тепер ви відстежуєте читання Біблії з початку.",
+  guest_backup_title: "Ваш журнал читання збережено лише на цьому пристрої",
+  guest_backup_text:
+    "Створіть безкоштовний обліковий запис, щоб зробити резервну копію і не втратити журнал у разі заміни чи скидання телефону.",
+  sync_changes_not_saved_one: "Не вдалося зберегти 1 зміну у вашому обліковому записі.",
+  sync_changes_not_saved_other: "Не вдалося зберегти зміни (%{count}) у вашому обліковому записі.",
 } as const satisfies Record<keyof typeof en, string>;

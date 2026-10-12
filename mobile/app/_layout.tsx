@@ -22,6 +22,7 @@ import { useDailyReminderSync } from "@/src/notifications/useDailyReminderSync";
 import { initStores } from "@/src/stores/init";
 import { useOnboardingStatus } from "@/src/stores/onboarding";
 import { ToastProvider } from "@/src/toast/ToastProvider";
+import { useSyncDropToasts } from "@/src/toast/useSyncDropToasts";
 import { UpgradeGate } from "@/src/upgrade/UpgradeGate";
 import { configureGoogleSignIn } from "@/src/auth/googleSignIn";
 import { Sentry, initCrashReporting } from "@/src/observability/sentry";
@@ -123,6 +124,7 @@ export default Sentry.wrap(RootLayout);
 function RootStack({ onboardingCompleted }: { onboardingCompleted: boolean }) {
   const { colors } = useTheme();
   useDailyReminderSync();
+  useSyncDropToasts();
 
   // The auth screens are the one place a native header survives, and only for
   // its back/dismiss chevron: they're vertically centred modals, so there's no

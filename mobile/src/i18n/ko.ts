@@ -593,4 +593,8 @@ export const ko = {
   reading_tracker_reset_start_fresh: "새로 시작",
   reading_tracker_reset_success:
     "추적기 시작 날짜가 오늘로 설정되었습니다. 이제 처음부터 성경 읽기를 추적하고 있습니다.",
+  guest_backup_title: "읽기 기록이 이 기기에만 저장되어 있습니다",
+  guest_backup_text: "무료 계정을 만들어 백업하면 휴대폰을 바꾸거나 초기화해도 기록이 유지됩니다.",
+  sync_changes_not_saved_one: "변경 사항 1개를 계정에 저장하지 못했습니다.",
+  sync_changes_not_saved_other: "변경 사항 %{count}개를 계정에 저장하지 못했습니다.",
 } as const satisfies Record<keyof typeof en, string>;

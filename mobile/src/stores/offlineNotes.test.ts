@@ -25,6 +25,7 @@ jest.mock("@/src/stores/passageNoteTags", () => ({
 }));
 
 import { ApiError } from "@/src/api/apiError";
+import { consumeDroppedChanges } from "@/src/stores/syncNotices";
 import { createNote } from "@/src/api/notesApi";
 import { getIsOnline } from "@/src/stores/connectivity";
 import {
@@ -105,6 +106,7 @@ describe("syncNow", () => {
   });
 
   it("keeps the note and mutation queued on a transient failure", async () => {
+    consumeDroppedChanges();
     (getIsOnline as jest.Mock).mockReturnValue(false);
     await actions().createNote(input);
     (getIsOnline as jest.Mock).mockReturnValue(true);
@@ -114,9 +116,11 @@ describe("syncNow", () => {
 
     expect(readyNotes()).toHaveLength(1);
     expect(await loadPendingNoteMutations()).toHaveLength(1);
+    expect(consumeDroppedChanges()).toBe(0);
   });
 
   it("drops the mutation but keeps the note on a permanent (4xx) failure", async () => {
+    consumeDroppedChanges();
     (getIsOnline as jest.Mock).mockReturnValue(false);
     await actions().createNote(input);
     (getIsOnline as jest.Mock).mockReturnValue(true);
@@ -128,6 +132,7 @@ describe("syncNow", () => {
 
     expect(readyNotes()).toHaveLength(1);
     expect(await loadPendingNoteMutations()).toHaveLength(0);
+    expect(consumeDroppedChanges()).toBe(1);
   });
 });
 

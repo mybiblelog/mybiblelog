@@ -2,13 +2,14 @@ import { create } from "zustand";
 import {
   DEFAULT_LOCAL_USER_SETTINGS,
   type LocalUserSettings,
-  loadLocalUserSettings,
+  deriveDefaultSettings,
   readLocalUserSettings,
   saveLocalUserSettings,
 } from "@/src/settings/userSettingsStorage";
 import { type ServerUserSettings, getSettings, updateSettings } from "@/src/api/settingsApi";
 import { reportHandledError } from "@/src/observability/sentry";
 import { appStorage } from "@/src/storage/keys";
+import { readLogEntries } from "@/src/storage/logEntries";
 import { registerManagedKey } from "@/src/storage/health";
 import { useAuthStore } from "@/src/stores/auth";
 import { getIsOnline, useConnectivityStore } from "@/src/stores/connectivity";
@@ -193,8 +194,30 @@ export const useUserSettingsStore = create<UserSettingsStore>((set, get) => ({
 }));
 
 /**
+ * The server-backed settings the onboarding wizard can stage. `lookBackDate`
+ * is deliberately absent: the wizard never asks for it, so the only value it
+ * could push is the hydration default — and pushing that over an existing
+ * account's tracker start hides all of that account's prior progress.
+ */
+export type PendingServerPushField = "dailyVerseCountGoal" | "preferredBibleVersion";
+
+const PENDING_SERVER_PUSH_FIELDS: readonly PendingServerPushField[] = [
+  "dailyVerseCountGoal",
+  "preferredBibleVersion",
+];
+
+function isPendingServerPushField(key: string): key is PendingServerPushField {
+  return (PENDING_SERVER_PUSH_FIELDS as readonly string[]).includes(key);
+}
+
+async function loadPendingServerPush(): Promise<PendingServerPushField[]> {
+  const stored = await appStorage.get("settingsPendingServerPush");
+  return Array.isArray(stored) ? stored.filter(isPendingServerPushField) : [];
+}
+
+/**
  * Stage a setting chosen before an account exists (the onboarding wizard's
- * "I'm New" path) and flag it to be pushed — not overwritten — the next time
+ * "I'm New" path) and record it to be pushed — not overwritten — the next time
  * this device signs in. Kept distinct from `setLocalSettings` so ordinary
  * signed-in-device edits (`reading.tsx`) are unaffected by construction; only
  * the wizard calls this one.
@@ -202,11 +225,41 @@ export const useUserSettingsStore = create<UserSettingsStore>((set, get) => ({
  * Not a repurposing of `dirtyFields`: that set is cleared the instant a value
  * lands on disk and exists only for crash-safe recovery across a storage
  * outage, not for surviving from "wizard completed" to "account created days
- * later." This uses its own disk-persisted flag instead.
+ * later." This uses its own disk-persisted field list instead.
  */
 async function setLocalSettingsWithPendingSync(partial: Partial<LocalUserSettings>): Promise<void> {
   await useUserSettingsStore.getState().setLocalSettings(partial);
-  await appStorage.set("settingsPendingServerPush", true);
+  const staged = new Set(await loadPendingServerPush());
+  for (const key of Object.keys(partial)) {
+    if (isPendingServerPushField(key)) staged.add(key);
+  }
+  await appStorage.set("settingsPendingServerPush", [...staged]);
+}
+
+/**
+ * The settings to start this launch with.
+ *
+ * With nothing usable stored, the defaults are derived from the reading log and
+ * persisted at once. Left unpersisted, the default look-back date would be
+ * recomputed as "today" on every launch — a guest who never touched a setting
+ * would see each day's relaunch hide everything read before it.
+ *
+ * An unreadable backend is different: the real settings are probably still on
+ * disk, so the defaults stay in memory only, and `rehydrateFromDisk` merges the
+ * stored values back once the key can be read.
+ */
+async function hydrateLocalSettings(): Promise<LocalUserSettings> {
+  const stored = await readLocalUserSettings();
+  if (stored.status === "ok") return stored.value;
+  if (stored.status === "unreadable") return DEFAULT_LOCAL_USER_SETTINGS;
+
+  const entries = await readLogEntries();
+  // Anchoring to "today" because the log couldn't be read would pin exactly
+  // the date this exists to avoid; derive again next launch instead.
+  if (entries.status === "unreadable") return deriveDefaultSettings([]);
+  const settings = deriveDefaultSettings(entries.status === "ok" ? entries.value : []);
+  await saveLocalUserSettings(settings);
+  return settings;
 }
 
 let initialized = false;
@@ -219,7 +272,7 @@ export function initUserSettings(): void {
   registerManagedKey(appStorage.keyName("userSettings"), rehydrateFromDisk);
 
   void (async () => {
-    const local = await loadLocalUserSettings();
+    const local = await hydrateLocalSettings();
     useUserSettingsStore.setState({
       state: { status: "ready", settings: local, isRefreshingFromServer: false },
     });
@@ -244,18 +297,19 @@ export function initUserSettings(): void {
    * the ones that land.
    */
   async function pushPendingSettingsOrRefresh(): Promise<void> {
-    const pending = await appStorage.get("settingsPendingServerPush");
-    if (pending) {
+    const pending = await loadPendingServerPush();
+    if (pending.length > 0) {
       const current = useUserSettingsStore.getState().state;
       if (current.status === "ready") {
-        // `preferredBibleApp` is excluded — the server schema doesn't accept it
-        // (see `ServerUserSettings`); it stays device-only everywhere else too.
-        const { dailyVerseCountGoal, lookBackDate, preferredBibleVersion } = current.settings;
-        await useUserSettingsStore
-          .getState()
-          .updateServerSettings({ dailyVerseCountGoal, lookBackDate, preferredBibleVersion });
+        // Only what the wizard staged. Never `lookBackDate` (see
+        // `PendingServerPushField`), and never `preferredBibleApp`, which the
+        // server schema doesn't accept.
+        const partial: Partial<ServerUserSettings> = Object.fromEntries(
+          pending.map((field) => [field, current.settings[field]])
+        );
+        await useUserSettingsStore.getState().updateServerSettings(partial);
       }
-      await appStorage.set("settingsPendingServerPush", false);
+      await appStorage.remove("settingsPendingServerPush");
       return;
     }
     tryRefresh();

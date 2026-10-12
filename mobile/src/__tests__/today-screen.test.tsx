@@ -196,6 +196,33 @@ describe("Today screen", () => {
     expect(router.push).toHaveBeenCalledWith("/(tabs)/calendar");
   });
 
+  describe("guest backup warning", () => {
+    const signOut = () => useAuthStore.setState({ state: { status: "unauthenticated" } } as never);
+
+    it("warns a signed-out reader that their log lives only on this device", async () => {
+      signOut();
+      renderWithProviders(<Today />);
+      expect(await screen.findByTestId("today.guest-backup")).toBeTruthy();
+
+      fireEvent.press(screen.getByText("Create account"));
+      expect(router.push).toHaveBeenCalledWith("/register");
+    });
+
+    it("stays hidden while signed in", async () => {
+      renderWithProviders(<Today />);
+      await screen.findByTestId("today.add-entry");
+      expect(screen.queryByTestId("today.guest-backup")).toBeNull();
+    });
+
+    it("stays hidden until there is something to lose", async () => {
+      signOut();
+      seed({ entries: [] });
+      renderWithProviders(<Today />);
+      await screen.findByTestId("today.add-entry");
+      expect(screen.queryByTestId("today.guest-backup")).toBeNull();
+    });
+  });
+
   it("filters the notes tab to a passage from the row menu", () => {
     renderWithProviders(<Today />);
     // The row's kebab is labelled with the passage range.

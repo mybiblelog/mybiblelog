@@ -7,7 +7,7 @@ const DEFAULTS = {
 
 jest.mock("@/src/settings/userSettingsStorage", () => ({
   DEFAULT_LOCAL_USER_SETTINGS: DEFAULTS,
-  loadLocalUserSettings: jest.fn(),
+  deriveDefaultSettings: jest.fn(() => DEFAULTS),
   readLocalUserSettings: jest.fn(),
   saveLocalUserSettings: jest.fn(),
 }));
@@ -27,11 +27,7 @@ jest.mock("@/src/stores/connectivity", () => ({
   useConnectivityStore: { subscribe: jest.fn() },
 }));
 
-import {
-  loadLocalUserSettings,
-  readLocalUserSettings,
-  saveLocalUserSettings,
-} from "@/src/settings/userSettingsStorage";
+import { readLocalUserSettings, saveLocalUserSettings } from "@/src/settings/userSettingsStorage";
 import { appStorage } from "@/src/storage/keys";
 import {
   __resetForTest as resetStorageHealth,
@@ -136,7 +132,7 @@ describe("rehydrating after a failed read", () => {
   beforeAll(() => {
     // `initUserSettings` is module-guarded, so this registers the rehydrator
     // once for the whole describe.
-    (loadLocalUserSettings as jest.Mock).mockResolvedValue(DEFAULTS);
+    (readLocalUserSettings as jest.Mock).mockResolvedValue({ status: "ok", value: DEFAULTS });
     (getSettings as jest.Mock).mockRejectedValue(new Error("offline"));
     initUserSettings();
     authListener = (useAuthStore.subscribe as jest.Mock).mock.calls[0][0];
