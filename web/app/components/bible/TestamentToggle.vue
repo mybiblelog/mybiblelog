@@ -115,6 +115,11 @@ const options = computed<Array<{ value: TestamentFilter; label: string; shortLab
 }
 
 @container (max-width: 32rem) {
+  /* Short labels don't need the full-width minimum, which would overflow a track sharing its row. */
+  .testament-toggle--button {
+    min-width: 3.5rem;
+  }
+
   .testament-toggle--label {
     display: none;
   }

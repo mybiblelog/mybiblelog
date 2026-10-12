@@ -1,7 +1,16 @@
-import { useEffect, useState } from "react";
-import { AccessibilityInfo, StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import {
+  AccessibilityInfo,
+  AppState,
+  StyleSheet,
+  View,
+  type LayoutChangeEvent,
+  type StyleProp,
+  type ViewStyle,
+} from "react-native";
 import Animated, {
   Easing,
+  interpolate,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
@@ -14,9 +23,13 @@ import type { ThemeColors } from "@/src/design";
 /** Web animates bar widths over 1s; `durations.slow` (320ms) is far too quick here. */
 const WIDTH_DURATION = 1000;
 const RAINBOW_SWEEP_DURATION = 2000;
-const RAINBOW_FADE_DURATION = 500;
 /** Web's `.bar-progress--complete.is-complete` opacity. */
 const RAINBOW_OPACITY = 0.3;
+/**
+ * The rainbow fades in over the last stretch of the fill's own animation, so
+ * it is never visible before the blue it washes over has arrived.
+ */
+const RAINBOW_FADE_START = 90;
 const BAR_HEIGHT = 16;
 
 type Props = {
@@ -56,8 +69,10 @@ const RAINBOW_CYCLES = 2;
 /** One cycle spans two bar widths, matching web's `background-size: 200%`. */
 const RAINBOW_CYCLE_WIDTH_PCT = 200;
 const RAINBOW_RECT_WIDTH_PCT = RAINBOW_CYCLES * RAINBOW_CYCLE_WIDTH_PCT;
+/** The rect's width in track widths. */
+const RAINBOW_RECT_CYCLES_IN_TRACKS = RAINBOW_RECT_WIDTH_PCT / 100;
 /** One cycle as a share of the rect — how far a single sweep travels. */
-const RAINBOW_SWEEP_PCT = 100 / RAINBOW_CYCLES;
+const RAINBOW_SWEEP_FRACTION = 1 / RAINBOW_CYCLES;
 
 const RAINBOW_GRADIENT_STOPS = Array.from({ length: RAINBOW_CYCLES }, (_, cycle) => cycle).flatMap(
   (cycle) =>
@@ -95,7 +110,7 @@ export function DoubleProgressBar({
 
   const primarySv = useSharedValue(primary);
   const secondarySv = useSharedValue(secondary);
-  const rainbowOpacity = useSharedValue(0);
+  const [trackWidth, setTrackWidth] = useState(0);
   const rainbowOffset = useSharedValue(0);
 
   const [reduceMotion, setReduceMotion] = useState(false);
@@ -125,11 +140,21 @@ export function DoubleProgressBar({
     });
   }, [secondary, secondarySv]);
 
+  // UI-thread animations can be dropped while the app is backgrounded, leaving
+  // the fill stale while `isComplete` (from props) is already true. Snap the
+  // fills back to the props on return.
+  const latest = useRef({ primary, secondary });
   useEffect(() => {
-    rainbowOpacity.value = withTiming(isComplete ? RAINBOW_OPACITY : 0, {
-      duration: RAINBOW_FADE_DURATION,
+    latest.current = { primary, secondary };
+  }, [primary, secondary]);
+  useEffect(() => {
+    const sub = AppState.addEventListener("change", (state) => {
+      if (state !== "active") return;
+      primarySv.value = latest.current.primary;
+      secondarySv.value = latest.current.secondary;
     });
-  }, [isComplete, rainbowOpacity]);
+    return () => sub.remove();
+  }, [primarySv, secondarySv]);
 
   useEffect(() => {
     if (!isComplete || reduceMotion) {
@@ -149,16 +174,26 @@ export function DoubleProgressBar({
   const primaryStyle = useAnimatedStyle(() => ({ width: `${primarySv.value}%` }));
   const secondaryStyle = useAnimatedStyle(() => ({ width: `${secondarySv.value}%` }));
   const rainbowStyle = useAnimatedStyle(() => ({
-    opacity: rainbowOpacity.value,
+    opacity: interpolate(primarySv.value, [RAINBOW_FADE_START, 100], [0, RAINBOW_OPACITY], "clamp"),
     // Ends flush at 0 rather than starting there, so the colours travel in
     // web's direction (rightwards) and the rect always covers the track.
-    transform: [{ translateX: `${RAINBOW_SWEEP_PCT * (rainbowOffset.value - 1)}%` }],
+    transform: [
+      {
+        translateX:
+          trackWidth *
+          RAINBOW_RECT_CYCLES_IN_TRACKS *
+          RAINBOW_SWEEP_FRACTION *
+          (rainbowOffset.value - 1),
+      },
+    ],
   }));
+  const handleLayout = (event: LayoutChangeEvent) => setTrackWidth(event.nativeEvent.layout.width);
 
   return (
     <View
       testID="double-progress-bar"
       accessibilityRole="progressbar"
+      onLayout={handleLayout}
       accessibilityValue={{ min: 0, max: 100, now: Math.round(primary) }}
       style={[
         styles.track,
@@ -182,17 +217,30 @@ export function DoubleProgressBar({
         style={[styles.bar, { backgroundColor: colors[fillColor] }, primaryStyle]}
       />
       {isComplete ? (
-        <Animated.View testID="primary-bar-complete" style={[styles.rainbow, rainbowStyle]}>
-          <Svg width="100%" height="100%">
-            <Defs>
-              <LinearGradient id="mbl-complete" x1="0" y1="0" x2="1" y2="0">
-                {RAINBOW_GRADIENT_STOPS.map((stop) => (
-                  <Stop key={stop.key} offset={stop.offset} stopColor={stop.color} />
-                ))}
-              </LinearGradient>
-            </Defs>
-            <Rect x="0" y="0" width="100%" height="100%" fill="url(#mbl-complete)" />
-          </Svg>
+        // Clipped to the primary fill, so the rainbow can never be drawn over
+        // bare track (which reads as a dark rainbow).
+        <Animated.View testID="primary-bar-complete" style={[styles.rainbowClip, primaryStyle]}>
+          {trackWidth > 0 ? (
+            <Animated.View
+              testID="rainbow-sweep"
+              style={[
+                styles.rainbow,
+                { width: trackWidth * RAINBOW_RECT_CYCLES_IN_TRACKS },
+                rainbowStyle,
+              ]}
+            >
+              <Svg width="100%" height="100%">
+                <Defs>
+                  <LinearGradient id="mbl-complete" x1="0" y1="0" x2="1" y2="0">
+                    {RAINBOW_GRADIENT_STOPS.map((stop) => (
+                      <Stop key={stop.key} offset={stop.offset} stopColor={stop.color} />
+                    ))}
+                  </LinearGradient>
+                </Defs>
+                <Rect x="0" y="0" width="100%" height="100%" fill="url(#mbl-complete)" />
+              </Svg>
+            </Animated.View>
+          ) : null}
         </Animated.View>
       ) : null}
     </View>
@@ -203,13 +251,8 @@ const styles = StyleSheet.create({
   track: { overflow: "hidden", position: "relative" },
   bar: { position: "absolute", top: 0, left: 0, height: "100%" },
   secondary: { opacity: 0.7 },
-  // Holds RAINBOW_CYCLES cycles, so the sweep can travel a whole one and the
-  // rect still spans the track at both ends of the translation.
-  rainbow: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    height: "100%",
-    width: `${RAINBOW_RECT_WIDTH_PCT}%`,
-  },
+  rainbowClip: { position: "absolute", top: 0, left: 0, height: "100%", overflow: "hidden" },
+  // Holds RAINBOW_CYCLES cycles (width set from the measured track), so the
+  // sweep can travel a whole one and the rect still spans the fill at both ends.
+  rainbow: { position: "absolute", top: 0, left: 0, height: "100%" },
 });

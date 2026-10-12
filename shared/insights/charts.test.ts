@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_CHART_DIMENSIONS, buildLineChartGeometry, buildMultiLineChartGeometry } from './charts';
+import { DEFAULT_CHART_DIMENSIONS, buildLineChartGeometry, buildMultiLineChartGeometry, buildSmoothPath } from './charts';
 
 const series = [
   { date: '2024-06-01', count: 0 },
@@ -95,5 +95,44 @@ describe('buildMultiLineChartGeometry', () => {
     const geometry = buildMultiLineChartGeometry([]);
     expect(geometry.series).toEqual([]);
     expect(geometry.maxCount).toBe(1);
+  });
+});
+
+describe('buildSmoothPath', () => {
+  it('returns an empty string for no points and a bare move for one', () => {
+    expect(buildSmoothPath([])).toBe('');
+    expect(buildSmoothPath([{ x: 5, y: 7 }])).toBe('M 5 7');
+  });
+
+  it('starts and ends on the first and last points', () => {
+    const d = buildSmoothPath([{ x: 0, y: 10 }, { x: 10, y: 0 }, { x: 20, y: 10 }]);
+    expect(d.startsWith('M 0 10 C')).toBe(true);
+    expect(d.endsWith('20 10')).toBe(true);
+  });
+
+  it('never overshoots below a flat run (monotone)', () => {
+    const pts = [{ x: 0, y: 100 }, { x: 10, y: 100 }, { x: 20, y: 0 }, { x: 30, y: 100 }];
+    const nums = buildSmoothPath(pts).replace(/[MC]/g, '').trim().split(/\s+/).map(Number);
+    const ys = nums.filter((_, i) => i % 2 === 1);
+    expect(Math.max(...ys)).toBeLessThanOrEqual(100);
+    expect(Math.min(...ys)).toBeGreaterThanOrEqual(0);
+  });
+});
+
+describe('buildLineChartGeometry smooth paths', () => {
+  it('exposes a curved linePath and an area path that follows it', () => {
+    const { linePath, areaPath } = buildLineChartGeometry(series);
+    expect(linePath).toContain('C');
+    expect(areaPath).toContain('C');
+    expect(areaPath.endsWith('Z')).toBe(true);
+  });
+
+  it('keeps whole-number ticks for fractional series', () => {
+    const { yTicks, maxCount } = buildLineChartGeometry([
+      { date: '2024-06-01', count: 0.33 },
+      { date: '2024-06-02', count: 2.4 },
+    ]);
+    expect(maxCount).toBe(3);
+    expect(yTicks.every(t => Number.isInteger(t.value))).toBe(true);
   });
 });

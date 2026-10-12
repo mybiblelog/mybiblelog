@@ -49,6 +49,7 @@ export const BOOK = {
   MARK: 41,
   LUKE: 42,
   JOHN: 43,
+  ACTS: 44,
   JUDE: 65,
   REVELATION: 66,
 } as const;

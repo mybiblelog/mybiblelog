@@ -1,4 +1,5 @@
 export { BackgroundPattern } from "./BackgroundPattern";
+export { BookListToolbar } from "./BookListToolbar";
 export { Card } from "./Card";
 export type { CardPadding, CardTone } from "./Card";
 export { CheckboxRow } from "./CheckboxRow";

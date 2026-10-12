@@ -87,6 +87,39 @@ test.describe('Bible Books pages', () => {
     await expect(progress).toHaveAttribute('data-percentage', String(biblePercentage));
   });
 
+  test('book order and testament filter can be changed and persist across visits', async ({ page }) => {
+    await page.goto('/books');
+    const books = page.getByTestId('bible-report-book');
+    await expect(books.first()).toHaveAttribute('data-book-index', String(BOOK.GENESIS));
+
+    // The sort button toggles to alphabetical (English): Acts comes first
+    const sortToggle = page.getByTestId('book-sort-toggle');
+    await expect(sortToggle).toHaveAttribute('data-sort-order', 'numerical');
+    await sortToggle.click();
+    await expect(sortToggle).toHaveAttribute('data-sort-order', 'alphabetical');
+    await expect(books).toHaveCount(66);
+    await expect(books.first()).toHaveAttribute('data-book-index', String(BOOK.ACTS));
+
+    await page.getByTestId('testament-toggle-new').click();
+    await expect(books).toHaveCount(27);
+    await expect(books.first()).toHaveAttribute('data-book-index', String(BOOK.ACTS));
+
+    // Both choices are rendered server-side on the next visit, so the list never reshuffles after hydration
+    const html = await (await page.request.get('/books')).text();
+    const ssrOrder = [...html.matchAll(/data-book-index="(\d+)"/g)].map(m => Number(m[1]));
+    expect(ssrOrder).toHaveLength(27);
+    expect(ssrOrder[0]).toBe(BOOK.ACTS);
+
+    await page.reload();
+    await expect(books).toHaveCount(27);
+    await expect(books.first()).toHaveAttribute('data-book-index', String(BOOK.ACTS));
+
+    // Toggling again returns to traditional order
+    await expect(sortToggle).toHaveAttribute('data-sort-order', 'alphabetical');
+    await sortToggle.click();
+    await expect(books.first()).toHaveAttribute('data-book-index', String(BOOK.MATTHEW));
+  });
+
   test('clicking a book on the overview navigates to its report', async ({ page }) => {
     await page.goto('/books');
     await page.getByTestId('bible-report-book').first().click();

@@ -1,8 +1,17 @@
 import { StyleSheet } from "react-native";
+import { act, fireEvent } from "@testing-library/react-native";
 import { Stop } from "react-native-svg";
 import { colorsByScheme, radius } from "@/src/design";
 import { renderWithProviders, screen } from "@/src/test-utils/renderWithProviders";
 import { DoubleProgressBar } from "./DoubleProgressBar";
+
+const TRACK_WIDTH = 200;
+const measureTrack = () =>
+  act(() => {
+    fireEvent(screen.getByTestId("double-progress-bar"), "layout", {
+      nativeEvent: { layout: { x: 0, y: 0, width: TRACK_WIDTH, height: 16 } },
+    });
+  });
 
 const styleOf = (testID: string) => StyleSheet.flatten(screen.getByTestId(testID).props.style);
 
@@ -57,19 +66,27 @@ describe("DoubleProgressBar", () => {
 
     it("loops seamlessly: the sweep distance lands on an identical gradient phase", () => {
       renderWithProviders(<DoubleProgressBar primaryPercentage={100} />);
-      const sweep = styleOf("primary-bar-complete");
-      const width = Number.parseFloat(String(sweep.width));
+      measureTrack();
+      const width = Number(styleOf("rainbow-sweep").width);
 
-      // The rect must hold a whole number of gradient cycles, and one sweep
-      // (half the rect) must be a whole number of them too — otherwise the
-      // restart snaps mid-cycle, which is the bug this guards.
-      const cycleWidth = 200;
+      // The rect must hold a whole number of gradient cycles (each two track
+      // widths), and one sweep (half the rect) must be a whole number of them
+      // too — otherwise the restart snaps mid-cycle, which is the bug this guards.
+      const cycleWidth = TRACK_WIDTH * 2;
       expect(width % cycleWidth).toBe(0);
       expect(width / 2 / cycleWidth).toBe(1);
     });
 
+    it("is clipped to the primary fill so it can't show over bare track", () => {
+      renderWithProviders(<DoubleProgressBar primaryPercentage={100} />);
+      const clip = styleOf("primary-bar-complete");
+      expect(clip.overflow).toBe("hidden");
+      expect(clip.width).toBe("100%");
+    });
+
     it("repeats the red endpoint so the two cycles meet without a hard edge", () => {
       renderWithProviders(<DoubleProgressBar primaryPercentage={100} />);
+      measureTrack();
       const stops = screen.UNSAFE_getAllByType(Stop);
       const at = (offset: string) => stops.filter((s) => s.props.offset === offset);
 

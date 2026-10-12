@@ -27,9 +27,17 @@ export default function Insights() {
       <ScrollView contentContainerStyle={styles.content}>
         <SegmentedControl
           options={[
-            { value: "activity", label: t("insights_tab_activity"), testID: "insights.tab-activity" },
+            {
+              value: "activity",
+              label: t("insights_tab_activity"),
+              testID: "insights.tab-activity",
+            },
             { value: "books", label: t("insights_tab_books"), testID: "insights.tab-books" },
-            { value: "frequency", label: t("insights_tab_frequency"), testID: "insights.tab-frequency" },
+            {
+              value: "frequency",
+              label: t("insights_tab_frequency"),
+              testID: "insights.tab-frequency",
+            },
             { value: "trend", label: t("insights_tab_trend"), testID: "insights.tab-trend" },
           ]}
           value={view}

@@ -53,21 +53,23 @@
         </template>
       </p>
 
-      <div v-if="chapterCount > 3" class="mbl-table-wrap">
-        <table class="mbl-table mbl-table--striped">
-          <thead>
-            <tr>
-              <th>{{ t('pace.header_1') }}</th>
-              <th>{{ t('pace.header_2', { book: bookName }) }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="pace in paces" :key="pace.label">
-              <td>{{ pace.label }}</td>
-              <td>{{ t('days_count', { n: formatNumber(pace.days) }, pace.days) }}</td>
-            </tr>
-          </tbody>
-        </table>
+      <div v-if="chapterCount > 3" class="mbl-box">
+        <div class="mbl-table-wrap">
+          <table class="mbl-table mbl-table--striped">
+            <thead>
+              <tr>
+                <th>{{ t('pace.header_1') }}</th>
+                <th>{{ t('pace.header_2', { book: bookName }) }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="pace in paces" :key="pace.label">
+                <td>{{ pace.label }}</td>
+                <td>{{ t('days_count', { n: formatNumber(pace.days) }, pace.days) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <content-app-callout

@@ -84,7 +84,7 @@
         </div>
 
         <div class="feedback-cards">
-          <div v-for="feedback in feedbacks" :key="feedback._id" class="feedback-card">
+          <div v-for="feedback in feedbacks" :key="feedback._id" class="feedback-card mbl-card">
             <div class="feedback-card__date mbl-text-small mbl-text-muted">
               {{ formatDateTime(feedback.createdAt) }}
             </div>
@@ -335,8 +335,6 @@ onMounted(() => { loadFeedbacks(); });
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--mbl-space-xs) var(--mbl-space-md);
-  border: 1px solid var(--mbl-border);
-  border-radius: var(--mbl-radius-lg);
   padding: var(--mbl-space-sm) var(--mbl-space-md);
 }
 

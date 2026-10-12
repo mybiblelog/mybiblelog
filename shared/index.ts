@@ -3,6 +3,7 @@ export { default as Bible } from './bible';
 export { default as BrowserCache } from './platform/browser-cache';
 
 // Utility exports
+export * from './text/linkify';
 export * from './bible/apps';
 export * from './bible/translations';
 export * from './platform/device';

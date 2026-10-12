@@ -15,7 +15,8 @@ export type TestamentFilter = 'all' | Testament;
 export type BookSortOrder = 'numerical' | 'alphabetical';
 
 export type FilterAndSortBookOptions = {
-  testament?: Testament;
+  /** `'all'` keeps both testaments. */
+  testament?: TestamentFilter;
   sortOrder?: BookSortOrder;
   locale?: string;
 };
@@ -31,7 +32,8 @@ export const getBookOptions = (locale = 'en'): BookOption[] =>
     value: book.bibleOrder,
   }));
 
-const stripLeadingNumbers = (str: string): string => str.replace(/^\d+\s*/, '').trim();
+// The optional dot covers ordinals written like German "1. Korinther".
+const stripLeadingNumbers = (str: string): string => str.replace(/^\d+\.?\s*/, '').trim();
 
 const newTestamentByBook = (): Map<number, boolean> => {
   const map = new Map<number, boolean>();
@@ -42,7 +44,7 @@ const newTestamentByBook = (): Map<number, boolean> => {
 };
 
 /**
- * Filters book options to a single testament and sorts them either in
+ * Filters book options to a testament (or keeps all of them) and sorts them either in
  * canonical (numerical) order or alphabetically by name (ignoring any
  * leading ordinal like "1" in "1 Samuel"). Returns a new array; the input
  * is not mutated.
@@ -57,6 +59,9 @@ export const filterAndSortBookOptions = (
     const newTestament = isNewTestament.get(option.value);
     if (newTestament === undefined) {
       return false;
+    }
+    if (testament === 'all') {
+      return true;
     }
     return testament === 'old' ? !newTestament : newTestament;
   });

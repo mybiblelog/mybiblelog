@@ -232,29 +232,46 @@ export type DailyVersePoint = {
  * Returns the total verses read on each of the trailing `days` days ending on
  * `endDate` (defaults to today), ordered oldest → newest. Always returns exactly
  * `days` points, padding empty days with a count of 0.
+ *
+ * With `averageWindow` > 1, each point is instead the mean daily total over the
+ * trailing `averageWindow` days (including that day). Days before the window
+ * are read too, so the first points are averaged over a full window.
  */
 export const computeDailyVerseSeries = (
   entries: ReadonlyArray<Readonly<InsightsLogEntry>>,
   days: number,
   endDate?: string,
+  averageWindow = 1,
 ): DailyVersePoint[] => {
   const safeDays = Math.max(0, Math.floor(days));
   if (safeDays === 0) {
     return [];
   }
 
+  const safeAverage = Math.max(1, Math.floor(averageWindow));
   const end = endDate ? dayjs(endDate) : dayjs();
   const start = end.subtract(safeDays - 1, 'day');
-  const startStr = start.format('YYYY-MM-DD');
-  const endStr = end.format('YYYY-MM-DD');
+  const readStart = start.subtract(safeAverage - 1, 'day');
 
-  const counts = computeDateVerseCounts(entries, startStr, endStr);
+  const counts = computeDateVerseCounts(
+    entries,
+    readStart.format('YYYY-MM-DD'),
+    end.format('YYYY-MM-DD'),
+  );
+
+  const totals: number[] = [];
+  let cursor = readStart;
+  for (let i = 0; i < safeDays + safeAverage - 1; i++) {
+    totals.push(counts[cursor.format('YYYY-MM-DD')]?.total ?? 0);
+    cursor = cursor.add(1, 'day');
+  }
 
   const series: DailyVersePoint[] = [];
-  let cursor = start;
+  cursor = start;
   for (let i = 0; i < safeDays; i++) {
-    const date = cursor.format('YYYY-MM-DD');
-    series.push({ date, count: counts[date]?.total ?? 0 });
+    let sum = 0;
+    for (let j = 0; j < safeAverage; j++) sum += totals[i + j]!;
+    series.push({ date: cursor.format('YYYY-MM-DD'), count: sum / safeAverage });
     cursor = cursor.add(1, 'day');
   }
   return series;

@@ -90,6 +90,13 @@ export default function SettingsIndex() {
           testID="settings.language-link"
         />
         <SectionRow
+          icon="chatbubble-ellipses-outline"
+          title={t("settings_section_feedback")}
+          subtitle={t("settings_section_feedback_subtitle")}
+          onPress={() => router.push("/settings/feedback")}
+          testID="settings.feedback-link"
+        />
+        <SectionRow
           icon="information-circle-outline"
           title={t("settings_section_about")}
           subtitle={t("settings_section_about_subtitle")}

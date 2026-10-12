@@ -10,212 +10,198 @@
       </NuxtLink>
     </header>
     <busy-bar :busy="dateVerseCountsBusy" />
-    <article class="mbl-message">
-      <div class="mbl-message__body">
-        <div class="mbl-content">
-          <h2 class="mbl-title mbl-title--5">
-            {{ t('your_reading_settings.title') }}
-          </h2>
-          <p>{{ t('your_reading_settings.description') }}</p>
-          <div class="mbl-button-group">
-            <NuxtLink class="mbl-button" :to="localePath('/settings/reading')">
-              {{ t('your_reading_settings.update_settings') }}
-            </NuxtLink>
-          </div>
-          <table class="mbl-table">
-            <tbody>
-              <tr>
-                <td>{{ t('your_reading_settings.look_back_date') }}</td>
-                <td>{{ displayDate(userSettings.lookBackDate) }}</td>
-              </tr>
-              <tr>
-                <td>{{ t('your_reading_settings.daily_verse_count_goal') }}</td>
-                <td>{{ userSettings.dailyVerseCountGoal }}</td>
-              </tr>
-            </tbody>
-          </table>
+    <article class="mbl-box progress-section">
+      <div class="mbl-content">
+        <h2 class="mbl-title mbl-title--5">
+          {{ t('your_reading_settings.title') }}
+        </h2>
+        <p>{{ t('your_reading_settings.description') }}</p>
+        <div class="mbl-button-group">
+          <NuxtLink class="mbl-button" :to="localePath('/settings/reading')">
+            {{ t('your_reading_settings.update_settings') }}
+          </NuxtLink>
         </div>
+        <table class="mbl-table">
+          <tbody>
+            <tr>
+              <td>{{ t('your_reading_settings.look_back_date') }}</td>
+              <td>{{ displayDate(userSettings.lookBackDate) }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('your_reading_settings.daily_verse_count_goal') }}</td>
+              <td>{{ userSettings.dailyVerseCountGoal }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </article>
-    <article class="mbl-message">
-      <div class="mbl-message__body">
-        <div class="mbl-content">
-          <h2 class="mbl-title mbl-title--5">
-            {{ t('your_progress_so_far.title') }}
-          </h2>
-          <table class="mbl-table">
-            <tbody>
-              <tr>
-                <td>{{ t('your_progress_so_far.total_bible_verses') }}</td>
-                <td>{{ n(totalBibleVerseCount, 'grouped') }}</td>
-              </tr>
-              <tr>
-                <td>{{ t('your_progress_so_far.verses_read') }}</td>
-                <td>{{ n(uniqueVersesReadSinceLookBackDate, 'grouped') }}</td>
-              </tr>
-              <tr>
-                <td>{{ t('your_progress_so_far.verses_remaining') }}</td>
-                <td>{{ n(unreadVerses, 'grouped') }}</td>
-              </tr>
-              <tr>
-                <td>{{ t('your_progress_so_far.percent_complete') }}</td>
-                <td>{{ n(Math.floor(uniqueVersesReadSinceLookBackDate / totalBibleVerseCount * 100) / 100, 'percent') }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <article class="mbl-box progress-section">
+      <div class="mbl-content">
+        <h2 class="mbl-title mbl-title--5">
+          {{ t('your_progress_so_far.title') }}
+        </h2>
+        <table class="mbl-table">
+          <tbody>
+            <tr>
+              <td>{{ t('your_progress_so_far.total_bible_verses') }}</td>
+              <td>{{ n(totalBibleVerseCount, 'grouped') }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('your_progress_so_far.verses_read') }}</td>
+              <td>{{ n(uniqueVersesReadSinceLookBackDate, 'grouped') }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('your_progress_so_far.verses_remaining') }}</td>
+              <td>{{ n(unreadVerses, 'grouped') }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('your_progress_so_far.percent_complete') }}</td>
+              <td>{{ n(Math.floor(uniqueVersesReadSinceLookBackDate / totalBibleVerseCount * 100) / 100, 'percent') }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </article>
-    <article class="mbl-message">
-      <div class="mbl-message__body">
-        <div class="mbl-content">
-          <h2 class="mbl-title mbl-title--5">
-            {{ t('your_outlook.historical.title') }}
-          </h2>
-          <i18n-t keypath="your_outlook.historical.description" tag="p">
-            <template #lookBackDate>
-              <strong>{{ t('your_reading_settings.look_back_date') }}</strong>
-            </template>
-          </i18n-t>
-          <table class="mbl-table">
-            <tbody>
-              <tr>
-                <td>
-                  <i18n-t keypath="your_outlook.days_since_look_back_date">
-                    <template #lookBackDate>
-                      <strong>{{ t('your_reading_settings.look_back_date') }}</strong>
-                    </template>
-                  </i18n-t>
-                </td>
-                <td>{{ n(daysSinceLookBackDate, 'grouped') }}</td>
-              </tr>
-              <tr>
-                <td>{{ t('your_outlook.average_daily_verses_read') }}</td>
-                <td>{{ n(averageUniqueVersesReadDailySinceLookBackDate, 'grouped') }}</td>
-              </tr>
-              <tr>
-                <td>{{ t('your_outlook.days_to_finish_at_this_rate') }}</td>
-                <td>{{ n(daysToFinishBibleBasedOnLookBackDateAverage, 'grouped') }}</td>
-              </tr>
-              <tr>
-                <td>{{ t('your_outlook.date_to_finish_at_this_rate') }}</td>
-                <td>{{ displayDate(dateToFinishBibleBasedOnLookBackDateAverage) }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <article class="mbl-box progress-section">
+      <div class="mbl-content">
+        <h2 class="mbl-title mbl-title--5">
+          {{ t('your_outlook.historical.title') }}
+        </h2>
+        <i18n-t keypath="your_outlook.historical.description" tag="p">
+          <template #lookBackDate>
+            <strong>{{ t('your_reading_settings.look_back_date') }}</strong>
+          </template>
+        </i18n-t>
+        <table class="mbl-table">
+          <tbody>
+            <tr>
+              <td>
+                <i18n-t keypath="your_outlook.days_since_look_back_date">
+                  <template #lookBackDate>
+                    <strong>{{ t('your_reading_settings.look_back_date') }}</strong>
+                  </template>
+                </i18n-t>
+              </td>
+              <td>{{ n(daysSinceLookBackDate, 'grouped') }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('your_outlook.average_daily_verses_read') }}</td>
+              <td>{{ n(averageUniqueVersesReadDailySinceLookBackDate, 'grouped') }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('your_outlook.days_to_finish_at_this_rate') }}</td>
+              <td>{{ n(daysToFinishBibleBasedOnLookBackDateAverage, 'grouped') }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('your_outlook.date_to_finish_at_this_rate') }}</td>
+              <td>{{ displayDate(dateToFinishBibleBasedOnLookBackDateAverage) }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </article>
-    <article class="mbl-message">
-      <div class="mbl-message__body">
-        <div class="mbl-content">
-          <h2 class="mbl-title mbl-title--5">
-            {{ t('your_outlook.30_day.title') }}
-          </h2>
-          <p>{{ t('your_outlook.30_day.description') }}</p>
-          <table class="mbl-table">
-            <tbody>
-              <tr>
-                <td>{{ t('your_outlook.average_daily_verses_read') }}</td>
-                <td>{{ n(averageDailyVersesReadPastXDays(30), 'grouped') }}</td>
-              </tr>
-              <tr>
-                <td>{{ t('your_outlook.days_to_finish_at_this_rate') }}</td>
-                <td>{{ n(daysToFinishBibleBasedOnXDayAverage(30), 'grouped') }}</td>
-              </tr>
-              <tr>
-                <td>{{ t('your_outlook.date_to_finish_at_this_rate') }}</td>
-                <td>{{ displayDate(dateToFinishBibleBasedOnXDayAverage(30)) }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <article class="mbl-box progress-section">
+      <div class="mbl-content">
+        <h2 class="mbl-title mbl-title--5">
+          {{ t('your_outlook.30_day.title') }}
+        </h2>
+        <p>{{ t('your_outlook.30_day.description') }}</p>
+        <table class="mbl-table">
+          <tbody>
+            <tr>
+              <td>{{ t('your_outlook.average_daily_verses_read') }}</td>
+              <td>{{ n(averageDailyVersesReadPastXDays(30), 'grouped') }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('your_outlook.days_to_finish_at_this_rate') }}</td>
+              <td>{{ n(daysToFinishBibleBasedOnXDayAverage(30), 'grouped') }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('your_outlook.date_to_finish_at_this_rate') }}</td>
+              <td>{{ displayDate(dateToFinishBibleBasedOnXDayAverage(30)) }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </article>
-    <article class="mbl-message">
-      <div class="mbl-message__body">
-        <div class="mbl-content">
-          <h2 class="mbl-title mbl-title--5">
-            {{ t('your_outlook.7_day.title') }}
-          </h2>
-          <p>{{ t('your_outlook.7_day.description') }}</p>
-          <table class="mbl-table">
-            <tbody>
-              <tr>
-                <td>{{ t('your_outlook.average_daily_verses_read') }}</td>
-                <td>{{ n(averageDailyVersesReadPastXDays(7), 'grouped') }}</td>
-              </tr>
-              <tr>
-                <td>{{ t('your_outlook.days_to_finish_at_this_rate') }}</td>
-                <td>{{ n(daysToFinishBibleBasedOnXDayAverage(7), 'grouped') }}</td>
-              </tr>
-              <tr>
-                <td>{{ t('your_outlook.date_to_finish_at_this_rate') }}</td>
-                <td>{{ displayDate(dateToFinishBibleBasedOnXDayAverage(7)) }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <article class="mbl-box progress-section">
+      <div class="mbl-content">
+        <h2 class="mbl-title mbl-title--5">
+          {{ t('your_outlook.7_day.title') }}
+        </h2>
+        <p>{{ t('your_outlook.7_day.description') }}</p>
+        <table class="mbl-table">
+          <tbody>
+            <tr>
+              <td>{{ t('your_outlook.average_daily_verses_read') }}</td>
+              <td>{{ n(averageDailyVersesReadPastXDays(7), 'grouped') }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('your_outlook.days_to_finish_at_this_rate') }}</td>
+              <td>{{ n(daysToFinishBibleBasedOnXDayAverage(7), 'grouped') }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('your_outlook.date_to_finish_at_this_rate') }}</td>
+              <td>{{ displayDate(dateToFinishBibleBasedOnXDayAverage(7)) }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </article>
-    <article class="mbl-message">
-      <div class="mbl-message__body">
-        <div class="mbl-content">
-          <h2 class="mbl-title mbl-title--5">
-            {{ t('your_outlook.today.title') }}
-          </h2>
-          <p>{{ t('your_outlook.today.description') }}</p>
-          <table class="mbl-table">
-            <tbody>
-              <tr>
-                <td>{{ t('your_outlook.verses_read') }}</td>
-                <td>{{ n(newVersesReadToday, 'grouped') }}</td>
-              </tr>
-              <tr>
-                <td>{{ t('your_outlook.days_to_finish_at_this_rate') }}</td>
-                <td>{{ n(daysToFinishBibleBasedOnToday, 'grouped') }}</td>
-              </tr>
-              <tr>
-                <td>{{ t('your_outlook.date_to_finish_at_this_rate') }}</td>
-                <td>{{ displayDate(dateToFinishBibleBasedOnToday) }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <article class="mbl-box progress-section">
+      <div class="mbl-content">
+        <h2 class="mbl-title mbl-title--5">
+          {{ t('your_outlook.today.title') }}
+        </h2>
+        <p>{{ t('your_outlook.today.description') }}</p>
+        <table class="mbl-table">
+          <tbody>
+            <tr>
+              <td>{{ t('your_outlook.verses_read') }}</td>
+              <td>{{ n(newVersesReadToday, 'grouped') }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('your_outlook.days_to_finish_at_this_rate') }}</td>
+              <td>{{ n(daysToFinishBibleBasedOnToday, 'grouped') }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('your_outlook.date_to_finish_at_this_rate') }}</td>
+              <td>{{ displayDate(dateToFinishBibleBasedOnToday) }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </article>
-    <article class="mbl-message">
-      <div class="mbl-message__body">
-        <div class="mbl-content">
-          <h2 class="mbl-title mbl-title--5">
-            {{ t('set_a_goal.title') }}
-          </h2>
-          <p>{{ t('set_a_goal.description') }}</p>
-          <table class="mbl-table">
-            <tbody>
-              <tr>
-                <td colspan="2">
-                  <label>{{ t('set_a_goal.goal_finish_date') }}
-                    <input v-model="goalFinishDate" class="mbl-input" type="date">
-                  </label>
-                </td>
-              </tr>
-              <tr v-if="goalFinishDateError">
-                <td colspan="2">
-                  <span class="mbl-text-danger">{{ goalFinishDateError }}</span>
-                </td>
-              </tr>
-              <tr>
-                <td>{{ t('set_a_goal.days_to_finish_by_goal') }}</td>
-                <td>{{ daysToFinishByGoalFinishDate }}</td>
-              </tr>
-              <tr>
-                <td>{{ t('set_a_goal.verses_required_each_day') }}</td>
-                <td>{{ versesRequiredEachDayForGoal }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <article class="mbl-box progress-section">
+      <div class="mbl-content">
+        <h2 class="mbl-title mbl-title--5">
+          {{ t('set_a_goal.title') }}
+        </h2>
+        <p>{{ t('set_a_goal.description') }}</p>
+        <table class="mbl-table">
+          <tbody>
+            <tr>
+              <td colspan="2">
+                <label>{{ t('set_a_goal.goal_finish_date') }}
+                  <input v-model="goalFinishDate" class="mbl-input" type="date">
+                </label>
+              </td>
+            </tr>
+            <tr v-if="goalFinishDateError">
+              <td colspan="2">
+                <span class="mbl-text-danger">{{ goalFinishDateError }}</span>
+              </td>
+            </tr>
+            <tr>
+              <td>{{ t('set_a_goal.days_to_finish_by_goal') }}</td>
+              <td>{{ daysToFinishByGoalFinishDate }}</td>
+            </tr>
+            <tr>
+              <td>{{ t('set_a_goal.verses_required_each_day') }}</td>
+              <td>{{ versesRequiredEachDayForGoal }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </article>
   </div>
@@ -356,6 +342,10 @@ onMounted(async () => {
 </script>
 
 <style>
+.progress-section + .progress-section {
+  margin-top: var(--mbl-space-xl);
+}
+
 td:nth-child(2) {
   white-space: pre;
 }

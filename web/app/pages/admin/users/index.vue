@@ -102,7 +102,7 @@
           </div>
 
           <div class="user-cards">
-            <div v-for="(user, index) in users" :key="user._id" class="user-card">
+            <div v-for="(user, index) in users" :key="user._id" class="user-card mbl-card">
               <div class="user-card__email">
                 <span class="user-card__number mbl-text-small mbl-text-muted">#{{ offset + index + 1 }}</span>
                 {{ user.email }}
@@ -288,8 +288,6 @@ onMounted(() => { loadUsers(); });
   grid-template-columns: 1fr auto;
   grid-template-rows: auto auto;
   gap: var(--mbl-space-xs) var(--mbl-space-md);
-  border: 1px solid var(--mbl-border);
-  border-radius: var(--mbl-radius-lg);
   padding: var(--mbl-space-sm) var(--mbl-space-md);
 }
 

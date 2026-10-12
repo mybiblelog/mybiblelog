@@ -11,55 +11,60 @@
           </template>
           <template v-else>
             <engagement-chart :rows="engagementData" />
-            <div class="mbl-table-wrap">
-              <table class="mbl-table mbl-table--narrow mbl-table--striped engagement-table">
-                <thead>
-                  <tr>
-                    <th>{{ t('column_date') }}</th>
-                    <th class="engagement-table__num">
-                      {{ t('column_new') }}
-                    </th>
-                    <th class="engagement-table__num">
-                      {{ t('column_web') }}
-                    </th>
-                    <th class="engagement-table__num">
-                      {{ t('column_android') }}
-                    </th>
-                    <th class="engagement-table__num">
-                      {{ t('column_ios') }}
-                    </th>
-                    <th class="engagement-table__num">
-                      {{ t('column_logged') }}
-                    </th>
-                    <th class="engagement-table__num">
-                      {{ t('column_notes') }}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(row, index) in engagementData" :key="index">
-                    <td>{{ formatShortDate(row.date) }}</td>
-                    <td class="engagement-table__num">
-                      {{ row.newUserAccounts }}
-                    </td>
-                    <td class="engagement-table__num">
-                      {{ row.newUserAccountsByPlatform.web }}
-                    </td>
-                    <td class="engagement-table__num">
-                      {{ row.newUserAccountsByPlatform.android }}
-                    </td>
-                    <td class="engagement-table__num">
-                      {{ row.newUserAccountsByPlatform.ios }}
-                    </td>
-                    <td class="engagement-table__num">
-                      {{ row.usersWithLogEntry }}
-                    </td>
-                    <td class="engagement-table__num">
-                      {{ row.usersWithNote }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="mbl-box engagement-table-box">
+              <div class="mbl-table-wrap">
+                <table class="mbl-table mbl-table--narrow mbl-table--striped engagement-table">
+                  <thead>
+                    <tr>
+                      <th>{{ t('column_date') }}</th>
+                      <th class="engagement-table__num">
+                        {{ t('column_new') }}
+                      </th>
+                      <th class="engagement-table__num">
+                        {{ t('column_web') }}
+                      </th>
+                      <th class="engagement-table__num">
+                        {{ t('column_android') }}
+                      </th>
+                      <th class="engagement-table__num">
+                        {{ t('column_ios') }}
+                      </th>
+                      <th class="engagement-table__num">
+                        {{ t('column_logged') }}
+                      </th>
+                      <th class="engagement-table__num">
+                        {{ t('column_notes') }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(row, index) in engagementData" :key="index">
+                      <td>
+                        <span class="engagement-table__weekday">{{ formatWeekday(row.date) }}</span>
+                        {{ formatShortDate(row.date) }}
+                      </td>
+                      <td class="engagement-table__num">
+                        {{ row.newUserAccounts }}
+                      </td>
+                      <td class="engagement-table__num">
+                        {{ row.newUserAccountsByPlatform.web }}
+                      </td>
+                      <td class="engagement-table__num">
+                        {{ row.newUserAccountsByPlatform.android }}
+                      </td>
+                      <td class="engagement-table__num">
+                        {{ row.newUserAccountsByPlatform.ios }}
+                      </td>
+                      <td class="engagement-table__num">
+                        {{ row.usersWithLogEntry }}
+                      </td>
+                      <td class="engagement-table__num">
+                        {{ row.usersWithNote }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </template>
         </div>
@@ -90,6 +95,10 @@ const dialogStore = useDialogStore();
 
 const loading = ref(true);
 const engagementData = ref<EngagementRow[]>([]);
+
+function formatWeekday(date: string) {
+  return dayjs(date).locale(locale.value).format('ddd');
+}
 
 function formatShortDate(date: string) {
   return dayjs(date).locale(locale.value).format('MMM D');
@@ -131,6 +140,18 @@ onMounted(async () => {
 
 .engagement-table tbody tr:nth-child(even) td:first-child {
   background: var(--mbl-bg-subtle);
+}
+
+.engagement-table-box {
+  margin-bottom: var(--mbl-fab-clearance);
+}
+
+.engagement-table__weekday {
+  color: var(--mbl-text-muted);
+  display: block;
+  font-size: 0.7em;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 .engagement-table__num {

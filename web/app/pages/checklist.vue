@@ -15,7 +15,7 @@
         </NuxtLink>
       </div>
     </header>
-    <testament-toggle v-model="testamentFilter" class="testament-filter" />
+    <book-list-toolbar v-model:testament="testamentFilter" v-model:sort-order="sortOrder" class="book-list-filter" />
     <div>
       <div v-if="!bookReports.length" class="loading-card">
         <strong>{{ t('loading') }}</strong>
@@ -110,9 +110,8 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import { Bible, BrowserCache, computeBibleProgress } from '@mybiblelog/shared';
-import type { TestamentFilter } from '@mybiblelog/shared';
-import TestamentToggle from '~/components/bible/TestamentToggle.vue';
+import { Bible, BrowserCache, computeBibleProgress, filterAndSortBookOptions, getBookOptions } from '@mybiblelog/shared';
+import BookListToolbar from '~/components/bible/BookListToolbar.vue';
 import BusyBar from '~/components/ui/BusyBar.vue';
 import CompletionBar from '~/components/ui/CompletionBar.vue';
 import ParticleBurst from '~/components/ui/ParticleBurst.vue';
@@ -152,15 +151,20 @@ const computeBusy = ref(false);
 const busyChapters = ref(new Set<string>());
 const bookReports = ref<BookReport[]>([]);
 
-// Purely a view filter: `bookReports`, the cached snapshot and `toggleChapter`
-// all keep working off the full 66-book list, so hiding a testament can never
-// change what gets computed or saved.
-const testamentFilter = ref<TestamentFilter>('all');
-const visibleBookReports = computed(() => bookReports.value.filter((report) => {
-  if (testamentFilter.value === 'old') { return !Bible.isNewTestament(report.bookIndex); }
-  if (testamentFilter.value === 'new') { return Bible.isNewTestament(report.bookIndex); }
-  return true;
-}));
+// Purely a view filter and order: `bookReports`, the cached snapshot and
+// `toggleChapter` all keep working off the full 66-book list, so hiding a
+// testament or reordering can never change what gets computed or saved.
+const { testament: testamentFilter, sortOrder } = useBookListPrefs();
+const visibleBookReports = computed(() => {
+  const reportsByBook = new Map(bookReports.value.map(report => [report.bookIndex, report]));
+  return filterAndSortBookOptions(getBookOptions(locale.value), {
+    testament: testamentFilter.value,
+    sortOrder: sortOrder.value,
+    locale: locale.value,
+  })
+    .map(option => reportsByBook.get(option.value))
+    .filter((report): report is BookReport => report !== undefined);
+});
 
 const bookCount = Bible.getBookCount();
 const expandedBooks = ref<Record<number, boolean>>({});
@@ -328,7 +332,7 @@ onBeforeUnmount(endAllCelebrations);
 <style scoped>
 /* Takes over the gap `.page-header` would otherwise hold against the list,
    so the toggle reads as part of the page chrome rather than the first card. */
-.testament-filter {
+.book-list-filter {
   margin-bottom: var(--mbl-page-header-gap);
 }
 

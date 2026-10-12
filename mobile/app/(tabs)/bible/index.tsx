@@ -1,9 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { Bible, type BookProgress, type TestamentFilter } from "@mybiblelog/shared";
+import { Bible, type BookProgress } from "@mybiblelog/shared";
+import { filterAndSortBooks } from "@/src/bible/bookList";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import {
   AnimatedList,
@@ -11,12 +12,13 @@ import {
   Screen,
   ScreenHeader,
   SegmentBar,
-  SegmentedControl,
+  BookListToolbar,
   Spinner,
   Text,
 } from "@/src/components";
 import { durations, easings, radius, spacing, useTheme } from "@/src/design";
 import { useBibleProgress } from "@/src/stores/bibleProgress";
+import { bookListPrefsActions, useBookListPrefs } from "@/src/stores/bookListPrefs";
 import {
   noteCountsActions,
   selectAnyBookHasNotes,
@@ -99,7 +101,8 @@ export default function BibleIndex() {
   const t = useT();
   const { locale } = useLocale();
   const progress = useBibleProgress();
-  const [testament, setTestament] = useState<TestamentFilter>("all");
+  const bookListPrefs = useBookListPrefs();
+  const { testament, sortOrder } = bookListPrefs;
   const noteCounts = useBookNoteCounts();
   const anyBooksHaveNotes = useMemo(() => selectAnyBookHasNotes(noteCounts), [noteCounts]);
   const navigatingRef = useRef(false);
@@ -121,17 +124,16 @@ export default function BibleIndex() {
 
   const filtered = useMemo(() => {
     if (!progress) return null;
-    const books = progress.books.filter((book) => {
-      if (testament === "old") return !Bible.isNewTestament(book.bookIndex);
-      if (testament === "new") return Bible.isNewTestament(book.bookIndex);
-      return true;
-    });
+    const books = filterAndSortBooks(progress.books, bookListPrefs, locale);
     const totalVerses = books.reduce((sum, book) => sum + book.totalVerses, 0);
     const versesRead = books.reduce((sum, book) => sum + book.versesRead, 0);
     const percentage = totalVerses ? Math.floor((versesRead / totalVerses) * 100) : 0;
-    const segments = books.flatMap((book) => book.segments);
+    // The overall bar always reads Genesis → Revelation, whatever the list order.
+    const segments = [...books]
+      .sort((a, b) => a.bookIndex - b.bookIndex)
+      .flatMap((book) => book.segments);
     return { books, percentage, segments };
-  }, [progress, testament]);
+  }, [progress, bookListPrefs, locale]);
 
   const header = (
     <View style={styles.header}>
@@ -148,14 +150,12 @@ export default function BibleIndex() {
           />
         }
       />
-      <SegmentedControl
-        options={[
-          { value: "all", label: t("whole_bible") },
-          { value: "old", label: t("old_testament_short") },
-          { value: "new", label: t("new_testament_short") },
-        ]}
-        value={testament}
-        onChange={setTestament}
+      <BookListToolbar
+        testament={testament}
+        sortOrder={sortOrder}
+        onTestamentChange={bookListPrefsActions.setTestament}
+        onSortOrderChange={bookListPrefsActions.setSortOrder}
+        testIDPrefix="bible"
       />
       {filtered ? (
         <View style={styles.overallRow}>
@@ -184,7 +184,7 @@ export default function BibleIndex() {
       {header}
 
       <AnimatedList
-        key={testament}
+        key={`${testament}-${sortOrder}`}
         data={filtered.books}
         keyExtractor={(item) => String(item.bookIndex)}
         // Fixed-size list (66 books): render it all up front instead of

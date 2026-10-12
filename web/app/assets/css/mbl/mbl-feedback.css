@@ -1,78 +1,79 @@
+/*
+ * Callout: one rounded surface holding an optional title (__header) and the
+ * message (__body), with a leading icon. Mirrors mobile's Card `tone` prop.
+ *
+ * - Neutral (no modifier) is a static footnote/caveat. It is flat and outlined
+ *   on purpose: an elevated white surface reads as .mbl-box content (a log
+ *   entry, a settings field), and a muted gray fill reads as gray-on-gray
+ *   against the off-white light canvas.
+ * - Toned variants flag something about the user's own data or action: a
+ *   tinted fill + 1px tinted border. The border, not the fill, is what
+ *   separates them from the canvas.
+ */
 .mbl-message {
-  border-radius: var(--mbl-radius-sm);
+  --mbl-message-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4M12 8h.01'/%3E%3C/svg%3E");
+  --mbl-message-icon-color: var(--mbl-text-muted);
+
+  border: 1px solid var(--mbl-border);
+  border-radius: var(--mbl-radius-xl);
+  color: var(--mbl-text-body);
   font-size: 1rem;
+  line-height: 1.5;
   margin-bottom: var(--mbl-space-xl);
-  padding: 0;
+
+  /* Left inset is room for the icon: its width plus a gap */
+  padding: var(--mbl-space-md) var(--mbl-space-lg) var(--mbl-space-md)
+    calc(var(--mbl-space-lg) + 1.25em + var(--mbl-space-sm));
   position: relative;
 }
 
+/* Leading icon, centred on the first line (1.5em line box, 1.25em icon) */
+.mbl-message::before {
+  background-color: var(--mbl-message-icon-color);
+  content: "";
+  height: 1.25em;
+  left: var(--mbl-space-lg);
+  -webkit-mask: var(--mbl-message-icon) center / contain no-repeat;
+  mask: var(--mbl-message-icon) center / contain no-repeat;
+  position: absolute;
+  top: calc(var(--mbl-space-md) + 0.125em);
+  width: 1.25em;
+}
+
 .mbl-message__header {
-  align-items: center;
-  background-color: var(--mbl-bg-muted);
-  border-radius: var(--mbl-radius-sm) var(--mbl-radius-sm) 0 0;
-  color: var(--mbl-text);
-  display: flex;
-  flex-shrink: 0;
+  color: var(--mbl-text-strong);
   font-weight: 600;
-  justify-content: space-between;
-  line-height: 1.25;
-  padding: 0.75em 1em;
+  margin-bottom: var(--mbl-space-2xs);
 }
 
-.mbl-message__header + .mbl-message__body {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+.mbl-message__body > * + * {
+  margin-top: var(--mbl-space-xs);
 }
 
-.mbl-message__body {
-  border-radius: var(--mbl-radius-sm);
-  padding: 1.25em 1.5em;
+.mbl-message__body > .mbl-button-group {
+  margin-top: var(--mbl-space-md);
 }
 
-/* Body-only callout: light fill, left accent, no full box border */
-.mbl-message > .mbl-message__body:only-child {
-  background-color: var(--mbl-bg-muted);
-  border: none;
-  border-left: 5px solid var(--mbl-border);
-  border-radius: var(--mbl-radius-sm);
-  color: var(--mbl-text);
-}
+.mbl-message--info {
+  --mbl-message-icon-color: var(--mbl-message-info-icon);
 
-.mbl-message--info .mbl-message__header {
-  background-color: var(--mbl-info);
-  color: var(--mbl-on-accent);
-}
-
-.mbl-message--info .mbl-message__body {
   background-color: var(--mbl-message-info-bg);
+  border-color: var(--mbl-message-info-border);
   color: var(--mbl-message-info-fg);
 }
 
-/* After general info body rules: body-only info callout keeps left accent, no full frame */
-.mbl-message--info > .mbl-message__body:only-child {
-  background-color: var(--mbl-message-info-bg);
-  border: none;
-  border-left: 5px solid var(--mbl-message-info-accent);
-  border-radius: var(--mbl-radius-sm);
-  color: var(--mbl-message-info-fg);
+.mbl-message--success {
+  --mbl-message-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m8.5 12 2.5 2.5 4.5-5'/%3E%3C/svg%3E");
+  --mbl-message-icon-color: var(--mbl-message-success-icon);
+
+  background-color: var(--mbl-message-success-bg);
+  border-color: var(--mbl-message-success-border);
+  color: var(--mbl-message-success-fg);
 }
 
+.mbl-message--info .mbl-message__header,
 .mbl-message--success .mbl-message__header {
-  background-color: var(--mbl-success);
-  color: var(--mbl-on-accent);
-}
-
-.mbl-message--success .mbl-message__body {
-  background-color: var(--mbl-message-success-bg);
-  color: var(--mbl-message-success-fg);
-}
-
-.mbl-message--success > .mbl-message__body:only-child {
-  background-color: var(--mbl-message-success-bg);
-  border: none;
-  border-left: 5px solid var(--mbl-message-success-accent);
-  border-radius: var(--mbl-radius-sm);
-  color: var(--mbl-message-success-fg);
+  color: inherit;
 }
 
 .mbl-notification {

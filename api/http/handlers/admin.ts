@@ -241,6 +241,7 @@ export const getUserStats: RouteHandler = async (req, deps) => {
         feedbackCount,
         lastLogEntryDate,
         lastNoteDate,
+        platforms: user.platforms,
       },
     },
   };
