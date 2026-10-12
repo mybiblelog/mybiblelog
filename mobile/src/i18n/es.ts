@@ -53,7 +53,7 @@ export const es = {
   progress_settings_description:
     "Estas configuraciones se utilizan para calcular y mostrar su progreso.",
   progress_update_settings: "Actualizar Configuraciones",
-  progress_look_back_date: "Fecha de Revisión",
+  progress_look_back_date: "Fecha de Inicio del Rastreador",
   progress_daily_goal: "Meta de Versos Diarios",
   progress_so_far_title: "Su Progreso Hasta Ahora",
   progress_total_verses: "Total de Versos de la Biblia",
@@ -62,7 +62,7 @@ export const es = {
   progress_percent_complete: "Porcentaje Completado",
   progress_outlook_historical_title: "Su Perspectiva Histórica",
   progress_outlook_historical_description:
-    "Basado en sus hábitos de lectura desde su Fecha de Revisión, ¿cuánto tiempo le tomará terminar la Biblia?",
+    "Basado en sus hábitos de lectura desde su Fecha de Inicio del Rastreador, ¿cuánto tiempo le tomará terminar la Biblia?",
   progress_outlook_30_title: "Su Perspectiva de 30 Días",
   progress_outlook_30_description:
     "Basado en sus hábitos de lectura de los últimos 30 días, ¿cuánto tiempo le tomará terminar la Biblia?",
@@ -72,7 +72,7 @@ export const es = {
   progress_outlook_today_title: "La Perspectiva de Hoy",
   progress_outlook_today_description:
     "Basado en su lectura de hoy, ¿cuánto tiempo le tomará terminar la Biblia?",
-  progress_days_since_look_back: "Días Desde la Fecha de Revisión",
+  progress_days_since_look_back: "Días Desde la Fecha de Inicio del Rastreador",
   progress_avg_daily_verses: "Promedio de Versos Leídos Diariamente",
   progress_days_to_finish: "Días para Terminar a Este Ritmo",
   progress_date_to_finish: "Fecha para Terminar a Este Ritmo",
@@ -379,7 +379,7 @@ export const es = {
 
   settings_select_option: "Seleccionar una opción",
   settings_reading_daily_goal_title: "Meta de Versículos Diarios",
-  settings_reading_look_back_date_title: "Fecha de Revisión",
+  settings_reading_look_back_date_title: "Fecha de Inicio del Rastreador",
   settings_reading_preferred_bible_version_title: "Versión de la Biblia Preferida",
   settings_reading_preferred_bible_app_title: "Aplicación de Biblia Preferida",
   settings_reading_local_only_notice:

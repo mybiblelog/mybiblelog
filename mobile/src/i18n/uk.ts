@@ -53,7 +53,7 @@ export const uk = {
   progress_settings_description:
     "Ці налаштування використовуються для обчислення та відображення вашого прогресу.",
   progress_update_settings: "Оновити налаштування",
-  progress_look_back_date: "Дата відліку",
+  progress_look_back_date: "Дата початку відстеження",
   progress_daily_goal: "Щоденна ціль з віршів",
   progress_so_far_title: "Ваш прогрес на даний момент",
   progress_total_verses: "Загальна кількість віршів Біблії",
@@ -62,7 +62,7 @@ export const uk = {
   progress_percent_complete: "Відсоток завершення",
   progress_outlook_historical_title: "Ваш історичний прогноз",
   progress_outlook_historical_description:
-    "На основі ваших звичок читання з дати відліку, скільки часу вам знадобиться, щоб дочитати Біблію?",
+    "На основі ваших звичок читання з дати початку відстеження, скільки часу вам знадобиться, щоб дочитати Біблію?",
   progress_outlook_30_title: "Ваш 30-денний прогноз",
   progress_outlook_30_description:
     "На основі ваших звичок читання за останні 30 днів, скільки часу вам знадобиться, щоб дочитати Біблію?",
@@ -72,7 +72,7 @@ export const uk = {
   progress_outlook_today_title: "Сьогоднішній прогноз",
   progress_outlook_today_description:
     "На основі вашого сьогоднішнього читання, скільки часу вам знадобиться, щоб дочитати Біблію?",
-  progress_days_since_look_back: "Днів з дати відліку",
+  progress_days_since_look_back: "Днів з дати початку відстеження",
   progress_avg_daily_verses: "Середня кількість прочитаних віршів на день",
   progress_days_to_finish: "Днів до завершення в такому темпі",
   progress_date_to_finish: "Дата завершення в такому темпі",
@@ -375,7 +375,7 @@ export const uk = {
 
   settings_select_option: "Виберіть варіант",
   settings_reading_daily_goal_title: "Щоденна ціль з віршів",
-  settings_reading_look_back_date_title: "Дата відліку",
+  settings_reading_look_back_date_title: "Дата початку відстеження",
   settings_reading_preferred_bible_version_title: "Бажаний переклад Біблії",
   settings_reading_preferred_bible_app_title: "Бажаний додаток для Біблії",
   settings_reading_local_only_notice:

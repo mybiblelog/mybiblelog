@@ -47,7 +47,7 @@ export const en = {
   progress_settings_title: "Your Reading Settings",
   progress_settings_description: "These settings are used to calculate and display your progress.",
   progress_update_settings: "Update Settings",
-  progress_look_back_date: "Look Back Date",
+  progress_look_back_date: "Tracker Start Date",
   progress_daily_goal: "Daily Verse Count Goal",
   progress_so_far_title: "Your Progress So Far",
   progress_total_verses: "Total Bible Verses",
@@ -56,7 +56,7 @@ export const en = {
   progress_percent_complete: "Percent Complete",
   progress_outlook_historical_title: "Your Historical Outlook",
   progress_outlook_historical_description:
-    "Based on your reading habits since your Look Back Date, how long will it take you to finish the Bible?",
+    "Based on your reading habits since your Tracker Start Date, how long will it take you to finish the Bible?",
   progress_outlook_30_title: "Your 30-Day Outlook",
   progress_outlook_30_description:
     "Based on your reading habits from the past 30 days, how long will it take you to finish the Bible?",
@@ -66,7 +66,7 @@ export const en = {
   progress_outlook_today_title: "Today's Outlook",
   progress_outlook_today_description:
     "Based on your reading today, how long will it take you to finish the Bible?",
-  progress_days_since_look_back: "Days Since Look Back Date",
+  progress_days_since_look_back: "Days Since Tracker Start Date",
   progress_avg_daily_verses: "Average Daily Verses Read",
   progress_days_to_finish: "Days to Finish at This Rate",
   progress_date_to_finish: "Date to Finish at This Rate",
@@ -402,7 +402,7 @@ export const en = {
 
   settings_select_option: "Select an option",
   settings_reading_daily_goal_title: "Daily Verse Count Goal",
-  settings_reading_look_back_date_title: "Look Back Date",
+  settings_reading_look_back_date_title: "Tracker Start Date",
   settings_reading_preferred_bible_version_title: "Preferred Bible Version",
   settings_reading_preferred_bible_app_title: "Preferred Bible App",
   settings_reading_local_only_notice:

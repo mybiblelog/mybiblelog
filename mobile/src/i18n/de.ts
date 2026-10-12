@@ -54,7 +54,7 @@ export const de = {
   progress_settings_description:
     "Diese Einstellungen werden verwendet, um Ihren Fortschritt zu berechnen und anzuzeigen.",
   progress_update_settings: "Einstellungen aktualisieren",
-  progress_look_back_date: "Rückblick-Datum",
+  progress_look_back_date: "Tracker-Startdatum",
   progress_daily_goal: "Tägliches Versziel",
   progress_so_far_title: "Ihr bisheriger Fortschritt",
   progress_total_verses: "Verse der Bibel insgesamt",
@@ -63,7 +63,7 @@ export const de = {
   progress_percent_complete: "Prozent abgeschlossen",
   progress_outlook_historical_title: "Ihr historischer Ausblick",
   progress_outlook_historical_description:
-    "Basierend auf Ihren Lesegewohnheiten seit Ihrem Rückblick-Datum, wie lange werden Sie brauchen, um die Bibel zu beenden?",
+    "Basierend auf Ihren Lesegewohnheiten seit Ihrem Tracker-Startdatum, wie lange werden Sie brauchen, um die Bibel zu beenden?",
   progress_outlook_30_title: "Ihr 30-Tage-Ausblick",
   progress_outlook_30_description:
     "Basierend auf Ihren Lesegewohnheiten der letzten 30 Tage, wie lange werden Sie brauchen, um die Bibel zu beenden?",
@@ -73,7 +73,7 @@ export const de = {
   progress_outlook_today_title: "Der heutige Ausblick",
   progress_outlook_today_description:
     "Basierend auf Ihrer heutigen Lektüre, wie lange werden Sie brauchen, um die Bibel zu beenden?",
-  progress_days_since_look_back: "Tage seit dem Rückblick-Datum",
+  progress_days_since_look_back: "Tage seit dem Tracker-Startdatum",
   progress_avg_daily_verses: "Durchschnittlich gelesene Verse pro Tag",
   progress_days_to_finish: "Tage bis zum Abschluss bei diesem Tempo",
   progress_date_to_finish: "Datum des Abschlusses bei diesem Tempo",
@@ -383,7 +383,7 @@ export const de = {
 
   settings_select_option: "Eine Option auswählen",
   settings_reading_daily_goal_title: "Tägliches Versziel",
-  settings_reading_look_back_date_title: "Rückblick-Datum",
+  settings_reading_look_back_date_title: "Tracker-Startdatum",
   settings_reading_preferred_bible_version_title: "Bevorzugte Bibelübersetzung",
   settings_reading_preferred_bible_app_title: "Bevorzugte Bibel-App",
   settings_reading_local_only_notice:
