@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-29"
+dateModified: "2026-10-12"
 seo:
   title: "Einstellungen: Tagesziel, Erinnerungen & Export"
   description: "Tagesziel festlegen, Übersetzung und Bibel-App wählen, Erinnerungs-E-Mails aktivieren und Ihr Leseprotokoll exportieren oder importieren."
@@ -29,7 +29,7 @@ Hier können Sie:
 
 ## Lesen
 
-Im Bereich „Lesen" stellen Sie alles rund ums Bibellesen ein – darunter Ihr **tägliches Versziel** und Ihr **Rückblickdatum**.
+Im Bereich „Lesen" stellen Sie alles rund ums Bibellesen ein – darunter Ihr **tägliches Versziel** und Ihr **Tracker-Startdatum**.
 
 ### Tägliches Versziel
 
@@ -37,13 +37,13 @@ Das tägliche Versziel ist die Anzahl der Bibelverse, die Sie sich pro Tag vorne
 
 Damit Sie leichter ein passendes Ziel finden, zeigt Ihnen dieser Bereich, wie lange Sie für die ganze Bibel brauchen, wenn Sie Ihr Ziel Tag für Tag erreichen. Voreingestellt sind 86 Verse – damit schaffen Sie die Bibel in weniger als 365 Tagen.
 
-### Rückblickdatum
+### Tracker-Startdatum
 
-Das Rückblickdatum legt fest, wie weit My Bible Log für Ihren Fortschritt in Ihre Einträge zurückschaut. Zu Beginn ist es der Tag, an dem Sie My Bible Log zum ersten Mal genutzt haben.
+Das Startdatum legt fest, wie weit My Bible Log für Ihren Fortschritt in Ihre Einträge zurückschaut. Zu Beginn ist es der Tag, an dem Sie My Bible Log zum ersten Mal genutzt haben.
 
 Einträge vor diesem Datum bleiben unberücksichtigt: Auf der Bibelbücher-Seite erscheint zum Beispiel nichts, was Sie davor gelesen haben.
 
-Haben Sie die ganze Bibel durch und möchten von vorn beginnen, setzen Sie das Rückblickdatum einfach auf heute. Damit wird Ihr Fortschritt auf der Bibelbücher-Seite zurückgesetzt, und auf der Heute-Seite und der Kalenderseite zählen Ihre Einträge wieder als „neue" Verse.
+Haben Sie die ganze Bibel durch und möchten von vorn beginnen, setzen Sie das Startdatum einfach auf heute. Damit wird Ihr Fortschritt auf der Bibelbücher-Seite zurückgesetzt, und auf der Heute-Seite und der Kalenderseite zählen Ihre Einträge wieder als „neue" Verse.
 
 Gelöscht wird dabei nichts. Alle Ihre Einträge bleiben erhalten und lassen sich jederzeit über die Kalenderseite ansehen.
 

@@ -2,7 +2,7 @@
 //
 // google-auth-library handles the service-account JWT and token refresh; the
 // endpoints themselves are plain REST, so they are called with fetch rather
-// than pulling in the full googleapis client for six routes.
+// than pulling in the full googleapis client for a handful of routes.
 //
 // Every listing change goes through an "edit": insert one, apply changes to it,
 // validate, then commit. An uncommitted edit is invisible in Play Console and
@@ -63,7 +63,7 @@ export function createPlayClient({ packageName, keyPath }) {
     });
 
     const text = await response.text();
-    if (!response.ok) throw apiError(response.status, text, packageName);
+    if (!response.ok) throw apiError(response.status, text, packageName, `${method} ${new URL(url).pathname}`);
     return text ? JSON.parse(text) : null;
   }
 
@@ -81,31 +81,43 @@ export function createPlayClient({ packageName, keyPath }) {
     updateListing: (editId, language, listing) =>
       json(`${base}/${editId}/listings/${language}`, "PUT", { language, ...listing }),
     deletePhoneScreenshots: (editId, language) =>
-      call(`${base}/${editId}/images/${language}/phoneScreenshots`, { method: "DELETE" }),
+      call(`${base}/${editId}/listings/${language}/phoneScreenshots`, { method: "DELETE" }),
     uploadPhoneScreenshot: (editId, language, file) =>
       call(
-        `${UPLOAD}/applications/${packageName}/edits/${editId}/images/${language}/phoneScreenshots?uploadType=media`,
+        `${UPLOAD}/applications/${packageName}/edits/${editId}/listings/${language}/phoneScreenshots?uploadType=media`,
         { method: "POST", body: readFileSync(file), contentType: "image/png" }
       ),
-    validateEdit: (editId) => json(`${base}/${editId}:validate`, "POST", {}),
+    deleteFeatureGraphic: (editId, language) =>
+      call(`${base}/${editId}/listings/${language}/featureGraphic`, { method: "DELETE" }),
+    uploadFeatureGraphic: (editId, language, file) =>
+      call(
+        `${UPLOAD}/applications/${packageName}/edits/${editId}/listings/${language}/featureGraphic?uploadType=media`,
+        { method: "POST", body: readFileSync(file), contentType: "image/png" }
+      ),
+    validateEdit:(editId) => json(`${base}/${editId}:validate`, "POST", {}),
     commitEdit: (editId) => json(`${base}/${editId}:commit`, "POST", {}),
   };
 }
 
 /** Turns the API's JSON error envelope into something actionable at the terminal. */
-function apiError(status, text, packageName) {
+function apiError(status, text, packageName, request) {
   let detail = text;
+  let isJson = true;
   try {
     detail = JSON.parse(text).error?.message ?? text;
   } catch {
     // Non-JSON body (proxy/HTML error page) — keep it as-is.
+    isJson = false;
   }
 
   if (status === 404) {
-    return new Error(
-      `Play API 404 for ${packageName}: ${detail}\n` +
-        "  The app must exist in Play Console with at least one uploaded build before the API accepts edits."
-    );
+    // Google's front end answers an unrecognised route with an HTML page; the
+    // API itself answers a missing app or edit with a JSON error.
+    const hint = isJson
+      ? "The app, edit, or locale was not found. The app must exist in Play Console with at least one " +
+        "uploaded build, and the locale must be enabled in its store listing."
+      : "The request path is not a Play API route (HTML 404 from Google's front end) — likely a bug in this script.";
+    return new Error(`Play API 404 for ${packageName} (${request}): ${isJson ? detail : "route not found"}\n  ${hint}`);
   }
   if (status === 401 || status === 403) {
     return new Error(

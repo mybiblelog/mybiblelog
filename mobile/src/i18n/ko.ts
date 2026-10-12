@@ -52,7 +52,7 @@ export const ko = {
   progress_settings_title: "읽기 설정",
   progress_settings_description: "이 설정은 진행 상황을 계산하고 표시하는 데 사용됩니다.",
   progress_update_settings: "설정 업데이트",
-  progress_look_back_date: "기준 날짜",
+  progress_look_back_date: "추적기 시작일",
   progress_daily_goal: "일일 구절 목표",
   progress_so_far_title: "현재까지의 진행 상황",
   progress_total_verses: "성경 전체 구절 수",
@@ -61,7 +61,7 @@ export const ko = {
   progress_percent_complete: "완료 비율",
   progress_outlook_historical_title: "역대 전망",
   progress_outlook_historical_description:
-    "기준 날짜 이후 읽기 습관을 바탕으로, 성경을 마치는 데 얼마나 걸릴까요?",
+    "추적기 시작일 이후 읽기 습관을 바탕으로, 성경을 마치는 데 얼마나 걸릴까요?",
   progress_outlook_30_title: "30일 전망",
   progress_outlook_30_description:
     "지난 30일간의 읽기 습관을 바탕으로, 성경을 마치는 데 얼마나 걸릴까요?",
@@ -70,7 +70,7 @@ export const ko = {
     "지난 7일간의 읽기 습관을 바탕으로, 성경을 마치는 데 얼마나 걸릴까요?",
   progress_outlook_today_title: "오늘의 전망",
   progress_outlook_today_description: "오늘의 읽기를 바탕으로, 성경을 마치는 데 얼마나 걸릴까요?",
-  progress_days_since_look_back: "기준 날짜 이후 경과일",
+  progress_days_since_look_back: "추적기 시작일 이후 경과일",
   progress_avg_daily_verses: "일평균 읽은 구절 수",
   progress_days_to_finish: "이 속도로 완료까지 남은 일수",
   progress_date_to_finish: "이 속도로 완료 예상 날짜",
@@ -367,7 +367,7 @@ export const ko = {
 
   settings_select_option: "옵션 선택",
   settings_reading_daily_goal_title: "일일 구절 목표",
-  settings_reading_look_back_date_title: "기준 날짜",
+  settings_reading_look_back_date_title: "추적기 시작일",
   settings_reading_preferred_bible_version_title: "선호하는 성경 번역본",
   settings_reading_preferred_bible_app_title: "선호하는 성경 앱",
   settings_reading_local_only_notice:

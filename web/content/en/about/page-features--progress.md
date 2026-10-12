@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-24"
+dateModified: "2026-10-12"
 seo:
   title: "Bible Reading Goal Calculator: Set a Finish Date"
   description: "See how much of the Bible you've read, predict when you'll finish, and calculate how many verses per day you need to read the whole Bible by your target date."
@@ -20,7 +20,7 @@ The Progress page gives you a high-level overview of your reading progress.
 
 ## Reading Settings
 
-You can see your reading settings, including your "look back date" and "daily verse count goal".
+You can see your reading settings, including your "tracker start date" and "daily verse count goal".
 You can also see how many verses you've read so far and the percentage of the Bible you've read.
 
 ## Reading Predictions
@@ -32,7 +32,7 @@ to calculate how much longer it will take you to read the remaining verses.
 You can see four separate predictions, each based on your reading progress over a particular period of time:
 
 **Your Historical Outlook:**
-This estimate uses your progress since your look back date (the date you started using My Bible Log, or the date you specifically chose later on).
+This estimate uses your progress since your start date (the date you started using My Bible Log, or the date you specifically chose later on).
 
 **Your 30-Day Outlook:**
 This estimate uses your progress over the past 30 days, or roughly the past month.

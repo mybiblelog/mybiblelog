@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-29"
+dateModified: "2026-10-12"
 seo:
   title: "Calculateur d'objectif de lecture biblique : fixez une date"
   description: "Voyez quelle part de la Bible vous avez lue, prédisez quand vous aurez fini et calculez combien de versets par jour il vous faut pour terminer avant votre date cible."
@@ -20,7 +20,7 @@ Vous y voyez d'un coup d'œil où vous en êtes dans votre lecture.
 
 ## Paramètres de lecture
 
-Vous retrouvez vos paramètres de lecture, dont votre « date de consultation précédente » et votre « objectif quotidien de versets ».
+Vous retrouvez vos paramètres de lecture, dont votre « date de début du suivi » et votre « objectif quotidien de versets ».
 Vous voyez aussi combien de versets vous avez lus jusqu'ici et la part de la Bible que cela représente.
 
 ## Prévisions de lecture
@@ -31,7 +31,7 @@ Elle calcule d'abord le nombre moyen de versets que vous lisez par jour, puis ap
 Quatre prévisions vous sont proposées, chacune fondée sur une période différente de votre lecture :
 
 **Prévision globale :**
-Elle se fonde sur votre progression depuis votre date de consultation précédente, c'est-à-dire depuis le jour où vous avez commencé à utiliser My Bible Log, ou depuis la date que vous avez choisie par la suite.
+Elle se fonde sur votre progression depuis votre date de début, c'est-à-dire depuis le jour où vous avez commencé à utiliser My Bible Log, ou depuis la date que vous avez choisie par la suite.
 
 **Prévision sur 30 jours :**
 Elle se fonde sur les 30 derniers jours, soit environ le mois écoulé.

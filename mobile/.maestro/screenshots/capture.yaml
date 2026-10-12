@@ -114,8 +114,24 @@ appId: com.mybiblelog.app
     timeout: 15000
 - runFlow:
     file: login.yaml
-# Back out of Account to the Settings root for the language switch.
+# Back out of Account to the Settings root for the language switch. The first
+# back can be swallowed (login pop transition still running, or it only
+# dismisses the lingering keyboard), so settle first and retry only while
+# the Account screen (the only one with settings.logout) is still showing.
+- waitForAnimationToEnd:
+    timeout: 3000
 - back
+- extendedWaitUntil:
+    optional: true
+    notVisible:
+      id: "settings.logout"
+    timeout: 8000
+- runFlow:
+    when:
+      visible:
+        id: "settings.logout"
+    commands:
+      - back
 
 # --- Switch language (all later steps are testID-only, text is now localized) -
 - tapOn:
@@ -177,6 +193,21 @@ appId: com.mybiblelog.app
 # --- Bible: whole-Bible progress (sc7), book grid (sc6), progress page (sc13) -
 - tapOn:
     id: "tab.bible"
+# The testament filter is a persisted, device-local pref (shared with the
+# Checklist tab) and this suite reuses the dev-client without clearState, so
+# a leftover "OT"/"NT" choice would hide Genesis and skew sc7. Force "all".
+- tapOn:
+    id: "bible.testament-all"
+# Sort order persists the same way. The toggle reports alphabetical as
+# `selected` (its visible label is localized), so flip it back only when set.
+- runFlow:
+    when:
+      visible:
+        id: "bible.sort-toggle"
+        selected: true
+    commands:
+      - tapOn:
+          id: "bible.sort-toggle"
 - waitForAnimationToEnd:
     timeout: 2000
 - takeScreenshot: ${OUTPUT_DIR}/sc7-bible-progress
@@ -324,3 +355,53 @@ appId: com.mybiblelog.app
     id: "checklist.chapter-65-1"
 - waitForAnimationToEnd:
     timeout: 2500
+
+# --- Dark mode: calendar (sc9) + insights activity (sc15) only --------------
+# The Play Store listing plan calls for a dark-theme showcase; rather than
+# re-run the whole light-mode capture list a second time, only re-shoot the
+# two screens most worth it (calendar's gold stars, insights' heatmap) using
+# the app's own Settings > Appearance switch (no ADB/system-level theme
+# override exists or is needed here). Switched back to "system" at the end so
+# the next locale's run — and any regular e2e reuse of this dev-client —
+# starts from the default appearance again.
+- tapOn:
+    id: "tab.settings"
+- tapOn:
+    id: "settings.appearance-link"
+- tapOn:
+    id: "appearance.option-dark"
+# setMode() doesn't navigate away — one back returns straight to Settings root.
+- back
+
+- tapOn:
+    id: "settings.insights-link"
+- assertVisible:
+    id: "insights.heatmap-grid"
+- takeScreenshot: ${OUTPUT_DIR}/sc15-insights-activity-dark
+- back
+
+- tapOn:
+    id: "tab.today"
+- repeat:
+    times: 20
+    while:
+      notVisible:
+        id: "today.view-all-reading"
+    commands:
+      - swipe:
+          start: 50%, 80%
+          end: 50%, 30%
+- tapOn:
+    id: "today.view-all-reading"
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${OUTPUT_DIR}/sc9-calendar-dark
+- back
+
+- tapOn:
+    id: "tab.settings"
+- tapOn:
+    id: "settings.appearance-link"
+- tapOn:
+    id: "appearance.option-system"
+- back

@@ -24,6 +24,8 @@ export type ButtonProps = {
    */
   rightIcon?: IconName;
   fullWidth?: boolean;
+  /** On/off state for toggle-style buttons, reported via `accessibilityState.selected`. */
+  selected?: boolean;
   accessibilityLabel?: string;
   testID?: string;
   style?: StyleProp<ViewStyle>;
@@ -43,6 +45,7 @@ export function Button({
   leftIcon,
   rightIcon,
   fullWidth = false,
+  selected,
   accessibilityLabel,
   testID,
   style,
@@ -82,7 +85,7 @@ export function Button({
     <AnimatedPressable
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? label}
-      accessibilityState={{ disabled: !isInteractive, busy: loading }}
+      accessibilityState={{ disabled: !isInteractive, busy: loading, selected }}
       testID={testID}
       onPress={isInteractive ? onPress : undefined}
       onPressIn={press.onPressIn}

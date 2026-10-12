@@ -81,6 +81,7 @@ export default function SettingsIndex() {
           title={t("settings_section_appearance")}
           subtitle={t("settings_section_appearance_subtitle")}
           onPress={() => router.push("/settings/appearance")}
+          testID="settings.appearance-link"
         />
         <SectionRow
           icon="language-outline"

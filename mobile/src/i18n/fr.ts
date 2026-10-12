@@ -53,7 +53,7 @@ export const fr = {
   progress_settings_description:
     "Ces paramètres sont utilisés pour calculer et afficher votre progression.",
   progress_update_settings: "Mettre à jour les paramètres",
-  progress_look_back_date: "Date de référence",
+  progress_look_back_date: "Date de Début du Suivi",
   progress_daily_goal: "Objectif quotidien de versets",
   progress_so_far_title: "Votre progression jusqu'à présent",
   progress_total_verses: "Total des versets de la Bible",
@@ -62,7 +62,7 @@ export const fr = {
   progress_percent_complete: "Pourcentage complété",
   progress_outlook_historical_title: "Votre perspective historique",
   progress_outlook_historical_description:
-    "Sur la base de vos habitudes de lecture depuis votre date de référence, combien de temps vous faudra-t-il pour terminer la Bible ?",
+    "Sur la base de vos habitudes de lecture depuis votre date de début du suivi, combien de temps vous faudra-t-il pour terminer la Bible ?",
   progress_outlook_30_title: "Votre perspective sur 30 jours",
   progress_outlook_30_description:
     "Sur la base de vos habitudes de lecture des 30 derniers jours, combien de temps vous faudra-t-il pour terminer la Bible ?",
@@ -72,7 +72,7 @@ export const fr = {
   progress_outlook_today_title: "La perspective d'aujourd'hui",
   progress_outlook_today_description:
     "Sur la base de votre lecture d'aujourd'hui, combien de temps vous faudra-t-il pour terminer la Bible ?",
-  progress_days_since_look_back: "Jours depuis la date de référence",
+  progress_days_since_look_back: "Jours depuis la date de début du suivi",
   progress_avg_daily_verses: "Moyenne de versets lus par jour",
   progress_days_to_finish: "Jours pour terminer à ce rythme",
   progress_date_to_finish: "Date de fin à ce rythme",
@@ -381,7 +381,7 @@ export const fr = {
 
   settings_select_option: "Sélectionner une option",
   settings_reading_daily_goal_title: "Objectif quotidien de versets",
-  settings_reading_look_back_date_title: "Date de référence",
+  settings_reading_look_back_date_title: "Date de Début du Suivi",
   settings_reading_preferred_bible_version_title: "Version de la Bible préférée",
   settings_reading_preferred_bible_app_title: "Application biblique préférée",
   settings_reading_local_only_notice:

@@ -18,14 +18,72 @@ from the repo root, and read from there at publish time.
 Plain text only — Play renders no markup, so the full description uses `•`
 bullets and blank lines. Trailing whitespace is stripped on publish.
 
+Play's metadata policy applies to every field and locale: use an em dash (`—`)
+wherever a dash is wanted, never a double hyphen (`--`) or an en dash (`–`).
+Listings that break this are flagged in Play Console ("may not be promoted").
+`npm run play:validate` (and every push) fails on both characters. Ranges like
+"1–3" should be written out ("1 to 3") or use a plain hyphen.
+
 `config.json` holds everything the tooling needs: the package name, the Play
 locales and which app locale supplies their screenshots, and the ordered list of
 screenshot slugs to upload (Play displays them in upload order).
 
-> The non-English copy was adapted from the vetted marketing text in
-> `web/content/<locale>/index.md`. It should get a native-speaker pass before the
-> first publish in that locale; until then, publish English only with
-> `--locales en-US`.
+## Listing strategy
+
+Google Play has no keyword field; indexing weight is roughly title (30) > short
+description (80) > full description (4000), plus engagement signals. Each keyword
+only needs to appear once or twice — stuffing is penalized.
+
+- The title "My Bible Log: Reading Tracker" is built so it indexes the full phrase
+  "bible reading tracker". Other targets (bible reading plan, bible progress, bible
+  in a year, bible journal, bible notes) live in the short and full descriptions,
+  along with the differentiators: free, no ads, no subscriptions, at your own pace,
+  offline.
+- We deliberately do **not** target "bible app" / "bible study app". Those head terms
+  are dominated by YouVersion-class apps, and they attract users expecting Bible
+  *text*, which hurts ratings. The copy says the app works *alongside* your favorite
+  Bible app to set that expectation.
+- Every claim in the copy must map to a shipped screen. Re-check this when editing.
+- Category is Books & Reference. An untried idea: a Store Listing Experiment in Play
+  Console comparing a self-paced/free short description against a keyword-dense one
+  ("Free Bible reading tracker. Set daily goals, log chapters, and take notes.").
+- Domains: `mybiblelog.com` is the product (PWA, account, policies) and supplies every
+  listing URL, so brand and privacy-policy domains match. `biblelog.app` is a
+  lightweight promo page whose main CTA is the Play badge.
+
+## Graphics (phone screenshots + feature graphic)
+
+With `"screenshots": { "composed": true }` in `config.json`, Play gets designed
+images rather than the raw app captures. Each image is an HTML slide: a
+background, one or more captures placed and rotated, and localized text.
+`npm run play:graphics` renders the slides with headless Chromium into
+`mobile/screenshots/play/<play-locale>/`, and that folder is what gets
+published.
+
+- `graphics/layout.json`: the visual design only. Each slide has an `id`, a `kind`
+  (`phone`, uploaded in layout order, 2–8 of them; or the single `feature`
+  graphic, 1024×500), a pixel `size`, a `background` (`color`, an optional CSS
+  `gradient`, an optional `pattern` of `dots`/`diagonal`/`grid`), plus `shapes`,
+  `images` and `texts`. Images and shapes are positioned by their centre (`x`,
+  `y`) with an optional `rotate`, `rotateX`/`rotateY`, `frame` (a CSS phone bezel)
+  and `shadow`. An image's `src` is a capture slug from
+  `mobile/screenshots/<app-locale>/`; `asset` takes a repo-relative image path
+  instead. A text box is positioned by its top-left and wraps within `width`.
+  Give it a `height` and the font shrinks until the text fits.
+- `listings/<play-locale>/graphics.json`: the copy, a flat map of the `key`s that
+  `layout.json` uses. English must cover every key. Any other locale falls back
+  to English for a missing key, with a warning. The non-English headlines come
+  from the web homepage (`web/content/<locale>/index.md`).
+
+```sh
+cd mobile
+npm run play:graphics -- --serve                 # live preview: edit the JSON, reload
+npm run play:graphics                            # render every locale
+npm run play:graphics -- --locales de-DE --slides 04-calendar
+```
+
+Render after every `npm run screenshots:mobile`. The fonts load from Google
+Fonts, so rendering needs a network connection.
 
 ## Publishing
 

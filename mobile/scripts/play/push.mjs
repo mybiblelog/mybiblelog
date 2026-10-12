@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 // Pushes the local Play listing metadata (mobile/store/play/) and the local
 // screenshots (mobile/screenshots/, gitignored) to Google Play via the
-// Developer API v3.
+// Developer API v3. With "screenshots.composed" set in config.json, the images
+// are the rendered graphics from `npm run play:graphics` (phone slides plus the
+// feature graphic) instead of the raw captures.
 //
 // Order matters: everything is checked offline first, because a failure halfway
 // through leaves a partially applied edit behind; then one edit carries every
@@ -19,6 +21,7 @@
 import { join } from "node:path";
 import { parseArgs } from "./lib/args.mjs";
 import { checkListings } from "./lib/checks.mjs";
+import { featureGraphicPath } from "./lib/graphics.mjs";
 import { prepareScreenshot } from "./lib/images.mjs";
 import { listScreenshots, loadConfig, readListingText, resolveLocales, TEXT_FIELDS } from "./lib/metadata.mjs";
 import { createPlayClient } from "./lib/playApi.mjs";
@@ -138,6 +141,13 @@ async function push(ctx) {
         await play.uploadPhoneScreenshot(editId, locale.play, await preparedPath(ctx, locale, shot));
         console.log(`  ✓ ${shot.slug}`);
       }
+
+      const feature = config.layout && featureGraphicPath(config, locale, config.layout);
+      if (feature?.exists) {
+        await play.deleteFeatureGraphic(editId, locale.play);
+        await play.uploadFeatureGraphic(editId, locale.play, feature.path);
+        console.log(`  ✓ ${feature.slug}`);
+      }
     }
   }
 
@@ -204,4 +214,13 @@ async function printScreenshotPlan(ctx, locale) {
     console.log(`    ${shot.slug} ${width}x${height}${file === shot.path ? "" : " (padded)"}`);
   }
   for (const shot of shots.filter((s) => !s.exists)) console.log(`    ${shot.slug} — MISSING`);
+
+  const feature = ctx.config.layout && featureGraphicPath(ctx.config, locale, ctx.config.layout);
+  if (feature) {
+    console.log(
+      feature.exists
+        ? `  → would replace the feature graphic with ${feature.slug}`
+        : `  → would keep the live feature graphic (${feature.slug}.png not rendered)`
+    );
+  }
 }

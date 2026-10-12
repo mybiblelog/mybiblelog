@@ -11,23 +11,17 @@
     { "play": "de-DE", "app": "de" },
     { "play": "es-419", "app": "es" },
     { "play": "es-ES", "aliasOf": "es-419" },
-    { "play": "fr-FR", "app": "fr" },
+    { "play": "es-US", "aliasOf": "es-419" },
+    { "play": "fr-CA", "app": "fr" },
+    { "play": "fr-FR", "aliasOf": "fr-CA" },
     { "play": "ko-KR", "app": "ko" },
     { "play": "pt-BR", "app": "pt" },
+    { "play": "pt-PT", "aliasOf": "pt-BR" },
     { "play": "uk", "app": "uk" }
   ],
   "screenshots": {
     "sourceDir": "../../screenshots",
-    "background": "#ffffff",
-    "phone": [
-      "sc4-daily-goal",
-      "sc7-bible-progress",
-      "sc12-checklist",
-      "sc9-calendar",
-      "sc10-notes",
-      "sc13-progress",
-      "sc2-achievements",
-      "sc6-book-chapter-progress"
-    ]
+    "composed": true,
+    "background": "#ffffff"
   }
 }

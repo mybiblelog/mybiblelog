@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-29"
+dateModified: "2026-10-12"
 seo:
   title: "Suivi de lecture biblique et calendrier : chaque jour de lecture"
   description: "Tenez un suivi de lecture biblique dans un calendrier mensuel. Voyez les jours où vous avez lu, si vous avez atteint votre objectif et ajoutez des lectures à des dates passées."
@@ -20,7 +20,7 @@ Cliquez sur une date pour afficher les entrées de ce jour-là. Vous pouvez auss
 
 Chaque date affiche sa propre barre de progression, comme sur la page Aujourd'hui. Elle se remplit en deux teintes de bleu :
 
-* Le bleu vif correspond aux versets nouveaux lus ce jour-là (à compter de votre date de consultation précédente).
+* Le bleu vif correspond aux versets nouveaux lus ce jour-là (à compter de votre date de début du suivi).
 * Le bleu plus sombre correspond au total des versets lus ce jour-là. Si tous étaient nouveaux, le bleu sombre disparaît entièrement derrière le bleu vif.
 
 Le remplissage de la barre dépend de votre objectif quotidien de versets. Si votre objectif est de 86 versets et que vous en lisez 43 nouveaux, le bleu vif s'arrête exactement à la moitié.

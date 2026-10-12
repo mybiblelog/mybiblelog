@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-29"
+dateModified: "2026-10-12"
 seo:
   title: "Configuración: meta diaria, recordatorios y exportación"
   description: "Fija tu meta diaria de lectura bíblica, elige tu traducción y app bíblica preferidas, activa los correos de recordatorio y exporta o importa tu registro de lectura."
@@ -29,7 +29,7 @@ Desde ahí puedes:
 
 ## Lectura
 
-En el panel Lectura ajustas todo lo relacionado con tu lectura de la Biblia, empezando por tu **meta diaria de versículos** y tu **Fecha de Revisión**.
+En el panel Lectura ajustas todo lo relacionado con tu lectura de la Biblia, empezando por tu **meta diaria de versículos** y tu **Fecha de Inicio del Rastreador**.
 
 ### Meta diaria de versículos
 
@@ -37,13 +37,13 @@ Tu meta diaria de versículos es la cantidad de versículos que quieres leer cad
 
 Para ayudarte a elegir un número, esta sección te muestra cuántos días tardarías en leer toda la Biblia si cumples tu meta todos los días. El valor por defecto es 86, con el que terminas la Biblia en menos de 365 días.
 
-### Fecha de Revisión
+### Fecha de Inicio del Rastreador
 
-Tu Fecha de Revisión define hasta dónde mira My Bible Log en tu registro de lectura al calcular tu avance. Al principio es el día en que empezaste a usar My Bible Log.
+Tu Fecha de Inicio define hasta dónde mira My Bible Log en tu registro de lectura al calcular tu avance. Al principio es el día en que empezaste a usar My Bible Log.
 
 Todo lo anterior a esa fecha queda fuera: la página Libros Bíblicos, por ejemplo, no muestra lo que leíste antes.
 
-Si terminaste toda la Biblia y quieres empezar de cero, pon la Fecha de Revisión en el día de hoy. Con eso se reinicia tu avance en la página Libros Bíblicos y tus lecturas vuelven a contar como versículos «nuevos» en las páginas Hoy y Calendario.
+Si terminaste toda la Biblia y quieres empezar de cero, pon la Fecha de Inicio en el día de hoy. Con eso se reinicia tu avance en la página Libros Bíblicos y tus lecturas vuelven a contar como versículos «nuevos» en las páginas Hoy y Calendario.
 
 No se borra nada. Todos tus registros siguen ahí y puedes consultarlos cuando quieras desde la página Calendario.
 

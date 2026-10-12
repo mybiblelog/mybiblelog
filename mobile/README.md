@@ -103,7 +103,7 @@ Notes:
 ### Troubleshooting
 
 **Build fails at `:app:createBundleReleaseJsAndAssets_SentryUpload…` with `error: An organization ID or slug is required (provide with --org)`.**
-Release builds try to upload source maps to Sentry, which requires `SENTRY_ORG`, `SENTRY_PROJECT`, and `SENTRY_AUTH_TOKEN`. Those are only configured in EAS (see the [Play Store publishing plan](docs/play-store-publishing-plan.md)) — locally, Sentry is optional. Skip the upload:
+Release builds try to upload source maps to Sentry, which requires `SENTRY_ORG`, `SENTRY_PROJECT`, and `SENTRY_AUTH_TOKEN`. Those are only configured in EAS (as secrets/environment variables on the build profile) — locally, Sentry is optional. Skip the upload:
 
 ```bash
 SENTRY_DISABLE_AUTO_UPLOAD=true npx expo run:android --variant release

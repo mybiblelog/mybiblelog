@@ -1,0 +1,38 @@
+<!doctype html>
+<!--
+  Renders the Play Store graphics described by layout.json. Served by
+  scripts/play/render-graphics.mjs: open it with `--serve` to preview every
+  slide, or let the script load it once per slide (?slide=<id>) to capture it.
+-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Play graphics</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; }
+
+      /* Preview mode: every slide, scaled down, with a locale switcher. */
+      body.preview { background: #2b2d31; color: #ddd; font: 14px system-ui, sans-serif; padding: 24px; }
+      .toolbar { display: flex; gap: 12px; align-items: center; margin-bottom: 24px; }
+      .messages { white-space: pre-line; color: #f5b041; }
+      .messages.error { color: #ff6b6b; }
+      .grid { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; }
+      .cell figcaption { margin-top: 8px; font-family: ui-monospace, monospace; }
+      .scaler { transform-origin: 0 0; }
+
+      /* Capture mode: one slide, pinned to the viewport origin. */
+      body.capture .slide { position: absolute; left: 0; top: 0; }
+
+      .slide { position: relative; overflow: hidden; }
+      .slide > * { position: absolute; }
+      /* keep-all: Korean wraps between words, not mid-word, like Latin text. */
+      .text { white-space: pre-line; overflow-wrap: break-word; word-break: keep-all; }
+      .text.missing { outline: 4px dashed #ff3b30; }
+      .image img { display: block; width: 100%; }
+    </style>
+  </head>
+  <body>
+    <script src="/render.js"></script>
+  </body>
+</html>

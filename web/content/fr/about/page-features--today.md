@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-29"
+dateModified: "2026-10-12"
 seo:
   title: Suivez votre lecture biblique au quotidien
   description: Comment utiliser la page Aujourd'hui de My Bible Log pour suivre votre objectif quotidien et découvrir de nouveaux passages
@@ -21,7 +21,7 @@ C'est aussi ici que vous consultez et gérez les entrées du jour. Une correctio
 Les couleurs de la barre de progression signifient :
 
 * **Bleu vif** - les versets que vous lisez aujourd'hui pour la première fois
-* **Bleu sombre** - les versets que vous aviez déjà lus (depuis votre date de consultation précédente)
+* **Bleu sombre** - les versets que vous aviez déjà lus (depuis votre date de début du suivi)
 * **Effet lumineux** - apparaît dès que vous atteignez votre objectif quotidien avec des versets nouveaux
 
 ## Suggestions de lecture

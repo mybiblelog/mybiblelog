@@ -24,7 +24,7 @@
         <table class="mbl-table">
           <tbody>
             <tr>
-              <td>{{ t('your_reading_settings.look_back_date') }}</td>
+              <td>{{ t('your_reading_settings.tracker_start_date') }}</td>
               <td>{{ displayDate(userSettings.lookBackDate) }}</td>
             </tr>
             <tr>
@@ -68,17 +68,17 @@
           {{ t('your_outlook.historical.title') }}
         </h2>
         <i18n-t keypath="your_outlook.historical.description" tag="p">
-          <template #lookBackDate>
-            <strong>{{ t('your_reading_settings.look_back_date') }}</strong>
+          <template #startDate>
+            <strong>{{ t('your_reading_settings.tracker_start_date') }}</strong>
           </template>
         </i18n-t>
         <table class="mbl-table">
           <tbody>
             <tr>
               <td>
-                <i18n-t keypath="your_outlook.days_since_look_back_date">
-                  <template #lookBackDate>
-                    <strong>{{ t('your_reading_settings.look_back_date') }}</strong>
+                <i18n-t keypath="your_outlook.days_since_start_date">
+                  <template #startDate>
+                    <strong>{{ t('your_reading_settings.start_date') }}</strong>
                   </template>
                 </i18n-t>
               </td>
@@ -360,7 +360,8 @@ td:nth-child(2) {
       "title": "Your Reading Settings",
       "description": "These settings are used to calculate and display your progress.",
       "update_settings": "Update Settings",
-      "look_back_date": "Look Back Date",
+      "tracker_start_date": "Tracker Start Date",
+      "start_date": "Start Date",
       "daily_verse_count_goal": "Daily Verse Count Goal"
     },
     "your_progress_so_far": {
@@ -373,7 +374,7 @@ td:nth-child(2) {
     "your_outlook": {
       "historical": {
         "title": "Your Historical Outlook",
-        "description": "Based on your reading habits since your {lookBackDate}, how long will it take you to finish the Bible?"
+        "description": "Based on your reading habits since your {startDate}, how long will it take you to finish the Bible?"
       },
       "30_day": {
         "title": "Your 30-Day Outlook",
@@ -387,7 +388,7 @@ td:nth-child(2) {
         "title": "Today's Outlook",
         "description": "Based on your reading today, how long will it take you to finish the Bible?"
       },
-      "days_since_look_back_date": "Days Since {lookBackDate}",
+      "days_since_start_date": "Days Since {startDate}",
       "verses_read": "Verses Read",
       "average_daily_verses_read": "Average Daily Verses Read",
       "days_to_finish_at_this_rate": "Days to Finish at This Rate",
@@ -410,7 +411,8 @@ td:nth-child(2) {
       "title": "Ihre Leseinstellungen",
       "description": "Diese Einstellungen werden verwendet, um Ihren Fortschritt zu berechnen und anzuzeigen.",
       "update_settings": "Einstellungen aktualisieren",
-      "look_back_date": "Rückblickdatum",
+      "tracker_start_date": "Tracker-Startdatum",
+      "start_date": "Startdatum",
       "daily_verse_count_goal": "Tägliche Verszahl-Ziel"
     },
     "your_progress_so_far": {
@@ -423,7 +425,7 @@ td:nth-child(2) {
     "your_outlook": {
       "historical": {
         "title": "Ihre historische Perspektive",
-        "description": "Basierend auf Ihren Lesegewohnheiten seit Ihrem {lookBackDate}, wie lange wird es dauern, bis Sie die Bibel lesen?"
+        "description": "Basierend auf Ihren Lesegewohnheiten seit Ihrem {startDate}, wie lange wird es dauern, bis Sie die Bibel lesen?"
       },
       "30_day": {
         "title": "Ihre 30-Tage-Perspektive",
@@ -437,7 +439,7 @@ td:nth-child(2) {
         "title": "Ihre heutige Perspektive",
         "description": "Basierend auf Ihrer heutigen Lesegewohnheit, wie lange wird es dauern, bis Sie die Bibel lesen?"
       },
-      "days_since_look_back_date": "Tage seit {lookBackDate}",
+      "days_since_start_date": "Tage seit {startDate}",
       "verses_read": "Gelesene Verszahl",
       "average_daily_verses_read": "Durchschnittliche tägliche Verszahl",
       "days_to_finish_at_this_rate": "Tage bis zum Erreichen dieses Rhythmus",
@@ -460,7 +462,8 @@ td:nth-child(2) {
       "title": "Sus Configuraciones de Lectura",
       "description": "Estas configuraciones se utilizan para calcular y mostrar su progreso.",
       "update_settings": "Actualizar Configuraciones",
-      "look_back_date": "Fecha de Revisión",
+      "tracker_start_date": "Fecha de Inicio del Rastreador",
+      "start_date": "Fecha de Inicio",
       "daily_verse_count_goal": "Meta de Versos Diarios"
     },
     "your_progress_so_far": {
@@ -473,7 +476,7 @@ td:nth-child(2) {
     "your_outlook": {
       "historical": {
         "title": "Su Perspectiva Histórica",
-        "description": "Basado en sus hábitos de lectura desde su {lookBackDate}, ¿cuánto tiempo le tomará terminar la Biblia?"
+        "description": "Basado en sus hábitos de lectura desde su {startDate}, ¿cuánto tiempo le tomará terminar la Biblia?"
       },
       "30_day": {
         "title": "Su Perspectiva de 30 Días",
@@ -487,7 +490,7 @@ td:nth-child(2) {
         "title": "La Perspectiva de Hoy",
         "description": "Basado en su lectura de hoy, ¿cuánto tiempo le tomará terminar la Biblia?"
       },
-      "days_since_look_back_date": "Días Desde {lookBackDate}",
+      "days_since_start_date": "Días Desde {startDate}",
       "verses_read": "Versos Leídos",
       "average_daily_verses_read": "Promedio de Versos Leídos Diariamente",
       "days_to_finish_at_this_rate": "Días para Terminar a Este Ritmo",
@@ -510,7 +513,8 @@ td:nth-child(2) {
       "title": "Vos paramètres de lecture",
       "description": "Ces paramètres sont utilisés pour calculer et afficher votre progression.",
       "update_settings": "Mettre à jour les paramètres",
-      "look_back_date": "Date de consultation précédente",
+      "tracker_start_date": "Date de Début du Suivi",
+      "start_date": "Date de Début",
       "daily_verse_count_goal": "Objectif de versets quotidiens"
     },
     "your_progress_so_far": {
@@ -523,7 +527,7 @@ td:nth-child(2) {
     "your_outlook": {
       "historical": {
         "title": "Votre Perspective Historique",
-        "description": "En fonction de vos habitudes de lecture depuis votre {lookBackDate}, combien de temps vous faudra-t-il pour finir la Bible?"
+        "description": "En fonction de vos habitudes de lecture depuis votre {startDate}, combien de temps vous faudra-t-il pour finir la Bible?"
       },
       "30_day": {
         "title": "Votre Perspective sur 30 Jours",
@@ -537,7 +541,7 @@ td:nth-child(2) {
         "title": "Perspective du Jour",
         "description": "En fonction de votre lecture aujourd'hui, combien de temps vous faudra-t-il pour finir la Bible?"
       },
-      "days_since_look_back_date": "Jours depuis la {lookBackDate}",
+      "days_since_start_date": "Jours depuis la {startDate}",
       "verses_read": "Versets lus",
       "average_daily_verses_read": "Moyenne des versets lus par jour",
       "days_to_finish_at_this_rate": "Jours restants à ce rythme",
@@ -560,7 +564,8 @@ td:nth-child(2) {
       "title": "나의 읽기 설정",
       "description": "아래 설정에 기반해 읽기 진도를 계산 및 표시합니다.",
       "update_settings": "설정 변경",
-      "look_back_date": "기준 시작일",
+      "tracker_start_date": "추적기 시작일",
+      "start_date": "시작일",
       "daily_verse_count_goal": "일일 구절 목표"
     },
     "your_progress_so_far": {
@@ -573,7 +578,7 @@ td:nth-child(2) {
     "your_outlook": {
       "historical": {
         "title": "전체 기간 전망",
-        "description": "{lookBackDate} 이후 읽기 습관을 바탕으로, 성경을 완독하는 데 얼마나 걸릴까요?"
+        "description": "{startDate} 이후 읽기 습관을 바탕으로, 성경을 완독하는 데 얼마나 걸릴까요?"
       },
       "30_day": {
         "title": "최근 30일 전망",
@@ -587,7 +592,7 @@ td:nth-child(2) {
         "title": "오늘의 전망",
         "description": "오늘 읽은 분량을 바탕으로, 성경을 완독하는 데 얼마나 걸릴까요?"
       },
-      "days_since_look_back_date": "{lookBackDate} 이후 경과일",
+      "days_since_start_date": "{startDate} 이후 경과일",
       "verses_read": "읽은 구절 수",
       "average_daily_verses_read": "일일 평균 읽은 구절 수",
       "days_to_finish_at_this_rate": "현재 속도로 완독까지 남은 일수",
@@ -610,7 +615,8 @@ td:nth-child(2) {
       "title": "Suas Configurações de Leitura",
       "description": "Essas configurações são usadas para calcular e exibir seu progresso.",
       "update_settings": "Atualizar Configurações",
-      "look_back_date": "Data de Revisão",
+      "tracker_start_date": "Data de Início do Rastreador",
+      "start_date": "Data de Início",
       "daily_verse_count_goal": "Meta Diária de Versículos"
     },
     "your_progress_so_far": {
@@ -623,7 +629,7 @@ td:nth-child(2) {
     "your_outlook": {
       "historical": {
         "title": "Seu Histórico de Progresso",
-        "description": "Com base nos seus hábitos de leitura desde sua {lookBackDate}, quanto tempo levará para você terminar a Bíblia?"
+        "description": "Com base nos seus hábitos de leitura desde sua {startDate}, quanto tempo levará para você terminar a Bíblia?"
       },
       "30_day": {
         "title": "Seu Progresso em 30 Dias",
@@ -637,7 +643,7 @@ td:nth-child(2) {
         "title": "Progresso de Hoje",
         "description": "Com base na sua leitura hoje, quanto tempo levará para você terminar a Bíblia?"
       },
-      "days_since_look_back_date": "Dias Desde a {lookBackDate}",
+      "days_since_start_date": "Dias Desde a {startDate}",
       "verses_read": "Versículos Lidos",
       "average_daily_verses_read": "Média Diária de Versículos Lidos",
       "days_to_finish_at_this_rate": "Dias para Terminar a Este Ritmo",
@@ -660,7 +666,8 @@ td:nth-child(2) {
       "title": "Ваші налаштування читання",
       "description": "Ці налаштування використовуються для розрахунку та відображення вашого прогресу.",
       "update_settings": "Оновити налаштування",
-      "look_back_date": "Дата перегляду",
+      "tracker_start_date": "Дата початку відстеження",
+      "start_date": "Дата початку",
       "daily_verse_count_goal": "Щоденна ціль кількості віршів"
     },
     "your_progress_so_far": {
@@ -673,7 +680,7 @@ td:nth-child(2) {
     "your_outlook": {
       "historical": {
         "title": "Ваш історичний прогляд",
-        "description": "На основі ваших звичок читання з дня вашого {lookBackDate}, скільки часу вам знадобиться, щоб закінчити Біблію?"
+        "description": "На основі ваших звичок читання з дня вашого {startDate}, скільки часу вам знадобиться, щоб закінчити Біблію?"
       },
       "30_day": {
         "title": "Ваш прогляд за 30 днів",
@@ -687,7 +694,7 @@ td:nth-child(2) {
         "title": "Прогляд на сьогодні",
         "description": "На основі вашого сьогоднішнього читання, скільки часу вам знадобиться, щоб закінчити Біблію?"
       },
-      "days_since_look_back_date": "Днів з перегляду",
+      "days_since_start_date": "Днів з дати початку",
       "verses_read": "Прочитані вірші",
       "average_daily_verses_read": "Середня кількість віршів за день",
       "days_to_finish_at_this_rate": "Днів до закінчення за цією швидкістю",

@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-23"
+dateModified: "2026-10-12"
 seo:
   title: "Settings: Daily Bible Reading Goal, Reminders & Export"
   description: "Set your daily Bible reading goal, choose your preferred Bible translation and app, get daily reminder emails, and export or import your reading log."
@@ -29,7 +29,7 @@ From here you can:
 
 ## Reading
 
-The Reading panel allows you to adjust settings related to reading the Bible. These include your **Daily Verse Count Goal** and **Look Back Date**.
+The Reading panel allows you to adjust settings related to reading the Bible. These include your **Daily Verse Count Goal** and **Tracker Start Date**.
 
 ### Daily Verse Count Goal
 
@@ -37,15 +37,15 @@ Your daily verse count goal is the number of Bible verses you want to read each 
 
 To help you decide what your daily verse count goal should be, this section shows you how many days it will take to read the Bible if you reach your verse count goal each day. By default, this value is 86, which will allow you to read the entire Bible in less than 365 days.
 
-### Look Back Date
+### Tracker Start Date
 
-Your look back date determines how far back in your reading log My Bible Log will look when determining your progress. Your look back date starts out as the date when you first started using My Bible Log.
+Your start date determines how far back in your reading log My Bible Log will look when determining your progress. Your start date starts out as the date when you first started using My Bible Log.
 
-Log entries before this date are ignored. As an example, the Bible Books page will not display reading you've done before your look back date.
+Log entries before this date are ignored. As an example, the Bible Books page will not display reading you've done before your start date.
 
-If you read the entire Bible and want to start over and read every part of the Bible again, setting your look back date to the current date will clear your progress on the Bible Books page and allow your log entries to be considered "new" verses again on the Today page and Calendar page.
+If you read the entire Bible and want to start over and read every part of the Bible again, setting your start date to the current date will clear your progress on the Bible Books page and allow your log entries to be considered "new" verses again on the Today page and Calendar page.
 
-Changing your look back date will not delete any data from My Bible Log. All of your log entries still exist and can be viewed at any time from the Calendar page.
+Changing your start date will not delete any data from My Bible Log. All of your log entries still exist and can be viewed at any time from the Calendar page.
 
 ### Preferred Bible Version
 
