@@ -85,6 +85,22 @@ jest.mock("@sentry/react-native", () => ({
   Native: {},
 }));
 
+// expo-notifications — no scheduler/permissions in the Jest environment.
+// Individual tests override behavior with `jest.spyOn`/`mockResolvedValue`.
+jest.mock("expo-notifications", () => ({
+  AndroidImportance: { DEFAULT: 3 },
+  SchedulableTriggerInputTypes: { DAILY: "daily" },
+  setNotificationHandler: jest.fn(),
+  setNotificationChannelAsync: jest.fn(async () => undefined),
+  getPermissionsAsync: jest.fn(async () => ({ status: "granted" })),
+  requestPermissionsAsync: jest.fn(async () => ({ status: "granted" })),
+  scheduleNotificationAsync: jest.fn(async () => "test-notification-id"),
+  cancelScheduledNotificationAsync: jest.fn(async () => undefined),
+  getAllScheduledNotificationsAsync: jest.fn(async () => []),
+  addNotificationResponseReceivedListener: jest.fn(() => ({ remove: jest.fn() })),
+  getLastNotificationResponseAsync: jest.fn(async () => null),
+}));
+
 // expo-haptics — no-op.
 jest.mock("expo-haptics", () => ({
   impactAsync: jest.fn(),

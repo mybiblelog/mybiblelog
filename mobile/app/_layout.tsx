@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { View, useColorScheme } from "react-native";
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
+import * as Notifications from "expo-notifications";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { AchievementModal, ConfigErrorScreen, JustOpenedModal } from "@/src/components";
 import { MISSING_CONFIG } from "@/src/config";
@@ -13,6 +14,11 @@ import {
   stackTransition,
   useTheme,
 } from "@/src/design";
+import {
+  DAILY_REMINDER_NOTIFICATION_DATA_TYPE,
+  configureDailyReminderHandler,
+} from "@/src/notifications/dailyReminder";
+import { useDailyReminderSync } from "@/src/notifications/useDailyReminderSync";
 import { initStores } from "@/src/stores/init";
 import { useOnboardingStatus } from "@/src/stores/onboarding";
 import { ToastProvider } from "@/src/toast/ToastProvider";
@@ -22,6 +28,17 @@ import { Sentry, initCrashReporting } from "@/src/observability/sentry";
 
 // Initialize crash reporting as early as possible (no-op unless a DSN is set).
 initCrashReporting();
+
+// How the daily reading reminder notification presents while the app is in
+// the foreground (module scope, mirroring the crash-reporting/Google
+// Sign-In setup above — it only needs to run once).
+configureDailyReminderHandler();
+
+function isDailyReminderResponse(response: Notifications.NotificationResponse | null): boolean {
+  return (
+    response?.notification.request.content.data?.type === DAILY_REMINDER_NOTIFICATION_DATA_TYPE
+  );
+}
 
 // Configure native Google Sign-In once, before any login attempt. Skipped when
 // the build is misconfigured — it reads the (absent) client ID at call time, and
@@ -38,6 +55,26 @@ function RootLayout() {
   useEffect(() => {
     if (MISSING_CONFIG.length > 0) return;
     initStores();
+  }, []);
+
+  // Tapping the daily reading reminder notification opens Today, whether the
+  // app was already running (the listener) or the tap launched it fresh (the
+  // last-response check, for a cold start).
+  useEffect(() => {
+    if (MISSING_CONFIG.length > 0) return;
+
+    void Notifications.getLastNotificationResponseAsync().then((response) => {
+      if (isDailyReminderResponse(response)) {
+        router.replace("/(tabs)");
+      }
+    });
+
+    const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
+      if (isDailyReminderResponse(response)) {
+        router.replace("/(tabs)");
+      }
+    });
+    return () => subscription.remove();
   }, []);
 
   const onboarding = useOnboardingStatus();
@@ -85,6 +122,7 @@ export default Sentry.wrap(RootLayout);
 
 function RootStack({ onboardingCompleted }: { onboardingCompleted: boolean }) {
   const { colors } = useTheme();
+  useDailyReminderSync();
 
   // The auth screens are the one place a native header survives, and only for
   // its back/dismiss chevron: they're vertically centred modals, so there's no

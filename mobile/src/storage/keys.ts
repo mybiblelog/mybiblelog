@@ -22,6 +22,7 @@ import type { StoredLocalNote, PendingNoteMutation } from "@/src/storage/passage
 import type { AuthSession } from "@/src/auth/authStorage";
 import type { ReviewPromptState } from "@/src/review/reviewPrompt";
 import type { BookListPrefs } from "@/src/stores/bookListPrefs";
+import type { DailyReminderSettings } from "@/src/notifications/dailyReminder";
 import { createTypedStorage, defineKey } from "./typedStorage";
 import type { StorageHooks } from "./typedStorage";
 import { reportStorageFailure, reportStorageOk } from "./health";
@@ -57,6 +58,12 @@ export const appStorage = createTypedStorage(
     passageNoteMutations: defineKey<PendingNoteMutation[]>("passageNotes.mutations.v1"),
     reviewPrompt: defineKey<ReviewPromptState>("reviewPrompt.v1"),
     bookListPrefs: defineKey<BookListPrefs>("bookListPrefs.v1"),
+    /**
+     * Local, on-device daily reading reminder (native scheduled notification).
+     * Independent of the server-side reminder email; see
+     * `src/notifications/dailyReminder.ts`.
+     */
+    dailyReminder: defineKey<DailyReminderSettings>("dailyReminder.v1"),
   },
   healthHooks
 );

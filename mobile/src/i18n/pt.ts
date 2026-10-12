@@ -382,6 +382,14 @@ export const pt = {
   settings_reading_local_only_notice:
     "Entre para sincronizar essas configurações com sua conta. (O aplicativo de Bíblia preferido é somente do dispositivo.)",
 
+  settings_reading_reminder_title: "Lembrete de leitura diária",
+  settings_reading_reminder_toggle: "Lembre-me de ler todos os dias",
+  settings_reading_reminder_time_label: "Horário do lembrete",
+  settings_reading_reminder_permission_denied:
+    "As notificações estão desativadas para este aplicativo. Ative-as nas configurações do dispositivo para receber um lembrete.",
+  daily_reading_reminder_notification_title: "Hora de ler",
+  daily_reading_reminder_notification_body: "Reserve um momento para sua leitura bíblica diária.",
+
   settings_saved_successfully: "Salvo.",
   settings_save_invalid: "Verifique o valor e tente novamente.",
   settings_reading_daily_goal_invalid: "Digite um número inteiro entre 1 e 1111.",

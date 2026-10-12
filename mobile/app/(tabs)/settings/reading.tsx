@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useIsAuthenticated } from "@/src/stores/auth";
 import {
   Button,
+  DailyReminderSection,
   InputField,
   Screen,
   ScreenHeader,
@@ -274,6 +275,8 @@ function ReadingSettingsForm({ settings }: { settings: LocalUserSettings }) {
             testID="settings-reading.bible-app-select"
           />
         </SettingSection>
+
+        <DailyReminderSection />
 
         {!isAuthenticated && (
           <Text variant="caption" color="mutedText" style={styles.help}>

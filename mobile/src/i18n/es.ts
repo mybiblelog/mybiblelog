@@ -385,6 +385,14 @@ export const es = {
   settings_reading_local_only_notice:
     "Inicia sesión para sincronizar estos ajustes con tu cuenta. (La app preferida es solo de este dispositivo.)",
 
+  settings_reading_reminder_title: "Recordatorio de lectura diaria",
+  settings_reading_reminder_toggle: "Recuérdame leer todos los días",
+  settings_reading_reminder_time_label: "Hora del recordatorio",
+  settings_reading_reminder_permission_denied:
+    "Las notificaciones están desactivadas para esta app. Actívalas en la configuración de tu dispositivo para recibir un recordatorio.",
+  daily_reading_reminder_notification_title: "Hora de leer",
+  daily_reading_reminder_notification_body: "Tómate un momento para tu lectura bíblica diaria.",
+
   settings_saved_successfully: "Guardado.",
   settings_save_invalid: "Revisa el valor e inténtalo de nuevo.",
   settings_reading_daily_goal_invalid: "Introduce un número entero entre 1 y 1111.",
