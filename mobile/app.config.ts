@@ -1,5 +1,5 @@
-import type { ExpoConfig } from 'expo/config';
-import { AndroidConfig, withAndroidManifest, type ConfigPlugin } from '@expo/config-plugins';
+import type { ExpoConfig } from "expo/config";
+import { AndroidConfig, withAndroidManifest, type ConfigPlugin } from "@expo/config-plugins";
 
 // This file is evaluated by `expo config` (run by EAS before uploading, and
 // locally). It only passes env through into `extra` — it never throws on a
@@ -31,7 +31,7 @@ const appNameSuffix = process.env.EXPO_PUBLIC_APP_NAME_SUFFIX?.trim() || undefin
 // suffix reversed into `com.googleusercontent.apps.<id>`.
 function toIosUrlScheme(iosClientId: string | undefined): string | undefined {
   if (!iosClientId) return undefined;
-  const id = iosClientId.replace(/\.apps\.googleusercontent\.com$/, '');
+  const id = iosClientId.replace(/\.apps\.googleusercontent\.com$/, "");
   return `com.googleusercontent.apps.${id}`;
 }
 
@@ -59,12 +59,12 @@ if (missingEnv.length > 0) {
 // the server" (e.g. the screenshot build). Permit cleartext only when the API
 // base URL is itself cleartext http://; production (https) is untouched, so this
 // never weakens real builds.
-const needsCleartextTraffic = apiBaseUrl?.startsWith('http://') ?? false;
+const needsCleartextTraffic = apiBaseUrl?.startsWith("http://") ?? false;
 
 const withCleartextTraffic: ConfigPlugin = (config) =>
   withAndroidManifest(config, (cfg) => {
     const app = AndroidConfig.Manifest.getMainApplicationOrThrow(cfg.modResults);
-    app.$['android:usesCleartextTraffic'] = 'true';
+    app.$["android:usesCleartextTraffic"] = "true";
     return cfg;
   });
 
@@ -81,8 +81,17 @@ const baseConfig = ({ config }: { config: ExpoConfig }): ExpoConfig => ({
     // EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID; Android uses the package name + SHA-1
     // registered in Google Cloud.
     ...(iosUrlScheme
-      ? [['react-native-nitro-google-signin', { iosUrlScheme }] as [string, { iosUrlScheme: string }]]
+      ? [
+          ["react-native-nitro-google-signin", { iosUrlScheme }] as [
+            string,
+            { iosUrlScheme: string },
+          ],
+        ]
       : []),
+    // Local, on-device daily reading reminder (src/notifications/dailyReminder.ts).
+    // `color` tints the small Android status-bar icon; no custom icon asset is
+    // configured, so it falls back to the app icon.
+    ["expo-notifications", { color: "#00aaf9" }] as [string, { color: string }],
   ],
   extra: {
     ...config.extra,

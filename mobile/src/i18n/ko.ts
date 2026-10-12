@@ -373,6 +373,14 @@ export const ko = {
   settings_reading_local_only_notice:
     "이 설정을 계정에 동기화하려면 로그인하세요. (선호하는 성경 앱은 이 기기에만 저장됩니다.)",
 
+  settings_reading_reminder_title: "매일 읽기 알림",
+  settings_reading_reminder_toggle: "매일 성경 읽기를 알려주세요",
+  settings_reading_reminder_time_label: "알림 시간",
+  settings_reading_reminder_permission_denied:
+    "이 앱의 알림이 꺼져 있습니다. 알림을 받으려면 기기 설정에서 알림을 켜주세요.",
+  daily_reading_reminder_notification_title: "읽을 시간이에요",
+  daily_reading_reminder_notification_body: "잠시 시간을 내어 오늘의 성경 읽기를 해보세요.",
+
   settings_saved_successfully: "저장되었습니다.",
   settings_save_invalid: "값을 확인하고 다시 시도해 주세요.",
   settings_reading_daily_goal_invalid: "1에서 1111 사이의 정수를 입력해 주세요.",

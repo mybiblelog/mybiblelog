@@ -389,6 +389,15 @@ export const de = {
   settings_reading_local_only_notice:
     "Melden Sie sich an, um diese Einstellungen mit Ihrem Konto zu synchronisieren. (Die bevorzugte Bibel-App gilt nur für dieses Gerät.)",
 
+  settings_reading_reminder_title: "Tägliche Leseerinnerung",
+  settings_reading_reminder_toggle: "Erinnere mich täglich ans Lesen",
+  settings_reading_reminder_time_label: "Erinnerungszeit",
+  settings_reading_reminder_permission_denied:
+    "Benachrichtigungen sind für diese App deaktiviert. Aktivieren Sie sie in den Geräteeinstellungen, um eine Erinnerung zu erhalten.",
+  daily_reading_reminder_notification_title: "Zeit zu lesen",
+  daily_reading_reminder_notification_body:
+    "Nehmen Sie sich einen Moment Zeit für Ihre tägliche Bibellese.",
+
   settings_saved_successfully: "Gespeichert.",
   settings_save_invalid: "Bitte überprüfen Sie den Wert und versuchen Sie es erneut.",
   settings_reading_daily_goal_invalid: "Geben Sie eine ganze Zahl zwischen 1 und 1111 ein.",

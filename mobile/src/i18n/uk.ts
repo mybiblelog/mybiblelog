@@ -381,6 +381,14 @@ export const uk = {
   settings_reading_local_only_notice:
     "Увійдіть, щоб синхронізувати ці налаштування з вашим обліковим записом. (Бажаний додаток для Біблії зберігається лише на цьому пристрої.)",
 
+  settings_reading_reminder_title: "Щоденне нагадування про читання",
+  settings_reading_reminder_toggle: "Нагадувати мені читати щодня",
+  settings_reading_reminder_time_label: "Час нагадування",
+  settings_reading_reminder_permission_denied:
+    "Сповіщення для цього додатку вимкнено. Увімкніть їх у налаштуваннях пристрою, щоб отримувати нагадування.",
+  daily_reading_reminder_notification_title: "Час читати",
+  daily_reading_reminder_notification_body: "Приділіть хвилину своєму щоденному читанню Біблії.",
+
   settings_saved_successfully: "Збережено.",
   settings_save_invalid: "Перевірте значення та спробуйте ще раз.",
   settings_reading_daily_goal_invalid: "Введіть ціле число від 1 до 1111.",

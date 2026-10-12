@@ -408,6 +408,14 @@ export const en = {
   settings_reading_local_only_notice:
     "Sign in to sync these settings to your account. (Preferred Bible App is device-only.)",
 
+  settings_reading_reminder_title: "Daily Reading Reminder",
+  settings_reading_reminder_toggle: "Remind me to read every day",
+  settings_reading_reminder_time_label: "Reminder Time",
+  settings_reading_reminder_permission_denied:
+    "Notifications are turned off for this app. Enable them in your device settings to receive a reminder.",
+  daily_reading_reminder_notification_title: "Time to read",
+  daily_reading_reminder_notification_body: "Take a moment for your daily Bible reading.",
+
   settings_saved_successfully: "Saved.",
   settings_save_invalid: "Please check the value and try again.",
   settings_reading_daily_goal_invalid: "Enter a whole number between 1 and 1111.",
