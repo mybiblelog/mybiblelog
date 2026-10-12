@@ -22,10 +22,28 @@ bullets and blank lines. Trailing whitespace is stripped on publish.
 locales and which app locale supplies their screenshots, and the ordered list of
 screenshot slugs to upload (Play displays them in upload order).
 
-> The non-English copy was adapted from the vetted marketing text in
-> `web/content/<locale>/index.md`. It should get a native-speaker pass before the
-> first publish in that locale; until then, publish English only with
-> `--locales en-US`.
+## Listing strategy
+
+Google Play has no keyword field; indexing weight is roughly title (30) > short
+description (80) > full description (4000), plus engagement signals. Each keyword
+only needs to appear once or twice — stuffing is penalized.
+
+- The title "My Bible Log: Reading Tracker" is built so it indexes the full phrase
+  "bible reading tracker". Other targets (bible reading plan, bible progress, bible
+  in a year, bible journal, bible notes) live in the short and full descriptions,
+  along with the differentiators: free, no ads, no subscriptions, at your own pace,
+  offline.
+- We deliberately do **not** target "bible app" / "bible study app". Those head terms
+  are dominated by YouVersion-class apps, and they attract users expecting Bible
+  *text*, which hurts ratings. The copy says the app works *alongside* your favorite
+  Bible app to set that expectation.
+- Every claim in the copy must map to a shipped screen. Re-check this when editing.
+- Category is Books & Reference. An untried idea: a Store Listing Experiment in Play
+  Console comparing a self-paced/free short description against a keyword-dense one
+  ("Free Bible reading tracker. Set daily goals, log chapters, and take notes.").
+- Domains: `mybiblelog.com` is the product (PWA, account, policies) and supplies every
+  listing URL, so brand and privacy-policy domains match. `biblelog.app` is a
+  lightweight promo page whose main CTA is the Play badge.
 
 ## Graphics (phone screenshots + feature graphic)
 
@@ -49,8 +67,7 @@ published.
 - `listings/<play-locale>/graphics.json`: the copy, a flat map of the `key`s that
   `layout.json` uses. English must cover every key. Any other locale falls back
   to English for a missing key, with a warning. The non-English headlines come
-  from the web homepage (`web/content/<locale>/index.md`), so they need the same
-  native-speaker pass as the listing copy.
+  from the web homepage (`web/content/<locale>/index.md`).
 
 ```sh
 cd mobile

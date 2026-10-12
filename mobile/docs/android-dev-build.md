@@ -100,13 +100,26 @@ Native Google Sign-In needs **three** OAuth client IDs in **Google Cloud Console
 2. **Android client ID** — `OAuth Client ID → Android`:
    * Package name: `com.mybiblelog.app`
    * SHA-1: (from EAS) — use the **debug** SHA-1 for dev builds, the production SHA-1 for
-     release builds.
+     release builds. Once the app is on Play with Play App Signing, release builds are
+     re-signed by Google, so register the **app-signing certificate** SHA-1 (Play Console →
+     App integrity) too — without it Google Sign-In silently fails in production.
 3. **iOS client ID** — `OAuth Client ID → iOS` (bundle ID `com.mybiblelog.app`). Set it as
    `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`; `app.config.ts` derives the reversed-client-ID URL
    scheme from it. Add it to the API's `GOOGLE_ALLOWED_CLIENT_IDS` too.
 
 > The `id_token` audience is the **web** client ID on both platforms, so that ID must be
 > present in `GOOGLE_ALLOWED_CLIENT_IDS` for login to succeed.
+
+## Play Console declarations
+
+Worth remembering when a release changes what the app collects:
+
+* **Data Safety:** email address (account), user-generated content (reading log entries,
+  notes, tags) stored on our own API, and crash diagnostics via Sentry; all encrypted in
+  transit; nothing sold or shared for advertising. Account deletion must be declared both
+  in-app **and** as a public web URL (the account page on mybiblelog.com).
+* **Target audience:** 13+ (avoids the under-13 designation and its added obligations).
+* **Ads / in-app purchases:** none. Keep both declarations accurate.
 
 ## Perform the dev build
 
