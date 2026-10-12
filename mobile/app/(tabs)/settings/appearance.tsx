@@ -30,6 +30,7 @@ export default function AppearanceSettings() {
                 title={opt.label}
                 variant="plain"
                 onPress={() => setMode(opt.value)}
+                testID={`appearance.option-${opt.value}`}
                 trailing={
                   mode === opt.value ? (
                     <Icon name="checkmark" size={20} color="primary" />

@@ -23,16 +23,13 @@ appId: com.mybiblelog.app
 # "sign in again as X" UX) once capture.yaml has forced a logout — inputText
 # appends at the cursor rather than replacing, so clear it first or repeated
 # runs double up the typed value (demo@example.comdemo@example.com).
-- eraseText
+- eraseText: 60
 - inputText: ${E2E_EMAIL}
-- hideKeyboard
 - tapOn:
     id: "login.password"
-- eraseText
+- eraseText: 60
 - inputText: ${E2E_PASSWORD}
-- hideKeyboard
-- tapOn:
-    id: "login.submit"
+- pressKey: Enter
 # Successful login pops back to the Account screen, where the login button is
 # replaced by the logout button. `settings.logout` is the locale-independent
 # "authenticated" signal (never visible on the login screen itself, so no

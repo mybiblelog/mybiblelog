@@ -60,6 +60,7 @@ export function BookListToolbar({
         variant="secondary"
         size="sm"
         leftIcon="swap-vertical"
+        selected={alphabetical}
         testID={`${testIDPrefix}.sort-toggle`}
         onPress={() => onSortOrderChange(alphabetical ? "numerical" : "alphabetical")}
       />
