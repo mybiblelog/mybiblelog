@@ -24,6 +24,7 @@
     "e2e:seed": "node scripts/e2e/seed.mjs",
     "check:build-env": "node scripts/check-build-env.mjs",
     "play:validate": "node scripts/play/validate.mjs",
+    "play:graphics": "node scripts/play/render-graphics.mjs",
     "play:listing:diff": "node --env-file-if-exists=.env scripts/play/push.mjs --dry-run",
     "play:listing:push": "node --env-file-if-exists=.env scripts/play/push.mjs",
     "eas:build:android:dev": "node scripts/check-build-env.mjs --profile development && eas build --platform android --profile development",

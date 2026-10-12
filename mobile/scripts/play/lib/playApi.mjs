@@ -2,7 +2,7 @@
 //
 // google-auth-library handles the service-account JWT and token refresh; the
 // endpoints themselves are plain REST, so they are called with fetch rather
-// than pulling in the full googleapis client for six routes.
+// than pulling in the full googleapis client for a handful of routes.
 //
 // Every listing change goes through an "edit": insert one, apply changes to it,
 // validate, then commit. An uncommitted edit is invisible in Play Console and
@@ -87,7 +87,14 @@ export function createPlayClient({ packageName, keyPath }) {
         `${UPLOAD}/applications/${packageName}/edits/${editId}/images/${language}/phoneScreenshots?uploadType=media`,
         { method: "POST", body: readFileSync(file), contentType: "image/png" }
       ),
-    validateEdit: (editId) => json(`${base}/${editId}:validate`, "POST", {}),
+    deleteFeatureGraphic: (editId, language) =>
+      call(`${base}/${editId}/images/${language}/featureGraphic`, { method: "DELETE" }),
+    uploadFeatureGraphic: (editId, language, file) =>
+      call(
+        `${UPLOAD}/applications/${packageName}/edits/${editId}/images/${language}/featureGraphic?uploadType=media`,
+        { method: "POST", body: readFileSync(file), contentType: "image/png" }
+      ),
+    validateEdit:(editId) => json(`${base}/${editId}:validate`, "POST", {}),
     commitEdit: (editId) => json(`${base}/${editId}:commit`, "POST", {}),
   };
 }

@@ -27,6 +27,41 @@ screenshot slugs to upload (Play displays them in upload order).
 > first publish in that locale; until then, publish English only with
 > `--locales en-US`.
 
+## Graphics (phone screenshots + feature graphic)
+
+With `"screenshots": { "composed": true }` in `config.json`, Play gets designed
+images rather than the raw app captures. Each image is an HTML slide: a
+background, one or more captures placed and rotated, and localized text.
+`npm run play:graphics` renders the slides with headless Chromium into
+`mobile/screenshots/play/<play-locale>/`, and that folder is what gets
+published.
+
+- `graphics/layout.json`: the visual design only. Each slide has an `id`, a `kind`
+  (`phone`, uploaded in layout order, 2–8 of them; or the single `feature`
+  graphic, 1024×500), a pixel `size`, a `background` (`color`, an optional CSS
+  `gradient`, an optional `pattern` of `dots`/`diagonal`/`grid`), plus `shapes`,
+  `images` and `texts`. Images and shapes are positioned by their centre (`x`,
+  `y`) with an optional `rotate`, `rotateX`/`rotateY`, `frame` (a CSS phone bezel)
+  and `shadow`. An image's `src` is a capture slug from
+  `mobile/screenshots/<app-locale>/`; `asset` takes a repo-relative image path
+  instead. A text box is positioned by its top-left and wraps within `width`.
+  Give it a `height` and the font shrinks until the text fits.
+- `listings/<play-locale>/graphics.json`: the copy, a flat map of the `key`s that
+  `layout.json` uses. English must cover every key. Any other locale falls back
+  to English for a missing key, with a warning. The non-English headlines come
+  from the web homepage (`web/content/<locale>/index.md`), so they need the same
+  native-speaker pass as the listing copy.
+
+```sh
+cd mobile
+npm run play:graphics -- --serve                 # live preview: edit the JSON, reload
+npm run play:graphics                            # render every locale
+npm run play:graphics -- --locales de-DE --slides 04-calendar
+```
+
+Render after every `npm run screenshots:mobile`. The fonts load from Google
+Fonts, so rendering needs a network connection.
+
 ## Publishing
 
 ```sh

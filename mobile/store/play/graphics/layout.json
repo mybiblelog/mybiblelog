@@ -1,0 +1,166 @@
+{
+  "fonts": [
+    "https://fonts.googleapis.com/css2?family=Noto+Sans:wght@500;700;800&family=Noto+Sans+KR:wght@500;700;800&display=block"
+  ],
+  "defaults": {
+    "fontFamily": "'Noto Sans', 'Noto Sans KR', sans-serif",
+    "color": "#ffffff",
+    "frameColor": "#15171c"
+  },
+  "slides": [
+    {
+      "id": "01-daily-goal",
+      "kind": "phone",
+      "size": { "width": 1080, "height": 1920 },
+      "background": {
+        "color": "#00aaf9",
+        "gradient": "linear-gradient(160deg, #00aaf9 0%, #0965f7 100%)",
+        "pattern": { "type": "dots", "color": "rgba(255,255,255,0.12)", "size": 36 }
+      },
+      "shapes": [{ "type": "circle", "x": 980, "y": 1500, "size": 620, "color": "rgba(255,255,255,0.10)" }],
+      "texts": [
+        { "key": "dailyGoal.eyebrow", "x": 60, "y": 110, "width": 960, "height": 48, "size": 36, "weight": 700, "align": "center", "letterSpacing": "0.08em", "textTransform": "uppercase", "opacity": 0.85 },
+        { "key": "dailyGoal.title", "x": 60, "y": 170, "width": 960, "height": 340, "size": 92, "weight": 800, "align": "center", "lineHeight": 1.08 }
+      ],
+      "images": [{ "src": "sc4-daily-goal", "x": 540, "y": 1368, "width": 720, "frame": true, "shadow": true }]
+    },
+    {
+      "id": "02-bible-progress",
+      "kind": "phone",
+      "size": { "width": 1080, "height": 1920 },
+      "background": {
+        "color": "#0965f7",
+        "pattern": { "type": "diagonal", "color": "rgba(255,255,255,0.07)", "size": 44 }
+      },
+      "texts": [
+        { "key": "bibleProgress.eyebrow", "x": 60, "y": 110, "width": 960, "height": 48, "size": 36, "weight": 700, "align": "center", "letterSpacing": "0.08em", "textTransform": "uppercase", "opacity": 0.85 },
+        { "key": "bibleProgress.title", "x": 60, "y": 170, "width": 960, "height": 340, "size": 92, "weight": 800, "align": "center", "lineHeight": 1.08 }
+      ],
+      "images": [{ "src": "sc7-bible-progress", "x": 560, "y": 1380, "width": 720, "rotate": 4, "frame": true, "shadow": true }]
+    },
+    {
+      "id": "03-checklist",
+      "kind": "phone",
+      "size": { "width": 1080, "height": 1920 },
+      "background": {
+        "color": "#00d1b2",
+        "gradient": "linear-gradient(200deg, #00d1b2 0%, #00aaf9 100%)",
+        "pattern": { "type": "grid", "color": "rgba(255,255,255,0.10)", "size": 60 }
+      },
+      "texts": [
+        { "key": "checklist.eyebrow", "x": 60, "y": 110, "width": 960, "height": 48, "size": 36, "weight": 700, "align": "center", "letterSpacing": "0.08em", "textTransform": "uppercase", "opacity": 0.85 },
+        { "key": "checklist.title", "x": 60, "y": 170, "width": 960, "height": 340, "size": 92, "weight": 800, "align": "center", "lineHeight": 1.08 }
+      ],
+      "images": [{ "src": "sc12-checklist", "x": 520, "y": 1380, "width": 720, "rotate": -4, "frame": true, "shadow": true }]
+    },
+    {
+      "id": "04-calendar",
+      "kind": "phone",
+      "size": { "width": 1080, "height": 1920 },
+      "background": {
+        "color": "#0b1220",
+        "gradient": "radial-gradient(circle at 50% 30%, #13305c 0%, #0b1220 70%)",
+        "pattern": { "type": "dots", "color": "rgba(0,170,249,0.18)", "size": 36 }
+      },
+      "texts": [
+        { "key": "calendar.eyebrow", "x": 60, "y": 110, "width": 960, "height": 48, "size": 36, "weight": 700, "align": "center", "letterSpacing": "0.08em", "textTransform": "uppercase", "color": "#00aaf9" },
+        { "key": "calendar.title", "x": 60, "y": 170, "width": 960, "height": 340, "size": 92, "weight": 800, "align": "center", "lineHeight": 1.08 }
+      ],
+      "images": [
+        { "src": "sc9-calendar", "x": 360, "y": 1250, "width": 560, "rotate": -8, "frame": true, "shadow": true, "z": 1 },
+        { "src": "sc9-calendar-dark", "x": 720, "y": 1340, "width": 560, "rotate": 5, "frame": true, "frameColor": "#2a2e37", "shadow": true, "z": 2 }
+      ]
+    },
+    {
+      "id": "05-notes",
+      "kind": "phone",
+      "size": { "width": 1080, "height": 1920 },
+      "background": {
+        "color": "#00aaf9",
+        "gradient": "linear-gradient(20deg, #0965f7 0%, #00aaf9 100%)",
+        "pattern": { "type": "diagonal", "color": "rgba(255,255,255,0.07)", "size": 44 }
+      },
+      "shapes": [{ "type": "circle", "x": 80, "y": 1100, "size": 520, "color": "rgba(255,255,255,0.10)" }],
+      "texts": [
+        { "key": "notes.eyebrow", "x": 60, "y": 110, "width": 960, "height": 48, "size": 36, "weight": 700, "align": "center", "letterSpacing": "0.08em", "textTransform": "uppercase", "opacity": 0.85 },
+        { "key": "notes.title", "x": 60, "y": 170, "width": 960, "height": 340, "size": 92, "weight": 800, "align": "center", "lineHeight": 1.08 }
+      ],
+      "images": [
+        { "src": "sc11-note-tags", "x": 720, "y": 1250, "width": 560, "rotate": 8, "frame": true, "shadow": true, "z": 1 },
+        { "src": "sc10-notes", "x": 360, "y": 1340, "width": 560, "rotate": -5, "frame": true, "shadow": true, "z": 2 }
+      ]
+    },
+    {
+      "id": "06-progress",
+      "kind": "phone",
+      "size": { "width": 1080, "height": 1920 },
+      "background": {
+        "color": "#0965f7",
+        "gradient": "linear-gradient(180deg, #0965f7 0%, #0a4fc2 100%)",
+        "pattern": { "type": "grid", "color": "rgba(255,255,255,0.07)", "size": 60 }
+      },
+      "texts": [
+        { "key": "progress.eyebrow", "x": 60, "y": 110, "width": 960, "height": 48, "size": 36, "weight": 700, "align": "center", "letterSpacing": "0.08em", "textTransform": "uppercase", "opacity": 0.85 },
+        { "key": "progress.title", "x": 60, "y": 170, "width": 960, "height": 340, "size": 92, "weight": 800, "align": "center", "lineHeight": 1.08 }
+      ],
+      "images": [{ "src": "sc13-progress", "x": 540, "y": 1368, "width": 720, "frame": true, "shadow": true }]
+    },
+    {
+      "id": "07-suggestions",
+      "kind": "phone",
+      "size": { "width": 1080, "height": 1920 },
+      "background": {
+        "color": "#00d1b2",
+        "gradient": "linear-gradient(160deg, #00d1b2 0%, #0965f7 100%)",
+        "pattern": { "type": "dots", "color": "rgba(255,255,255,0.12)", "size": 36 }
+      },
+      "shapes": [{ "type": "circle", "x": 1000, "y": 900, "size": 480, "color": "rgba(255,255,255,0.10)" }],
+      "texts": [
+        { "key": "suggestions.eyebrow", "x": 60, "y": 110, "width": 960, "height": 48, "size": 36, "weight": 700, "align": "center", "letterSpacing": "0.08em", "textTransform": "uppercase", "opacity": 0.85 },
+        { "key": "suggestions.title", "x": 60, "y": 170, "width": 960, "height": 340, "size": 92, "weight": 800, "align": "center", "lineHeight": 1.08 }
+      ],
+      "images": [{ "src": "sc1-reading-suggestions", "x": 540, "y": 1380, "width": 720, "rotate": -3, "frame": true, "shadow": true }]
+    },
+    {
+      "id": "08-insights",
+      "kind": "phone",
+      "size": { "width": 1080, "height": 1920 },
+      "background": {
+        "color": "#0b1220",
+        "gradient": "radial-gradient(circle at 50% 30%, #0e3b3a 0%, #0b1220 70%)",
+        "pattern": { "type": "grid", "color": "rgba(0,209,178,0.10)", "size": 60 }
+      },
+      "texts": [
+        { "key": "insights.eyebrow", "x": 60, "y": 110, "width": 960, "height": 48, "size": 36, "weight": 700, "align": "center", "letterSpacing": "0.08em", "textTransform": "uppercase", "color": "#00d1b2" },
+        { "key": "insights.title", "x": 60, "y": 170, "width": 960, "height": 340, "size": 92, "weight": 800, "align": "center", "lineHeight": 1.08 }
+      ],
+      "images": [
+        { "src": "sc16-insights-trend", "x": 720, "y": 1250, "width": 560, "rotate": 8, "frame": true, "shadow": true, "z": 1 },
+        { "src": "sc15-insights-activity-dark", "x": 360, "y": 1340, "width": 560, "rotate": -5, "frame": true, "frameColor": "#2a2e37", "shadow": true, "z": 2 }
+      ]
+    },
+    {
+      "id": "feature-graphic",
+      "kind": "feature",
+      "size": { "width": 1024, "height": 500 },
+      "background": {
+        "color": "#00aaf9",
+        "gradient": "linear-gradient(120deg, #00aaf9 0%, #0965f7 100%)",
+        "pattern": { "type": "dots", "color": "rgba(255,255,255,0.12)", "size": 28 }
+      },
+      "shapes": [
+        { "type": "circle", "x": 860, "y": 250, "size": 520, "color": "rgba(255,255,255,0.10)" },
+        { "type": "rect", "x": 112, "y": 120, "width": 112, "height": 112, "radius": 26, "color": "#ffffff", "shadow": true }
+      ],
+      "texts": [
+        { "key": "feature.title", "x": 56, "y": 200, "width": 520, "size": 62, "weight": 800, "lineHeight": 1.1 },
+        { "key": "feature.tagline", "x": 56, "y": 280, "width": 500, "height": 130, "size": 30, "weight": 500, "lineHeight": 1.3, "opacity": 0.92 }
+      ],
+      "images": [
+        { "asset": "web/public/images/logo.svg", "x": 112, "y": 120, "width": 80 },
+        { "src": "sc4-daily-goal", "x": 740, "y": 330, "width": 250, "rotate": -10, "frame": true, "shadow": true, "z": 1 },
+        { "src": "sc9-calendar-dark", "x": 900, "y": 370, "width": 250, "rotate": 7, "frame": true, "frameColor": "#2a2e37", "shadow": true, "z": 2 }
+      ]
+    }
+  ]
+}

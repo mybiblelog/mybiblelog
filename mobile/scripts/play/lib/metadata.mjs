@@ -8,6 +8,8 @@ import { readFileSync, existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { composedDir, loadLayout, phoneSlides } from "./graphics.mjs";
+
 const here = dirname(fileURLToPath(import.meta.url));
 export const STORE_DIR = resolve(here, "..", "..", "..", "store", "play");
 export const CONFIG_PATH = join(STORE_DIR, "config.json");
@@ -41,8 +43,12 @@ export function loadConfig(configPath = CONFIG_PATH) {
   if (!Array.isArray(config.locales) || config.locales.length === 0) {
     throw new Error(`${configPath}: "locales" must be a non-empty array.`);
   }
-  if (!Array.isArray(config.screenshots?.phone)) {
-    throw new Error(`${configPath}: "screenshots.phone" must be an array of slugs.`);
+  if (config.screenshots?.composed) {
+    // The phone set is the layout's phone slides, rendered by
+    // `npm run play:graphics`, rather than raw captures named in this file.
+    config.layout = loadLayout();
+  } else if (!Array.isArray(config.screenshots?.phone)) {
+    throw new Error(`${configPath}: "screenshots.phone" must be an array of slugs (or set "screenshots.composed").`);
   }
 
   config.configPath = configPath;
@@ -75,6 +81,7 @@ export function resolveLocales(config, only = null) {
 
     return {
       play: entry.play,
+      listing: source.play,
       app: source.app,
       aliasOf: entry.aliasOf ?? null,
       dir: join(STORE_DIR, "listings", source.play),
@@ -110,10 +117,16 @@ export function readListingText(locale) {
   return { text, missing };
 }
 
+/** The phone screenshot slugs Play gets, in upload order. */
+export function screenshotSlugs(config) {
+  return config.layout ? phoneSlides(config.layout).map((slide) => slide.id) : config.screenshots.phone;
+}
+
 /** Resolves the configured phone screenshots for a locale, in upload order. */
 export function listScreenshots(config, locale) {
-  return config.screenshots.phone.map((slug) => {
-    const path = join(locale.screenshotDir, `${slug}.png`);
+  const dir = config.layout ? composedDir(config, locale) : locale.screenshotDir;
+  return screenshotSlugs(config).map((slug) => {
+    const path = join(dir, `${slug}.png`);
     return { slug, path, exists: existsSync(path) };
   });
 }
