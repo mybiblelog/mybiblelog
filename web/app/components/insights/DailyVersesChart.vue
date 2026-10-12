@@ -1,22 +1,26 @@
 <template>
   <div class="trend mbl-box">
     <div class="trend__controls">
-      <label class="mbl-label" for="trend-window">{{ t('window') }}</label>
-      <div class="mbl-select mbl-select--sm">
-        <select id="trend-window" v-model.number="days">
-          <option v-for="opt in windowOptions" :key="opt" :value="opt">
-            {{ t('last_n_days', { count: opt }) }}
-          </option>
-        </select>
+      <div class="trend__control">
+        <label class="mbl-label" for="trend-window">{{ t('window') }}</label>
+        <div class="mbl-select mbl-select--sm">
+          <select id="trend-window" v-model.number="days">
+            <option v-for="opt in windowOptions" :key="opt" :value="opt">
+              {{ t('last_n_days', { count: opt }) }}
+            </option>
+          </select>
+        </div>
       </div>
 
-      <label class="mbl-label" for="trend-metric">{{ t('metric') }}</label>
-      <div class="mbl-select mbl-select--sm">
-        <select id="trend-metric" v-model="metric">
-          <option v-for="opt in metricOptions" :key="opt.value" :value="opt.value">
-            {{ t(opt.label) }}
-          </option>
-        </select>
+      <div class="trend__control">
+        <label class="mbl-label" for="trend-metric">{{ t('metric') }}</label>
+        <div class="mbl-select mbl-select--sm">
+          <select id="trend-metric" v-model="metric">
+            <option v-for="opt in metricOptions" :key="opt.value" :value="opt.value">
+              {{ t(opt.label) }}
+            </option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -154,8 +158,14 @@ const lastLabel = computed(() => {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: var(--mbl-space-xs);
+  gap: var(--mbl-space-xs) var(--mbl-space-lg);
   margin-bottom: var(--mbl-space-xl);
+}
+
+.trend__control {
+  display: flex;
+  align-items: center;
+  gap: var(--mbl-space-xs);
 }
 
 .trend__svg {
