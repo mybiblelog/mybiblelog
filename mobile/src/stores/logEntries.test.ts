@@ -40,6 +40,7 @@ import {
   recoverStorage,
   reportStorageOk,
 } from "@/src/storage/health";
+import { consumeDroppedChanges } from "@/src/stores/syncNotices";
 import { initLogEntries, useLogEntriesStore } from "./logEntries";
 
 const actions = () => useLogEntriesStore.getState();
@@ -194,7 +195,10 @@ describe("achievements", () => {
 });
 
 describe("syncNow poison-pill handling", () => {
-  beforeEach(() => (getIsOnline as jest.Mock).mockReturnValue(true));
+  beforeEach(() => {
+    (getIsOnline as jest.Mock).mockReturnValue(true);
+    consumeDroppedChanges();
+  });
 
   it("drops a mutation the server permanently rejects (4xx) and drains the queue", async () => {
     await AsyncStorage.setItem(
@@ -212,6 +216,8 @@ describe("syncNow poison-pill handling", () => {
     expect(queue).toHaveLength(0);
     // Queue drained, so the store reconciled with the server.
     expect(fetchLogEntries).toHaveBeenCalled();
+    // The entry vanishes on that reload, so the user must be told.
+    expect(consumeDroppedChanges()).toBe(1);
   });
 
   it("keeps a mutation queued after a transient (network/5xx) failure", async () => {
@@ -226,6 +232,7 @@ describe("syncNow poison-pill handling", () => {
     const queue = await loadPendingLogEntryMutations();
     expect(queue).toHaveLength(1);
     expect(fetchLogEntries).not.toHaveBeenCalled();
+    expect(consumeDroppedChanges()).toBe(0);
   });
 });
 

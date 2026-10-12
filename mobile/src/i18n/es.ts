@@ -616,4 +616,9 @@ export const es = {
   reading_tracker_reset_start_fresh: "Empezar de nuevo",
   reading_tracker_reset_success:
     "Tu fecha de inicio del rastreador está configurada para la fecha actual. Ahora estás rastreando tu lectura de la Biblia desde el principio.",
+  guest_backup_title: "Tu registro de lectura solo está guardado en este dispositivo",
+  guest_backup_text:
+    "Crea una cuenta gratuita para respaldarlo y no perderlo si cambias o restableces tu teléfono.",
+  sync_changes_not_saved_one: "No se pudo guardar 1 cambio en tu cuenta.",
+  sync_changes_not_saved_other: "No se pudieron guardar %{count} cambios en tu cuenta.",
 } as const satisfies Record<keyof typeof en, string>;

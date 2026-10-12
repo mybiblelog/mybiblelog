@@ -37,6 +37,7 @@ import { appStorage } from "@/src/storage/keys";
 import { achievementActions } from "@/src/stores/achievements";
 import { useAuthStore } from "@/src/stores/auth";
 import { getIsOnline, useConnectivityStore } from "@/src/stores/connectivity";
+import { reportDroppedChanges } from "@/src/stores/syncNotices";
 import { useUserSettingsStore } from "@/src/stores/userSettings";
 
 /**
@@ -158,6 +159,7 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
           // auth) stay queued for the next sync; permanent 4xx failures are
           // dropped so one bad mutation can't stall the queue forever.
           const remaining: PendingLogEntryMutation[] = [];
+          let dropped = 0;
           for (const m of mutations) {
             try {
               if (m.type === "create") {
@@ -184,6 +186,7 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
             } catch (err) {
               if (isPermanentMutationError(err)) {
                 reportHandledError(err, { op: "logEntries.sync.dropMutation", type: m.type });
+                dropped += 1;
                 continue;
               }
               remaining.push(m);
@@ -191,6 +194,7 @@ export const useLogEntriesStore = create<LogEntriesStore>((set, get) => {
           }
 
           await savePendingLogEntryMutations(remaining);
+          reportDroppedChanges(dropped);
 
           // Only reload if we drained the queue; otherwise keep current offline-local state.
           if (remaining.length === 0) {

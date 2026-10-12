@@ -60,9 +60,22 @@ one deliberate exception.** The onboarding wizard's "I'm New" path lets a
 signed-out user choose real settings (goal, translation) before any account
 exists. If the ordinary pull ran unconditionally, a newly created account's
 server defaults would land a moment after sign-in and silently overwrite those
-choices. `settingsPendingServerPush` (`userSettings.pendingServerPush.v1`) flags
-exactly that case: set only by the wizard's writes, checked before the pull on
-the next sign-in, and cleared once pushed. See `stores/userSettings.ts`.
+choices. `settingsPendingServerPush` (`userSettings.pendingServerPush.v2`) covers
+exactly that case. It lists the fields the wizard staged (`dailyVerseCountGoal`,
+`preferredBibleVersion`), is checked before the pull on the next sign-in, and is
+removed once pushed. Only the listed fields are pushed. `lookBackDate` is never
+one of them: the wizard doesn't ask for it, so all it could push is the
+hydration default, and that would overwrite a returning user's tracker start and
+hide their prior progress. The v1 boolean pushed every field, which is why
+migration 0003 replaced it. See `stores/userSettings.ts`.
+
+**Settings with nothing stored are anchored, then persisted on first hydrate.**
+If `userSettings.v1` is absent or corrupt, the store derives defaults whose
+`lookBackDate` is the earliest logged entry (or today, when the log is empty),
+and writes them at once. Without that write, the default would be recomputed on
+every launch, and a guest who never edits a setting would see their tracker
+start slide forward to each new day. An unreadable key persists nothing (see the
+durability model below).
 
 ### Data shapes
 

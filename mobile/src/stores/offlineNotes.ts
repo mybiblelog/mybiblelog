@@ -30,6 +30,7 @@ import { registerManagedKey } from "@/src/storage/health";
 import { useAuthStore } from "@/src/stores/auth";
 import { getIsOnline, useConnectivityStore } from "@/src/stores/connectivity";
 import { notesActions, useNotesStore } from "@/src/stores/passageNotes";
+import { reportDroppedChanges } from "@/src/stores/syncNotices";
 import { tagActions } from "@/src/stores/passageNoteTags";
 
 /**
@@ -146,6 +147,7 @@ export const useOfflineNotesStore = create<OfflineNotesStore>((set, get) => ({
         const mutations = (await loadPendingNoteMutations()).sort((a, b) => a.ts - b.ts);
         const remaining: PendingNoteMutation[] = [];
         const syncedClientIds = new Set<string>();
+        let dropped = 0;
 
         for (const m of mutations) {
           try {
@@ -168,6 +170,7 @@ export const useOfflineNotesStore = create<OfflineNotesStore>((set, get) => ({
           } catch (err) {
             if (isPermanentMutationError(err)) {
               reportHandledError(err, { op: "offlineNotes.sync.dropMutation", type: m.type });
+              dropped += 1;
               continue;
             }
             remaining.push(m);
@@ -175,6 +178,7 @@ export const useOfflineNotesStore = create<OfflineNotesStore>((set, get) => ({
         }
 
         await savePendingNoteMutations(remaining);
+        reportDroppedChanges(dropped);
 
         // Drop synced notes from the local list; they reappear via the online list.
         if (syncedClientIds.size > 0) {

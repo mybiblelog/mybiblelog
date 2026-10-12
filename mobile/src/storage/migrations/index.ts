@@ -1,5 +1,6 @@
 import { up as up0001 } from "@/src/storage/migrations/0001-baseline";
 import { up as up0002 } from "@/src/storage/migrations/0002-onboarding-existing-install";
+import { up as up0003 } from "@/src/storage/migrations/0003-pending-push-fields";
 
 /**
  * Ordered registry of storage migrations.
@@ -24,6 +25,7 @@ export type Migration = {
 export const MIGRATIONS: Migration[] = [
   { version: 1, name: "0001-baseline", up: up0001 },
   { version: 2, name: "0002-onboarding-existing-install", up: up0002 },
+  { version: 3, name: "0003-pending-push-fields", up: up0003 },
 ];
 
 // Guard the registry invariants at module load so a mis-authored migration

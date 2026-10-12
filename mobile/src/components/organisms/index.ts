@@ -12,6 +12,7 @@ export { ConfirmDialog } from "./ConfirmDialog";
 export { DailyVersesChart } from "./DailyVersesChart";
 export { DailyReminderSection } from "./DailyReminderSection";
 export { DatePickerSheet } from "./DatePickerSheet";
+export { GuestBackupAlert } from "./GuestBackupAlert";
 export { TimePickerSheet } from "./TimePickerSheet";
 export { JustOpenedModal } from "./JustOpenedModal";
 export { LogEntryEditorModal } from "./LogEntryEditorModal";

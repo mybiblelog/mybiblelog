@@ -597,4 +597,9 @@ export const en = {
     "This chapter was logged as part of a longer passage, so it can't be unchecked here. You can edit that entry on the Calendar page.",
   unable_to_mark_complete: "Unable to mark the chapter complete.",
   unable_to_mark_incomplete: "Unable to mark the chapter incomplete.",
+  guest_backup_title: "Your reading log is saved only on this device",
+  guest_backup_text:
+    "Create a free account to back it up, so you keep it if you change or reset your phone.",
+  sync_changes_not_saved_one: "1 change couldn’t be saved to your account.",
+  sync_changes_not_saved_other: "%{count} changes couldn’t be saved to your account.",
 } as const;
