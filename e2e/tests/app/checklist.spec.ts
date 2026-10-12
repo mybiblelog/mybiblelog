@@ -240,4 +240,25 @@ test.describe('Chapter Checklist', () => {
     await page.getByTestId('testament-toggle-all').click();
     await expect(books).toHaveCount(66);
   });
+
+  test('sort toggle switches between traditional and alphabetical order', async ({ page }) => {
+    await page.goto('/checklist');
+    const books = page.getByTestId('book-card');
+    const sortToggle = page.getByTestId('book-sort-toggle');
+    await expect(books.first()).toHaveAttribute('data-book-index', String(BOOK.GENESIS));
+
+    // Alphabetical (English): Acts comes first, and the order survives a reload
+    await sortToggle.click();
+    await expect(sortToggle).toHaveAttribute('data-sort-order', 'alphabetical');
+    await expect(books).toHaveCount(66);
+    await expect(books.first()).toHaveAttribute('data-book-index', String(BOOK.ACTS));
+    await page.reload();
+    await expect(books.first()).toHaveAttribute('data-book-index', String(BOOK.ACTS));
+
+    // Toggling again restores traditional order
+    await expect(sortToggle).toBeEnabled();
+    await sortToggle.click();
+    await expect(sortToggle).toHaveAttribute('data-sort-order', 'numerical');
+    await expect(books.first()).toHaveAttribute('data-book-index', String(BOOK.GENESIS));
+  });
 });

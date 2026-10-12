@@ -9,7 +9,7 @@
         <caret-right-icon style="margin-left: 0.2rem;" />
       </NuxtLink>
     </header>
-    <testament-toggle v-model="testamentFilter" />
+    <book-list-toolbar v-model:testament="testamentFilter" v-model:sort-order="sortOrder" />
     <div class="plaque" data-testid="bible-report-progress" :data-percentage="percentageRead">
       <p><span>{{ n(percentageRead / 100, 'percent') }}</span></p>
       <segment-bar :thick="true" :segments="bibleReadingSegments" />
@@ -43,11 +43,11 @@
 </template>
 
 <script setup lang="ts">
-import { Bible, withSegmentPercentages } from '@mybiblelog/shared';
-import type { LogEntry, TestamentFilter } from '@mybiblelog/shared';
+import { Bible, filterAndSortBookOptions, getBookOptions, withSegmentPercentages } from '@mybiblelog/shared';
+import type { LogEntry } from '@mybiblelog/shared';
 import { usePassageNotesStore } from '~/stores/passage-notes';
 import SegmentBar from '~/components/bible/SegmentBar.vue';
-import TestamentToggle from '~/components/bible/TestamentToggle.vue';
+import BookListToolbar from '~/components/bible/BookListToolbar.vue';
 import StarIcon from '~/components/svg/StarIcon.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
 
@@ -68,7 +68,7 @@ const passageNotesStore = usePassageNotesStore();
 const hydrated = ref(false);
 onMounted(() => { hydrated.value = true; });
 
-const testamentFilter = ref<TestamentFilter>('all');
+const { testament: testamentFilter, sortOrder } = useBookListPrefs();
 
 function navigateToBook(bookIndex: number) {
   emit('view-book-report', bookIndex);
@@ -77,15 +77,19 @@ function navigateToBook(bookIndex: number) {
 const bookNotesCounts = computed(() => passageNotesStore.bookNoteCounts);
 const anyBooksHaveNotes = computed(() => passageNotesStore.anyBooksHaveNotes);
 
-const visibleBookIndices = computed(() => {
-  return Bible.getBooks()
-    .filter((book) => {
-      if (testamentFilter.value === 'old') { return !Bible.isNewTestament(book.bibleOrder); }
-      if (testamentFilter.value === 'new') { return Bible.isNewTestament(book.bibleOrder); }
-      return true;
-    })
-    .map(book => book.bibleOrder);
-});
+/** Books shown in the list, filtered and in the chosen display order. */
+const visibleBookIndices = computed(() =>
+  filterAndSortBookOptions(getBookOptions(locale.value), {
+    testament: testamentFilter.value,
+    sortOrder: sortOrder.value,
+    locale: locale.value,
+  }).map(option => option.value),
+);
+
+/** The same books in canonical order, so the overall bar reads Genesis → Revelation whatever the list order. */
+const canonicalBookIndices = computed(() =>
+  [...visibleBookIndices.value].sort((a, b) => a - b),
+);
 
 const totalVisibleVerses = computed(() =>
   visibleBookIndices.value.reduce((sum, bookIndex) => sum + Bible.getBookVerseCount(bookIndex), 0),
@@ -105,7 +109,7 @@ const allBookReports = computed(() =>
 
 const bibleReadingSegments = computed(() => {
   const segments = [];
-  for (const bookIndex of visibleBookIndices.value) {
+  for (const bookIndex of canonicalBookIndices.value) {
     segments.push(...Bible.generateBookSegments(bookIndex, props.logEntries));
   }
   return withSegmentPercentages(segments, totalVisibleVerses.value);

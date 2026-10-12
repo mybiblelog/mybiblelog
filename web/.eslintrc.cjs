@@ -71,6 +71,7 @@ module.exports = {
     useSettingsWizardStep: 'readonly',
     useHydrated: 'readonly',
     usePagedResource: 'readonly',
+    useBookListPrefs: 'readonly',
   },
   extends: [
     '@nuxtjs/eslint-config-typescript',

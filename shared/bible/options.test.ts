@@ -24,6 +24,19 @@ describe('filterAndSortBookOptions', () => {
     expect(neu.some(o => o.value === 40)).toBe(true);
   });
 
+  it('keeps every book for the "all" filter', () => {
+    const result = filterAndSortBookOptions(options, { testament: 'all' });
+    expect(result).toHaveLength(options.length);
+  });
+
+  it('ignores dotted ordinals like German "1. Korinther" when sorting alphabetically', () => {
+    const labels = filterAndSortBookOptions(getBookOptions('de'), { testament: 'all', sortOrder: 'alphabetical', locale: 'de' })
+      .map(o => o.label);
+    const first = labels.indexOf('1. Korinther');
+    expect(labels[first + 1]).toBe('2. Korinther');
+    expect(labels[first - 1]).toBe('2. Könige');
+  });
+
   it('sorts numerically by bible order by default', () => {
     const result = filterAndSortBookOptions(options, { testament: 'old', sortOrder: 'numerical' });
     const values = result.map(o => o.value);
