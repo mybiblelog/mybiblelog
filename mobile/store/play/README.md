@@ -18,6 +18,12 @@ from the repo root, and read from there at publish time.
 Plain text only — Play renders no markup, so the full description uses `•`
 bullets and blank lines. Trailing whitespace is stripped on publish.
 
+Play's metadata policy applies to every field and locale: use an em dash (`—`)
+wherever a dash is wanted, never a double hyphen (`--`) or an en dash (`–`).
+Listings that break this are flagged in Play Console ("may not be promoted").
+`npm run play:validate` (and every push) fails on both characters. Ranges like
+"1–3" should be written out ("1 to 3") or use a plain hyphen.
+
 `config.json` holds everything the tooling needs: the package name, the Play
 locales and which app locale supplies their screenshots, and the ordered list of
 screenshot slugs to upload (Play displays them in upload order).

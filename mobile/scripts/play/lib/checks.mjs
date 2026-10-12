@@ -70,6 +70,11 @@ export function checkListings(config, locales, { requireScreenshots = false, scr
       if (limit && value.length > limit) {
         errors.push(`${locale.play}${source}: ${field.label} is ${value.length} chars (limit ${limit}).`);
       }
+      // Play's content policy: dashes in listing text must be em dashes. Flagged
+      // in the Play Console as "may not be promoted" rather than rejected on push.
+      if (/--|–/.test(value)) {
+        errors.push(`${locale.play}${source}: ${field.label} uses a double hyphen or en dash; use an em dash (—).`);
+      }
       if (field.key === "title" && value.includes("\n")) {
         errors.push(`${locale.play}${source}: Title must be a single line.`);
       }
