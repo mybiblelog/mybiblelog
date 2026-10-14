@@ -58,6 +58,22 @@ describe('passage-note-tag.repository', () => {
       const { passageNoteTags } = await getRepos();
       await expect(passageNoteTags.create(ownerId, tagInput({ color: 'blue' }))).rejects.toThrow();
     });
+
+    it('rejects an empty/whitespace-only label', async () => {
+      const { passageNoteTags } = await getRepos();
+      await expect(passageNoteTags.create(ownerId, tagInput({ label: '' }))).rejects.toThrow();
+      await expect(passageNoteTags.create(ownerId, tagInput({ label: '   ' }))).rejects.toThrow();
+    });
+
+    it('rejects a label over 32 characters', async () => {
+      const { passageNoteTags } = await getRepos();
+      await expect(passageNoteTags.create(ownerId, tagInput({ label: 'a'.repeat(33) }))).rejects.toThrow();
+    });
+
+    it('rejects a description over 1500 characters', async () => {
+      const { passageNoteTags } = await getRepos();
+      await expect(passageNoteTags.create(ownerId, tagInput({ description: 'a'.repeat(1501) }))).rejects.toThrow();
+    });
   });
 
   describe('listing and lookup', () => {

@@ -400,6 +400,54 @@ describe('log-entries.test.js', () => {
       }
     });
 
+    it('documents current behavior when patching only one end of the verse range invalid against the existing other end', async () => {
+      // logEntryUpdateSchema's verse-range refine only runs when BOTH
+      // startVerseId and endVerseId are present in the same request body (see
+      // validation/schemas/log-entry.ts). Patching only startVerseId to a value
+      // that is invalid against the entry's EXISTING endVerseId bypasses that
+      // zod refine entirely. The repository layer does still recompute the
+      // merged range (repositories/log-entry.repository.ts `update`), but via a
+      // plain `throw new Error(...)` rather than a zod/ValidationError, so it
+      // currently surfaces as an unhandled 500 rather than a 400
+      // validation_error -- and the entry is left unmodified, since the throw
+      // happens before the `updateOne` write.
+      const testUser = await createTestUser();
+      try {
+        // Create an entry first: Genesis 1:1-5
+        const createResponse = await requestApi
+          .post('/api/log-entries')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send(logEntry1);
+        expect(createResponse.status).toBe(200);
+
+        // Patch only startVerseId to something after the entry's existing
+        // endVerseId -- an invalid range once merged, but the request body
+        // alone (just `startVerseId`) satisfies the schema.
+        const response = await requestApi
+          .patch(`/api/log-entries/${createResponse.body.data.id}`)
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send({ startVerseId: logEntry1.endVerseId + 1 });
+
+        expect(response.status).toBe(500);
+        expect(response.body).toEqual({ error: { code: 'internal_server_error' } });
+
+        // The invalid merge was never persisted: the entry keeps its original values.
+        const listResponse = await requestApi
+          .get('/api/log-entries')
+          .set('Authorization', `Bearer ${testUser.token}`);
+        expect(listResponse.body.data).toEqual([
+          expect.objectContaining({
+            id: createResponse.body.data.id,
+            startVerseId: logEntry1.startVerseId,
+            endVerseId: logEntry1.endVerseId,
+          }),
+        ]);
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
     it('error if invalid ID format', async () => {
       const testUser = await createTestUser();
       try {

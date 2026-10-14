@@ -19,6 +19,9 @@ declare let window: UnknownBrowserWindow;
  * @returns {String}
  */
 export const getMobileOperatingSystem = () => {
+  if (typeof window === 'undefined') {
+    return 'unknown';
+  }
   const userAgent = String(navigator.userAgent || navigator.vendor || window.opera);
 
   // Windows Phone must come first because its UA also contains "Android"

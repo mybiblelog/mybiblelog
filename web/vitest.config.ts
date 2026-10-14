@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 import { resolve } from 'path';
 import vue from '@vitejs/plugin-vue';
 
@@ -52,6 +52,12 @@ export default defineConfig({
     // `// @vitest-environment happy-dom` docblock at the top of the file.
     environment: 'node',
     include: ['test/**/*.test.ts'],
+    // http.ts's client-only logout branch needs `import.meta.client: true`,
+    // which this project can't provide (see the `define` block above); that
+    // coverage lives in test/plugins/http-client.test.ts, run separately via
+    // `vitest.client.config.ts`. Exclude it here so it isn't also collected
+    // (and misleadingly failing) under this server-context project.
+    exclude: [...configDefaults.exclude, 'test/plugins/http-client.test.ts'],
     setupFiles: ['test/setup.ts'],
     clearMocks: true,
   },

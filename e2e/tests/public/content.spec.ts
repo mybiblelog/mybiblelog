@@ -44,6 +44,40 @@ test.describe('Content pages', () => {
     expect(response?.status()).toBe(404);
   });
 
+  test('double-dash about slug resolves instead of redirecting to overview', async ({ page }) => {
+    // page-features--notes.md ships with a literal `--` in its filename/URL,
+    // but @nuxt/content collapses repeated dashes in the generated path.
+    // The page normalizes the slug for lookup (see about/[slug].vue) so this
+    // should render the real page, not bounce to /about/overview.
+    await page.goto('/about/page-features--notes');
+    await expect(page).toHaveURL(/\/about\/page-features--notes/);
+    await expect(page.getByRole('heading', { name: 'Notes Page' })).toBeVisible();
+  });
+
+  test('contribute page renders automatic h3 grid tiles', async ({ page }) => {
+    // <content-section-grid> reshapes its slotted h3 sections into
+    // .content-section-grid-item tiles on mount (ContentSectionGrid.vue processAutomatic).
+    await page.goto('/contribute');
+
+    const tiles = page.locator('.content-section-grid-item');
+    await expect(tiles.first()).toBeVisible();
+
+    // Every automatic tile in contribute.md starts with an emoji, so the
+    // heading text is split: emoji stays as plain text, the rest of the
+    // heading is wrapped in a .h3-gradient-text span.
+    const firstTile = tiles.first();
+    const heading = firstTile.getByRole('heading', { level: 3 });
+    await expect(heading).toBeVisible();
+    await expect(heading.locator('.h3-gradient-text')).toBeVisible();
+    await expect(heading).toContainText('Tell Someone About It');
+
+    // The emoji itself renders as plain text in the heading, outside the
+    // gradient span (confirms the emoji/text split, not just the split's
+    // gradient half).
+    const headingText = await heading.textContent();
+    expect(headingText?.trim().startsWith('💬')).toBe(true);
+  });
+
   test('FAQ page renders content', async ({ page }) => {
     await page.goto('/faq');
     await expect(page.getByRole('heading', { name: 'Frequently Asked Questions' })).toBeVisible();

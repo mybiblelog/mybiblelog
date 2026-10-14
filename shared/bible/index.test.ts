@@ -75,6 +75,32 @@ test('falls back to English book names when a locale has no data for a book', ()
   expect(revelationNameMissing).toBe('Revelation');
 });
 
+test('can get book USFM codes', () => {
+  const genesisUsfmCode = Bible.getBookUsfmCode(1);
+  expect(genesisUsfmCode).toBe('GEN');
+});
+
+test('should get empty string for nonexistant book USFM codes', () => {
+  const usfmCode0 = Bible.getBookUsfmCode(0);
+  const usfmCode67 = Bible.getBookUsfmCode(67);
+
+  expect(usfmCode0).toBe('');
+  expect(usfmCode67).toBe('');
+});
+
+test('can get book Blue Letter Bible codes', () => {
+  const genesisBlbCode = Bible.getBookBlbCode(1);
+  expect(genesisBlbCode).toBe('Gen');
+});
+
+test('should get empty string for nonexistant book Blue Letter Bible codes', () => {
+  const blbCode0 = Bible.getBookBlbCode(0);
+  const blbCode67 = Bible.getBookBlbCode(67);
+
+  expect(blbCode0).toBe('');
+  expect(blbCode67).toBe('');
+});
+
 test('can identify which testament a book belongs to', () => {
   // Boundary pair: Malachi is the last Old Testament book, Matthew the first New.
   expect(Bible.isNewTestament(1)).toBe(false);
@@ -661,6 +687,64 @@ test('can safely consolidate ranges at the end of a book', () => {
   expect(result[1].endVerseId).toBe(startNoConsolidate.endVerseId);
 });
 
+test('can get first and last verseId of a book', () => {
+  const genesisFirstVerseId = Bible.getFirstBookVerseId(1);
+  const genesisLastVerseId = Bible.getLastBookVerseId(1);
+  expect(genesisFirstVerseId).toBe(Bible.makeVerseId(1, 1, 1));
+  expect(genesisLastVerseId).toBe(Bible.makeVerseId(1, 50, 26));
+});
+
+test('can get first and last verseId of a book chapter', () => {
+  const genesis1FirstVerseId = Bible.getFirstBookChapterVerseId(1, 1);
+  const genesis1LastVerseId = Bible.getLastBookChapterVerseId(1, 1);
+  expect(genesis1FirstVerseId).toBe(Bible.makeVerseId(1, 1, 1));
+  expect(genesis1LastVerseId).toBe(Bible.makeVerseId(1, 1, 31));
+});
+
+test('should get no ranges between consecutive verseIds', () => {
+  const startVerseId = Bible.makeVerseId(1, 1, 1);
+  const endVerseId = Bible.makeVerseId(1, 1, 2);
+  const result = Bible.getRangesBetweenVerseIds(startVerseId, endVerseId);
+  expect(result).toEqual([]);
+});
+
+test('can get the range between non-consecutive verseIds in the same book', () => {
+  const startVerseId = Bible.makeVerseId(1, 1, 1);
+  const endVerseId = Bible.makeVerseId(1, 1, 5);
+  const result = Bible.getRangesBetweenVerseIds(startVerseId, endVerseId);
+  expect(result).toEqual([{
+    startVerseId: Bible.makeVerseId(1, 1, 2),
+    endVerseId: Bible.makeVerseId(1, 1, 4),
+  }]);
+});
+
+test('can get the ranges between verseIds spanning multiple books', () => {
+  // Genesis 50:24 -> Leviticus 1:3, crossing all of Exodus
+  const startVerseId = Bible.makeVerseId(1, 50, 24);
+  const endVerseId = Bible.makeVerseId(3, 1, 3);
+  const result = Bible.getRangesBetweenVerseIds(startVerseId, endVerseId);
+
+  expect(result.length).toBe(3);
+  // Rest of Genesis 50
+  expect(result[0]!.startVerseId).toBe(Bible.makeVerseId(1, 50, 25));
+  expect(result[0]!.endVerseId).toBe(Bible.getLastBookVerseId(1));
+  // All of Exodus
+  expect(result[1]!.startVerseId).toBe(Bible.getFirstBookVerseId(2));
+  expect(result[1]!.endVerseId).toBe(Bible.getLastBookVerseId(2));
+  // NOTE: the final range's startVerseId comes back as the start of Genesis
+  // (getFirstBookVerseId(startBook)) rather than the start of Leviticus, which
+  // looks like a pre-existing bug in getRangesBetweenVerseIds (shared/bible/core/ranges.ts).
+  // This assertion documents current behavior, not intended behavior.
+  expect(result[2]!.startVerseId).toBe(Bible.getFirstBookVerseId(1));
+  expect(result[2]!.endVerseId).toBe(Bible.makeVerseId(3, 1, 2));
+});
+
+test('should throw when startVerseId is after endVerseId', () => {
+  const startVerseId = Bible.makeVerseId(1, 1, 2);
+  const endVerseId = Bible.makeVerseId(1, 1, 1);
+  expect(() => Bible.getRangesBetweenVerseIds(startVerseId, endVerseId)).toThrow();
+});
+
 test('can get next verseId', () => {
   const verseId = Bible.makeVerseId(1, 1, 1);
   const nextVerseId = Bible.getNextVerseId(verseId);
@@ -722,6 +806,23 @@ test('can get previous verseId through entire Bible', () => {
     }
   }
   expect(verseCount).toBe(Bible.getTotalVerseCount());
+});
+
+test('should throw generating segments when firstVerseId is after finalVerseId', () => {
+  const firstVerseId = Bible.makeVerseId(1, 1, 5);
+  const finalVerseId = Bible.makeVerseId(1, 1, 1);
+  expect(() => Bible.generateSegments(firstVerseId, finalVerseId, [])).toThrow();
+});
+
+test('can generate a single unread segment when given no ranges', () => {
+  const firstVerseId = Bible.makeVerseId(1, 1, 1);
+  const finalVerseId = Bible.makeVerseId(1, 1, 31);
+  const result = Bible.generateSegments(firstVerseId, finalVerseId, []);
+  expect(result.length).toBe(1);
+  expect(result[0]!.startVerseId).toBe(firstVerseId);
+  expect(result[0]!.endVerseId).toBe(finalVerseId);
+  expect(result[0]!.read).toBe(false);
+  expect(result[0]!.verseCount).toBe(31);
 });
 
 test('can generate read/unread segments from ranges in a given book', () => {

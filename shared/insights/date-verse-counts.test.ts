@@ -180,3 +180,30 @@ test('counts pre-tracker log entries in total only when trackerStartDate is late
     '2026-06-11': { total: 8, unique: 8 },
   });
 });
+
+test('reduces unique count for verses already covered between trackerStartDate and the query window start', () => {
+  const logEntries = [
+    {
+      date: '2026-06-05',
+      startVerseId: Bible.makeVerseId(1, 1, 1),
+      endVerseId: Bible.makeVerseId(1, 1, 5),
+    },
+    {
+      date: '2026-06-10',
+      startVerseId: Bible.makeVerseId(1, 1, 3),
+      endVerseId: Bible.makeVerseId(1, 1, 10),
+    },
+  ];
+
+  const counts = computeDateVerseCounts(
+    logEntries,
+    '2026-06-10',
+    '2026-06-11',
+    '2026-06-01',
+  );
+
+  expect(counts).toEqual({
+    '2026-06-10': { total: 8, unique: 5 },
+    '2026-06-11': { total: 0, unique: 0 },
+  });
+});

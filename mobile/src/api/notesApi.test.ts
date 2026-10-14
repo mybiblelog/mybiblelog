@@ -1,9 +1,21 @@
+jest.mock("@/src/api/httpClient", () => ({
+  httpClient: { get: jest.fn(), post: jest.fn(), patch: jest.fn(), delete: jest.fn() },
+}));
+
+import { httpClient } from "@/src/api/httpClient";
 import {
   buildNotesQueryString,
+  createNote,
   defaultNotesSort,
+  deleteNote,
+  fetchBookNoteCounts,
+  fetchNotesPage,
   parseApiPassageNote,
+  updateNote,
   type NotesQuery,
 } from "@/src/api/notesApi";
+
+const mockedHttpClient = httpClient as jest.Mocked<typeof httpClient>;
 
 const baseQuery: NotesQuery = {
   limit: 10,
@@ -110,5 +122,94 @@ describe("parseApiPassageNote", () => {
     expect(parseApiPassageNote(null)).toBeNull();
     expect(parseApiPassageNote("nope")).toBeNull();
     expect(parseApiPassageNote({ content: "orphan" })).toBeNull();
+  });
+});
+
+describe("fetchNotesPage", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  it("uses meta.pagination when present", async () => {
+    mockedHttpClient.get.mockResolvedValue({
+      data: [],
+      meta: { pagination: { offset: 20, limit: 5, size: 50 } },
+    });
+    const { meta } = await fetchNotesPage({ ...baseQuery, limit: 10 });
+    expect(meta).toEqual({ offset: 20, limit: 5, size: 50 });
+  });
+
+  it("falls back to query.limit and 0 when meta.pagination is absent", async () => {
+    mockedHttpClient.get.mockResolvedValue({ data: [], meta: {} });
+    const { meta } = await fetchNotesPage({ ...baseQuery, limit: 25 });
+    expect(meta).toEqual({ offset: 0, limit: 25, size: 0 });
+  });
+
+  it("falls back to 10 when meta.pagination and query.limit are both absent", async () => {
+    mockedHttpClient.get.mockResolvedValue({ data: [], meta: undefined });
+    const { meta } = await fetchNotesPage({ ...baseQuery, limit: 0 });
+    expect(meta).toEqual({ offset: 0, limit: 10, size: 0 });
+  });
+});
+
+describe("fetchBookNoteCounts", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  it("maps numeric keys/values into a bookIndex -> count record", async () => {
+    mockedHttpClient.get.mockResolvedValue({ data: { "1": 3, "2": "5", bad: 1, "3": "x" } });
+    expect(await fetchBookNoteCounts()).toEqual({ 1: 3, 2: 5 });
+  });
+
+  it("returns an empty object for non-object data", async () => {
+    mockedHttpClient.get.mockResolvedValue({ data: null });
+    expect(await fetchBookNoteCounts()).toEqual({});
+  });
+});
+
+describe("createNote", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  const input = { content: "hi", passages: [], tags: [] };
+
+  it("returns the parsed note on success", async () => {
+    mockedHttpClient.post.mockResolvedValue({ data: { id: "1", content: "hi" } });
+    expect(await createNote(input)).toEqual(expect.objectContaining({ id: "1", content: "hi" }));
+  });
+
+  it("throws when the response fails parseApiPassageNote", async () => {
+    mockedHttpClient.post.mockResolvedValue({ data: null });
+    await expect(createNote(input)).rejects.toThrow(
+      "POST /passage-notes returned unexpected payload"
+    );
+  });
+});
+
+describe("updateNote", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  const input = { id: "1", content: "hi", passages: [], tags: [] };
+
+  it("returns the parsed note on success", async () => {
+    mockedHttpClient.patch.mockResolvedValue({ data: { id: "1", content: "hi" } });
+    expect(await updateNote(input)).toEqual(expect.objectContaining({ id: "1", content: "hi" }));
+  });
+
+  it("throws when the response fails parseApiPassageNote", async () => {
+    mockedHttpClient.patch.mockResolvedValue({ data: { content: "orphan" } });
+    await expect(updateNote(input)).rejects.toThrow(
+      "PATCH /passage-notes returned unexpected payload"
+    );
+  });
+});
+
+describe("deleteNote", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  it("coerces a truthy data field to true", async () => {
+    mockedHttpClient.delete.mockResolvedValue({ data: { ok: true } });
+    expect(await deleteNote("1")).toBe(true);
+  });
+
+  it("coerces a falsy data field to false", async () => {
+    mockedHttpClient.delete.mockResolvedValue({ data: undefined });
+    expect(await deleteNote("1")).toBe(false);
   });
 });

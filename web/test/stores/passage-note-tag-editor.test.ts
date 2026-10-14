@@ -3,8 +3,16 @@ import { setActivePinia, createPinia } from 'pinia';
 import { usePassageNoteTagEditorStore } from '~/stores/passage-note-tag-editor';
 import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
 import { ApiError } from '~/helpers/api-error';
+import { confirmDiscardIfDirty } from '~/helpers/confirm-discard';
 
-beforeEach(() => setActivePinia(createPinia()));
+vi.mock('~/helpers/confirm-discard', () => ({
+  confirmDiscardIfDirty: vi.fn(),
+}));
+
+beforeEach(() => {
+  setActivePinia(createPinia());
+  vi.mocked(confirmDiscardIfDirty).mockReset();
+});
 
 describe('passage-note-tag-editor store', () => {
   it('openEditor opens with submitting false', () => {
@@ -69,5 +77,44 @@ describe('passage-note-tag-editor store', () => {
     expect(result).toBeNull();
     expect(store.errors.label).toEqual({ field: 'label', code: 'required' });
     expect(store.submitting).toBe(false);
+  });
+
+  it('maps a non-ApiError failure to the UnknownApiError fallback', async () => {
+    const tags = usePassageNoteTagsStore();
+    vi.spyOn(tags, 'createPassageNoteTag').mockRejectedValue(new Error('boom'));
+    const store = usePassageNoteTagEditorStore();
+    store.openEditor();
+
+    const result = await store.savePassageNoteTag();
+
+    expect(result).toBeNull();
+    expect(store.errors._form).toEqual({ field: null, code: 'unknown_error' });
+    expect(store.submitting).toBe(false);
+  });
+
+  it('closeEditor keeps the editor open when the user cancels the discard confirm', async () => {
+    vi.mocked(confirmDiscardIfDirty).mockResolvedValue(false);
+    const store = usePassageNoteTagEditorStore();
+    store.openEditor();
+    store.updatePassageNoteTag({ ...store.passageNoteTag, label: 'changed' });
+
+    const closed = await store.closeEditor({});
+
+    expect(confirmDiscardIfDirty).toHaveBeenCalledTimes(1);
+    expect(closed).toBe(false);
+    expect(store.open).toBe(true);
+  });
+
+  it('closeEditor discards and resets when the user confirms the discard', async () => {
+    vi.mocked(confirmDiscardIfDirty).mockResolvedValue(true);
+    const store = usePassageNoteTagEditorStore();
+    store.openEditor();
+    store.updatePassageNoteTag({ ...store.passageNoteTag, label: 'changed' });
+
+    const closed = await store.closeEditor({});
+
+    expect(confirmDiscardIfDirty).toHaveBeenCalledTimes(1);
+    expect(closed).toBe(true);
+    expect(store.open).toBe(false);
   });
 });

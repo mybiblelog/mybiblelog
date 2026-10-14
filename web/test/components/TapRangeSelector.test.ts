@@ -25,4 +25,20 @@ describe('TapRangeSelector', () => {
     await options[1].trigger('click'); // value 2 — end
     expect(wrapper.emitted('selection')).toEqual([[{ from: 2, to: 5 }]]);
   });
+
+  it('multi mode restarts a fresh range on a third tap after a completed range', async () => {
+    const wrapper = mount(TapRangeSelector, { props: { min: 1, max: 9, multi: true } });
+    const options = wrapper.findAll('.tap-range-selector--option');
+    await options[4].trigger('click'); // value 5 — start
+    await options[1].trigger('click'); // value 2 — end, completes range 2-5
+    expect(wrapper.emitted('selection')).toEqual([[{ from: 2, to: 5 }]]);
+
+    await options[6].trigger('click'); // value 7 — third tap starts a new range, no emit yet
+    expect(wrapper.emitted('selection')).toEqual([[{ from: 2, to: 5 }]]);
+    expect(options[6].classes()).toContain('waiting');
+    expect(options[6].classes()).toContain('selected');
+
+    await options[8].trigger('click'); // value 9 — completes the new range
+    expect(wrapper.emitted('selection')).toEqual([[{ from: 2, to: 5 }], [{ from: 7, to: 9 }]]);
+  });
 });

@@ -9,6 +9,7 @@ import {
   cropRangesByPassage,
   passageIsRead,
   getBookChapterRanges,
+  getBookSuggestions,
   getReadingPathSuggestions,
   getReadingSuggestions,
   type ReadingSuggestionLogEntry,
@@ -193,6 +194,21 @@ describe('getBookChapterRanges', () => {
   });
 });
 
+describe('getBookSuggestions', () => {
+  it('filters out already-read chapters for a book', () => {
+    const ch1Read: ReadingSuggestionPassage[] = [{ startVerseId: gen1v1, endVerseId: gen1v31 }];
+    const suggestions = getBookSuggestions(1, ch1Read);
+    expect(suggestions).toHaveLength(49);
+    expect(suggestions[0]!.startVerseId).toBe(gen2v1);
+  });
+
+  it('returns all chapters when nothing has been read', () => {
+    const suggestions = getBookSuggestions(1, []);
+    expect(suggestions).toHaveLength(50);
+    expect(suggestions[0]!.startVerseId).toBe(gen1v1);
+  });
+});
+
 describe('getReadingPathSuggestions', () => {
   it('returns one suggestion per book when nothing has been read', () => {
     const suggestions = getReadingPathSuggestions([1, 2], []);
@@ -301,6 +317,17 @@ describe('getReadingSuggestions', () => {
     const suggestions = getReadingSuggestions(entries, today);
     expect(suggestions[0]!.context).toMatchObject({ kind: 'continue', lastRead: { date: yesterday } });
     expect(suggestions[1]!.context).toMatchObject({ kind: 'continue', lastRead: { date: twoDaysAgo } });
+  });
+
+  it('does not throw and produces no continue suggestion when a recent entry ends at the very last verse of the Bible', () => {
+    const lastChapter = Bible.getBookChapterCount(66);
+    const revelationLastVerse = Bible.getLastBookChapterVerseId(66, lastChapter);
+    const entries: ReadingSuggestionLogEntry[] = [
+      { startVerseId: Bible.makeVerseId(66, lastChapter, 1), endVerseId: revelationLastVerse, date: yesterday },
+    ];
+    expect(() => getReadingSuggestions(entries, today)).not.toThrow();
+    const suggestions = getReadingSuggestions(entries, today);
+    expect(suggestions.some(s => s.context.kind === 'continue')).toBe(false);
   });
 
   it('returns empty when the whole Bible has been read', () => {

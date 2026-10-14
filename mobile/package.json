@@ -19,6 +19,7 @@
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:scripts": "node --test $(find scripts -name '*.test.mjs')",
     "e2e": "node scripts/e2e/run.mjs",
     "e2e:smoke": "node scripts/e2e/run.mjs --include-tags smoke",
     "e2e:seed": "node scripts/e2e/seed.mjs",

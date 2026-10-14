@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import Bible from '../bible';
 import { coerceVerseRange, formatVerseRange, parseVerseInput } from './verse-input';
 
@@ -33,6 +33,17 @@ describe('parseVerseInput', () => {
     expect(result.range).toBeNull();
     expect(result.isValid).toBe(false);
     expect(result.hasText).toBe(true);
+  });
+
+  it('treats a throwing parser as unparseable rather than propagating', () => {
+    const spy = vi.spyOn(Bible, 'parseVerseRange').mockImplementation(() => {
+      throw new Error('parser exploded');
+    });
+
+    const result = parseVerseInput('John 3:16');
+    expect(result).toEqual({ range: null, isValid: false, hasText: true });
+
+    spy.mockRestore();
   });
 });
 

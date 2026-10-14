@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { Bible } from '@mybiblelog/shared';
+import { UpstreamServiceError } from '../http/errors/upstream-error';
 import { ValidationError } from '../http/errors/validation-errors';
 import {
   extractPassageBlocksFromChapter,
@@ -9,7 +10,15 @@ import {
   HELLOAO_DEFAULT_TRANSLATION_ID,
   getHelloaoTranslationId,
 } from '../services/scripture/helloao-translations';
-import { computePassageChunkBounds, type PassageChunkBounds } from '../services/scripture/scripture.service';
+
+// getPassageChunk's own upstream-failure test needs fetchHelloaoChapter mocked
+// (rather than stubbing global.fetch), so the upstream failure is simulated at
+// the module boundary getPassageChunk actually depends on.
+vi.mock('../services/scripture/helloao-client', () => ({
+  fetchHelloaoChapter: vi.fn().mockRejectedValue(new UpstreamServiceError()),
+}));
+
+import { computePassageChunkBounds, getPassageChunk, type PassageChunkBounds } from '../services/scripture/scripture.service';
 
 describe('helloao-parser', () => {
   it('extractPassageBlocksFromChapter filters verses by range and stamps the chapter', () => {
@@ -223,5 +232,15 @@ describe('getHelloaoTranslationId', () => {
     expect(getHelloaoTranslationId('NASB2020')).toBe(HELLOAO_DEFAULT_TRANSLATION_ID);
     expect(getHelloaoTranslationId('ESV')).toBe(HELLOAO_DEFAULT_TRANSLATION_ID);
     expect(getHelloaoTranslationId('MSG')).toBe(HELLOAO_DEFAULT_TRANSLATION_ID);
+  });
+});
+
+describe('getPassageChunk', () => {
+  it('propagates an UpstreamServiceError when the upstream fetch fails', async () => {
+    await expect(getPassageChunk({
+      startVerseId: Bible.makeVerseId(1, 1, 1),
+      endVerseId: Bible.makeVerseId(1, 1, 2),
+      bibleVersion: 'NASB2020',
+    })).rejects.toBeInstanceOf(UpstreamServiceError);
   });
 });

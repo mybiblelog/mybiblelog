@@ -84,6 +84,8 @@ describe('chapter and verse selection', () => {
     const model = initLogEntryEditorModel();
     expect(selectStartChapter(model, 3)).toBe(model);
     expect(selectStartVerse(model, 3)).toBe(model);
+    expect(selectEndChapter(model, 3)).toBe(model);
+    expect(selectEndVerse(model, 3)).toBe(model);
   });
 });
 

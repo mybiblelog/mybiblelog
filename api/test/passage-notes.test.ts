@@ -512,6 +512,47 @@ describe('passage-notes.test.js', () => {
         await deleteTestUser(testUser);
       }
     });
+
+    it('error if tag does not exist', async () => {
+      const testUser = await createTestUser();
+      try {
+        const response = await requestApi
+          .post('/api/passage-notes')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send({ ...passageNote1, tags: [missingObjectId] });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error');
+        expect(response.body).not.toHaveProperty('data');
+        expect(response.body.error.code).toBe('validation_error');
+        expect(response.body.error.errors).toEqual([{ code: 'not_valid', field: 'tags' }]);
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
+    it('error if tag belongs to another user', async () => {
+      const testUser = await createTestUser();
+      const otherUser = await createTestUser();
+      try {
+        // Create a tag owned by a different user
+        const otherUserTags = await createPassageNoteTags(otherUser, [tag1]);
+
+        const response = await requestApi
+          .post('/api/passage-notes')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send({ ...passageNote1, tags: [otherUserTags[0].id] });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error');
+        expect(response.body).not.toHaveProperty('data');
+        expect(response.body.error.code).toBe('validation_error');
+        expect(response.body.error.errors).toEqual([{ code: 'not_valid', field: 'tags' }]);
+      }
+      finally {
+        await deleteTestUser(testUser);
+        await deleteTestUser(otherUser);
+      }
+    });
   });
 
   describe('PATCH /api/passage-notes/:id', () => {
@@ -682,6 +723,63 @@ describe('passage-notes.test.js', () => {
       }
       finally {
         await deleteTestUser(testUser);
+      }
+    });
+
+    it('error if updating tags with a tag that does not exist', async () => {
+      const testUser = await createTestUser();
+      try {
+        // Create tags first
+        await createPassageNoteTags(testUser, [tag1]);
+
+        // Create a note first
+        const createResponse = await requestApi
+          .post('/api/passage-notes')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send(passageNote1);
+
+        const response = await requestApi
+          .patch(`/api/passage-notes/${createResponse.body.data.id}`)
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send({ tags: [missingObjectId] });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error');
+        expect(response.body).not.toHaveProperty('data');
+        expect(response.body.error.code).toBe('validation_error');
+        expect(response.body.error.errors).toEqual([{ code: 'not_valid', field: 'tags' }]);
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
+    it('error if updating tags with a tag that belongs to another user', async () => {
+      const testUser = await createTestUser();
+      const otherUser = await createTestUser();
+      try {
+        // Create tags first
+        await createPassageNoteTags(testUser, [tag1]);
+        const otherUserTags = await createPassageNoteTags(otherUser, [tag2]);
+
+        // Create a note first
+        const createResponse = await requestApi
+          .post('/api/passage-notes')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send(passageNote1);
+
+        const response = await requestApi
+          .patch(`/api/passage-notes/${createResponse.body.data.id}`)
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send({ tags: [otherUserTags[0].id] });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error');
+        expect(response.body).not.toHaveProperty('data');
+        expect(response.body.error.code).toBe('validation_error');
+        expect(response.body.error.errors).toEqual([{ code: 'not_valid', field: 'tags' }]);
+      }
+      finally {
+        await deleteTestUser(testUser);
+        await deleteTestUser(otherUser);
       }
     });
   });

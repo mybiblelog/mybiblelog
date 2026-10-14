@@ -51,4 +51,32 @@ describe('evaluateAchievement', () => {
   it('does not fire when the book is still incomplete', () => {
     expect(evaluateAchievement(OBADIAH, [], [partialObadiah])).toBeNull();
   });
+
+  it('fires a bible achievement (not a book achievement) when completing the last book finishes the whole Bible', () => {
+    const totalBooks = Bible.getBookCount();
+    const wholeBook = (bookIndex: number) => {
+      const lastChapter = Bible.getBookChapterCount(bookIndex);
+      return {
+        startVerseId: Bible.makeVerseId(bookIndex, 1, 1),
+        endVerseId: Bible.makeVerseId(
+          bookIndex,
+          lastChapter,
+          Bible.getChapterVerseCount(bookIndex, lastChapter),
+        ),
+      };
+    };
+
+    const before = [];
+    for (let bookIndex = 1; bookIndex < totalBooks; bookIndex++) {
+      before.push(wholeBook(bookIndex));
+    }
+    before.push({
+      startVerseId: Bible.makeVerseId(totalBooks, 1, 1),
+      endVerseId: Bible.makeVerseId(totalBooks, 1, 1),
+    });
+    const after = [...before.slice(0, -1), wholeBook(totalBooks)];
+
+    const event = evaluateAchievement(totalBooks, before, after);
+    expect(event).toEqual({ type: 'bible' });
+  });
 });

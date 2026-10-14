@@ -4,13 +4,17 @@ import { withEnvConfig, restoreEnvConfig } from './config-helpers';
 // The google-verify handler imports the OAuth helper directly; mock it so the
 // CSRF-state branch is testable without real Google config. `verifyState` is a
 // spy (defaulting to false) so individual tests can let the state check pass.
-const { mockVerifyState } = vi.hoisted(() => ({ mockVerifyState: vi.fn(() => false) }));
+const { mockVerifyState, mockGetGoogleLoginUrl, mockGetUserProfileFromToken } = vi.hoisted(() => ({
+  mockVerifyState: vi.fn(() => false),
+  mockGetGoogleLoginUrl: vi.fn(() => ({ url: 'https://example.com', state: 'state' })),
+  mockGetUserProfileFromToken: vi.fn(async () => ({ id: 'g', email: 'g@example.com', verified_email: true })),
+}));
 vi.mock('../http/helpers/google-oauth2', () => ({
   default: {
-    getGoogleLoginUrl: () => ({ url: 'https://example.com', state: 'state' }),
+    getGoogleLoginUrl: mockGetGoogleLoginUrl,
     verifyState: mockVerifyState,
     getAccessTokenFromCode: async () => 'token',
-    getUserProfileFromToken: async () => ({ id: 'g', email: 'g@example.com', verified_email: true }),
+    getUserProfileFromToken: mockGetUserProfileFromToken,
   },
 }));
 
@@ -34,8 +38,11 @@ import {
   validatePasswordResetCode,
   completePasswordReset,
   beginEmailChange,
+  getEmailChange,
+  cancelEmailChange,
   completeEmailChange,
   resendEmailVerification,
+  getGoogleOauthUrl,
   verifyGoogleOauth,
   googleIdTokenLogin,
 } from '../http/handlers/auth';
@@ -658,6 +665,29 @@ describe('auth handlers (unit)', () => {
       expect(result.body).toEqual({ data: { valid: true } });
       expect(recordPasswordResetAttempt).not.toHaveBeenCalled();
     });
+
+    it('propagates a rejection from the email-scoped rate-limit check before looking up the user', async () => {
+      const findByEmail = vi.fn();
+      const check = vi.fn(async (req: HttpRequest, opts: { keyFn?: (req: HttpRequest) => string }) => {
+        if (opts.keyFn) {
+          throw new Error('rate limited (email)');
+        }
+      });
+      const deps = makeDeps({ users: { findByEmail }, rateLimiter: { check } });
+
+      await expect(
+        validatePasswordResetCode(
+          makeRequest({ body: { email: 'user@example.com', code: '123456' } }),
+          deps,
+        ),
+      ).rejects.toThrow('rate limited (email)');
+
+      expect(findByEmail).not.toHaveBeenCalled();
+      expect(check).toHaveBeenCalledTimes(2);
+      const emailScopedCall = check.mock.calls[1];
+      expect(emailScopedCall[1].keyFn).toBeInstanceOf(Function);
+      expect(emailScopedCall[1].keyFn?.(makeRequest())).toBe('email:user@example.com');
+    });
   });
 
   describe('completePasswordReset', () => {
@@ -721,6 +751,29 @@ describe('auth handlers (unit)', () => {
       );
       expect((result.body?.data as { token?: string })?.token).toBeUndefined();
       expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
+    });
+
+    it('propagates a rejection from the email-scoped rate-limit check before reading the user record', async () => {
+      const findByEmail = vi.fn();
+      const check = vi.fn(async (req: HttpRequest, opts: { keyFn?: (req: HttpRequest) => string }) => {
+        if (opts.keyFn) {
+          throw new Error('rate limited (email)');
+        }
+      });
+      const deps = makeDeps({ users: { findByEmail }, rateLimiter: { check } });
+
+      await expect(
+        completePasswordReset(
+          makeRequest({ body: { email: 'user@example.com', code: '123456', newPassword: 'password123' } }),
+          deps,
+        ),
+      ).rejects.toThrow('rate limited (email)');
+
+      expect(findByEmail).not.toHaveBeenCalled();
+      expect(check).toHaveBeenCalledTimes(2);
+      const emailScopedCall = check.mock.calls[1];
+      expect(emailScopedCall[1].keyFn).toBeInstanceOf(Function);
+      expect(emailScopedCall[1].keyFn?.(makeRequest())).toBe('email:user@example.com');
     });
   });
 
@@ -787,6 +840,64 @@ describe('auth handlers (unit)', () => {
       );
       expect(result.body).toEqual({ data: { success: true } });
       expect(queueEmailUpdateLink).toHaveBeenCalledWith('user@example.com', 'new@example.com', 'NEWCODE', 'en');
+    });
+  });
+
+  describe('getEmailChange', () => {
+    it('reports an in-progress change with its expiry', async () => {
+      const expires = new Date(Date.now() + 60_000);
+      const currentUser = {
+        ...verifiedUser,
+        newEmail: 'new@example.com',
+        newEmailVerificationExpires: expires,
+      } as unknown as UserRecord;
+      const deps = makeDeps({ authenticate: (async () => currentUser) as RouteDependencies['authenticate'] });
+      const result = await getEmailChange(makeRequest({ method: 'GET' }), deps);
+      expect(result.body).toEqual({ data: { newEmail: 'new@example.com', expires } });
+    });
+
+    it('reports no change in progress as nulls', async () => {
+      const deps = makeDeps({ authenticate: (async () => verifiedUser) as RouteDependencies['authenticate'] });
+      const result = await getEmailChange(makeRequest({ method: 'GET' }), deps);
+      expect(result.body).toEqual({ data: { newEmail: null, expires: null } });
+    });
+  });
+
+  describe('cancelEmailChange', () => {
+    it('cancels an in-progress change and returns true', async () => {
+      const currentUser = { ...verifiedUser, newEmail: 'new@example.com' } as unknown as UserRecord;
+      const cancelEmailUpdate = vi.fn();
+      const deps = makeDeps({
+        authenticate: (async () => currentUser) as RouteDependencies['authenticate'],
+        users: { cancelEmailUpdate },
+      });
+      const result = await cancelEmailChange(makeRequest(), deps);
+      expect(result.body).toEqual({ data: true });
+      expect(cancelEmailUpdate).toHaveBeenCalledWith(USER_ID);
+    });
+
+    it('returns false when no change is in progress', async () => {
+      const cancelEmailUpdate = vi.fn();
+      const deps = makeDeps({
+        authenticate: (async () => verifiedUser) as RouteDependencies['authenticate'],
+        users: { cancelEmailUpdate },
+      });
+      const result = await cancelEmailChange(makeRequest(), deps);
+      expect(result.body).toEqual({ data: false });
+      expect(cancelEmailUpdate).not.toHaveBeenCalled();
+    });
+
+    it('swallows an error from authenticate/cancelEmailUpdate and returns false', async () => {
+      const deps = makeDeps({
+        authenticate: (async () => { throw new Error('boom'); }) as unknown as RouteDependencies['authenticate'],
+      });
+      // The handler's try/catch logs unexpected errors rather than surfacing
+      // them, so a caller with an already-invalid session still gets a clean
+      // 200 instead of a 401/500.
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+      const result = await cancelEmailChange(makeRequest(), deps);
+      expect(result.body).toEqual({ data: false });
+      logSpy.mockRestore();
     });
   });
 
@@ -878,10 +989,21 @@ describe('auth handlers (unit)', () => {
     });
   });
 
+  describe('getGoogleOauthUrl', () => {
+    it('echoes the url/state from the googleOauth2 helper', async () => {
+      const deps = makeDeps();
+      const result = await getGoogleOauthUrl(makeRequest({ method: 'GET' }), deps);
+
+      expect(result.body?.data).toEqual({ url: 'https://example.com', state: 'state' });
+    });
+  });
+
   describe('verifyGoogleOauth', () => {
     beforeEach(() => {
       mockVerifyState.mockReset();
       mockVerifyState.mockReturnValue(false);
+      mockGetUserProfileFromToken.mockReset();
+      mockGetUserProfileFromToken.mockResolvedValue({ id: 'g', email: 'g@example.com', verified_email: true });
     });
 
     it('rejects an invalid CSRF state', async () => {
@@ -897,6 +1019,51 @@ describe('auth handlers (unit)', () => {
       await expect(
         verifyGoogleOauth(makeRequest({ body: { code: { $gt: '' }, state: 'ok', locale: 'en' } }), deps),
       ).rejects.toBeInstanceOf(InvalidRequestError);
+    });
+
+    it('rejects an unverified Google email with EmailNotVerified', async () => {
+      mockVerifyState.mockReturnValue(true);
+      mockGetUserProfileFromToken.mockResolvedValue({ id: 'g', email: 'g@example.com', verified_email: false });
+      const deps = makeDeps();
+
+      const call = verifyGoogleOauth(makeRequest({ body: { code: 'c', state: 'ok', locale: 'en' } }), deps);
+      await expect(call).rejects.toBeInstanceOf(ValidationError);
+      await expect(call).rejects.toMatchObject({
+        details: [{ code: ApiErrorDetailCode.EmailNotVerified }],
+      });
+    });
+
+    it('links the Google account to an existing user without a googleId', async () => {
+      mockVerifyState.mockReturnValue(true);
+      const existing = { ...verifiedUser, email: 'g@example.com', googleId: null } as unknown as UserRecord;
+      const linkGoogleAccount = vi.fn(async () => existing);
+      const deps = makeDeps({ users: { findByEmail: async () => existing, linkGoogleAccount } });
+
+      await verifyGoogleOauth(makeRequest({ body: { code: 'c', state: 'ok', locale: 'en' } }), deps);
+
+      expect(linkGoogleAccount).toHaveBeenCalledWith(existing.id, 'g');
+    });
+
+    it('creates a new account when no existing user is found', async () => {
+      mockVerifyState.mockReturnValue(true);
+      const created = { ...verifiedUser, email: 'g@example.com', hasLocalAccount: false } as unknown as UserRecord;
+      const create = vi.fn(async () => created);
+      const deps = makeDeps({ users: { findByEmail: async () => null, create } });
+
+      const result = await verifyGoogleOauth(
+        makeRequest({ body: { code: 'c', state: 'ok', locale: 'en' } }),
+        deps,
+      );
+
+      expect(create).toHaveBeenCalledWith({
+        email: 'g@example.com',
+        emailVerificationCode: '',
+        password: null,
+        googleId: 'g',
+        locale: 'en',
+      });
+      expect(typeof (result.body?.data as { token: string }).token).toBe('string');
+      expect(result.cookies?.find((c) => c.name === AUTH_COOKIE_NAME)?.value).toEqual(expect.any(String));
     });
 
     it('omits the token from the body for web callers, but still sets the cookie', async () => {

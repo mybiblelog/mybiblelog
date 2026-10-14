@@ -19,6 +19,7 @@ export default function ForgotPassword() {
   const [step, setStep] = useState<"email" | "code">("email");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const trimmedEmail = email.trim();
@@ -26,6 +27,7 @@ export default function ForgotPassword() {
   async function onSend() {
     if (isSubmitting) return;
     setEmailError(null);
+    setError(null);
     if (!trimmedEmail) {
       setEmailError(t("auth_email_required"));
       return;
@@ -35,6 +37,8 @@ export default function ForgotPassword() {
       // The API always reports success (anti-enumeration); we advance regardless.
       await beginPasswordReset(trimmedEmail);
       setStep("code");
+    } catch {
+      setError(t("auth_generic_error"));
     } finally {
       setIsSubmitting(false);
     }
@@ -61,6 +65,16 @@ export default function ForgotPassword() {
               <Text variant="body" color="mutedText" style={styles.subtitle}>
                 {t("forgot_password_hint")}
               </Text>
+              {!!error && (
+                <Text
+                  variant="bodyStrong"
+                  color="destructive"
+                  style={styles.error}
+                  testID="forgot-password.error"
+                >
+                  {error}
+                </Text>
+              )}
               <View style={styles.form}>
                 <InputField
                   label={t("auth_email")}
@@ -105,5 +119,6 @@ const styles = StyleSheet.create({
   container: { flexGrow: 1, paddingHorizontal: spacing.pageGutter, justifyContent: "center" },
   title: { marginBottom: spacing.xs },
   subtitle: { marginBottom: spacing.sm },
+  error: { marginBottom: spacing.sm },
   form: { gap: spacing.sm, marginBottom: spacing.sm },
 });

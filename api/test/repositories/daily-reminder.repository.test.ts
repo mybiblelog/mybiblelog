@@ -95,6 +95,18 @@ describe('daily-reminder.repository', () => {
       expect(after.emailsSentSinceLastEngagement).toBe(0);
     });
 
+    it('recordEngagement is a no-op for an unknown public token', async () => {
+      const { dailyReminders } = await getRepos();
+      const { dailyReminders: dailyRemindersCollection } = await getCollections();
+      const created = await dailyReminders.getOrCreateForOwner(ownerId);
+      const before = await dailyRemindersCollection.findOne({ _id: new ObjectId(created.id) });
+
+      await expect(dailyReminders.recordEngagement('unknown-token')).resolves.toBeUndefined();
+
+      const after = await dailyRemindersCollection.findOne({ _id: new ObjectId(created.id) });
+      expect(after).toEqual(before);
+    });
+
     it('deactivateByPublicToken deactivates a reminder or returns null for an unknown token', async () => {
       const { dailyReminders } = await getRepos();
       const activated = await dailyReminders.updateForOwner(ownerId, { active: true });
@@ -112,6 +124,12 @@ describe('daily-reminder.repository', () => {
 
       const after = await dailyReminders.getOrCreateForOwner(ownerId);
       expect(after.active).toBe(false);
+    });
+
+    it('deactivate(id) is a no-op for a non-existent id', async () => {
+      const { dailyReminders } = await getRepos();
+
+      await expect(dailyReminders.deactivate(new ObjectId().toString())).resolves.toBeUndefined();
     });
 
     it('advanceSchedule increments emailsSentSinceLastEngagement and recomputes nextOccurrence', async () => {

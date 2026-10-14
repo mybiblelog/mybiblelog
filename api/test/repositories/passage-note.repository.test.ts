@@ -107,6 +107,82 @@ describe('passage-note.repository', () => {
       expect((await passageNotes.findByIdForOwner(ownerId, created.id))?.id).toBe(created.id);
       expect(await passageNotes.findByIdForOwner(ownerId, new ObjectId().toString())).toBeNull();
     });
+
+    it('patches only content, leaving passages and tags untouched', async () => {
+      const { passageNotes, passageNoteTags } = await getRepos();
+      const tag = await passageNoteTags.create(ownerId, { label: 'T', color: '#abcdef' });
+      const created = await passageNotes.create(ownerId, {
+        content: 'old',
+        passages: [GEN_1_1_5],
+        tags: [tag.id],
+      });
+
+      const updated = await passageNotes.update(ownerId, created.id, { content: 'new' });
+
+      expect(updated!.content).toBe('new');
+      expect(updated!.passages).toEqual(created.passages);
+      expect(updated!.tags).toEqual([tag.id]);
+    });
+
+    it('patches only passages, leaving content and tags untouched', async () => {
+      const { passageNotes, passageNoteTags } = await getRepos();
+      const tag = await passageNoteTags.create(ownerId, { label: 'T', color: '#abcdef' });
+      const created = await passageNotes.create(ownerId, {
+        content: 'old',
+        passages: [GEN_1_1_5],
+        tags: [tag.id],
+      });
+
+      const updated = await passageNotes.update(ownerId, created.id, { passages: [GEN_1_6_10] });
+
+      expect(updated!.content).toBe('old');
+      expect(updated!.passages[0]!.startVerseId).toBe(GEN_1_6_10.startVerseId);
+      expect(updated!.tags).toEqual([tag.id]);
+    });
+
+    it('patches only tags, leaving content and passages untouched', async () => {
+      const { passageNotes, passageNoteTags } = await getRepos();
+      const tag = await passageNoteTags.create(ownerId, { label: 'T', color: '#abcdef' });
+      const created = await passageNotes.create(ownerId, {
+        content: 'old',
+        passages: [GEN_1_1_5],
+      });
+
+      const updated = await passageNotes.update(ownerId, created.id, { tags: [tag.id] });
+
+      expect(updated!.content).toBe('old');
+      expect(updated!.passages).toEqual(created.passages);
+      expect(updated!.tags).toEqual([tag.id]);
+    });
+
+    it('rejects an update with a reversed verse range', async () => {
+      const { passageNotes } = await getRepos();
+      const created = await passageNotes.create(ownerId, { content: 'old' });
+
+      await expect(
+        passageNotes.update(ownerId, created.id, {
+          passages: [{ startVerseId: 101001005, endVerseId: 101001001 }],
+        }),
+      ).rejects.toThrow();
+    });
+
+    it('rejects an update with content longer than the 3000 character limit', async () => {
+      const { passageNotes } = await getRepos();
+      const created = await passageNotes.create(ownerId, { content: 'old' });
+
+      await expect(
+        passageNotes.update(ownerId, created.id, { content: 'a'.repeat(3001) }),
+      ).rejects.toThrow();
+    });
+
+    it('rejects an update that clears both content and passages', async () => {
+      const { passageNotes } = await getRepos();
+      const created = await passageNotes.create(ownerId, { content: 'old', passages: [GEN_1_1_5] });
+
+      await expect(
+        passageNotes.update(ownerId, created.id, { content: '', passages: [] }),
+      ).rejects.toThrow();
+    });
   });
 
   describe('deletion and counting', () => {
@@ -213,6 +289,22 @@ describe('passage-note.repository', () => {
 
       const exact = await passageNotes.search(ownerId, baseSearch({ filterTags: [t1.id], filterTagMatching: 'exact' }));
       expect(exact.total).toBe(1);
+    });
+
+    it('filters by exact matching with an empty filterTags list, matching only untagged notes', async () => {
+      const { passageNotes, passageNoteTags } = await getRepos();
+      const t1 = await passageNoteTags.create(ownerId, { label: 'T1', color: '#111111' });
+      await passageNotes.create(ownerId, { content: 'tagged', tags: [t1.id] });
+      await passageNotes.create(ownerId, { content: 'untagged-a' });
+      await passageNotes.create(ownerId, { content: 'untagged-b' });
+
+      const { results, total } = await passageNotes.search(ownerId, baseSearch({ filterTags: [], filterTagMatching: 'exact' }));
+
+      expect(total).toBe(2);
+      expect(results.map(r => r.content).sort()).toEqual(['untagged-a', 'untagged-b']);
+      for (const result of results) {
+        expect(result.tags).toEqual([]);
+      }
     });
 
     it('filters by passage range with inclusive and exclusive matching', async () => {

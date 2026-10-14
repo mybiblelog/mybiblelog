@@ -203,6 +203,20 @@ describe('user.repository', () => {
       expect(completed.tokenVersion).toBe(created.tokenVersion + 1);
       expect(await users.verifyPassword(created.id, 'newpassword456')).toBe(true);
     });
+
+    it('records failed password-reset attempts and increments the count', async () => {
+      const { users } = await getRepos();
+      const created = await createUser();
+
+      expect(await users.recordPasswordResetAttempt(created.id)).toBe(1);
+      expect(await users.recordPasswordResetAttempt(created.id)).toBe(2);
+      expect((await users.findById(created.id))!.passwordResetAttempts).toBe(2);
+    });
+
+    it('recordPasswordResetAttempt resolves to 0 (not an error) for an unknown user', async () => {
+      const { users } = await getRepos();
+      expect(await users.recordPasswordResetAttempt(new ObjectId().toString())).toBe(0);
+    });
   });
 
   describe('email verification and update flows', () => {
@@ -236,6 +250,21 @@ describe('user.repository', () => {
 
       const resent = await users.resendEmailVerification(created.id);
       expect(resent.emailVerificationAttempts).toBe(0);
+    });
+
+    it('records failed change-email code attempts and increments the count', async () => {
+      const { users } = await getRepos();
+      const created = await createUser();
+      await users.beginEmailUpdate(created.id, uniqueEmail());
+
+      expect(await users.recordNewEmailVerificationAttempt(created.id)).toBe(1);
+      expect(await users.recordNewEmailVerificationAttempt(created.id)).toBe(2);
+      expect((await users.findById(created.id))!.newEmailVerificationAttempts).toBe(2);
+    });
+
+    it('recordNewEmailVerificationAttempt resolves to 0 (not an error) for an unknown user', async () => {
+      const { users } = await getRepos();
+      expect(await users.recordNewEmailVerificationAttempt(new ObjectId().toString())).toBe(0);
     });
 
     it('completes an email update: archives the old email and promotes the new one', async () => {
@@ -417,6 +446,35 @@ describe('user.repository', () => {
       const { users } = await getRepos();
       const page = await users.listAdminUsers({ ...baseQuery, searchText: 'a+b' });
       expect(page.total).toBe(0);
+    });
+  });
+
+  describe('listAdminEmails', () => {
+    it('returns only the emails of admin accounts', async () => {
+      const { users } = await getRepos();
+      const admin = await createUser();
+      await users.setAdmin(admin.id, true);
+      await createUser(); // non-admin, should be excluded
+
+      const emails = await users.listAdminEmails();
+
+      expect(emails).toEqual([admin.email]);
+    });
+  });
+
+  describe('getAdminUserSummary', () => {
+    it('returns the minimal {_id, email} shape for a known email', async () => {
+      const { users } = await getRepos();
+      const created = await createUser();
+
+      const summary = await users.getAdminUserSummary(created.email);
+
+      expect(summary).toEqual({ _id: created.id, email: created.email });
+    });
+
+    it('returns null for an unknown email', async () => {
+      const { users } = await getRepos();
+      expect(await users.getAdminUserSummary(uniqueEmail())).toBeNull();
     });
   });
 });

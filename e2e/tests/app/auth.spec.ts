@@ -143,4 +143,28 @@ test.describe('Auth middleware', () => {
     await expect(page.getByRole('heading', { name: 'Sign In' })).toBeVisible();
     await expect(page).toHaveURL(/\/login/);
   });
+
+  test('logged-in user is redirected away from guest-only pages to /start', async ({ page }) => {
+    // A freshly created user (no `startPage` setting yet) so landing on
+    // /start doesn't get bounced further by the start-redirect middleware.
+    const testUser = await createTestUser();
+    try {
+      await page.goto('/login');
+      await page.getByRole('textbox', { name: 'Email' }).fill(testUser.email);
+      await page.getByRole('textbox', { name: 'Password' }).fill(testUser.password);
+      await page.getByRole('button', { name: 'Sign In' }).click();
+      await expect(page.getByRole('heading', { name: 'Welcome to your new My Bible Log account!' })).toBeVisible();
+
+      // The `auth: 'guest'` route meta should bounce an already-logged-in
+      // user away from /login and /register, back to /start.
+      await page.goto('/login');
+      await expect(page).toHaveURL(/\/start/);
+
+      await page.goto('/register');
+      await expect(page).toHaveURL(/\/start/);
+    }
+    finally {
+      await deleteTestUser(testUser);
+    }
+  });
 });
