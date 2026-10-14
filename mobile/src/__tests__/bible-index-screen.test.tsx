@@ -17,11 +17,16 @@ jest.mock("@/src/api/notesApi", () => ({
 import { computeBibleProgress } from "@mybiblelog/shared";
 import { router } from "expo-router";
 import { fetchBookNoteCounts } from "@/src/api/notesApi";
+import { act, within } from "@testing-library/react-native";
 import { fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/renderWithProviders";
 import { useBibleProgressStore } from "@/src/stores/bibleProgress";
 import { useNoteCountsStore } from "@/src/stores/passageNoteCounts";
 import { useNotesStore } from "@/src/stores/passageNotes";
-import { DEFAULT_BOOK_LIST_PREFS, useBookListPrefsStore } from "@/src/stores/bookListPrefs";
+import {
+  DEFAULT_BOOK_LIST_PREFS,
+  bookListPrefsActions,
+  useBookListPrefsStore,
+} from "@/src/stores/bookListPrefs";
 import BibleIndex from "@/app/(tabs)/bible/index";
 
 beforeEach(() => {
@@ -104,5 +109,13 @@ describe("Bible Books screen", () => {
 
     fireEvent.press(getByTestId("bible.sort-toggle"));
     expect(firstOf()).toBe("Genesis");
+  });
+
+  it("labels the overall progress card with the testament it covers", () => {
+    const { getByTestId } = renderWithProviders(<BibleIndex />);
+    expect(within(getByTestId("bible.overall-progress")).getByText("Whole Bible")).toBeTruthy();
+
+    act(() => bookListPrefsActions.setTestament("new"));
+    expect(within(getByTestId("bible.overall-progress")).getByText("New Testament")).toBeTruthy();
   });
 });

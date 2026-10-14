@@ -3,12 +3,13 @@ import { router, useFocusEffect } from "expo-router";
 import { memo, useCallback, useEffect, useMemo, useRef } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import { Bible, type BookProgress } from "@mybiblelog/shared";
+import { Bible, type BookProgress, type TestamentFilter } from "@mybiblelog/shared";
 import { filterAndSortBooks } from "@/src/bible/bookList";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import {
   AnimatedList,
   Button,
+  Card,
   Screen,
   ScreenHeader,
   SegmentBar,
@@ -26,6 +27,13 @@ import {
 } from "@/src/stores/passageNoteCounts";
 
 const Separator = () => <View style={styles.separator} />;
+
+/** Names the scope the overall bar covers, which follows the testament filter. */
+const OVERALL_LABEL_KEYS = {
+  all: "insights_books_whole_bible",
+  old: "insights_books_old_testament",
+  new: "insights_books_new_testament",
+} as const satisfies Record<TestamentFilter, string>;
 
 /** Memoized book row. Its `book` snapshot is reference-stable from the
  * precomputed store, so it only re-renders when its data or the theme changes. */
@@ -158,14 +166,13 @@ export default function BibleIndex() {
         testIDPrefix="bible"
       />
       {filtered ? (
-        <View style={styles.overallRow}>
-          <View style={styles.overallBar}>
-            <SegmentBar segments={filtered.segments} />
+        <Card padding="list-item" testID="bible.overall-progress">
+          <View style={styles.overallHeader}>
+            <Text variant="label">{t(OVERALL_LABEL_KEYS[testament])}</Text>
+            <Text variant="label">{filtered.percentage}%</Text>
           </View>
-          <Text variant="caption" color="mutedText" style={styles.overallPercent}>
-            {filtered.percentage}%
-          </Text>
-        </View>
+          <SegmentBar segments={filtered.segments} thick />
+        </Card>
       ) : null}
     </View>
   );
@@ -214,19 +221,11 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.md,
     gap: spacing.sm,
   },
-  overallRow: {
+  overallHeader: {
     flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    gap: spacing.sm,
-    paddingHorizontal: spacing.xs,
-    paddingVertical: spacing["2xs"],
-  },
-  overallBar: {
-    flex: 1,
-  },
-  overallPercent: {
-    width: 48,
-    textAlign: "right",
+    marginBottom: spacing.xs,
   },
   listContent: {
     paddingHorizontal: spacing.pageGutter,
