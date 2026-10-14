@@ -18,6 +18,48 @@ test.describe('Tags page', () => {
     await expect(tagLine).toContainText('Passages about prophecy');
   });
 
+  // handleEditorSave's failure branch: `tagEditorStore.savePassageNoteTag()`
+  // resolves falsy and the modal must surface an error instead of silently
+  // closing. A duplicate label is the one save failure the API produces
+  // naturally (per-user label uniqueness), but the server keys it to the
+  // `label` field rather than the form, so the editor falls back to its
+  // generic "unknown error" message.
+  test('a duplicate tag label surfaces an error and keeps the editor open', async ({ page, api }) => {
+    await seedTag(api, { label: 'Duplicate Label', color: '#556677' });
+
+    await page.goto('/tags');
+    await page.getByTestId('tag-new').click();
+    await page.getByTestId('tag-editor-label').fill('Duplicate Label');
+    await page.getByTestId('tag-editor-color').fill('#112233');
+    await page.getByTestId('tag-editor-submit').click();
+
+    await expect(page.locator('.mbl-help--danger')).toContainText('An unknown error occurred');
+    await expect(page.getByTestId('tag-editor-submit')).toBeVisible();
+  });
+
+  // selectNewlyCreatedTagIfAny: creating a tag from the note editor's
+  // "Choose Tags" flow (via 'Create Tag') should auto-select it back in the
+  // manage-tags list once the nested tag editor closes.
+  test('creating a tag from the note editor auto-selects it in the manage-tags list', async ({ page }) => {
+    await page.goto('/notes');
+    await page.getByRole('button', { name: 'New' }).click();
+    await page.getByTestId('note-editor-content').fill('Note pending a new tag');
+    await page.getByTestId('note-editor-manage-tags').click();
+
+    await page.getByTestId('note-editor-create-tag').click();
+    await page.getByTestId('tag-editor-label').fill('Freshly Minted');
+    await page.getByTestId('tag-editor-color').fill('#4477aa');
+    await page.getByTestId('tag-editor-submit').click();
+
+    await expect(page.getByRole('checkbox', { name: 'Freshly Minted' })).toBeChecked();
+
+    await page.getByRole('button', { name: 'Done' }).click();
+    await page.getByTestId('note-editor-submit').click();
+
+    const note = page.getByTestId('passage-note').first();
+    await expect(note.getByTestId('passage-note-tags')).toContainText('Freshly Minted');
+  });
+
   test('user can edit a tag', async ({ page, api }) => {
     await seedTag(api, { label: 'Old Label', color: '#aa0000' });
 

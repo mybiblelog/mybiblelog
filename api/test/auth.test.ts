@@ -270,6 +270,67 @@ describe('Auth routes', () => {
       });
     });
 
+    it('error if password is under the character limit but over the bcrypt byte limit', async () => {
+      // bcrypt only uses the first 72 bytes of a password. A password built from
+      // multi-byte (e.g. emoji) characters can stay under the 72-character limit
+      // while exceeding 72 UTF-8 bytes: each '😀' is 2 UTF-16 code units (counted
+      // by zod's `.max`) but 4 UTF-8 bytes. 20 copies -> length 40 (<=72), but 80
+      // bytes (>72), so only the `Buffer.byteLength` refine should reject it.
+      const multiByteOverBytePassword = '😀'.repeat(20);
+      expect(multiByteOverBytePassword.length).toBeLessThanOrEqual(72);
+      expect(Buffer.byteLength(multiByteOverBytePassword, 'utf8')).toBeGreaterThan(72);
+
+      const response = await requestApi
+        .post('/api/auth/register')
+        // bypass rate limiting
+        .set('x-test-bypass-secret', TEST_BYPASS_SECRET!)
+        .send({
+          email: generateTestEmail(),
+          password: multiByteOverBytePassword,
+          name: 'Test User',
+          locale: 'en',
+        });
+      expect(response.status).toBe(400);
+      expect(response.body.error).toEqual({
+        code: 'validation_error',
+        errors: [{ field: 'password', code: 'not_valid' }],
+      });
+    });
+
+    it('error if email is empty or whitespace-only reports as required', async () => {
+      const emptyResponse = await requestApi
+        .post('/api/auth/register')
+        // bypass rate limiting
+        .set('x-test-bypass-secret', TEST_BYPASS_SECRET!)
+        .send({
+          email: '',
+          password: 'password123',
+          name: 'Test User',
+          locale: 'en',
+        });
+      expect(emptyResponse.status).toBe(400);
+      expect(emptyResponse.body.error).toEqual({
+        code: 'validation_error',
+        errors: [{ field: 'email', code: 'required' }],
+      });
+
+      const whitespaceResponse = await requestApi
+        .post('/api/auth/register')
+        // bypass rate limiting
+        .set('x-test-bypass-secret', TEST_BYPASS_SECRET!)
+        .send({
+          email: '   ',
+          password: 'password123',
+          name: 'Test User',
+          locale: 'en',
+        });
+      expect(whitespaceResponse.status).toBe(400);
+      expect(whitespaceResponse.body.error).toEqual({
+        code: 'validation_error',
+        errors: [{ field: 'email', code: 'required' }],
+      });
+    });
+
     it('enforces rate limiting when test bypass header is not present', async () => {
       // Send 6 requests to ensure the rate limit is enforced
       // (previous tests may have already counted against the rate limit)
@@ -469,6 +530,14 @@ describe('Auth routes', () => {
     });
   });
 
+  describe('GET /api/auth/oauth2/google/url', () => {
+    it('returns a Google OAuth2 redirect url and CSRF state', async () => {
+      const res = await requestApi.get('/api/auth/oauth2/google/url');
+      expect(res.statusCode).toBe(200);
+      expect(res.body.data).toEqual({ url: expect.any(String), state: expect.any(String) });
+    });
+  });
+
   describe('POST /api/auth/oauth2/google/verify', () => {
     it('returns 400 for invalid state parameter', async () => {
       const res = await requestApi
@@ -518,6 +587,72 @@ describe('Auth routes', () => {
       expect(response.body).toHaveProperty('data');
       expect(response.body).not.toHaveProperty('error');
       expect(response.body.data).not.toHaveProperty('newEmailVerificationCode');
+
+      await deleteTestUser(testUser);
+    });
+  });
+
+  describe('GET /api/auth/change-email', () => {
+    it('reports null/null when no change is in progress', async () => {
+      const testUser = await createTestUser();
+      const response = await requestApi
+        .get('/api/auth/change-email')
+        .set('Authorization', `Bearer ${testUser.token}`);
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toHaveProperty('data');
+      expect(response.body.data).toEqual({ newEmail: null, expires: null });
+
+      await deleteTestUser(testUser);
+    });
+
+    it('reports the pending new email and expiry once a change is begun', async () => {
+      const testUser = await createTestUser();
+      const newEmail = generateTestEmail();
+      await requestApi
+        .post('/api/auth/change-email')
+        .set('Authorization', `Bearer ${testUser.token}`)
+        .send({ newEmail, password: testUser.password });
+
+      const response = await requestApi
+        .get('/api/auth/change-email')
+        .set('Authorization', `Bearer ${testUser.token}`);
+      expect(response.statusCode).toBe(200);
+      expect(response.body.data.newEmail).toBe(newEmail);
+      expect(response.body.data.expires).not.toBeNull();
+
+      await deleteTestUser(testUser);
+    });
+  });
+
+  describe('DELETE /api/auth/change-email', () => {
+    it('returns false when no change is in progress', async () => {
+      const testUser = await createTestUser();
+      const response = await requestApi
+        .delete('/api/auth/change-email')
+        .set('Authorization', `Bearer ${testUser.token}`);
+      expect(response.statusCode).toBe(200);
+      expect(response.body.data).toBe(false);
+
+      await deleteTestUser(testUser);
+    });
+
+    it('cancels an in-progress change and reports it on a subsequent GET', async () => {
+      const testUser = await createTestUser();
+      await requestApi
+        .post('/api/auth/change-email')
+        .set('Authorization', `Bearer ${testUser.token}`)
+        .send({ newEmail: generateTestEmail(), password: testUser.password });
+
+      const cancelResponse = await requestApi
+        .delete('/api/auth/change-email')
+        .set('Authorization', `Bearer ${testUser.token}`);
+      expect(cancelResponse.statusCode).toBe(200);
+      expect(cancelResponse.body.data).toBe(true);
+
+      const followUp = await requestApi
+        .get('/api/auth/change-email')
+        .set('Authorization', `Bearer ${testUser.token}`);
+      expect(followUp.body.data).toEqual({ newEmail: null, expires: null });
 
       await deleteTestUser(testUser);
     });

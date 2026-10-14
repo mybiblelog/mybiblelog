@@ -41,7 +41,7 @@ const requiredEnvVars = Object.values(
  * eas.json makes this moot, which is why we do — this is the fallback so the
  * check can't silently disagree with the build.
  */
-function resolveEnvironment(profileName, easJson) {
+export function resolveEnvironment(profileName, easJson) {
   const seen = new Set();
   let profile = {};
   let name = profileName;
@@ -106,14 +106,18 @@ function checkProfile(profileName) {
   process.exit(result.status ?? 1);
 }
 
-const args = process.argv.slice(2);
-if (args.includes("--assert")) {
-  assertEnv();
-} else {
-  const profile = args[args.indexOf("--profile") + 1];
-  if (!args.includes("--profile") || !profile) {
-    console.error("Usage: node scripts/check-build-env.mjs --profile <name> | --assert");
-    process.exit(1);
+// Guarded so this file can be imported (e.g. by check-build-env.test.mjs) for
+// its pure helpers without triggering the CLI's argv parsing / process.exit.
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const args = process.argv.slice(2);
+  if (args.includes("--assert")) {
+    assertEnv();
+  } else {
+    const profile = args[args.indexOf("--profile") + 1];
+    if (!args.includes("--profile") || !profile) {
+      console.error("Usage: node scripts/check-build-env.mjs --profile <name> | --assert");
+      process.exit(1);
+    }
+    checkProfile(profile);
   }
-  checkProfile(profile);
 }

@@ -10,6 +10,7 @@ import {
   selectEndChapter,
   selectEndVerse,
   selectStartVerse,
+  selectVerses,
   singleSelectBook,
   singleSelectChapter,
   singleSelectVerse,
@@ -56,6 +57,18 @@ describe('multi-verse passage selection', () => {
     });
     // End verses cannot precede the start verse within the same chapter.
     expect(options.endVerses[0]).toBe(16);
+  });
+
+  it('selectVerses sets both start and end verse in one step', () => {
+    let { state } = selectBook(JOHN);
+    ({ state } = selectChapters(state, { from: 3, to: 3 }));
+    const { state: withVerses, range } = selectVerses(state, { from: 16, to: 18 });
+    expect(withVerses.startVerse).toBe(16);
+    expect(withVerses.endVerse).toBe(18);
+    expect(range).toEqual({
+      startVerseId: Bible.makeVerseId(JOHN, 3, 16),
+      endVerseId: Bible.makeVerseId(JOHN, 3, 18),
+    });
   });
 
   it('end chapters never precede the start chapter', () => {

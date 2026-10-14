@@ -6,13 +6,13 @@ jest.mock("@/src/api/notesApi", () => ({
   deleteNote: jest.fn(),
   fetchBookNoteCounts: jest.fn(),
 }));
-
 import { ApiError } from "@/src/api/apiError";
 import {
   createNote,
   deleteNote,
   fetchBookNoteCounts,
   fetchNotesPage,
+  updateNote,
   type PassageNote,
 } from "@/src/api/notesApi";
 import { initialNotesQuery, useNotesStore } from "./passageNotes";
@@ -208,6 +208,43 @@ describe("mutations", () => {
   it("does not refresh the counts when the mutation fails", async () => {
     (createNote as jest.Mock).mockRejectedValue(new Error("boom"));
     await actions().create({ content: "x", passages: [], tags: [] });
+    expect(fetchBookNoteCounts).not.toHaveBeenCalled();
+  });
+
+  it("update replaces the matching note in place and refreshes counts", async () => {
+    const updated = { ...note("1"), content: "updated" };
+    (updateNote as jest.Mock).mockResolvedValue(updated);
+    useNotesStore.setState({
+      state: {
+        status: "ready",
+        notes: [note("1"), note("2")],
+        totalSize: 2,
+        isFetchingMore: false,
+      },
+    });
+
+    const saved = await actions().update({ id: "1", content: "updated", passages: [], tags: [] });
+
+    expect(saved).toEqual(updated);
+    const state = useNotesStore.getState().state;
+    expect(state.status === "ready" && state.notes).toEqual([updated, note("2")]);
+    expect(fetchBookNoteCounts).toHaveBeenCalledTimes(1);
+  });
+
+  it("update returns null and leaves state untouched when the save fails", async () => {
+    (updateNote as jest.Mock).mockRejectedValue(new Error("boom"));
+    const readyState = {
+      status: "ready" as const,
+      notes: [note("1")],
+      totalSize: 1,
+      isFetchingMore: false,
+    };
+    useNotesStore.setState({ state: readyState });
+
+    const saved = await actions().update({ id: "1", content: "updated", passages: [], tags: [] });
+
+    expect(saved).toBeNull();
+    expect(useNotesStore.getState().state).toEqual(readyState);
     expect(fetchBookNoteCounts).not.toHaveBeenCalled();
   });
 });

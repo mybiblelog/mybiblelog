@@ -68,6 +68,41 @@ describe('RateLimiter', () => {
     await expect(limiter.check(makeReq({ ip: 'a' }), opts)).rejects.toBeInstanceOf(TooManyRequestsError);
   });
 
+  it('scopes buckets by the custom keyFn, ignoring ip', async () => {
+    const limiter = new RateLimiter(new MemoryRateLimitStore());
+    const opts = {
+      maxRequests: 1,
+      windowMs: 60_000,
+      keyFn: (req: RateLimitRequest) => `user:${req.headers['x-user-id']}`,
+    };
+
+    // Same custom key, even though ip differs → shares a bucket.
+    await expect(
+      limiter.check(makeReq({ ip: 'a', headers: { 'x-user-id': '1' } }), opts),
+    ).resolves.toBeUndefined();
+    await expect(
+      limiter.check(makeReq({ ip: 'b', headers: { 'x-user-id': '1' } }), opts),
+    ).rejects.toBeInstanceOf(TooManyRequestsError);
+
+    // Different custom key → separate bucket, still allowed.
+    await expect(
+      limiter.check(makeReq({ ip: 'a', headers: { 'x-user-id': '2' } }), opts),
+    ).resolves.toBeUndefined();
+  });
+
+  it('falls back to an "unknown" bucket when req.ip is missing', async () => {
+    const limiter = new RateLimiter(new MemoryRateLimitStore());
+    const opts = { maxRequests: 1, windowMs: 60_000 };
+
+    await expect(
+      limiter.check(makeReq({ ip: undefined }), opts),
+    ).resolves.toBeUndefined();
+    // Another request with no ip, same method/path → same 'unknown' bucket, over limit.
+    await expect(
+      limiter.check(makeReq({ ip: undefined }), opts),
+    ).rejects.toBeInstanceOf(TooManyRequestsError);
+  });
+
   it('is a no-op when the test bypass is active', async () => {
     mockedBypass.mockReturnValue(true);
     const store = new MemoryRateLimitStore();

@@ -22,10 +22,12 @@ let routerPush: ReturnType<typeof vi.fn>;
 
 // Point useNuxtApp at a stable $http we can assert on (the default setup stub
 // hands out a fresh mock on every call, so the component's copy would differ).
-function stubNuxtApp() {
+// `postImpl` lets a test branch responses by URL (e.g. the reset-password code
+// validation endpoint) while everything else keeps the generic default.
+function stubNuxtApp(postImpl?: (url: string, body?: unknown) => Promise<unknown>) {
   http = {
     get: vi.fn().mockResolvedValue({ data: { user: { email: 'user@example.com' } } }),
-    post: vi.fn().mockResolvedValue({ data: {} }),
+    post: postImpl ? vi.fn(postImpl) : vi.fn().mockResolvedValue({ data: {} }),
   };
   routerPush = vi.fn();
   vi.stubGlobal('useNuxtApp', () => ({
@@ -129,5 +131,35 @@ describe('AuthCodeModal', () => {
 
     expect(wrapper.find('[data-testid="auth-code-error"]').exists()).toBe(true);
     expect((codeInput(wrapper).element as HTMLInputElement).value).toBe('');
+  });
+
+  it('rejects mismatched new/confirm passwords without calling the API', async () => {
+    // Reach the password step: send the reset code, then let the full code
+    // auto-submit and validate successfully.
+    stubNuxtApp(url =>
+      url === '/api/auth/password/reset/validate'
+        ? Promise.resolve({ data: { valid: true } })
+        : Promise.resolve({ data: {} }));
+    useAuthCodeStore().open({ flow: 'reset-password', email: 'user@example.com' });
+    const wrapper = mountModal();
+
+    await wrapper.get('[data-testid="auth-code-email"]').setValue('user@example.com');
+    await wrapper.get('[data-testid="auth-code-send-code"]').trigger('click');
+    await flushPromises();
+
+    await codeInput(wrapper).setValue('123456');
+    await flushPromises();
+
+    expect(wrapper.find('[data-testid="auth-code-new-password"]').exists()).toBe(true);
+    const postCallsBeforeSubmit = http.post.mock.calls.length;
+
+    await wrapper.get('[data-testid="auth-code-new-password"]').setValue('password1');
+    await wrapper.get('[data-testid="auth-code-confirm-password"]').setValue('password2');
+    await wrapper.get('[data-testid="auth-code-password-submit"]').trigger('click');
+    await flushPromises();
+
+    expect(wrapper.find('[data-testid="auth-code-error"]').text()).toBe('passwords_must_match');
+    // No `/api/auth/password/reset/complete` call was made.
+    expect(http.post.mock.calls.length).toBe(postCallsBeforeSubmit);
   });
 });

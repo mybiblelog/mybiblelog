@@ -28,43 +28,47 @@ import { createPlayClient } from "./lib/playApi.mjs";
 import { pngSize } from "./lib/pngSize.mjs";
 import { run } from "./lib/cli.mjs";
 
-run(async () => {
-  const options = parseArgs(process.argv.slice(2), {
-    flags: ["dry-run", "text-only", "screenshots-only", "no-commit"],
+// Guarded so this file can be imported (e.g. by push.test.mjs) for its
+// exported helpers without kicking off a real run against process.argv.
+if (import.meta.url === `file://${process.argv[1]}`) {
+  run(async () => {
+    const options = parseArgs(process.argv.slice(2), {
+      flags: ["dry-run", "text-only", "screenshots-only", "no-commit"],
+    });
+    if (options.textOnly && options.screenshotsOnly) {
+      throw new Error("--text-only and --screenshots-only are mutually exclusive.");
+    }
+
+    const config = loadConfig();
+    const ctx = {
+      options,
+      config,
+      locales: resolveLocales(config, options.locales),
+      pushText: !options.screenshotsOnly,
+      pushImages: !options.textOnly,
+      play: null,
+      editId: null,
+    };
+
+    precheck(ctx);
+
+    try {
+      if (options.dryRun) await dryRun(ctx);
+      else await push(ctx);
+    } catch (error) {
+      // Leaving an edit open would block the next run with a 409.
+      if (ctx.editId) await ctx.play.deleteEdit(ctx.editId).catch(() => {});
+      throw error;
+    }
   });
-  if (options.textOnly && options.screenshotsOnly) {
-    throw new Error("--text-only and --screenshots-only are mutually exclusive.");
-  }
-
-  const config = loadConfig();
-  const ctx = {
-    options,
-    config,
-    locales: resolveLocales(config, options.locales),
-    pushText: !options.screenshotsOnly,
-    pushImages: !options.textOnly,
-    play: null,
-    editId: null,
-  };
-
-  precheck(ctx);
-
-  try {
-    if (options.dryRun) await dryRun(ctx);
-    else await push(ctx);
-  } catch (error) {
-    // Leaving an edit open would block the next run with a 409.
-    if (ctx.editId) await ctx.play.deleteEdit(ctx.editId).catch(() => {});
-    throw error;
-  }
-});
+}
 
 /**
  * Everything knowable without the network. A real push needs the images on
  * disk; a dry run only reports what it would have uploaded, so a missing
  * capture is a warning there rather than a failure.
  */
-function precheck({ config, locales, options, pushImages }) {
+export function precheck({ config, locales, options, pushImages }) {
   const { errors, warnings, notes } = checkListings(config, locales, {
     screenshots: pushImages,
     requireScreenshots: pushImages && !options.dryRun,
@@ -79,19 +83,19 @@ function precheck({ config, locales, options, pushImages }) {
 }
 
 /** The API is only touched when something actually has to be read or written. */
-function connect(ctx) {
+export function connect(ctx) {
   ctx.play ??= createPlayClient({ packageName: ctx.config.packageName, keyPath: ctx.options.key });
   return ctx.play;
 }
 
-async function openEdit(ctx) {
+export async function openEdit(ctx) {
   const edit = await connect(ctx).insertEdit();
   ctx.editId = edit.id;
   console.log(`Edit ${edit.id} opened for ${ctx.config.packageName}`);
   return edit.id;
 }
 
-async function dryRun(ctx) {
+export async function dryRun(ctx) {
   const { config, locales, pushText, pushImages } = ctx;
 
   // Only the text diff needs the live listing; a screenshots-only preview stays
@@ -120,7 +124,7 @@ async function dryRun(ctx) {
   console.log("\nDry run — nothing changed.");
 }
 
-async function push(ctx) {
+export async function push(ctx) {
   const { config, locales, options, pushText, pushImages } = ctx;
   const play = connect(ctx);
   const editId = await openEdit(ctx);
@@ -164,7 +168,7 @@ async function push(ctx) {
 }
 
 /** Pads an out-of-spec capture into mobile/screenshots/.play-upload/<locale>/. */
-async function preparedPath({ config }, locale, shot) {
+export async function preparedPath({ config }, locale, shot) {
   const { path } = await prepareScreenshot({
     path: shot.path,
     size: pngSize(shot.path),
@@ -174,7 +178,7 @@ async function preparedPath({ config }, locale, shot) {
   return path;
 }
 
-function printTextDiff(liveListing, local) {
+export function printTextDiff(liveListing, local) {
   for (const field of TEXT_FIELDS) {
     const before = (liveListing?.[field.key] ?? "").replace(/\r\n/g, "\n").trimEnd();
     const after = local[field.key];
@@ -188,7 +192,7 @@ function printTextDiff(liveListing, local) {
 }
 
 /** A plain line-level diff — enough to eyeball a copy change before committing. */
-function printLineDiff(before, after, maxLines = 12) {
+export function printLineDiff(before, after, maxLines = 12) {
   const oldLines = before ? before.split("\n") : [];
   const newLines = after.split("\n");
   const changed = [];
@@ -203,7 +207,7 @@ function printLineDiff(before, after, maxLines = 12) {
   if (changed.length > maxLines) console.log(`    … ${changed.length - maxLines} more changed line(s)`);
 }
 
-async function printScreenshotPlan(ctx, locale) {
+export async function printScreenshotPlan(ctx, locale) {
   const shots = listScreenshots(ctx.config, locale);
   const present = shots.filter((shot) => shot.exists);
 

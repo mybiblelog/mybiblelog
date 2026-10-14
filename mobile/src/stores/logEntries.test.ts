@@ -22,7 +22,12 @@ jest.mock("@/src/stores/achievements", () => ({
   achievementActions: { evaluate: jest.fn() },
 }));
 
-import { deleteLogEntryRequest, fetchLogEntries, postLogEntry } from "@mybiblelog/shared";
+import {
+  deleteLogEntryRequest,
+  fetchLogEntries,
+  patchLogEntry,
+  postLogEntry,
+} from "@mybiblelog/shared";
 import { ApiError } from "@/src/api/apiError";
 import { achievementActions } from "@/src/stores/achievements";
 import { getIsOnline } from "@/src/stores/connectivity";
@@ -126,6 +131,100 @@ describe("createEntry (online)", () => {
   });
 });
 
+describe("updateEntry (offline)", () => {
+  beforeEach(() => (getIsOnline as jest.Mock).mockReturnValue(false));
+
+  it("writes the change locally and enqueues an update mutation", async () => {
+    setReady([{ ...entry, clientId: "c1", id: "server-1" }]);
+    const updated = { ...entry, endVerseId: 43003020 };
+
+    await actions().updateEntry("c1", updated);
+
+    const state = useLogEntriesStore.getState().state;
+    expect(state.status === "ready" && state.entries[0]).toMatchObject({
+      ...updated,
+      clientId: "c1",
+      id: "server-1",
+    });
+    expect(patchLogEntry).not.toHaveBeenCalled();
+
+    const queue = await loadPendingLogEntryMutations();
+    expect(queue).toEqual([
+      expect.objectContaining({ type: "update", clientId: "c1", id: "server-1" }),
+    ]);
+  });
+});
+
+describe("deleteEntry (online)", () => {
+  beforeEach(() => (getIsOnline as jest.Mock).mockReturnValue(true));
+
+  it("deletes via the API and removes the entry locally", async () => {
+    setReady([{ ...entry, clientId: "c1", id: "server-1" }]);
+    (deleteLogEntryRequest as jest.Mock).mockResolvedValue(undefined);
+
+    await actions().deleteEntry("c1");
+
+    expect(deleteLogEntryRequest).toHaveBeenCalledWith(expect.anything(), "server-1");
+    const state = useLogEntriesStore.getState().state;
+    expect(state.status === "ready" && state.entries).toHaveLength(0);
+    const queue = await loadPendingLogEntryMutations();
+    expect(queue).toHaveLength(0);
+  });
+
+  it("falls back to the offline queue when the API delete fails", async () => {
+    setReady([{ ...entry, clientId: "c1", id: "server-1" }]);
+    (deleteLogEntryRequest as jest.Mock).mockRejectedValue(new Error("500"));
+
+    await actions().deleteEntry("c1");
+
+    const state = useLogEntriesStore.getState().state;
+    expect(state.status === "ready" && state.entries).toHaveLength(0);
+    const queue = await loadPendingLogEntryMutations();
+    expect(queue).toEqual([
+      expect.objectContaining({ type: "delete", clientId: "c1", id: "server-1" }),
+    ]);
+  });
+});
+
+describe("updateEntry (online)", () => {
+  beforeEach(() => (getIsOnline as jest.Mock).mockReturnValue(true));
+
+  it("patches the API and applies the response locally without a full reload", async () => {
+    setReady([{ ...entry, clientId: "c1", id: "server-1" }]);
+    const updated = { ...entry, endVerseId: 43003020 };
+    (patchLogEntry as jest.Mock).mockResolvedValue({ id: "server-1", ...updated });
+
+    await actions().updateEntry("c1", updated);
+
+    expect(patchLogEntry).toHaveBeenCalledTimes(1);
+    expect(patchLogEntry).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ id: "server-1", endVerseId: 43003020 })
+    );
+    expect(fetchLogEntries).not.toHaveBeenCalled();
+
+    const queue = await loadPendingLogEntryMutations();
+    expect(queue).toHaveLength(0);
+
+    const state = useLogEntriesStore.getState().state;
+    expect(state.status === "ready" && state.entries[0]).toMatchObject({
+      id: "server-1",
+      endVerseId: 43003020,
+    });
+  });
+
+  it("falls back to the offline queue when the API call fails", async () => {
+    setReady([{ ...entry, clientId: "c1", id: "server-1" }]);
+    (patchLogEntry as jest.Mock).mockRejectedValue(new Error("500"));
+
+    await actions().updateEntry("c1", { ...entry, endVerseId: 43003020 });
+
+    const queue = await loadPendingLogEntryMutations();
+    expect(queue).toHaveLength(1);
+    expect(queue[0]).toMatchObject({ type: "update", clientId: "c1", id: "server-1" });
+  });
+});
+
 describe("entry ordering", () => {
   beforeEach(() => (getIsOnline as jest.Mock).mockReturnValue(false));
 
@@ -186,6 +285,31 @@ describe("achievements", () => {
     expect((after as StoredLogEntry[]).map((e) => e.date)).toEqual([johnEntry.date]);
   });
 
+  it("evaluates the affected book after an offline update", async () => {
+    (getIsOnline as jest.Mock).mockReturnValue(false);
+    setReady([{ ...johnEntry, clientId: "c1", id: "server-1" }]);
+
+    const updated = { ...johnEntry, endVerseId: 143003020 };
+    await actions().updateEntry("c1", updated);
+
+    expect(achievementActions.evaluate).toHaveBeenCalledTimes(1);
+    const [bookIndex, before, after] = (achievementActions.evaluate as jest.Mock).mock.calls[0];
+    expect(bookIndex).toBe(43);
+    expect(before).toEqual([expect.objectContaining(johnEntry)]);
+    expect(after).toEqual([expect.objectContaining(updated)]);
+  });
+
+  it("evaluates after an online update", async () => {
+    (getIsOnline as jest.Mock).mockReturnValue(true);
+    setReady([{ ...johnEntry, clientId: "c1", id: "server-1" }]);
+    const updated = { ...johnEntry, endVerseId: 143003020 };
+    (patchLogEntry as jest.Mock).mockResolvedValue({ id: "server-1", ...updated });
+
+    await actions().updateEntry("c1", updated);
+
+    expect(achievementActions.evaluate).toHaveBeenCalledTimes(1);
+  });
+
   it("does not evaluate on delete", async () => {
     (getIsOnline as jest.Mock).mockReturnValue(false);
     setReady([{ ...entry, clientId: "c1", id: "server-1" }]);
@@ -233,6 +357,69 @@ describe("syncNow poison-pill handling", () => {
     expect(queue).toHaveLength(1);
     expect(fetchLogEntries).not.toHaveBeenCalled();
     expect(consumeDroppedChanges()).toBe(0);
+  });
+});
+
+describe("syncNow reconciles legacy unsynced entries", () => {
+  beforeEach(() => (getIsOnline as jest.Mock).mockReturnValue(true));
+
+  it("synthesizes and sends a create mutation for a ready entry with no server id", async () => {
+    setReady([{ ...entry, clientId: "legacy-1" }]);
+    (postLogEntry as jest.Mock).mockResolvedValue({ id: "server-9", ...entry });
+    (fetchLogEntries as jest.Mock).mockResolvedValue([]);
+
+    await actions().syncNow();
+
+    expect(postLogEntry).toHaveBeenCalledWith(expect.anything(), entry);
+    // Queue drained, so the store reconciled with the server.
+    expect(fetchLogEntries).toHaveBeenCalled();
+  });
+});
+
+describe("syncNow update and delete mutations", () => {
+  beforeEach(() => (getIsOnline as jest.Mock).mockReturnValue(true));
+
+  it("patches via the API when an update mutation carries a server id", async () => {
+    await AsyncStorage.setItem(
+      "logEntries.mutations.v1",
+      JSON.stringify([{ type: "update", clientId: "u1", id: "server-1", entry, ts: 1 }])
+    );
+    (patchLogEntry as jest.Mock).mockResolvedValue({ id: "server-1", ...entry });
+    (fetchLogEntries as jest.Mock).mockResolvedValue([]);
+
+    await actions().syncNow();
+
+    expect(patchLogEntry).toHaveBeenCalledWith(expect.anything(), { id: "server-1", ...entry });
+    expect(postLogEntry).not.toHaveBeenCalled();
+  });
+
+  it("treats an id-less update mutation as a create", async () => {
+    await AsyncStorage.setItem(
+      "logEntries.mutations.v1",
+      JSON.stringify([{ type: "update", clientId: "u2", entry, ts: 1 }])
+    );
+    (postLogEntry as jest.Mock).mockResolvedValue({ id: "server-2", ...entry });
+    (fetchLogEntries as jest.Mock).mockResolvedValue([]);
+
+    await actions().syncNow();
+
+    expect(postLogEntry).toHaveBeenCalledWith(expect.anything(), entry);
+    expect(patchLogEntry).not.toHaveBeenCalled();
+  });
+
+  it("is a silent no-op for an id-less delete mutation", async () => {
+    await AsyncStorage.setItem(
+      "logEntries.mutations.v1",
+      JSON.stringify([{ type: "delete", clientId: "d1", ts: 1 }])
+    );
+    (fetchLogEntries as jest.Mock).mockResolvedValue([]);
+
+    await actions().syncNow();
+
+    expect(deleteLogEntryRequest).not.toHaveBeenCalled();
+    const queue = await loadPendingLogEntryMutations();
+    expect(queue).toHaveLength(0);
+    expect(fetchLogEntries).toHaveBeenCalled();
   });
 });
 

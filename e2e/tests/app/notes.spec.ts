@@ -139,6 +139,50 @@ test.describe('Notes page', () => {
     await expect(note.getByTestId('passage-note-tags')).toContainText('Creation');
   });
 
+  // handleSave's failure branch: `store.savePassageNote()` resolves falsy and the
+  // modal must surface `formErrorMessage` (translated via `$terr`) instead of
+  // silently swallowing the error. No server-side rule naturally produces a
+  // form-level (field: null) note error, so the save request is mocked.
+  test('a failed save surfaces a translated error and keeps the editor open', async ({ page }) => {
+    await page.goto('/notes');
+    await page.getByRole('button', { name: 'New' }).click();
+    await page.getByTestId('note-editor-content').fill('This note will fail to save');
+
+    await page.route('**/api/passage-notes', async (route) => {
+      if (route.request().method() !== 'POST') { return route.continue(); }
+      await route.fulfill({
+        status: 400,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: { code: 'validation_error', errors: [{ field: null, code: 'review' }] } }),
+      });
+    });
+
+    await page.getByTestId('note-editor-submit').click();
+
+    await expect(page.locator('.mbl-help--danger')).toHaveText('Please review.');
+    await expect(page.getByTestId('note-editor')).toBeVisible();
+  });
+
+  test('an unrecognized save error code falls back to the local "could not save" message', async ({ page }) => {
+    await page.goto('/notes');
+    await page.getByRole('button', { name: 'New' }).click();
+    await page.getByTestId('note-editor-content').fill('This note will also fail to save');
+
+    await page.route('**/api/passage-notes', async (route) => {
+      if (route.request().method() !== 'POST') { return route.continue(); }
+      await route.fulfill({
+        status: 400,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: { code: 'validation_error', errors: [{ field: null, code: 'made_up_code' }] } }),
+      });
+    });
+
+    await page.getByTestId('note-editor-submit').click();
+
+    await expect(page.locator('.mbl-help--danger')).toHaveText('The note could not be saved.');
+    await expect(page.getByTestId('note-editor')).toBeVisible();
+  });
+
   test('user can edit a note', async ({ page, api }) => {
     await seedNote(api, { content: 'Original content', passages: [] });
 
@@ -254,6 +298,25 @@ test.describe('Notes page', () => {
     await expect(page.getByTestId('passage-note')).toHaveCount(0);
   });
 
+  test('shows an error toast when deletion fails', async ({ page, api }) => {
+    await seedNote(api, { content: 'Stubborn note', passages: [] });
+
+    await page.goto('/notes');
+    // Force the delete request to come back without a `data` payload, the
+    // shape `deletePassageNote` treats as a failed delete (see notes.vue).
+    await page.route('**/api/passage-notes/*', async (route) => {
+      if (route.request().method() !== 'DELETE') { return route.fallback(); }
+      await route.fulfill({ status: 200, contentType: 'application/json', body: '{}' });
+    });
+
+    const note = page.getByTestId('passage-note').first();
+    await note.getByRole('button', { name: 'Delete' }).click();
+    await page.getByTestId('dialog-confirm').click();
+
+    await expect(page.getByTestId('toast')).toHaveText('The note could not be deleted.');
+    await expect(page.getByTestId('passage-note')).toHaveCount(1);
+  });
+
   test('tag matching "all" requires every selected tag', async ({ page, api }) => {
     const alpha = await seedTag(api, { label: 'Alpha', color: '#22aa66' });
     const beta = await seedTag(api, { label: 'Beta', color: '#dd3344' });
@@ -309,6 +372,29 @@ test.describe('Notes page', () => {
 
     await expect(page.getByTestId('passage-note')).toHaveCount(1);
     await expect(page.getByTestId('passage-note')).toContainText('Untagged note');
+
+    // Unchecking reverts the "exact, no tags" filter back to no filter at all.
+    await sidebar.getByTestId('notes-query-only-untagged').uncheck();
+    await sidebar.getByTestId('notes-query-apply').click();
+    await expect(page.getByTestId('passage-note')).toHaveCount(2);
+  });
+
+  test('choosing a tag after "only untagged notes" reverts tag matching to "any"', async ({ page, api }) => {
+    const tag = await seedTag(api, { label: 'Favorites', color: '#dd3344' });
+    await seedNote(api, { content: 'Tagged note', passages: [], tags: [tag.id] });
+    await seedNote(api, { content: 'Untagged note', passages: [] });
+
+    await page.goto('/notes');
+    await expect(page.getByTestId('passage-note')).toHaveCount(2);
+
+    const sidebar = page.locator('.notes-page__sidebar');
+    await sidebar.getByTestId('notes-query-only-untagged').check();
+
+    await sidebar.getByTestId('notes-query-choose-tags').click();
+    await page.getByRole('dialog').getByText('Favorites').click();
+    await page.getByRole('dialog').getByRole('button', { name: 'Done' }).click();
+
+    await expect(sidebar.getByTestId('notes-query-tag-match-any')).toBeChecked();
   });
 
   test('passage filter narrows to notes in the range', async ({ page, api }) => {

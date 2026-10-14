@@ -155,6 +155,22 @@ describe('sortPassageNoteTags', () => {
     expect(labels(sortPassageNoteTags(tags, 'createdAt:ascending'))).toEqual(['older', 'newer']);
   });
 
+  it('sorts by createdAt descending using the ObjectId fallback', () => {
+    const older = '4f000000aaaaaaaaaaaaaaaa';
+    const newer = '5f000000aaaaaaaaaaaaaaaa';
+    const tags = [tag({ id: older, label: 'older' }), tag({ id: newer, label: 'newer' })];
+    expect(labels(sortPassageNoteTags(tags, 'createdAt:descending'))).toEqual(['newer', 'older']);
+  });
+
+  it('sorts by note count ascending, tie-breaking on label', () => {
+    const tags = [
+      tag({ id: 1, label: 'many', noteCount: 9 }),
+      tag({ id: 2, label: 'few', noteCount: 1 }),
+      tag({ id: 3, label: 'none' }),
+    ];
+    expect(labels(sortPassageNoteTags(tags, 'noteCount:ascending'))).toEqual(['none', 'few', 'many']);
+  });
+
   it('sorts in place and returns the same array reference', () => {
     const tags = [tag({ id: 1, label: 'B' }), tag({ id: 2, label: 'A' })];
     const result = sortPassageNoteTags(tags, 'label:ascending');

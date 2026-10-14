@@ -30,6 +30,14 @@ jest.mock("@/src/api/authApi", () => ({
 }));
 jest.mock("@/src/auth/googleSignIn", () => ({ signOutGoogle: jest.fn() }));
 
+const mockReportHandledError = jest.fn();
+// Mocked directly (rather than relying on the real module's DSN guard) so these
+// tests can assert a forced rejection was actually reported, not just swallowed.
+jest.mock("@/src/observability/sentry", () => ({
+  reportHandledError: mockReportHandledError,
+  initCrashReporting: jest.fn(),
+}));
+
 let mockIsOnline: boolean | null = true;
 const mockConnectivityListeners: ((s: { isOnline: boolean | null }) => void)[] = [];
 const mockReportApiReachability = jest.fn();
@@ -481,5 +489,64 @@ describe("an unreadable stored session", () => {
       await jest.advanceTimersByTimeAsync(5_000);
       expect(fetchCount()).toBe(2);
     });
+  });
+});
+
+/**
+ * `hydrate`/`revalidate` run fire-and-forget (`void hydrateAndValidate()`,
+ * `void revalidate(session)`) with no caller around to catch a throw. Both
+ * must report and recover internally, or a genuine failure becomes an
+ * unhandled promise rejection instead of a handled one.
+ */
+describe("forced rejections are caught, not left unhandled", () => {
+  it("reports and falls back to unauthenticated when hydrate's storage read throws", async () => {
+    mockReadAuthSession.mockRejectedValue(new Error("keychain exploded"));
+
+    const onUnhandledRejection = jest.fn();
+    process.on("unhandledRejection", onUnhandledRejection);
+    try {
+      await withFreshAuth(async (auth) => {
+        auth.initAuth();
+        await flush();
+
+        expect(auth.useAuthStore.getState().state.status).toBe("unauthenticated");
+        expect(mockReportHandledError).toHaveBeenCalledWith(
+          expect.any(Error),
+          expect.objectContaining({ op: "auth.hydrate" })
+        );
+      });
+    } finally {
+      process.off("unhandledRejection", onUnhandledRejection);
+    }
+    expect(onUnhandledRejection).not.toHaveBeenCalled();
+  });
+
+  it("reports and leaves the session alone when revalidate's cleanup throws mid-invalidation", async () => {
+    // The token comes back invalid, but the keychain delete itself blows up —
+    // simulating a storage failure partway through the only path that may
+    // destroy a session.
+    respondWith(200, { data: { user: null } });
+    mockClearAuthSession.mockRejectedValue(new Error("keychain delete failed"));
+
+    const onUnhandledRejection = jest.fn();
+    process.on("unhandledRejection", onUnhandledRejection);
+    try {
+      await withFreshAuth(async (auth) => {
+        auth.initAuth();
+        await flush();
+
+        expect(mockReportHandledError).toHaveBeenCalledWith(
+          expect.any(Error),
+          expect.objectContaining({ op: "auth.revalidate" })
+        );
+        // The state transition to `unauthenticated` never completed, so the
+        // stored (still-valid-on-disk) session is left in place rather than
+        // silently dropped.
+        expect(auth.useAuthStore.getState().state.status).toBe("authenticated");
+      });
+    } finally {
+      process.off("unhandledRejection", onUnhandledRejection);
+    }
+    expect(onUnhandledRejection).not.toHaveBeenCalled();
   });
 });

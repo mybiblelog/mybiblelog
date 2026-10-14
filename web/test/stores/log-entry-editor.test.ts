@@ -3,8 +3,16 @@ import { setActivePinia, createPinia } from 'pinia';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { ApiError } from '~/helpers/api-error';
+import { confirmDiscardIfDirty } from '~/helpers/confirm-discard';
 
-beforeEach(() => setActivePinia(createPinia()));
+vi.mock('~/helpers/confirm-discard', () => ({
+  confirmDiscardIfDirty: vi.fn(),
+}));
+
+beforeEach(() => {
+  setActivePinia(createPinia());
+  vi.mocked(confirmDiscardIfDirty).mockReset();
+});
 
 describe('log-entry-editor store', () => {
   it('openEditor opens the editor with a date and not submitting', () => {
@@ -70,6 +78,45 @@ describe('log-entry-editor store', () => {
     expect(result).toBeNull();
     expect(store.errors.date).toEqual({ field: 'date', code: 'invalid' });
     expect(store.submitting).toBe(false);
+  });
+
+  it('maps a non-ApiError failure to the UnknownApiError fallback', async () => {
+    const entries = useLogEntriesStore();
+    vi.spyOn(entries, 'createLogEntry').mockRejectedValue(new Error('boom'));
+    const store = useLogEntryEditorStore();
+    store.openEditor({ empty: true });
+
+    const result = await store.saveLogEntry();
+
+    expect(result).toBeNull();
+    expect(store.errors._form).toEqual({ field: null, code: 'unknown_error' });
+    expect(store.submitting).toBe(false);
+  });
+
+  it('closeEditor keeps the editor open when the user cancels the discard confirm', async () => {
+    vi.mocked(confirmDiscardIfDirty).mockResolvedValue(false);
+    const store = useLogEntryEditorStore();
+    store.openEditor({ empty: true });
+    store.updateDate('2026-02-02');
+
+    const closed = await store.closeEditor({});
+
+    expect(confirmDiscardIfDirty).toHaveBeenCalledTimes(1);
+    expect(closed).toBe(false);
+    expect(store.open).toBe(true);
+  });
+
+  it('closeEditor discards and resets when the user confirms the discard', async () => {
+    vi.mocked(confirmDiscardIfDirty).mockResolvedValue(true);
+    const store = useLogEntryEditorStore();
+    store.openEditor({ empty: true });
+    store.updateDate('2026-02-02');
+
+    const closed = await store.closeEditor({});
+
+    expect(confirmDiscardIfDirty).toHaveBeenCalledTimes(1);
+    expect(closed).toBe(true);
+    expect(store.open).toBe(false);
   });
 
   it('allows a retry after a failed save', async () => {

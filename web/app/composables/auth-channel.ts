@@ -21,13 +21,26 @@ export interface AuthChannelEvent {
 const CHANNEL_NAME = 'mybiblelog-auth';
 const STORAGE_KEY = 'mbl-auth-channel-event';
 
-const supportsBroadcastChannel = (): boolean =>
-  import.meta.client && typeof BroadcastChannel !== 'undefined';
+const supportsBroadcastChannel = (): boolean => typeof BroadcastChannel !== 'undefined';
 
-/** Broadcasts a completed-flow event to other tabs on this origin. */
-export const postAuthEvent = (event: AuthChannelEvent): void => {
-  if (!import.meta.client) { return; }
+/**
+ * Type guard for a parsed `AuthChannelEvent` payload arriving over either
+ * transport (BroadcastChannel message data or a JSON-parsed storage value).
+ * Exported so it (and its callers below) can be unit tested directly.
+ */
+export const isAuthEvent = (value: unknown): value is AuthChannelEvent =>
+  Boolean(value) && typeof value === 'object' &&
+  (value as AuthChannelEvent).type === 'completed' &&
+  typeof (value as AuthChannelEvent).email === 'string';
 
+// Transport logic, split out from the `import.meta.client` guards below so it
+// can be unit tested directly: the test runner's server-only esbuild define
+// compiles `import.meta.client` to `false`, which would make the guarded
+// entry points below permanent no-ops under test (see stores/auth.ts's
+// `purgePwaRuntimeCache` for the same pattern).
+
+/** Broadcasts a completed-flow event to other tabs on this origin. Assumes a client context. */
+export const postAuthEventImpl = (event: AuthChannelEvent): void => {
   if (supportsBroadcastChannel()) {
     const channel = new BroadcastChannel(CHANNEL_NAME);
     channel.postMessage(event);
@@ -47,18 +60,17 @@ export const postAuthEvent = (event: AuthChannelEvent): void => {
   }
 };
 
+/** Broadcasts a completed-flow event to other tabs on this origin. */
+export const postAuthEvent = (event: AuthChannelEvent): void => {
+  if (!import.meta.client) { return; }
+  postAuthEventImpl(event);
+};
+
 /**
  * Subscribes to completed-flow events from other tabs. Returns an unsubscribe
- * function; call it in `onUnmounted`.
+ * function. Assumes a client context.
  */
-export const onAuthEvent = (handler: (event: AuthChannelEvent) => void): (() => void) => {
-  if (!import.meta.client) { return () => {}; }
-
-  const isAuthEvent = (value: unknown): value is AuthChannelEvent =>
-    Boolean(value) && typeof value === 'object' &&
-    (value as AuthChannelEvent).type === 'completed' &&
-    typeof (value as AuthChannelEvent).email === 'string';
-
+export const onAuthEventImpl = (handler: (event: AuthChannelEvent) => void): (() => void) => {
   if (supportsBroadcastChannel()) {
     const channel = new BroadcastChannel(CHANNEL_NAME);
     const onMessage = (e: MessageEvent) => {
@@ -83,4 +95,13 @@ export const onAuthEvent = (handler: (event: AuthChannelEvent) => void): (() => 
   };
   window.addEventListener('storage', onStorage);
   return () => window.removeEventListener('storage', onStorage);
+};
+
+/**
+ * Subscribes to completed-flow events from other tabs. Returns an unsubscribe
+ * function; call it in `onUnmounted`.
+ */
+export const onAuthEvent = (handler: (event: AuthChannelEvent) => void): (() => void) => {
+  if (!import.meta.client) { return () => {}; }
+  return onAuthEventImpl(handler);
 };

@@ -67,6 +67,13 @@ describe("loadTags", () => {
     const state = useTagsStore.getState().state;
     expect(state.status === "ready" && state.tags.map((t) => t.label)).toEqual(["kept"]);
   });
+
+  it("enters the error state when the initial load fails", async () => {
+    (fetchTags as jest.Mock).mockRejectedValue(new ApiError({ code: "network_error", errors: [] }));
+    await actions().loadTags();
+    const state = useTagsStore.getState().state;
+    expect(state).toEqual({ status: "error", code: "network_error" });
+  });
 });
 
 describe("setSortOrder", () => {

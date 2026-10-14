@@ -1,17 +1,29 @@
 <template>
   <div class="book-report">
     <header class="book-report-header">
-      <button class="mbl-button mbl-button--sm book-report-header__back" @click="emit('exit-book-report')">
+      <button
+        class="mbl-button mbl-button--sm book-report-header__back"
+        data-testid="book-report-back"
+        @click="emit('exit-book-report')"
+      >
         <caret-left-icon />
       </button>
       <h2 class="mbl-title book-report-header__title">
         <span>{{ bookName }}</span>
       </h2>
-      <button class="mbl-button mbl-button--sm book-report-header__notes" @click="emit('view-book-notes')">
+      <button
+        class="mbl-button mbl-button--sm book-report-header__notes"
+        data-testid="book-report-view-notes"
+        @click="emit('view-book-notes')"
+      >
         {{ t('book_notes') }}
         <caret-right-icon style="margin-left: 0.2rem;" />
       </button>
-      <button class="mbl-button mbl-button--sm book-report-header__reading" @click="emit('view-book-log')">
+      <button
+        class="mbl-button mbl-button--sm book-report-header__reading"
+        data-testid="book-report-view-log"
+        @click="emit('view-book-log')"
+      >
         {{ t('book_reading') }}
         <caret-right-icon style="margin-left: 0.2rem;" />
       </button>

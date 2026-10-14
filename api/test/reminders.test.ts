@@ -99,5 +99,35 @@ describe('Reminders routes', () => {
     expect(res.headers).toHaveProperty('location');
     expect(res.headers.location).toMatch(/\/start$/);
   });
+
+  test('GET /api/reminders/daily-reminder/track/:token falls back to /start for a cross-origin absolute URL', async () => {
+    const res = await requestApi
+      .get('/api/reminders/daily-reminder/track/not-a-real-token')
+      .query({ to: 'https://evil.example.com' });
+
+    expect(res.statusCode).toBe(302);
+    expect(res.headers).toHaveProperty('location');
+    expect(res.headers.location).toMatch(/\/start$/);
+    expect(res.headers.location).not.toMatch(/evil\.example\.com/);
+  });
+
+  test('GET /api/reminders/daily-reminder/track/:token falls back to /start for a malformed URL', async () => {
+    const res = await requestApi
+      .get('/api/reminders/daily-reminder/track/not-a-real-token')
+      .query({ to: 'not a valid url' });
+
+    expect(res.statusCode).toBe(302);
+    expect(res.headers).toHaveProperty('location');
+    expect(res.headers.location).toMatch(/\/start$/);
+  });
+
+  test('GET /api/reminders/daily-reminder/track/:token falls back to /start when `to` is missing', async () => {
+    const res = await requestApi
+      .get('/api/reminders/daily-reminder/track/not-a-real-token');
+
+    expect(res.statusCode).toBe(302);
+    expect(res.headers).toHaveProperty('location');
+    expect(res.headers.location).toMatch(/\/start$/);
+  });
 });
 

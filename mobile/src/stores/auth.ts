@@ -213,47 +213,55 @@ function hydrateAndValidate(): Promise<void> {
 async function hydrate(): Promise<void> {
   if (loggedOutThisSession) return;
 
-  // Only a keychain that actually threw is retried, so a normal launch pays
-  // nothing. Each attempt is cheap and local; three of them cover the usual
-  // "app started before the device was unlocked" window.
-  let read = await readAuthSession();
-  for (const delay of STORAGE_RETRY_DELAYS_MS) {
-    if (read.status !== "unreadable") break;
-    await sleep(delay);
-    if (loggedOutThisSession) return;
-    read = await readAuthSession();
-  }
+  try {
+    // Only a keychain that actually threw is retried, so a normal launch pays
+    // nothing. Each attempt is cheap and local; three of them cover the usual
+    // "app started before the device was unlocked" window.
+    let read = await readAuthSession();
+    for (const delay of STORAGE_RETRY_DELAYS_MS) {
+      if (read.status !== "unreadable") break;
+      await sleep(delay);
+      if (loggedOutThisSession) return;
+      read = await readAuthSession();
+    }
 
-  if (read.status === "unreadable") {
-    // The token is almost certainly still on disk, so nothing is cleared here.
-    // We just can't use it yet; the foreground/online listeners will try again.
-    sessionUnreadable = true;
-    reportHandledError(new Error("auth_session_unreadable"), { op: "auth.hydrate" });
+    if (read.status === "unreadable") {
+      // The token is almost certainly still on disk, so nothing is cleared here.
+      // We just can't use it yet; the foreground/online listeners will try again.
+      sessionUnreadable = true;
+      reportHandledError(new Error("auth_session_unreadable"), { op: "auth.hydrate" });
+      useAuthStore.setState({ state: { status: "unauthenticated" } });
+      return;
+    }
+
+    sessionUnreadable = false;
+
+    if (read.status === "absent") {
+      const lastEmail = await loadLastLoggedInEmail();
+      useAuthStore.setState({
+        state: { status: "unauthenticated", lastLoggedInEmail: lastEmail ?? undefined },
+      });
+      return;
+    }
+
+    // Trust the stored token immediately: verification can only ever downgrade
+    // this, and awaiting it would hold the whole app in `loading` behind a request
+    // to a server that may be down.
+    const session = read.session;
+    useAuthStore.setState({ state: { status: "authenticated", session } });
+
+    if (getIsOnline() === false) {
+      scheduleRetry();
+      return;
+    }
+    void revalidate(session);
+  } catch (err) {
+    // Anything unexpected (a throw from storage or the last-email read) must
+    // not become an unhandled rejection on this fire-and-forget path; fall
+    // back to a safe unauthenticated state rather than leaving `loading` stuck.
+    reportHandledError(err, { op: "auth.hydrate" });
     useAuthStore.setState({ state: { status: "unauthenticated" } });
-    return;
   }
-
-  sessionUnreadable = false;
-
-  if (read.status === "absent") {
-    const lastEmail = await loadLastLoggedInEmail();
-    useAuthStore.setState({
-      state: { status: "unauthenticated", lastLoggedInEmail: lastEmail ?? undefined },
-    });
-    return;
-  }
-
-  // Trust the stored token immediately: verification can only ever downgrade
-  // this, and awaiting it would hold the whole app in `loading` behind a request
-  // to a server that may be down.
-  const session = read.session;
-  useAuthStore.setState({ state: { status: "authenticated", session } });
-
-  if (getIsOnline() === false) {
-    scheduleRetry();
-    return;
-  }
-  void revalidate(session);
 }
 
 function sleep(ms: number): Promise<void> {
@@ -283,9 +291,13 @@ async function revalidate(session: AuthSession): Promise<void> {
     ensureAuthenticated(session);
     if (validation.result === "valid") cancelRetry();
     else scheduleRetry();
-  })().finally(() => {
-    probeInFlight = null;
-  });
+  })()
+    .catch((err) => {
+      reportHandledError(err, { op: "auth.revalidate" });
+    })
+    .finally(() => {
+      probeInFlight = null;
+    });
 
   return probeInFlight;
 }

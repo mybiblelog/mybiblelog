@@ -1,7 +1,8 @@
 import { test, expect } from '../../fixtures';
-import { seedLogEntries } from '../../helpers/seed';
-import { verseId, chapterRange, chapterVerseCount, bookVerseCount, BOOK } from '../../helpers/passages';
+import { seedLogEntries, seedNote } from '../../helpers/seed';
+import { verseId, chapterRange, chapterVerseCount, bookVerseCount, bookChapterCount, displayVerseRange, BOOK } from '../../helpers/passages';
 import { today } from '../../helpers/dates';
+import { waitForHydration } from '../../helpers/hydration';
 
 test.describe('Bible Books pages', () => {
   test('books overview shows per-book progress for seeded entries', async ({ page, api }) => {
@@ -22,6 +23,32 @@ test.describe('Bible Books pages', () => {
     // An unread book shows zero progress
     const exodusCard = page.getByTestId('bible-report-book').nth(1);
     await expect(exodusCard).toHaveAttribute('data-percentage', '0');
+  });
+
+  test('books overview shows a note-count badge on every book once any book has notes', async ({ page, api }) => {
+    await seedNote(api, {
+      content: 'In the beginning',
+      passages: [{ startVerseId: verseId(BOOK.GENESIS, 1, 1), endVerseId: verseId(BOOK.GENESIS, 1, 5) }],
+    });
+    await seedNote(api, {
+      content: 'Another note in Genesis',
+      passages: [{ startVerseId: verseId(BOOK.GENESIS, 2, 1), endVerseId: verseId(BOOK.GENESIS, 2, 3) }],
+    });
+
+    await page.goto('/books');
+    const genesisCard = page.getByTestId('bible-report-book').first();
+    await expect(genesisCard.locator('.progress-card-note-count-badge')).toHaveText('2 Notes');
+
+    // Exodus has no notes of its own, but the badge still renders (as 0) once
+    // any book in the list has notes, since the v-if gates on the whole set.
+    const exodusCard = page.getByTestId('bible-report-book').nth(1);
+    await expect(exodusCard.locator('.progress-card-note-count-badge')).toHaveText('0 Notes');
+  });
+
+  test('books overview hides the note-count badge when no books have notes', async ({ page }) => {
+    await page.goto('/books');
+    await expect(page.getByTestId('bible-report-book')).toHaveCount(66);
+    await expect(page.locator('.progress-card-note-count-badge')).toHaveCount(0);
   });
 
   test('book report shows chapter-level progress', async ({ page, api }) => {
@@ -151,5 +178,71 @@ test.describe('Bible Books pages', () => {
 
     const chapter1 = page.getByTestId('book-report-chapter').first();
     await expect(chapter1).toHaveAttribute('data-verses-read', String(chapterVerseCount(BOOK.GENESIS, 1)));
+  });
+
+  test('book report back button returns to the books overview', async ({ page }) => {
+    await page.goto('/books/1');
+    await waitForHydration(page);
+    await page.getByTestId('book-report-back').click();
+    await expect(page).toHaveURL(/\/books$/);
+  });
+
+  test('book report "Book Notes" button navigates to /notes filtered to the whole book', async ({ page }) => {
+    await page.goto('/books/1');
+    await waitForHydration(page);
+    await page.getByTestId('book-report-view-notes').click();
+
+    await expect(page).toHaveURL(/\/notes/);
+    const url = new URL(page.url());
+    const lastChapter = bookChapterCount(BOOK.GENESIS);
+    expect(url.searchParams.get('filterPassageStartVerseId')).toBe(String(verseId(BOOK.GENESIS, 1, 1)));
+    expect(url.searchParams.get('filterPassageEndVerseId'))
+      .toBe(String(verseId(BOOK.GENESIS, lastChapter, chapterVerseCount(BOOK.GENESIS, lastChapter))));
+  });
+
+  test('book report "Book Reading" button navigates to /log filtered to the whole book', async ({ page }) => {
+    await page.goto('/books/1');
+    await waitForHydration(page);
+    await page.getByTestId('book-report-view-log').click();
+
+    await expect(page).toHaveURL(/\/log/);
+    const url = new URL(page.url());
+    const lastChapter = bookChapterCount(BOOK.GENESIS);
+    expect(url.searchParams.get('filterPassageStartVerseId')).toBe(String(verseId(BOOK.GENESIS, 1, 1)));
+    expect(url.searchParams.get('filterPassageEndVerseId'))
+      .toBe(String(verseId(BOOK.GENESIS, lastChapter, chapterVerseCount(BOOK.GENESIS, lastChapter))));
+  });
+
+  test('taking a note on a chapter opens the note editor prefilled with the chapter passage', async ({ page }) => {
+    await page.goto('/books/1');
+    await page.getByTestId('book-report-chapter').first().click();
+    await page.getByTestId('action-sheet-item').filter({ hasText: 'Take Note' }).click();
+
+    const editor = page.getByTestId('note-editor');
+    await expect(editor).toBeVisible();
+    const expectedRange = displayVerseRange(verseId(BOOK.GENESIS, 1, 1), verseId(BOOK.GENESIS, 1, chapterVerseCount(BOOK.GENESIS, 1)));
+    await expect(editor.locator('.passage-list')).toContainText(expectedRange);
+  });
+
+  test('viewing notes for a chapter navigates to /notes filtered to that chapter', async ({ page }) => {
+    await page.goto('/books/1');
+    await page.getByTestId('book-report-chapter').first().click();
+    await page.getByTestId('action-sheet-item').filter({ hasText: 'View Notes' }).click();
+
+    await expect(page).toHaveURL(/\/notes/);
+    const url = new URL(page.url());
+    expect(url.searchParams.get('filterPassageStartVerseId')).toBe(String(verseId(BOOK.GENESIS, 1, 1)));
+    expect(url.searchParams.get('filterPassageEndVerseId')).toBe(String(verseId(BOOK.GENESIS, 1, chapterVerseCount(BOOK.GENESIS, 1))));
+  });
+
+  test('viewing the reading log for a chapter navigates to /log filtered to that chapter', async ({ page }) => {
+    await page.goto('/books/1');
+    await page.getByTestId('book-report-chapter').first().click();
+    await page.getByTestId('action-sheet-item').filter({ hasText: 'View Reading Log' }).click();
+
+    await expect(page).toHaveURL(/\/log/);
+    const url = new URL(page.url());
+    expect(url.searchParams.get('filterPassageStartVerseId')).toBe(String(verseId(BOOK.GENESIS, 1, 1)));
+    expect(url.searchParams.get('filterPassageEndVerseId')).toBe(String(verseId(BOOK.GENESIS, 1, chapterVerseCount(BOOK.GENESIS, 1))));
   });
 });

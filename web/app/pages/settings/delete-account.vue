@@ -18,27 +18,28 @@
         <form>
           <div class="mbl-field">
             <label class="mbl-checkbox">
-              <input v-model="understand.logEntries" type="checkbox" :disabled="!mounted"> {{ t('understand.log_entries') }}
+              <input v-model="understand.logEntries" type="checkbox" data-testid="delete-account-understand-log-entries" :disabled="!mounted"> {{ t('understand.log_entries') }}
             </label>
           </div>
           <div class="mbl-field">
             <label class="mbl-checkbox">
-              <input v-model="understand.export" type="checkbox" :disabled="!mounted"> {{ t('understand.export') }}
+              <input v-model="understand.export" type="checkbox" data-testid="delete-account-understand-export" :disabled="!mounted"> {{ t('understand.export') }}
             </label>
           </div>
           <div class="mbl-field">
             <label class="mbl-checkbox">
-              <input v-model="understand.notes" type="checkbox" :disabled="!mounted"> {{ t('understand.notes') }}
+              <input v-model="understand.notes" type="checkbox" data-testid="delete-account-understand-notes" :disabled="!mounted"> {{ t('understand.notes') }}
             </label>
           </div>
           <div class="mbl-field">
             <label class="mbl-checkbox">
-              <input v-model="understand.permanent" type="checkbox" :disabled="!mounted"> {{ t('understand.permanent') }}
+              <input v-model="understand.permanent" type="checkbox" data-testid="delete-account-understand-permanent" :disabled="!mounted"> {{ t('understand.permanent') }}
             </label>
           </div>
         </form>
         <button
           class="mbl-button mbl-button--primary"
+          data-testid="delete-account-submit"
           :disabled="!mounted || !fullyUnderstands || formBusy"
           @click="deleteAccount"
         >

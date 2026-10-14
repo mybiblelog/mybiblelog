@@ -37,7 +37,7 @@ import {
 import { getSettings, updateSettings } from "@/src/api/settingsApi";
 import { getIsOnline } from "@/src/stores/connectivity";
 import { useAuthStore } from "@/src/stores/auth";
-import { initUserSettings, useUserSettingsStore } from "./userSettings";
+import { initUserSettings, useUserSettingsStore, userSettingsActions } from "./userSettings";
 
 const actions = () => useUserSettingsStore.getState();
 
@@ -61,6 +61,23 @@ describe("setLocalSettings", () => {
     expect(saveLocalUserSettings).toHaveBeenCalledWith(
       expect.objectContaining({ preferredBibleApp: "youversion" })
     );
+  });
+});
+
+describe("setLocalSettingsWithPendingSync", () => {
+  it("merges the setting locally and flags a pending server push", async () => {
+    const setSpy = jest.spyOn(appStorage, "set").mockResolvedValue(true);
+
+    await userSettingsActions.setLocalSettingsWithPendingSync({
+      preferredBibleApp: "youversion",
+      dailyVerseCountGoal: 50,
+    });
+
+    const state = useUserSettingsStore.getState().state;
+    expect(state.status === "ready" && state.settings.preferredBibleApp).toBe("youversion");
+    expect(setSpy).toHaveBeenCalledWith("settingsPendingServerPush", ["dailyVerseCountGoal"]);
+
+    setSpy.mockRestore();
   });
 });
 

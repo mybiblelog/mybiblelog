@@ -859,6 +859,70 @@ describe('admin.test.js', () => {
       }
     });
 
+    it('rejects a non-numeric limit', async () => {
+      const admin = await createTestAdmin();
+      try {
+        const response = await requestApi
+          .get('/api/admin/users?limit=abc')
+          .set('Authorization', `Bearer ${admin.token}`);
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error');
+        expect(response.body).not.toHaveProperty('data');
+        expect(response.body.error.code).toBe('invalid_request');
+      }
+      finally {
+        await deleteTestUser(admin);
+      }
+    });
+
+    it('rejects a zero limit', async () => {
+      const admin = await createTestAdmin();
+      try {
+        const response = await requestApi
+          .get('/api/admin/users?limit=0')
+          .set('Authorization', `Bearer ${admin.token}`);
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error');
+        expect(response.body).not.toHaveProperty('data');
+        expect(response.body.error.code).toBe('invalid_request');
+      }
+      finally {
+        await deleteTestUser(admin);
+      }
+    });
+
+    it('rejects a negative limit', async () => {
+      const admin = await createTestAdmin();
+      try {
+        const response = await requestApi
+          .get('/api/admin/users?limit=-1')
+          .set('Authorization', `Bearer ${admin.token}`);
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error');
+        expect(response.body).not.toHaveProperty('data');
+        expect(response.body.error.code).toBe('invalid_request');
+      }
+      finally {
+        await deleteTestUser(admin);
+      }
+    });
+
+    it('rejects a non-numeric offset', async () => {
+      const admin = await createTestAdmin();
+      try {
+        const response = await requestApi
+          .get('/api/admin/users?offset=abc')
+          .set('Authorization', `Bearer ${admin.token}`);
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error');
+        expect(response.body).not.toHaveProperty('data');
+        expect(response.body.error.code).toBe('invalid_request');
+      }
+      finally {
+        await deleteTestUser(admin);
+      }
+    });
+
     it('admin can get the total number of users', async () => {
       const admin = await createTestAdmin();
       let testUser;

@@ -1,8 +1,8 @@
 <template>
   <div class="calendar-date-selector">
-    <span class="prev" @click="selectPrevious"><triangle-left-icon class="icon" /></span>
-    <span class="today" @click="selectCurrent">{{ t('today') }}</span>
-    <span class="next" @click="selectNext"><triangle-right-icon class="icon" /></span>
+    <span class="prev" data-testid="calendar-prev-month" @click="selectPrevious"><triangle-left-icon class="icon" /></span>
+    <span class="today" data-testid="calendar-today" @click="selectCurrent">{{ t('today') }}</span>
+    <span class="next" data-testid="calendar-next-month" @click="selectNext"><triangle-right-icon class="icon" /></span>
   </div>
 </template>
 

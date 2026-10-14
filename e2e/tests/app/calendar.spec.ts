@@ -93,11 +93,35 @@ test.describe('Calendar page', () => {
     await expect(days.first()).toBeVisible();
 
     // Previous month: no current-month day matches today's date anymore
-    await page.locator('.calendar-date-selector .prev').click();
+    await page.getByTestId('calendar-prev-month').click();
     await expect(page.locator(`[data-testid="calendar-day"][data-date="${today()}"][data-current-month="true"]`)).toHaveCount(0);
 
     // Back to the current month
-    await page.locator('.calendar-date-selector .today').click();
+    await page.getByTestId('calendar-today').click();
     await expect(page.locator(`[data-testid="calendar-day"][data-date="${today()}"][data-current-month="true"]`)).toHaveCount(1);
+
+    // Next month: from the current month, no current-month day matches today's date
+    await page.getByTestId('calendar-next-month').click();
+    await expect(page.locator(`[data-testid="calendar-day"][data-date="${today()}"][data-current-month="true"]`)).toHaveCount(0);
+  });
+
+  test('days before the tracker start date show the before-tracker-start state', async ({ page, api }) => {
+    // Mid-month date, so there's guaranteed to be a current-month day right before it.
+    const midMonth = new Date();
+    midMonth.setDate(10);
+    const lookBackDate = isoDate(midMonth);
+
+    const dayBeforeStart = new Date(midMonth);
+    dayBeforeStart.setDate(dayBeforeStart.getDate() - 1);
+
+    await setSettings(api, { lookBackDate });
+
+    await page.goto('/calendar');
+
+    const startDay = page.locator(`[data-testid="calendar-day"][data-date="${lookBackDate}"]`);
+    await expect(startDay).toHaveClass(/calendar-day--tracker-start/);
+
+    const beforeStartCell = page.locator(`[data-testid="calendar-day"][data-date="${isoDate(dayBeforeStart)}"]`);
+    await expect(beforeStartCell).toHaveClass(/calendar-day--before-tracker-start/);
   });
 });

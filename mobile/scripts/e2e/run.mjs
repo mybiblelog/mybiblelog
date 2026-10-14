@@ -3,7 +3,7 @@
  * Runs the Maestro e2e flows against a local Android emulator.
  *
  * Steps:
- *   1. Verifies an adb device is connected and bridges port 8080 so the app
+ *   1. Verifies an adb device is connected and bridges ports 8080/3000 so the app
  *      (EXPO_PUBLIC_API_BASE_URL=http://localhost:8080) reaches the local API.
  *   2. Seeds a throwaway user via scripts/e2e/seed.mjs.
  *   3. Runs `maestro test` with the credentials passed as flow env vars.
@@ -71,6 +71,10 @@ if (!devices.split("\n").some((line) => /\tdevice$/.test(line.trim().replace(/\s
   process.exit(1);
 }
 run("adb", ["reverse", "tcp:8080", "tcp:8080"]);
+// A local .env may point EXPO_PUBLIC_API_BASE_URL at the Nuxt dev server on
+// 3000 instead (see mobile/CLAUDE.md); without this bridge the app reports
+// "Server unavailable" and hides the Login button.
+run("adb", ["reverse", "tcp:3000", "tcp:3000"]);
 // Dev-client flows load the JS bundle from localhost:8081 via deep link.
 run("adb", ["reverse", "tcp:8081", "tcp:8081"]);
 

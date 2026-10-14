@@ -17,11 +17,13 @@ jest.mock("@/src/stores/connectivity", () => ({
   resetApiReachability: jest.fn(),
   useConnectivityStore: { subscribe: jest.fn() },
 }));
+jest.mock("@/src/observability/sentry", () => ({ reportHandledError: jest.fn() }));
 
 import { reportApiReachability, resetApiReachability } from "@/src/stores/connectivity";
 import { emailPasswordLogin, googleIdTokenLogin } from "@/src/api/authApi";
 import { clearAuthSession, saveAuthSession } from "@/src/auth/authStorage";
 import { signOutGoogle } from "@/src/auth/googleSignIn";
+import { reportHandledError } from "@/src/observability/sentry";
 import { getAuthToken, useAuthStore } from "./auth";
 
 const actions = () => useAuthStore.getState();
@@ -29,6 +31,7 @@ const actions = () => useAuthStore.getState();
 beforeEach(() => {
   useAuthStore.setState({ state: { status: "loading" } });
   global.fetch = jest.fn().mockResolvedValue({ ok: true });
+  (clearAuthSession as jest.Mock).mockResolvedValue(true);
 });
 
 describe("loginWithEmailPassword", () => {
@@ -112,5 +115,39 @@ describe("logout", () => {
     });
     await actions().logout();
     expect(resetApiReachability).toHaveBeenCalled();
+  });
+
+  it("skips the network logout call when not authenticated", async () => {
+    useAuthStore.setState({ state: { status: "unauthenticated" } });
+    await actions().logout();
+    expect(global.fetch).not.toHaveBeenCalled();
+    expect(signOutGoogle).toHaveBeenCalled();
+    expect(useAuthStore.getState().state.status).toBe("unauthenticated");
+  });
+
+  it("reports a handled error only when clearAuthSession fails on both attempts", async () => {
+    (clearAuthSession as jest.Mock).mockResolvedValue(false);
+    useAuthStore.setState({
+      state: { status: "authenticated", session: { token: "tok", user: { email: "a@b.com" } } },
+    });
+    await actions().logout();
+    expect(clearAuthSession).toHaveBeenCalledTimes(2);
+    expect(reportHandledError).toHaveBeenCalledWith(
+      expect.any(Error),
+      expect.objectContaining({ op: "auth.logout" })
+    );
+    // Local state still clears even though the keychain refused the delete —
+    // `loggedOutThisSession` is the backstop.
+    expect(useAuthStore.getState().state.status).toBe("unauthenticated");
+  });
+
+  it("does not report a handled error when clearAuthSession succeeds on the first attempt", async () => {
+    (clearAuthSession as jest.Mock).mockResolvedValue(true);
+    useAuthStore.setState({
+      state: { status: "authenticated", session: { token: "tok", user: { email: "a@b.com" } } },
+    });
+    await actions().logout();
+    expect(clearAuthSession).toHaveBeenCalledTimes(1);
+    expect(reportHandledError).not.toHaveBeenCalled();
   });
 });
