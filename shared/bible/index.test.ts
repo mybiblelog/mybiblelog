@@ -485,6 +485,26 @@ test('can filter ranges by book and chapter', () => {
   expect(result.length).toBe(3);
 });
 
+test('includes cross-book ranges that cover the given book and chapter', () => {
+  // Genesis is book 1, Exodus is book 2. A range starting in Genesis 40 and
+  // ending in Exodus 5 genuinely covers Genesis 45, even though the range's
+  // end verse's chapter number (5) is less than the target chapter (45).
+  const bookIndex = 1;
+  const chapterIndex = 45;
+  const crossBookRange = {
+    startVerseId: Bible.makeVerseId(1, 40, 1),
+    endVerseId: Bible.makeVerseId(2, 5, 21),
+  };
+  const nonOverlappingCrossBookRange = {
+    startVerseId: Bible.makeVerseId(2, 1, 1),
+    endVerseId: Bible.makeVerseId(3, 3, 10),
+  };
+  const ranges = deepFreeze([crossBookRange, nonOverlappingCrossBookRange]);
+  const result = Bible.filterRangesByBookChapter(bookIndex, chapterIndex, ranges);
+  expect(result.length).toBe(1);
+  expect(result[0]).toEqual(crossBookRange);
+});
+
 test('can crop ranges to include only verses in given chapter', () => {
   const bookIndex = 5;
   const chapterIndex = 4;

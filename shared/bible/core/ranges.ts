@@ -145,7 +145,7 @@ export const filterRangesByBookChapter = (bookIndex: number, chapterIndex: numbe
     return (
       startVerse.book === bookIndex &&
       startVerse.chapter <= chapterIndex &&
-      endVerse.chapter >= chapterIndex
+      (endVerse.book !== bookIndex || endVerse.chapter >= chapterIndex)
     );
   });
 };
