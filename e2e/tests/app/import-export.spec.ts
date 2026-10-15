@@ -66,6 +66,29 @@ test.describe('Export', () => {
     expect(parsed.tags).toHaveLength(1);
     expect(parsed.tags[0].label).toBe('JsonTag');
   });
+
+  test('notes JSON export includes all notes across multiple pages', async ({ page, api }) => {
+    // The API's default page size is 10; seed enough notes to force loadAllNotes()
+    // in export.vue to walk multiple pages, exercising its pagination loop.
+    const NOTE_COUNT = 25;
+    for (let i = 0; i < NOTE_COUNT; i++) {
+      await seedNote(api, { content: `Paginated note ${i}`, passages: [] });
+    }
+
+    await page.goto('/settings/export');
+    const downloadPromise = page.waitForEvent('download');
+    await page.getByTestId('export-notes-json-button').click();
+    const download = await downloadPromise;
+
+    const parsed = JSON.parse(await readDownload(download));
+    expect(parsed.notes).toHaveLength(NOTE_COUNT);
+
+    // No duplicates and none missing: every seeded note appears exactly once.
+    const contents = parsed.notes.map((note: { content: string }) => note.content);
+    const expectedContents = Array.from({ length: NOTE_COUNT }, (_, i) => `Paginated note ${i}`);
+    expect(contents.slice().sort()).toEqual(expectedContents.slice().sort());
+    expect(new Set(contents).size).toBe(NOTE_COUNT);
+  });
 });
 
 test.describe('Import', () => {
