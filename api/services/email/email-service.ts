@@ -82,7 +82,7 @@ const init = async () => {
 
     // record email, but do not block with `await`
     const { attachments: _attachments, ...forRecord } = params;
-    emails.create({ ...forRecord, status });
+    emails.create({ ...forRecord, status }).catch((err: unknown) => console.error('Failed to record email:', err));
   };
 
   // Outside production nothing is actually sent (emails are recorded as
