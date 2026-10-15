@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
 import type { PassageNotesQuery } from '~/helpers/passage-notes-route-query';
 
 export type { PassageNotesQuery };
@@ -38,9 +39,16 @@ const clone = <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
 
 // Tag `noteCount` is computed per request by the API and cached in the tags
 // store, so any write that changes a note's tag set leaves it stale.
-const refreshPassageNoteTags = async (): Promise<void> => {
-  const { usePassageNoteTagsStore } = await import('~/stores/passage-note-tags');
-  const passageNoteTagsStore = usePassageNoteTagsStore();
+//
+// `passageNoteTagsStore` must be resolved by the caller BEFORE its own prior
+// await (e.g. right alongside `usePassageNotesStore`'s `this`), never inside
+// this helper after an await — on the server, the global active Pinia
+// instance can point at a different request's store by the time an await
+// resumes, so a bare `usePassageNoteTagsStore()` call here would risk
+// mutating another request's store.
+const refreshPassageNoteTags = async (
+  passageNoteTagsStore: ReturnType<typeof usePassageNoteTagsStore>,
+): Promise<void> => {
   // Nothing to invalidate if the tag list was never loaded
   if (!passageNoteTagsStore.isLoaded) { return; }
   await passageNoteTagsStore.loadPassageNoteTags({ force: true });
@@ -207,11 +215,12 @@ export const usePassageNotesStore = defineStore('passage-notes', {
     // can't reproduce the server's sort position or the page's total count.
     async createPassageNote(newPassageNote: Record<string, unknown>): Promise<PassageNoteListItem | null> {
       const http = useHttp();
+      const passageNoteTagsStore = usePassageNoteTagsStore();
       const { data } = await http.post<PassageNoteListItem>('/api/passage-notes', newPassageNote);
       if (data) {
         await Promise.all([
           this.hasLoadedOnce ? this.loadPassageNotesPage() : Promise.resolve(),
-          refreshPassageNoteTags(),
+          refreshPassageNoteTags(passageNoteTagsStore),
         ]);
       }
       return data || null;
@@ -219,12 +228,13 @@ export const usePassageNotesStore = defineStore('passage-notes', {
 
     async updatePassageNote(passageNoteUpdate: Record<string, unknown> & { id: number | string }): Promise<PassageNoteListItem | null> {
       const http = useHttp();
+      const passageNoteTagsStore = usePassageNoteTagsStore();
       const { id } = passageNoteUpdate;
       const { data } = await http.patch<PassageNoteListItem>(`/api/passage-notes/${id}`, passageNoteUpdate);
       if (data) {
         await Promise.all([
           this.hasLoadedOnce ? this.loadPassageNotesPage() : Promise.resolve(),
-          refreshPassageNoteTags(),
+          refreshPassageNoteTags(passageNoteTagsStore),
         ]);
       }
       return data || null;
@@ -232,11 +242,12 @@ export const usePassageNotesStore = defineStore('passage-notes', {
 
     async deletePassageNote(passageNoteId: number | string): Promise<boolean> {
       const http = useHttp();
+      const passageNoteTagsStore = usePassageNoteTagsStore();
       const { data } = await http.delete<unknown>(`/api/passage-notes/${passageNoteId}`);
       if (data) {
         await Promise.all([
           this.loadPassageNotesPage(),
-          refreshPassageNoteTags(),
+          refreshPassageNoteTags(passageNoteTagsStore),
         ]);
         return true;
       }
