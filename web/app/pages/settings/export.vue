@@ -108,11 +108,16 @@ function downloadLogEntriesCSV() {
 async function loadAllNotes(): Promise<PassageNoteListItem[]> {
   const allNotes: PassageNoteListItem[] = [];
   let offset = 0;
-  while (true) {
-    const res = await $fetch<{ data: PassageNoteListItem[]; meta: { pagination: { size: number } } }>(`/api/passage-notes?offset=${offset}`);
+  // Defensive cap so a malformed/unexpected API response can never spin this loop forever.
+  const MAX_PAGES = 1000;
+  for (let page = 0; page < MAX_PAGES; page++) {
+    const res = await $fetch<{ data: PassageNoteListItem[]; meta: { pagination: { size: number; limit: number } } }>(`/api/passage-notes?offset=${offset}`);
+    if (!res.data.length) { break; }
     allNotes.push(...res.data);
+    // `meta.pagination.size` is the total matching record count, not the page size, so advance
+    // the offset by the number of items actually returned rather than an assumed page size.
+    offset += res.data.length;
     if (allNotes.length >= res.meta.pagination.size) { break; }
-    offset += 10;
   }
   return allNotes;
 }
