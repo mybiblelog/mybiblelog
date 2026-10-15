@@ -346,26 +346,31 @@ const deletePassageNote = async (id: number | string) => {
 
 onMounted(async () => {
   try {
-    await appInitStore.loadUserData();
+    try {
+      await appInitStore.loadUserData();
+    }
+    finally {
+      loadingLogEntries.value = false;
+    }
+    setTimeout(() => {
+      dateVerseCountsStore.cacheDateVerseCounts();
+    }, 0);
+    try {
+      await readingSuggestionsStore.refreshReadingSuggestions();
+    }
+    finally {
+      loadingReadingSuggestions.value = false;
+    }
+    await passageNotesStore.resetQuery({
+      limit: 3,
+      offset: 0,
+      sortOn: 'createdAt',
+      sortDirection: 'descending',
+    });
   }
-  finally {
-    loadingLogEntries.value = false;
+  catch {
+    toastStore.add({ type: 'error', text: t('something_went_wrong') });
   }
-  setTimeout(() => {
-    dateVerseCountsStore.cacheDateVerseCounts();
-  }, 0);
-  try {
-    await readingSuggestionsStore.refreshReadingSuggestions();
-  }
-  finally {
-    loadingReadingSuggestions.value = false;
-  }
-  await passageNotesStore.resetQuery({
-    limit: 3,
-    offset: 0,
-    sortOn: 'createdAt',
-    sortDirection: 'descending',
-  });
 });
 </script>
 
@@ -405,7 +410,8 @@ onMounted(async () => {
     "recent_notes": "Recent Notes",
     "no_recent_notes": "No Notes",
     "new_note": "New Note",
-    "view_all_notes": "View All Notes"
+    "view_all_notes": "View All Notes",
+    "something_went_wrong": "Something went wrong. Please try again."
   },
   "de": {
     "today": "Heute",
@@ -430,7 +436,8 @@ onMounted(async () => {
     "recent_notes": "Letzte Notizen",
     "no_recent_notes": "Keine Notizen",
     "new_note": "Neue Notiz",
-    "view_all_notes": "Alle Notizen ansehen"
+    "view_all_notes": "Alle Notizen ansehen",
+    "something_went_wrong": "Etwas ist schiefgegangen. Bitte versuchen Sie es erneut."
   },
   "es": {
     "today": "Hoy",
@@ -455,7 +462,8 @@ onMounted(async () => {
     "recent_notes": "Notas Recientes",
     "no_recent_notes": "Sin Notas",
     "new_note": "Nueva Nota",
-    "view_all_notes": "Ver Todas las Notas"
+    "view_all_notes": "Ver Todas las Notas",
+    "something_went_wrong": "Algo salió mal. Por favor, inténtelo de nuevo."
   },
   "fr": {
     "today": "Aujourd'hui",
@@ -480,7 +488,8 @@ onMounted(async () => {
     "recent_notes": "Notes Récentes",
     "no_recent_notes": "Aucune Note",
     "new_note": "Nouvelle Note",
-    "view_all_notes": "Voir Toutes les Notes"
+    "view_all_notes": "Voir Toutes les Notes",
+    "something_went_wrong": "Quelque chose s'est mal passé. Veuillez réessayer."
   },
   "ko": {
     "today": "오늘의 성경",
@@ -505,7 +514,8 @@ onMounted(async () => {
     "recent_notes": "최근 노트",
     "no_recent_notes": "노트 없음",
     "new_note": "노트 작성",
-    "view_all_notes": "모든 노트 보기"
+    "view_all_notes": "모든 노트 보기",
+    "something_went_wrong": "문제가 발생했습니다. 다시 시도해 주세요."
   },
   "pt": {
     "today": "Hoje",
@@ -530,7 +540,8 @@ onMounted(async () => {
     "recent_notes": "Notas Recentes",
     "no_recent_notes": "Sem Notas",
     "new_note": "Nova Nota",
-    "view_all_notes": "Ver Todas as Notas"
+    "view_all_notes": "Ver Todas as Notas",
+    "something_went_wrong": "Algo deu errado. Por favor, tente novamente."
   },
   "uk": {
     "today": "Сьогодні",
@@ -555,7 +566,8 @@ onMounted(async () => {
     "recent_notes": "Останні Нотатки",
     "no_recent_notes": "Немає Нотаток",
     "new_note": "Нова Нотатка",
-    "view_all_notes": "Переглянути Всі Нотатки"
+    "view_all_notes": "Переглянути Всі Нотатки",
+    "something_went_wrong": "Щось пішло не так. Будь ласка, спробуйте знову."
   }
 }
 </i18n>

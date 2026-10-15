@@ -19,6 +19,12 @@ export default defineNuxtPlugin(async () => {
 
   if (authStore.loggedIn) {
     const appInitStore = useAppInitStore();
-    await appInitStore.loadUserData();
+    try {
+      await appInitStore.loadUserData();
+    }
+    catch {
+      // Degrade to an unauthenticated-data render rather than failing SSR
+      // for every logged-in user hitting a transient API/network error.
+    }
   }
 });
