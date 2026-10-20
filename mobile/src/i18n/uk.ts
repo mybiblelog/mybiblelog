@@ -134,6 +134,7 @@ export const uk = {
 
   insights_frequency_timeframe_label: "Період",
   insights_frequency_last_n_days: "Останні %{count} днів",
+  insights_frequency_all_time: "За весь час",
   insights_frequency_metric_label: "Показник",
   insights_frequency_metric_raw: "Кількість віршів",
   insights_frequency_metric_proportional: "Пропорційно",

@@ -128,6 +128,7 @@ export const en = {
 
   insights_frequency_timeframe_label: "Timeframe",
   insights_frequency_last_n_days: "Last %{count} days",
+  insights_frequency_all_time: "All time",
   insights_frequency_metric_label: "Metric",
   insights_frequency_metric_raw: "Verse counts",
   insights_frequency_metric_proportional: "Proportional",

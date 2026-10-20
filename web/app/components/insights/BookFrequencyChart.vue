@@ -4,9 +4,9 @@
       <div class="frequency__control">
         <label class="mbl-label" for="freq-timeframe">{{ t('timeframe') }}</label>
         <div class="mbl-select mbl-select--sm">
-          <select id="freq-timeframe" v-model.number="days">
+          <select id="freq-timeframe" v-model="days">
             <option v-for="opt in timeframeOptions" :key="opt" :value="opt">
-              {{ t('last_n_days', { count: opt }) }}
+              {{ opt === 'all' ? t('all_time') : t('last_n_days', { count: opt }) }}
             </option>
           </select>
         </div>
@@ -76,17 +76,22 @@ const props = defineProps({
 
 const { locale, t } = useI18n();
 
-const timeframeOptions = [30, 60, 90, 180, 365];
-const days = ref(30);
+const timeframeOptions: Array<number | 'all'> = [30, 60, 90, 180, 365, 'all'];
+const days = ref<number | 'all'>(30);
 const metric = ref<'raw' | 'proportional'>('raw');
 const sort = ref<'bible' | 'alpha' | 'most' | 'least'>('bible');
 
 const stripLeadingNumbers = (str: string) => str.replace(/^\d+\s*/, '').trim();
 
 const rows = computed(() => {
-  const endDate = dayjs().format('YYYY-MM-DD');
-  const startDate = dayjs().subtract(days.value - 1, 'day').format('YYYY-MM-DD');
-  const frequencies = computeBookFrequencies(props.entries as InsightsLogEntry[], startDate, endDate);
+  const entries = props.entries as InsightsLogEntry[];
+  const frequencies = days.value === 'all'
+    ? computeBookFrequencies(entries)
+    : computeBookFrequencies(
+      entries,
+      dayjs().subtract(days.value - 1, 'day').format('YYYY-MM-DD'),
+      dayjs().format('YYYY-MM-DD'),
+    );
 
   const useProportion = metric.value === 'proportional';
   const enriched = frequencies.map(freq => ({
@@ -183,6 +188,7 @@ const rows = computed(() => {
     "metric": "Metric",
     "sort_by": "Sort by",
     "last_n_days": "Last {count} days",
+    "all_time": "All time",
     "raw_counts": "Verse counts",
     "proportional": "Proportional",
     "bible_order": "Bible order",
@@ -195,6 +201,7 @@ const rows = computed(() => {
     "metric": "Messwert",
     "sort_by": "Sortieren nach",
     "last_n_days": "Letzte {count} Tage",
+    "all_time": "Gesamter Zeitraum",
     "raw_counts": "Verszahlen",
     "proportional": "Anteilig",
     "bible_order": "Bibelreihenfolge",
@@ -207,6 +214,7 @@ const rows = computed(() => {
     "metric": "Métrica",
     "sort_by": "Ordenar por",
     "last_n_days": "Últimos {count} días",
+    "all_time": "Todo el tiempo",
     "raw_counts": "Recuento de versículos",
     "proportional": "Proporcional",
     "bible_order": "Orden bíblico",
@@ -219,6 +227,7 @@ const rows = computed(() => {
     "metric": "Mesure",
     "sort_by": "Trier par",
     "last_n_days": "{count} derniers jours",
+    "all_time": "Depuis le début",
     "raw_counts": "Nombre de versets",
     "proportional": "Proportionnel",
     "bible_order": "Ordre biblique",
@@ -231,6 +240,7 @@ const rows = computed(() => {
     "metric": "지표",
     "sort_by": "정렬 기준",
     "last_n_days": "최근 {count}일",
+    "all_time": "전체 기간",
     "raw_counts": "구절 수",
     "proportional": "비율",
     "bible_order": "성경 순서",
@@ -243,6 +253,7 @@ const rows = computed(() => {
     "metric": "Métrica",
     "sort_by": "Ordenar por",
     "last_n_days": "Últimos {count} dias",
+    "all_time": "Todo o período",
     "raw_counts": "Contagem de versículos",
     "proportional": "Proporcional",
     "bible_order": "Ordem bíblica",
@@ -255,6 +266,7 @@ const rows = computed(() => {
     "metric": "Показник",
     "sort_by": "Сортувати за",
     "last_n_days": "Останні {count} днів",
+    "all_time": "За весь час",
     "raw_counts": "Кількість віршів",
     "proportional": "Пропорційно",
     "bible_order": "Біблійний порядок",

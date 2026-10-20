@@ -134,6 +134,7 @@ export const es = {
 
   insights_frequency_timeframe_label: "Período",
   insights_frequency_last_n_days: "Últimos %{count} días",
+  insights_frequency_all_time: "Todo el tiempo",
   insights_frequency_metric_label: "Métrica",
   insights_frequency_metric_raw: "Recuento de versículos",
   insights_frequency_metric_proportional: "Proporcional",

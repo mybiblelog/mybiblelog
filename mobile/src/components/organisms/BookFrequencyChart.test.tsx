@@ -93,4 +93,18 @@ describe("BookFrequencyChart", () => {
     // opposite order from the raw-count "most read" sort above.
     expect(renderedBookOrder()).toEqual(["Obadiah", "Amos", "Revelation", "Genesis"]);
   });
+
+  it("includes entries older than a year once All time is selected", () => {
+    const oldEntry: InsightsLogEntry = {
+      date: dayjs().subtract(2, "year").format("YYYY-MM-DD"),
+      startVerseId: Bible.makeVerseId(1, 2, 1),
+      endVerseId: Bible.makeVerseId(1, 2, 7),
+    };
+    renderWithProviders(<BookFrequencyChart entries={[...entries, oldEntry]} />);
+    expect(screen.getByText("20")).toBeTruthy(); // Genesis, last 30 days only
+    fireEvent.press(screen.getByTestId("insights.frequency-timeframe-row"));
+    fireEvent.press(screen.getByText("All time"));
+    expect(screen.getByText("27")).toBeTruthy(); // Genesis: 20 + 7
+    expect(screen.queryByText("20")).toBeNull();
+  });
 });
