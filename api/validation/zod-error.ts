@@ -46,8 +46,12 @@ const mapIssue = (issue: ZodIssue): ApiErrorDetail => {
   case 'invalid_union':
   case 'invalid_key':
   case 'invalid_element':
-  case 'custom':
     return { field, code: ApiErrorDetailCode.NotValid };
+
+  // A refinement may pick its API code via `params.apiCode` (e.g. a field that
+  // is only conditionally required); otherwise it is a generic "invalid".
+  case 'custom':
+    return { field, code: (issue.params?.apiCode as ApiErrorDetailCode | undefined) ?? ApiErrorDetailCode.NotValid };
 
   default:
     return { field, code: ApiErrorDetailCode.Review };

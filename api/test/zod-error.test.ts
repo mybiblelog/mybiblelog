@@ -20,6 +20,16 @@ describe('zodErrorToApiDetails (unit)', () => {
     expect(details).toEqual([{ field: 'name', code: ApiErrorDetailCode.Required }]);
   });
 
+  it('lets a custom refinement choose its API code via params.apiCode', () => {
+    const schema = z.object({ a: z.string().optional() })
+      .refine((v) => v.a !== undefined, { path: ['a'], params: { apiCode: ApiErrorDetailCode.Required } });
+    const result = schema.safeParse({});
+    expect(result.success).toBe(false);
+
+    const details = zodErrorToApiDetails(result.error!);
+    expect(details).toEqual([{ field: 'a', code: ApiErrorDetailCode.Required }]);
+  });
+
   it('maps too_small on a string to min_length with the minimum length', () => {
     const schema = z.object({ password: z.string().min(8) });
     const result = schema.safeParse({ password: 'ab' });

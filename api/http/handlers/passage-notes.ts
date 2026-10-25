@@ -1,6 +1,6 @@
 import { Bible } from '@mybiblelog/shared';
 import { isValidObjectId } from '../../repositories/helpers/ids';
-import { toPassageNoteJSON } from '../../repositories/helpers/serializers';
+import { toPassageNoteJSON, toPassageNoteSearchResultJSON } from '../../repositories/helpers/serializers';
 import { type PassageNoteSearchQuery, type PassageNoteSortOn } from '../../repositories/helpers/types';
 import { ApiErrorDetailCode } from '../errors/error-codes';
 import { ValidationError } from '../errors/validation-errors';
@@ -108,8 +108,16 @@ const validateQuery = (
     }
   }
 
-  // determine which passage to filter by
-  if (query.filterPassageStartVerseId && query.filterPassageEndVerseId) {
+  // determine which passage to filter by (a USFM reference takes precedence over the verse id pair)
+  if (query.filterPassage) {
+    const range = Bible.parseUsfmReference(String(query.filterPassage));
+    if (!range) {
+      return;
+    }
+    validated.filterPassageStartVerseId = range.startVerseId;
+    validated.filterPassageEndVerseId = range.endVerseId;
+  }
+  else if (query.filterPassageStartVerseId && query.filterPassageEndVerseId) {
     const startVerseId = Number(query.filterPassageStartVerseId);
     const endVerseId = Number(query.filterPassageEndVerseId);
     const rangeIsValid = Bible.validateRange(startVerseId, endVerseId);
@@ -172,7 +180,7 @@ export const listPassageNotes: RouteHandler = async (req, deps) => {
   return {
     status: 200,
     body: {
-      data: results,
+      data: results.map(toPassageNoteSearchResultJSON),
       meta: {
         pagination: {
           offset: query.offset,

@@ -72,7 +72,7 @@ describe('log entry handlers (unit)', () => {
       expect(result.status).toBe(200);
       expect(result.body).toEqual({
         data: [{
-          id: ENTRY_ID, date: '2024-01-01', startVerseId: 101001001, endVerseId: 101001005,
+          id: ENTRY_ID, date: '2024-01-01', startVerseId: 101001001, endVerseId: 101001005, passage: 'GEN.1.1-5',
         }],
       });
     });
@@ -127,7 +127,7 @@ describe('log entry handlers (unit)', () => {
       const result = await getLogEntry(makeRequest({ params: { id: ENTRY_ID } }), deps);
       expect(result.status).toBe(200);
       expect(result.body).toEqual({
-        data: { id: ENTRY_ID, date: '2024-01-01', startVerseId: 101001001, endVerseId: 101001005 },
+        data: { id: ENTRY_ID, date: '2024-01-01', startVerseId: 101001001, endVerseId: 101001005, passage: 'GEN.1.1-5' },
       });
     });
   });
@@ -145,8 +145,47 @@ describe('log entry handlers (unit)', () => {
       expect(received).toEqual(body);
       expect(result.status).toBe(200);
       expect(result.body).toEqual({
-        data: { id: ENTRY_ID, date: '2024-01-01', startVerseId: 101001001, endVerseId: 101001005 },
+        data: { id: ENTRY_ID, date: '2024-01-01', startVerseId: 101001001, endVerseId: 101001005, passage: 'GEN.1.1-5' },
       });
+    });
+
+    it('accepts a USFM passage in place of verse ids', async () => {
+      let received: unknown;
+      const deps = makeDeps({
+        logEntries: {
+          create: async (_ownerId, input) => { received = input; return sampleEntry; },
+        },
+      });
+      await createLogEntry(makeRequest({ method: 'POST', body: { date: '2024-01-01', passage: 'JHN.3.16-18' } }), deps);
+      expect(received).toEqual({ date: '2024-01-01', startVerseId: 143003016, endVerseId: 143003018 });
+    });
+
+    it.each([
+      ['an unknown book', { passage: 'XYZ.1.1' }, 'passage'],
+      ['a passage crossing books', { passage: 'GEN.50-EXO.1' }, 'passage'],
+      ['both passage forms', { passage: 'GEN.1', startVerseId: 101001001, endVerseId: 101001005 }, 'passage'],
+    ])('rejects %s', async (_label, passageFields, field) => {
+      const deps = makeDeps({ logEntries: { create: async () => sampleEntry } });
+      const error = await createLogEntry(makeRequest({ method: 'POST', body: { date: '2024-01-01', ...passageFields } }), deps)
+        .catch((e: unknown) => e);
+      expect(error).toBeInstanceOf(ValidationError);
+      expect((error as ValidationError).details).toEqual([{ field, code: 'not_valid' }]);
+    });
+
+    it('reports every missing field when the body is empty', async () => {
+      const deps = makeDeps({ logEntries: { create: async () => sampleEntry } });
+      const error = await createLogEntry(makeRequest({ method: 'POST', body: {} }), deps).catch((e: unknown) => e);
+      expect((error as ValidationError).details).toEqual([
+        { field: 'date', code: 'required' },
+        { field: 'startVerseId', code: 'required' },
+        { field: 'endVerseId', code: 'required' },
+      ]);
+    });
+
+    it.each([null, 'GEN.1', 5])('rejects a non-object body (%j) as a validation error', async (body) => {
+      const deps = makeDeps({ logEntries: { create: async () => sampleEntry } });
+      await expect(createLogEntry(makeRequest({ method: 'POST', body }), deps))
+        .rejects.toBeInstanceOf(ValidationError);
     });
 
     it('propagates repository validation errors', async () => {
@@ -180,8 +219,27 @@ describe('log entry handlers (unit)', () => {
       );
       expect(result.status).toBe(200);
       expect(result.body).toEqual({
-        data: { id: ENTRY_ID, date: '2024-02-02', startVerseId: 101001001, endVerseId: 101001005 },
+        data: { id: ENTRY_ID, date: '2024-02-02', startVerseId: 101001001, endVerseId: 101001005, passage: 'GEN.1.1-5' },
       });
+    });
+  });
+
+  describe('updateLogEntry with a USFM passage', () => {
+    it('replaces both endpoints', async () => {
+      let received: unknown;
+      const deps = makeDeps({
+        logEntries: { update: async (_ownerId, _id, patch) => { received = patch; return sampleEntry; } },
+      });
+      await updateLogEntry(makeRequest({ method: 'PATCH', params: { id: ENTRY_ID }, body: { passage: 'PSA.23' } }), deps);
+      expect(received).toEqual({ startVerseId: 119023001, endVerseId: 119023006 });
+    });
+
+    it('rejects a passage sent alongside a verse id', async () => {
+      const deps = makeDeps({ logEntries: { update: async () => sampleEntry } });
+      await expect(updateLogEntry(
+        makeRequest({ method: 'PATCH', params: { id: ENTRY_ID }, body: { passage: 'PSA.23', endVerseId: 119023006 } }),
+        deps,
+      )).rejects.toBeInstanceOf(ValidationError);
     });
   });
 

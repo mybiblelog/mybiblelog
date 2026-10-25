@@ -5,6 +5,7 @@ import {
   getBookCount,
   getBookIndex,
   getBookIndexBySlug,
+  getBookIndexByUsfmCode,
   getBookName,
   getBookSlug,
   getBookUsfmCode,
@@ -44,6 +45,7 @@ import {
   generateSegments,
 } from './core/segments';
 import { displayVerseRange, parseVerseRange } from './core/display';
+import { formatUsfmReference, parseUsfmReference } from './core/usfm';
 
 export type { ParsedVerseId, Segment, VerseId, VerseRange } from './core/encoding';
 
@@ -60,6 +62,7 @@ const Bible = {
   getBookSlug,
   getBookIndexBySlug,
   getBookUsfmCode,
+  getBookIndexByUsfmCode,
   getBookBlbCode,
   isNewTestament,
   verseExists,
@@ -89,6 +92,8 @@ const Bible = {
   generateBookChapterSegments,
   displayVerseRange,
   parseVerseRange,
+  parseUsfmReference,
+  formatUsfmReference,
 };
 
 export default Bible;

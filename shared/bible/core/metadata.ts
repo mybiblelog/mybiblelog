@@ -58,6 +58,13 @@ export const getBookUsfmCode = (bookIndex: number): string => {
   return targetBook.usfmCode;
 };
 
+/** Inverse of getBookUsfmCode (case-insensitive); returns -1 for an unknown code. */
+export const getBookIndexByUsfmCode = (usfmCode: string): number => {
+  const upper = usfmCode.toUpperCase();
+  const targetBook = bibleBooks.find((b) => b.usfmCode === upper);
+  return targetBook ? targetBook.bibleOrder : -1;
+};
+
 /**
  * Returns the Blue Letter Bible URL book code (e.g. "Gen", "1Sa"),
  * or an empty string for an invalid book index.
