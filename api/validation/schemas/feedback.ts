@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
 export const feedbackBodySchema = z.object({
-  email: z.string().trim().toLowerCase().regex(/^\S+@\S+\.\S+$/),
-  kind: z.enum(['bug', 'feature', 'comment']),
-  message: z.string().trim().min(1).max(1500),
-});
+  email: z.string().trim().toLowerCase().regex(/^\S+@\S+\.\S+$/).describe('Email address to reply to'),
+  kind: z.enum(['bug', 'feature', 'comment']).describe('The kind of feedback'),
+  message: z.string().trim().min(1).max(1500).describe('The feedback message, 1–1500 characters'),
+}).describe('Feedback for the site\'s maintainers.');
 
 export type FeedbackBody = z.infer<typeof feedbackBodySchema>;
 

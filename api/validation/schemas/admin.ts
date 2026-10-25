@@ -34,8 +34,8 @@ export const adminFeedbackIdParam = z.object({ id: z.string() });
 
 /** Body accepted by `PUT /admin/feedback/:id`. */
 export const adminFeedbackPatchSchema = z.object({
-  status: z.enum(['open', 'resolved', 'archived']),
-});
+  status: z.enum(['open', 'resolved', 'archived']).describe('The new status of the feedback item'),
+}).describe('Updates a feedback item\'s status.');
 
 /** A user as returned by the admin user list. */
 export const adminUserSchema = z.object({

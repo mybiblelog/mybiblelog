@@ -3,13 +3,15 @@ import { type VerseRange } from '@mybiblelog/shared';
 import { dateString, verseId } from '../primitives';
 import { PASSAGE_FIELDS_DESCRIPTION, passageFields, requirePassage, resolvePassage } from './passage';
 
+const readingDate = dateString.describe('YYYY-MM-DD date the passage was read');
+
 /**
  * Creating a log entry requires a date and a valid passage, sent either as a
  * USFM `passage` or as `startVerseId`/`endVerseId`. Either form resolves to
  * `{ date, startVerseId, endVerseId }`.
  */
 export const logEntryCreateSchema = requirePassage(
-  z.object({ date: dateString, ...passageFields }).describe(PASSAGE_FIELDS_DESCRIPTION),
+  z.object({ date: readingDate, ...passageFields }).describe(`A passage the user read. ${PASSAGE_FIELDS_DESCRIPTION}`),
 )
   .transform((value, ctx) => ({
     date: value.date,
@@ -21,7 +23,7 @@ export const logEntryCreateSchema = requirePassage(
  * replaces both endpoints; the integer verse range is only checked when both
  * endpoints are provided in the same request.
  */
-export const logEntryUpdateSchema = z.object({ date: dateString.optional(), ...passageFields })
+export const logEntryUpdateSchema = z.object({ date: readingDate.optional(), ...passageFields })
   .describe(`All fields are optional. ${PASSAGE_FIELDS_DESCRIPTION}`)
   .transform((value, ctx) => ({
     ...(value.date === undefined ? {} : { date: value.date }),

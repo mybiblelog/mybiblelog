@@ -1058,4 +1058,121 @@ describe('passage-notes.test.js', () => {
       }
     });
   });
+
+  describe('USFM passage references', () => {
+    it('creates a note from mixed passage forms and returns their references', async () => {
+      const testUser = await createTestUser();
+      try {
+        const response = await requestApi
+          .post('/api/passage-notes')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send({
+            content: 'Mixed passage forms',
+            passages: ['ROM.8.28-30', { passage: 'GEN.1' }, { startVerseId: 143003016, endVerseId: 143003016 }],
+          });
+        expect(response.status).toBe(200);
+        expect(response.body.data.passages).toEqual([
+          expect.objectContaining({ startVerseId: 145008028, endVerseId: 145008030, passage: 'ROM.8.28-30' }),
+          expect.objectContaining({ startVerseId: 101001001, endVerseId: 101001031, passage: 'GEN.1' }),
+          expect.objectContaining({ startVerseId: 143003016, endVerseId: 143003016, passage: 'JHN.3.16' }),
+        ]);
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
+    it('reports an invalid USFM passage by its index', async () => {
+      const testUser = await createTestUser();
+      try {
+        const response = await requestApi
+          .post('/api/passage-notes')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send({ content: 'Bad passage', passages: ['GEN.1', 'GEN-EXO'] });
+        expect(response.status).toBe(400);
+        expect(response.body.error.code).toBe('validation_error');
+        expect(response.body.error.errors).toEqual([{ field: 'passages.1.passage', code: 'not_valid' }]);
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
+    it('updates passages from USFM references', async () => {
+      const testUser = await createTestUser();
+      try {
+        const createResponse = await requestApi
+          .post('/api/passage-notes')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send(passageNote1);
+        const response = await requestApi
+          .patch(`/api/passage-notes/${createResponse.body.data.id}`)
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send({ passages: ['PHP.4.13'] });
+        expect(response.status).toBe(200);
+        expect(response.body.data.passages).toEqual([
+          expect.objectContaining({ startVerseId: 150004013, endVerseId: 150004013, passage: 'PHP.4.13' }),
+        ]);
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
+    it('filters by a USFM filterPassage and returns passage references', async () => {
+      const testUser = await createTestUser();
+      try {
+        const genesisNote = await requestApi
+          .post('/api/passage-notes')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send(passageNote1); // Genesis 1:1-5
+        await requestApi
+          .post('/api/passage-notes')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send({ content: 'Exodus note', passages: ['EXO.1.1-5'] });
+
+        const response = await requestApi
+          .get('/api/passage-notes?filterPassage=GEN.1')
+          .set('Authorization', `Bearer ${testUser.token}`);
+        expect(response.status).toBe(200);
+        expect(response.body.data.map((note: { id: string }) => note.id)).toEqual([genesisNote.body.data.id]);
+        expect(response.body.data[0].passages).toEqual([expect.objectContaining({ passage: 'GEN.1.1-5' })]);
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
+    it('rejects an invalid filterPassage', async () => {
+      const testUser = await createTestUser();
+      try {
+        const response = await requestApi
+          .get('/api/passage-notes?filterPassage=GEN.1-EXO.1')
+          .set('Authorization', `Bearer ${testUser.token}`);
+        expect(response.status).toBe(400);
+        expect(response.body).not.toHaveProperty('data');
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
+    it('returns passage references from GET /api/passage-notes/:id', async () => {
+      const testUser = await createTestUser();
+      try {
+        const createResponse = await requestApi
+          .post('/api/passage-notes')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send(passageNote1);
+        const response = await requestApi
+          .get(`/api/passage-notes/${createResponse.body.data.id}`)
+          .set('Authorization', `Bearer ${testUser.token}`);
+        expect(response.status).toBe(200);
+        expect(response.body.data.passages).toEqual([expect.objectContaining({ passage: 'GEN.1.1-5' })]);
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+  });
 });

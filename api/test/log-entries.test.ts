@@ -563,4 +563,88 @@ describe('log-entries.test.js', () => {
       }
     });
   });
+
+  describe('USFM passage references', () => {
+    it('creates an entry from a USFM passage and returns its reference', async () => {
+      const testUser = await createTestUser();
+      try {
+        const response = await requestApi
+          .post('/api/log-entries')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send({ date: '2024-01-01', passage: 'PSA.23' });
+        expect(response.status).toBe(200);
+        expect(response.body.data).toMatchObject({
+          date: '2024-01-01',
+          startVerseId: 119023001,
+          endVerseId: 119023006,
+          passage: 'PSA.23',
+        });
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
+    it('returns the USFM reference for entries created with verse IDs', async () => {
+      const testUser = await createTestUser();
+      try {
+        await requestApi
+          .post('/api/log-entries')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send(logEntry1);
+        const response = await requestApi
+          .get('/api/log-entries')
+          .set('Authorization', `Bearer ${testUser.token}`);
+        expect(response.status).toBe(200);
+        expect(response.body.data).toEqual([expect.objectContaining({ passage: 'GEN.1.1-5' })]);
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
+    it.each([
+      ['an unknown book', { passage: 'XYZ.1.1' }],
+      ['a passage that crosses books', { passage: 'GEN.50-EXO.1' }],
+      ['a passage alongside verse IDs', { passage: 'GEN.1', startVerseId: 101001001, endVerseId: 101001005 }],
+    ])('rejects %s', async (_label, passageFields) => {
+      const testUser = await createTestUser();
+      try {
+        const response = await requestApi
+          .post('/api/log-entries')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send({ date: '2024-01-01', ...passageFields });
+        expect(response.status).toBe(400);
+        expect(response.body.error.code).toBe('validation_error');
+        expect(response.body.error.errors).toEqual([{ field: 'passage', code: 'not_valid' }]);
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+
+    it('updates an entry from a USFM passage', async () => {
+      const testUser = await createTestUser();
+      try {
+        const createResponse = await requestApi
+          .post('/api/log-entries')
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send(logEntry1);
+        const response = await requestApi
+          .patch(`/api/log-entries/${createResponse.body.data.id}`)
+          .set('Authorization', `Bearer ${testUser.token}`)
+          .send({ passage: 'JHN.3.16-18' });
+        expect(response.status).toBe(200);
+        expect(response.body.data).toMatchObject({
+          date: logEntry1.date,
+          startVerseId: 143003016,
+          endVerseId: 143003018,
+          passage: 'JHN.3.16-18',
+        });
+      }
+      finally {
+        await deleteTestUser(testUser);
+      }
+    });
+  });
 });

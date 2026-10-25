@@ -94,7 +94,18 @@ export const zodToOpenApiSchema = (
   if (rootId) { return { $ref: `${COMPONENTS_REF_PREFIX}${rootId}` }; }
 
   const entityIds = new Set(registry._idmap.keys());
-  const js = z.toJSONSchema(schema, { io, metadata: registry }) as JsonSchema;
+  const js = z.toJSONSchema(schema, {
+    io,
+    metadata: registry,
+    // Passing the entity registry as `metadata` replaces zod's global registry,
+    // which is where `.describe()` stores descriptions, so copy them back in.
+    override: ({ zodSchema, jsonSchema }) => {
+      const description = z.globalRegistry.get(zodSchema)?.description;
+      if (description && jsonSchema.description === undefined) {
+        jsonSchema.description = description;
+      }
+    },
+  }) as JsonSchema;
   return clean(rewriteEntityRefs(js, entityIds));
 };
 

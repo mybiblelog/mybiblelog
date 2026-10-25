@@ -10,8 +10,8 @@ import { usfmPassage, verseId } from '../primitives';
  * handlers and repositories only ever see integer verse ids.
  */
 export const passageFields = {
-  startVerseId: verseId.optional(),
-  endVerseId: verseId.optional(),
+  startVerseId: verseId.optional().describe('Integer ID of the first verse: 100000000 + book × 1000000 + chapter × 1000 + verse (Genesis 1:1 = 101001001)'),
+  endVerseId: verseId.optional().describe('Integer ID of the last verse, in the same book as `startVerseId`'),
   passage: usfmPassage.optional(),
 };
 

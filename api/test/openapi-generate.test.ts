@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { z } from 'zod';
 import { generateOpenApiPaths } from '../http/openapi/generate';
 import { type DocumentedRoute } from '../http/types';
+import { documentedRoutes } from '../http/routes';
 
 /**
  * Covers `buildOperation()`'s branches in `http/openapi/generate.ts`: routes
@@ -124,5 +125,46 @@ describe('generateOpenApiPaths', () => {
     };
     const { paths } = generateOpenApiPaths([route]);
     expect(paths['/no-cookie'].get.responses[200].headers).toBeUndefined();
+  });
+
+  it('keeps .describe() descriptions in request bodies', () => {
+    const route: DocumentedRoute = {
+      method: 'POST',
+      path: '/things',
+      docs: {
+        summary: 'Create a thing',
+        tags: ['things'],
+        request: { body: z.object({ name: z.string().describe('The name') }).describe('A thing') },
+      },
+    };
+    const { paths } = generateOpenApiPaths([route]);
+    const schema = paths['/things'].post.requestBody.content['application/json'].schema;
+    expect(schema.description).toBe('A thing');
+    expect(schema.properties.name.description).toBe('The name');
+  });
+
+  it('describes every request body and every field in it', () => {
+    const undescribed: string[] = [];
+    const walk = (node: any, path: string) => {
+      if (!node || typeof node !== 'object') { return; }
+      for (const [key, child] of Object.entries<any>(node.properties ?? {})) {
+        if (!child.description && !child.$ref) { undescribed.push(`${path}.${key}`); }
+        walk(child, `${path}.${key}`);
+      }
+      walk(node.items, `${path}[]`);
+      (node.anyOf ?? []).forEach((option: any, i: number) => walk(option, `${path}|${i}`));
+    };
+
+    const { paths } = generateOpenApiPaths(documentedRoutes);
+    for (const [path, operations] of Object.entries<any>(paths)) {
+      for (const [method, operation] of Object.entries<any>(operations)) {
+        const schema = operation.requestBody?.content['application/json'].schema;
+        if (!schema) { continue; }
+        const label = `${method.toUpperCase()} ${path}`;
+        if (!schema.description) { undescribed.push(label); }
+        walk(schema, label);
+      }
+    }
+    expect(undescribed).toEqual([]);
   });
 });

@@ -1,11 +1,12 @@
 import { z } from 'zod';
 
 export const dailyReminderPatchSchema = z.object({
-  hour: z.number().int().min(0).max(23),
-  minute: z.number().int().min(0).max(59),
-  timezoneOffset: z.number().int().min(-12 * 60).max(14 * 60),
-  active: z.boolean(),
-}).partial();
+  hour: z.number().int().min(0).max(23).describe('Hour of the reminder in the user\'s local time (0–23)'),
+  minute: z.number().int().min(0).max(59).describe('Minute of the reminder (0–59)'),
+  timezoneOffset: z.number().int().min(-12 * 60).max(14 * 60)
+    .describe('The user\'s timezone offset in minutes, as returned by JavaScript\'s `Date#getTimezoneOffset()`'),
+  active: z.boolean().describe('Whether the reminder email is sent'),
+}).partial().describe('All fields are optional; omitted fields keep their values.');
 
 export type DailyReminderPatchBody = z.infer<typeof dailyReminderPatchSchema>;
 
