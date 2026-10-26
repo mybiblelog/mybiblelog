@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import {
   deleteLogEntryRequest,
   evaluateAchievement,
+  evaluateGoalCompletions,
   fetchLogEntries,
   getBookIndexFromVerseId,
   isBibleComplete,
@@ -27,12 +28,27 @@ const refreshReadingSuggestions = async (): Promise<void> => {
   useReadingSuggestionsStore().refreshReadingSuggestions();
 };
 
-const applyAchievement = (
+const applyAchievement = async (
   bookIndex: number,
-  before: LogEntry[],
-  after: LogEntry[],
-): void => {
-  const achievement = evaluateAchievement(bookIndex, before, after);
+  before: { all: LogEntry[]; current: LogEntry[] },
+  after: { all: LogEntry[]; current: LogEntry[] },
+): Promise<void> => {
+  // Only one modal shows at a time; a completed reading goal wins over a
+  // completed book or Bible. Goals count every entry (they have their own
+  // start date), while book/Bible completion honors the tracker reset date.
+  const { useReadingGoalsStore } = await import('~/stores/reading-goals');
+  const completedGoals = evaluateGoalCompletions(
+    useReadingGoalsStore().goals,
+    before.all,
+    after.all,
+    dayjs().format('YYYY-MM-DD'),
+  );
+  if (completedGoals.length) {
+    useAchievementsStore().showGoalCompleteAchievement(completedGoals[0]!.title);
+    return;
+  }
+
+  const achievement = evaluateAchievement(bookIndex, before.current, after.current);
   if (achievement?.type === 'bible') {
     useAchievementsStore().showBibleCompleteAchievement();
   }
@@ -73,13 +89,14 @@ export const useLogEntriesStore = defineStore('log-entries', {
 
     async createLogEntry(input: CreateLogEntryInput): Promise<LogEntry> {
       const http = useHttp();
-      const before = this.currentLogEntries;
+      // Copies: without a tracker reset date `currentLogEntries` is the live array.
+      const before = { all: [...this.logEntries], current: [...this.currentLogEntries] };
       const bookIndex = getBookIndexFromVerseId(input.startVerseId);
 
       const created = await postLogEntry(http, input);
       this.logEntries.push(created);
 
-      applyAchievement(bookIndex, before, this.currentLogEntries);
+      await applyAchievement(bookIndex, before, { all: this.logEntries, current: this.currentLogEntries });
 
       await refreshReadingSuggestions();
       refreshDateVerseCounts();
@@ -89,7 +106,11 @@ export const useLogEntriesStore = defineStore('log-entries', {
 
     async updateLogEntry(input: UpdateLogEntryInput): Promise<LogEntry> {
       const http = useHttp();
-      const before = this.currentLogEntries;
+      // Snapshot copies: the update below mutates the entry in place.
+      const before = {
+        all: this.logEntries.map(le => ({ ...le })),
+        current: this.currentLogEntries.map(le => ({ ...le })),
+      };
       const bookIndex = getBookIndexFromVerseId(input.startVerseId);
 
       const updated = await patchLogEntry(http, input);
@@ -102,7 +123,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
         this.logEntries.push(updated);
       }
 
-      applyAchievement(bookIndex, before, this.currentLogEntries);
+      await applyAchievement(bookIndex, before, { all: this.logEntries, current: this.currentLogEntries });
 
       await refreshReadingSuggestions();
       refreshDateVerseCounts();

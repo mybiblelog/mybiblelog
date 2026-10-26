@@ -4,13 +4,15 @@ import { createModalStore } from '~/helpers/create-modal-store';
 export const ACHIEVEMENT = {
   BOOK_COMPLETE: 'BOOK_COMPLETE',
   BIBLE_COMPLETE: 'BIBLE_COMPLETE',
+  GOAL_COMPLETE: 'GOAL_COMPLETE',
 } as const;
 
 export type AchievementType = (typeof ACHIEVEMENT)[keyof typeof ACHIEVEMENT];
 
 export type AchievementsPayload = {
   achievementType: AchievementType | null;
-  achievementData: number | null;
+  /** Book index for BOOK_COMPLETE; goal title for GOAL_COMPLETE. */
+  achievementData: number | string | null;
 };
 
 const modal = createModalStore<AchievementsPayload>({
@@ -31,6 +33,10 @@ const useAchievementsStore = defineStore('achievements', {
 
     showBibleCompleteAchievement(): void {
       this.openModal({ achievementType: ACHIEVEMENT.BIBLE_COMPLETE, achievementData: null });
+    },
+
+    showGoalCompleteAchievement(goalTitle: string): void {
+      this.openModal({ achievementType: ACHIEVEMENT.GOAL_COMPLETE, achievementData: goalTitle });
     },
 
     closeAchievement(): void {

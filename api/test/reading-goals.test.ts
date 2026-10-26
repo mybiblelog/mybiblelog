@@ -36,7 +36,7 @@ describe('reading-goals.test.js', () => {
       // Passage order is preserved.
       expect(list.body.data[0].passages).toEqual(goal.passages);
 
-      const updated = await requestApi.put(`/api/reading-goals/${id}`).set('Authorization', auth)
+      const updated = await requestApi.patch(`/api/reading-goals/${id}`).set('Authorization', auth)
         .send({ ...goal, title: 'Renamed', active: false, passages: [bookToPassage(PHILEMON)] });
       expect(updated.status).toBe(200);
       expect(updated.body.data).toMatchObject({ id, title: 'Renamed', active: false, passages: [bookToPassage(PHILEMON)] });
@@ -78,7 +78,7 @@ describe('reading-goals.test.js', () => {
       const otherAuth = `Bearer ${other.token}`;
 
       expect((await requestApi.get(`/api/reading-goals/${id}`).set('Authorization', otherAuth)).status).toBe(404);
-      expect((await requestApi.put(`/api/reading-goals/${id}`).set('Authorization', otherAuth).send(goal)).status).toBe(404);
+      expect((await requestApi.patch(`/api/reading-goals/${id}`).set('Authorization', otherAuth).send(goal)).status).toBe(404);
       expect((await requestApi.delete(`/api/reading-goals/${id}`).set('Authorization', otherAuth)).status).toBe(404);
       expect((await requestApi.get(`/api/reading-goals/${missingObjectId}`).set('Authorization', otherAuth)).status).toBe(404);
       expect((await requestApi.get('/api/reading-goals').set('Authorization', otherAuth)).body.data).toEqual([]);

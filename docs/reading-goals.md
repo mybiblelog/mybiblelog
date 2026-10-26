@@ -76,7 +76,7 @@ Endpoints (all authenticated; 401 otherwise):
 | GET | `/reading-goals` | All of the current user's goals |
 | GET | `/reading-goals/:id` | 404 if the goal is missing or belongs to another user |
 | POST | `/reading-goals` | Create |
-| PUT | `/reading-goals/:id` | Full update (title, books, order, dates, active) |
+| PATCH | `/reading-goals/:id` | Full update: the body is the whole goal (title, passages, dates, active). PATCH matches the shared `HttpClient`, which has no PUT. |
 | DELETE | `/reading-goals/:id` | Delete |
 
 Validation (reject with the repo's standard validation error response):

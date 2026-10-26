@@ -115,7 +115,7 @@ describe('reading goal handlers (unit)', () => {
     const deps = makeDeps();
     const params = { id: goalId };
     await expect(getReadingGoal(makeRequest({ method: 'GET', params }), deps)).rejects.toMatchObject({ status: 404 });
-    await expect(updateReadingGoal(makeRequest({ method: 'PUT', params }), deps)).rejects.toMatchObject({ status: 404 });
+    await expect(updateReadingGoal(makeRequest({ method: 'PATCH', params }), deps)).rejects.toMatchObject({ status: 404 });
     await expect(deleteReadingGoal(makeRequest({ method: 'DELETE', params }), deps)).rejects.toMatchObject({ status: 404 });
   });
 });

@@ -41,7 +41,7 @@ const goalPassagesSchema = z.array(goalPassageSchema)
   .superRefine(noOverlappingPassages)
   .superRefine(wholeBookPassagesOnly);
 
-/** Create and update both send the full goal (update is a PUT). */
+/** Create and update both send the full goal (PATCH replaces every field). */
 export const readingGoalBodySchema = z.object({
   title: z.string().trim().min(1).max(100),
   passages: goalPassagesSchema,
