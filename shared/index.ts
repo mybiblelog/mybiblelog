@@ -124,6 +124,7 @@ export {
   type CreateLogEntryInput,
   type UpdateLogEntryInput,
 } from './log-entry/api';
+export * from './reading-goals';
 export type { HttpClient, ApiResponse } from './platform/http-client';
 export { identityTranslator, type Translator } from './platform/translator';
 
