@@ -24,7 +24,9 @@
           </div>
         </div>
       </div>
-      <p>{{ t('intro') }}</p>
+      <p class="reading-goals__intro">
+        {{ t('intro') }}
+      </p>
 
       <div class="mbl-tabs">
         <ul>
@@ -69,7 +71,7 @@
               {{ goal.title }}
             </NuxtLink>
             <span class="mbl-text-small mbl-text-muted">
-              {{ displayDate(goal.startDate, locale) }} – {{ displayDate(goal.endDate, locale) }}
+              {{ formatDate(goal.startDate) }} – {{ formatDate(goal.endDate) }}
               · {{ $n(Math.floor(progress.percent) / 100, 'percent') }}
               <template v-if="progress.isComplete">· {{ t('complete') }}</template>
             </span>
@@ -99,13 +101,17 @@
 </template>
 
 <script setup lang="ts">
-import { displayDate, type ReadingGoal } from '@mybiblelog/shared';
+import dayjs from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import type { ReadingGoal } from '@mybiblelog/shared';
 import ReadingGoalEditor from '~/components/goals/ReadingGoalEditor.vue';
 import SkeletonLoader from '~/components/ui/SkeletonLoader.vue';
 import { useAppInitStore } from '~/stores/app-init';
 import { useReadingGoalsStore } from '~/stores/reading-goals';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
+
+dayjs.extend(localizedFormat);
 
 const { t, locale } = useI18n();
 const localePath = useLocalePath();
@@ -118,6 +124,8 @@ const toastStore = useToastStore();
 
 definePageMeta({ middleware: ['auth'] });
 useHead({ title: () => t('goals'), meta: [{ name: 'robots', content: 'noindex' }] });
+
+const formatDate = (date: string) => dayjs(date).locale(locale.value).format('ll');
 
 const view = ref<'active' | 'inactive'>('active');
 const busyGoalId = ref<string | null>(null);
@@ -181,6 +189,10 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.reading-goals__intro {
+  margin-bottom: var(--mbl-space-md);
+}
+
 .reading-goals__list {
   display: flex;
   flex-direction: column;

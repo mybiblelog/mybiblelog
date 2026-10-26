@@ -7,7 +7,9 @@
 
     <!-- Step 0: choose a template or start a custom goal (create only) -->
     <div v-if="step === 'start'">
-      <p>{{ t('start.prompt') }}</p>
+      <p class="goal-editor__prompt">
+        {{ t('start.prompt') }}
+      </p>
       <div class="goal-editor__templates">
         <button
           v-for="template in templates"
@@ -84,7 +86,9 @@
 
     <!-- Step 3: order -->
     <div v-else-if="step === 'order'">
-      <p>{{ t('order.prompt') }}</p>
+      <p class="goal-editor__prompt">
+        {{ t('order.prompt') }}
+      </p>
       <ol class="goal-editor__order" data-testid="reading-goal-order">
         <li v-for="(bookIndex, position) in orderedBooks" :key="bookIndex" class="mbl-card mbl-card--list-item goal-editor__order-item">
           <span>{{ bookName(bookIndex) }}</span>
@@ -124,7 +128,7 @@
           maxlength="100"
           data-testid="reading-goal-title"
         >
-        <p class="mbl-text-small mbl-text-muted" data-testid="reading-goal-template-books">
+        <p class="mbl-text-small mbl-text-muted goal-editor__template-books" data-testid="reading-goal-template-books">
           {{ orderedBooks.map(bookName).join(', ') }}
         </p>
       </template>
@@ -392,6 +396,14 @@ const save = async () => {
 
 <style scoped>
 .goal-editor__progress {
+  margin-bottom: var(--mbl-space-lg);
+}
+
+.goal-editor__prompt {
+  margin-bottom: var(--mbl-space-md);
+}
+
+.goal-editor__template-books {
   margin-bottom: var(--mbl-space-lg);
 }
 
