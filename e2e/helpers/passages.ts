@@ -50,6 +50,13 @@ export const BOOK = {
   LUKE: 42,
   JOHN: 43,
   ACTS: 44,
+  PHILEMON: 57,
   JUDE: 65,
   REVELATION: 66,
 } as const;
+
+/** A whole book as a single passage, the form reading goals store books in. */
+export const bookRange = (book: number): { startVerseId: number; endVerseId: number } => ({
+  startVerseId: Bible.getFirstBookVerseId(book),
+  endVerseId: Bible.getLastBookVerseId(book),
+});

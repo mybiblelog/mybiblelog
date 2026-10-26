@@ -7,6 +7,7 @@
  *   - POST /api/passage-note-tags  { label, color, description? }
  *   - POST /api/passage-notes      { content, passages: [{ startVerseId, endVerseId }], tags?: [tagId] }
  *   - PATCH /api/settings          { settings: { ...partial } }
+ *   - POST /api/reading-goals      { title, passages: [{ startVerseId, endVerseId }], startDate, endDate, active? }
  */
 import type { APIRequestContext, APIResponse } from '@playwright/test';
 
@@ -26,6 +27,14 @@ export interface SeedNote {
   content: string;
   passages: { startVerseId: number; endVerseId: number }[];
   tags?: string[]; // tag ids
+}
+
+export interface SeedReadingGoal {
+  title: string;
+  passages: { startVerseId: number; endVerseId: number }[]; // whole books
+  startDate: string; // YYYY-MM-DD
+  endDate: string; // YYYY-MM-DD
+  active?: boolean;
 }
 
 export interface UserSettingsPatch {
@@ -72,5 +81,10 @@ export async function setSettings(api: APIRequestContext, settings: UserSettings
 
 export async function getLogEntries(api: APIRequestContext) {
   const response = await ensureOk(await api.get('/api/log-entries'), 'get log entries');
+  return dataOf(response);
+}
+
+export async function seedReadingGoal(api: APIRequestContext, goal: SeedReadingGoal) {
+  const response = await ensureOk(await api.post('/api/reading-goals', { data: goal }), 'seed reading goal');
   return dataOf(response);
 }

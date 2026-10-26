@@ -18,13 +18,13 @@
           </NuxtLink>
         </header>
         <p class="mbl-text-muted">
-          {{ displayDate(goal.startDate, locale) }} – {{ displayDate(goal.endDate, locale) }}
+          {{ formatDate(goal.startDate) }} – {{ formatDate(goal.endDate) }}
           <span v-if="!goal.active">· {{ t('inactive') }}</span>
         </p>
 
         <div v-if="progress.isComplete" class="mbl-message mbl-message--success" data-testid="reading-goal-detail-complete">
           <div class="mbl-message__body">
-            {{ t('completed_on', { date: displayDate(progress.completedDate!, locale) }) }}
+            {{ t('completed_on', { date: formatDate(progress.completedDate!) }) }}
           </div>
         </div>
 
@@ -41,7 +41,7 @@
           <div>
             <dt>{{ progress.isComplete ? t('finished') : t('projected_finish') }}</dt>
             <dd data-testid="reading-goal-detail-projected-finish">
-              {{ progress.projectedFinishDate ? displayDate(progress.projectedFinishDate, locale) : t('not_enough_reading') }}
+              {{ progress.projectedFinishDate ? formatDate(progress.projectedFinishDate) : t('not_enough_reading') }}
             </dd>
           </div>
           <div>
@@ -63,7 +63,7 @@
           </div>
         </dl>
 
-        <p v-if="nextUpLabel" data-testid="reading-goal-detail-next-up">
+        <p v-if="nextUpLabel" class="goal-detail__next-up" data-testid="reading-goal-detail-next-up">
           {{ t('next_up', { passage: nextUpLabel }) }}
         </p>
 
@@ -91,10 +91,10 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 import {
   Bible,
   computeGoalChartSeries,
-  displayDate,
   isWholeBookPassage,
   passageBookIndex,
   type GoalPassage,
@@ -105,6 +105,8 @@ import SkeletonLoader from '~/components/ui/SkeletonLoader.vue';
 import { useAppInitStore } from '~/stores/app-init';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useReadingGoalsStore } from '~/stores/reading-goals';
+
+dayjs.extend(localizedFormat);
 
 definePageMeta({ middleware: ['auth'] });
 
@@ -124,6 +126,8 @@ useHead({
   title: () => goal.value?.title ?? t('goal'),
   meta: [{ name: 'robots', content: 'noindex' }],
 });
+
+const formatDate = (date: string) => dayjs(date).locale(locale.value).format('LL');
 
 const roundTenth = (value: number) => Math.round(value * 10) / 10;
 
@@ -163,6 +167,10 @@ onMounted(async () => {
   color: var(--mbl-text-strong);
   font-size: var(--mbl-title-5);
   font-weight: 600;
+}
+
+.goal-detail__next-up {
+  margin-bottom: var(--mbl-space-lg);
 }
 
 .goal-detail__books {
