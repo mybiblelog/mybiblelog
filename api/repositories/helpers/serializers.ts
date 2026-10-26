@@ -5,6 +5,7 @@ import {
   PassageNoteRecord,
   PassageNoteSearchResultItem,
   PassageNoteTagRecord,
+  ReadingGoalRecord,
 } from './types';
 import { type LogEntryJSON } from '../../validation/schemas/log-entry';
 
@@ -37,6 +38,11 @@ export const toPassageNoteSearchResultJSON = (result: PassageNoteSearchResultIte
 export const toPassageNoteTagJSON = (tag: PassageNoteTagRecord) => {
   const { id, label, color, description, noteCount } = tag;
   return { id, label, color, description, noteCount };
+};
+
+export const toReadingGoalJSON = (goal: ReadingGoalRecord) => {
+  const { id, title, passages, startDate, endDate, active } = goal;
+  return { id, title, passages, startDate, endDate, active };
 };
 
 export const toDailyReminderJSON = (reminder: DailyReminderRecord) => {

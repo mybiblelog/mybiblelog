@@ -5,6 +5,7 @@ import { authRoutes } from '../http/routes/auth';
 import { logEntryRoutes } from '../http/routes/log-entries';
 import { passageNoteRoutes } from '../http/routes/passage-notes';
 import { passageNoteTagRoutes } from '../http/routes/passage-note-tags';
+import { readingGoalRoutes } from '../http/routes/reading-goals';
 import { settingsRoutes } from '../http/routes/settings';
 import { reminderRoutes } from '../http/routes/reminders';
 import { feedbackRoutes } from '../http/routes/feedback';
@@ -28,6 +29,7 @@ registerRoutes(apiRouter, [
   ...logEntryRoutes,
   ...passageNoteRoutes,
   ...passageNoteTagRoutes,
+  ...readingGoalRoutes,
   ...settingsRoutes,
   ...reminderRoutes,
   ...feedbackRoutes,

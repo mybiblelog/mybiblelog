@@ -9,6 +9,7 @@ const main = async (): Promise<void> => {
     logEntries,
     passageNotes,
     passageNoteTags,
+    readingGoals,
     users,
   } = await useCollections();
 
@@ -18,6 +19,7 @@ const main = async (): Promise<void> => {
     { name: 'logentries', collection: logEntries as unknown as Collection<Document> },
     { name: 'passagenotes', collection: passageNotes as unknown as Collection<Document> },
     { name: 'passagenotetags', collection: passageNoteTags as unknown as Collection<Document> },
+    { name: 'readinggoals', collection: readingGoals as unknown as Collection<Document> },
   ];
 
   const activeUserIds = await users.distinct('_id');
