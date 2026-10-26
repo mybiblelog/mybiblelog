@@ -10,6 +10,7 @@ const main = async (): Promise<void> => {
     logEntries,
     passageNotes,
     passageNoteTags,
+    readingGoals,
     users,
     feedback,
   } = await useCollections();
@@ -21,6 +22,7 @@ const main = async (): Promise<void> => {
   await logEntries.deleteMany({});
   await passageNotes.deleteMany({});
   await passageNoteTags.deleteMany({});
+  await readingGoals.deleteMany({});
   await users.deleteMany({});
   await feedback.deleteMany({});
 

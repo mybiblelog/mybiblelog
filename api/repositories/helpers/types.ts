@@ -182,6 +182,26 @@ export interface PassageNoteTagInput {
   description?: string;
 }
 
+export interface ReadingGoalRecord {
+  id: string;
+  ownerId: string;
+  title: string;
+  passages: Array<{ startVerseId: number; endVerseId: number }>;
+  startDate: string;
+  endDate: string;
+  active: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ReadingGoalInput {
+  title: string;
+  passages: Array<{ startVerseId: number; endVerseId: number }>;
+  startDate: string;
+  endDate: string;
+  active: boolean;
+}
+
 export interface DailyReminderRecord {
   id: string;
   ownerId: string;

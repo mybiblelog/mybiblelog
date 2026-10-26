@@ -5,6 +5,7 @@ import { createFeedbackRepository } from './feedback.repository';
 import { createLogEntryRepository } from './log-entry.repository';
 import { createPassageNoteRepository } from './passage-note.repository';
 import { createPassageNoteTagRepository } from './passage-note-tag.repository';
+import { createReadingGoalRepository } from './reading-goal.repository';
 import { createUserRepository } from './user.repository';
 
 /**
@@ -20,6 +21,7 @@ const useRepositories = async () => {
     logEntries: createLogEntryRepository(collections),
     passageNotes: createPassageNoteRepository(collections),
     passageNoteTags: createPassageNoteTagRepository(collections),
+    readingGoals: createReadingGoalRepository(collections),
     dailyReminders: createDailyReminderRepository(collections),
     feedback: createFeedbackRepository(collections),
     emails: createEmailRepository(collections),

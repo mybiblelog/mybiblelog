@@ -7,6 +7,7 @@ import {
   LogEntryDocument,
   PassageNoteDocument,
   PassageNoteTagDocument,
+  ReadingGoalDocument,
   UserDocument,
 } from './documents';
 
@@ -32,6 +33,7 @@ export interface Collections {
   logEntries: Collection<LogEntryDocument>;
   passageNotes: Collection<PassageNoteDocument>;
   passageNoteTags: Collection<PassageNoteTagDocument>;
+  readingGoals: Collection<ReadingGoalDocument>;
   dailyReminders: Collection<DailyReminderDocument>;
   feedback: Collection<FeedbackDocument>;
 }
@@ -72,6 +74,7 @@ const useCollections = async (): Promise<Collections> => {
     logEntries: database.collection<LogEntryDocument>('logentries'),
     passageNotes: database.collection<PassageNoteDocument>('passagenotes'),
     passageNoteTags: database.collection<PassageNoteTagDocument>('passagenotetags'),
+    readingGoals: database.collection<ReadingGoalDocument>('readinggoals'),
     dailyReminders: database.collection<DailyReminderDocument>('dailyreminders'),
     feedback: database.collection<FeedbackDocument>('feedbacks'),
   };
@@ -88,6 +91,7 @@ export const ensureIndexes = async (): Promise<void> => {
     collections.users.createIndex({ email: 1 }, { unique: true }),
     collections.passageNoteTags.createIndex({ owner: 1, label: 1 }, { unique: true }),
     collections.passageNotes.createIndex({ content: 'text' }),
+    collections.readingGoals.createIndex({ owner: 1 }),
   ]);
 };
 

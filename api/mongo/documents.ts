@@ -81,6 +81,19 @@ export interface LogEntryDocument {
   updatedAt: Date;
 }
 
+export interface ReadingGoalDocument {
+  _id: ObjectId;
+  owner: ObjectId;
+  title: string;
+  /** Ordered verse ranges; no subdocument `_id`s (they are never addressed individually). */
+  passages: Array<{ startVerseId: number; endVerseId: number }>;
+  startDate: string;
+  endDate: string;
+  active: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 /** Passage subdocuments carry their own `_id` (Mongoose did not set `_id: false`). */
 export interface PassageSubdocument {
   _id: ObjectId;
