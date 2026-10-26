@@ -33,6 +33,15 @@
         </div>
       </div>
     </div>
+    <div v-if="todayGoals.length" class="today-page__goals" role="list" data-testid="reading-goals">
+      <reading-goal-card
+        v-for="{ goal, progress } of todayGoals"
+        :key="goal.id"
+        role="listitem"
+        :goal="goal"
+        :progress="progress"
+      />
+    </div>
     <reading-tracker-reset-card />
     <div class="entry-container" role="list" data-testid="log-entries">
       <ClientOnly>
@@ -156,6 +165,7 @@ import DoubleProgressBar from '~/components/ui/DoubleProgressBar.vue';
 import ReadingTrackerResetCard from '~/components/ui/ReadingTrackerResetCard.vue';
 import SkeletonLoader from '~/components/ui/SkeletonLoader.vue';
 import LogEntry from '~/components/log/LogEntry.vue';
+import ReadingGoalCard from '~/components/goals/ReadingGoalCard.vue';
 import PassageNote from '~/components/notes/PassageNote.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
 import { useAppInitStore } from '~/stores/app-init';
@@ -167,6 +177,7 @@ import type { ReadingSuggestionPassage } from '~/stores/reading-suggestions';
 import { usePassageNotesStore, type PassageNoteListItem } from '~/stores/passage-notes';
 import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
 import { useUserSettingsStore } from '~/stores/user-settings';
+import { useReadingGoalsStore } from '~/stores/reading-goals';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
 import { encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
@@ -195,6 +206,8 @@ const loadingLogEntries = ref(true);
 const loadingReadingSuggestions = ref(true);
 
 const userSettings = computed(() => userSettingsStore.settings);
+const readingGoalsStore = useReadingGoalsStore();
+const todayGoals = computed(() => readingGoalsStore.todayGoals);
 const logEntries = computed(() => logEntriesStore.currentLogEntries);
 const addNewVerseCountToReadingSuggestion = (passage: Passage) => {
   const today = dayjs().format('YYYY-MM-DD');
@@ -370,6 +383,13 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.today-page__goals {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mbl-space-xs);
+  margin-bottom: var(--mbl-space-md);
+}
+
 .today-page__progress-bar-container {
   margin-top: calc(-1 * var(--mbl-space-md));
   margin-bottom: var(--mbl-space-xl);

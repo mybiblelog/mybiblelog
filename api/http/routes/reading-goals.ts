@@ -53,11 +53,11 @@ export const readingGoalRoutes: RouteDefinition[] = [
     },
   },
   {
-    method: 'PUT',
+    method: 'PATCH',
     path: '/reading-goals/:id',
     handler: updateReadingGoal,
     docs: {
-      summary: 'Replace a reading goal',
+      summary: 'Update a reading goal (full replacement)',
       tags,
       request: { params: objectIdParam, body: readingGoalBodySchema },
       response: { description: 'The updated reading goal', schema: readingGoalSchema },

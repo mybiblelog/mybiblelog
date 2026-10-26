@@ -38,7 +38,7 @@ export const createReadingGoal: RouteHandler = async (req, deps) => {
   return { status: 200, body: { data: toReadingGoalJSON(goal) } };
 };
 
-// PUT /reading-goals/:id - Replace a goal
+// PATCH /reading-goals/:id - Replace a goal (the body is the full goal)
 export const updateReadingGoal: RouteHandler = async (req, deps) => {
   const { params, body } = validate(req, { params: objectIdParam, body: readingGoalBodySchema });
   const currentUser = await deps.authenticate(req);

@@ -58,6 +58,9 @@ const achievementTitle = computed(() => {
   if (achievement.achievementType === ACHIEVEMENT.BIBLE_COMPLETE) {
     return t('achievement.bible_complete.title');
   }
+  if (achievement.achievementType === ACHIEVEMENT.GOAL_COMPLETE) {
+    return t('achievement.goal_complete.title');
+  }
   return '';
 });
 
@@ -68,6 +71,9 @@ const achievementMessage = computed(() => {
   }
   if (achievement.achievementType === ACHIEVEMENT.BIBLE_COMPLETE) {
     return t('achievement.bible_complete.message');
+  }
+  if (achievement.achievementType === ACHIEVEMENT.GOAL_COMPLETE) {
+    return t('achievement.goal_complete.message', { goalTitle: achievement.achievementData as string });
   }
   return '';
 });
@@ -143,6 +149,10 @@ const _close = () => {
       "bible_complete": {
         "title": "Bible Complete!",
         "message": "🎉 Amazing! You have completed reading the entire Bible! 🎉"
+      },
+      "goal_complete": {
+        "title": "Goal Complete!",
+        "message": "Congratulations! You have completed your reading goal: {goalTitle}!"
       }
     }
   },
@@ -156,6 +166,10 @@ const _close = () => {
       "bible_complete": {
         "title": "Bibel abgeschlossen!",
         "message": "🎉 Unglaublich! Sie haben die gesamte Bibel gelesen! 🎉"
+      },
+      "goal_complete": {
+        "title": "Ziel erreicht!",
+        "message": "Glückwunsch! Sie haben Ihr Leseziel erreicht: {goalTitle}!"
       }
     }
   },
@@ -169,6 +183,10 @@ const _close = () => {
       "bible_complete": {
         "title": "¡Biblia completada!",
         "message": "🎉 ¡Increíble! Has completado la lectura de toda la Biblia! 🎉"
+      },
+      "goal_complete": {
+        "title": "¡Meta cumplida!",
+        "message": "¡Felicitaciones! Has completado tu meta de lectura: {goalTitle}!"
       }
     }
   },
@@ -182,6 +200,10 @@ const _close = () => {
       "bible_complete": {
         "title": "Bible terminée!",
         "message": "🎉 Incroyable! Vous avez terminé de lire toute la Bible! 🎉"
+      },
+      "goal_complete": {
+        "title": "Objectif atteint!",
+        "message": "Félicitations! Vous avez atteint votre objectif de lecture : {goalTitle}!"
       }
     }
   },
@@ -195,6 +217,10 @@ const _close = () => {
       "bible_complete": {
         "title": "성경을 다 읽으셨네요!",
         "message": "🎉 대단합니다! 성경 전체를 1독하셨군요! 🎉"
+      },
+      "goal_complete": {
+        "title": "목표 달성!",
+        "message": "축하드립니다! 읽기 목표를 달성하셨군요: {goalTitle}!"
       }
     }
   },
@@ -208,6 +234,10 @@ const _close = () => {
       "bible_complete": {
         "title": "Bíblia completa!",
         "message": "🎉 Incrível! Você completou a leitura de toda a Bíblia! 🎉"
+      },
+      "goal_complete": {
+        "title": "Meta concluída!",
+        "message": "Parabéns! Você concluiu sua meta de leitura: {goalTitle}!"
       }
     }
   },
@@ -221,6 +251,10 @@ const _close = () => {
       "bible_complete": {
         "title": "Біблія завершена!",
         "message": "🎉 Дивовижно! Ви завершили читання всієї Біблії! 🎉"
+      },
+      "goal_complete": {
+        "title": "Мету досягнуто!",
+        "message": "Вітаємо! Ви досягли своєї мети читання: {goalTitle}!"
       }
     }
   }

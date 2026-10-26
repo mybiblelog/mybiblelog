@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useUserSettingsStore } from '~/stores/user-settings';
 import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
+import { useReadingGoalsStore } from '~/stores/reading-goals';
 
 export const useAppInitStore = defineStore('app-init', {
   actions: {
@@ -13,6 +14,7 @@ export const useAppInitStore = defineStore('app-init', {
       await Promise.all([
         logEntriesStore.loadLogEntries(),
         passageNoteTagsStore.loadPassageNoteTags(),
+        useReadingGoalsStore().loadReadingGoals(),
       ]);
     },
 
@@ -22,6 +24,7 @@ export const useAppInitStore = defineStore('app-init', {
       useLogEntriesStore().$reset();
       useUserSettingsStore().$reset();
       usePassageNoteTagsStore().$reset();
+      useReadingGoalsStore().$reset();
     },
   },
 });
