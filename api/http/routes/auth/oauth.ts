@@ -11,6 +11,7 @@ export const authOauthRoutes: RouteDefinition[] = [
     path: '/auth/oauth2/google/url',
     handler: getGoogleOauthUrl,
     docs: {
+      operationId: 'getGoogleOauthUrl',
       summary: 'Get Google OAuth2 URL',
       tags,
       public: true,
@@ -26,6 +27,7 @@ export const authOauthRoutes: RouteDefinition[] = [
     path: '/auth/oauth2/google/verify',
     handler: verifyGoogleOauth,
     docs: {
+      operationId: 'verifyGoogleOauthCode',
       summary: 'Verify Google OAuth2 code',
       tags,
       public: true,
@@ -43,6 +45,7 @@ export const authOauthRoutes: RouteDefinition[] = [
     path: '/auth/oauth2/google/id-token',
     handler: googleIdTokenLogin,
     docs: {
+      operationId: 'loginWithGoogleIdToken',
       summary: 'Login with a Google ID token (mobile-friendly)',
       description:
         'Accepts a Google `id_token` from a native/mobile Google sign-in flow and '

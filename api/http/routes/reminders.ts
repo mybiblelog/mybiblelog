@@ -32,6 +32,7 @@ export const reminderRoutes: RouteDefinition[] = [
     path: '/reminders/daily-reminder',
     handler: getDailyReminder,
     docs: {
+      operationId: 'getDailyReminder',
       summary: 'Get the daily reminder for the current user',
       tags,
       response: { description: 'The daily reminder', schema: dailyReminderSchema },
@@ -43,6 +44,7 @@ export const reminderRoutes: RouteDefinition[] = [
     path: '/reminders/daily-reminder',
     handler: updateDailyReminder,
     docs: {
+      operationId: 'updateDailyReminder',
       summary: 'Update the daily reminder for the current user',
       tags,
       request: { body: dailyReminderPatchSchema },
@@ -55,6 +57,8 @@ export const reminderRoutes: RouteDefinition[] = [
     path: '/reminders/daily-reminder/unsubscribe/:token',
     handler: unsubscribeDailyReminder,
     docs: {
+      operationId: 'unsubscribeDailyReminder',
+      internal: true,
       summary: 'Unsubscribe from daily reminders using the reminder public token',
       tags,
       public: true,

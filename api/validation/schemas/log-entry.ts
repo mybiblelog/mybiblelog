@@ -11,7 +11,10 @@ const readingDate = dateString.describe('YYYY-MM-DD date the passage was read');
  * `{ date, startVerseId, endVerseId }`.
  */
 export const logEntryCreateSchema = requirePassage(
-  z.object({ date: readingDate, ...passageFields }).describe(`A passage the user read. ${PASSAGE_FIELDS_DESCRIPTION}`),
+  z.object({ date: readingDate, ...passageFields }).meta({
+    description: `A passage the user read. ${PASSAGE_FIELDS_DESCRIPTION}`,
+    example: { date: '2026-10-26', passage: 'JHN.3' },
+  }),
 )
   .transform((value, ctx) => ({
     date: value.date,
@@ -38,8 +41,8 @@ export type LogEntryUpdateBody = z.infer<typeof logEntryUpdateSchema>;
  * trailing `?startDate=` does not fail validation (matching prior behavior).
  */
 export const logEntryListQuerySchema = z.object({
-  startDate: z.preprocess((v) => (v === '' ? undefined : v), dateString.optional()),
-  endDate: z.preprocess((v) => (v === '' ? undefined : v), dateString.optional()),
+  startDate: z.preprocess((v) => (v === '' ? undefined : v), dateString.optional()).describe('Earliest reading date to include (YYYY-MM-DD, inclusive)'),
+  endDate: z.preprocess((v) => (v === '' ? undefined : v), dateString.optional()).describe('Latest reading date to include (YYYY-MM-DD, inclusive)'),
 });
 
 export type LogEntryListQuery = z.infer<typeof logEntryListQuerySchema>;

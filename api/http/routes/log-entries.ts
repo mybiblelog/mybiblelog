@@ -29,7 +29,9 @@ export const logEntryRoutes: RouteDefinition[] = [
     method: 'GET',
     path: '/log-entries',
     handler: listLogEntries,
+    scopes: ['logs:read'],
     docs: {
+      operationId: 'listLogEntries',
       summary: 'Get all log entries for the current user',
       tags: ['LogEntries'],
       request: { query: logEntryListQuerySchema },
@@ -40,7 +42,9 @@ export const logEntryRoutes: RouteDefinition[] = [
     method: 'GET',
     path: '/log-entries/:id',
     handler: getLogEntry,
+    scopes: ['logs:read'],
     docs: {
+      operationId: 'getLogEntry',
       summary: 'Get a specific log entry by ID',
       tags: ['LogEntries'],
       request: { params: objectIdParam },
@@ -51,7 +55,9 @@ export const logEntryRoutes: RouteDefinition[] = [
     method: 'POST',
     path: '/log-entries',
     handler: createLogEntry,
+    scopes: ['logs:write'],
     docs: {
+      operationId: 'createLogEntry',
       summary: 'Create a new log entry',
       tags: ['LogEntries'],
       request: { body: logEntryCreateSchema },
@@ -62,7 +68,9 @@ export const logEntryRoutes: RouteDefinition[] = [
     method: 'PATCH',
     path: '/log-entries/:id',
     handler: updateLogEntry,
+    scopes: ['logs:write'],
     docs: {
+      operationId: 'updateLogEntry',
       summary: 'Update a log entry',
       tags: ['LogEntries'],
       request: { params: objectIdParam, body: logEntryUpdateSchema },
@@ -73,7 +81,10 @@ export const logEntryRoutes: RouteDefinition[] = [
     method: 'DELETE',
     path: '/log-entries/:id',
     handler: deleteLogEntry,
+    scopes: ['logs:write'],
     docs: {
+      operationId: 'deleteLogEntry',
+      destructive: true,
       summary: 'Delete a log entry',
       tags: ['LogEntries'],
       request: { params: objectIdParam },

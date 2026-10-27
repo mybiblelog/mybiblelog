@@ -29,6 +29,21 @@ describe('clean', () => {
     const node = { $schema: 'https://json-schema.org/draft/2020-12/schema', $id: 'foo', type: 'string' };
     expect(clean(node)).toEqual({ type: 'string' });
   });
+
+  it('rewrites anyOf-with-null as OpenAPI 3.0 nullable', () => {
+    const node = { anyOf: [{ type: 'string' }, { type: 'null' }], description: 'Owner' };
+    expect(clean(node)).toEqual({ type: 'string', description: 'Owner', nullable: true });
+  });
+
+  it('keeps anyOf when more than one non-null option remains', () => {
+    const node = { anyOf: [{ type: 'string' }, { type: 'number' }, { type: 'null' }] };
+    expect(clean(node)).toEqual({ anyOf: [{ type: 'string' }, { type: 'number' }], nullable: true });
+  });
+
+  it('drops a propertyNames that only says keys are strings', () => {
+    const node = { type: 'object', propertyNames: { type: 'string' }, additionalProperties: { type: 'number' } };
+    expect(clean(node)).toEqual({ type: 'object', additionalProperties: { type: 'number' } });
+  });
 });
 
 describe('zodToOpenApiSchema', () => {

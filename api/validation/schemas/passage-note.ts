@@ -32,7 +32,10 @@ export const passageNoteBodyDocsSchema = passageNoteBaseSchema.extend({
   content: passageNoteBaseSchema.shape.content.describe('Note text, up to 3000 characters'),
   passages: z.array(passageInputDocsSchema).optional().describe('Passages the note is about'),
   tags: z.array(z.string()).optional().describe('IDs of the user\'s tags to attach to the note'),
-}).describe('A note needs `content`, `passages`, or both. On update, omitted fields keep their values.');
+}).meta({
+  description: 'A note needs `content`, `passages`, or both. On update, omitted fields keep their values.',
+  example: { content: 'God loved the world enough to give.', passages: ['JHN.3.16-18'], tags: [] },
+});
 
 export type PassageNoteCreateBody = z.infer<typeof passageNoteCreateSchema>;
 export type PassageNoteUpdateBody = z.infer<typeof passageNoteUpdateSchema>;

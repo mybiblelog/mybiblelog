@@ -12,6 +12,7 @@ import { adminRoutes } from '../http/routes/admin';
 import { scriptureRoutes } from '../http/routes/scripture';
 import { sitemapRoutes } from '../http/routes/sitemap';
 import { mobileAppRoutes } from '../http/routes/mobile-app';
+import { accessTokenRoutes } from '../http/routes/access-tokens';
 import { testEmailRoutes } from '../http/routes/test-emails';
 
 /**
@@ -35,6 +36,7 @@ registerRoutes(apiRouter, [
   ...scriptureRoutes,
   ...sitemapRoutes,
   ...mobileAppRoutes,
+  ...accessTokenRoutes,
   // Test-only seam; the handler returns 404 in production / without the bypass header.
   ...testEmailRoutes,
 ]);

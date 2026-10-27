@@ -27,6 +27,7 @@ const locales: Locales = {
       email_not_verified: 'Email not verified',
       verification_code_expired: 'Verification code has expired',
       tag_in_use: 'This tag is still used by one or more notes',
+      access_token_limit: 'You can have at most {limit} access tokens. Revoke one you no longer use first.',
     },
     reading_suggestion: {
       new_testament: 'Read something new in the New Testament',
@@ -61,6 +62,7 @@ const locales: Locales = {
       email_not_verified: 'Email nicht verifiziert',
       verification_code_expired: 'Verifizierungscode abgelaufen',
       tag_in_use: 'Dieser Tag wird noch von einer oder mehreren Notizen verwendet',
+      access_token_limit: 'Sie können höchstens {limit} Zugriffstoken haben. Widerrufen Sie zuerst eines, das Sie nicht mehr verwenden.',
     },
     reading_suggestion: {
       new_testament: 'Lese etwas Neues im Neuen Testament',
@@ -95,6 +97,7 @@ const locales: Locales = {
       email_not_verified: 'Correo electrónico no verificado',
       verification_code_expired: 'El código de verificación ha caducado',
       tag_in_use: 'Esta etiqueta todavía se usa en una o más notas',
+      access_token_limit: 'Puede tener como máximo {limit} tokens de acceso. Revoque primero uno que ya no use.',
     },
     reading_suggestion: {
       new_testament: 'Lee algo nuevo en el Nuevo Testamento',
@@ -129,6 +132,7 @@ const locales: Locales = {
       email_not_verified: 'Email non vérifié',
       verification_code_expired: 'Code de vérification expiré',
       tag_in_use: 'Ce tag est encore utilisé par une ou plusieurs notes',
+      access_token_limit: 'Vous pouvez avoir au maximum {limit} jetons d\'accès. Révoquez d\'abord un jeton que vous n\'utilisez plus.',
     },
     reading_suggestion: {
       new_testament: 'Lisez quelque chose de nouveau dans le Nouveau Testament',
@@ -163,6 +167,7 @@ const locales: Locales = {
       email_not_verified: '이메일이 인증되지 않았습니다',
       verification_code_expired: '인증 코드가 만료되었습니다',
       tag_in_use: '이 태그는 아직 하나 이상의 노트에서 사용 중입니다',
+      access_token_limit: '액세스 토큰은 최대 {limit}개까지 만들 수 있습니다. 먼저 더 이상 사용하지 않는 토큰을 해지하세요.',
     },
     reading_suggestion: {
       new_testament: '신약성경에서 새로운 내용을 읽어보세요',
@@ -197,6 +202,7 @@ const locales: Locales = {
       email_not_verified: 'Email não verificado',
       verification_code_expired: 'Código de verificação expirado',
       tag_in_use: 'Esta tag ainda é usada por uma ou mais notas',
+      access_token_limit: 'Você pode ter no máximo {limit} tokens de acesso. Revogue primeiro um que não usa mais.',
     },
     reading_suggestion: {
       new_testament: 'Leia algo novo no Novo Testamento',
@@ -231,6 +237,7 @@ const locales: Locales = {
       email_not_verified: 'Email не підтверджений',
       verification_code_expired: 'Код підтвердження застарів',
       tag_in_use: 'Цей тег усе ще використовується в одній або кількох нотатках',
+      access_token_limit: 'Ви можете мати щонайбільше {limit} токенів доступу. Спершу відкличте той, яким більше не користуєтеся.',
     },
     reading_suggestion: {
       new_testament: 'Прочитайте щось нове в Новому Заповіті',

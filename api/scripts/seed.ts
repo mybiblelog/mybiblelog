@@ -5,6 +5,7 @@ import useRepositories from '../repositories/useRepositories';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const main = async (): Promise<void> => {
   const {
+    accessTokens,
     dailyReminders,
     emails,
     logEntries,
@@ -16,6 +17,7 @@ const main = async (): Promise<void> => {
 
   // Delete all documents. Wholesale collection wipes have no repository
   // equivalent, so this is sanctioned direct collection access for admin scripts.
+  await accessTokens.deleteMany({});
   await dailyReminders.deleteMany({});
   await emails.deleteMany({});
   await logEntries.deleteMany({});

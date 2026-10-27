@@ -22,6 +22,8 @@ export const mobileAppRoutes: RouteDefinition[] = [
     path: '/mobile-app/support',
     handler: getMobileAppSupport,
     docs: {
+      operationId: 'getMobileAppSupport',
+      internal: true,
       summary: 'Mobile app support / upgrade status',
       description:
         'Used by the React Native app at startup to determine whether the installed app '

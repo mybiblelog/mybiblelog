@@ -28,7 +28,9 @@ export const passageNoteTagRoutes: RouteDefinition[] = [
     method: 'GET',
     path: '/passage-note-tags',
     handler: listPassageNoteTags,
+    scopes: ['notes:read'],
     docs: {
+      operationId: 'listPassageNoteTags',
       summary: 'Get all passage note tags for the current user',
       tags,
       response: { description: 'List of passage note tags', schema: z.array(passageNoteTagSchema) },
@@ -39,7 +41,9 @@ export const passageNoteTagRoutes: RouteDefinition[] = [
     method: 'GET',
     path: '/passage-note-tags/:id',
     handler: getPassageNoteTag,
+    scopes: ['notes:read'],
     docs: {
+      operationId: 'getPassageNoteTag',
       summary: 'Get a specific passage note tag by ID',
       tags,
       request: { params: objectIdParam },
@@ -51,7 +55,9 @@ export const passageNoteTagRoutes: RouteDefinition[] = [
     method: 'POST',
     path: '/passage-note-tags',
     handler: createPassageNoteTag,
+    scopes: ['notes:write'],
     docs: {
+      operationId: 'createPassageNoteTag',
       summary: 'Create a new passage note tag',
       tags,
       request: { body: passageNoteTagCreateSchema },
@@ -63,7 +69,9 @@ export const passageNoteTagRoutes: RouteDefinition[] = [
     method: 'PATCH',
     path: '/passage-note-tags/:id',
     handler: updatePassageNoteTag,
+    scopes: ['notes:write'],
     docs: {
+      operationId: 'updatePassageNoteTag',
       summary: 'Update a passage note tag',
       tags,
       request: { params: objectIdParam, body: passageNoteTagUpdateSchema },
@@ -75,7 +83,10 @@ export const passageNoteTagRoutes: RouteDefinition[] = [
     method: 'DELETE',
     path: '/passage-note-tags/:id',
     handler: deletePassageNoteTag,
+    scopes: ['notes:write'],
     docs: {
+      operationId: 'deletePassageNoteTag',
+      destructive: true,
       summary: 'Delete a passage note tag',
       tags,
       request: { params: objectIdParam },

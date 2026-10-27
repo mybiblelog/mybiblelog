@@ -1,10 +1,12 @@
 import jwt from 'jsonwebtoken';
+import { ACCESS_TOKEN_PREFIX, type AccessTokenScope } from '@mybiblelog/shared';
 import { getConfig } from '../../config';
 import useRepositories from '../../repositories/useRepositories';
 import { parseCookieHeader } from './parse-cookie-header';
 import { AUTH_TOKEN_TTL_DAYS } from '../../repositories/helpers/user-auth';
-import { type UserRecord } from '../../repositories/helpers/types';
+import { type AccessTokenRecord, type UserRecord } from '../../repositories/helpers/types';
 import { UnauthenticatedError, UnauthorizedError } from '../errors/http-errors';
+import { ApiErrorDetailCode } from '../errors/error-codes';
 
 /**
  * Minimal, framework-agnostic request shape this helper needs. Both the
@@ -14,7 +16,14 @@ import { UnauthenticatedError, UnauthorizedError } from '../errors/http-errors';
  */
 type AuthRequest = {
   headers: Record<string, string | string[] | undefined>;
+  /** The scopes an access token needs for this route; see `RouteDefinition.scopes`. */
+  requiredScopes?: readonly AccessTokenScope[];
 };
+
+type AuthOptions = { optional?: boolean; adminOnly?: boolean };
+
+/** The authenticated user, plus the access token they authenticated with, if any. */
+export type AuthResult = { user: UserRecord; accessToken: AccessTokenRecord | null };
 
 export const AUTH_COOKIE_NAME = 'auth_token';
 // Keep the cookie lifetime in sync with the JWT it carries
@@ -25,6 +34,8 @@ const jwtAlgorithms: jwt.Algorithm[] = ['HS256'];
 // NOTE: the auth-token cookie is set declaratively via `HttpResult.cookies`
 // (see `auth-cookie.ts`); the adapter performs the actual `res.cookie()` call,
 // which keeps this helper framework-agnostic.
+
+const isAccessToken = (token: string): boolean => token.startsWith(ACCESS_TOKEN_PREFIX);
 
 const getTokenFromHeader = (req: AuthRequest): string | null => {
   const authorizationHeader = req.headers.authorization;
@@ -40,9 +51,67 @@ const getTokenFromHeader = (req: AuthRequest): string | null => {
     return null;
   }
 
+  // The cookie only ever carries a session. An access token is accepted from
+  // the Authorization header alone, so a browser never sends one implicitly.
   const cookies = parseCookieHeader(cookieHeader);
-  return cookies[AUTH_COOKIE_NAME] || null;
+  const cookieToken = cookies[AUTH_COOKIE_NAME] || null;
+  return cookieToken && !isAccessToken(cookieToken) ? cookieToken : null;
 };
+
+/**
+ * Decides whether an access token may make this request. Pure, so the rules
+ * are testable without a database.
+ *
+ * Revocation, expiry and the owner's `tokenVersion` are checked before scopes,
+ * so a dead token always reads as 401 (sign in again) rather than 403. A route
+ * that declares no scopes rejects every access token: routes are session-only
+ * until they opt in, and admin routes never opt in.
+ */
+export const checkAccessToken = (
+  accessToken: AccessTokenRecord | null,
+  user: UserRecord | null,
+  { requiredScopes, adminOnly = false, now = new Date() }: { requiredScopes?: readonly AccessTokenScope[]; adminOnly?: boolean; now?: Date },
+): UserRecord => {
+  if (!accessToken || !user || accessToken.expiresAt <= now || accessToken.tokenVersion !== user.tokenVersion) {
+    throw new UnauthenticatedError();
+  }
+  const required = adminOnly ? [] : (requiredScopes ?? []);
+  if (required.length === 0 || !required.every((scope) => accessToken.scopes.includes(scope))) {
+    throw new UnauthorizedError([{
+      field: null,
+      code: ApiErrorDetailCode.InsufficientScope,
+      properties: { requiredScopes: [...required] },
+    }]);
+  }
+  return user;
+};
+
+const authenticateAccessToken = async (req: AuthRequest, token: string, adminOnly: boolean): Promise<AuthResult> => {
+  const { accessTokens, users } = await useRepositories();
+  const accessToken = await accessTokens.findByToken(token);
+  const owner = accessToken && await users.findById(accessToken.ownerId);
+  const user = checkAccessToken(accessToken, owner, { requiredScopes: req.requiredScopes, adminOnly });
+  return { user, accessToken };
+};
+
+/**
+ * Authenticates a request from its session JWT (Authorization header or auth
+ * cookie) or its personal access token (Authorization header only). Returns
+ * `null` for an anonymous or invalid session when `optional` is set. An access
+ * token is never treated as anonymous: one that cannot make this request is an
+ * error even on an optional route, so an agent hears why instead of silently
+ * acting as nobody.
+ */
+export async function authenticateRequest(req: AuthRequest, opts: { optional: true; adminOnly?: boolean }): Promise<AuthResult | null>;
+export async function authenticateRequest(req: AuthRequest, opts?: { optional?: false; adminOnly?: boolean }): Promise<AuthResult>;
+export async function authenticateRequest(req: AuthRequest, { optional = false, adminOnly = false }: AuthOptions = {}): Promise<AuthResult | null> {
+  const token = getTokenFromHeader(req);
+  if (token && isAccessToken(token)) {
+    return authenticateAccessToken(req, token, adminOnly);
+  }
+  const user = await authenticateSession(token, { optional, adminOnly });
+  return user && { user, accessToken: null };
+}
 
 async function authCurrentUser(
   req: AuthRequest,
@@ -58,14 +127,18 @@ async function authCurrentUser(
   opts: { optional: true; adminOnly?: boolean }
 ): Promise<UserRecord | null>;
 
-async function authCurrentUser(req: AuthRequest, { optional = false, adminOnly = false } = {}): Promise<UserRecord | null> {
+async function authCurrentUser(req: AuthRequest, opts: AuthOptions = {}): Promise<UserRecord | null> {
+  const result = await authenticateRequest(req, opts as { optional: true; adminOnly?: boolean });
+  return result?.user ?? null;
+}
+
+async function authenticateSession(token: string | null, { optional = false, adminOnly = false }: AuthOptions): Promise<UserRecord | null> {
   const { jwtSecret, siteUrl } = getConfig();
   const jwtIssuer = new URL(siteUrl).origin;
   const jwtAudience = jwtIssuer;
 
   const { users } = await useRepositories();
 
-  const token = getTokenFromHeader(req);
   if (!token) {
     if (!optional) {
       throw new UnauthenticatedError();

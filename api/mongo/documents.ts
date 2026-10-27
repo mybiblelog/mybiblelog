@@ -147,3 +147,26 @@ export interface EmailDocument {
   createdAt: Date;
   updatedAt: Date;
 }
+
+/**
+ * A personal access token. Only a SHA-256 hash of the token is stored; the
+ * plaintext is shown to the user once, when the token is created.
+ */
+export interface AccessTokenDocument {
+  _id: ObjectId;
+  owner: ObjectId;
+  name: string;
+  tokenHash: string;
+  /** The first characters of the token, so the user can tell their tokens apart. */
+  prefix: string;
+  scopes: string[];
+  /**
+   * The owner's `tokenVersion` when the token was created. Bumping the user's
+   * version (password change, "log out all sessions") revokes their access
+   * tokens along with their sessions.
+   */
+  tokenVersion: number;
+  expiresAt: Date;
+  lastUsedAt: Date | null;
+  createdAt: Date;
+}

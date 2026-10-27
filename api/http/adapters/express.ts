@@ -32,6 +32,7 @@ export const registerRoutes = (router: Router, routes: RouteDefinition[]): void 
           headers: req.headers,
           ip: req.ip,
           path: req.path,
+          requiredScopes: route.scopes,
         };
         const result = await route.handler(httpReq, deps);
         for (const cookie of result.cookies ?? []) {

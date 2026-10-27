@@ -6,6 +6,8 @@
  * methods exist. Route handlers should only ever see these types.
  */
 
+import { type AccessTokenScope } from '@mybiblelog/shared';
+
 export interface UserSettingsRecord {
   dailyVerseCountGoal: number;
   lookBackDate: string;
@@ -252,4 +254,23 @@ export interface EmailCreateInput {
   text?: string;
   html?: string;
   status: EmailStatus;
+}
+
+export interface AccessTokenRecord {
+  id: string;
+  ownerId: string;
+  name: string;
+  prefix: string;
+  scopes: AccessTokenScope[];
+  tokenVersion: number;
+  expiresAt: Date;
+  lastUsedAt: Date | null;
+  createdAt: Date;
+}
+
+export interface AccessTokenCreateInput {
+  name: string;
+  scopes: AccessTokenScope[];
+  expiresAt: Date;
+  tokenVersion: number;
 }

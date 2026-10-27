@@ -18,21 +18,35 @@ const JS_INT_MAX = 9007199254740991;
 const DEFS_REF_PREFIX = '#/$defs/';
 const COMPONENTS_REF_PREFIX = '#/components/schemas/';
 
+const isNullSchema = (node: any): boolean => node?.type === 'null' && Object.keys(node).length === 1;
+
 /**
- * Strips JSON Schema bookkeeping that OpenAPI 3.0 / Swagger UI does not need:
- * the `$schema`/`$id` dialect markers and the noisy safe-integer bounds zod
- * emits for `.int()`.
+ * Strips JSON Schema bookkeeping that OpenAPI 3.0 / Swagger UI does not need
+ * (the `$schema`/`$id` dialect markers and the noisy safe-integer bounds zod
+ * emits for `.int()`), and rewrites the two JSON Schema constructs OpenAPI 3.0
+ * rejects: `{ anyOf: [X, { type: 'null' }] }` becomes `X` plus `nullable: true`,
+ * and a `propertyNames` that only says keys are strings is dropped.
  */
 export const clean = (node: any): any => {
   if (Array.isArray(node)) {
     return node.map(clean);
   }
   if (node && typeof node === 'object') {
-    const rest: JsonSchema = { ...node };
+    let rest: JsonSchema = { ...node };
     delete rest.$schema;
     delete rest.$id;
     if (rest.minimum === JS_INT_MIN) { delete rest.minimum; }
     if (rest.maximum === JS_INT_MAX) { delete rest.maximum; }
+    if (rest.propertyNames?.type === 'string' && Object.keys(rest.propertyNames).length === 1) {
+      delete rest.propertyNames;
+    }
+    if (Array.isArray(rest.anyOf) && rest.anyOf.some(isNullSchema)) {
+      const { anyOf, ...siblings } = rest;
+      const nonNull = anyOf.filter((option: any) => !isNullSchema(option));
+      rest = nonNull.length === 1 && !nonNull[0].$ref
+        ? { ...nonNull[0], ...siblings, nullable: true }
+        : { ...siblings, anyOf: nonNull, nullable: true };
+    }
     for (const key of Object.keys(rest)) {
       rest[key] = clean(rest[key]);
     }
@@ -98,11 +112,16 @@ export const zodToOpenApiSchema = (
     io,
     metadata: registry,
     // Passing the entity registry as `metadata` replaces zod's global registry,
-    // which is where `.describe()` stores descriptions, so copy them back in.
+    // which is where `.describe()` and `.meta()` store their metadata, so copy
+    // back the keys the docs use. OpenAPI 3.0 spells a single example `example`.
     override: ({ zodSchema, jsonSchema }) => {
-      const description = z.globalRegistry.get(zodSchema)?.description;
-      if (description && jsonSchema.description === undefined) {
-        jsonSchema.description = description;
+      const meta: JsonSchema | undefined = z.globalRegistry.get(zodSchema);
+      if (!meta) { return; }
+      const target = jsonSchema as JsonSchema;
+      for (const key of ['description', 'example', 'deprecated']) {
+        if (meta[key] !== undefined && target[key] === undefined) {
+          target[key] = meta[key];
+        }
       }
     },
   }) as JsonSchema;

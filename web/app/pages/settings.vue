@@ -31,6 +31,9 @@
               <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/import')">
                 {{ t('import') }}
               </NuxtLink>
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/access-tokens')">
+                {{ t('access_tokens') }}
+              </NuxtLink>
             </div>
           </div>
         </div>
@@ -67,6 +70,11 @@
               {{ t('import') }}
             </NuxtLink>
           </li>
+          <li>
+            <NuxtLink :to="localePath('/settings/access-tokens')">
+              {{ t('access_tokens') }}
+            </NuxtLink>
+          </li>
         </ul>
       </div>
       <NuxtPage />
@@ -96,7 +104,8 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
     "reading": "Reading",
     "reminder": "Reminder",
     "export": "Export",
-    "import": "Import"
+    "import": "Import",
+    "access_tokens": "Tokens"
   },
   "de": {
     "settings": "Einstellungen",
@@ -106,7 +115,8 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
     "reading": "Lesen",
     "reminder": "Erinnerung",
     "export": "Exportieren",
-    "import": "Importieren"
+    "import": "Importieren",
+    "access_tokens": "Token"
   },
   "es": {
     "settings": "Configuración",
@@ -116,7 +126,8 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
     "reading": "Lectura",
     "reminder": "Recordatorio",
     "export": "Exportar",
-    "import": "Importar"
+    "import": "Importar",
+    "access_tokens": "Tokens"
   },
   "fr": {
     "settings": "Paramètres",
@@ -126,7 +137,8 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
     "reading": "Lecture",
     "reminder": "Rappel",
     "export": "Exporter",
-    "import": "Importer"
+    "import": "Importer",
+    "access_tokens": "Jetons"
   },
   "ko": {
     "settings": "설정",
@@ -136,7 +148,8 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
     "reading": "읽기",
     "reminder": "알림",
     "export": "내보내기",
-    "import": "불러오기"
+    "import": "불러오기",
+    "access_tokens": "토큰"
   },
   "pt": {
     "settings": "Configurações",
@@ -146,7 +159,8 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
     "reading": "Leitura",
     "reminder": "Lembrete",
     "export": "Exportar",
-    "import": "Importar"
+    "import": "Importar",
+    "access_tokens": "Tokens"
   },
   "uk": {
     "settings": "Налаштування",
@@ -156,7 +170,8 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
     "reading": "Читання",
     "reminder": "Нагадування",
     "export": "Експорт",
-    "import": "Імпорт"
+    "import": "Імпорт",
+    "access_tokens": "Токени"
   }
 }
 </i18n>

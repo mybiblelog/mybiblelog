@@ -16,6 +16,7 @@ export const authEmailChangeRoutes: RouteDefinition[] = [
     path: '/auth/change-email',
     handler: beginEmailChange,
     docs: {
+      operationId: 'beginEmailChange',
       summary: 'Initiate email change process',
       tags,
       request: { body: changeEmailBodySchema },
@@ -31,6 +32,7 @@ export const authEmailChangeRoutes: RouteDefinition[] = [
     path: '/auth/change-email',
     handler: getEmailChange,
     docs: {
+      operationId: 'getEmailChange',
       summary: 'Check for an in-progress email change',
       tags,
       response: {
@@ -45,6 +47,7 @@ export const authEmailChangeRoutes: RouteDefinition[] = [
     path: '/auth/change-email',
     handler: cancelEmailChange,
     docs: {
+      operationId: 'cancelEmailChange',
       summary: 'Cancel email change process',
       tags,
       response: {
@@ -59,6 +62,7 @@ export const authEmailChangeRoutes: RouteDefinition[] = [
     path: '/auth/change-email/complete',
     handler: completeEmailChange,
     docs: {
+      operationId: 'completeEmailChange',
       summary: 'Complete email change process using email and verification code',
       tags,
       public: true,

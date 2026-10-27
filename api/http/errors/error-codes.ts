@@ -48,6 +48,10 @@ export const ApiErrorDetailCode = {
   VerificationCodeExpired: 'verification_code_expired',
   AdminCannotDeleteOwnAccount: 'admin_cannot_delete_own_account',
   TagInUse: 'tag_in_use',
+  // An access token was used on a route it cannot call; `properties.requiredScopes`
+  // lists what the route needs (empty when it never accepts access tokens).
+  InsufficientScope: 'insufficient_scope',
+  AccessTokenLimit: 'access_token_limit', // properties.limit
 };
 
 export type ApiErrorDetailCode = typeof ApiErrorDetailCode[keyof typeof ApiErrorDetailCode];

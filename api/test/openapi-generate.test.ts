@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { generateOpenApiPaths } from '../http/openapi/generate';
 import { type DocumentedRoute } from '../http/types';
 import { documentedRoutes } from '../http/routes';
+import { buildOpenApiSpec } from '../config/swagger';
 
 /**
  * Covers `buildOperation()`'s branches in `http/openapi/generate.ts`: routes
@@ -16,6 +17,16 @@ describe('generateOpenApiPaths', () => {
   it('skips routes with no docs', () => {
     const { paths } = generateOpenApiPaths([{ method: 'GET', path: '/undocumented' }]);
     expect(paths).toEqual({});
+  });
+
+  it('does not default to 401 for a public route', () => {
+    const route: DocumentedRoute = {
+      method: 'GET',
+      path: '/public-thing',
+      docs: { summary: 'Public thing', tags: ['things'], public: true },
+    };
+    const { paths } = generateOpenApiPaths([route]);
+    expect(Object.keys(paths['/public-thing'].get.responses).sort()).toEqual(['200', '400']);
   });
 
   it('defaults to 404 in errors for a route with a path param, and not otherwise', () => {
@@ -36,11 +47,12 @@ describe('generateOpenApiPaths', () => {
 
     const { paths } = generateOpenApiPaths([withParam, withoutParam]);
 
+    // Both are private, so both also document 401.
     const paramOp = paths['/things/{id}'].get;
-    expect(Object.keys(paramOp.responses).sort()).toEqual(['200', '400', '404']);
+    expect(Object.keys(paramOp.responses).sort()).toEqual(['200', '400', '401', '404']);
 
     const noParamOp = paths['/things'].get;
-    expect(Object.keys(noParamOp.responses).sort()).toEqual(['200', '400']);
+    expect(Object.keys(noParamOp.responses).sort()).toEqual(['200', '400', '401']);
   });
 
   it('documents a public route with an empty security array', () => {
@@ -166,5 +178,62 @@ describe('generateOpenApiPaths', () => {
       }
     }
     expect(undescribed).toEqual([]);
+  });
+
+  it('documents a scoped route as accepting access tokens, with its scopes, 403 and 429', () => {
+    const route: DocumentedRoute = {
+      method: 'GET',
+      path: '/scoped-thing',
+      scopes: ['logs:read'],
+      docs: { summary: 'Scoped thing', tags: ['things'], errors: [] },
+    };
+    const { paths } = generateOpenApiPaths([route]);
+    const op = paths['/scoped-thing'].get;
+    expect(op.security).toEqual([{ bearerAuth: [] }, { accessToken: [] }]);
+    expect(op['x-required-scopes']).toEqual(['logs:read']);
+    expect(Object.keys(op.responses).sort()).toEqual(['200', '403', '429']);
+  });
+
+  it('emits operationId and x-destructive from docs', () => {
+    const route: DocumentedRoute = {
+      method: 'DELETE',
+      path: '/things/:id',
+      docs: { operationId: 'deleteThing', summary: 'Delete a thing', tags: ['things'], destructive: true },
+    };
+    const { paths } = generateOpenApiPaths([route]);
+    expect(paths['/things/{id}'].delete.operationId).toBe('deleteThing');
+    expect(paths['/things/{id}'].delete['x-destructive']).toBe(true);
+  });
+
+  it('leaves internal routes out of the public audience only', () => {
+    const route: DocumentedRoute = {
+      method: 'GET',
+      path: '/internal-thing',
+      docs: { summary: 'Internal thing', tags: ['things'], internal: true },
+    };
+    expect(generateOpenApiPaths([route], { audience: 'public' }).paths).toEqual({});
+    expect(generateOpenApiPaths([route]).paths).toHaveProperty('/internal-thing');
+  });
+
+  it('gives every documented route a unique operationId', () => {
+    const ids = documentedRoutes.filter((route) => route.docs).map((route) => route.docs?.operationId);
+    expect(ids.filter((id) => !id)).toEqual([]);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('marks every DELETE route an access token can call as destructive', () => {
+    const unmarked = documentedRoutes
+      .filter((route) => route.method === 'DELETE' && route.scopes?.length && !route.docs?.destructive)
+      .map((route) => route.path);
+    expect(unmarked).toEqual([]);
+  });
+
+  it('keeps admin and other internal routes out of the public spec', () => {
+    const spec = buildOpenApiSpec({ audience: 'public' });
+    const paths = Object.keys(spec.paths);
+    expect(paths.filter((path) => path.startsWith('/admin'))).toEqual([]);
+    expect(paths).not.toContain('/sitemap.xml');
+    expect(paths).toContain('/log-entries');
+    expect(spec.tags.map((tag) => tag.name)).not.toContain('Admin');
   });
 });

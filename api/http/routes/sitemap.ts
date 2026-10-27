@@ -16,6 +16,8 @@ export const sitemapRoutes: RouteDefinition[] = [
     path: '/sitemap.xml',
     handler: getSitemap,
     docs: {
+      operationId: 'getSitemap',
+      internal: true,
       summary: 'Get sitemap in XML format',
       tags,
       public: true,

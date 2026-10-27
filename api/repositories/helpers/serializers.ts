@@ -1,5 +1,6 @@
 import { Bible } from '@mybiblelog/shared';
 import {
+  AccessTokenRecord,
   DailyReminderRecord,
   LogEntryRecord,
   PassageNoteRecord,
@@ -8,6 +9,7 @@ import {
   PassageRecord,
 } from './types';
 import { type LogEntryJSON } from '../../validation/schemas/log-entry';
+import { type AccessTokenJSON } from '../../validation/schemas/access-token';
 
 /**
  * Pure response serializers replicating the custom `toJSON` shapes the
@@ -43,4 +45,17 @@ export const toPassageNoteTagJSON = (tag: PassageNoteTagRecord) => {
 export const toDailyReminderJSON = (reminder: DailyReminderRecord) => {
   const { id, hour, minute, timezoneOffset, active } = reminder;
   return { id, hour, minute, timezoneOffset, active };
+};
+
+export const toAccessTokenJSON = (accessToken: AccessTokenRecord): AccessTokenJSON => {
+  const { id, name, prefix, scopes, createdAt, expiresAt, lastUsedAt } = accessToken;
+  return {
+    id,
+    name,
+    prefix,
+    scopes,
+    createdAt: createdAt.toISOString(),
+    expiresAt: expiresAt.toISOString(),
+    lastUsedAt: lastUsedAt ? lastUsedAt.toISOString() : null,
+  };
 };

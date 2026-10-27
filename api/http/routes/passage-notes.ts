@@ -30,7 +30,9 @@ export const passageNoteRoutes: RouteDefinition[] = [
     method: 'GET',
     path: '/passage-notes',
     handler: listPassageNotes,
+    scopes: ['notes:read'],
     docs: {
+      operationId: 'listPassageNotes',
       summary: 'Get passage notes for the current user',
       tags,
       request: { query: passageNoteListQuerySchema },
@@ -42,7 +44,9 @@ export const passageNoteRoutes: RouteDefinition[] = [
     method: 'GET',
     path: '/passage-notes/:id',
     handler: getPassageNote,
+    scopes: ['notes:read'],
     docs: {
+      operationId: 'getPassageNote',
       summary: 'Get a specific passage note by ID',
       tags,
       request: { params: objectIdParam },
@@ -54,7 +58,9 @@ export const passageNoteRoutes: RouteDefinition[] = [
     method: 'POST',
     path: '/passage-notes',
     handler: createPassageNote,
+    scopes: ['notes:write'],
     docs: {
+      operationId: 'createPassageNote',
       summary: 'Create a new passage note',
       tags,
       request: { body: passageNoteBodyDocsSchema },
@@ -66,7 +72,9 @@ export const passageNoteRoutes: RouteDefinition[] = [
     method: 'PATCH',
     path: '/passage-notes/:id',
     handler: updatePassageNote,
+    scopes: ['notes:write'],
     docs: {
+      operationId: 'updatePassageNote',
       summary: 'Update a passage note',
       tags,
       request: { params: objectIdParam, body: passageNoteBodyDocsSchema },
@@ -78,7 +86,10 @@ export const passageNoteRoutes: RouteDefinition[] = [
     method: 'DELETE',
     path: '/passage-notes/:id',
     handler: deletePassageNote,
+    scopes: ['notes:write'],
     docs: {
+      operationId: 'deletePassageNote',
+      destructive: true,
       summary: 'Delete a passage note',
       tags,
       request: { params: objectIdParam },
@@ -90,7 +101,9 @@ export const passageNoteRoutes: RouteDefinition[] = [
     method: 'GET',
     path: '/passage-notes/count/books',
     handler: getPassageNoteBookCounts,
+    scopes: ['notes:read'],
     docs: {
+      operationId: 'countPassageNotesByBook',
       summary: 'Get count of passage notes by Bible book',
       tags,
       response: {

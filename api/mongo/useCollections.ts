@@ -1,6 +1,7 @@
 import { Collection, Db, MongoClient } from 'mongodb';
 import { getConfig } from '../config';
 import {
+  AccessTokenDocument,
   DailyReminderDocument,
   EmailDocument,
   FeedbackDocument,
@@ -34,6 +35,7 @@ export interface Collections {
   passageNoteTags: Collection<PassageNoteTagDocument>;
   dailyReminders: Collection<DailyReminderDocument>;
   feedback: Collection<FeedbackDocument>;
+  accessTokens: Collection<AccessTokenDocument>;
 }
 
 let client: MongoClient | null = null;
@@ -74,6 +76,7 @@ const useCollections = async (): Promise<Collections> => {
     passageNoteTags: database.collection<PassageNoteTagDocument>('passagenotetags'),
     dailyReminders: database.collection<DailyReminderDocument>('dailyreminders'),
     feedback: database.collection<FeedbackDocument>('feedbacks'),
+    accessTokens: database.collection<AccessTokenDocument>('accesstokens'),
   };
 };
 
@@ -88,6 +91,8 @@ export const ensureIndexes = async (): Promise<void> => {
     collections.users.createIndex({ email: 1 }, { unique: true }),
     collections.passageNoteTags.createIndex({ owner: 1, label: 1 }, { unique: true }),
     collections.passageNotes.createIndex({ content: 'text' }),
+    collections.accessTokens.createIndex({ tokenHash: 1 }, { unique: true }),
+    collections.accessTokens.createIndex({ owner: 1 }),
   ]);
 };
 

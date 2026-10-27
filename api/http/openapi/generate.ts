@@ -17,6 +17,12 @@ import { zodToJsonSchema, zodToOpenApiSchema } from './to-json-schema';
 type JsonSchema = Record<string, any>;
 
 /**
+ * `all` documents every route (the development Swagger UI); `public` leaves out
+ * routes marked `docs.internal` (the spec served in production).
+ */
+export type SpecAudience = 'public' | 'all';
+
+/**
  * The minimal shape the generator needs to document a route. Both a full
  * `RouteDefinition` (with an attached `docs`) and a documentation-only
  * `DocumentedRoute` satisfy this structurally.
@@ -25,6 +31,7 @@ interface DocumentableRoute {
   method: string;
   path: string;
   docs?: RouteDocs;
+  scopes?: readonly string[];
 }
 
 /**
@@ -68,8 +75,8 @@ const errorResponse = {
 /** Default descriptions for the error statuses the generator knows how to emit. */
 const ERROR_DESCRIPTIONS: Record<number, string> = {
   400: 'Invalid request or validation error',
-  401: 'Unauthenticated',
-  403: 'Unauthorized',
+  401: 'Unauthenticated: the token is missing, expired or revoked',
+  403: 'Forbidden: not allowed for this user, or the access token lacks a required scope',
   404: 'Resource not found',
   429: 'Too many requests',
 };
@@ -82,6 +89,18 @@ const AUTH_COOKIE_HEADER = {
   },
 };
 
+/**
+ * Who can call an operation: nobody needs a token (`public`), only a signed-in
+ * session (`bearerAuth`), or a session or a personal access token holding the
+ * route's scopes (`accessToken`). OpenAPI 3.0 has no way to attach scopes to an
+ * `http` scheme, so they are listed in `x-required-scopes` instead.
+ */
+const securityFor = (route: DocumentableRoute): JsonSchema[] => {
+  if (route.docs?.public) { return []; }
+  if (route.scopes?.length) { return [{ bearerAuth: [] }, { accessToken: [] }]; }
+  return [{ bearerAuth: [] }];
+};
+
 const buildOperation = (route: DocumentableRoute): JsonSchema | undefined => {
   const { docs } = route;
   if (!docs) { return undefined; }
@@ -91,7 +110,14 @@ const buildOperation = (route: DocumentableRoute): JsonSchema | undefined => {
   if (docs.request?.query) { parameters.push(...toParameters(docs.request.query, 'query')); }
 
   const hasPathParam = parameters.some((p) => p.in === 'path');
-  const errorStatuses = docs.errors ?? [400, ...(hasPathParam ? [404] : [])];
+  const hasScopes = Boolean(route.scopes?.length);
+  const defaultErrors = [400, ...(docs.public ? [] : [401]), ...(hasPathParam ? [404] : [])];
+  // A scoped route can always answer 403 (the token lacks a scope) and 429
+  // (the per-token rate limit), whatever else it documents.
+  const errorStatuses = [...new Set([
+    ...(docs.errors ?? defaultErrors),
+    ...(hasScopes ? [403, 429] : []),
+  ])].sort((a, b) => a - b);
 
   const responses: JsonSchema = {
     200: {
@@ -117,10 +143,13 @@ const buildOperation = (route: DocumentableRoute): JsonSchema | undefined => {
   }
 
   return {
+    ...(docs.operationId ? { operationId: docs.operationId } : {}),
     summary: docs.summary,
     tags: docs.tags,
     ...(docs.description ? { description: docs.description } : {}),
-    security: docs.public ? [] : [{ bearerAuth: [] }],
+    security: securityFor(route),
+    ...(hasScopes ? { 'x-required-scopes': [...route.scopes!] } : {}),
+    ...(docs.destructive ? { 'x-destructive': true } : {}),
     ...(parameters.length ? { parameters } : {}),
     ...(docs.request?.body
       ? {
@@ -142,10 +171,14 @@ const buildOperation = (route: DocumentableRoute): JsonSchema | undefined => {
  * Builds the OpenAPI `paths` object for the given route tables. Routes without a
  * `docs` field are skipped (they simply won't appear in the docs yet).
  */
-export const generateOpenApiPaths = (routes: DocumentableRoute[]): { paths: JsonSchema } => {
+export const generateOpenApiPaths = (
+  routes: DocumentableRoute[],
+  { audience = 'all' }: { audience?: SpecAudience } = {},
+): { paths: JsonSchema } => {
   const paths: JsonSchema = {};
 
   for (const route of routes) {
+    if (audience === 'public' && route.docs?.internal) { continue; }
     const operation = buildOperation(route);
     if (!operation) { continue; }
 

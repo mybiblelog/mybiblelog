@@ -39,6 +39,8 @@ export const adminRoutes: RouteDefinition[] = [
     path: '/admin/feedback',
     handler: listFeedback,
     docs: {
+      operationId: 'listAdminFeedback',
+      internal: true,
       summary: 'Get feedback submissions by status (open by default)',
       tags,
       request: { query: adminFeedbackListQuerySchema },
@@ -51,6 +53,8 @@ export const adminRoutes: RouteDefinition[] = [
     path: '/admin/feedback/:id',
     handler: updateFeedback,
     docs: {
+      operationId: 'updateAdminFeedback',
+      internal: true,
       summary: 'Update a feedback submission\'s status',
       tags,
       request: { params: adminFeedbackIdParam, body: adminFeedbackPatchSchema },
@@ -63,6 +67,9 @@ export const adminRoutes: RouteDefinition[] = [
     path: '/admin/feedback/:id',
     handler: deleteFeedback,
     docs: {
+      operationId: 'deleteAdminFeedback',
+      internal: true,
+      destructive: true,
       summary: 'Delete a feedback submission',
       tags,
       request: { params: adminFeedbackIdParam },
@@ -75,6 +82,8 @@ export const adminRoutes: RouteDefinition[] = [
     path: '/admin/reports/user-engagement/past-week',
     handler: getUserEngagementPastWeek,
     docs: {
+      operationId: 'getAdminUserEngagementPastWeek',
+      internal: true,
       summary: 'Get past-week user engagement data',
       tags,
       response: {
@@ -89,6 +98,8 @@ export const adminRoutes: RouteDefinition[] = [
     path: '/admin/users',
     handler: listUsers,
     docs: {
+      operationId: 'listAdminUsers',
+      internal: true,
       summary: 'Get a list of users',
       tags,
       request: { query: adminUserListQuerySchema },
@@ -101,6 +112,8 @@ export const adminRoutes: RouteDefinition[] = [
     path: '/admin/users/:email',
     handler: getUser,
     docs: {
+      operationId: 'getAdminUser',
+      internal: true,
       summary: 'Get a specific user by email',
       tags,
       request: { params: adminEmailParam },
@@ -113,6 +126,8 @@ export const adminRoutes: RouteDefinition[] = [
     path: '/admin/users/:email/login',
     handler: loginAsUser,
     docs: {
+      operationId: 'loginAsUser',
+      internal: true,
       summary: 'Get a JWT to log in as a specific user',
       tags,
       request: { params: adminEmailParam },
@@ -126,6 +141,8 @@ export const adminRoutes: RouteDefinition[] = [
     path: '/admin/users/:email/stats',
     handler: getUserStats,
     docs: {
+      operationId: 'getAdminUserStats',
+      internal: true,
       summary: 'Get activity stats for a specific user',
       tags,
       request: { params: adminEmailParam },
@@ -138,6 +155,9 @@ export const adminRoutes: RouteDefinition[] = [
     path: '/admin/users/:email',
     handler: deleteUser,
     docs: {
+      operationId: 'deleteAdminUser',
+      internal: true,
+      destructive: true,
       summary: 'Delete a user by email',
       tags,
       request: { params: adminEmailParam },

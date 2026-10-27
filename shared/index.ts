@@ -124,6 +124,16 @@ export {
   type CreateLogEntryInput,
   type UpdateLogEntryInput,
 } from './log-entry/api';
+export {
+  ACCESS_TOKEN_SCOPES,
+  ACCESS_TOKEN_PREFIX,
+  ACCESS_TOKEN_EXPIRY_DAYS,
+  DEFAULT_ACCESS_TOKEN_EXPIRY_DAYS,
+  MAX_ACTIVE_ACCESS_TOKENS,
+  isAccessTokenScope,
+  type AccessTokenScope,
+  type AccessTokenExpiryDays,
+} from './access-tokens/scopes';
 export type { HttpClient, ApiResponse } from './platform/http-client';
 export { identityTranslator, type Translator } from './platform/translator';
 

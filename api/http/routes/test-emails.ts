@@ -17,6 +17,8 @@ export const testEmailRoutes: RouteDefinition[] = [
     path: '/test/emails',
     handler: listRecentEmails,
     docs: {
+      operationId: 'listRecentEmails',
+      internal: true,
       summary: 'List recent emails for a recipient (test environments only)',
       description:
         'Returns the most recently recorded emails to an address, newest first. '

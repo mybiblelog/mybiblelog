@@ -22,7 +22,9 @@ export const scriptureRoutes: RouteDefinition[] = [
     method: 'GET',
     path: '/scripture/passage',
     handler: getScripturePassage,
+    scopes: ['scripture:read'],
     docs: {
+      operationId: 'getScripturePassage',
       summary: 'Get one chunk of passage text for a verse range',
       tags,
       request: { query: passageQuerySchema },

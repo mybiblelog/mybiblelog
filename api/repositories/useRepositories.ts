@@ -1,4 +1,5 @@
 import useCollections from '../mongo/useCollections';
+import { createAccessTokenRepository } from './access-token.repository';
 import { createDailyReminderRepository } from './daily-reminder.repository';
 import { createEmailRepository } from './email.repository';
 import { createFeedbackRepository } from './feedback.repository';
@@ -23,6 +24,7 @@ const useRepositories = async () => {
     dailyReminders: createDailyReminderRepository(collections),
     feedback: createFeedbackRepository(collections),
     emails: createEmailRepository(collections),
+    accessTokens: createAccessTokenRepository(collections),
   };
 };
 

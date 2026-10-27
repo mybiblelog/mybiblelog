@@ -23,6 +23,7 @@ export const authPasswordRoutes: RouteDefinition[] = [
     path: '/auth/password',
     handler: changePassword,
     docs: {
+      operationId: 'changePassword',
       summary: 'Change user password',
       tags,
       request: { body: changePasswordBodySchema },
@@ -38,6 +39,7 @@ export const authPasswordRoutes: RouteDefinition[] = [
     path: '/auth/password/set',
     handler: setPassword,
     docs: {
+      operationId: 'setPassword',
       summary: 'Set a password for a Google-only account',
       tags,
       request: { body: setPasswordBodySchema },
@@ -53,6 +55,7 @@ export const authPasswordRoutes: RouteDefinition[] = [
     path: '/auth/password/reset',
     handler: beginPasswordReset,
     docs: {
+      operationId: 'beginPasswordReset',
       summary: 'Initiate password reset process',
       tags,
       public: true,
@@ -69,6 +72,7 @@ export const authPasswordRoutes: RouteDefinition[] = [
     path: '/auth/password/reset/validate',
     handler: validatePasswordResetCode,
     docs: {
+      operationId: 'validatePasswordResetCode',
       summary: 'Check if a password reset code is valid for an email',
       tags,
       public: true,
@@ -85,6 +89,7 @@ export const authPasswordRoutes: RouteDefinition[] = [
     path: '/auth/password/reset/complete',
     handler: completePasswordReset,
     docs: {
+      operationId: 'completePasswordReset',
       summary: 'Reset password using an email and reset code',
       tags,
       public: true,

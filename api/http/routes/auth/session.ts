@@ -11,6 +11,7 @@ export const authSessionRoutes: RouteDefinition[] = [
     path: '/auth/user',
     handler: getUser,
     docs: {
+      operationId: 'getCurrentUser',
       summary: 'Get the currently logged-in user',
       tags,
       response: {
@@ -25,6 +26,7 @@ export const authSessionRoutes: RouteDefinition[] = [
     path: '/auth/login',
     handler: login,
     docs: {
+      operationId: 'login',
       summary: 'Login with email and password',
       tags,
       public: true,
@@ -42,6 +44,7 @@ export const authSessionRoutes: RouteDefinition[] = [
     path: '/auth/logout',
     handler: logout,
     docs: {
+      operationId: 'logout',
       summary: 'Logout the current user',
       tags,
       response: { description: 'User logged out successfully', schema: z.boolean() },
@@ -53,6 +56,7 @@ export const authSessionRoutes: RouteDefinition[] = [
     path: '/auth/logout-all',
     handler: logoutAllSessions,
     docs: {
+      operationId: 'logoutAllSessions',
       summary: 'Log out all other sessions for the current user',
       tags,
       response: {
@@ -68,6 +72,7 @@ export const authSessionRoutes: RouteDefinition[] = [
     path: '/auth/register',
     handler: register,
     docs: {
+      operationId: 'register',
       summary: 'Register a new user account',
       tags,
       public: true,

@@ -5,6 +5,7 @@ import useCollections, { closeConnection } from '../mongo/useCollections';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const main = async (): Promise<void> => {
   const {
+    accessTokens,
     dailyReminders,
     logEntries,
     passageNotes,
@@ -14,6 +15,7 @@ const main = async (): Promise<void> => {
 
   // delete all documents with an owner that is not in the active user list
   const ownedEntities: { name: string; collection: Collection<Document> }[] = [
+    { name: 'accesstokens', collection: accessTokens as unknown as Collection<Document> },
     { name: 'dailyreminders', collection: dailyReminders as unknown as Collection<Document> },
     { name: 'logentries', collection: logEntries as unknown as Collection<Document> },
     { name: 'passagenotes', collection: passageNotes as unknown as Collection<Document> },

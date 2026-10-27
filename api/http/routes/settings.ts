@@ -20,7 +20,9 @@ export const settingsRoutes: RouteDefinition[] = [
     method: 'GET',
     path: '/settings',
     handler: getSettings,
+    scopes: ['logs:read'],
     docs: {
+      operationId: 'getSettings',
       summary: 'Get user settings',
       tags,
       response: { description: 'User settings', schema: userSettingsSchema },
@@ -32,6 +34,7 @@ export const settingsRoutes: RouteDefinition[] = [
     path: '/settings',
     handler: updateSettings,
     docs: {
+      operationId: 'updateSettings',
       summary: 'Update user settings',
       tags,
       request: { body: settingsUpdateBodySchema },
@@ -44,6 +47,8 @@ export const settingsRoutes: RouteDefinition[] = [
     path: '/settings/account',
     handler: deleteUserAccount,
     docs: {
+      operationId: 'deleteAccount',
+      destructive: true,
       summary: 'Delete user account and all associated data',
       tags,
       response: { description: 'Number of deleted accounts (1)', schema: z.number() },

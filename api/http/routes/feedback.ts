@@ -13,6 +13,7 @@ export const feedbackRoutes: RouteDefinition[] = [
     path: '/feedback',
     handler: submitFeedback,
     docs: {
+      operationId: 'submitFeedback',
       summary: 'Submit feedback',
       tags: ['Feedback'],
       public: true,

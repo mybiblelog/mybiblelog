@@ -11,6 +11,7 @@ export const authEmailVerificationRoutes: RouteDefinition[] = [
     path: '/auth/verify-email',
     handler: verifyEmail,
     docs: {
+      operationId: 'verifyEmail',
       summary: 'Verify email via code',
       tags,
       public: true,
@@ -28,6 +29,7 @@ export const authEmailVerificationRoutes: RouteDefinition[] = [
     path: '/auth/verify-email/resend',
     handler: resendEmailVerification,
     docs: {
+      operationId: 'resendEmailVerification',
       summary: 'Resend verification email (with cooldown)',
       tags,
       public: true,

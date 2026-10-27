@@ -1,4 +1,5 @@
 import { type ZodType } from 'zod';
+import { type AccessTokenScope } from '@mybiblelog/shared';
 import { type ApiResponse } from './response';
 import { type Repositories } from '../repositories/useRepositories';
 import { type UserRecord } from '../repositories/helpers/types';
@@ -23,6 +24,12 @@ export interface HttpRequest {
   ip?: string;
   /** Request path, used for rate-limit keying. Optional — not every adapter sets it. */
   path?: string;
+  /**
+   * The scopes a personal access token needs to call this route, copied from
+   * `RouteDefinition.scopes` by the adapter. Absent means the route accepts
+   * session tokens only.
+   */
+  requiredScopes?: readonly AccessTokenScope[];
 }
 
 /**
@@ -121,9 +128,21 @@ export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
  * drift from what the endpoint actually accepts and returns.
  */
 export interface RouteDocs {
+  /**
+   * Stable, unique camelCase name for the operation (e.g. `createLogEntry`).
+   * Client and tool generators (and AI agents) key on it, so never rename one.
+   */
+  operationId?: string;
   summary: string;
   tags: string[];
   description?: string;
+  /**
+   * When true the route is left out of the public spec served in production
+   * (admin, the sitemap, email-link callbacks, the mobile upgrade check).
+   */
+  internal?: boolean;
+  /** When true the operation deletes data, so agents should confirm with the user first. */
+  destructive?: boolean;
   /** When true the endpoint requires no authentication (emits `security: []`). */
   public?: boolean;
   /** Request schemas — reuse the exact schemas passed to `validate()`. */
@@ -164,6 +183,7 @@ export interface DocumentedRoute {
   method: HttpMethod;
   path: string;
   docs: RouteDocs;
+  scopes?: readonly AccessTokenScope[];
 }
 
 /**
@@ -177,4 +197,10 @@ export interface RouteDefinition {
   path: string;
   handler: RouteHandler;
   docs?: RouteDocs;
+  /**
+   * The scopes a personal access token must hold to call this route. Routes
+   * without `scopes` reject access tokens outright, so a new route is
+   * session-only until it opts in.
+   */
+  scopes?: readonly AccessTokenScope[];
 }

@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import errorhandler from 'errorhandler';
 import swaggerUi from 'swagger-ui-express';
-import swaggerSpec from './config/swagger';
+import swaggerSpec, { buildOpenApiSpec } from './config/swagger';
 import { getConfig } from './config';
 import apiRouter from './express/router';
 import { ApiResponse } from './http/response';
@@ -125,6 +125,14 @@ const buildApp = (): express.Application => {
       return res.redirect('https://' + req.headers.host + req.originalUrl);
     }
     next();
+  });
+
+  // The public spec (no admin or other internal routes) is served in every
+  // environment so agents and API clients can discover the contract. It holds no
+  // secrets and never changes at runtime, so it is built once.
+  const publicSpec = buildOpenApiSpec({ audience: 'public', serverUrl: `${allowedOrigin}/api` });
+  app.get('/api/openapi.json', (req, res) => {
+    res.json(publicSpec);
   });
 
   if (!isProduction) {
