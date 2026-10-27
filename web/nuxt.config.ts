@@ -279,5 +279,15 @@ export default defineNuxtConfig({
     // requests run concurrently (Playwright fullyParallel) because the synchronous
     // unctx context stack is a shared global that gets corrupted across async boundaries.
     asyncContext: true,
+    // compatibilityVersion 5 turns Nitro auto-imports off, and since Nuxt 4.6.2
+    // that also strips them from `#imports` in the server bundle. @nuxtjs/i18n's
+    // server runtime still imports `useRuntimeConfig` from `#imports`, so the
+    // build fails without this (nuxt-modules/i18n#4175). Drop it once i18n
+    // imports from `nitropack/runtime` instead.
+    nitroAutoImports: true,
+    // Nuxt 4.6 turns typed pages on at compatibilityVersion 5, which makes
+    // `localePath('/some/path')` string arguments a type error throughout the
+    // app. Keep the pre-4.6 behavior until the call sites move to typed routes.
+    typedPages: false,
   },
 });
