@@ -43,7 +43,7 @@ function handleNext() {
 async function handleSkip() {
   const success = await useUserSettingsStore().updateSettings({ startPage: 'today' });
   if (success) {
-    await router.push(localePath('/today'));
+    await router.push(localePath('today'));
   }
 }
 </script>

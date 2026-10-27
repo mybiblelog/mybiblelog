@@ -1,3 +1,8 @@
+type BibleBookLocale = {
+  name: string;
+  abbreviations: string[];
+};
+
 export type BibleBook = {
   testamentOrder: number;
   bibleOrder: number;
@@ -8,10 +13,8 @@ export type BibleBook = {
   /** Blue Letter Bible URL book code (e.g. "Gen", "1Sa"). */
   blbCode: string;
   locales: {
-    [locale: string]: {
-      name: string;
-      abbreviations: string[];
-    };
+    en: BibleBookLocale;
+    [locale: string]: BibleBookLocale;
   };
 }
 

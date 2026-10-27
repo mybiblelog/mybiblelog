@@ -9,12 +9,12 @@ import { Bible } from '@mybiblelog/shared';
  */
 export default defineNuxtRouteMiddleware((to) => {
   const localePath = useLocalePath();
-  const raw = String(to.params.book ?? '');
+  const raw = 'book' in to.params ? String(to.params.book) : '';
   const bookIndex = Number(raw);
   const isValidBookIndex = /^\d+$/.test(raw) &&
     bookIndex >= 1 &&
     bookIndex <= Bible.getBookCount();
   if (!isValidBookIndex) {
-    return navigateTo(localePath('/books'));
+    return navigateTo(localePath('books'));
   }
 });

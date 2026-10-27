@@ -8,7 +8,7 @@
         <em>{{ authStore.user?.email }}</em>
       </p>
       <p>
-        <NuxtLink class="mbl-button mbl-button--primary" :to="localePath('/settings/email')">
+        <NuxtLink class="mbl-button mbl-button--primary" :to="localePath('settings-email')">
           {{ t('change_email') }}
         </NuxtLink>
       </p>
@@ -20,7 +20,7 @@
       <div class="mbl-content">
         <p>{{ t('you_can_change_your_password_below') }}</p>
         <p>
-          <NuxtLink class="mbl-button mbl-button--primary" :to="localePath('/settings/password')">
+          <NuxtLink class="mbl-button mbl-button--primary" :to="localePath('settings-password')">
             {{ t('change_password') }}
           </NuxtLink>
         </p>
@@ -47,7 +47,7 @@
     <div class="mbl-content">
       <p>{{ t('you_are_in_control') }}</p>
       <p>
-        <NuxtLink :to="localePath('/settings/delete-account')">
+        <NuxtLink :to="localePath('settings-delete-account')">
           {{ t('learn_more') }}
         </NuxtLink>
       </p>

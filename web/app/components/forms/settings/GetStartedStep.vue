@@ -29,7 +29,7 @@ const router = useRouter();
 
 async function handleGetStarted() {
   await useUserSettingsStore().updateSettings({ startPage: 'today' });
-  await router.push(localePath('/today'));
+  await router.push(localePath('today'));
 }
 </script>
 

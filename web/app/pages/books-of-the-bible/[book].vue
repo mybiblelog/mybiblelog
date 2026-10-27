@@ -2,7 +2,7 @@
   <main role="main">
     <article class="content-column mbl-content">
       <nav class="book-breadcrumb" :aria-label="t('breadcrumb_label')">
-        <NuxtLink :to="localePath('/books-of-the-bible')">
+        <NuxtLink :to="localePath('books-of-the-bible')">
           {{ t('hub') }}
         </NuxtLink>
         <span aria-hidden="true"> › </span>
@@ -109,17 +109,17 @@
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink :to="localePath('/books-of-the-bible')">
+          <NuxtLink :to="localePath('books-of-the-bible')">
             {{ t('keep_reading.all_books') }}
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink :to="localePath('/about/guide--how-long-does-it-take-to-read-the-bible')">
+          <NuxtLink :to="localePath({ name: 'about-slug', params: { slug: 'guide--how-long-does-it-take-to-read-the-bible' } })">
             {{ t('keep_reading.how_long_guide') }}
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink :to="localePath('/about/guide--bible-reading-plans-compared')">
+          <NuxtLink :to="localePath({ name: 'about-slug', params: { slug: 'guide--bible-reading-plans-compared' } })">
             {{ t('keep_reading.plans_guide') }}
           </NuxtLink>
         </li>
@@ -191,7 +191,7 @@ const paces = [1, 2, 3].map(perDay => ({
 })).concat([{ label: t('pace.minutes_per_day', { n: 10 }), days: getDaysAtMinutesPerDay(bookIndex, 10) }]);
 
 const bookLink = (index: number) => (index >= 1 && index <= Bible.getBookCount()
-  ? { name: Bible.getBookName(index, locale.value), path: localePath(`/books-of-the-bible/${Bible.getBookSlug(index)}`) }
+  ? { name: Bible.getBookName(index, locale.value), path: localePath({ name: 'books-of-the-bible-book', params: { book: Bible.getBookSlug(index) } }) }
   : null);
 const previousBook = bookLink(bookIndex - 1);
 const nextBook = bookLink(bookIndex + 1);

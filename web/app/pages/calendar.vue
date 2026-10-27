@@ -150,7 +150,7 @@ function viewNotesForPassage(passage: { startVerseId: number; endVerseId: number
     filterPassageEndVerseId: passage.endVerseId,
     offset: 0,
   });
-  router.push({ path: localePath('/notes'), query: q as Record<string, string | string[]> });
+  router.push({ path: localePath('notes'), query: q as Record<string, string | string[]> });
 }
 
 function selectDate(date: string | null) {

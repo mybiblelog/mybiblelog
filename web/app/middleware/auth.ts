@@ -10,18 +10,18 @@ export default defineNuxtRouteMiddleware((to) => {
 
   if (authRule === 'guest') {
     if (isLoggedIn) {
-      return navigateTo(localePath('/start'));
+      return navigateTo(localePath('start'));
     }
   }
   else if (authRule === 'admin') {
     if (!isLoggedIn) {
-      return navigateTo(localePath('/login'));
+      return navigateTo(localePath('login'));
     }
     else if (!isAdmin) {
       throw createError({ statusCode: 403 });
     }
   }
   else if (!authRule && !isLoggedIn) {
-    return navigateTo(localePath('/login'));
+    return navigateTo(localePath('login'));
   }
 });

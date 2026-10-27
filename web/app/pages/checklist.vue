@@ -9,7 +9,7 @@
         {{ t('chapter_checklist') }}
       </h2>
       <div class="mbl-button-group mbl-button-group--start">
-        <NuxtLink class="mbl-button" :to="localePath('/log')">
+        <NuxtLink class="mbl-button" :to="localePath('log')">
           {{ t('reading_log') }}
           <caret-right-icon style="margin-left: 0.2rem;" />
         </NuxtLink>

@@ -9,7 +9,7 @@
       </p>
       <p class="hero-description" v-html="description" />
       <div class="hero-cta">
-        <NuxtLink :to="localePath('/register')" class="mbl-button mbl-button--primary mbl-button--lg mbl-button--glow">
+        <NuxtLink :to="localePath('register')" class="mbl-button mbl-button--primary mbl-button--lg mbl-button--glow">
           {{ buttonText }}
         </NuxtLink>
         <p class="hero-cta-note">

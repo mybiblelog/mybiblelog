@@ -8,7 +8,7 @@
           </h1>
         </div>
         <div class="mbl-level-right">
-          <NuxtLink :to="localePath('/login')">
+          <NuxtLink :to="localePath('login')">
             {{ t('have_an_account') }}
           </NuxtLink>
         </div>
@@ -127,7 +127,7 @@ const onSubmit = async () => {
       errors.value = error instanceof ApiError ? mapFormErrors(error) : mapFormErrors(new UnknownApiError());
       return;
     }
-    await router.push(localePath('/start'));
+    await router.push(localePath('start'));
     return;
   }
 

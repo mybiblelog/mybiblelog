@@ -359,7 +359,7 @@ async function loadPageData() {
 }
 
 function pushLogQuery(nextQuery: Partial<LogEntriesQuery>, { replace = false } = {}) {
-  const path = localePath('/log');
+  const path = localePath('log');
   const q = encodeLogEntriesQueryToRoute(nextQuery);
   const nav = { path, query: q };
   return replace ? router.replace(nav) : router.push(nav);
@@ -415,7 +415,7 @@ function viewNotesForPassage(passage: LogEntryLike) {
     filterPassageEndVerseId: endVerseId,
     offset: 0,
   });
-  router.push({ path: localePath('/notes'), query: q as Record<string, string | string[]> });
+  router.push({ path: localePath('notes'), query: q as Record<string, string | string[]> });
 }
 
 function openEditEntryForm(id: number | string) {

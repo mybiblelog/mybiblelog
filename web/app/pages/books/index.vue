@@ -25,7 +25,7 @@ const logEntriesStore = useLogEntriesStore();
 const logEntries = computed(() => logEntriesStore.currentLogEntries);
 
 function viewBookReport(bookIndex: number) {
-  router.push(localePath('/books/' + bookIndex));
+  router.push(localePath({ name: 'books-book', params: { book: bookIndex } }));
 }
 
 onMounted(async () => {

@@ -13,22 +13,22 @@
           </div>
           <div class="mbl-dropdown__menu" role="menu" @click="toggleMenu">
             <div class="mbl-dropdown__content">
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings')">
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('settings')">
                 {{ t('account') }}
               </NuxtLink>
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/start')">
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('settings-start')">
                 {{ t('start_page') }}
               </NuxtLink>
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/reading')">
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('settings-reading')">
                 {{ t('reading') }}
               </NuxtLink>
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/reminder')">
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('settings-reminder')">
                 {{ t('reminder') }}
               </NuxtLink>
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/export')">
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('settings-export')">
                 {{ t('export') }}
               </NuxtLink>
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('/settings/import')">
+              <NuxtLink class="mbl-dropdown__item" :to="localePath('settings-import')">
                 {{ t('import') }}
               </NuxtLink>
             </div>
@@ -38,32 +38,32 @@
       <div class="mbl-tabs wide-screen">
         <ul>
           <li>
-            <NuxtLink :to="localePath('/settings')">
+            <NuxtLink :to="localePath('settings')">
               {{ t('account') }}
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="localePath('/settings/start')">
+            <NuxtLink :to="localePath('settings-start')">
               {{ t('start_page') }}
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="localePath('/settings/reading')">
+            <NuxtLink :to="localePath('settings-reading')">
               {{ t('reading') }}
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="localePath('/settings/reminder')">
+            <NuxtLink :to="localePath('settings-reminder')">
               {{ t('reminder') }}
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="localePath('/settings/export')">
+            <NuxtLink :to="localePath('settings-export')">
               {{ t('export') }}
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink :to="localePath('/settings/import')">
+            <NuxtLink :to="localePath('settings-import')">
               {{ t('import') }}
             </NuxtLink>
           </li>

@@ -20,7 +20,7 @@
           <li v-for="(item, index) in list" :key="index" v-html="item" />
         </ul>
         <div v-if="buttonText && buttonDestination" class="fifty-fifty-cta">
-          <NuxtLink :to="localePath(buttonDestination)" class="mbl-button mbl-button--primary mbl-button--glow">
+          <NuxtLink :to="localePath({ path: buttonDestination })" class="mbl-button mbl-button--primary mbl-button--glow">
             {{ buttonText }}
           </NuxtLink>
         </div>

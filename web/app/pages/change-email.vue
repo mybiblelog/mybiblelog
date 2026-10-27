@@ -47,7 +47,7 @@ onMounted(async () => {
   // The link embeds the account's CURRENT email (which holds the pending code).
   const email = params.get('email');
   if (!code || !email) {
-    await router.push(localePath('/settings/email'));
+    await router.push(localePath('settings-email'));
     return;
   }
 
@@ -76,7 +76,7 @@ onMounted(async () => {
   // Notify any tab waiting on the code modal for this flow.
   postAuthEvent({ type: 'completed', flow: 'change-email', email });
 
-  await router.push(localePath('/settings'));
+  await router.push(localePath('settings'));
 });
 </script>
 

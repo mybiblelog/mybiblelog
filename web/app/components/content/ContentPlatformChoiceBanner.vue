@@ -14,7 +14,7 @@
         <p class="platform-choice-card-description">
           {{ webDescription }}
         </p>
-        <NuxtLink :to="localePath(webButtonDestination)" class="mbl-button mbl-button--primary">
+        <NuxtLink :to="localePath({ path: webButtonDestination })" class="mbl-button mbl-button--primary">
           {{ webButtonText }}
         </NuxtLink>
       </div>
@@ -26,7 +26,7 @@
         <p class="platform-choice-card-description">
           {{ androidDescription }}
         </p>
-        <NuxtLink :to="localePath(androidButtonDestination)" class="mbl-button mbl-button--primary mbl-button--glow">
+        <NuxtLink :to="localePath({ path: androidButtonDestination })" class="mbl-button mbl-button--primary mbl-button--glow">
           {{ androidButtonText }}
         </NuxtLink>
       </div>

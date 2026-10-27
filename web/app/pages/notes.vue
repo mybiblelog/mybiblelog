@@ -5,7 +5,7 @@
         {{ t('notes') }}
       </h2>
       <div class="mbl-button-group mbl-button-group--start">
-        <NuxtLink class="mbl-button" :to="localePath('/tags')">
+        <NuxtLink class="mbl-button" :to="localePath('tags')">
           {{ t('tags') }}
           <caret-right-icon style="margin-left: 0.2rem;" />
         </NuxtLink>

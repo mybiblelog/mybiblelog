@@ -228,7 +228,7 @@ const groups = computed(() => groupDefs.map((groupDef) => {
 }
 
 .engagement-chart__legend-swatch {
-  border-radius: 2px;
+  border-radius: var(--mbl-radius-xs);
   display: inline-block;
   height: 10px;
   width: 10px;

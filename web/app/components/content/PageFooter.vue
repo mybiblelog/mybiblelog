@@ -12,7 +12,7 @@
               <component
                 :is="isExternal(link.destination) ? 'a' : NuxtLink"
                 :href="isExternal(link.destination) ? link.destination : undefined"
-                :to="isExternal(link.destination) ? undefined : localePath(link.destination)"
+                :to="isExternal(link.destination) ? undefined : localePath({ path: link.destination })"
                 :target="isExternal(link.destination) ? '_blank' : undefined"
                 :rel="isExternal(link.destination) ? 'noopener noreferrer' : undefined"
                 class="footer-link"

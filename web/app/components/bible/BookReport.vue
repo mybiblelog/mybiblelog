@@ -142,7 +142,7 @@ function viewNotesForChapter(bookIndex: number, chapterIndex: number) {
     filterPassageEndVerseId: Bible.makeVerseId(bookIndex, chapterIndex, chapterVerseCount),
     offset: 0,
   });
-  router.push({ path: localePath('/notes'), query });
+  router.push({ path: localePath('notes'), query });
 }
 
 function viewReadingLogForChapter(bookIndex: number, chapterIndex: number) {
@@ -152,7 +152,7 @@ function viewReadingLogForChapter(bookIndex: number, chapterIndex: number) {
     filterPassageEndVerseId: Bible.makeVerseId(bookIndex, chapterIndex, chapterVerseCount),
     offset: 0,
   });
-  router.push({ path: localePath('/log'), query });
+  router.push({ path: localePath('log'), query });
 }
 </script>
 

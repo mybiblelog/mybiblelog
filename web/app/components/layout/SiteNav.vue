@@ -6,14 +6,14 @@
           <div class="site-nav__mobile-brand">
             <NuxtLink
               class="site-nav__logo"
-              :to="localePath(authStore.loggedIn ? '/start' : '/')"
+              :to="localePath(authStore.loggedIn ? 'start' : 'index')"
               aria-label="home"
             >
               <img src="/images/logo.svg" width="28" height="28" alt="">
             </NuxtLink>
             <NuxtLink
               class="site-nav__brand-text"
-              :to="localePath(authStore.loggedIn ? '/start' : '/')"
+              :to="localePath(authStore.loggedIn ? 'start' : 'index')"
             >
               {{ $t("my_bible_log") }}
             </NuxtLink>
@@ -42,7 +42,7 @@
           <div class="site-nav__brand">
             <NuxtLink
               class="site-nav__logo"
-              :to="localePath(authStore.loggedIn ? '/start' : '/')"
+              :to="localePath(authStore.loggedIn ? 'start' : 'index')"
               aria-label="home"
             >
               <img src="/images/logo.svg" width="28" height="28" alt="">
@@ -50,7 +50,7 @@
             <NuxtLink
               v-if="!authStore.loggedIn"
               class="site-nav__brand-text"
-              :to="localePath('/')"
+              :to="localePath('index')"
             >
               {{ $t("my_bible_log") }}
             </NuxtLink>
@@ -63,7 +63,7 @@
                 class="site-nav__route-spacer"
                 aria-hidden="true"
               />
-              <NuxtLink class="site-nav__link" :to="localePath(item.to)">
+              <NuxtLink class="site-nav__link" :to="localePath({ path: item.to })">
                 {{ t(item.labelKey) }}
               </NuxtLink>
             </template>
@@ -91,7 +91,7 @@
                   v-for="item in ADMIN_CHILD_LINKS"
                   :key="'desk-admin-' + item.to"
                   class="site-nav__admin-item"
-                  :to="localePath(item.to)"
+                  :to="localePath({ path: item.to })"
                   role="menuitem"
                 >
                   {{ t(item.labelKey) }}
@@ -116,7 +116,7 @@
                 >
                   <NuxtLink
                     class="site-nav__account-item"
-                    :to="localePath('/settings')"
+                    :to="localePath('settings')"
                     role="menuitem"
                   >
                     {{ t("settings") }}
@@ -132,12 +132,12 @@
             </template>
             <template v-if="!authStore.loggedIn">
               <span class="site-nav__auth-slot">
-                <NuxtLink class="site-nav__link" :to="localePath('/register')">
+                <NuxtLink class="site-nav__link" :to="localePath('register')">
                   {{ t("sign_up") }}
                 </NuxtLink>
               </span>
               <span class="site-nav__auth-slot">
-                <NuxtLink class="site-nav__link" :to="localePath('/login')">
+                <NuxtLink class="site-nav__link" :to="localePath('login')">
                   {{ t("sign_in") }}
                 </NuxtLink>
               </span>
@@ -178,7 +178,7 @@
               v-for="item in visibleRouteNavItems"
               :key="'drawer-route-' + item.to"
               class="site-nav__drawer-link"
-              :to="localePath(item.to)"
+              :to="localePath({ path: item.to })"
             >
               {{ t(item.labelKey) }}
             </NuxtLink>
@@ -190,7 +190,7 @@
                 v-for="item in ADMIN_CHILD_LINKS"
                 :key="'drawer-admin-' + item.to"
                 class="site-nav__drawer-link site-nav__drawer-link--indent"
-                :to="localePath(item.to)"
+                :to="localePath({ path: item.to })"
               >
                 {{ t(item.labelKey) }}
               </NuxtLink>
@@ -201,7 +201,7 @@
               </div>
               <NuxtLink
                 class="site-nav__drawer-link site-nav__drawer-link--indent"
-                :to="localePath('/settings')"
+                :to="localePath('settings')"
               >
                 {{ t("settings") }}
               </NuxtLink>
@@ -216,7 +216,7 @@
               <span class="site-nav__auth-slot">
                 <NuxtLink
                   class="site-nav__drawer-link"
-                  :to="localePath('/register')"
+                  :to="localePath('register')"
                 >
                   {{ t("sign_up") }}
                 </NuxtLink>
@@ -224,7 +224,7 @@
               <span class="site-nav__auth-slot">
                 <NuxtLink
                   class="site-nav__drawer-link"
-                  :to="localePath('/login')"
+                  :to="localePath('login')"
                 >
                   {{ t("sign_in") }}
                 </NuxtLink>

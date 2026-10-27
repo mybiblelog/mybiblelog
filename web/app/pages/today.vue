@@ -90,7 +90,7 @@
         </ClientOnly>
       </div>
       <div class="mbl-text-center" style="margin-top: 1rem;">
-        <NuxtLink class="mbl-button" :to="localePath('/calendar')">
+        <NuxtLink class="mbl-button" :to="localePath('calendar')">
           {{ t('view_all_reading') }}
           <caret-right-icon style="margin-left: 0.2rem;" />
         </NuxtLink>
@@ -134,7 +134,7 @@
             data-testid="recent-note"
           />
           <div class="mbl-text-center" style="margin-top: 1rem;">
-            <NuxtLink class="mbl-button" :to="localePath('/notes')">
+            <NuxtLink class="mbl-button" :to="localePath('notes')">
               {{ t('view_all_notes') }}
               <caret-right-icon style="margin-left: 0.2rem;" />
             </NuxtLink>
@@ -311,7 +311,7 @@ const viewNotesForPassage = (passage: Passage) => {
     filterPassageEndVerseId: endVerseId,
     offset: 0,
   });
-  router.push({ path: localePath('/notes'), query: q as Record<string, string | string[]> });
+  router.push({ path: localePath('notes'), query: q as Record<string, string | string[]> });
 };
 
 const { actionsForLogEntry: actionsForTodayLogEntry } = useLogEntryActions<LogEntryLike>(t, {

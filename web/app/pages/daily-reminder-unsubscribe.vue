@@ -14,7 +14,7 @@
             </template>
           </i18n-t>
           <p>
-            <NuxtLink class="mbl-button mbl-button--primary" :to="localePath('/settings/reminder')">
+            <NuxtLink class="mbl-button mbl-button--primary" :to="localePath('settings-reminder')">
               {{ $t('update_preferences') }}
             </NuxtLink>
           </p>
@@ -28,7 +28,7 @@
             <p>{{ $t('client_error.p2') }}</p>
             <p>{{ $t('client_error.p3') }}</p>
             <p>
-              <NuxtLink class="mbl-button mbl-button--primary" :to="localePath('/settings/reminder')">
+              <NuxtLink class="mbl-button mbl-button--primary" :to="localePath('settings-reminder')">
                 {{ $t('update_preferences') }}
               </NuxtLink>
             </p>
@@ -57,7 +57,7 @@ const email = ref('');
 onMounted(async () => {
   const code = new URL(window.location.href).searchParams.get('code');
   if (!code) {
-    await navigateTo(localePath('/'));
+    await navigateTo(localePath('index'));
     return;
   }
   try {

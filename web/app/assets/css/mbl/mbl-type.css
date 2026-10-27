@@ -144,7 +144,8 @@
 /* Markdown tables in content pages (guides) */
 .mbl-content table {
   width: 100%;
-  margin: 1em 0;
+  margin-block: 1em;
+  margin-inline: 0;
   font-size: 0.95em;
 }
 
