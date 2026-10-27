@@ -1,72 +1,78 @@
 import { StyleSheet } from "react-native";
-import { act, fireEvent } from "@testing-library/react-native";
-import { Stop } from "react-native-svg";
+import { fireEvent } from "@testing-library/react-native";
+import { LinearGradient } from "react-native-svg";
 import { colorsByScheme, radius } from "@/src/design";
-import { renderWithProviders, screen } from "@/src/test-utils/renderWithProviders";
+import {
+  getByComponentType,
+  renderWithProviders,
+  screen,
+} from "@/src/test-utils/renderWithProviders";
 import { DoubleProgressBar } from "./DoubleProgressBar";
 
 const TRACK_WIDTH = 200;
 const measureTrack = () =>
-  act(() => {
-    fireEvent(screen.getByTestId("double-progress-bar"), "layout", {
-      nativeEvent: { layout: { x: 0, y: 0, width: TRACK_WIDTH, height: 16 } },
-    });
+  fireEvent(screen.getByTestId("double-progress-bar"), "layout", {
+    nativeEvent: { layout: { x: 0, y: 0, width: TRACK_WIDTH, height: 16 } },
   });
 
 const styleOf = (testID: string) => StyleSheet.flatten(screen.getByTestId(testID).props.style);
 
 describe("DoubleProgressBar", () => {
-  it("reports the primary measure to assistive tech", () => {
-    renderWithProviders(<DoubleProgressBar primaryPercentage={62} secondaryPercentage={80} />);
+  it("reports the primary measure to assistive tech", async () => {
+    await renderWithProviders(
+      <DoubleProgressBar primaryPercentage={62} secondaryPercentage={80} />
+    );
     const bar = screen.getByTestId("double-progress-bar");
     expect(bar.props.accessibilityRole).toBe("progressbar");
     expect(bar.props.accessibilityValue).toEqual({ min: 0, max: 100, now: 62 });
   });
 
-  it("renders the secondary fill dimmer than the primary", () => {
-    renderWithProviders(<DoubleProgressBar primaryPercentage={40} secondaryPercentage={90} />);
+  it("renders the secondary fill dimmer than the primary", async () => {
+    await renderWithProviders(
+      <DoubleProgressBar primaryPercentage={40} secondaryPercentage={90} />
+    );
     expect(styleOf("secondary-bar").opacity).toBe(0.7);
     expect(styleOf("primary-bar").opacity).toBeUndefined();
   });
 
   describe("clamping", () => {
-    it("floors at 0", () => {
-      renderWithProviders(<DoubleProgressBar primaryPercentage={-25} />);
+    it("floors at 0", async () => {
+      await renderWithProviders(<DoubleProgressBar primaryPercentage={-25} />);
       expect(screen.getByTestId("double-progress-bar").props.accessibilityValue.now).toBe(0);
     });
 
-    it("caps at 100 so overshoot doesn't overflow the track", () => {
-      renderWithProviders(<DoubleProgressBar primaryPercentage={340} />);
+    it("caps at 100 so overshoot doesn't overflow the track", async () => {
+      await renderWithProviders(<DoubleProgressBar primaryPercentage={340} />);
       expect(screen.getByTestId("double-progress-bar").props.accessibilityValue.now).toBe(100);
     });
 
-    it("survives a non-finite percentage (goal of 0 divides by zero)", () => {
-      expect(() =>
+    it("survives a non-finite percentage (goal of 0 divides by zero)", async () => {
+      await expect(
         renderWithProviders(<DoubleProgressBar primaryPercentage={NaN} secondaryPercentage={NaN} />)
-      ).not.toThrow();
+      ).resolves.toBeDefined();
       expect(screen.getByTestId("double-progress-bar").props.accessibilityValue.now).toBe(0);
     });
   });
 
   describe("the completion rainbow", () => {
-    it("stays off below the goal", () => {
-      renderWithProviders(<DoubleProgressBar primaryPercentage={99} />);
+    it("stays off below the goal", async () => {
+      await renderWithProviders(<DoubleProgressBar primaryPercentage={99} />);
       expect(screen.queryByTestId("primary-bar-complete")).toBeNull();
     });
 
-    it("appears exactly at the goal", () => {
-      renderWithProviders(<DoubleProgressBar primaryPercentage={100} />);
+    it("appears exactly at the goal", async () => {
+      await renderWithProviders(<DoubleProgressBar primaryPercentage={100} />);
       expect(screen.getByTestId("primary-bar-complete")).toBeTruthy();
     });
 
-    it("stays on past the goal, since overshoot is still complete", () => {
-      renderWithProviders(<DoubleProgressBar primaryPercentage={250} />);
+    it("stays on past the goal, since overshoot is still complete", async () => {
+      await renderWithProviders(<DoubleProgressBar primaryPercentage={250} />);
       expect(screen.getByTestId("primary-bar-complete")).toBeTruthy();
     });
 
-    it("loops seamlessly: the sweep distance lands on an identical gradient phase", () => {
-      renderWithProviders(<DoubleProgressBar primaryPercentage={100} />);
-      measureTrack();
+    it("loops seamlessly: the sweep distance lands on an identical gradient phase", async () => {
+      await renderWithProviders(<DoubleProgressBar primaryPercentage={100} />);
+      await measureTrack();
       const width = Number(styleOf("rainbow-sweep").width);
 
       // The rect must hold a whole number of gradient cycles (each two track
@@ -77,17 +83,19 @@ describe("DoubleProgressBar", () => {
       expect(width / 2 / cycleWidth).toBe(1);
     });
 
-    it("is clipped to the primary fill so it can't show over bare track", () => {
-      renderWithProviders(<DoubleProgressBar primaryPercentage={100} />);
+    it("is clipped to the primary fill so it can't show over bare track", async () => {
+      await renderWithProviders(<DoubleProgressBar primaryPercentage={100} />);
       const clip = styleOf("primary-bar-complete");
       expect(clip.overflow).toBe("hidden");
       expect(clip.width).toBe("100%");
     });
 
-    it("repeats the red endpoint so the two cycles meet without a hard edge", () => {
-      renderWithProviders(<DoubleProgressBar primaryPercentage={100} />);
-      measureTrack();
-      const stops = screen.UNSAFE_getAllByType(Stop);
+    it("repeats the red endpoint so the two cycles meet without a hard edge", async () => {
+      await renderWithProviders(<DoubleProgressBar primaryPercentage={100} />);
+      await measureTrack();
+      // The gradient reads its <Stop> children as data rather than mounting them.
+      const stops: { props: { offset: string; stopColor: string } }[] =
+        getByComponentType(LinearGradient).props.children;
       const at = (offset: string) => stops.filter((s) => s.props.offset === offset);
 
       expect(at("0%")).toHaveLength(1);
@@ -100,8 +108,8 @@ describe("DoubleProgressBar", () => {
     });
   });
 
-  it("keeps the track radius with its themed background (Android regression guard)", () => {
-    renderWithProviders(<DoubleProgressBar primaryPercentage={10} />);
+  it("keeps the track radius with its themed background (Android regression guard)", async () => {
+    await renderWithProviders(<DoubleProgressBar primaryPercentage={10} />);
     const declarations = screen
       .getByTestId("double-progress-bar")
       .props.style.flat(Infinity)
@@ -110,8 +118,8 @@ describe("DoubleProgressBar", () => {
     expect(withBackground?.borderRadius).toBe(radius.lg);
   });
 
-  it("takes its track and fill from theme roles", () => {
-    renderWithProviders(<DoubleProgressBar primaryPercentage={10} />, { scheme: "dark" });
+  it("takes its track and fill from theme roles", async () => {
+    await renderWithProviders(<DoubleProgressBar primaryPercentage={10} />, { scheme: "dark" });
     expect(styleOf("double-progress-bar").backgroundColor).toBe(colorsByScheme.dark.progressTrack);
     expect(styleOf("primary-bar").backgroundColor).toBe(colorsByScheme.dark.linkBright);
   });

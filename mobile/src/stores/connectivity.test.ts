@@ -132,9 +132,9 @@ describe("useCanReachServer", () => {
     "server-unreachable": { isOnline: true, apiReachable: false },
   };
 
-  it.each(cases)("%s -> %p", (status, expected) => {
+  it.each(cases)("%s -> %p", async (status, expected) => {
     useConnectivityStore.setState(stateFor[status]);
-    const { result } = renderHook(() => useCanReachServer());
+    const { result } = await renderHook(() => useCanReachServer());
     expect(result.current).toBe(expected);
   });
 });

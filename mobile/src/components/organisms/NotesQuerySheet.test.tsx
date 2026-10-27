@@ -13,43 +13,43 @@ beforeEach(() => {
   });
 });
 
-function renderSheet(onApply = jest.fn(), onClose = jest.fn()) {
+async function renderSheet(onApply = jest.fn(), onClose = jest.fn()) {
   return {
     onApply,
     onClose,
-    ...renderWithProviders(
+    ...(await renderWithProviders(
       <NotesQuerySheet
         visible
         appliedQuery={{ ...initialNotesQuery, filterTags: [] }}
         onApply={onApply}
         onClose={onClose}
       />
-    ),
+    )),
   };
 }
 
 describe("NotesQuerySheet", () => {
-  it("disables Apply until the draft differs from the applied query", () => {
-    const { getByLabelText, getByPlaceholderText } = renderSheet();
+  it("disables Apply until the draft differs from the applied query", async () => {
+    const { getByLabelText, getByPlaceholderText } = await renderSheet();
     expect(getByLabelText("Apply")).toBeDisabled();
 
-    fireEvent.changeText(getByPlaceholderText("Search note text…"), "grace");
+    await fireEvent.changeText(getByPlaceholderText("Search note text…"), "grace");
     expect(getByLabelText("Apply")).toBeEnabled();
   });
 
-  it("maps 'only untagged' to exact matching with no tags", () => {
-    const { getByText, getByLabelText, onApply } = renderSheet();
-    fireEvent.press(getByText("Only untagged notes"));
-    fireEvent.press(getByLabelText("Apply"));
+  it("maps 'only untagged' to exact matching with no tags", async () => {
+    const { getByText, getByLabelText, onApply } = await renderSheet();
+    await fireEvent.press(getByText("Only untagged notes"));
+    await fireEvent.press(getByLabelText("Apply"));
     expect(onApply).toHaveBeenCalledWith(
       expect.objectContaining({ filterTagMatching: "exact", filterTags: [] })
     );
   });
 
-  it("applies sort direction changes", () => {
-    const { getByText, getByLabelText, onApply } = renderSheet();
-    fireEvent.press(getByText("Oldest First"));
-    fireEvent.press(getByLabelText("Apply"));
+  it("applies sort direction changes", async () => {
+    const { getByText, getByLabelText, onApply } = await renderSheet();
+    await fireEvent.press(getByText("Oldest First"));
+    await fireEvent.press(getByLabelText("Apply"));
     expect(onApply).toHaveBeenCalledWith(expect.objectContaining({ sortDirection: "ascending" }));
   });
 
@@ -64,24 +64,24 @@ describe("NotesQuerySheet", () => {
       sortDirection: "ascending" as const,
     };
 
-    it("offers passage order only while a passage filter is set", () => {
-      expect(renderSheet().queryByText("Passage")).toBeNull();
-      expect(renderPassageSheet().getByText("Passage")).toBeTruthy();
+    it("offers passage order only while a passage filter is set", async () => {
+      expect((await renderSheet()).queryByText("Passage")).toBeNull();
+      expect((await renderPassageSheet()).getByText("Passage")).toBeTruthy();
     });
 
-    it("keeps passage order when applying an unrelated change", () => {
-      const { getByPlaceholderText, getByLabelText, onApply } = renderPassageSheet();
-      fireEvent.changeText(getByPlaceholderText("Search note text…"), "grace");
-      fireEvent.press(getByLabelText("Apply"));
+    it("keeps passage order when applying an unrelated change", async () => {
+      const { getByPlaceholderText, getByLabelText, onApply } = await renderPassageSheet();
+      await fireEvent.changeText(getByPlaceholderText("Search note text…"), "grace");
+      await fireEvent.press(getByLabelText("Apply"));
       expect(onApply).toHaveBeenCalledWith(
         expect.objectContaining({ sortOn: "passage", sortDirection: "ascending" })
       );
     });
 
-    it("reverts to newest first when the passage filter is cleared", () => {
-      const { getByText, getByLabelText, onApply } = renderPassageSheet();
-      fireEvent.press(getByText("Clear passage"));
-      fireEvent.press(getByLabelText("Apply"));
+    it("reverts to newest first when the passage filter is cleared", async () => {
+      const { getByText, getByLabelText, onApply } = await renderPassageSheet();
+      await fireEvent.press(getByText("Clear passage"));
+      await fireEvent.press(getByLabelText("Apply"));
       expect(onApply).toHaveBeenCalledWith(
         expect.objectContaining({
           sortOn: "createdAt",
@@ -92,28 +92,28 @@ describe("NotesQuerySheet", () => {
       );
     });
 
-    it("does not stomp an explicit sort when the passage filter is cleared", () => {
-      const { getByText, getByLabelText, onApply } = renderPassageSheet();
-      fireEvent.press(getByText("Oldest First"));
-      fireEvent.press(getByText("Clear passage"));
-      fireEvent.press(getByLabelText("Apply"));
+    it("does not stomp an explicit sort when the passage filter is cleared", async () => {
+      const { getByText, getByLabelText, onApply } = await renderPassageSheet();
+      await fireEvent.press(getByText("Oldest First"));
+      await fireEvent.press(getByText("Clear passage"));
+      await fireEvent.press(getByLabelText("Apply"));
       expect(onApply).toHaveBeenCalledWith(
         expect.objectContaining({ sortOn: "createdAt", sortDirection: "ascending" })
       );
     });
 
-    function renderPassageSheet() {
+    async function renderPassageSheet() {
       const onApply = jest.fn();
       return {
         onApply,
-        ...renderWithProviders(
+        ...(await renderWithProviders(
           <NotesQuerySheet
             visible
             appliedQuery={passageQuery}
             onApply={onApply}
             onClose={jest.fn()}
           />
-        ),
+        )),
       };
     }
   });

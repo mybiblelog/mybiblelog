@@ -24,34 +24,34 @@ beforeEach(() => {
 });
 
 describe("Insights screen", () => {
-  it("shows a loading state while entries are hydrating", () => {
+  it("shows a loading state while entries are hydrating", async () => {
     useLogEntriesStore.setState({ state: { status: "loading" } });
-    const { getByText } = renderWithProviders(<Insights />);
+    const { getByText } = await renderWithProviders(<Insights />);
     expect(getByText("Loading your reading history…")).toBeTruthy();
   });
 
   it("defaults to the Activity view", async () => {
-    const { getByTestId } = renderWithProviders(<Insights />);
+    const { getByTestId } = await renderWithProviders(<Insights />);
     await waitFor(() => expect(getByTestId("insights.heatmap-grid")).toBeTruthy());
   });
 
   it("switches to the Books view and shows book rows", async () => {
-    const { getByText, getByTestId } = renderWithProviders(<Insights />);
-    fireEvent.press(getByText("Books"));
+    const { getByText, getByTestId } = await renderWithProviders(<Insights />);
+    await fireEvent.press(getByText("Books"));
     await waitFor(() => expect(getByTestId("insights.books-sort-row")).toBeTruthy());
     expect(getByText(Bible.getBookName(1, "en"))).toBeTruthy();
   });
 
   it("switches to the Frequency view", async () => {
-    const { getByText, getByTestId } = renderWithProviders(<Insights />);
-    fireEvent.press(getByText("Frequency"));
+    const { getByText, getByTestId } = await renderWithProviders(<Insights />);
+    await fireEvent.press(getByText("Frequency"));
     await waitFor(() => expect(getByTestId("insights.frequency-timeframe-row")).toBeTruthy());
     expect(getByText("Verse counts")).toBeTruthy();
   });
 
   it("switches to the Trend view", async () => {
-    const { getByText, getByTestId } = renderWithProviders(<Insights />);
-    fireEvent.press(getByText("Trend"));
+    const { getByText, getByTestId } = await renderWithProviders(<Insights />);
+    await fireEvent.press(getByText("Trend"));
     await waitFor(() => expect(getByTestId("insights.trend-chart")).toBeTruthy());
   });
 });

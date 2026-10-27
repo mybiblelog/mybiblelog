@@ -14,8 +14,8 @@ function captureKeyboardListeners() {
     return { remove: () => handlers.delete(event) };
   }) as never);
   return {
-    emit(event: string, height: number) {
-      act(() => {
+    async emit(event: string, height: number) {
+      await act(() => {
         handlers.get(event)?.({ endCoordinates: { height, width: 0, screenX: 0, screenY: 0 } });
       });
     },
@@ -27,29 +27,32 @@ afterEach(() => {
 });
 
 describe("BottomSheet", () => {
-  it.each(["sheet", "center", "full"] as const)("renders children in the %s variant", (variant) => {
-    const { getByText } = renderWithProviders(
-      <BottomSheet visible variant={variant} onClose={jest.fn()}>
-        <Text>Editor body</Text>
-      </BottomSheet>
-    );
-    expect(getByText("Editor body")).toBeTruthy();
-  });
+  it.each(["sheet", "center", "full"] as const)(
+    "renders children in the %s variant",
+    async (variant) => {
+      const { getByText } = await renderWithProviders(
+        <BottomSheet visible variant={variant} onClose={jest.fn()}>
+          <Text>Editor body</Text>
+        </BottomSheet>
+      );
+      expect(getByText("Editor body")).toBeTruthy();
+    }
+  );
 
-  it("closes when the backdrop is pressed", () => {
+  it("closes when the backdrop is pressed", async () => {
     const onClose = jest.fn();
-    const { getByLabelText } = renderWithProviders(
+    const { getByLabelText } = await renderWithProviders(
       <BottomSheet visible onClose={onClose}>
         <Text>Editor body</Text>
       </BottomSheet>
     );
-    fireEvent.press(getByLabelText("Dismiss"));
+    await fireEvent.press(getByLabelText("Dismiss"));
     expect(onClose).toHaveBeenCalled();
   });
 
-  it("stays mounted while the keyboard opens and closes", () => {
+  it("stays mounted while the keyboard opens and closes", async () => {
     const keyboard = captureKeyboardListeners();
-    const { getByText } = renderWithProviders(
+    const { getByText } = await renderWithProviders(
       <BottomSheet visible variant="full" onClose={jest.fn()}>
         <Text>Editor body</Text>
       </BottomSheet>
@@ -62,9 +65,9 @@ describe("BottomSheet", () => {
     expect(getByText("Editor body")).toBeTruthy();
   });
 
-  it("does not subscribe to keyboard events while hidden", () => {
+  it("does not subscribe to keyboard events while hidden", async () => {
     const spy = jest.spyOn(Keyboard, "addListener");
-    renderWithProviders(
+    await renderWithProviders(
       <BottomSheet visible={false} onClose={jest.fn()}>
         <Text>Editor body</Text>
       </BottomSheet>

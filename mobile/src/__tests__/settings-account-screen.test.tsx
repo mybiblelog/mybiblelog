@@ -14,9 +14,11 @@ beforeEach(() => {
 });
 
 describe("Account settings screen", () => {
-  it("clarifies the signed-out state and offers both Login and Create account", () => {
+  it("clarifies the signed-out state and offers both Login and Create account", async () => {
     useAuthStore.setState({ state: { status: "unauthenticated" } });
-    const { getByText, getByTestId, queryAllByText } = renderWithProviders(<AccountSettings />);
+    const { getByText, getByTestId, queryAllByText } = await renderWithProviders(
+      <AccountSettings />
+    );
 
     expect(getByText("Not Logged In")).toBeTruthy();
     expect(
@@ -31,20 +33,20 @@ describe("Account settings screen", () => {
     expect(queryAllByText("Login")).toHaveLength(1);
   });
 
-  it("shows the signed-in email once authenticated", () => {
+  it("shows the signed-in email once authenticated", async () => {
     useAuthStore.setState({
       state: { status: "authenticated", session: { token: "t", user: { email: "a@b.com" } } },
     });
-    const { getByText } = renderWithProviders(<AccountSettings />);
+    const { getByText } = await renderWithProviders(<AccountSettings />);
 
     expect(getByText("Logged In")).toBeTruthy();
     expect(getByText("Signed in as a@b.com")).toBeTruthy();
   });
 
-  it("hides the Login button and explains why when offline and signed out", () => {
+  it("hides the Login button and explains why when offline and signed out", async () => {
     useConnectivityStore.setState({ isOnline: false });
     useAuthStore.setState({ state: { status: "unauthenticated" } });
-    const { getByText, queryByTestId } = renderWithProviders(<AccountSettings />);
+    const { getByText, queryByTestId } = await renderWithProviders(<AccountSettings />);
 
     expect(queryByTestId("settings.login")).toBeNull();
     expect(queryByTestId("settings.register")).toBeNull();
@@ -54,37 +56,37 @@ describe("Account settings screen", () => {
 
   // A server outage must not read as "you're offline" — the user's own network
   // is fine and other apps work.
-  it("blames the server, not the network, when the API is unreachable", () => {
+  it("blames the server, not the network, when the API is unreachable", async () => {
     useConnectivityStore.setState({ isOnline: true, apiReachable: false });
     useAuthStore.setState({ state: { status: "unauthenticated" } });
-    const { getByText, queryByTestId } = renderWithProviders(<AccountSettings />);
+    const { getByText, queryByTestId } = await renderWithProviders(<AccountSettings />);
 
     expect(queryByTestId("settings.login")).toBeNull();
     expect(getByText("Server unavailable")).toBeTruthy();
     expect(getByText("Logging in requires reaching the My Bible Log server.")).toBeTruthy();
   });
 
-  it("still allows logout while offline", () => {
+  it("still allows logout while offline", async () => {
     useConnectivityStore.setState({ isOnline: false });
     useAuthStore.setState({
       state: { status: "authenticated", session: { token: "t", user: { email: "a@b.com" } } },
     });
-    const { getByText } = renderWithProviders(<AccountSettings />);
+    const { getByText } = await renderWithProviders(<AccountSettings />);
 
     expect(getByText("Logout")).toBeTruthy();
   });
 
-  it("confirms before logging out", () => {
+  it("confirms before logging out", async () => {
     useAuthStore.setState({
       state: { status: "authenticated", session: { token: "t", user: { email: "a@b.com" } } },
     });
-    const { getByText, getAllByText, getByTestId } = renderWithProviders(<AccountSettings />);
+    const { getByText, getAllByText, getByTestId } = await renderWithProviders(<AccountSettings />);
 
-    fireEvent.press(getByTestId("settings.logout"));
+    await fireEvent.press(getByTestId("settings.logout"));
     expect(logout).not.toHaveBeenCalled();
     expect(getByText("Log out?")).toBeTruthy();
 
-    fireEvent.press(getAllByText("Logout")[getAllByText("Logout").length - 1]);
+    await fireEvent.press(getAllByText("Logout")[getAllByText("Logout").length - 1]);
     expect(logout).toHaveBeenCalled();
   });
 });

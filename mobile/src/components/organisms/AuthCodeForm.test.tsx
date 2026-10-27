@@ -6,7 +6,7 @@ jest.mock("@/src/api/authApi", () => ({
   completePasswordReset: jest.fn(),
 }));
 
-import type { ReactTestInstance } from "react-test-renderer";
+import type { TestInstance } from "test-renderer";
 import {
   completeEmailChange,
   completePasswordReset,
@@ -23,19 +23,19 @@ beforeEach(() => {
   useAuthStore.setState({ state: { status: "unauthenticated" } });
 });
 
-function typeCode(getByTestId: (id: string) => ReactTestInstance, prefix = "auth-code") {
-  fireEvent.changeText(getByTestId(`${prefix}.code`), CODE);
+async function typeCode(getByTestId: (id: string) => TestInstance, prefix = "auth-code") {
+  await fireEvent.changeText(getByTestId(`${prefix}.code`), CODE);
 }
 
 describe("AuthCodeForm", () => {
   it("verify-email: submits the code and establishes a session on success", async () => {
     (verifyEmailCode as jest.Mock).mockResolvedValue({ ok: true, token: "tok-1" });
     const onDone = jest.fn();
-    const { getByTestId } = renderWithProviders(
+    const { getByTestId } = await renderWithProviders(
       <AuthCodeForm flow="verify-email" email="a@example.com" onDone={onDone} />
     );
 
-    typeCode(getByTestId);
+    await typeCode(getByTestId);
 
     await waitFor(() => expect(onDone).toHaveBeenCalled());
     expect(verifyEmailCode).toHaveBeenCalledWith("a@example.com", CODE);
@@ -53,11 +53,11 @@ describe("AuthCodeForm", () => {
       error: { code: "verification_code_expired", errors: [] },
     });
     const onDone = jest.fn();
-    const { getByTestId, findByTestId } = renderWithProviders(
+    const { getByTestId, findByTestId } = await renderWithProviders(
       <AuthCodeForm flow="verify-email" email="a@example.com" onDone={onDone} />
     );
 
-    typeCode(getByTestId);
+    await typeCode(getByTestId);
 
     const error = await findByTestId("auth-code.error");
     expect(error.props.children).toBeTruthy();
@@ -68,7 +68,7 @@ describe("AuthCodeForm", () => {
   it("change-email: submits the code against the current email and establishes a session using resultEmail", async () => {
     (completeEmailChange as jest.Mock).mockResolvedValue({ ok: true, token: "tok-2" });
     const onDone = jest.fn();
-    const { getByTestId } = renderWithProviders(
+    const { getByTestId } = await renderWithProviders(
       <AuthCodeForm
         flow="change-email"
         email="old@example.com"
@@ -77,7 +77,7 @@ describe("AuthCodeForm", () => {
       />
     );
 
-    typeCode(getByTestId);
+    await typeCode(getByTestId);
 
     await waitFor(() => expect(onDone).toHaveBeenCalled());
     expect(completeEmailChange).toHaveBeenCalledWith("old@example.com", CODE);
@@ -95,11 +95,11 @@ describe("AuthCodeForm", () => {
       error: { code: "unknown_error", errors: [] },
     });
     const onDone = jest.fn();
-    const { getByTestId, findByTestId } = renderWithProviders(
+    const { getByTestId, findByTestId } = await renderWithProviders(
       <AuthCodeForm flow="change-email" email="old@example.com" onDone={onDone} />
     );
 
-    typeCode(getByTestId);
+    await typeCode(getByTestId);
 
     expect(await findByTestId("auth-code.error")).toBeTruthy();
     expect(onDone).not.toHaveBeenCalled();
@@ -109,16 +109,16 @@ describe("AuthCodeForm", () => {
     (validatePasswordResetCode as jest.Mock).mockResolvedValue({ ok: true, valid: true });
     (completePasswordReset as jest.Mock).mockResolvedValue({ ok: true, token: "tok-3" });
     const onDone = jest.fn();
-    const { getByTestId, findByTestId } = renderWithProviders(
+    const { getByTestId, findByTestId } = await renderWithProviders(
       <AuthCodeForm flow="reset-password" email="a@example.com" onDone={onDone} />
     );
 
-    typeCode(getByTestId);
+    await typeCode(getByTestId);
 
     const newPassword = await findByTestId("auth-code.new-password");
-    fireEvent.changeText(newPassword, "hunter22");
-    fireEvent.changeText(getByTestId("auth-code.confirm-password"), "hunter22");
-    fireEvent.press(getByTestId("auth-code.submit"));
+    await fireEvent.changeText(newPassword, "hunter22");
+    await fireEvent.changeText(getByTestId("auth-code.confirm-password"), "hunter22");
+    await fireEvent.press(getByTestId("auth-code.submit"));
 
     await waitFor(() => expect(onDone).toHaveBeenCalled());
     expect(completePasswordReset).toHaveBeenCalledWith("a@example.com", CODE, "hunter22");
@@ -132,11 +132,11 @@ describe("AuthCodeForm", () => {
 
   it("reset-password: shows the invalid-code error and clears the code without advancing", async () => {
     (validatePasswordResetCode as jest.Mock).mockResolvedValue({ ok: true, valid: false });
-    const { getByTestId, findByText, queryByTestId } = renderWithProviders(
+    const { getByTestId, findByText, queryByTestId } = await renderWithProviders(
       <AuthCodeForm flow="reset-password" email="a@example.com" onDone={jest.fn()} />
     );
 
-    typeCode(getByTestId);
+    await typeCode(getByTestId);
 
     expect(
       await findByText(
@@ -152,11 +152,11 @@ describe("AuthCodeForm", () => {
       ok: false,
       error: { code: "unknown_error", errors: [] },
     });
-    const { getByTestId, findByTestId, queryByTestId } = renderWithProviders(
+    const { getByTestId, findByTestId, queryByTestId } = await renderWithProviders(
       <AuthCodeForm flow="reset-password" email="a@example.com" onDone={jest.fn()} />
     );
 
-    typeCode(getByTestId);
+    await typeCode(getByTestId);
 
     expect(await findByTestId("auth-code.error")).toBeTruthy();
     expect(queryByTestId("auth-code.new-password")).toBeNull();
@@ -164,16 +164,16 @@ describe("AuthCodeForm", () => {
 
   it("reset-password: rejects mismatched passwords without calling the API", async () => {
     (validatePasswordResetCode as jest.Mock).mockResolvedValue({ ok: true, valid: true });
-    const { getByTestId, findByTestId, findByText } = renderWithProviders(
+    const { getByTestId, findByTestId, findByText } = await renderWithProviders(
       <AuthCodeForm flow="reset-password" email="a@example.com" onDone={jest.fn()} />
     );
 
-    typeCode(getByTestId);
+    await typeCode(getByTestId);
 
     const newPassword = await findByTestId("auth-code.new-password");
-    fireEvent.changeText(newPassword, "hunter22");
-    fireEvent.changeText(getByTestId("auth-code.confirm-password"), "different1");
-    fireEvent.press(getByTestId("auth-code.submit"));
+    await fireEvent.changeText(newPassword, "hunter22");
+    await fireEvent.changeText(getByTestId("auth-code.confirm-password"), "different1");
+    await fireEvent.press(getByTestId("auth-code.submit"));
 
     expect(await findByText("Passwords must match.")).toBeTruthy();
     expect(completePasswordReset).not.toHaveBeenCalled();

@@ -1,12 +1,14 @@
 import { SegmentBar, type SegmentBarSegment } from "./SegmentBar";
 import { renderWithProviders } from "@/src/test-utils/renderWithProviders";
 
-function renderSegments(segments: SegmentBarSegment[]) {
-  const tree = renderWithProviders(<SegmentBar segments={segments} />).toJSON();
-  // Unwrap provider wrappers (e.g. SafeAreaProvider) down to the bar View;
-  // its children are the rendered segments.
+async function renderSegments(segments: SegmentBarSegment[]) {
+  const tree = (await renderWithProviders(<SegmentBar segments={segments} />)).toJSON();
+  // Unwrap provider wrappers (the gesture root View, then SafeAreaProvider)
+  // down to the bar View; its children are the rendered segments.
   let node = Array.isArray(tree) ? tree[0] : tree;
-  while (node && node.type !== "View") {
+  let insideProviders = false;
+  while (node && !(insideProviders && node.type === "View")) {
+    if (node.type === "RNCSafeAreaProvider") insideProviders = true;
     const next = node.children?.[0];
     if (!next || typeof next === "string") break;
     node = next;
@@ -16,25 +18,25 @@ function renderSegments(segments: SegmentBarSegment[]) {
 }
 
 describe("SegmentBar", () => {
-  it("renders one view per positive-count segment", () => {
+  it("renders one view per positive-count segment", async () => {
     const segments = [
       { startVerseId: 1, read: true, verseCount: 10 },
       { startVerseId: 2, read: false, verseCount: 5 },
     ];
-    expect(renderSegments(segments)).toHaveLength(2);
+    expect(await renderSegments(segments)).toHaveLength(2);
   });
 
-  it("filters out zero, non-finite, and negative verse counts", () => {
+  it("filters out zero, non-finite, and negative verse counts", async () => {
     const segments = [
       { startVerseId: 1, read: true, verseCount: 10 },
       { startVerseId: 2, read: false, verseCount: 0 },
       { startVerseId: 3, read: false, verseCount: Infinity },
       { startVerseId: 4, read: true, verseCount: -3 },
     ];
-    expect(renderSegments(segments)).toHaveLength(1);
+    expect(await renderSegments(segments)).toHaveLength(1);
   });
 
-  it("renders an empty bar for no segments", () => {
-    expect(renderSegments([])).toHaveLength(0);
+  it("renders an empty bar for no segments", async () => {
+    expect(await renderSegments([])).toHaveLength(0);
   });
 });

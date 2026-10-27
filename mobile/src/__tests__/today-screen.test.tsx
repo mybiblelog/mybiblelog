@@ -86,19 +86,19 @@ beforeEach(() => {
 });
 
 describe("Today screen", () => {
-  it("renders the title and the add-entry control", () => {
-    renderWithProviders(<Today />);
+  it("renders the title and the add-entry control", async () => {
+    await renderWithProviders(<Today />);
     expect(screen.getByText("Today")).toBeTruthy();
     expect(screen.getByTestId("today.add-entry")).toBeTruthy();
   });
 
   describe("daily goal", () => {
-    it("measures the goal in new verses, not total verses read", () => {
+    it("measures the goal in new verses, not total verses read", async () => {
       // 10 verses read today, but only 4 of them were new. Web's primary bar
       // tracks the new count — this is the number the two platforms must agree
       // on, and the reason mobile can't just use countUniqueRangeVerses.
       seed({ uniqueToday: 4 });
-      renderWithProviders(<Today />);
+      await renderWithProviders(<Today />);
 
       const bar = screen.getByTestId("double-progress-bar");
       expect(bar.props.accessibilityValue.now).toBe(Math.round((4 / GOAL) * 100));
@@ -108,28 +108,28 @@ describe("Today screen", () => {
       );
     });
 
-    it("shows total verses read behind the new-verse count", () => {
+    it("shows total verses read behind the new-verse count", async () => {
       seed({ uniqueToday: 4 });
-      renderWithProviders(<Today />);
+      await renderWithProviders(<Today />);
       // Both fills render; the secondary one carries the dimming.
       expect(screen.getByTestId("primary-bar")).toBeTruthy();
       expect(screen.getByTestId("secondary-bar")).toBeTruthy();
     });
 
-    it("celebrates only once the goal is actually met", () => {
+    it("celebrates only once the goal is actually met", async () => {
       seed({ uniqueToday: GOAL - 1 });
-      renderWithProviders(<Today />);
+      await renderWithProviders(<Today />);
       expect(screen.queryByTestId("primary-bar-complete")).toBeNull();
 
-      screen.rerender(<Today />);
+      await screen.rerender(<Today />);
       seed({ uniqueToday: GOAL });
-      screen.rerender(<Today />);
+      await screen.rerender(<Today />);
       expect(screen.getByTestId("primary-bar-complete")).toBeTruthy();
     });
 
-    it("points at Settings when no goal is set", () => {
+    it("points at Settings when no goal is set", async () => {
       seed({ goal: 0, uniqueToday: 3 });
-      renderWithProviders(<Today />);
+      await renderWithProviders(<Today />);
       expect(screen.getByTestId("daily-goal-summary").props.children).toContain(
         "Set a daily goal in Settings"
       );
@@ -137,19 +137,19 @@ describe("Today screen", () => {
   });
 
   describe("entry rows", () => {
-    it("reports the passage and how much of it was new", () => {
-      renderWithProviders(<Today />);
+    it("reports the passage and how much of it was new", async () => {
+      await renderWithProviders(<Today />);
       expect(screen.getByText(Bible.displayVerseRange(GEN_1_1, GEN_1_10))).toBeTruthy();
       // Nothing read before today, so all ten verses are new.
       expect(screen.getByText("10 verses - all new")).toBeTruthy();
     });
 
-    it('says "all new" rather than repeating the number', () => {
-      renderWithProviders(<Today />);
+    it('says "all new" rather than repeating the number', async () => {
+      await renderWithProviders(<Today />);
       expect(screen.queryByText("10 verses - 10 new")).toBeNull();
     });
 
-    it("counts only the unread part when a passage overlaps earlier reading", () => {
+    it("counts only the unread part when a passage overlaps earlier reading", async () => {
       // Genesis 1:1-5 read last week, then 1:1-10 today: 5 of 10 are new.
       seed({
         entries: [
@@ -161,38 +161,38 @@ describe("Today screen", () => {
           entry({ clientId: "new" }),
         ],
       });
-      renderWithProviders(<Today />);
+      await renderWithProviders(<Today />);
       expect(screen.getByText("10 verses - 5 new")).toBeTruthy();
     });
   });
 
   describe("loading", () => {
-    it("shows placeholder rows rather than a blank screen", () => {
+    it("shows placeholder rows rather than a blank screen", async () => {
       seed({ loadingEntries: true });
-      renderWithProviders(<Today />);
+      await renderWithProviders(<Today />);
       // The layout renders immediately; only the list is standing in.
       expect(screen.getByText("Today")).toBeTruthy();
       expect(screen.getAllByLabelText("Loading...").length).toBeGreaterThan(0);
     });
 
-    it("holds the goal at zero until the counts land, rather than jumping", () => {
+    it("holds the goal at zero until the counts land, rather than jumping", async () => {
       // jobs in flight, counts map still empty — the cold-start gap.
       useDateVerseCountsStore.setState({ jobs: 1, dateVerseCounts: {} });
-      renderWithProviders(<Today />);
+      await renderWithProviders(<Today />);
       expect(screen.getByTestId("double-progress-bar").props.accessibilityValue.now).toBe(0);
       expect(screen.queryByText("0%")).toBeNull();
     });
   });
 
-  it("offers a way to log the first entry when the day is empty", () => {
+  it("offers a way to log the first entry when the day is empty", async () => {
     seed({ entries: [] });
-    renderWithProviders(<Today />);
+    await renderWithProviders(<Today />);
     expect(screen.getByText("No entries yet")).toBeTruthy();
   });
 
-  it("sends View All Reading to the calendar", () => {
-    renderWithProviders(<Today />);
-    fireEvent.press(screen.getByTestId("today.view-all-reading"));
+  it("sends View All Reading to the calendar", async () => {
+    await renderWithProviders(<Today />);
+    await fireEvent.press(screen.getByTestId("today.view-all-reading"));
     expect(router.push).toHaveBeenCalledWith("/(tabs)/calendar");
   });
 
@@ -201,15 +201,15 @@ describe("Today screen", () => {
 
     it("warns a signed-out reader that their log lives only on this device", async () => {
       signOut();
-      renderWithProviders(<Today />);
+      await renderWithProviders(<Today />);
       expect(await screen.findByTestId("today.guest-backup")).toBeTruthy();
 
-      fireEvent.press(screen.getByText("Create account"));
+      await fireEvent.press(screen.getByText("Create account"));
       expect(router.push).toHaveBeenCalledWith("/register");
     });
 
     it("stays hidden while signed in", async () => {
-      renderWithProviders(<Today />);
+      await renderWithProviders(<Today />);
       await screen.findByTestId("today.add-entry");
       expect(screen.queryByTestId("today.guest-backup")).toBeNull();
     });
@@ -217,18 +217,18 @@ describe("Today screen", () => {
     it("stays hidden until there is something to lose", async () => {
       signOut();
       seed({ entries: [] });
-      renderWithProviders(<Today />);
+      await renderWithProviders(<Today />);
       await screen.findByTestId("today.add-entry");
       expect(screen.queryByTestId("today.guest-backup")).toBeNull();
     });
   });
 
-  it("filters the notes tab to a passage from the row menu", () => {
-    renderWithProviders(<Today />);
+  it("filters the notes tab to a passage from the row menu", async () => {
+    await renderWithProviders(<Today />);
     // The row's kebab is labelled with the passage range.
-    fireEvent.press(screen.getByLabelText(Bible.displayVerseRange(GEN_1_1, GEN_1_10)));
+    await fireEvent.press(screen.getByLabelText(Bible.displayVerseRange(GEN_1_1, GEN_1_10)));
 
-    fireEvent.press(screen.getByText("View Notes"));
+    await fireEvent.press(screen.getByText("View Notes"));
 
     const query = useNotesStore.getState().query;
     expect(query.filterPassageStartVerseId).toBe(GEN_1_1);

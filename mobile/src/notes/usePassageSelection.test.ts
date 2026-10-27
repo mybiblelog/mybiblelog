@@ -9,16 +9,16 @@ const SINGLE_CHAPTER_BOOK = Bible.getBooks().find(
 )!.bibleOrder;
 
 describe("usePassageSelection", () => {
-  it("starts empty and invalid with no book selected", () => {
-    const { result } = renderHook(() => usePassageSelection());
+  it("starts empty and invalid with no book selected", async () => {
+    const { result } = await renderHook(() => usePassageSelection());
     expect(result.current.state.book).toBe(0);
     expect(result.current.range).toBeNull();
     expect(result.current.isValid).toBe(false);
   });
 
-  it("auto-fills the whole book when a book is selected", () => {
-    const { result } = renderHook(() => usePassageSelection());
-    act(() => result.current.selectBook(GENESIS));
+  it("auto-fills the whole book when a book is selected", async () => {
+    const { result } = await renderHook(() => usePassageSelection());
+    await act(() => result.current.selectBook(GENESIS));
 
     const lastChapter = Bible.getBookChapterCount(GENESIS);
     const lastVerse = Bible.getChapterVerseCount(GENESIS, lastChapter);
@@ -39,9 +39,9 @@ describe("usePassageSelection", () => {
     expect(result.current.isValid).toBe(true);
   });
 
-  it("auto-fills a single-chapter book to its one full chapter", () => {
-    const { result } = renderHook(() => usePassageSelection());
-    act(() => result.current.selectBook(SINGLE_CHAPTER_BOOK));
+  it("auto-fills a single-chapter book to its one full chapter", async () => {
+    const { result } = await renderHook(() => usePassageSelection());
+    await act(() => result.current.selectBook(SINGLE_CHAPTER_BOOK));
 
     const lastVerse = Bible.getChapterVerseCount(SINGLE_CHAPTER_BOOK, 1);
     expect(result.current.state).toEqual({
@@ -54,11 +54,11 @@ describe("usePassageSelection", () => {
     expect(result.current.isValid).toBe(true);
   });
 
-  it("keeps every field populated and editable when the start chapter changes", () => {
+  it("keeps every field populated and editable when the start chapter changes", async () => {
     const DEUTERONOMY = 5;
-    const { result } = renderHook(() => usePassageSelection());
-    act(() => result.current.selectBook(DEUTERONOMY));
-    act(() => result.current.selectStartChapter(2));
+    const { result } = await renderHook(() => usePassageSelection());
+    await act(() => result.current.selectBook(DEUTERONOMY));
+    await act(() => result.current.selectStartChapter(2));
 
     // Changing the start chapter collapses to that whole chapter (the Log Entry
     // editor flow) — the verses are NOT cleared, so the end-chapter/verse rows
@@ -74,18 +74,18 @@ describe("usePassageSelection", () => {
     expect(result.current.isValid).toBe(true);
 
     // The end chapter can then be widened from there.
-    act(() => result.current.selectEndChapter(4));
+    await act(() => result.current.selectEndChapter(4));
     expect(result.current.state.endChapter).toBe(4);
     expect(result.current.isValid).toBe(true);
   });
 
-  it("lets the user narrow the passage after the book auto-fill", () => {
-    const { result } = renderHook(() => usePassageSelection());
-    act(() => result.current.selectBook(GENESIS));
-    act(() => result.current.selectStartChapter(1));
-    act(() => result.current.selectStartVerse(1));
-    act(() => result.current.selectEndChapter(1));
-    act(() => result.current.selectEndVerse(2));
+  it("lets the user narrow the passage after the book auto-fill", async () => {
+    const { result } = await renderHook(() => usePassageSelection());
+    await act(() => result.current.selectBook(GENESIS));
+    await act(() => result.current.selectStartChapter(1));
+    await act(() => result.current.selectStartVerse(1));
+    await act(() => result.current.selectEndChapter(1));
+    await act(() => result.current.selectEndVerse(2));
 
     expect(result.current.range).toEqual({
       startVerseId: Bible.makeVerseId(GENESIS, 1, 1),
@@ -94,21 +94,21 @@ describe("usePassageSelection", () => {
     expect(result.current.isValid).toBe(true);
   });
 
-  it("pre-populates from an initial range", () => {
+  it("pre-populates from an initial range", async () => {
     const initialRange = {
       startVerseId: Bible.makeVerseId(GENESIS, 1, 1),
       endVerseId: Bible.makeVerseId(GENESIS, 1, 3),
     };
-    const { result } = renderHook(() => usePassageSelection(initialRange));
+    const { result } = await renderHook(() => usePassageSelection(initialRange));
     expect(result.current.range).toEqual(initialRange);
     expect(result.current.isValid).toBe(true);
   });
 
-  it("reset clears back to an empty selection", () => {
-    const { result } = renderHook(() => usePassageSelection());
-    act(() => result.current.selectBook(GENESIS));
+  it("reset clears back to an empty selection", async () => {
+    const { result } = await renderHook(() => usePassageSelection());
+    await act(() => result.current.selectBook(GENESIS));
     expect(result.current.isValid).toBe(true);
-    act(() => result.current.reset());
+    await act(() => result.current.reset());
     expect(result.current.state.book).toBe(0);
     expect(result.current.range).toBeNull();
     expect(result.current.isValid).toBe(false);

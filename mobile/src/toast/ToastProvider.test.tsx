@@ -19,14 +19,14 @@ function ProminentTrigger({ durationMs }: { durationMs?: number | null }) {
   );
 }
 
-function show(type: ToastType, scheme: "light" | "dark") {
-  renderWithProviders(<Trigger type={type} />, { scheme });
-  fireEvent.press(screen.getByText("show"));
+async function show(type: ToastType, scheme: "light" | "dark") {
+  await renderWithProviders(<Trigger type={type} />, { scheme });
+  await fireEvent.press(screen.getByText("show"));
 }
 
-function showProminent(durationMs?: number | null) {
-  renderWithProviders(<ProminentTrigger durationMs={durationMs} />);
-  fireEvent.press(screen.getByText("show"));
+async function showProminent(durationMs?: number | null) {
+  await renderWithProviders(<ProminentTrigger durationMs={durationMs} />);
+  await fireEvent.press(screen.getByText("show"));
 }
 
 const flatten = (testID: string) =>
@@ -37,23 +37,23 @@ describe("ToastProvider", () => {
     ["info", "info"],
     ["success", "success"],
     ["error", "destructive"],
-  ] as const)("fills a %s toast with its intent color in dark mode", (type, role) => {
+  ] as const)("fills a %s toast with its intent color in dark mode", async (type, role) => {
     // The regression this guards: `info` used to paint itself `surface`, which
     // is all but invisible against the dark canvas.
-    show(type, "dark");
+    await show(type, "dark");
     expect(flatten("toast.container").backgroundColor).toBe(colorsByScheme.dark[role]);
     expect(flatten("toast.message").color).toBe("#ffffff");
   });
 
-  it("keeps the corner radius with the background color", () => {
+  it("keeps the corner radius with the background color", async () => {
     // Android drops a registered radius on a background-only style update — see
     // the comment in the component.
-    show("error", "light");
+    await show("error", "light");
     expect(flatten("toast.container").borderRadius).toBe(16);
   });
 
-  it("anchors to the top of the screen, clear of the keyboard", () => {
-    show("error", "light");
+  it("anchors to the top of the screen, clear of the keyboard", async () => {
+    await show("error", "light");
     const wrap = flatten("toast.wrap");
     expect(wrap.top).toBe(spacing.xs); // safe-area top is 0 in tests
     expect(wrap.bottom).toBeUndefined();
@@ -61,27 +61,27 @@ describe("ToastProvider", () => {
 
   describe("prominent toasts", () => {
     beforeEach(() => jest.useFakeTimers());
-    afterEach(() => {
-      act(() => jest.runOnlyPendingTimers());
+    afterEach(async () => {
+      await act(() => jest.runOnlyPendingTimers());
       jest.useRealTimers();
     });
 
-    it("does not auto-dismiss when durationMs is null", () => {
-      showProminent(null);
+    it("does not auto-dismiss when durationMs is null", async () => {
+      await showProminent(null);
       expect(screen.getByTestId("toast.message")).toBeTruthy();
-      act(() => jest.advanceTimersByTime(60_000));
+      await act(() => jest.advanceTimersByTime(60_000));
       expect(screen.getByTestId("toast.message")).toBeTruthy();
     });
 
-    it("shows a close button that dismisses it", () => {
-      showProminent(null);
-      fireEvent.press(screen.getByTestId("toast.close"));
-      act(() => jest.advanceTimersByTime(1000)); // let the fade-out finish
+    it("shows a close button that dismisses it", async () => {
+      await showProminent(null);
+      await fireEvent.press(screen.getByTestId("toast.close"));
+      await act(() => jest.advanceTimersByTime(1000)); // let the fade-out finish
       expect(screen.queryByTestId("toast.message")).toBeNull();
     });
 
-    it("uses more generous padding and a larger, left-aligned message than the compact toast", () => {
-      showProminent(null);
+    it("uses more generous padding and a larger, left-aligned message than the compact toast", async () => {
+      await showProminent(null);
       const container = flatten("toast.container");
       const text = flatten("toast.message");
       expect(container.paddingHorizontal).toBe(spacing.lg);
@@ -90,8 +90,8 @@ describe("ToastProvider", () => {
     });
   });
 
-  it("does not show a close button on the compact (non-prominent) toast", () => {
-    show("info", "light");
+  it("does not show a close button on the compact (non-prominent) toast", async () => {
+    await show("info", "light");
     expect(screen.queryByTestId("toast.close")).toBeNull();
   });
 });

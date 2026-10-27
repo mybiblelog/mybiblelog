@@ -47,7 +47,7 @@ beforeEach(() => {
 
 describe("RecentNotesSection", () => {
   it("fetches and renders the most recent notes", async () => {
-    const { getByText } = renderWithProviders(<RecentNotesSection />);
+    const { getByText } = await renderWithProviders(<RecentNotesSection />);
 
     await waitFor(() => expect(getByText("In the beginning…")).toBeTruthy());
     expect(getByText("Second note")).toBeTruthy();
@@ -59,25 +59,25 @@ describe("RecentNotesSection", () => {
       notes: [],
       meta: { offset: 0, limit: 3, size: 0 },
     });
-    const { getByText } = renderWithProviders(<RecentNotesSection />);
+    const { getByText } = await renderWithProviders(<RecentNotesSection />);
 
     await waitFor(() => expect(getByText("No Notes")).toBeTruthy());
   });
 
   it("navigates to the Notes tab from View All Notes", async () => {
-    const { getByText } = renderWithProviders(<RecentNotesSection />);
+    const { getByText } = await renderWithProviders(<RecentNotesSection />);
     await waitFor(() => expect(getByText("In the beginning…")).toBeTruthy());
 
-    fireEvent.press(getByText("View All Notes"));
+    await fireEvent.press(getByText("View All Notes"));
 
     expect(router.push).toHaveBeenCalledWith("/(tabs)/notes");
   });
 
   it("opens the note editor from the New button", async () => {
-    const { getByText } = renderWithProviders(<RecentNotesSection />);
+    const { getByText } = await renderWithProviders(<RecentNotesSection />);
     await waitFor(() => expect(getByText("In the beginning…")).toBeTruthy());
 
-    fireEvent.press(getByText("New"));
+    await fireEvent.press(getByText("New"));
 
     expect(getByText("New Note")).toBeTruthy();
   });
@@ -101,7 +101,7 @@ describe("RecentNotesSection", () => {
       },
     });
 
-    const { getByText, queryByText } = renderWithProviders(<RecentNotesSection />);
+    const { getByText, queryByText } = await renderWithProviders(<RecentNotesSection />);
 
     await waitFor(() => expect(getByText("Staged while offline")).toBeTruthy());
     expect(queryByText("In the beginning…")).toBeNull();

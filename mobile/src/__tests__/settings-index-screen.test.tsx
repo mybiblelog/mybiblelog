@@ -12,29 +12,29 @@ beforeEach(() => {
 });
 
 describe("Settings index screen", () => {
-  it("flags the Account row when signed out", () => {
+  it("flags the Account row when signed out", async () => {
     useAuthStore.setState({ state: { status: "unauthenticated" } });
-    const { queryByTestId } = renderWithProviders(<SettingsIndex />);
+    const { queryByTestId } = await renderWithProviders(<SettingsIndex />);
     expect(queryByTestId("attentionDot")).toBeTruthy();
   });
 
-  it("hides the flag once signed in", () => {
+  it("hides the flag once signed in", async () => {
     useAuthStore.setState({
       state: { status: "authenticated", session: { token: "t", user: { email: "a@b.com" } } },
     });
-    const { queryByTestId } = renderWithProviders(<SettingsIndex />);
+    const { queryByTestId } = await renderWithProviders(<SettingsIndex />);
     expect(queryByTestId("attentionDot")).toBeNull();
   });
 
-  it("shows the offline banner (Settings screens previously had none)", () => {
+  it("shows the offline banner (Settings screens previously had none)", async () => {
     useConnectivityStore.setState({ isOnline: false });
-    const { getByText } = renderWithProviders(<SettingsIndex />);
+    const { getByText } = await renderWithProviders(<SettingsIndex />);
     expect(getByText("You’re offline — changes will sync when you reconnect.")).toBeTruthy();
   });
 
-  it("links to the Feedback screen", () => {
-    const { getByTestId } = renderWithProviders(<SettingsIndex />);
-    fireEvent.press(getByTestId("settings.feedback-link"));
+  it("links to the Feedback screen", async () => {
+    const { getByTestId } = await renderWithProviders(<SettingsIndex />);
+    await fireEvent.press(getByTestId("settings.feedback-link"));
     expect(router.push).toHaveBeenCalledWith("/settings/feedback");
   });
 });

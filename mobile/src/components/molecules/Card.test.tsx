@@ -7,8 +7,8 @@ import { Card } from "./Card";
 const styleOf = (testID: string) => StyleSheet.flatten(screen.getByTestId(testID).props.style);
 
 describe("Card", () => {
-  it("renders its children", () => {
-    renderWithProviders(
+  it("renders its children", async () => {
+    await renderWithProviders(
       <Card>
         <Text>Inside</Text>
       </Card>
@@ -17,8 +17,8 @@ describe("Card", () => {
   });
 
   describe("padding", () => {
-    it('defaults to "content" (web .mbl-card__content)', () => {
-      renderWithProviders(
+    it('defaults to "content" (web .mbl-card__content)', async () => {
+      await renderWithProviders(
         <Card testID="c">
           <Text>x</Text>
         </Card>
@@ -26,8 +26,8 @@ describe("Card", () => {
       expect(styleOf("c").padding).toBe(spacing.xl);
     });
 
-    it('"list-item" is tighter vertically than horizontally (web .mbl-card--list-item)', () => {
-      renderWithProviders(
+    it('"list-item" is tighter vertically than horizontally (web .mbl-card--list-item)', async () => {
+      await renderWithProviders(
         <Card testID="c" padding="list-item">
           <Text>x</Text>
         </Card>
@@ -38,8 +38,8 @@ describe("Card", () => {
       expect(style.padding).toBeUndefined();
     });
 
-    it('"none" applies no padding', () => {
-      renderWithProviders(
+    it('"none" applies no padding', async () => {
+      await renderWithProviders(
         <Card testID="c" padding="none">
           <Text>x</Text>
         </Card>
@@ -50,8 +50,8 @@ describe("Card", () => {
     });
   });
 
-  it("uses the elevated surface, not the plain one", () => {
-    renderWithProviders(
+  it("uses the elevated surface, not the plain one", async () => {
+    await renderWithProviders(
       <Card testID="c">
         <Text>x</Text>
       </Card>
@@ -59,8 +59,8 @@ describe("Card", () => {
     expect(styleOf("c").backgroundColor).toBe(colorsByScheme.light.surfaceElevated);
   });
 
-  it("lifts off the canvas in dark mode", () => {
-    renderWithProviders(
+  it("lifts off the canvas in dark mode", async () => {
+    await renderWithProviders(
       <Card testID="c">
         <Text>x</Text>
       </Card>,
@@ -76,8 +76,8 @@ describe("Card", () => {
 
   // Regression guard for the Android bug where a background-only style update
   // drops a separately-registered borderRadius: the two must travel together.
-  it("declares borderRadius in the same style object as backgroundColor", () => {
-    renderWithProviders(
+  it("declares borderRadius in the same style object as backgroundColor", async () => {
+    await renderWithProviders(
       <Card testID="c">
         <Text>x</Text>
       </Card>
@@ -91,8 +91,8 @@ describe("Card", () => {
   });
 
   describe("elevation", () => {
-    it("carries a resting shadow whose last layer is the 1px rim", () => {
-      renderWithProviders(
+    it("carries a resting shadow whose last layer is the 1px rim", async () => {
+      await renderWithProviders(
         <Card testID="c">
           <Text>x</Text>
         </Card>
@@ -105,8 +105,8 @@ describe("Card", () => {
       expect(shadow.at(-1)?.color).toBe(colorsByScheme.light.shadowRim);
     });
 
-    it("omits the shadow when flat", () => {
-      renderWithProviders(
+    it("omits the shadow when flat", async () => {
+      await renderWithProviders(
         <Card testID="c" flat>
           <Text>x</Text>
         </Card>
@@ -116,8 +116,8 @@ describe("Card", () => {
   });
 
   describe("tone", () => {
-    it("paints info callout chrome with a visible edge", () => {
-      renderWithProviders(
+    it("paints info callout chrome with a visible edge", async () => {
+      await renderWithProviders(
         <Card testID="c" tone="info">
           <Text>x</Text>
         </Card>
@@ -128,8 +128,8 @@ describe("Card", () => {
       expect(style.borderWidth).toBe(StyleSheet.hairlineWidth);
     });
 
-    it("drops the resting shadow on toned callouts", () => {
-      renderWithProviders(
+    it("drops the resting shadow on toned callouts", async () => {
+      await renderWithProviders(
         <Card testID="c" tone="info">
           <Text>x</Text>
         </Card>
@@ -137,8 +137,8 @@ describe("Card", () => {
       expect(styleOf("c").boxShadow).toBeUndefined();
     });
 
-    it("renders a note as a flat outline, not a content surface", () => {
-      renderWithProviders(
+    it("renders a note as a flat outline, not a content surface", async () => {
+      await renderWithProviders(
         <Card testID="c" tone="note">
           <Text>x</Text>
         </Card>
@@ -150,8 +150,8 @@ describe("Card", () => {
       expect(style.boxShadow).toBeUndefined();
     });
 
-    it("leaves neutral cards borderless", () => {
-      renderWithProviders(
+    it("leaves neutral cards borderless", async () => {
+      await renderWithProviders(
         <Card testID="c">
           <Text>x</Text>
         </Card>
@@ -161,20 +161,20 @@ describe("Card", () => {
   });
 
   describe("onPress", () => {
-    it("becomes a button and fires", () => {
+    it("becomes a button and fires", async () => {
       const onPress = jest.fn();
-      renderWithProviders(
+      await renderWithProviders(
         <Card testID="c" onPress={onPress} accessibilityLabel="Open">
           <Text>x</Text>
         </Card>
       );
-      fireEvent.press(screen.getByTestId("c"));
+      await fireEvent.press(screen.getByTestId("c"));
       expect(onPress).toHaveBeenCalledTimes(1);
       expect(screen.getByRole("button", { name: "Open" })).toBeTruthy();
     });
 
-    it("stays a plain view without onPress", () => {
-      renderWithProviders(
+    it("stays a plain view without onPress", async () => {
+      await renderWithProviders(
         <Card testID="c">
           <Text>x</Text>
         </Card>

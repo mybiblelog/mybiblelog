@@ -58,48 +58,50 @@ describe("useLogEntryOverlays", () => {
     (logEntryActions.deleteEntry as jest.Mock).mockReset();
   });
 
-  it("omits Continue Reading for the final verse of Revelation", () => {
-    const { getByText, queryByText } = renderWithProviders(<Harness entry={finalVerseEntry} />);
-    fireEvent.press(getByText("Open Menu"));
+  it("omits Continue Reading for the final verse of Revelation", async () => {
+    const { getByText, queryByText } = await renderWithProviders(
+      <Harness entry={finalVerseEntry} />
+    );
+    await fireEvent.press(getByText("Open Menu"));
     expect(getByText("Open in Bible")).toBeTruthy();
     expect(queryByText("Continue Reading")).toBeNull();
   });
 
-  it("offers Continue Reading when a next verse exists", () => {
-    const { getByText } = renderWithProviders(<Harness entry={genesisEntry} />);
-    fireEvent.press(getByText("Open Menu"));
+  it("offers Continue Reading when a next verse exists", async () => {
+    const { getByText } = await renderWithProviders(<Harness entry={genesisEntry} />);
+    await fireEvent.press(getByText("Open Menu"));
     expect(getByText("Continue Reading")).toBeTruthy();
   });
 
   it("shows the open-in-bible failure toast when it fails to open", async () => {
     (openPassageInBible as jest.Mock).mockResolvedValue(false);
-    const { getByText } = renderWithProviders(<Harness entry={genesisEntry} />);
-    fireEvent.press(getByText("Open Menu"));
-    fireEvent.press(getByText("Open in Bible"));
+    const { getByText } = await renderWithProviders(<Harness entry={genesisEntry} />);
+    await fireEvent.press(getByText("Open Menu"));
+    await fireEvent.press(getByText("Open in Bible"));
 
     await waitFor(() => expect(getByText("Unable to open Bible app.")).toBeTruthy());
   });
 
   it("does not show the failure toast when opening succeeds", async () => {
     (openPassageInBible as jest.Mock).mockResolvedValue(true);
-    const { getByText, queryByText } = renderWithProviders(<Harness entry={genesisEntry} />);
-    fireEvent.press(getByText("Open Menu"));
-    fireEvent.press(getByText("Open in Bible"));
+    const { getByText, queryByText } = await renderWithProviders(<Harness entry={genesisEntry} />);
+    await fireEvent.press(getByText("Open Menu"));
+    await fireEvent.press(getByText("Open in Bible"));
 
     await waitFor(() => expect(openPassageInBible).toHaveBeenCalled());
     expect(queryByText("Unable to open Bible app.")).toBeNull();
   });
 
   it("deletes the confirmed entry by clientId", async () => {
-    const { getByText, getAllByText } = renderWithProviders(<Harness entry={genesisEntry} />);
-    fireEvent.press(getByText("Open Menu"));
-    fireEvent.press(getByText("Delete"));
+    const { getByText, getAllByText } = await renderWithProviders(<Harness entry={genesisEntry} />);
+    await fireEvent.press(getByText("Open Menu"));
+    await fireEvent.press(getByText("Delete"));
 
     // Both the menu action and the confirm dialog's button read "Delete";
     // the dialog's title confirms the confirm sheet is now open.
     expect(getByText("Delete log entry?")).toBeTruthy();
     const deleteButtons = getAllByText("Delete");
-    fireEvent.press(deleteButtons[deleteButtons.length - 1]);
+    await fireEvent.press(deleteButtons[deleteButtons.length - 1]);
 
     await waitFor(() =>
       expect(logEntryActions.deleteEntry).toHaveBeenCalledWith(genesisEntry.clientId)

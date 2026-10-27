@@ -13,27 +13,27 @@ describe("InlineAlert", () => {
     await AsyncStorage.clear();
   });
 
-  it("calls onDismiss and hides the card when the dismiss button is pressed", () => {
+  it("calls onDismiss and hides the card when the dismiss button is pressed", async () => {
     const onDismiss = jest.fn();
-    renderWithProviders(
+    await renderWithProviders(
       <InlineAlert title="Heads up" dismissLabel="Dismiss" onDismiss={onDismiss} testID="alert" />
     );
 
     expect(screen.getByTestId("alert")).toBeTruthy();
-    fireEvent.press(screen.getByLabelText("Dismiss"));
+    await fireEvent.press(screen.getByLabelText("Dismiss"));
 
     expect(onDismiss).toHaveBeenCalledTimes(1);
     expect(screen.queryByTestId("alert")).toBeNull();
   });
 
-  it("does not render a dismiss button when dismissLabel is omitted", () => {
-    renderWithProviders(<InlineAlert title="Heads up" testID="alert" />);
+  it("does not render a dismiss button when dismissLabel is omitted", async () => {
+    await renderWithProviders(<InlineAlert title="Heads up" testID="alert" />);
     expect(screen.queryByRole("button")).toBeNull();
   });
 
   describe("dismissKey persistence", () => {
     it("persists the dismissal via setCache under dismissKey", async () => {
-      renderWithProviders(
+      await renderWithProviders(
         <InlineAlert
           title="Heads up"
           dismissLabel="Dismiss"
@@ -45,7 +45,7 @@ describe("InlineAlert", () => {
       // The hydration gate resolves (no prior cache entry) and the card appears.
       await waitFor(() => expect(screen.getByTestId("alert")).toBeTruthy());
 
-      fireEvent.press(screen.getByLabelText("Dismiss"));
+      await fireEvent.press(screen.getByLabelText("Dismiss"));
 
       await waitFor(async () => {
         expect(await getCache<boolean>("test-alert")).toBe(true);
@@ -55,7 +55,7 @@ describe("InlineAlert", () => {
     it("renders null on a fresh mount when the dismissal is already cached", async () => {
       await setCache("test-alert", true, 60);
 
-      renderWithProviders(
+      await renderWithProviders(
         <InlineAlert
           title="Heads up"
           dismissLabel="Dismiss"
@@ -72,7 +72,18 @@ describe("InlineAlert", () => {
 
   describe("hydration gate", () => {
     it("renders null until the cache check resolves when a dismissKey is set", async () => {
-      renderWithProviders(
+      // Async render flushes pending effects, so hold the dismiss-key lookup
+      // open to observe the pre-hydration state.
+      let releaseLookup!: () => void;
+      const lookupHeld = new Promise<void>((resolve) => (releaseLookup = resolve));
+      const getItem = AsyncStorage.getItem as jest.Mock;
+      const realGetItem = getItem.getMockImplementation()!;
+      getItem.mockImplementation(async (key: string, ...rest: unknown[]) => {
+        if (key.includes("test-alert")) await lookupHeld;
+        return realGetItem(key, ...rest);
+      });
+
+      await renderWithProviders(
         <InlineAlert
           title="Heads up"
           dismissLabel="Dismiss"
@@ -81,34 +92,35 @@ describe("InlineAlert", () => {
         />
       );
 
-      // Synchronously after mount, the async getCache() lookup hasn't resolved yet.
       expect(screen.queryByTestId("alert")).toBeNull();
 
+      releaseLookup();
       await waitFor(() => expect(screen.getByTestId("alert")).toBeTruthy());
+      getItem.mockImplementation(realGetItem);
     });
 
-    it("renders immediately (no gate) when no dismissKey is given", () => {
-      renderWithProviders(<InlineAlert title="Heads up" testID="alert" />);
+    it("renders immediately (no gate) when no dismissKey is given", async () => {
+      await renderWithProviders(<InlineAlert title="Heads up" testID="alert" />);
       expect(screen.getByTestId("alert")).toBeTruthy();
     });
   });
 
   describe("CTA layout", () => {
-    it("renders a single full-width CTA when there is no secondary action", () => {
+    it("renders a single full-width CTA when there is no secondary action", async () => {
       const onPressCta = jest.fn();
-      renderWithProviders(
+      await renderWithProviders(
         <InlineAlert title="Heads up" ctaLabel="Do it" onPressCta={onPressCta} testID="alert" />
       );
 
-      fireEvent.press(screen.getByText("Do it"));
+      await fireEvent.press(screen.getByText("Do it"));
       expect(onPressCta).toHaveBeenCalledTimes(1);
       expect(screen.queryByText(/secondary/i)).toBeNull();
     });
 
-    it("renders both CTA and secondary CTA when provided", () => {
+    it("renders both CTA and secondary CTA when provided", async () => {
       const onPressCta = jest.fn();
       const onPressSecondaryCta = jest.fn();
-      renderWithProviders(
+      await renderWithProviders(
         <InlineAlert
           title="Heads up"
           ctaLabel="Do it"
@@ -119,14 +131,14 @@ describe("InlineAlert", () => {
         />
       );
 
-      fireEvent.press(screen.getByText("Do it"));
-      fireEvent.press(screen.getByText("Not now"));
+      await fireEvent.press(screen.getByText("Do it"));
+      await fireEvent.press(screen.getByText("Not now"));
       expect(onPressCta).toHaveBeenCalledTimes(1);
       expect(onPressSecondaryCta).toHaveBeenCalledTimes(1);
     });
 
-    it("omits the actions row entirely without a ctaLabel/onPressCta pair", () => {
-      renderWithProviders(<InlineAlert title="Heads up" testID="alert" />);
+    it("omits the actions row entirely without a ctaLabel/onPressCta pair", async () => {
+      await renderWithProviders(<InlineAlert title="Heads up" testID="alert" />);
       expect(screen.queryByRole("button")).toBeNull();
     });
   });

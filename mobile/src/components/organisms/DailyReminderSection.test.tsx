@@ -23,7 +23,7 @@ describe("DailyReminderSection", () => {
   });
 
   it("starts unchecked when no reminder is saved", async () => {
-    renderWithProviders(<DailyReminderSection />);
+    await renderWithProviders(<DailyReminderSection />);
     await waitFor(() =>
       expect(screen.getByRole("checkbox")).toHaveProp("accessibilityState", {
         checked: false,
@@ -33,10 +33,10 @@ describe("DailyReminderSection", () => {
   });
 
   it("schedules a notification and checks the box when toggled on", async () => {
-    renderWithProviders(<DailyReminderSection />);
+    await renderWithProviders(<DailyReminderSection />);
     await waitFor(() => screen.getByRole("checkbox"));
 
-    fireEvent.press(screen.getByRole("checkbox"));
+    await fireEvent.press(screen.getByRole("checkbox"));
 
     await waitFor(() => expect(scheduleNotificationAsync).toHaveBeenCalledTimes(1));
     await waitFor(() =>
@@ -51,10 +51,10 @@ describe("DailyReminderSection", () => {
     getPermissionsAsync.mockResolvedValue({ status: "denied" });
     requestPermissionsAsync.mockResolvedValue({ status: "denied" });
 
-    renderWithProviders(<DailyReminderSection />);
+    await renderWithProviders(<DailyReminderSection />);
     await waitFor(() => screen.getByRole("checkbox"));
 
-    fireEvent.press(screen.getByRole("checkbox"));
+    await fireEvent.press(screen.getByRole("checkbox"));
 
     await waitFor(() =>
       expect(
@@ -78,7 +78,7 @@ describe("DailyReminderSection", () => {
       notificationId: "existing-id",
     });
 
-    renderWithProviders(<DailyReminderSection />);
+    await renderWithProviders(<DailyReminderSection />);
     await waitFor(() =>
       expect(screen.getByRole("checkbox")).toHaveProp(
         "accessibilityState",
@@ -86,7 +86,7 @@ describe("DailyReminderSection", () => {
       )
     );
 
-    fireEvent.press(screen.getByTestId("settings-reading.reminder-time-select"));
+    await fireEvent.press(screen.getByTestId("settings-reading.reminder-time-select"));
     // The time picker itself is a native spinner (untestable in Jest); this
     // confirms tapping the row opens the picker sheet rather than driving the
     // OS picker directly.
@@ -98,10 +98,10 @@ describe("DailyReminderSection", () => {
     Platform.OS = "android";
     const open = jest.spyOn(DateTimePickerAndroid, "open").mockImplementation(() => undefined);
     try {
-      renderWithProviders(<DailyReminderSection />);
+      await renderWithProviders(<DailyReminderSection />);
       await waitFor(() => screen.getByRole("checkbox"));
 
-      fireEvent.press(screen.getByTestId("settings-reading.reminder-time-select"));
+      await fireEvent.press(screen.getByTestId("settings-reading.reminder-time-select"));
 
       expect(open).toHaveBeenCalledWith(expect.objectContaining({ mode: "time" }));
       expect(screen.queryByText("Done")).toBeNull();

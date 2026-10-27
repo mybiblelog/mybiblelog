@@ -5,7 +5,7 @@ jest.mock("@/src/api/tagsApi", () => ({
 }));
 
 import { fireEvent, renderWithProviders } from "@/src/test-utils/renderWithProviders";
-import { deleteTag, type PassageNoteTag } from "@/src/api/tagsApi";
+import { deleteTag, fetchTags, type PassageNoteTag } from "@/src/api/tagsApi";
 import { useAuthStore } from "@/src/stores/auth";
 import { useConnectivityStore } from "@/src/stores/connectivity";
 import { useTagsStore } from "@/src/stores/passageNoteTags";
@@ -22,6 +22,8 @@ const tag = (overrides: Partial<PassageNoteTag>): PassageNoteTag => ({
 
 function setTags(tags: PassageNoteTag[]) {
   useTagsStore.setState({ state: { status: "ready", tags }, sortOrder: "label:ascending" });
+  // The screen reloads on mount; serve the same list so the refresh keeps it.
+  (fetchTags as jest.Mock).mockResolvedValue(tags);
 }
 
 function signIn() {
@@ -32,6 +34,7 @@ function signIn() {
 
 beforeEach(() => {
   useTagsStore.setState({ state: { status: "idle" }, sortOrder: "label:ascending" });
+  (fetchTags as jest.Mock).mockResolvedValue([]);
   // Tag creation requires a live authenticated API, so the default fixture is
   // signed in and online — the offline cases opt out explicitly.
   signIn();
@@ -39,46 +42,46 @@ beforeEach(() => {
 });
 
 describe("Tags screen", () => {
-  it("renders tag rows with note counts", () => {
+  it("renders tag rows with note counts", async () => {
     setTags([
       tag({ id: "t1", label: "Prayer", noteCount: 3, description: "Prayer notes" }),
       tag({ id: "t2", label: "Sermon", noteCount: 0 }),
     ]);
-    const { getByText, getAllByText } = renderWithProviders(<Tags />);
+    const { getByText, getAllByText } = await renderWithProviders(<Tags />);
     expect(getAllByText("Prayer").length).toBeGreaterThan(0);
     expect(getByText("Prayer notes")).toBeTruthy();
     expect(getByText("3 notes")).toBeTruthy();
   });
 
-  it("shows the empty state when there are no tags", () => {
+  it("shows the empty state when there are no tags", async () => {
     setTags([]);
-    const { getByText } = renderWithProviders(<Tags />);
+    const { getByText } = await renderWithProviders(<Tags />);
     expect(getByText("No tags yet")).toBeTruthy();
   });
 
-  it("blocks deleting a tag that is still in use", () => {
+  it("blocks deleting a tag that is still in use", async () => {
     setTags([tag({ id: "t1", label: "Prayer", noteCount: 3 })]);
-    const { getByText, getAllByText } = renderWithProviders(<Tags />);
-    fireEvent.press(getAllByText("Prayer")[0]);
-    fireEvent.press(getByText("Delete"));
+    const { getByText, getAllByText } = await renderWithProviders(<Tags />);
+    await fireEvent.press(getAllByText("Prayer")[0]);
+    await fireEvent.press(getByText("Delete"));
     expect(getByText("Tag in use")).toBeTruthy();
     expect(deleteTag).not.toHaveBeenCalled();
   });
 
-  it("confirms before deleting an unused tag", () => {
+  it("confirms before deleting an unused tag", async () => {
     setTags([tag({ id: "t1", label: "Prayer", noteCount: 0 })]);
-    const { getByText, getAllByText } = renderWithProviders(<Tags />);
-    fireEvent.press(getAllByText("Prayer")[0]);
-    fireEvent.press(getByText("Delete"));
+    const { getByText, getAllByText } = await renderWithProviders(<Tags />);
+    await fireEvent.press(getAllByText("Prayer")[0]);
+    await fireEvent.press(getByText("Delete"));
     expect(getByText("Delete tag?")).toBeTruthy();
-    fireEvent.press(getAllByText("Delete")[getAllByText("Delete").length - 1]);
+    await fireEvent.press(getAllByText("Delete")[getAllByText("Delete").length - 1]);
     expect(deleteTag).toHaveBeenCalledWith("t1");
   });
 
-  it("opens the tag editor from the Create Tag button", () => {
+  it("opens the tag editor from the Create Tag button", async () => {
     setTags([]);
-    const { getByText, getAllByText } = renderWithProviders(<Tags />);
-    fireEvent.press(getAllByText("Create Tag")[0]);
+    const { getByText, getAllByText } = await renderWithProviders(<Tags />);
+    await fireEvent.press(getAllByText("Create Tag")[0]);
     expect(getByText("New Tag")).toBeTruthy();
     expect(getByText("Label")).toBeTruthy();
     expect(getByText("Color")).toBeTruthy();
@@ -87,42 +90,42 @@ describe("Tags screen", () => {
   // Tags have no offline mutation queue (unlike notes and log entries), so the
   // action is withdrawn up front rather than offered and then failed.
   describe("when tags can't be created", () => {
-    it("disables Create Tag and says why while the device is offline", () => {
+    it("disables Create Tag and says why while the device is offline", async () => {
       setTags([tag({ id: "t1", label: "Prayer" })]);
       useConnectivityStore.setState({ isOnline: false, apiReachable: null });
 
-      const { getByTestId, getByText } = renderWithProviders(<Tags />);
+      const { getByTestId, getByText } = await renderWithProviders(<Tags />);
 
       expect(getByTestId("tags.new")).toBeDisabled();
       expect(getByText("Creating tags requires an internet connection.")).toBeTruthy();
     });
 
-    it("distinguishes an unreachable server from a dead network", () => {
+    it("distinguishes an unreachable server from a dead network", async () => {
       setTags([tag({ id: "t1", label: "Prayer" })]);
       useConnectivityStore.setState({ isOnline: true, apiReachable: false });
 
-      const { getByTestId, getByText } = renderWithProviders(<Tags />);
+      const { getByTestId, getByText } = await renderWithProviders(<Tags />);
 
       expect(getByTestId("tags.new")).toBeDisabled();
       expect(getByText("Creating tags requires reaching the My Bible Log server.")).toBeTruthy();
     });
 
-    it("blames sign-in, not the network, when signed out but online", () => {
+    it("blames sign-in, not the network, when signed out but online", async () => {
       setTags([tag({ id: "t1", label: "Prayer" })]);
       useAuthStore.setState({ state: { status: "unauthenticated" } });
 
-      const { getByTestId, getByText, queryByText } = renderWithProviders(<Tags />);
+      const { getByTestId, getByText, queryByText } = await renderWithProviders(<Tags />);
 
       expect(getByTestId("tags.new")).toBeDisabled();
       expect(getByText("Sign in to create and use tags.")).toBeTruthy();
       expect(queryByText("Creating tags requires an internet connection.")).toBeNull();
     });
 
-    it("drops the empty-state CTA so it can't be tapped either", () => {
+    it("drops the empty-state CTA so it can't be tapped either", async () => {
       setTags([]);
       useConnectivityStore.setState({ isOnline: false, apiReachable: null });
 
-      const { queryAllByText, getByText } = renderWithProviders(<Tags />);
+      const { queryAllByText, getByText } = await renderWithProviders(<Tags />);
 
       expect(getByText("No tags yet")).toBeTruthy();
       // Only the (disabled) toolbar button remains — the CTA is gone.

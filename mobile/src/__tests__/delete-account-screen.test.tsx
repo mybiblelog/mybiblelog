@@ -6,7 +6,7 @@ jest.mock("@/src/api/settingsApi", () => ({
   deleteAccount: (...args: unknown[]) => mockDeleteAccount(...(args as [])),
 }));
 
-import type { ReactTestInstance } from "react-test-renderer";
+import type { TestInstance } from "test-renderer";
 import { router } from "expo-router";
 import { act, fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/renderWithProviders";
 import { useAuthStore } from "@/src/stores/auth";
@@ -26,10 +26,10 @@ function seed() {
   });
 }
 
-function checkAll(getByText: (text: string) => ReactTestInstance) {
-  fireEvent.press(getByText(LOG_ENTRIES_CHECK));
-  fireEvent.press(getByText(NOTES_CHECK));
-  fireEvent.press(getByText(PERMANENT_CHECK));
+async function checkAll(getByText: (text: string) => TestInstance) {
+  await fireEvent.press(getByText(LOG_ENTRIES_CHECK));
+  await fireEvent.press(getByText(NOTES_CHECK));
+  await fireEvent.press(getByText(PERMANENT_CHECK));
 }
 
 beforeEach(() => {
@@ -40,33 +40,33 @@ beforeEach(() => {
 });
 
 describe("Delete account screen", () => {
-  it("keeps the confirm button disabled until all three checkboxes are checked", () => {
-    const { getByText, getByRole } = renderWithProviders(<DeleteAccountScreen />);
+  it("keeps the confirm button disabled until all three checkboxes are checked", async () => {
+    const { getByText, getByRole } = await renderWithProviders(<DeleteAccountScreen />);
     const confirmButton = () => getByRole("button", { name: CONFIRM_LABEL });
 
     expect(confirmButton().props.accessibilityState?.disabled).toBe(true);
 
-    fireEvent.press(getByText(LOG_ENTRIES_CHECK));
+    await fireEvent.press(getByText(LOG_ENTRIES_CHECK));
     expect(confirmButton().props.accessibilityState?.disabled).toBe(true);
 
-    fireEvent.press(getByText(NOTES_CHECK));
+    await fireEvent.press(getByText(NOTES_CHECK));
     expect(confirmButton().props.accessibilityState?.disabled).toBe(true);
 
-    fireEvent.press(getByText(PERMANENT_CHECK));
+    await fireEvent.press(getByText(PERMANENT_CHECK));
     expect(confirmButton().props.accessibilityState?.disabled).toBe(false);
   });
 
   it("deletes the account, logs out, and navigates away on success", async () => {
     mockDeleteAccount.mockResolvedValue(undefined);
-    const { getByText, getAllByText } = renderWithProviders(<DeleteAccountScreen />);
+    const { getByText, getAllByText } = await renderWithProviders(<DeleteAccountScreen />);
 
-    checkAll(getByText);
-    fireEvent.press(getByText(CONFIRM_LABEL));
+    await checkAll(getByText);
+    await fireEvent.press(getByText(CONFIRM_LABEL));
 
     // The ConfirmDialog reuses the same label; press the dialog's copy (last one).
     const confirmButtons = getAllByText(CONFIRM_LABEL);
     await act(async () => {
-      fireEvent.press(confirmButtons[confirmButtons.length - 1]);
+      await fireEvent.press(confirmButtons[confirmButtons.length - 1]);
     });
 
     await waitFor(() => {
@@ -78,16 +78,16 @@ describe("Delete account screen", () => {
 
   it("shows an error toast and leaves the screen usable when deleteAccount fails", async () => {
     mockDeleteAccount.mockRejectedValue(new Error("nope"));
-    const { getByText, getAllByText, getByTestId, getByRole } = renderWithProviders(
+    const { getByText, getAllByText, getByTestId, getByRole } = await renderWithProviders(
       <DeleteAccountScreen />
     );
 
-    checkAll(getByText);
-    fireEvent.press(getByText(CONFIRM_LABEL));
+    await checkAll(getByText);
+    await fireEvent.press(getByText(CONFIRM_LABEL));
 
     const confirmButtons = getAllByText(CONFIRM_LABEL);
     await act(async () => {
-      fireEvent.press(confirmButtons[confirmButtons.length - 1]);
+      await fireEvent.press(confirmButtons[confirmButtons.length - 1]);
     });
 
     await waitFor(() => {
@@ -98,7 +98,10 @@ describe("Delete account screen", () => {
     expect(logout).not.toHaveBeenCalled();
     expect(router.replace).not.toHaveBeenCalled();
 
-    // isDeleting reset: the confirm button is interactive again (not stuck loading/disabled).
+    // isDeleting reset: the confirm button is interactive again (not stuck
+    // loading/disabled). Wait out the dialog's close animation first, or its
+    // copy of the label still matches.
+    await waitFor(() => expect(getAllByText(CONFIRM_LABEL)).toHaveLength(1));
     expect(getByRole("button", { name: CONFIRM_LABEL }).props.accessibilityState?.disabled).toBe(
       false
     );

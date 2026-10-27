@@ -26,9 +26,7 @@ export function DatePickerSheet({ visible, value, onChange, onClose }: Props) {
           mode="date"
           display="spinner"
           value={value}
-          onChange={(_event, date) => {
-            if (date) onChange(date);
-          }}
+          onValueChange={(_event, date) => onChange(date)}
         />
       </View>
       <Button label={t("date_picker_done")} onPress={onClose} fullWidth />

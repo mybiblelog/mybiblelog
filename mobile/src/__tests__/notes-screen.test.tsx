@@ -21,6 +21,7 @@ jest.mock("@/src/api/tagsApi", () => ({
 import { act, fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/renderWithProviders";
 import type { PassageNote } from "@/src/api/notesApi";
 import { fetchNotesPage } from "@/src/api/notesApi";
+import { fetchTags } from "@/src/api/tagsApi";
 import { initialNotesQuery, notesActions, useNotesStore } from "@/src/stores/passageNotes";
 import { useTagsStore } from "@/src/stores/passageNoteTags";
 import Notes from "@/app/(tabs)/notes/index";
@@ -38,23 +39,20 @@ beforeEach(() => {
     state: { status: "idle" },
     query: { ...initialNotesQuery, filterTags: [] },
   });
-  useTagsStore.setState({
-    state: {
-      status: "ready",
-      tags: [{ id: "t1", label: "Prayer", color: "#00aaf9", description: "", noteCount: 1 }],
-    },
-    sortOrder: "label:ascending",
-  });
+  const tags = [{ id: "t1", label: "Prayer", color: "#00aaf9", description: "", noteCount: 1 }];
+  useTagsStore.setState({ state: { status: "ready", tags }, sortOrder: "label:ascending" });
+  // Mounting reloads tags; serve the same list so the refresh keeps it.
+  (fetchTags as jest.Mock).mockResolvedValue(tags);
 });
 
 describe("Notes screen", () => {
-  it("shows a loading state while notes load", () => {
+  it("shows a loading state while notes load", async () => {
     useNotesStore.setState({ state: { status: "loading" } });
-    const { getByText } = renderWithProviders(<Notes />);
+    const { getByText } = await renderWithProviders(<Notes />);
     expect(getByText("Loading notes…")).toBeTruthy();
   });
 
-  it("renders note cards with passages, content, and tag pills", () => {
+  it("renders note cards with passages, content, and tag pills", async () => {
     setNotes([
       {
         id: "n1",
@@ -63,22 +61,22 @@ describe("Notes screen", () => {
         tags: ["t1"],
       },
     ]);
-    const { getByText } = renderWithProviders(<Notes />);
+    const { getByText } = await renderWithProviders(<Notes />);
     expect(getByText("Genesis 1:1-5")).toBeTruthy();
     expect(getByText("In the beginning")).toBeTruthy();
     expect(getByText("Prayer")).toBeTruthy();
     expect(getByText("1 of 1 notes loaded")).toBeTruthy();
   });
 
-  it("shows the empty state with a create CTA when there are no notes", () => {
+  it("shows the empty state with a create CTA when there are no notes", async () => {
     setNotes([]);
-    const { getByText } = renderWithProviders(<Notes />);
+    const { getByText } = await renderWithProviders(<Notes />);
     expect(getByText("No notes found")).toBeTruthy();
   });
 
-  it("shows the error state with a translated message and a retry action", () => {
+  it("shows the error state with a translated message and a retry action", async () => {
     useNotesStore.setState({ state: { status: "error", code: "network_error" } });
-    const { getByText } = renderWithProviders(<Notes />);
+    const { getByText } = await renderWithProviders(<Notes />);
     expect(getByText("Unable to load notes")).toBeTruthy();
     expect(
       getByText("Can't reach the server. Please check your connection and try again.")
@@ -86,16 +84,16 @@ describe("Notes screen", () => {
     expect(getByText("Retry")).toBeTruthy();
   });
 
-  it("opens the note editor from the New button", () => {
+  it("opens the note editor from the New button", async () => {
     setNotes([]);
-    const { getByText, getAllByText } = renderWithProviders(<Notes />);
-    fireEvent.press(getAllByText("New")[0]);
+    const { getByText, getAllByText } = await renderWithProviders(<Notes />);
+    await fireEvent.press(getAllByText("New")[0]);
     expect(getByText("New Note")).toBeTruthy();
     expect(getByText("Add Passage")).toBeTruthy();
     expect(getByText("Choose Tags")).toBeTruthy();
   });
 
-  it("prefills the new note editor with the active passage filter", () => {
+  it("prefills the new note editor with the active passage filter", async () => {
     setNotes([]);
     useNotesStore.setState({
       query: {
@@ -105,21 +103,21 @@ describe("Notes screen", () => {
         filterPassageEndVerseId: 101001005,
       },
     });
-    const { getByText, getAllByText } = renderWithProviders(<Notes />);
-    fireEvent.press(getAllByText("New")[0]);
+    const { getByText, getAllByText } = await renderWithProviders(<Notes />);
+    await fireEvent.press(getAllByText("New")[0]);
     expect(getByText("New Note")).toBeTruthy();
     expect(getByText("Genesis 1:1-5")).toBeTruthy();
   });
 
-  it("opens the new note editor empty when no passage filter is applied", () => {
+  it("opens the new note editor empty when no passage filter is applied", async () => {
     setNotes([]);
-    const { getByText, getAllByText } = renderWithProviders(<Notes />);
-    fireEvent.press(getAllByText("New")[0]);
+    const { getByText, getAllByText } = await renderWithProviders(<Notes />);
+    await fireEvent.press(getAllByText("New")[0]);
     expect(getByText("New Note")).toBeTruthy();
     expect(getByText("Add Passage")).toBeTruthy();
   });
 
-  it("opens the card menu with edit and delete actions", () => {
+  it("opens the card menu with edit and delete actions", async () => {
     setNotes([
       {
         id: "n1",
@@ -128,16 +126,16 @@ describe("Notes screen", () => {
         tags: [],
       },
     ]);
-    const { getByLabelText, getByText } = renderWithProviders(<Notes />);
-    fireEvent.press(getByLabelText("Note actions"));
+    const { getByLabelText, getByText } = await renderWithProviders(<Notes />);
+    await fireEvent.press(getByLabelText("Note actions"));
     expect(getByText("Edit")).toBeTruthy();
     expect(getByText("Delete")).toBeTruthy();
   });
 
-  it("opens the query sheet from the search button", () => {
+  it("opens the query sheet from the search button", async () => {
     setNotes([]);
-    const { getByText, getAllByText } = renderWithProviders(<Notes />);
-    fireEvent.press(getAllByText("Search · Filter · Sort")[0]);
+    const { getByText, getAllByText } = await renderWithProviders(<Notes />);
+    await fireEvent.press(getAllByText("Search · Filter · Sort")[0]);
     expect(getByText("Apply")).toBeTruthy();
     expect(getByText("Only untagged notes")).toBeTruthy();
     expect(getByText("Newest First")).toBeTruthy();
@@ -148,10 +146,10 @@ describe("Notes screen", () => {
     useNotesStore.setState({
       query: { ...initialNotesQuery, filterTags: [], searchText: "beginning" },
     });
-    renderWithProviders(<Notes />);
+    await renderWithProviders(<Notes />);
 
     let cleanup: void | (() => void);
-    act(() => {
+    await act(() => {
       cleanup = mockFocusEffectCallback?.();
     });
     await act(async () => {
@@ -166,10 +164,10 @@ describe("Notes screen", () => {
 
   it("does not reload on blur when no view options are applied", async () => {
     setNotes([]);
-    renderWithProviders(<Notes />);
+    await renderWithProviders(<Notes />);
 
     let cleanup: void | (() => void);
-    act(() => {
+    await act(() => {
       cleanup = mockFocusEffectCallback?.();
     });
     await act(async () => {
@@ -181,11 +179,11 @@ describe("Notes screen", () => {
 
   it("keeps a deep-link passage filter set after the previous blur reset", async () => {
     setNotes([]);
-    renderWithProviders(<Notes />);
+    await renderWithProviders(<Notes />);
 
     // Leave the tab with no filters applied (blur is a no-op)...
     let cleanup: void | (() => void);
-    act(() => {
+    await act(() => {
       cleanup = mockFocusEffectCallback?.();
     });
     await act(async () => {
@@ -202,7 +200,7 @@ describe("Notes screen", () => {
     });
 
     // Re-focusing the screen must not clear the deep-link filter.
-    act(() => {
+    await act(() => {
       mockFocusEffectCallback?.();
     });
     expect(useNotesStore.getState().query.filterPassageStartVerseId).toBe(101001001);

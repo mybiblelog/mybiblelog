@@ -13,9 +13,9 @@ beforeEach(() => {
 });
 
 describe("NoteEditorModal initialPassages", () => {
-  it("prefills a new note with the given passage", () => {
+  it("prefills a new note with the given passage", async () => {
     const onSubmit = jest.fn();
-    const { getByText } = renderWithProviders(
+    const { getByText } = await renderWithProviders(
       <NoteEditorModal
         visible
         initialPassages={[passage]}
@@ -29,19 +29,19 @@ describe("NoteEditorModal initialPassages", () => {
       getByText(Bible.displayVerseRange(passage.startVerseId, passage.endVerseId))
     ).toBeTruthy();
 
-    fireEvent.press(getByText("Save"));
+    await fireEvent.press(getByText("Save"));
     expect(onSubmit).toHaveBeenCalledWith(
       expect.objectContaining({ passages: [passage], content: "", tags: [] })
     );
   });
 
-  it("treats the prefilled draft as clean — closing does not prompt to discard", () => {
+  it("treats the prefilled draft as clean — closing does not prompt to discard", async () => {
     const onClose = jest.fn();
-    const { getByText, queryByText } = renderWithProviders(
+    const { getByText, queryByText } = await renderWithProviders(
       <NoteEditorModal visible initialPassages={[passage]} onClose={onClose} onSubmit={jest.fn()} />
     );
 
-    fireEvent.press(getByText("Close"));
+    await fireEvent.press(getByText("Close"));
     expect(queryByText("Discard changes?")).toBeNull();
     expect(onClose).toHaveBeenCalledTimes(1);
   });

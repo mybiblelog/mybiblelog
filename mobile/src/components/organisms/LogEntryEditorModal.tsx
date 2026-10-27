@@ -72,9 +72,7 @@ export function LogEntryEditorModal({
       DateTimePickerAndroid.open({
         value: selectedDate,
         mode: "date",
-        onChange: (_event, date) => {
-          if (date) editor.updateDate(toYmd(date));
-        },
+        onValueChange: (_event, date) => editor.updateDate(toYmd(date)),
       });
       return;
     }

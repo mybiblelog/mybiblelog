@@ -54,24 +54,24 @@ beforeEach(() => {
   (router.push as jest.Mock).mockClear();
 });
 
-function openChapterMenu(utils: ReturnType<typeof renderWithProviders>) {
+async function openChapterMenu(utils: Awaited<ReturnType<typeof renderWithProviders>>) {
   // The chapter tile's a11y label comes from chapter_unread_a11y.
-  fireEvent.press(utils.getByLabelText("3 John chapter 1, not read"));
+  await fireEvent.press(utils.getByLabelText("3 John chapter 1, not read"));
 }
 
 describe("Bible book screen", () => {
-  it("offers take-note and view-notes on a chapter", () => {
-    const utils = renderWithProviders(<BibleBookScreen />);
-    openChapterMenu(utils);
+  it("offers take-note and view-notes on a chapter", async () => {
+    const utils = await renderWithProviders(<BibleBookScreen />);
+    await openChapterMenu(utils);
     expect(utils.getByText("Take Note")).toBeTruthy();
     expect(utils.getByText("View Notes")).toBeTruthy();
   });
 
-  it("take note on a chapter opens the editor prefilled with the chapter passage", () => {
-    const utils = renderWithProviders(<BibleBookScreen />);
-    openChapterMenu(utils);
+  it("take note on a chapter opens the editor prefilled with the chapter passage", async () => {
+    const utils = await renderWithProviders(<BibleBookScreen />);
+    await openChapterMenu(utils);
 
-    fireEvent.press(utils.getByText("Take Note"));
+    await fireEvent.press(utils.getByText("Take Note"));
 
     expect(utils.getByText("New Note")).toBeTruthy();
     const start = Bible.makeVerseId(BOOK_INDEX, 1, 1);
@@ -81,11 +81,11 @@ describe("Bible book screen", () => {
     expect(utils.getByLabelText(`Edit: ${Bible.displayVerseRange(start, end)}`)).toBeTruthy();
   });
 
-  it("view notes on a chapter filters inclusively and navigates", () => {
-    const utils = renderWithProviders(<BibleBookScreen />);
-    openChapterMenu(utils);
+  it("view notes on a chapter filters inclusively and navigates", async () => {
+    const utils = await renderWithProviders(<BibleBookScreen />);
+    await openChapterMenu(utils);
 
-    fireEvent.press(utils.getByText("View Notes"));
+    await fireEvent.press(utils.getByText("View Notes"));
 
     const query = useNotesStore.getState().query;
     expect(query.filterPassageStartVerseId).toBe(Bible.makeVerseId(BOOK_INDEX, 1, 1));
@@ -93,11 +93,11 @@ describe("Bible book screen", () => {
     expect(router.push).toHaveBeenCalledWith("/(tabs)/notes");
   });
 
-  it("the book menu offers take-note and view-notes for the whole book", () => {
-    const utils = renderWithProviders(<BibleBookScreen />);
-    fireEvent.press(utils.getByLabelText("Book actions"));
+  it("the book menu offers take-note and view-notes for the whole book", async () => {
+    const utils = await renderWithProviders(<BibleBookScreen />);
+    await fireEvent.press(utils.getByLabelText("Book actions"));
 
-    fireEvent.press(utils.getByText("View Notes"));
+    await fireEvent.press(utils.getByText("View Notes"));
 
     const query = useNotesStore.getState().query;
     expect(query.filterPassageStartVerseId).toBe(Bible.getFirstBookVerseId(BOOK_INDEX));
@@ -106,11 +106,11 @@ describe("Bible book screen", () => {
     expect(router.push).toHaveBeenCalledWith("/(tabs)/notes");
   });
 
-  it("take note on the book prefills the whole-book passage", () => {
-    const utils = renderWithProviders(<BibleBookScreen />);
-    fireEvent.press(utils.getByLabelText("Book actions"));
+  it("take note on the book prefills the whole-book passage", async () => {
+    const utils = await renderWithProviders(<BibleBookScreen />);
+    await fireEvent.press(utils.getByLabelText("Book actions"));
 
-    fireEvent.press(utils.getByText("Take Note"));
+    await fireEvent.press(utils.getByText("Take Note"));
 
     expect(utils.getByText("New Note")).toBeTruthy();
     const wholeBook = Bible.displayVerseRange(

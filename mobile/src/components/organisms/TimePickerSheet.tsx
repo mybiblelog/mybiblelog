@@ -28,9 +28,7 @@ export function TimePickerSheet({ visible, value, onChange, onClose }: Props) {
           mode="time"
           display="spinner"
           value={value}
-          onChange={(_event, date) => {
-            if (date) onChange(date);
-          }}
+          onValueChange={(_event, date) => onChange(date)}
         />
       </View>
       <Button label={t("date_picker_done")} onPress={onClose} fullWidth />

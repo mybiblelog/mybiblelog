@@ -19,6 +19,9 @@ export default function TabsLayout() {
         popToTopOnBlur: true,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.mutedText,
+        // Both tints are theme strings, so each `tabBarIcon` narrows its
+        // `color` (typed as RN's wider `ColorValue`) to the `string` that
+        // @expo/vector-icons accepts.
         tabBarStyle: {
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
@@ -33,7 +36,7 @@ export default function TabsLayout() {
           title: t("tab_today"),
           tabBarIcon: ({ color, size, focused }) => (
             <TabBarIcon focused={focused}>
-              <Ionicons name="today-outline" color={color} size={size} />
+              <Ionicons name="today-outline" color={color as string} size={size} />
             </TabBarIcon>
           ),
         }}
@@ -45,7 +48,7 @@ export default function TabsLayout() {
           title: t("tab_bible"),
           tabBarIcon: ({ color, size, focused }) => (
             <TabBarIcon focused={focused}>
-              <Ionicons name="book-outline" color={color} size={size} />
+              <Ionicons name="book-outline" color={color as string} size={size} />
             </TabBarIcon>
           ),
         }}
@@ -60,7 +63,7 @@ export default function TabsLayout() {
           title: t("tab_checklist"),
           tabBarIcon: ({ color, size, focused }) => (
             <TabBarIcon focused={focused}>
-              <Ionicons name="checkbox-outline" color={color} size={size} />
+              <Ionicons name="checkbox-outline" color={color as string} size={size} />
             </TabBarIcon>
           ),
         }}
@@ -72,7 +75,7 @@ export default function TabsLayout() {
           title: t("notes_tab_title"),
           tabBarIcon: ({ color, size, focused }) => (
             <TabBarIcon focused={focused}>
-              <Ionicons name="document-text-outline" color={color} size={size} />
+              <Ionicons name="document-text-outline" color={color as string} size={size} />
             </TabBarIcon>
           ),
         }}
@@ -85,7 +88,7 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size, focused }) => (
             <TabBarIcon focused={focused}>
               <View>
-                <Ionicons name="settings-outline" color={color} size={size} />
+                <Ionicons name="settings-outline" color={color as string} size={size} />
                 {showSignInAlert && <AttentionDot />}
               </View>
             </TabBarIcon>

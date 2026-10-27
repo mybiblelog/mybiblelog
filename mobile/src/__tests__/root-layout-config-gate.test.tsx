@@ -27,15 +27,15 @@ import { render, screen } from "@testing-library/react-native";
 import RootLayout from "@/app/_layout";
 
 describe("root layout config gate", () => {
-  it("renders the error screen naming the missing var instead of the app", () => {
-    render(<RootLayout />);
+  it("renders the error screen naming the missing var instead of the app", async () => {
+    await render(<RootLayout />);
 
     expect(screen.getByTestId("config-error.screen")).toBeTruthy();
     expect(screen.getByText("EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID")).toBeTruthy();
   });
 
-  it("skips Google Sign-In configuration and store hydration", () => {
-    render(<RootLayout />);
+  it("skips Google Sign-In configuration and store hydration", async () => {
+    await render(<RootLayout />);
 
     // Both read config that isn't there; calling them is what used to crash.
     expect(mockConfigureGoogleSignIn).not.toHaveBeenCalled();

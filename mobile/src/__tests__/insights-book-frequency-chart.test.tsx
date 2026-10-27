@@ -19,8 +19,8 @@ const entries = [
 ];
 
 describe("BookFrequencyChart", () => {
-  it("defaults to a 30-day timeframe and raw verse counts", () => {
-    const { getByTestId, getByText } = renderWithProviders(
+  it("defaults to a 30-day timeframe and raw verse counts", async () => {
+    const { getByTestId, getByText } = await renderWithProviders(
       <BookFrequencyChart entries={entries} />
     );
     expect(getByTestId("insights.frequency-timeframe-row")).toBeTruthy();
@@ -29,20 +29,20 @@ describe("BookFrequencyChart", () => {
     expect(getByText(Bible.getBookName(9, "en"))).toBeTruthy();
   });
 
-  it("switches to proportional percentages", () => {
-    const { getAllByText, getByText } = renderWithProviders(
+  it("switches to proportional percentages", async () => {
+    const { getAllByText, getByText } = await renderWithProviders(
       <BookFrequencyChart entries={entries} />
     );
-    fireEvent.press(getByText("Proportional"));
+    await fireEvent.press(getByText("Proportional"));
     expect(getAllByText(/%$/).length).toBeGreaterThan(0);
   });
 
-  it("keeps book names intact (with leading numbers) under alphabetical sort", () => {
-    const { getByTestId, getByText } = renderWithProviders(
+  it("keeps book names intact (with leading numbers) under alphabetical sort", async () => {
+    const { getByTestId, getByText } = await renderWithProviders(
       <BookFrequencyChart entries={entries} />
     );
-    fireEvent.press(getByTestId("insights.frequency-sort-row"));
-    fireEvent.press(getByText("Alphabetical"));
+    await fireEvent.press(getByTestId("insights.frequency-sort-row"));
+    await fireEvent.press(getByText("Alphabetical"));
     expect(getByText(Bible.getBookName(9, "en"))).toBeTruthy();
   });
 });

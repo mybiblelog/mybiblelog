@@ -6,7 +6,7 @@ import { formatLongDate } from "@/src/i18n/date";
 import { LogEntryEditorModal } from "./LogEntryEditorModal";
 
 // The native Android dialog can't run under Jest — stub it so `openDatePicker`
-// can be exercised and its `onChange` callback driven manually. The iOS path
+// can be exercised and its `onValueChange` callback driven manually. The iOS path
 // (`DatePickerSheet`) renders the real component tree, no mock needed.
 const mockAndroidOpen = jest.fn();
 jest.mock("@react-native-community/datetimepicker", () => ({
@@ -15,10 +15,10 @@ jest.mock("@react-native-community/datetimepicker", () => ({
   DateTimePickerAndroid: { open: (...args: unknown[]) => mockAndroidOpen(...args) },
 }));
 
-function setup(props: Partial<React.ComponentProps<typeof LogEntryEditorModal>> = {}) {
+async function setup(props: Partial<React.ComponentProps<typeof LogEntryEditorModal>> = {}) {
   const onClose = jest.fn();
   const onSubmit = jest.fn();
-  const utils = renderWithProviders(
+  const utils = await renderWithProviders(
     <LogEntryEditorModal
       visible
       title="Log Reading"
@@ -36,13 +36,13 @@ afterEach(() => {
 });
 
 describe("LogEntryEditorModal — submit gating", () => {
-  it("keeps submit disabled until a book is selected, then enables it", () => {
-    const { getByTestId, getByText } = setup({ presetDate: "2026-01-05" });
+  it("keeps submit disabled until a book is selected, then enables it", async () => {
+    const { getByTestId, getByText } = await setup({ presetDate: "2026-01-05" });
 
     expect(getByTestId("entry-editor.save")).toBeDisabled();
 
-    fireEvent.press(getByTestId("entry-editor.book"));
-    fireEvent.press(getByText(Bible.getBookName(1, "en")));
+    await fireEvent.press(getByTestId("entry-editor.book"));
+    await fireEvent.press(getByText(Bible.getBookName(1, "en")));
 
     // Selecting a book seeds a whole-book default range, which is already a
     // valid passage — the user narrows it down from there.
@@ -51,40 +51,40 @@ describe("LogEntryEditorModal — submit gating", () => {
 });
 
 describe("LogEntryEditorModal — discard confirmation", () => {
-  it("closes immediately when nothing has changed", () => {
-    const { getByText, onClose, queryByText } = setup({ presetDate: "2026-01-05" });
+  it("closes immediately when nothing has changed", async () => {
+    const { getByText, onClose, queryByText } = await setup({ presetDate: "2026-01-05" });
 
-    fireEvent.press(getByText("Close"));
+    await fireEvent.press(getByText("Close"));
 
     expect(queryByText("Discard changes?")).toBeNull();
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it("prompts to discard once the form has been edited, and respects Cancel/Discard", () => {
-    const { getByTestId, getByText, onClose } = setup({ presetDate: "2026-01-05" });
+  it("prompts to discard once the form has been edited, and respects Cancel/Discard", async () => {
+    const { getByTestId, getByText, onClose } = await setup({ presetDate: "2026-01-05" });
 
-    fireEvent.press(getByTestId("entry-editor.book"));
-    fireEvent.press(getByText(Bible.getBookName(1, "en")));
+    await fireEvent.press(getByTestId("entry-editor.book"));
+    await fireEvent.press(getByText(Bible.getBookName(1, "en")));
 
-    fireEvent.press(getByText("Close"));
+    await fireEvent.press(getByText("Close"));
     expect(getByText("Discard changes?")).toBeTruthy();
     expect(onClose).not.toHaveBeenCalled();
 
-    fireEvent.press(getByText("Cancel"));
+    await fireEvent.press(getByText("Cancel"));
     expect(onClose).not.toHaveBeenCalled();
 
-    fireEvent.press(getByText("Close"));
-    fireEvent.press(getByText("Discard"));
+    await fireEvent.press(getByText("Close"));
+    await fireEvent.press(getByText("Discard"));
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 });
 
 describe("LogEntryEditorModal — date picker by platform", () => {
-  it("opens the native Android dialog directly instead of the in-sheet picker", () => {
+  it("opens the native Android dialog directly instead of the in-sheet picker", async () => {
     Platform.OS = "android";
-    const { getByLabelText, queryByText } = setup({ presetDate: "2026-01-05" });
+    const { getByLabelText, queryByText } = await setup({ presetDate: "2026-01-05" });
 
-    fireEvent.press(getByLabelText("Date"));
+    await fireEvent.press(getByLabelText("Date"));
 
     expect(mockAndroidOpen).toHaveBeenCalledTimes(1);
     expect(mockAndroidOpen.mock.calls[0][0]).toMatchObject({ mode: "date" });
@@ -92,21 +92,21 @@ describe("LogEntryEditorModal — date picker by platform", () => {
     expect(queryByText("Done")).toBeNull();
   });
 
-  it("applies the Android dialog's chosen date back onto the form", () => {
+  it("applies the Android dialog's chosen date back onto the form", async () => {
     Platform.OS = "android";
-    const { getByLabelText, getByText } = setup({ presetDate: "2026-01-05" });
+    const { getByLabelText, getByText } = await setup({ presetDate: "2026-01-05" });
 
-    fireEvent.press(getByLabelText("Date"));
-    const onChange = mockAndroidOpen.mock.calls[0][0].onChange;
-    act(() => onChange({}, new Date(2026, 0, 20)));
+    await fireEvent.press(getByLabelText("Date"));
+    const onValueChange = mockAndroidOpen.mock.calls[0][0].onValueChange;
+    await act(() => onValueChange({}, new Date(2026, 0, 20)));
 
     expect(getByText(formatLongDate("2026-01-20", "en"))).toBeTruthy();
   });
 
-  it("opens the in-sheet spinner picker on iOS instead of a native dialog", () => {
-    const { getByLabelText, getByText } = setup({ presetDate: "2026-01-05" });
+  it("opens the in-sheet spinner picker on iOS instead of a native dialog", async () => {
+    const { getByLabelText, getByText } = await setup({ presetDate: "2026-01-05" });
 
-    fireEvent.press(getByLabelText("Date"));
+    await fireEvent.press(getByLabelText("Date"));
 
     expect(mockAndroidOpen).not.toHaveBeenCalled();
     expect(getByText("Done")).toBeTruthy();
@@ -114,9 +114,9 @@ describe("LogEntryEditorModal — date picker by platform", () => {
 });
 
 describe("LogEntryEditorModal — web date input", () => {
-  it("renders a free-text date field instead of the tap-to-open selector", () => {
+  it("renders a free-text date field instead of the tap-to-open selector", async () => {
     Platform.OS = "web";
-    const { getByPlaceholderText, queryByLabelText } = setup({ presetDate: "2026-01-05" });
+    const { getByPlaceholderText, queryByLabelText } = await setup({ presetDate: "2026-01-05" });
 
     expect(queryByLabelText("Date")).toBeNull();
     expect(getByPlaceholderText("YYYY-MM-DD")).toBeTruthy();
@@ -124,13 +124,13 @@ describe("LogEntryEditorModal — web date input", () => {
 });
 
 describe("LogEntryEditorModal — reset on open", () => {
-  it("seeds fields from initialEntry", () => {
+  it("seeds fields from initialEntry", async () => {
     const initialEntry: LogEntry = {
       startVerseId: Bible.makeVerseId(43, 3, 16),
       endVerseId: Bible.makeVerseId(43, 3, 16),
       date: "2025-12-25",
     };
-    const { getByText, onClose, queryByText } = setup({ initialEntry });
+    const { getByText, onClose, queryByText } = await setup({ initialEntry });
 
     expect(getByText(Bible.getBookName(43, "en"))).toBeTruthy();
     expect(getByText(formatLongDate("2025-12-25", "en"))).toBeTruthy();
@@ -139,26 +139,26 @@ describe("LogEntryEditorModal — reset on open", () => {
     ).toBeTruthy();
 
     // A prefilled edit starts clean — closing shouldn't prompt to discard.
-    fireEvent.press(getByText("Close"));
+    await fireEvent.press(getByText("Close"));
     expect(queryByText("Discard changes?")).toBeNull();
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it("seeds only the date from presetDate, leaving the book unselected", () => {
-    const { getByText, getByTestId } = setup({ presetDate: "2025-06-01" });
+  it("seeds only the date from presetDate, leaving the book unselected", async () => {
+    const { getByText, getByTestId } = await setup({ presetDate: "2025-06-01" });
 
     expect(getByText(formatLongDate("2025-06-01", "en"))).toBeTruthy();
     expect(getByText("Choose Book")).toBeTruthy();
     expect(getByTestId("entry-editor.save")).toBeDisabled();
   });
 
-  it("re-seeds fields when reopened with different props", () => {
+  it("re-seeds fields when reopened with different props", async () => {
     const initialEntry: LogEntry = {
       startVerseId: Bible.makeVerseId(43, 3, 16),
       endVerseId: Bible.makeVerseId(43, 3, 16),
       date: "2025-12-25",
     };
-    const { getByText, queryByText, rerender } = setup({
+    const { getByText, queryByText, rerender } = await setup({
       visible: true,
       initialEntry,
     });
@@ -166,7 +166,7 @@ describe("LogEntryEditorModal — reset on open", () => {
 
     // Close it, then reopen fresh with only a preset date — the John 3:16
     // seed from the previous open should be gone.
-    rerender(
+    await rerender(
       <LogEntryEditorModal
         visible={false}
         title="Log Reading"
@@ -176,7 +176,7 @@ describe("LogEntryEditorModal — reset on open", () => {
         initialEntry={initialEntry}
       />
     );
-    rerender(
+    await rerender(
       <LogEntryEditorModal
         visible
         title="Log Reading"

@@ -14,22 +14,26 @@ const entries = [
 ];
 
 describe("ActivityHeatmap", () => {
-  it("renders the grid and legend", () => {
-    const { getByTestId, getByText } = renderWithProviders(<ActivityHeatmap entries={entries} />);
+  it("renders the grid and legend", async () => {
+    const { getByTestId, getByText } = await renderWithProviders(
+      <ActivityHeatmap entries={entries} />
+    );
     expect(getByTestId("insights.heatmap-grid")).toBeTruthy();
     expect(getByText("Less")).toBeTruthy();
     expect(getByText("More")).toBeTruthy();
   });
 
-  it("reveals the count and date for a tapped cell", () => {
-    const { getByTestId, getByText } = renderWithProviders(<ActivityHeatmap entries={entries} />);
-    fireEvent.press(getByTestId(`insights.heatmap-cell.${today}`));
+  it("reveals the count and date for a tapped cell", async () => {
+    const { getByTestId, getByText } = await renderWithProviders(
+      <ActivityHeatmap entries={entries} />
+    );
+    await fireEvent.press(getByTestId(`insights.heatmap-cell.${today}`));
     expect(getByText(/31 verses read/)).toBeTruthy();
   });
 
-  it("shows no-activity messaging for an empty day", () => {
-    const { getByTestId, getByText } = renderWithProviders(<ActivityHeatmap entries={[]} />);
-    fireEvent.press(getByTestId(`insights.heatmap-cell.${today}`));
+  it("shows no-activity messaging for an empty day", async () => {
+    const { getByTestId, getByText } = await renderWithProviders(<ActivityHeatmap entries={[]} />);
+    await fireEvent.press(getByTestId(`insights.heatmap-cell.${today}`));
     expect(getByText(/No verses read/)).toBeTruthy();
   });
 });

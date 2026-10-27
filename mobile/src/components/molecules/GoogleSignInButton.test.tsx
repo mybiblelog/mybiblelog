@@ -1,7 +1,12 @@
 import { StyleSheet } from "react-native";
 import { Path } from "react-native-svg";
 import { GoogleSignInButton } from "./GoogleSignInButton";
-import { fireEvent, renderWithProviders, screen } from "@/src/test-utils/renderWithProviders";
+import {
+  fireEvent,
+  getAllByComponentType,
+  renderWithProviders,
+  screen,
+} from "@/src/test-utils/renderWithProviders";
 
 const backgroundOf = (testID: string) =>
   (
@@ -11,44 +16,48 @@ const backgroundOf = (testID: string) =>
   ).backgroundColor;
 
 describe("GoogleSignInButton", () => {
-  it("renders its label", () => {
-    renderWithProviders(<GoogleSignInButton label="Continue with Google" />);
+  it("renders its label", async () => {
+    await renderWithProviders(<GoogleSignInButton label="Continue with Google" />);
     expect(screen.getByText("Continue with Google")).toBeTruthy();
   });
 
   // The four-color mark is brand-required: it must never be tinted down to a
   // single theme color the way `Icon` glyphs are.
-  it("draws the official four-color G", () => {
-    renderWithProviders(<GoogleSignInButton label="Continue with Google" />);
-    const fills = screen.UNSAFE_getAllByType(Path).map((path) => path.props.fill);
+  it("draws the official four-color G", async () => {
+    await renderWithProviders(<GoogleSignInButton label="Continue with Google" />);
+    const fills = getAllByComponentType(Path).map((path) => path.props.fill);
     expect(fills).toEqual(["#EA4335", "#4285F4", "#FBBC05", "#34A853"]);
   });
 
-  it("calls onPress when tapped", () => {
+  it("calls onPress when tapped", async () => {
     const onPress = jest.fn();
-    renderWithProviders(<GoogleSignInButton label="Continue with Google" onPress={onPress} />);
-    fireEvent.press(screen.getByRole("button"));
+    await renderWithProviders(
+      <GoogleSignInButton label="Continue with Google" onPress={onPress} />
+    );
+    await fireEvent.press(screen.getByRole("button"));
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it("does not call onPress when disabled", () => {
+  it("does not call onPress when disabled", async () => {
     const onPress = jest.fn();
-    renderWithProviders(
+    await renderWithProviders(
       <GoogleSignInButton label="Continue with Google" onPress={onPress} disabled />
     );
-    fireEvent.press(screen.getByRole("button"));
+    await fireEvent.press(screen.getByRole("button"));
     expect(onPress).not.toHaveBeenCalled();
   });
 
-  it("uses Google's own palette per scheme, not app theme colors", () => {
-    renderWithProviders(<GoogleSignInButton label="Continue with Google" testID="google" />, {
+  // One scheme per test: a mount persists its theme mode, which the next
+  // mount in the same test would load over its pinned scheme.
+  it("uses Google's own light palette, not app theme colors", async () => {
+    await renderWithProviders(<GoogleSignInButton label="Continue with Google" testID="google" />, {
       scheme: "light",
     });
     expect(backgroundOf("google")).toBe("#FFFFFF");
+  });
 
-    screen.unmount();
-
-    renderWithProviders(<GoogleSignInButton label="Continue with Google" testID="google" />, {
+  it("uses Google's own dark palette, not app theme colors", async () => {
+    await renderWithProviders(<GoogleSignInButton label="Continue with Google" testID="google" />, {
       scheme: "dark",
     });
     expect(backgroundOf("google")).toBe("#131314");

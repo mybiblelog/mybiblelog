@@ -8,7 +8,7 @@ import { Bible } from "@mybiblelog/shared";
 import dayjs from "dayjs";
 import { StyleSheet } from "react-native";
 import type { ViewStyle } from "react-native";
-import type { ReactTestInstance } from "react-test-renderer";
+import type { TestInstance } from "test-renderer";
 import Calendar from "@/app/(tabs)/calendar";
 import { colorsByScheme } from "@/src/design";
 import { useAuthStore } from "@/src/stores/auth";
@@ -17,6 +17,8 @@ import { useLogEntriesStore } from "@/src/stores/logEntries";
 import { useUserSettingsStore } from "@/src/stores/userSettings";
 import {
   fireEvent,
+  getAllByComponentType,
+  getByComponentType,
   renderWithProviders,
   screen,
   within,
@@ -49,8 +51,8 @@ describe("Calendar grid", () => {
   // The grid used to compute cell widths from the window width while applying a
   // margin to all seven cells, so at some widths (360dp among them) the seventh
   // cell overflowed and Yoga wrapped it into a sixth column.
-  it("always lays out seven day cells per week row", () => {
-    renderWithProviders(<Calendar />);
+  it("always lays out seven day cells per week row", async () => {
+    await renderWithProviders(<Calendar />);
 
     const rows = screen.getAllByTestId("calendar.week-row");
     expect(rows.length).toBeGreaterThanOrEqual(4);
@@ -59,9 +61,9 @@ describe("Calendar grid", () => {
     }
   });
 
-  it("renders every day of the current month, including today", () => {
+  it("renders every day of the current month, including today", async () => {
     const today = dayjs();
-    renderWithProviders(<Calendar />);
+    await renderWithProviders(<Calendar />);
 
     expect(screen.getByTestId(`calendar.day-cell.${today.format("YYYY-MM-DD")}`)).toBeTruthy();
     expect(screen.getAllByTestId(DAY_CELL).length).toBe(
@@ -70,8 +72,8 @@ describe("Calendar grid", () => {
   });
 
   // Cells are shaped by background color + radius, not table-style borders.
-  it("draws no border on the day cells themselves", () => {
-    renderWithProviders(<Calendar />);
+  it("draws no border on the day cells themselves", async () => {
+    await renderWithProviders(<Calendar />);
 
     for (const cell of screen.getAllByTestId(DAY_CELL)) {
       const style = StyleSheet.flatten(cell.props.style);
@@ -83,12 +85,12 @@ describe("Calendar grid", () => {
   // Every cell is "somewhat rounded" on every corner, but the four corners of
   // the whole month (the outward-facing corner of each of the 4 corner cells)
   // get an extra-large radius so the grid reads as one rounded block.
-  it("rounds every cell, with extra rounding on the four outer corners", () => {
-    renderWithProviders(<Calendar />);
+  it("rounds every cell, with extra rounding on the four outer corners", async () => {
+    await renderWithProviders(<Calendar />);
 
     const rows = screen.getAllByTestId("calendar.week-row");
-    const cornerOf = (row: ReactTestInstance, column: 0 | 6) =>
-      StyleSheet.flatten(within(row).getAllByTestId(DAY_CELL)[column].props.style as ViewStyle);
+    const cornerOf = (row: TestInstance, column: 0 | 6) =>
+      StyleSheet.flatten(within(row).getAllByTestId(DAY_CELL)[column].props.style) as ViewStyle;
 
     const first = rows[0];
     const last = rows[rows.length - 1];
@@ -117,8 +119,8 @@ describe("Calendar grid", () => {
   // The header used a fixed pixel width while the cells carried an extra
   // margin, so labels drifted left of their column by up to 6px. Both rows now
   // have to derive columns from the same flex + gap geometry.
-  it("aligns the weekday header to the day columns", () => {
-    renderWithProviders(<Calendar />);
+  it("aligns the weekday header to the day columns", async () => {
+    await renderWithProviders(<Calendar />);
 
     const header = screen.getByTestId("calendar.weekdays-row");
     const headerStyle = StyleSheet.flatten(header.props.style);
@@ -129,10 +131,10 @@ describe("Calendar grid", () => {
     expect(headerStyle.gap).toBe(gridStyle.gap);
     expect(headerStyle.marginHorizontal).toBe(gridStyle.marginHorizontal);
 
-    const labels = header.children as ReactTestInstance[];
+    const labels = header.children as TestInstance[];
     expect(labels).toHaveLength(7);
     for (const label of labels) {
-      const style = StyleSheet.flatten(label.props.style as ViewStyle);
+      const style = StyleSheet.flatten(label.props.style) as ViewStyle;
       expect(style.flex).toBe(1);
       expect(style.width).toBeUndefined();
     }
@@ -159,50 +161,50 @@ describe("Calendar day selection", () => {
     });
   });
 
-  it("shows the selected day's entries and verse count when a day cell is pressed", () => {
-    renderWithProviders(<Calendar />, { scheme: "light" });
+  it("shows the selected day's entries and verse count when a day cell is pressed", async () => {
+    await renderWithProviders(<Calendar />, { scheme: "light" });
 
-    fireEvent.press(screen.getByTestId(`calendar.day-cell.${selectedDate}`));
+    await fireEvent.press(screen.getByTestId(`calendar.day-cell.${selectedDate}`));
 
     expect(screen.getByText(range)).toBeTruthy();
     const verseCount = Bible.countRangeVerses(start, end);
     expect(screen.getByText(`${verseCount} verses`)).toBeTruthy();
   });
 
-  it("shows a gold star when the day's unique verse count meets the daily goal", () => {
+  it("shows a gold star when the day's unique verse count meets the daily goal", async () => {
     useDateVerseCountsStore.setState({
       jobs: 0,
       dateVerseCounts: { [selectedDate]: { total: 50, unique: 50 } },
     });
-    renderWithProviders(<Calendar />, { scheme: "light" });
+    await renderWithProviders(<Calendar />, { scheme: "light" });
 
     const cell = screen.getByTestId(`calendar.day-cell.${selectedDate}`);
-    const star = within(cell).UNSAFE_getByType(Ionicons);
+    const star = getByComponentType(Ionicons, cell);
     expect(star.props.name).toBe("star");
     expect(star.props.color).toBe(colorsByScheme.light.starGold);
   });
 
-  it("shows a blue star when only the total verse count meets the daily goal", () => {
+  it("shows a blue star when only the total verse count meets the daily goal", async () => {
     useDateVerseCountsStore.setState({
       jobs: 0,
       dateVerseCounts: { [selectedDate]: { total: 50, unique: 10 } },
     });
-    renderWithProviders(<Calendar />, { scheme: "light" });
+    await renderWithProviders(<Calendar />, { scheme: "light" });
 
     const cell = screen.getByTestId(`calendar.day-cell.${selectedDate}`);
-    const star = within(cell).UNSAFE_getByType(Ionicons);
+    const star = getByComponentType(Ionicons, cell);
     expect(star.props.name).toBe("star");
     expect(star.props.color).toBe(colorsByScheme.light.secondary);
   });
 
-  it("shows no star when neither count meets the daily goal", () => {
+  it("shows no star when neither count meets the daily goal", async () => {
     useDateVerseCountsStore.setState({
       jobs: 0,
       dateVerseCounts: { [selectedDate]: { total: 10, unique: 5 } },
     });
-    renderWithProviders(<Calendar />, { scheme: "light" });
+    await renderWithProviders(<Calendar />, { scheme: "light" });
 
     const cell = screen.getByTestId(`calendar.day-cell.${selectedDate}`);
-    expect(within(cell).UNSAFE_queryAllByType(Ionicons)).toHaveLength(0);
+    expect(getAllByComponentType(Ionicons, cell)).toHaveLength(0);
   });
 });

@@ -8,7 +8,12 @@ jest.mock("@/src/i18n/LocaleProvider", () => ({
 }));
 
 import { Path } from "react-native-svg";
-import { fireEvent, renderWithProviders, within } from "@/src/test-utils/renderWithProviders";
+import {
+  fireEvent,
+  getAllByComponentType,
+  getByComponentType,
+  renderWithProviders,
+} from "@/src/test-utils/renderWithProviders";
 import LanguageSettings from "@/app/(tabs)/settings/language";
 
 beforeEach(() => {
@@ -17,21 +22,21 @@ beforeEach(() => {
 });
 
 describe("Language settings screen", () => {
-  it("shows the checkmark next to the currently selected locale only", () => {
+  it("shows the checkmark next to the currently selected locale only", async () => {
     mockLocale = "es";
-    const { getByTestId } = renderWithProviders(<LanguageSettings />);
+    const { getByTestId } = await renderWithProviders(<LanguageSettings />);
 
     const spanishRow = getByTestId("language.option-es");
-    expect(within(spanishRow).UNSAFE_getByType(Path).props.d).toBe("M5 13L9 17L19 7");
+    expect(getByComponentType(Path, spanishRow).props.d).toBe("M5 13L9 17L19 7");
 
     const englishRow = getByTestId("language.option-en");
-    expect(within(englishRow).UNSAFE_queryByType(Path)).toBeNull();
+    expect(getAllByComponentType(Path, englishRow)).toHaveLength(0);
   });
 
-  it("calls setLocale with the pressed language's code", () => {
-    const { getByTestId } = renderWithProviders(<LanguageSettings />);
+  it("calls setLocale with the pressed language's code", async () => {
+    const { getByTestId } = await renderWithProviders(<LanguageSettings />);
 
-    fireEvent.press(getByTestId("language.option-fr"));
+    await fireEvent.press(getByTestId("language.option-fr"));
 
     expect(mockSetLocale).toHaveBeenCalledWith("fr");
   });

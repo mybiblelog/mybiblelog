@@ -136,9 +136,7 @@ export default function Progress() {
       DateTimePickerAndroid.open({
         value: current,
         mode: "date",
-        onChange: (_event, date) => {
-          if (date) setGoalDate(toYmd(date));
-        },
+        onValueChange: (_event, date) => setGoalDate(toYmd(date)),
       });
       return;
     }

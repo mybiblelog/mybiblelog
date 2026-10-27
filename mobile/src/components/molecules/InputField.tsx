@@ -1,5 +1,11 @@
 import { forwardRef, useState } from "react";
-import { StyleSheet, TextInput, View, type TextInputProps } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  type TextInputInstance,
+  type TextInputProps,
+} from "react-native";
 import { radius, spacing, TOUCH_TARGET, useTheme } from "@/src/design";
 import { Text } from "../atoms/Text";
 
@@ -9,7 +15,7 @@ export type InputFieldProps = TextInputProps & {
 };
 
 /** Labeled text input with focus + error states keyed to design tokens. */
-export const InputField = forwardRef<TextInput, InputFieldProps>(function InputField(
+export const InputField = forwardRef<TextInputInstance, InputFieldProps>(function InputField(
   { label, error, style, onFocus, onBlur, ...rest },
   ref
 ) {

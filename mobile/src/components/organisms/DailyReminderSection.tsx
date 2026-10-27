@@ -74,9 +74,7 @@ export function DailyReminderSection() {
         value: toDate(current.hour, current.minute),
         mode: "time",
         is24Hour: !getTimeFormatter(locale).resolvedOptions().hour12,
-        onChange: (event, date) => {
-          if (event.type === "set" && date) void handleTimeChange(date);
-        },
+        onValueChange: (_event, date) => void handleTimeChange(date),
       });
       return;
     }

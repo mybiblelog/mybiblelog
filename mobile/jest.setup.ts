@@ -7,6 +7,17 @@
 
 // React Native Gesture Handler — installs no-op gesture handlers.
 import "react-native-gesture-handler/jestSetup";
+// Gesture Handler 3 installs its UI-runtime bindings in a microtask by calling
+// worklets' `getUIRuntimeHolder`, which the jest-safe worklets build throws
+// from. Its jestSetup doesn't stub this yet, so skip the install here (for
+// both of its builds, as its jestSetup does for the modules it mocks).
+jest.mock("react-native-gesture-handler/src/handlers/gestures/installUIRuntimeBindings", () => ({
+  installUIRuntimeBindings: () => {},
+}));
+jest.mock(
+  "react-native-gesture-handler/lib/module/handlers/gestures/installUIRuntimeBindings",
+  () => ({ installUIRuntimeBindings: () => {} })
+);
 
 // AsyncStorage — official in-memory mock.
 jest.mock("@react-native-async-storage/async-storage", () =>
@@ -64,6 +75,15 @@ jest.mock("@react-native-community/netinfo", () => ({
 jest.mock("expo-store-review", () => ({
   isAvailableAsync: jest.fn(async () => true),
   requestReview: jest.fn(async () => {}),
+}));
+
+// jest-expo mocks `react-native/asset-registry` (where transformed asset
+// requires register), but RN 0.88's `AssetRegistry` export — which expo-asset
+// reads — is a separate private module that never sees those registrations
+// ("Module "1" is missing from the asset registry" from icon font loads).
+// Route it to the same mock. Not in RN's exports map, hence the file path.
+jest.mock("./node_modules/react-native/src/private/assets/AssetRegistry", () => ({
+  AssetRegistry: require("react-native/asset-registry"),
 }));
 
 // Native Google Sign-In — not available off-device.
