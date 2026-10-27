@@ -10,7 +10,8 @@
   "workspaces": [
     "api",
     "web",
-    "shared"
+    "shared",
+    "mcp"
   ],
   "engines": {
     "node": "24.18.0"
@@ -35,6 +36,7 @@
     "test:shared": "npm run -w shared test",
     "test:web": "npm run -w web test",
     "test:api": "npm run -w api test",
+    "test:mcp": "npm run -w mcp test",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "script:seed": "npm run -w api script:seed",

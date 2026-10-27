@@ -1,0 +1,35 @@
+{
+  "name": "@mybiblelog/mcp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Model Context Protocol server that lets AI agents log reading, summarize progress, and take and organize notes in My Bible Log",
+  "license": "MIT",
+  "author": "Aaron Smith",
+  "main": "dist/index.js",
+  "bin": {
+    "mybiblelog-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "clean": "rm -rf node_modules dist",
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint --ext .ts .",
+    "lint:fix": "eslint --ext .ts . --fix"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "@mybiblelog/shared": "*",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^24.9.1",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.6"
+  }
+}

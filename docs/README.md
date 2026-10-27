@@ -7,6 +7,7 @@ Reference material for developing and operating My Bible Log. See the [root READ
 - **[Web & API Development](web-api.md)** — setup, environment variables, debugging, testing, custom scripts, HTTPS on localhost, and deployment.
 - **[Google OAuth2](oauth.md)** — configuring Google sign-in for web and mobile.
 - **[Bible Integrations](bible-integrations.md)** — adding a new Bible translation or reading app.
+- **[MCP Server](../mcp/README.md)** — letting AI agents log reading and manage notes with a scoped personal access token.
 - **[USFM Migration](usfm-migration.md)** — moving web and mobile onto USFM passage references, and what dropping verse IDs from the API would take.
 
 ## Internationalization

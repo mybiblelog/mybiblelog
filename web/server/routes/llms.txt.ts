@@ -8,7 +8,7 @@ export default defineEventHandler((event) => {
 
 > A free Bible reading tracker and journal. People log the passages they read each day, see their progress through the Bible, and write notes about passages, organized with tags.
 
-An AI agent can act for a user through the HTTP API with a personal access token the user creates in Settings → Access tokens (${siteUrl}/settings/access-tokens). Each token carries only the scopes the user chose (reading log, notes, Scripture text), expires, and can be revoked at any time. A token can never change the account, its password, email or settings, so never ask a user for their password.
+An AI agent can act for a user through the HTTP API with a personal access token the user creates in Settings → Tokens (${siteUrl}/settings/access-tokens). Each token carries only the scopes the user chose (reading log, notes, Scripture text), expires, and can be revoked at any time. A token can never change the account, its password, email or settings, so never ask a user for their password.
 
 ## API
 

@@ -15,7 +15,7 @@ they read each day and writes notes about passages, organized with tags.
 Send \`Authorization: Bearer <token>\`. Two kinds of token are accepted:
 
 - **Personal access token** (\`mbl_pat_…\`): what scripts and AI agents should use. The
-  user creates one in Settings → Access tokens, choosing its scopes and lifetime, and can
+  user creates one in Settings → Tokens, choosing its scopes and lifetime, and can
   revoke it there at any time. A token works only on operations that list
   \`x-required-scopes\`, and only when it holds every scope listed. Account, sign-in,
   password, email, settings-change, reminder and admin operations never accept one.
@@ -113,7 +113,7 @@ export const buildOpenApiSpec = (
           type: 'http',
           scheme: 'bearer',
           bearerFormat: 'mbl_pat_…',
-          description: 'Personal access token the user creates in Settings → Access tokens. Accepted only on operations that list `x-required-scopes`, and only with every scope listed.',
+          description: 'Personal access token the user creates in Settings → Tokens. Accepted only on operations that list `x-required-scopes`, and only with every scope listed.',
         },
       },
       schemas: generateOpenApiComponents().schemas,

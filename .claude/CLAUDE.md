@@ -17,11 +17,17 @@ This file is intended to capture task-level guidance for Claude-style agents wor
 
 ## Repository context
 
-This repository is a monorepo for a Bible journaling site: `api/`, `web/`, `shared/`, `mobile/`, and `e2e/` workspaces. Read the workspace tree directly rather than relying on a folder-by-folder description here — it changes independently of this file.
+This repository is a monorepo for a Bible journaling site: `api/`, `web/`, `shared/`, `mcp/`, `mobile/`, and `e2e/` workspaces. Read the workspace tree directly rather than relying on a folder-by-folder description here — it changes independently of this file.
 
 ## Documentation policy
 
 Do not document file/folder structure or anything easy to discern by reading the code — that kind of doc duplicates the code and goes stale the moment the code changes. Only document broad architectural decisions (the "why" behind a non-obvious choice), and only when the reasoning wouldn't otherwise be recoverable from the code itself.
+
+## API routes and access tokens
+
+- A route's zod schemas are its contract and the source of the OpenAPI spec, so document a route through its `RouteDefinition.docs`, never by hand. Give every documented route a unique, stable `operationId` (agents and generated clients key on it; never rename one), and set `destructive: true` on operations that delete data.
+- Personal access tokens (`mbl_pat_…`) are how users delegate to AI agents and scripts. A route accepts one only if its `RouteDefinition` lists `scopes`; leaving `scopes` off keeps a route session-only, which is the safe default. Add scopes only to routes that read or change reading logs, notes, tags or Scripture. Never add them to account, auth, settings-change, reminder, admin or token-management routes, so a leaked token can never take over or delete an account. `api/test/access-token-scopes.test.ts` pins the full list, so update it in the same change and treat the update as a security decision.
+- Agents read the public spec at `/api/openapi.json`, which leaves out routes marked `docs.internal`. Mark admin-only and other non-public routes internal.
 
 ## Content markdown (`web/content/`)
 
