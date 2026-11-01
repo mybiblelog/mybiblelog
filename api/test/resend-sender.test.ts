@@ -10,9 +10,10 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 const send = vi.fn();
 
 vi.mock('resend', () => ({
-  Resend: vi.fn().mockImplementation(() => ({
-    emails: { send },
-  })),
+  // Called with `new`, so the implementation must be a constructible function.
+  Resend: vi.fn().mockImplementation(function() {
+    return { emails: { send } };
+  }),
 }));
 
 vi.mock('../config', () => ({

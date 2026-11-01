@@ -15,7 +15,10 @@ vi.mock('../config', () => ({
 // real library rejects internally).
 const { mockVerifyIdToken } = vi.hoisted(() => ({ mockVerifyIdToken: vi.fn() }));
 vi.mock('google-auth-library', () => ({
-  OAuth2Client: vi.fn().mockImplementation(() => ({ verifyIdToken: mockVerifyIdToken })),
+  // Called with `new`, so the implementation must be a constructible function.
+  OAuth2Client: vi.fn().mockImplementation(function() {
+    return { verifyIdToken: mockVerifyIdToken };
+  }),
 }));
 
 import googleIdToken from '../http/helpers/google-id-token';
