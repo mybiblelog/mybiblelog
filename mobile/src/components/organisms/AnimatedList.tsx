@@ -49,6 +49,7 @@ type CellProps = {
  * its snapshot is left holding the row's vertical space — a gap that never
  * closes (see reanimated#5656 / #8665). Removing on delete is therefore
  * instant; the layout animation still reflows the surviving rows into place.
+ * TECH-DEBT(reanimated-flatlist-exiting): restore an exit animation once fixed.
  *
  * Enter/layout animations live on the FlatList *cell* (via
  * `CellRendererComponent`) rather than a view nested inside `renderItem`, so the

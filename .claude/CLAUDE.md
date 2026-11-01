@@ -31,6 +31,12 @@ Do not document file/folder structure or anything easy to discern by reading the
 - Write it as a quoted string: the content schema (`web/content.config.ts`) types the field as a string, and an unquoted YAML date is parsed as a date value instead.
 - New content files include the field. Some older pages (for example `index.md`, `faq.md`) don't carry it yet; add it the next time you edit them, and until then the sitemap simply omits their `<lastmod>`.
 
+## Tech debt register (`docs/tech-debt.md`)
+
+- When you add a workaround waiting on an upstream fix (override, pin, compat flag, shim) or defer a follow-up, add an entry to `docs/tech-debt.md` and put a `TECH-DEBT(<id>)` comment at each code site (JSON files can't hold comments, so the entry's **Where** field covers those).
+- When you remove one, delete its markers and its entry in the same change.
+- When upgrading dependencies, check the register for entries the upgrade might resolve.
+
 ## Task guidance
 
 - If a user asks to create or initialize a repo file, add it to the root unless another location is clearly more appropriate.
