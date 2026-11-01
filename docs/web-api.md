@@ -7,7 +7,7 @@ Setup, environment variables, debugging, testing, and deployment for the `web` (
 ```bash
 # use the correct NPM version, if applicable
 # this is specified in package.json under "engines"
-$ nvm use 24.2.0
+$ nvm use 24.22.1
 
 # install root project dependencies
 $ npm install

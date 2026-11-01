@@ -39,7 +39,7 @@ describe('postAuthEventImpl', () => {
   it('uses BroadcastChannel when available', () => {
     const postMessage = vi.fn();
     const close = vi.fn();
-    const BroadcastChannelMock = vi.fn().mockImplementation(() => ({ postMessage, close }));
+    const BroadcastChannelMock = vi.fn().mockImplementation(function() { return { postMessage, close }; });
     vi.stubGlobal('BroadcastChannel', BroadcastChannelMock);
     const setItem = vi.fn();
     vi.stubGlobal('localStorage', { setItem, removeItem: vi.fn() });
@@ -90,11 +90,13 @@ describe('onAuthEventImpl', () => {
     beforeEach(() => {
       listeners = {};
       close = vi.fn();
-      const BroadcastChannelMock = vi.fn().mockImplementation(() => ({
-        addEventListener: (type: string, cb: (e: unknown) => void) => { listeners[type] = cb; },
-        removeEventListener: vi.fn(),
-        close,
-      }));
+      const BroadcastChannelMock = vi.fn().mockImplementation(function() {
+        return {
+          addEventListener: (type: string, cb: (e: unknown) => void) => { listeners[type] = cb; },
+          removeEventListener: vi.fn(),
+          close,
+        };
+      });
       vi.stubGlobal('BroadcastChannel', BroadcastChannelMock);
     });
 
