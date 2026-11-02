@@ -42,14 +42,14 @@ const render = (props: Partial<React.ComponentProps<typeof TagSelectorSheet>> = 
   );
 
 describe("TagSelectorSheet", () => {
-  it("offers tag creation when signed in and online", () => {
-    const { getByTestId, getByText } = render();
+  it("offers tag creation when signed in and online", async () => {
+    const { getByTestId, getByText } = await render();
     expect(getByTestId("tag-selector.create")).toBeTruthy();
     expect(getByText("No tags yet. Create your first tag.")).toBeTruthy();
   });
 
-  it("hides the create button for the query-filter use (allowCreate off)", () => {
-    const { queryByTestId } = render({ allowCreate: false });
+  it("hides the create button for the query-filter use (allowCreate off)", async () => {
+    const { queryByTestId } = await render({ allowCreate: false });
     expect(queryByTestId("tag-selector.create")).toBeNull();
     expect(queryByTestId("tag-selector.blocked-notice")).toBeNull();
   });
@@ -58,10 +58,10 @@ describe("TagSelectorSheet", () => {
   // mutation queue) and the loaded list is empty — so the default copy would
   // invite the user to "create your first tag" and then lose their input.
   describe("when tags can't be created", () => {
-    it("withdraws creation and reassures the user the note still saves", () => {
+    it("withdraws creation and reassures the user the note still saves", async () => {
       useConnectivityStore.setState({ isOnline: false, apiReachable: null });
 
-      const { getByText, queryByTestId } = render();
+      const { getByText, queryByTestId } = await render();
 
       expect(queryByTestId("tag-selector.create")).toBeNull();
       expect(
@@ -73,53 +73,53 @@ describe("TagSelectorSheet", () => {
       expect(queryByTestId("tag-selector.blocked-notice")).toBeNull();
     });
 
-    it("explains the missing Create button when there are still tags to pick", () => {
+    it("explains the missing Create button when there are still tags to pick", async () => {
       setTags([tag("t1", "Prayer")]);
       useConnectivityStore.setState({ isOnline: false, apiReachable: null });
 
-      const { getByTestId, getByText, queryByTestId } = render();
+      const { getByTestId, getByText, queryByTestId } = await render();
 
       expect(queryByTestId("tag-selector.create")).toBeNull();
       expect(getByTestId("tag-selector.blocked-notice")).toBeTruthy();
       expect(getByText("Creating tags requires an internet connection.")).toBeTruthy();
     });
 
-    it("never shows the misleading empty-account copy", () => {
+    it("never shows the misleading empty-account copy", async () => {
       useConnectivityStore.setState({ isOnline: false, apiReachable: null });
-      const { queryByText } = render();
+      const { queryByText } = await render();
       expect(queryByText("No tags yet. Create your first tag.")).toBeNull();
     });
 
-    it("blames sign-in, not the network, when signed out but online", () => {
+    it("blames sign-in, not the network, when signed out but online", async () => {
       setTags([tag("t1", "Prayer")]);
       useAuthStore.setState({ state: { status: "unauthenticated" } });
 
-      const { getByText, queryByText, queryByTestId } = render();
+      const { getByText, queryByText, queryByTestId } = await render();
 
       expect(queryByTestId("tag-selector.create")).toBeNull();
       expect(getByText("Sign in to create and use tags.")).toBeTruthy();
       expect(queryByText("Creating tags requires an internet connection.")).toBeNull();
     });
 
-    it("uses the sign-in wording in the empty-list copy too", () => {
+    it("uses the sign-in wording in the empty-list copy too", async () => {
       useAuthStore.setState({ state: { status: "unauthenticated" } });
 
-      const { getByText } = render();
+      const { getByText } = await render();
 
       expect(
         getByText("Sign in to use tags. Your note will still be saved on this device.")
       ).toBeTruthy();
     });
 
-    it("still lets already-loaded tags be selected", () => {
+    it("still lets already-loaded tags be selected", async () => {
       setTags([tag("t1", "Prayer")]);
       useConnectivityStore.setState({ isOnline: false, apiReachable: null });
       const onDone = jest.fn();
 
-      const { getByText } = render({ onDone });
+      const { getByText } = await render({ onDone });
 
-      fireEvent.press(getByText("Prayer"));
-      fireEvent.press(getByText("Done"));
+      await fireEvent.press(getByText("Prayer"));
+      await fireEvent.press(getByText("Done"));
       expect(onDone).toHaveBeenCalledWith(["t1"]);
     });
   });

@@ -45,10 +45,10 @@ beforeEach(() => {
 });
 
 describe("Reading settings screen", () => {
-  it("does not persist anything while a field is being edited", () => {
-    const { getByTestId } = renderWithProviders(<ReadingSettings />);
+  it("does not persist anything while a field is being edited", async () => {
+    const { getByTestId } = await renderWithProviders(<ReadingSettings />);
 
-    fireEvent.changeText(getByTestId("settings-reading.daily-goal-input"), "120");
+    await fireEvent.changeText(getByTestId("settings-reading.daily-goal-input"), "120");
 
     expect(mockUpdateSettings).not.toHaveBeenCalled();
     expect(mockSaveLocalUserSettings).not.toHaveBeenCalled();
@@ -59,11 +59,11 @@ describe("Reading settings screen", () => {
 
   it("saves the daily goal only when Save is pressed", async () => {
     mockUpdateSettings.mockResolvedValue({ ...SAVED, dailyVerseCountGoal: 120 });
-    const { getByTestId } = renderWithProviders(<ReadingSettings />);
+    const { getByTestId } = await renderWithProviders(<ReadingSettings />);
 
-    fireEvent.changeText(getByTestId("settings-reading.daily-goal-input"), "120");
+    await fireEvent.changeText(getByTestId("settings-reading.daily-goal-input"), "120");
     await act(async () => {
-      fireEvent.press(getByTestId("settings-reading.daily-goal-save"));
+      await fireEvent.press(getByTestId("settings-reading.daily-goal-save"));
     });
 
     expect(mockUpdateSettings).toHaveBeenCalledWith({ dailyVerseCountGoal: 120 });
@@ -73,37 +73,37 @@ describe("Reading settings screen", () => {
     });
   });
 
-  it("keeps Save disabled until the value differs from the saved one", () => {
-    const { getByTestId } = renderWithProviders(<ReadingSettings />);
+  it("keeps Save disabled until the value differs from the saved one", async () => {
+    const { getByTestId } = await renderWithProviders(<ReadingSettings />);
     const save = getByTestId("settings-reading.daily-goal-save");
 
     expect(save.props.accessibilityState.disabled).toBe(true);
 
-    fireEvent.changeText(getByTestId("settings-reading.daily-goal-input"), "120");
+    await fireEvent.changeText(getByTestId("settings-reading.daily-goal-input"), "120");
     expect(save.props.accessibilityState.disabled).toBe(false);
 
-    fireEvent.changeText(getByTestId("settings-reading.daily-goal-input"), "86");
+    await fireEvent.changeText(getByTestId("settings-reading.daily-goal-input"), "86");
     expect(save.props.accessibilityState.disabled).toBe(true);
   });
 
-  it("discards an edit back to the saved value", () => {
-    const { getByTestId, queryByTestId } = renderWithProviders(<ReadingSettings />);
+  it("discards an edit back to the saved value", async () => {
+    const { getByTestId, queryByTestId } = await renderWithProviders(<ReadingSettings />);
 
     expect(queryByTestId("settings-reading.daily-goal-discard")).toBeNull();
 
-    fireEvent.changeText(getByTestId("settings-reading.daily-goal-input"), "120");
-    fireEvent.press(getByTestId("settings-reading.daily-goal-discard"));
+    await fireEvent.changeText(getByTestId("settings-reading.daily-goal-input"), "120");
+    await fireEvent.press(getByTestId("settings-reading.daily-goal-discard"));
 
     expect(getByTestId("settings-reading.daily-goal-input").props.value).toBe("86");
     expect(mockUpdateSettings).not.toHaveBeenCalled();
   });
 
   it("rejects an out-of-range daily goal without saving", async () => {
-    const { getByTestId, getByText } = renderWithProviders(<ReadingSettings />);
+    const { getByTestId, getByText } = await renderWithProviders(<ReadingSettings />);
 
-    fireEvent.changeText(getByTestId("settings-reading.daily-goal-input"), "5000");
+    await fireEvent.changeText(getByTestId("settings-reading.daily-goal-input"), "5000");
     await act(async () => {
-      fireEvent.press(getByTestId("settings-reading.daily-goal-save"));
+      await fireEvent.press(getByTestId("settings-reading.daily-goal-save"));
     });
 
     expect(getByText("Enter a whole number between 1 and 1111.")).toBeTruthy();
@@ -111,11 +111,11 @@ describe("Reading settings screen", () => {
   });
 
   it("rejects a look back date that isn't a real day", async () => {
-    const { getByTestId, getByText } = renderWithProviders(<ReadingSettings />);
+    const { getByTestId, getByText } = await renderWithProviders(<ReadingSettings />);
 
-    fireEvent.changeText(getByTestId("settings-reading.look-back-date-input"), "2026-02-30");
+    await fireEvent.changeText(getByTestId("settings-reading.look-back-date-input"), "2026-02-30");
     await act(async () => {
-      fireEvent.press(getByTestId("settings-reading.look-back-date-save"));
+      await fireEvent.press(getByTestId("settings-reading.look-back-date-save"));
     });
 
     expect(getByText("Enter a date as YYYY-MM-DD.")).toBeTruthy();
@@ -124,10 +124,10 @@ describe("Reading settings screen", () => {
 
   it("stages a picked Bible version and only saves it on Save", async () => {
     mockUpdateSettings.mockResolvedValue({ ...SAVED, preferredBibleVersion: "ESV" });
-    const { getByTestId, getByText } = renderWithProviders(<ReadingSettings />);
+    const { getByTestId, getByText } = await renderWithProviders(<ReadingSettings />);
 
-    fireEvent.press(getByTestId("settings-reading.bible-version-select"));
-    fireEvent.press(getByText("English Standard Version (ESV)"));
+    await fireEvent.press(getByTestId("settings-reading.bible-version-select"));
+    await fireEvent.press(getByText("English Standard Version (ESV)"));
 
     // Picking an option stages the choice; Save turns on but nothing is stored.
     expect(mockUpdateSettings).not.toHaveBeenCalled();
@@ -137,18 +137,18 @@ describe("Reading settings screen", () => {
     ).toBe(false);
 
     await act(async () => {
-      fireEvent.press(getByTestId("settings-reading.bible-version-save"));
+      await fireEvent.press(getByTestId("settings-reading.bible-version-save"));
     });
     expect(mockUpdateSettings).toHaveBeenCalledWith({ preferredBibleVersion: "ESV" });
   });
 
   it("saves device-only settings locally, never to the server", async () => {
-    const { getByTestId, getByText } = renderWithProviders(<ReadingSettings />);
+    const { getByTestId, getByText } = await renderWithProviders(<ReadingSettings />);
 
-    fireEvent.press(getByTestId("settings-reading.bible-app-select"));
-    fireEvent.press(getByText("Logos"));
+    await fireEvent.press(getByTestId("settings-reading.bible-app-select"));
+    await fireEvent.press(getByText("Logos"));
     await act(async () => {
-      fireEvent.press(getByTestId("settings-reading.bible-app-save"));
+      await fireEvent.press(getByTestId("settings-reading.bible-app-save"));
     });
 
     expect(mockUpdateSettings).not.toHaveBeenCalled();
@@ -159,11 +159,11 @@ describe("Reading settings screen", () => {
 
   it("falls back to device storage when signed out", async () => {
     seed({ authenticated: false });
-    const { getByTestId } = renderWithProviders(<ReadingSettings />);
+    const { getByTestId } = await renderWithProviders(<ReadingSettings />);
 
-    fireEvent.changeText(getByTestId("settings-reading.daily-goal-input"), "120");
+    await fireEvent.changeText(getByTestId("settings-reading.daily-goal-input"), "120");
     await act(async () => {
-      fireEvent.press(getByTestId("settings-reading.daily-goal-save"));
+      await fireEvent.press(getByTestId("settings-reading.daily-goal-save"));
     });
 
     expect(mockUpdateSettings).not.toHaveBeenCalled();
@@ -172,11 +172,11 @@ describe("Reading settings screen", () => {
     );
   });
 
-  it("keeps an in-progress edit when settings refresh underneath it", () => {
-    const { getByTestId } = renderWithProviders(<ReadingSettings />);
+  it("keeps an in-progress edit when settings refresh underneath it", async () => {
+    const { getByTestId } = await renderWithProviders(<ReadingSettings />);
 
-    fireEvent.changeText(getByTestId("settings-reading.daily-goal-input"), "120");
-    act(() => {
+    await fireEvent.changeText(getByTestId("settings-reading.daily-goal-input"), "120");
+    await act(() => {
       useUserSettingsStore.setState({
         state: {
           status: "ready",

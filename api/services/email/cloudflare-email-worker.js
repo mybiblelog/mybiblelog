@@ -6,7 +6,7 @@
 export default {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Cloudflare email handler signature
   async email(message, env, ctx) {
-    // TODO: Replace with the actual domain name
+    // (TODO: Replace with the actual domain name when setting up the Cloudflare Worker)
     const appDomain = 'https://mail.domain.com';
 
     try {

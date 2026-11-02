@@ -21,17 +21,19 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-async function fillAndSubmit(getByTestId: ReturnType<typeof renderWithProviders>["getByTestId"]) {
-  fireEvent.changeText(getByTestId("login.email"), "person@example.com");
-  fireEvent.changeText(getByTestId("login.password"), "hunter2");
+async function fillAndSubmit(
+  getByTestId: Awaited<ReturnType<typeof renderWithProviders>>["getByTestId"]
+) {
+  await fireEvent.changeText(getByTestId("login.email"), "person@example.com");
+  await fireEvent.changeText(getByTestId("login.password"), "hunter2");
   await act(async () => {
-    fireEvent.press(getByTestId("login.submit"));
+    await fireEvent.press(getByTestId("login.submit"));
   });
 }
 
 describe("Login screen", () => {
-  it("leaves the submit buttons enabled and shows no notice when the server is reachable", () => {
-    const { getByTestId, queryByText } = renderWithProviders(<Login />);
+  it("leaves the submit buttons enabled and shows no notice when the server is reachable", async () => {
+    const { getByTestId, queryByText } = await renderWithProviders(<Login />);
 
     expect(getByTestId("login.submit")).not.toBeDisabled();
     expect(getByTestId("login.google")).not.toBeDisabled();
@@ -39,20 +41,20 @@ describe("Login screen", () => {
     expect(queryByText("Logging in requires reaching the My Bible Log server.")).toBeNull();
   });
 
-  it("disables submitting and says why while the device is offline", () => {
+  it("disables submitting and says why while the device is offline", async () => {
     useConnectivityStore.setState({ isOnline: false, apiReachable: null });
 
-    const { getByTestId, getByText } = renderWithProviders(<Login />);
+    const { getByTestId, getByText } = await renderWithProviders(<Login />);
 
     expect(getByTestId("login.submit")).toBeDisabled();
     expect(getByTestId("login.google")).toBeDisabled();
     expect(getByText("Logging in requires an internet connection.")).toBeTruthy();
   });
 
-  it("distinguishes an unreachable server from a dead network", () => {
+  it("distinguishes an unreachable server from a dead network", async () => {
     useConnectivityStore.setState({ isOnline: true, apiReachable: false });
 
-    const { getByTestId, getByText } = renderWithProviders(<Login />);
+    const { getByTestId, getByText } = await renderWithProviders(<Login />);
 
     expect(getByTestId("login.submit")).toBeDisabled();
     expect(getByTestId("login.google")).toBeDisabled();
@@ -64,7 +66,7 @@ describe("Login screen", () => {
       const loginWithEmailPassword = jest.fn().mockResolvedValue({ ok: true });
       useAuthStore.setState({ loginWithEmailPassword });
 
-      const { getByTestId } = renderWithProviders(<Login />);
+      const { getByTestId } = await renderWithProviders(<Login />);
       await fillAndSubmit(getByTestId);
 
       expect(loginWithEmailPassword).toHaveBeenCalledWith("person@example.com", "hunter2");
@@ -84,7 +86,7 @@ describe("Login screen", () => {
       });
       useAuthStore.setState({ loginWithEmailPassword });
 
-      const { getByTestId, getByText } = renderWithProviders(<Login />);
+      const { getByTestId, getByText } = await renderWithProviders(<Login />);
       await fillAndSubmit(getByTestId);
 
       expect(getByText("Please enter a valid email")).toBeTruthy();
@@ -100,7 +102,7 @@ describe("Login screen", () => {
       });
       useAuthStore.setState({ loginWithEmailPassword });
 
-      const { getByTestId, getByText } = renderWithProviders(<Login />);
+      const { getByTestId, getByText } = await renderWithProviders(<Login />);
       await fillAndSubmit(getByTestId);
 
       expect(getByText("Email or password is incorrect")).toBeTruthy();
@@ -113,7 +115,7 @@ describe("Login screen", () => {
       });
       useAuthStore.setState({ loginWithEmailPassword });
 
-      const { getByTestId } = renderWithProviders(<Login />);
+      const { getByTestId } = await renderWithProviders(<Login />);
       await fillAndSubmit(getByTestId);
 
       expect(getByTestId("login.verify.code")).toBeTruthy();
@@ -126,7 +128,7 @@ describe("Login screen", () => {
       });
       useAuthStore.setState({ loginWithEmailPassword });
 
-      const { getByTestId, getByText } = renderWithProviders(<Login />);
+      const { getByTestId, getByText } = await renderWithProviders(<Login />);
       await fillAndSubmit(getByTestId);
 
       expect(getByText("Something went wrong. Please try again.")).toBeTruthy();
@@ -136,7 +138,7 @@ describe("Login screen", () => {
       const loginWithEmailPassword = jest.fn().mockRejectedValue(new Error("network down"));
       useAuthStore.setState({ loginWithEmailPassword });
 
-      const { getByTestId, getByText } = renderWithProviders(<Login />);
+      const { getByTestId, getByText } = await renderWithProviders(<Login />);
       await fillAndSubmit(getByTestId);
 
       expect(getByText("Something went wrong. Please try again.")).toBeTruthy();
@@ -147,9 +149,9 @@ describe("Login screen", () => {
     it("stays quiet and resets submitting when the user cancels", async () => {
       mockSignInWithGoogle.mockResolvedValue({ ok: "cancelled" });
 
-      const { getByTestId, queryByText } = renderWithProviders(<Login />);
+      const { getByTestId, queryByText } = await renderWithProviders(<Login />);
       await act(async () => {
-        fireEvent.press(getByTestId("login.google"));
+        await fireEvent.press(getByTestId("login.google"));
       });
 
       expect(queryByText("Something went wrong. Please try again.")).toBeNull();
@@ -159,9 +161,9 @@ describe("Login screen", () => {
     it("shows a generic error when signInWithGoogle fails", async () => {
       mockSignInWithGoogle.mockResolvedValue({ ok: false });
 
-      const { getByTestId, getByText } = renderWithProviders(<Login />);
+      const { getByTestId, getByText } = await renderWithProviders(<Login />);
       await act(async () => {
-        fireEvent.press(getByTestId("login.google"));
+        await fireEvent.press(getByTestId("login.google"));
       });
 
       expect(getByText("Something went wrong. Please try again.")).toBeTruthy();
@@ -172,9 +174,9 @@ describe("Login screen", () => {
       const finishGoogleLogin = jest.fn().mockResolvedValue({ ok: true });
       useAuthStore.setState({ finishGoogleLogin });
 
-      const { getByTestId } = renderWithProviders(<Login />);
+      const { getByTestId } = await renderWithProviders(<Login />);
       await act(async () => {
-        fireEvent.press(getByTestId("login.google"));
+        await fireEvent.press(getByTestId("login.google"));
       });
 
       expect(finishGoogleLogin).toHaveBeenCalledWith("id-token", expect.anything());
@@ -186,9 +188,9 @@ describe("Login screen", () => {
       const finishGoogleLogin = jest.fn().mockResolvedValue({ ok: false });
       useAuthStore.setState({ finishGoogleLogin });
 
-      const { getByTestId, getByText } = renderWithProviders(<Login />);
+      const { getByTestId, getByText } = await renderWithProviders(<Login />);
       await act(async () => {
-        fireEvent.press(getByTestId("login.google"));
+        await fireEvent.press(getByTestId("login.google"));
       });
 
       expect(getByText("Something went wrong. Please try again.")).toBeTruthy();
@@ -197,9 +199,9 @@ describe("Login screen", () => {
     it("shows a generic error when signInWithGoogle rejects", async () => {
       mockSignInWithGoogle.mockRejectedValue(new Error("native failure"));
 
-      const { getByTestId, getByText } = renderWithProviders(<Login />);
+      const { getByTestId, getByText } = await renderWithProviders(<Login />);
       await act(async () => {
-        fireEvent.press(getByTestId("login.google"));
+        await fireEvent.press(getByTestId("login.google"));
       });
 
       expect(getByText("Something went wrong. Please try again.")).toBeTruthy();

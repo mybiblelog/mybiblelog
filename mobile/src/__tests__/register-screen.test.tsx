@@ -13,8 +13,8 @@ beforeEach(() => {
 });
 
 describe("Register screen", () => {
-  it("leaves the submit buttons enabled and shows no notice when the server is reachable", () => {
-    const { getByTestId, queryByText } = renderWithProviders(<Register />);
+  it("leaves the submit buttons enabled and shows no notice when the server is reachable", async () => {
+    const { getByTestId, queryByText } = await renderWithProviders(<Register />);
 
     expect(getByTestId("register.submit")).not.toBeDisabled();
     expect(getByTestId("register.google")).not.toBeDisabled();
@@ -22,20 +22,20 @@ describe("Register screen", () => {
     expect(queryByText("Signing up requires reaching the My Bible Log server.")).toBeNull();
   });
 
-  it("disables submitting and says why while the device is offline", () => {
+  it("disables submitting and says why while the device is offline", async () => {
     useConnectivityStore.setState({ isOnline: false, apiReachable: null });
 
-    const { getByTestId, getByText } = renderWithProviders(<Register />);
+    const { getByTestId, getByText } = await renderWithProviders(<Register />);
 
     expect(getByTestId("register.submit")).toBeDisabled();
     expect(getByTestId("register.google")).toBeDisabled();
     expect(getByText("Signing up requires an internet connection.")).toBeTruthy();
   });
 
-  it("distinguishes an unreachable server from a dead network", () => {
+  it("distinguishes an unreachable server from a dead network", async () => {
     useConnectivityStore.setState({ isOnline: true, apiReachable: false });
 
-    const { getByTestId, getByText } = renderWithProviders(<Register />);
+    const { getByTestId, getByText } = await renderWithProviders(<Register />);
 
     expect(getByTestId("register.submit")).toBeDisabled();
     expect(getByTestId("register.google")).toBeDisabled();

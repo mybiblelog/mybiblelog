@@ -142,6 +142,7 @@ const { t, locale } = useI18n();
 const dialogStore = useDialogStore();
 const authStore = useAuthStore();
 const router = useRouter();
+const localePath = useLocalePath();
 
 const stats = ref<UserStats | null>(null);
 const statsLoading = ref(false);
@@ -190,7 +191,7 @@ async function signInAsUser() {
     // Drop the previous user's cached data so the next page reloads this user's.
     useAppInitStore().resetUserData();
     emit('close');
-    router.push('/start');
+    router.push(localePath('start'));
   }
   catch {
     await dialogStore.alert({ message: t('error_sign_in') });

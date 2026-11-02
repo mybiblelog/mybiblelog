@@ -9,7 +9,7 @@ This is the code that runs the live [mybiblelog.com](https://www.mybiblelog.com/
 ```bash
 # use the correct NPM version, if applicable
 # this is specified in package.json under "engines"
-$ nvm use 24.2.0
+$ nvm use 26.13.0
 
 # install root project dependencies
 $ npm install

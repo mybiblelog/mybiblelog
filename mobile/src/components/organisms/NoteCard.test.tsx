@@ -24,9 +24,11 @@ const note: PassageNote = {
 describe("NoteCard", () => {
   it("opens a passage in the Bible app when pressed", async () => {
     (openPassageInBible as jest.Mock).mockResolvedValue(true);
-    const { getByRole } = renderWithProviders(<NoteCard note={note} onPressMenu={jest.fn()} />);
+    const { getByRole } = await renderWithProviders(
+      <NoteCard note={note} onPressMenu={jest.fn()} />
+    );
 
-    fireEvent.press(getByRole("link"));
+    await fireEvent.press(getByRole("link"));
 
     await waitFor(() =>
       expect(openPassageInBible).toHaveBeenCalledWith(
@@ -37,19 +39,19 @@ describe("NoteCard", () => {
     );
   });
 
-  it("still opens the note menu from the menu button", () => {
+  it("still opens the note menu from the menu button", async () => {
     const onPressMenu = jest.fn();
-    const { getByLabelText } = renderWithProviders(
+    const { getByLabelText } = await renderWithProviders(
       <NoteCard note={note} onPressMenu={onPressMenu} />
     );
 
-    fireEvent.press(getByLabelText("Note actions"));
+    await fireEvent.press(getByLabelText("Note actions"));
 
     expect(onPressMenu).toHaveBeenCalledWith(note);
   });
 
-  it("keeps the menu button on the right edge when the note has no passages", () => {
-    const { getByLabelText } = renderWithProviders(
+  it("keeps the menu button on the right edge when the note has no passages", async () => {
+    const { getByLabelText } = await renderWithProviders(
       <NoteCard note={{ ...note, passages: [] }} onPressMenu={jest.fn()} />
     );
 

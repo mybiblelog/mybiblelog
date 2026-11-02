@@ -202,7 +202,8 @@ export default defineNuxtConfig({
     // never invoked (Connect matches on the pathname, and /dev-sw.js carries a query
     // string) — only their presence in the stack matters. Production is unaffected: the
     // built worker is a real /sw.js asset.
-    // Remove once @vite-pwa/nuxt relaxes its `if (isServer) return` guard.
+    // TECH-DEBT(vite-pwa-dev-sw-route-markers): remove once @vite-pwa/nuxt relaxes its
+    // `if (isServer) return` guard.
     'vite:serverCreated': (viteServer) => {
       // app.baseURL is the default '/'; Vite's own `base` is /_nuxt/ in dev, so it
       // cannot be used here.
@@ -279,5 +280,12 @@ export default defineNuxtConfig({
     // requests run concurrently (Playwright fullyParallel) because the synchronous
     // unctx context stack is a shared global that gets corrupted across async boundaries.
     asyncContext: true,
+    // compatibilityVersion 5 turns Nitro auto-imports off, and since Nuxt 4.6.2
+    // that also strips them from `#imports` in the server bundle. @nuxtjs/i18n's
+    // server runtime still imports `useRuntimeConfig` from `#imports`, so the
+    // build fails without this (nuxt-modules/i18n#4175).
+    // TECH-DEBT(nuxt-i18n-nitro-auto-imports): drop it once i18n imports from
+    // `nitropack/runtime` instead.
+    nitroAutoImports: true,
   },
 });

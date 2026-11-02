@@ -7,10 +7,10 @@ import AboutSettings from "@/app/(tabs)/settings/about";
 describe("About settings screen", () => {
   it("shows an error toast when opening a link fails", async () => {
     const openURL = jest.spyOn(Linking, "openURL").mockRejectedValueOnce(new Error("cannot open"));
-    const { getByText } = renderWithProviders(<AboutSettings />);
+    const { getByText } = await renderWithProviders(<AboutSettings />);
 
     await act(async () => {
-      fireEvent.press(getByText("Privacy Policy"));
+      await fireEvent.press(getByText("Privacy Policy"));
     });
 
     expect(openURL).toHaveBeenCalledWith("https://www.mybiblelog.com/policy/privacy");
@@ -19,10 +19,10 @@ describe("About settings screen", () => {
 
   it("opens the link and shows no error toast when it succeeds", async () => {
     const openURL = jest.spyOn(Linking, "openURL").mockResolvedValueOnce(undefined as never);
-    const { getByText, queryByText } = renderWithProviders(<AboutSettings />);
+    const { getByText, queryByText } = await renderWithProviders(<AboutSettings />);
 
     await act(async () => {
-      fireEvent.press(getByText("Terms and Conditions"));
+      await fireEvent.press(getByText("Terms and Conditions"));
     });
 
     expect(openURL).toHaveBeenCalledWith("https://www.mybiblelog.com/policy/terms");

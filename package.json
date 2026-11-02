@@ -13,7 +13,7 @@
     "shared"
   ],
   "engines": {
-    "node": "24.18.0"
+    "node": "26.13.0"
   },
   "scripts": {
     "dev": "npm-run-all --parallel dev:api dev:web",
@@ -37,6 +37,7 @@
     "test:api": "npm run -w api test",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "test:e2e:locale": "playwright test --project=locale",
     "script:seed": "npm run -w api script:seed",
     "script:backup": "npm run -w api script:backup",
     "script:restore": "npm run -w api script:restore",
@@ -58,15 +59,15 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.51.1",
-    "@types/node": "^22.14.1",
+    "@types/node": "^26.6.6",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.1",
-    "openai": "^4.54.0",
-    "sharp": "^0.34.5"
+    "sharp": "^0.35.5"
   },
   "overrides": {
-    "vue": "^3.5.42",
-    "@vue/server-renderer": "^3.5.42"
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^9.0.7"
+    }
   }
 }

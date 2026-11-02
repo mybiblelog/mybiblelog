@@ -10,7 +10,7 @@
         <li v-for="(item, index) in list" :key="index" v-html="item" />
       </ul>
       <div class="app-callout-cta">
-        <NuxtLink :to="localePath(buttonDestination)" class="mbl-button mbl-button--primary">
+        <NuxtLink :to="localePath({ path: buttonDestination })" class="mbl-button mbl-button--primary">
           {{ buttonText }}
         </NuxtLink>
       </div>

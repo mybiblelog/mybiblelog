@@ -6,14 +6,14 @@
           <div class="site-nav__mobile-brand">
             <NuxtLink
               class="site-nav__logo"
-              :to="localePath(authStore.loggedIn ? '/start' : '/')"
+              :to="localePath(authStore.loggedIn ? 'start' : 'index')"
               aria-label="home"
             >
               <img src="/images/logo.svg" width="28" height="28" alt="">
             </NuxtLink>
             <NuxtLink
               class="site-nav__brand-text"
-              :to="localePath(authStore.loggedIn ? '/start' : '/')"
+              :to="localePath(authStore.loggedIn ? 'start' : 'index')"
             >
               {{ $t("my_bible_log") }}
             </NuxtLink>
@@ -42,7 +42,7 @@
           <div class="site-nav__brand">
             <NuxtLink
               class="site-nav__logo"
-              :to="localePath(authStore.loggedIn ? '/start' : '/')"
+              :to="localePath(authStore.loggedIn ? 'start' : 'index')"
               aria-label="home"
             >
               <img src="/images/logo.svg" width="28" height="28" alt="">
@@ -50,14 +50,14 @@
             <NuxtLink
               v-if="!authStore.loggedIn"
               class="site-nav__brand-text"
-              :to="localePath('/')"
+              :to="localePath('index')"
             >
               {{ $t("my_bible_log") }}
             </NuxtLink>
           </div>
 
           <div class="site-nav__link-row">
-            <template v-for="item in visibleRouteNavItems" :key="item.to">
+            <template v-for="item in visibleRouteNavItems" :key="item.labelKey">
               <span
                 v-if="item.spaceBefore"
                 class="site-nav__route-spacer"
@@ -89,7 +89,7 @@
               >
                 <NuxtLink
                   v-for="item in ADMIN_CHILD_LINKS"
-                  :key="'desk-admin-' + item.to"
+                  :key="'desk-admin-' + item.labelKey"
                   class="site-nav__admin-item"
                   :to="localePath(item.to)"
                   role="menuitem"
@@ -116,7 +116,7 @@
                 >
                   <NuxtLink
                     class="site-nav__account-item"
-                    :to="localePath('/settings')"
+                    :to="localePath('settings')"
                     role="menuitem"
                   >
                     {{ t("settings") }}
@@ -132,12 +132,12 @@
             </template>
             <template v-if="!authStore.loggedIn">
               <span class="site-nav__auth-slot">
-                <NuxtLink class="site-nav__link" :to="localePath('/register')">
+                <NuxtLink class="site-nav__link" :to="localePath('register')">
                   {{ t("sign_up") }}
                 </NuxtLink>
               </span>
               <span class="site-nav__auth-slot">
-                <NuxtLink class="site-nav__link" :to="localePath('/login')">
+                <NuxtLink class="site-nav__link" :to="localePath('login')">
                   {{ t("sign_in") }}
                 </NuxtLink>
               </span>
@@ -176,7 +176,7 @@
           <div class="site-nav__drawer-scroll">
             <NuxtLink
               v-for="item in visibleRouteNavItems"
-              :key="'drawer-route-' + item.to"
+              :key="'drawer-route-' + item.labelKey"
               class="site-nav__drawer-link"
               :to="localePath(item.to)"
             >
@@ -188,7 +188,7 @@
               </div>
               <NuxtLink
                 v-for="item in ADMIN_CHILD_LINKS"
-                :key="'drawer-admin-' + item.to"
+                :key="'drawer-admin-' + item.labelKey"
                 class="site-nav__drawer-link site-nav__drawer-link--indent"
                 :to="localePath(item.to)"
               >
@@ -201,7 +201,7 @@
               </div>
               <NuxtLink
                 class="site-nav__drawer-link site-nav__drawer-link--indent"
-                :to="localePath('/settings')"
+                :to="localePath('settings')"
               >
                 {{ t("settings") }}
               </NuxtLink>
@@ -216,7 +216,7 @@
               <span class="site-nav__auth-slot">
                 <NuxtLink
                   class="site-nav__drawer-link"
-                  :to="localePath('/register')"
+                  :to="localePath('register')"
                 >
                   {{ t("sign_up") }}
                 </NuxtLink>
@@ -224,7 +224,7 @@
               <span class="site-nav__auth-slot">
                 <NuxtLink
                   class="site-nav__drawer-link"
-                  :to="localePath('/login')"
+                  :to="localePath('login')"
                 >
                   {{ t("sign_in") }}
                 </NuxtLink>
@@ -256,20 +256,20 @@ import { MBL_MEDIA_DESKTOP } from '~/helpers/breakpoints';
 const { t } = useI18n();
 
 const ORDERED_ROUTE_NAV = [
-  { labelKey: 'today', to: '/today', authOnly: true, spaceBefore: false },
-  { labelKey: 'bible_books', to: '/books', authOnly: true, spaceBefore: false },
+  { labelKey: 'today', to: 'today', authOnly: true, spaceBefore: false },
+  { labelKey: 'bible_books', to: 'books', authOnly: true, spaceBefore: false },
   {
     labelKey: 'chapter_checklist',
-    to: '/checklist',
+    to: 'checklist',
     authOnly: true,
     spaceBefore: false,
   },
-  { labelKey: 'calendar', to: '/calendar', authOnly: true, spaceBefore: false },
-  { labelKey: 'notes', to: '/notes', authOnly: true, spaceBefore: false },
-  { labelKey: 'insights', to: '/insights', authOnly: true, spaceBefore: false },
+  { labelKey: 'calendar', to: 'calendar', authOnly: true, spaceBefore: false },
+  { labelKey: 'notes', to: 'notes', authOnly: true, spaceBefore: false },
+  { labelKey: 'insights', to: 'insights', authOnly: true, spaceBefore: false },
   {
     labelKey: 'about',
-    to: '/about/overview',
+    to: { name: 'about-slug', params: { slug: 'overview' } },
     authOnly: false,
     guestOnly: true,
     spaceBefore: true,
@@ -277,9 +277,9 @@ const ORDERED_ROUTE_NAV = [
 ] as const;
 
 const ADMIN_CHILD_LINKS = [
-  { labelKey: 'users', to: '/admin/users' },
-  { labelKey: 'feedback', to: '/admin/feedback' },
-  { labelKey: 'engagement', to: '/admin/engagement' },
+  { labelKey: 'users', to: 'admin-users' },
+  { labelKey: 'feedback', to: 'admin-feedback' },
+  { labelKey: 'engagement', to: 'admin-engagement' },
 ] as const;
 
 const SITE_NAV_DRAWER_MS = 280;

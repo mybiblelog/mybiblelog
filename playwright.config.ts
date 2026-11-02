@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
+import type { AppOptions } from './e2e/fixtures';
 
 dotenv.config({
   path: path.resolve(__dirname, '.env'),
@@ -13,7 +14,7 @@ const apiUrl = process.env.TEST_API_URL || 'http://localhost:8080';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-export default defineConfig({
+export default defineConfig<AppOptions>({
   testDir: './e2e/tests',
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -58,6 +59,15 @@ export default defineConfig({
       name: 'public',
       testMatch: 'public/**/*.spec.ts',
       use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      /*
+       * Locale-prefixed routing (links and redirects keep the `/<locale>/`
+       * prefix). Defaults to `es`; set E2E_LOCALE to try another prefixed locale.
+       */
+      name: 'locale',
+      testMatch: 'locale/**/*.spec.ts',
+      use: { ...devices['Desktop Chrome'], appLocale: process.env.E2E_LOCALE || 'es' },
     },
   ],
 

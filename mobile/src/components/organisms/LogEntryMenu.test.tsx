@@ -1,7 +1,7 @@
 import { fireEvent, renderWithProviders } from "@/src/test-utils/renderWithProviders";
 import { LogEntryMenu } from "./LogEntryMenu";
 
-function setup(overrides: Partial<Parameters<typeof LogEntryMenu>[0]> = {}) {
+async function setup(overrides: Partial<Parameters<typeof LogEntryMenu>[0]> = {}) {
   const handlers = {
     onClose: jest.fn(),
     onOpenInBible: jest.fn(),
@@ -11,38 +11,38 @@ function setup(overrides: Partial<Parameters<typeof LogEntryMenu>[0]> = {}) {
     onEdit: jest.fn(),
     onDelete: jest.fn(),
   };
-  const utils = renderWithProviders(<LogEntryMenu visible {...handlers} {...overrides} />);
+  const utils = await renderWithProviders(<LogEntryMenu visible {...handlers} {...overrides} />);
   return { handlers, ...utils };
 }
 
 describe("LogEntryMenu", () => {
-  it("offers Continue Reading between Open in Bible and Edit when handler is given", () => {
-    const { handlers, getByText } = setup();
+  it("offers Continue Reading between Open in Bible and Edit when handler is given", async () => {
+    const { handlers, getByText } = await setup();
     expect(getByText("Open in Bible")).toBeTruthy();
     expect(getByText("Continue Reading")).toBeTruthy();
-    fireEvent.press(getByText("Continue Reading"));
+    await fireEvent.press(getByText("Continue Reading"));
     expect(handlers.onContinueReading).toHaveBeenCalledTimes(1);
   });
 
-  it("omits Continue Reading when no handler is given (final verse)", () => {
-    const { queryByText } = setup({ onContinueReading: undefined });
+  it("omits Continue Reading when no handler is given (final verse)", async () => {
+    const { queryByText } = await setup({ onContinueReading: undefined });
     expect(queryByText("Continue Reading")).toBeNull();
   });
 
-  it("offers Take Note above Edit", () => {
-    const { handlers, getByText } = setup();
-    fireEvent.press(getByText("Take Note"));
+  it("offers Take Note above Edit", async () => {
+    const { handlers, getByText } = await setup();
+    await fireEvent.press(getByText("Take Note"));
     expect(handlers.onTakeNote).toHaveBeenCalledTimes(1);
   });
 
-  it("offers View Notes", () => {
-    const { handlers, getByText } = setup();
-    fireEvent.press(getByText("View Notes"));
+  it("offers View Notes", async () => {
+    const { handlers, getByText } = await setup();
+    await fireEvent.press(getByText("View Notes"));
     expect(handlers.onViewNotes).toHaveBeenCalledTimes(1);
   });
 
-  it("orders actions as web's useLogEntryActions does", () => {
-    const { getAllByRole } = setup();
+  it("orders actions as web's useLogEntryActions does", async () => {
+    const { getAllByRole } = await setup();
     const labels = getAllByRole("button").map((node) => node.props.accessibilityLabel);
     expect(labels).toEqual(expect.arrayContaining(["Take Note", "View Notes", "Edit"]));
     expect(labels.indexOf("View Notes")).toBeGreaterThan(labels.indexOf("Take Note"));

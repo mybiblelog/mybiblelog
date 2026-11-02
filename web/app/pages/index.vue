@@ -17,7 +17,7 @@ const { locale } = useI18n();
 const config = useRuntimeConfig();
 
 if (authStore.loggedIn) {
-  await navigateTo(localePath('/start'));
+  await navigateTo(localePath('start'));
 }
 
 const { data: page } = await useAsyncData(

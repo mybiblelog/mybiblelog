@@ -112,12 +112,13 @@ describe("hydrating with no stored settings", () => {
 
   it("persists nothing when the settings key can't be read", async () => {
     await withFreshModules(async ({ AsyncStorage, store }) => {
-      const realGetItem = AsyncStorage.getItem.bind(AsyncStorage);
-      jest
-        .spyOn(AsyncStorage, "getItem")
-        .mockImplementation((key: string) =>
-          key === SETTINGS_KEY ? Promise.reject(new Error("locked")) : realGetItem(key)
-        );
+      // getItem is already a jest.fn, so spyOn would hand back the same mock;
+      // delegate to its original implementation instead of to itself.
+      const getItem = AsyncStorage.getItem as jest.Mock;
+      const realGetItem = getItem.getMockImplementation()!;
+      getItem.mockImplementation((key: string) =>
+        key === SETTINGS_KEY ? Promise.reject(new Error("locked")) : realGetItem(key)
+      );
       const setItem = jest.spyOn(AsyncStorage, "setItem");
 
       store.initUserSettings();

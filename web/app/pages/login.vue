@@ -8,7 +8,7 @@
           </h1>
         </div>
         <div class="mbl-level-right">
-          <NuxtLink :to="localePath('/register')">
+          <NuxtLink :to="localePath('register')">
             {{ t('need_an_account') }}
           </NuxtLink>
         </div>
@@ -142,7 +142,7 @@ const onSubmit = async () => {
   finally {
     submitting.value = false;
   }
-  await router.push(localePath('/start'));
+  await router.push(localePath('start'));
 };
 
 const openPasswordReset = () => {

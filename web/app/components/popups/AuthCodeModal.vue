@@ -240,7 +240,7 @@ async function completeSignedIn() {
   await authStore.refreshUser();
   postAuthEvent({ type: 'completed', flow: store.flow, email: store.email });
   close();
-  await router.push(localePath('/start'));
+  await router.push(localePath('start'));
 }
 
 // Briefly hold the "Code verified…" notice so it registers before a flow that
@@ -395,7 +395,7 @@ onMounted(() => {
     else {
       authStore.refreshUser().then(() => {
         close();
-        router.push(localePath('/start'));
+        router.push(localePath('start'));
       });
     }
   });

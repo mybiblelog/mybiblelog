@@ -4,7 +4,7 @@
       <h2 class="mbl-title">
         {{ t('bible_books') }}
       </h2>
-      <NuxtLink class="mbl-button" :to="localePath('/progress')">
+      <NuxtLink class="mbl-button" :to="localePath('progress')">
         {{ t('progress') }}
         <caret-right-icon style="margin-left: 0.2rem;" />
       </NuxtLink>
@@ -72,7 +72,7 @@ const { testament: testamentFilter, sortOrder } = useBookListPrefs();
 
 function navigateToBook(bookIndex: number) {
   emit('view-book-report', bookIndex);
-  router.push(localePath('/books/' + bookIndex));
+  router.push(localePath({ name: 'books-book', params: { book: bookIndex } }));
 }
 const bookNotesCounts = computed(() => passageNotesStore.bookNoteCounts);
 const anyBooksHaveNotes = computed(() => passageNotesStore.anyBooksHaveNotes);

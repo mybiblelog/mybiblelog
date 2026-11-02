@@ -1,4 +1,5 @@
 import * as Notifications from "expo-notifications";
+import { AndroidImportance } from "expo-notifications";
 import { Platform } from "react-native";
 import { i18n } from "@/src/i18n";
 import { appStorage } from "@/src/storage/keys";
@@ -59,7 +60,7 @@ async function ensureAndroidChannelAsync(): Promise<void> {
   if (Platform.OS !== "android") return;
   await Notifications.setNotificationChannelAsync(ANDROID_CHANNEL_ID, {
     name: "Daily Reading Reminder",
-    importance: Notifications.AndroidImportance.DEFAULT,
+    importance: AndroidImportance.DEFAULT,
   });
 }
 

@@ -39,13 +39,13 @@ function renderedBookOrder() {
   return screen.getAllByText(bookNames).map((el) => el.props.children);
 }
 
-function openSort() {
-  fireEvent.press(screen.getByTestId("insights.frequency-sort-row"));
+async function openSort() {
+  await fireEvent.press(screen.getByTestId("insights.frequency-sort-row"));
 }
 
 describe("BookFrequencyChart", () => {
-  it("defaults to Bible order with raw verse counts", () => {
-    renderWithProviders(<BookFrequencyChart entries={entries} />);
+  it("defaults to Bible order with raw verse counts", async () => {
+    await renderWithProviders(<BookFrequencyChart entries={entries} />);
     expect(renderedBookOrder()).toEqual(["Genesis", "Amos", "Obadiah", "Revelation"]);
     expect(screen.getByText("20")).toBeTruthy();
     expect(screen.getByText("15")).toBeTruthy();
@@ -53,42 +53,42 @@ describe("BookFrequencyChart", () => {
     expect(screen.getByText("12")).toBeTruthy();
   });
 
-  it("sorts alphabetically, independent of Bible order", () => {
-    renderWithProviders(<BookFrequencyChart entries={entries} />);
-    openSort();
-    fireEvent.press(screen.getByText("Alphabetical"));
+  it("sorts alphabetically, independent of Bible order", async () => {
+    await renderWithProviders(<BookFrequencyChart entries={entries} />);
+    await openSort();
+    await fireEvent.press(screen.getByText("Alphabetical"));
     expect(renderedBookOrder()).toEqual(["Amos", "Genesis", "Obadiah", "Revelation"]);
   });
 
-  it("sorts most read by raw verse count", () => {
-    renderWithProviders(<BookFrequencyChart entries={entries} />);
-    openSort();
-    fireEvent.press(screen.getByText("Most read"));
+  it("sorts most read by raw verse count", async () => {
+    await renderWithProviders(<BookFrequencyChart entries={entries} />);
+    await openSort();
+    await fireEvent.press(screen.getByText("Most read"));
     // Raw counts: Genesis 20 > Amos 15 > Revelation 12 > Obadiah 10.
     expect(renderedBookOrder()).toEqual(["Genesis", "Amos", "Revelation", "Obadiah"]);
   });
 
-  it("sorts least read by raw verse count", () => {
-    renderWithProviders(<BookFrequencyChart entries={entries} />);
-    openSort();
-    fireEvent.press(screen.getByText("Least read"));
+  it("sorts least read by raw verse count", async () => {
+    await renderWithProviders(<BookFrequencyChart entries={entries} />);
+    await openSort();
+    await fireEvent.press(screen.getByText("Least read"));
     expect(renderedBookOrder()).toEqual(["Obadiah", "Revelation", "Amos", "Genesis"]);
   });
 
-  it("switches to the proportional metric, relabeling rows as percentages", () => {
-    renderWithProviders(<BookFrequencyChart entries={entries} />);
-    fireEvent.press(screen.getByText("Proportional"));
+  it("switches to the proportional metric, relabeling rows as percentages", async () => {
+    await renderWithProviders(<BookFrequencyChart entries={entries} />);
+    await fireEvent.press(screen.getByText("Proportional"));
     expect(screen.getByText("1%")).toBeTruthy(); // Genesis: 20/1533
     expect(screen.getByText("10%")).toBeTruthy(); // Amos: 15/146
     expect(screen.getByText("48%")).toBeTruthy(); // Obadiah: 10/21
     expect(screen.getByText("3%")).toBeTruthy(); // Revelation: 12/404
   });
 
-  it("sorts most read by proportion once the proportional metric is selected", () => {
-    renderWithProviders(<BookFrequencyChart entries={entries} />);
-    fireEvent.press(screen.getByText("Proportional"));
-    openSort();
-    fireEvent.press(screen.getByText("Most read"));
+  it("sorts most read by proportion once the proportional metric is selected", async () => {
+    await renderWithProviders(<BookFrequencyChart entries={entries} />);
+    await fireEvent.press(screen.getByText("Proportional"));
+    await openSort();
+    await fireEvent.press(screen.getByText("Most read"));
     // Proportions: Obadiah 48% > Amos 10% > Revelation 3% > Genesis 1% — the
     // opposite order from the raw-count "most read" sort above.
     expect(renderedBookOrder()).toEqual(["Obadiah", "Amos", "Revelation", "Genesis"]);
