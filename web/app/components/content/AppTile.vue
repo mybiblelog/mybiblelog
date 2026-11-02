@@ -9,7 +9,7 @@
   >
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 // Decorative: the logo on a white launcher-style tile (mirrors the mobile app's
 // icon.png) so the app reads as its own product. Always sits next to text naming the app.
 withDefaults(defineProps<{

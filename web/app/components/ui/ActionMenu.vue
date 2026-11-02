@@ -26,7 +26,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 const { t } = useI18n();
 
 type Action = { label: string; callback?: () => void };

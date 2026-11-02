@@ -27,7 +27,7 @@
   </Teleport>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 const props = withDefaults(defineProps<{ title?: string; open?: boolean }>(), {
   title: '',
   open: false,

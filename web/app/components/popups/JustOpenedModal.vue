@@ -37,7 +37,7 @@
   </app-modal>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import dayjs from 'dayjs';
 import { Bible } from '@mybiblelog/shared';
 import AppModal from '~/components/popups/AppModal.vue';

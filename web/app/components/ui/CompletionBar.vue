@@ -12,7 +12,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 withDefaults(defineProps<{
   percentage?: number;
   backgroundColor?: string;

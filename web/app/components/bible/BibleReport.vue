@@ -42,7 +42,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { Bible, filterAndSortBookOptions, getBookOptions, withSegmentPercentages } from '@mybiblelog/shared';
 import type { LogEntry } from '@mybiblelog/shared';
 import { usePassageNotesStore } from '~/stores/passage-notes';

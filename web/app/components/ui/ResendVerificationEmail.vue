@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 
 const props = withDefaults(defineProps<{

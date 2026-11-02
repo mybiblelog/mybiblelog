@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 const gridContainer = ref<HTMLElement | null>(null);
 
 onMounted(() => {

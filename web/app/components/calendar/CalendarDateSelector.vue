@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import dayjs, { type Dayjs } from 'dayjs';
 import TriangleLeftIcon from '~/components/svg/TriangleLeftIcon.vue';
 import TriangleRightIcon from '~/components/svg/TriangleRightIcon.vue';

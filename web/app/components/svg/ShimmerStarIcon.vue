@@ -2,7 +2,7 @@
   <div class="shimmer-star" :style="starStyle" />
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 const props = withDefaults(defineProps<{ width?: string; height?: string }>(), {
   width: '24px',
   height: '24px',

@@ -68,7 +68,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { bibleVersionOptions as allBibleVersionOptions, bibleAppOptions, localeVersionGroups } from '@mybiblelog/shared';
 import { useUserSettingsStore } from '~/stores/user-settings';
 

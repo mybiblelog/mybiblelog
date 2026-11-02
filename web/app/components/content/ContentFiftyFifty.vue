@@ -30,7 +30,7 @@
   </section>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 // Rendered via v-html: these props must only come from trusted repo-authored
 // content (web/content/<locale>/*.md), never from translator/Crowdin-supplied strings.
 withDefaults(defineProps<{

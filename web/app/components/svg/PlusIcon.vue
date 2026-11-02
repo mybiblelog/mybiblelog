@@ -4,7 +4,7 @@
   </svg>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 withDefaults(defineProps<{ width?: string; height?: string; stroke?: string }>(), {
   width: '24px', height: '24px', stroke: 'currentColor',
 });

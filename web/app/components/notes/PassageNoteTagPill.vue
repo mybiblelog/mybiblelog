@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 defineProps<{ tag: { id: string | number; label: string; color: string } }>();
 </script>
 

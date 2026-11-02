@@ -83,7 +83,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import dayjs from 'dayjs';
 import VerseInput from '~/components/forms/VerseInput.vue';
 import { useDialogStore } from '~/stores/dialog';

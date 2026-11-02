@@ -28,7 +28,7 @@
   </Teleport>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { useDialogStore } from '~/stores/dialog';
 
 const { t } = useI18n();

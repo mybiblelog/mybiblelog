@@ -32,7 +32,7 @@
   </app-modal>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import AppModal from '~/components/popups/AppModal.vue';
 import PassageNoteTagSelector from '~/components/forms/PassageNoteTagSelector.vue';
 import { usePassageNoteTagEditorStore } from '~/stores/passage-note-tag-editor';

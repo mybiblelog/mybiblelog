@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { useActionSheetStore } from '~/stores/action-sheet';
 import type { ActionSheetItem } from '~/stores/action-sheet';
 

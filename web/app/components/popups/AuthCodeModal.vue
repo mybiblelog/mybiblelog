@@ -134,7 +134,7 @@
   </app-modal>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import AppModal from '~/components/popups/AppModal.vue';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import type { ApiErrorDetail } from '~/helpers/api-error';

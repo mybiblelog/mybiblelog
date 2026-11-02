@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import type { BookSortOrder, TestamentFilter } from '@mybiblelog/shared';
 import TestamentToggle from '~/components/bible/TestamentToggle.vue';
 import BookSortToggle from '~/components/bible/BookSortToggle.vue';

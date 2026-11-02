@@ -46,7 +46,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import dayjs from 'dayjs';
 import { Bible, withSegmentPercentages } from '@mybiblelog/shared';
 import { encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';

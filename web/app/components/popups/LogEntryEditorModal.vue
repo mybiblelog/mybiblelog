@@ -19,7 +19,7 @@
   </app-modal>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import AppModal from '~/components/popups/AppModal.vue';
 import LogEntryEditorForm from '~/components/forms/LogEntryEditorForm.vue';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';

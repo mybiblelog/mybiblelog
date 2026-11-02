@@ -6,7 +6,7 @@
   </ol>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 const { locale } = useI18n();
 const weekdays = computed(() => {
   const opts: Intl.DateTimeFormatOptions = { weekday: 'short' };

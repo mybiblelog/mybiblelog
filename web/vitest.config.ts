@@ -18,8 +18,27 @@ const stripI18nBlock = {
   },
 };
 
+// Components opt into Vue Vapor Mode with `<script setup vapor>` (see `vue.vapor`
+// in nuxt.config.ts), but @vue/test-utils can't drive vapor instances: they
+// have no component proxy, so `wrapper.vm`, `emitted()`, `setProps()` and
+// `findComponent()` all fail. Drop the marker so the suite compiles those SFCs
+// as vdom, which shares the template/script semantics; the Nuxt build and the
+// e2e suite exercise the real vapor output.
+// TECH-DEBT(vtu-vapor-support): remove once @vue/test-utils can mount vapor
+// components.
+const stripVaporMarker = {
+  name: 'mbl-strip-vapor-marker',
+  enforce: 'pre' as const,
+  transform(code: string, id: string) {
+    if (id.endsWith('.vue') && code.includes('<script setup vapor')) {
+      return { code: code.replace(/<script setup vapor\b/g, '<script setup'), map: null };
+    }
+    return undefined;
+  },
+};
+
 export default defineConfig({
-  plugins: [stripI18nBlock, vue()],
+  plugins: [stripI18nBlock, stripVaporMarker, vue()],
   resolve: {
     alias: {
       // Nuxt config sets `srcDir: 'app/'`, so `~` and `@` resolve into app/.

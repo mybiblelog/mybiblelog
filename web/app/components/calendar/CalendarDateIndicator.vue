@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import type { Dayjs } from 'dayjs';
 const props = defineProps<{ selectedDate: Dayjs }>();
 const { locale } = useI18n();

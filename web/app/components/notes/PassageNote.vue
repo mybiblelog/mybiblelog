@@ -38,7 +38,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { Bible, displayTimeSince, linkifyText } from '@mybiblelog/shared';
 import PassageNoteTagPill from '~/components/notes/PassageNoteTagPill.vue';
 

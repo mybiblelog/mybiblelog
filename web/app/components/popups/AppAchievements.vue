@@ -28,7 +28,7 @@
   </Teleport>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { Bible } from '@mybiblelog/shared';
 import { ACHIEVEMENT, useAchievementsStore } from '~/stores/achievements';
 import StarIcon from '~/components/svg/StarIcon.vue';

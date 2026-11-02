@@ -77,7 +77,7 @@
   </client-only>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { useAuthStore } from '~/stores/auth';
 
 const { t } = useI18n();

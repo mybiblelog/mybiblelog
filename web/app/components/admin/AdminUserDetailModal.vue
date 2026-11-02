@@ -98,7 +98,7 @@
   </app-modal>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { displayTimeSince } from '@mybiblelog/shared';
 import AppModal from '~/components/popups/AppModal.vue';
 import { sessionStore } from '~/helpers/app-storage';

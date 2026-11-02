@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { useUserSettingsStore } from '~/stores/user-settings';
 
 withDefaults(defineProps<{ previousButtonText?: string }>(), { previousButtonText: 'Back' });

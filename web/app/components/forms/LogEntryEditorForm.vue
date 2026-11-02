@@ -100,7 +100,7 @@
   </form>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { Bible, PassageSelection } from '@mybiblelog/shared';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 

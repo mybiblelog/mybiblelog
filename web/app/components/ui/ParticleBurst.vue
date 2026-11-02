@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 // A one-shot radial burst. Mounting *is* the trigger: particles are generated
 // once during setup and every stage of the animation is driven by CSS delays,
 // so the component owns no timers and cannot leak one. The parent controls the

@@ -44,6 +44,16 @@ export default defineNuxtConfig({
     },
   },
 
+  // Vue Vapor Mode (Vue 3.6+). Installs Vue's `vaporInteropPlugin` so SFCs
+  // that opt in with `<script setup vapor>` render without a virtual DOM while
+  // mixing freely with vdom components (Nuxt's built-ins, library components).
+  // Components under app/components/ opt in; pages, layouts and app.vue stay
+  // vdom: pages run async setup under <NuxtPage>'s <Suspense>, which vapor
+  // components don't support.
+  vue: {
+    vapor: true,
+  },
+
   // Page transitions matching the original app
   app: {
     pageTransition: { name: 'page', mode: 'out-in', duration: 100 },
@@ -190,6 +200,35 @@ export default defineNuxtConfig({
   },
 
   hooks: {
+    // @nuxtjs/mdc (installed by @nuxt/content) adds a template nodeTransform,
+    // `viteMDCSlot`, that reads `context.nodeTransforms` on every node. Vue's
+    // vapor compiler context has no such field (it keeps them under
+    // `context.options`), so every `<script setup vapor>` component fails to
+    // compile with "Cannot read properties of undefined (reading '0')". Skip the
+    // transform for vapor compiles: it only rewrites `<MDCSlot>` and
+    // `<slot mdc-unwrap>`, which no component here uses (content markdown is
+    // rendered by mdc's own vdom components, unaffected). This runs on
+    // `vite:extendConfig`, which fires after mdc registers its transform on
+    // `vite:extend`.
+    // TECH-DEBT(mdc-vapor-node-transform): remove once @nuxtjs/mdc guards for
+    // the vapor compiler context.
+    'vite:extendConfig': (config) => {
+      const compilerOptions = (config as { vue?: { template?: { compilerOptions?: { nodeTransforms?: Array<(...args: never[]) => unknown> } } } })
+        .vue?.template?.compilerOptions;
+      const transforms = compilerOptions?.nodeTransforms;
+      if (!transforms) { return; }
+      compilerOptions.nodeTransforms = transforms.map((transform) => {
+        if (transform.name !== 'viteMDCSlot') { return transform; }
+        // Keep the name: the transform locates itself by it.
+        const vaporSafe = {
+          viteMDCSlot(node: unknown, context: { nodeTransforms?: unknown[] }) {
+            if (!Array.isArray(context.nodeTransforms)) { return undefined; }
+            return (transform as (...args: unknown[]) => unknown)(node, context);
+          },
+        }.viteMDCSlot;
+        return vaporSafe as typeof transform;
+      });
+    },
     // Re-register @vite-pwa/nuxt's dev-server route markers. The module pushes them
     // only when `vite:serverCreated` fires with `isServer: false`, but
     // `experimental.viteEnvironmentApi` (on by default at compatibilityVersion 5)

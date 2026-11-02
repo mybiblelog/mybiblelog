@@ -14,7 +14,7 @@
   </button>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import type { BookSortOrder } from '@mybiblelog/shared';
 import SortIcon from '~/components/svg/SortIcon.vue';
 

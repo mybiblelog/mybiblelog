@@ -63,7 +63,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import dayjs from 'dayjs';
 import { Bible, computeBookFrequencies, type InsightsLogEntry } from '@mybiblelog/shared';
 

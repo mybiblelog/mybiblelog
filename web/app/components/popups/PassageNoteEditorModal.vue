@@ -138,7 +138,7 @@
   />
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { Bible } from '@mybiblelog/shared';
 import type { ApiErrorDetail } from '~/helpers/api-error';
 import AppModal from '~/components/popups/AppModal.vue';

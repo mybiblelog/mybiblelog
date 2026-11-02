@@ -15,7 +15,7 @@
               class="site-nav__brand-text"
               :to="localePath(authStore.loggedIn ? 'start' : 'index')"
             >
-              {{ $t("my_bible_log") }}
+              {{ tGlobal("my_bible_log") }}
             </NuxtLink>
           </div>
           <button
@@ -52,7 +52,7 @@
               class="site-nav__brand-text"
               :to="localePath('index')"
             >
-              {{ $t("my_bible_log") }}
+              {{ tGlobal("my_bible_log") }}
             </NuxtLink>
           </div>
 
@@ -245,7 +245,7 @@
   </nav>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { useAuthStore } from '~/stores/auth';
 import {
   filterVisibleNavItems,
@@ -254,6 +254,9 @@ import {
 import { MBL_MEDIA_DESKTOP } from '~/helpers/breakpoints';
 
 const { t } = useI18n();
+// `my_bible_log` lives in the global messages. Vapor templates have no
+// component proxy, so `$t` isn't available there.
+const { t: tGlobal } = useI18n({ useScope: 'global' });
 
 const ORDERED_ROUTE_NAV = [
   { labelKey: 'today', to: 'today', authOnly: true, spaceBefore: false },

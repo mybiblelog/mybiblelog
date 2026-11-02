@@ -68,6 +68,8 @@
   "overrides": {
     "@typescript-eslint/typescript-estree": {
       "minimatch": "^9.0.7"
-    }
+    },
+    "vue": "3.6.0-rc.14",
+    "@vue/server-renderer": "3.6.0-rc.14"
   }
 }

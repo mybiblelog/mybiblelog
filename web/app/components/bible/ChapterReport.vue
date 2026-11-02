@@ -23,7 +23,7 @@
   </button>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { Bible } from '@mybiblelog/shared';
 import type { Segment } from '@mybiblelog/shared';
 import SegmentBar from '~/components/bible/SegmentBar.vue';

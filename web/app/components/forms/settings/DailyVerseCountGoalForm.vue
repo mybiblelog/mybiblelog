@@ -119,7 +119,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import dayjs from 'dayjs';
 import { useUserSettingsStore } from '~/stores/user-settings';
 

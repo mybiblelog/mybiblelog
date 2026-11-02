@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import type { TestamentFilter } from '@mybiblelog/shared';
 
 defineProps<{ modelValue: TestamentFilter }>();

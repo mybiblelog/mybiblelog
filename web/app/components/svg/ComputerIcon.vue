@@ -9,7 +9,7 @@
   </svg>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 withDefaults(defineProps<{ width?: string; height?: string; fill?: string }>(), {
   width: '24px', height: '24px', fill: 'currentColor',
 });

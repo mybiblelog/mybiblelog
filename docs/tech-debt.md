@@ -2,7 +2,7 @@
 
 Workarounds and deferred follow-ups that should be undone later, kept in one place so they can be reviewed without searching the repo for them.
 
-**Last reviewed:** 2026-11-01
+**Last reviewed:** 2026-11-02
 
 ## What goes here
 
@@ -98,6 +98,33 @@ Permanent design decisions and constraints don't belong here, even when they're 
 - **Check:** delete the mock and run `npm test` in `mobile/`.
 - **Tracking:** none.
 - **Added:** 2026-11-01
+
+### vue-3-6-prerelease
+
+- **Where:** `web/package.json` (`vue`, `@vue/server-renderer`) and root `package.json` (`overrides.vue`, `overrides["@vue/server-renderer"]`), all pinned to `3.6.0-rc.14`
+- **Why:** Vapor Mode (`vue.vapor` in `web/nuxt.config.ts`) needs Vue 3.6, which is still a release candidate. Dependents (Nuxt, Pinia, vue-i18n, ...) declare `vue@^3.x` ranges, which don't match prereleases, so without the overrides npm installs a second Vue 3.5 copy next to the RC. That breaks the built server (see the "Exactly one copy of `vue`" note in `web/nuxt.config.ts`). The exact pin keeps RC upgrades deliberate.
+- **Remove when:** Vue 3.6.0 ships stable. Then set both packages to `^3.6.0`, keep the overrides on that range (the nuxt.config note relies on them) and run the full e2e suite.
+- **Check:** `npm view vue dist-tags.latest`
+- **Tracking:** none.
+- **Added:** 2026-11-02
+
+### mdc-vapor-node-transform
+
+- **Where:** `web/nuxt.config.ts` (`hooks['vite:extendConfig']`)
+- **Why:** `@nuxtjs/mdc` (installed by `@nuxt/content`) adds a template `nodeTransform`, `viteMDCSlot`, that reads `context.nodeTransforms`. Vue's vapor compiler context doesn't have it, so every `<script setup vapor>` SFC fails to build with "Cannot read properties of undefined (reading '0')". The hook skips that transform for vapor compiles.
+- **Remove when:** `@nuxtjs/mdc` guards the transform for the vapor compiler.
+- **Check:** `npm ls @nuxtjs/mdc`, then remove the hook and run `npm run build -w web`.
+- **Tracking:** none filed yet.
+- **Added:** 2026-11-02
+
+### vtu-vapor-support
+
+- **Where:** `web/vitest.config.ts` (`stripVaporMarker`)
+- **Why:** `@vue/test-utils` (2.5.1) can't mount or inspect vapor components: they have no component proxy, so `wrapper.vm`, `emitted()`, `setProps()` and `findComponent()` fail. The unit suite drops the `vapor` marker and compiles those SFCs as vdom. The real vapor output is covered only by the build and the e2e suite.
+- **Remove when:** `@vue/test-utils` supports vapor components.
+- **Check:** `npm view @vue/test-utils version` and its changelog, then remove the plugin and run `npm test -w web`.
+- **Tracking:** none.
+- **Added:** 2026-11-02
 
 ## Internal follow-ups
 

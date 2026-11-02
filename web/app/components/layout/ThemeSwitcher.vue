@@ -50,7 +50,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { useThemeStore } from '~/stores/theme';
 import type { ThemeMode } from '~/stores/theme';
 

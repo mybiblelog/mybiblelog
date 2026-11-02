@@ -75,7 +75,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import AppModal from '~/components/popups/AppModal.vue';
 import FeedbackIcon from '~/components/svg/FeedbackIcon.vue';
 import { useAuthStore } from '~/stores/auth';

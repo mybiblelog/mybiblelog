@@ -42,7 +42,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import type { LocaleCode } from '@mybiblelog/shared';
 import { useAuthStore } from '~/stores/auth';
 import { useUserSettingsStore } from '~/stores/user-settings';

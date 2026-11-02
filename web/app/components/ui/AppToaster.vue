@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import { useToastStore } from '~/stores/toast';
 
 const toastStore = useToastStore();

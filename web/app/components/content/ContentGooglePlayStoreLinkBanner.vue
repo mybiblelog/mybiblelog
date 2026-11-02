@@ -17,7 +17,7 @@
   </section>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 const productionUrl = 'https://play.google.com/store/apps/details?id=com.mybiblelog.app';
 
 const { t } = useI18n();

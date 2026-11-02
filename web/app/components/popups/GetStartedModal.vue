@@ -13,7 +13,7 @@
   </Teleport>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import GetStartedStep from '~/components/forms/settings/GetStartedStep.vue';
 
 withDefaults(defineProps<{ isVisible?: boolean }>(), { isVisible: false });

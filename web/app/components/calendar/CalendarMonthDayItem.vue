@@ -22,7 +22,7 @@
   </li>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import dayjs from 'dayjs';
 import StarIcon from '~/components/svg/StarIcon.vue';
 

@@ -13,7 +13,7 @@
   </svg>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 // Stroked rather than filled: the round caps/joins on a 4.5-unit stroke (~19% of
 // the 24-unit viewBox) are what give the mark its rounded, chunky read, and a
 // stroke is also what makes the draw-on animation below possible.

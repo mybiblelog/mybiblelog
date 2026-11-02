@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 type TagOption = { id: string | number; label?: string; color?: string; [key: string]: unknown };
 
 const props = withDefaults(defineProps<{

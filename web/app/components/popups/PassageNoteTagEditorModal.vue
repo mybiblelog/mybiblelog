@@ -60,7 +60,7 @@
   </app-modal>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import type { ApiErrorDetail } from '~/helpers/api-error';
 import AppModal from '~/components/popups/AppModal.vue';
 import { usePassageNoteTagEditorStore } from '~/stores/passage-note-tag-editor';

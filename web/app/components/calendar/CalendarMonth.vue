@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import dayjs from 'dayjs';
 import { buildMonthGrid } from '@mybiblelog/shared';
 import CalendarMonthDayItem from '~/components/calendar/CalendarMonthDayItem.vue';

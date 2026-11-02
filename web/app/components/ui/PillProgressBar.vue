@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 defineProps<{
   currentStep: number;
   totalSteps: number;

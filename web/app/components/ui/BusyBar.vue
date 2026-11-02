@@ -2,7 +2,7 @@
   <div class="busy-bar" :class="{ 'is-busy': busy }" />
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 defineProps<{ busy: boolean }>();
 </script>
 

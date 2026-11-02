@@ -75,7 +75,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup vapor lang="ts">
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import { DEFAULT_CHART_DIMENSIONS, buildMultiLineChartGeometry, displayDate } from '@mybiblelog/shared';
