@@ -32,58 +32,58 @@ afterEach(() => {
 });
 
 describe("Checklist screen", () => {
-  it("collapses expanded books when the screen loses focus", () => {
-    const { getByLabelText, queryByLabelText } = renderWithProviders(<Checklist />);
+  it("collapses expanded books when the screen loses focus", async () => {
+    const { getByLabelText, queryByLabelText } = await renderWithProviders(<Checklist />);
 
     // Expand Genesis: its chapter cells appear.
-    fireEvent.press(getByLabelText("Genesis"));
+    await fireEvent.press(getByLabelText("Genesis"));
     expect(getByLabelText("Genesis chapter 1, not read")).toBeTruthy();
 
     // Simulate focus, then blur (the focus effect's cleanup).
     let cleanup: void | (() => void);
-    act(() => {
+    await act(() => {
       cleanup = mockFocusEffectCallback?.();
     });
-    act(() => {
+    await act(() => {
       if (typeof cleanup === "function") cleanup();
     });
 
     expect(queryByLabelText("Genesis chapter 1, not read")).toBeNull();
   });
 
-  it("sort toggle flips between traditional and alphabetical order", () => {
-    const { getByTestId, getAllByText } = renderWithProviders(<Checklist />);
+  it("sort toggle flips between traditional and alphabetical order", async () => {
+    const { getByTestId, getAllByText } = await renderWithProviders(<Checklist />);
     const firstOf = () => getAllByText(/^(Acts|Genesis)$/)[0].props.children;
     const toggle = getByTestId("checklist.sort-toggle");
 
     expect(firstOf()).toBe("Genesis");
     expect(toggle).toHaveProp("accessibilityLabel", "Book order: Traditional");
 
-    fireEvent.press(toggle);
+    await fireEvent.press(toggle);
     expect(firstOf()).toBe("Acts");
     expect(getByTestId("checklist.sort-toggle")).toHaveProp(
       "accessibilityLabel",
       "Book order: Alphabetical"
     );
 
-    fireEvent.press(getByTestId("checklist.sort-toggle"));
+    await fireEvent.press(getByTestId("checklist.sort-toggle"));
     expect(firstOf()).toBe("Genesis");
   });
 
   // Mirrors the testament-filter test pattern on the Bible Books screen
   // (bible/index.tsx): the SegmentedControl narrows `filteredBooks` via
   // Bible.isNewTestament without disturbing the underlying full progress list.
-  it("narrows the book list by testament", () => {
+  it("narrows the book list by testament", async () => {
     const allBooks = computeBibleProgress([]).books;
     const oldTestamentCount = allBooks.filter((b) => !Bible.isNewTestament(b.bookIndex)).length;
     const newTestamentCount = allBooks.filter((b) => Bible.isNewTestament(b.bookIndex)).length;
 
-    const { getAllByTestId, getByLabelText } = renderWithProviders(<Checklist />);
+    const { getAllByTestId, getByLabelText } = await renderWithProviders(<Checklist />);
     const BOOK_ROW = /^checklist\.book-/;
 
     expect(getAllByTestId(BOOK_ROW)).toHaveLength(allBooks.length);
 
-    fireEvent.press(getByLabelText("OT"));
+    await fireEvent.press(getByLabelText("OT"));
     let rows = getAllByTestId(BOOK_ROW);
     expect(rows).toHaveLength(oldTestamentCount);
     for (const row of rows) {
@@ -91,7 +91,7 @@ describe("Checklist screen", () => {
       expect(Bible.isNewTestament(bookIndex)).toBe(false);
     }
 
-    fireEvent.press(getByLabelText("NT"));
+    await fireEvent.press(getByLabelText("NT"));
     rows = getAllByTestId(BOOK_ROW);
     expect(rows).toHaveLength(newTestamentCount);
     for (const row of rows) {
@@ -103,10 +103,10 @@ describe("Checklist screen", () => {
   it("creates an entry when an unread chapter is pressed", async () => {
     const createEntry = jest.spyOn(logEntryActions, "createEntry").mockResolvedValue(undefined);
 
-    const { getByLabelText } = renderWithProviders(<Checklist />);
+    const { getByLabelText } = await renderWithProviders(<Checklist />);
 
-    fireEvent.press(getByLabelText("Genesis"));
-    fireEvent.press(getByLabelText("Genesis chapter 1, not read"));
+    await fireEvent.press(getByLabelText("Genesis"));
+    await fireEvent.press(getByLabelText("Genesis chapter 1, not read"));
 
     await waitFor(() => {
       expect(createEntry).toHaveBeenCalledWith({
@@ -131,10 +131,10 @@ describe("Checklist screen", () => {
     });
     const deleteEntry = jest.spyOn(logEntryActions, "deleteEntry").mockResolvedValue(undefined);
 
-    const { getByLabelText } = renderWithProviders(<Checklist />);
+    const { getByLabelText } = await renderWithProviders(<Checklist />);
 
-    fireEvent.press(getByLabelText("Genesis"));
-    fireEvent.press(getByLabelText("Genesis chapter 1, read"));
+    await fireEvent.press(getByLabelText("Genesis"));
+    await fireEvent.press(getByLabelText("Genesis chapter 1, read"));
 
     await waitFor(() => {
       expect(deleteEntry).toHaveBeenCalledWith("client-1");
@@ -159,10 +159,10 @@ describe("Checklist screen", () => {
     });
     const deleteEntry = jest.spyOn(logEntryActions, "deleteEntry").mockResolvedValue(undefined);
 
-    const { getByLabelText, findByTestId } = renderWithProviders(<Checklist />);
+    const { getByLabelText, findByTestId } = await renderWithProviders(<Checklist />);
 
-    fireEvent.press(getByLabelText("Genesis"));
-    fireEvent.press(getByLabelText("Genesis chapter 1, read"));
+    await fireEvent.press(getByLabelText("Genesis"));
+    await fireEvent.press(getByLabelText("Genesis chapter 1, read"));
 
     const toast = await findByTestId("toast.message");
     expect(toast.props.children).toBe(
@@ -187,10 +187,10 @@ describe("Checklist screen", () => {
     });
     const deleteEntry = jest.spyOn(logEntryActions, "deleteEntry").mockResolvedValue(undefined);
 
-    const { getByLabelText, findByTestId } = renderWithProviders(<Checklist />);
+    const { getByLabelText, findByTestId } = await renderWithProviders(<Checklist />);
 
-    fireEvent.press(getByLabelText("Genesis"));
-    fireEvent.press(getByLabelText("Genesis chapter 1, read"));
+    await fireEvent.press(getByLabelText("Genesis"));
+    await fireEvent.press(getByLabelText("Genesis chapter 1, read"));
 
     const toast = await findByTestId("toast.message");
     expect(toast.props.children).toBe(
@@ -202,10 +202,10 @@ describe("Checklist screen", () => {
   it("shows an error toast when creating an entry fails", async () => {
     jest.spyOn(logEntryActions, "createEntry").mockRejectedValue(new Error("network"));
 
-    const { getByLabelText, findByTestId } = renderWithProviders(<Checklist />);
+    const { getByLabelText, findByTestId } = await renderWithProviders(<Checklist />);
 
-    fireEvent.press(getByLabelText("Genesis"));
-    fireEvent.press(getByLabelText("Genesis chapter 1, not read"));
+    await fireEvent.press(getByLabelText("Genesis"));
+    await fireEvent.press(getByLabelText("Genesis chapter 1, not read"));
 
     const toast = await findByTestId("toast.message");
     expect(toast.props.children).toBe("Unable to mark the chapter complete.");
@@ -225,10 +225,10 @@ describe("Checklist screen", () => {
     });
     jest.spyOn(logEntryActions, "deleteEntry").mockRejectedValue(new Error("network"));
 
-    const { getByLabelText, findByTestId } = renderWithProviders(<Checklist />);
+    const { getByLabelText, findByTestId } = await renderWithProviders(<Checklist />);
 
-    fireEvent.press(getByLabelText("Genesis"));
-    fireEvent.press(getByLabelText("Genesis chapter 1, read"));
+    await fireEvent.press(getByLabelText("Genesis"));
+    await fireEvent.press(getByLabelText("Genesis chapter 1, read"));
 
     const toast = await findByTestId("toast.message");
     expect(toast.props.children).toBe("Unable to mark the chapter incomplete.");

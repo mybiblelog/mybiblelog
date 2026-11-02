@@ -90,6 +90,15 @@ Permanent design decisions and constraints don't belong here, even when they're 
 - **Tracking:** [software-mansion/react-native-reanimated#8665](https://github.com/software-mansion/react-native-reanimated/issues/8665)
 - **Added:** 2026-07
 
+### rngh3-jest-ui-runtime-bindings
+
+- **Where:** `mobile/jest.setup.ts`
+- **Why:** Gesture Handler 3 queues a call to worklets' `getUIRuntimeHolder` on import. Jest resolves worklets' web build, which throws on that call, so every test that renders a gesture fails. The mock replaces RNGH's binding installer with the no-op its own web build uses.
+- **Remove when:** `react-native-gesture-handler/jestSetup` mocks the installer itself, or worklets' jest build supports `getUIRuntimeHolder`.
+- **Check:** delete the mock and run `npm test` in `mobile/`.
+- **Tracking:** none.
+- **Added:** 2026-11-01
+
 ## Internal follow-ups
 
 None currently.

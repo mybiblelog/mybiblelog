@@ -2,7 +2,6 @@ import type { ExpoConfig } from "expo/config";
 import {
   AndroidConfig,
   withAndroidManifest,
-  withAppBuildGradle,
   withGradleProperties,
   type ConfigPlugin,
 } from "@expo/config-plugins";
@@ -74,25 +73,6 @@ const withCleartextTraffic: ConfigPlugin = (config) =>
     return cfg;
   });
 
-// R8 full optimization (Play Console "Optimization isn't enabled"). The Expo
-// template's release build type uses `proguard-android.txt`, which disables
-// R8's optimization passes; the `-optimize` variant enables them. Minify itself
-// is turned on via expo-build-properties in app.json. Throws if the template
-// line moves so a prebuild template change can't silently drop the setting.
-const R8_DEFAULT_RULES = 'getDefaultProguardFile("proguard-android.txt")';
-
-const withR8Optimization: ConfigPlugin = (config) =>
-  withAppBuildGradle(config, (cfg) => {
-    if (!cfg.modResults.contents.includes(R8_DEFAULT_RULES)) {
-      throw new Error(`[app.config] ${R8_DEFAULT_RULES} not found in app/build.gradle`);
-    }
-    cfg.modResults.contents = cfg.modResults.contents.replace(
-      R8_DEFAULT_RULES,
-      'getDefaultProguardFile("proguard-android-optimize.txt")'
-    );
-    return cfg;
-  });
-
 // Optimized resource shrinking (AGP 8.6+): lets R8 shrink resources and code
 // together. Resource shrinking itself is enabled via expo-build-properties.
 const withOptimizedResourceShrinking: ConfigPlugin = (config) =>
@@ -141,6 +121,6 @@ const baseConfig = ({ config }: { config: ExpoConfig }): ExpoConfig => ({
 // Function config plugins can't sit in the typed `plugins` array (it only
 // accepts names/tuples), so apply these mods to the resolved config.
 export default (params: { config: ExpoConfig }): ExpoConfig => {
-  const resolved = withOptimizedResourceShrinking(withR8Optimization(baseConfig(params)));
+  const resolved = withOptimizedResourceShrinking(baseConfig(params));
   return needsCleartextTraffic ? withCleartextTraffic(resolved) : resolved;
 };

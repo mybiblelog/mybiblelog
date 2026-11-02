@@ -1,23 +1,24 @@
 import { Spinner } from "./Spinner";
-import { renderWithProviders } from "@/src/test-utils/renderWithProviders";
+import { renderWithProviders, type TestInstance } from "@/src/test-utils/renderWithProviders";
+
+const isSvgSized = (size: number) => (node: TestInstance) =>
+  node.type === "RNSVGSvgView" && node.props.bbWidth === size && node.props.bbHeight === size;
 
 // The rotation animates via Reanimated; under the jest mock the component
 // still renders without throwing. These tests assert the size prop resolves
 // to the expected dimensions.
 describe("Spinner", () => {
-  it("renders without throwing", () => {
-    expect(() => renderWithProviders(<Spinner />)).not.toThrow();
+  it("renders without throwing", async () => {
+    await expect(renderWithProviders(<Spinner />)).resolves.toBeDefined();
   });
 
-  it("sizes small by default", () => {
-    const { UNSAFE_root } = renderWithProviders(<Spinner />);
-    const svg = UNSAFE_root.findByProps({ width: 20, height: 20 });
-    expect(svg).toBeTruthy();
+  it("sizes small by default", async () => {
+    const { container } = await renderWithProviders(<Spinner />);
+    expect(container.queryAll(isSvgSized(20))).toHaveLength(1);
   });
 
-  it("sizes up when size='large'", () => {
-    const { UNSAFE_root } = renderWithProviders(<Spinner size="large" />);
-    const svg = UNSAFE_root.findByProps({ width: 36, height: 36 });
-    expect(svg).toBeTruthy();
+  it("sizes up when size='large'", async () => {
+    const { container } = await renderWithProviders(<Spinner size="large" />);
+    expect(container.queryAll(isSvgSized(36))).toHaveLength(1);
   });
 });

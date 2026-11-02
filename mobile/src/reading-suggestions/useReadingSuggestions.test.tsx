@@ -21,8 +21,8 @@ const entry = (
 ): StoredLogEntry => ({ clientId, date, startVerseId, endVerseId });
 
 describe("useReadingSuggestions", () => {
-  it("maps reading-path suggestions to translated messages", () => {
-    const { result } = renderHook(() => useReadingSuggestions([], today), { wrapper });
+  it("maps reading-path suggestions to translated messages", async () => {
+    const { result } = await renderHook(() => useReadingSuggestions([], today), { wrapper });
 
     expect(result.current).toHaveLength(3);
     expect(result.current[0]!.passageLabel).toBe("Matthew 1");
@@ -31,11 +31,11 @@ describe("useReadingSuggestions", () => {
     expect(result.current[2]!.contextMessage).toBe("Read something new in the Wisdom books");
   });
 
-  it("maps continue-suggestions to a capitalized last-read message", () => {
+  it("maps continue-suggestions to a capitalized last-read message", async () => {
     const entries = [
       entry("c1", yesterday, Bible.makeVerseId(1, 1, 1), Bible.makeVerseId(1, 1, 31)),
     ];
-    const { result } = renderHook(() => useReadingSuggestions(entries, today), { wrapper });
+    const { result } = await renderHook(() => useReadingSuggestions(entries, today), { wrapper });
 
     const first = result.current[0]!;
     expect(first.passageLabel).toBe("Genesis 2");
@@ -43,11 +43,11 @@ describe("useReadingSuggestions", () => {
     expect(first.contextMessage.charAt(0)).toBe(first.contextMessage.charAt(0).toUpperCase());
   });
 
-  it("computes the new-verse count net of verses already read", () => {
+  it("computes the new-verse count net of verses already read", async () => {
     // Matthew 1 has 25 verses; 10 were already read today, so the NT path
     // suggestion (still Matthew 1 — the chapter is incomplete) adds 15.
     const entries = [entry("c1", today, Bible.makeVerseId(40, 1, 1), Bible.makeVerseId(40, 1, 10))];
-    const { result } = renderHook(() => useReadingSuggestions(entries, today), { wrapper });
+    const { result } = await renderHook(() => useReadingSuggestions(entries, today), { wrapper });
 
     const nt = result.current.find((s) => s.contextMessage.includes("New Testament"));
     expect(nt?.passageLabel).toBe("Matthew 1");

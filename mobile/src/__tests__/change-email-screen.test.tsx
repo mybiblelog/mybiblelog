@@ -24,20 +24,20 @@ beforeEach(() => {
 });
 
 describe("Change email screen", () => {
-  it("shows the not-logged-in guard when unauthenticated", () => {
+  it("shows the not-logged-in guard when unauthenticated", async () => {
     useAuthStore.setState({ state: { status: "unauthenticated" } });
 
-    const { getByText, queryByTestId } = renderWithProviders(<ChangeEmail />);
+    const { getByText, queryByTestId } = await renderWithProviders(<ChangeEmail />);
 
     expect(getByText("Not Logged In")).toBeTruthy();
     expect(queryByTestId("change-email.submit")).toBeNull();
     expect(mockedBeginEmailChange).not.toHaveBeenCalled();
   });
 
-  it("requires the new email and password before calling the API", () => {
-    const { getByTestId, getByText } = renderWithProviders(<ChangeEmail />);
+  it("requires the new email and password before calling the API", async () => {
+    const { getByTestId, getByText } = await renderWithProviders(<ChangeEmail />);
 
-    fireEvent.press(getByTestId("change-email.submit"));
+    await fireEvent.press(getByTestId("change-email.submit"));
 
     expect(getByText("Enter your new email.")).toBeTruthy();
     expect(getByText("Enter your current password.")).toBeTruthy();
@@ -50,11 +50,11 @@ describe("Change email screen", () => {
       error: { code: "validation_error", errors: [{ field: "newEmail", code: "email_in_use" }] },
     });
 
-    const { getByTestId, findByText, queryByText } = renderWithProviders(<ChangeEmail />);
+    const { getByTestId, findByText, queryByText } = await renderWithProviders(<ChangeEmail />);
 
-    fireEvent.changeText(getByTestId("change-email.new-email"), "taken@example.com");
-    fireEvent.changeText(getByTestId("change-email.password"), "correct-password");
-    fireEvent.press(getByTestId("change-email.submit"));
+    await fireEvent.changeText(getByTestId("change-email.new-email"), "taken@example.com");
+    await fireEvent.changeText(getByTestId("change-email.password"), "correct-password");
+    await fireEvent.press(getByTestId("change-email.submit"));
 
     expect(await findByText("Email address is already in use")).toBeTruthy();
     expect(queryByText("Enter your current password.")).toBeNull();
@@ -71,11 +71,11 @@ describe("Change email screen", () => {
       error: { code: "too_many_requests", errors: [] },
     });
 
-    const { getByTestId, findByText } = renderWithProviders(<ChangeEmail />);
+    const { getByTestId, findByText } = await renderWithProviders(<ChangeEmail />);
 
-    fireEvent.changeText(getByTestId("change-email.new-email"), "new@example.com");
-    fireEvent.changeText(getByTestId("change-email.password"), "correct-password");
-    fireEvent.press(getByTestId("change-email.submit"));
+    await fireEvent.changeText(getByTestId("change-email.new-email"), "new@example.com");
+    await fireEvent.changeText(getByTestId("change-email.password"), "correct-password");
+    await fireEvent.press(getByTestId("change-email.submit"));
 
     expect(await findByText("Too many requests were sent in a short amount of time")).toBeTruthy();
   });
@@ -83,11 +83,11 @@ describe("Change email screen", () => {
   it("moves to the code step after a successful submission", async () => {
     mockedBeginEmailChange.mockResolvedValue({ ok: true });
 
-    const { getByTestId, queryByTestId } = renderWithProviders(<ChangeEmail />);
+    const { getByTestId, queryByTestId } = await renderWithProviders(<ChangeEmail />);
 
-    fireEvent.changeText(getByTestId("change-email.new-email"), "new@example.com");
-    fireEvent.changeText(getByTestId("change-email.password"), "correct-password");
-    fireEvent.press(getByTestId("change-email.submit"));
+    await fireEvent.changeText(getByTestId("change-email.new-email"), "new@example.com");
+    await fireEvent.changeText(getByTestId("change-email.password"), "correct-password");
+    await fireEvent.press(getByTestId("change-email.submit"));
 
     await waitFor(() => expect(getByTestId("change-email.code.code")).toBeTruthy());
     expect(queryByTestId("change-email.submit")).toBeNull();

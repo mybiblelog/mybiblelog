@@ -178,7 +178,7 @@ export default function Notes() {
         onEndReachedThreshold={0.4}
         onEndReached={() => void notesActions.loadMore()}
         ListFooterComponent={
-          isFetchingMore ? <Spinner size="large" style={styles.footerSpinner} /> : null
+          isFetchingMore ? <Spinner size="large" style={styles.footerSpinner} /> : undefined
         }
         ListEmptyComponent={
           <EmptyState

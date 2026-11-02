@@ -9,35 +9,35 @@ const borderOf = (testID: string) =>
   };
 
 describe("Button", () => {
-  it("renders its label", () => {
-    renderWithProviders(<Button label="Save" />);
+  it("renders its label", async () => {
+    await renderWithProviders(<Button label="Save" />);
     expect(screen.getByText("Save")).toBeTruthy();
   });
 
-  it("calls onPress when tapped", () => {
+  it("calls onPress when tapped", async () => {
     const onPress = jest.fn();
-    renderWithProviders(<Button label="Save" onPress={onPress} />);
-    fireEvent.press(screen.getByRole("button"));
+    await renderWithProviders(<Button label="Save" onPress={onPress} />);
+    await fireEvent.press(screen.getByRole("button"));
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it("does not call onPress when disabled", () => {
+  it("does not call onPress when disabled", async () => {
     const onPress = jest.fn();
-    renderWithProviders(<Button label="Save" onPress={onPress} disabled />);
-    fireEvent.press(screen.getByRole("button"));
+    await renderWithProviders(<Button label="Save" onPress={onPress} disabled />);
+    await fireEvent.press(screen.getByRole("button"));
     expect(onPress).not.toHaveBeenCalled();
   });
 
-  it("does not call onPress while loading and hides the label", () => {
+  it("does not call onPress while loading and hides the label", async () => {
     const onPress = jest.fn();
-    renderWithProviders(<Button label="Save" onPress={onPress} loading />);
-    fireEvent.press(screen.getByRole("button"));
+    await renderWithProviders(<Button label="Save" onPress={onPress} loading />);
+    await fireEvent.press(screen.getByRole("button"));
     expect(onPress).not.toHaveBeenCalled();
     expect(screen.queryByText("Save")).toBeNull();
   });
 
-  it("exposes disabled and busy accessibility state", () => {
-    renderWithProviders(<Button label="Save" loading />);
+  it("exposes disabled and busy accessibility state", async () => {
+    await renderWithProviders(<Button label="Save" loading />);
     const button = screen.getByRole("button");
     expect(button.props.accessibilityState).toMatchObject({
       disabled: true,
@@ -45,16 +45,16 @@ describe("Button", () => {
     });
   });
 
-  it("uses an explicit accessibilityLabel over the visible label", () => {
-    renderWithProviders(<Button label="X" accessibilityLabel="Close dialog" />);
+  it("uses an explicit accessibilityLabel over the visible label", async () => {
+    await renderWithProviders(<Button label="X" accessibilityLabel="Close dialog" />);
     expect(screen.getByLabelText("Close dialog")).toBeTruthy();
   });
 
   // The translucent secondary fill needs its own border to read against a
   // same-colored surface. Disabled drops the accent tint for a neutral
   // border instead, so it no longer matches the enabled secondary border.
-  it("outlines the secondary variant and keeps accent variants borderless", () => {
-    renderWithProviders(
+  it("outlines the secondary variant and keeps accent variants borderless", async () => {
+    await renderWithProviders(
       <>
         <Button label="Secondary" variant="secondary" testID="secondary" />
         <Button label="Primary" testID="primary" />

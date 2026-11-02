@@ -35,9 +35,9 @@ beforeEach(() => {
 
 describe("Forgot password screen", () => {
   it("shows a validation error and does not call beginPasswordReset when the email is empty", async () => {
-    const { getByTestId, getByText } = renderWithProviders(<ForgotPassword />);
+    const { getByTestId, getByText } = await renderWithProviders(<ForgotPassword />);
 
-    fireEvent.press(getByTestId("forgot-password.submit"));
+    await fireEvent.press(getByTestId("forgot-password.submit"));
 
     await waitFor(() => {
       expect(getByText("Enter your email.")).toBeTruthy();
@@ -48,10 +48,10 @@ describe("Forgot password screen", () => {
   it("submits the email and advances to the code step", async () => {
     mockBeginPasswordReset.mockResolvedValueOnce({ ok: true });
 
-    const { getByTestId, queryByTestId, getByText } = renderWithProviders(<ForgotPassword />);
+    const { getByTestId, queryByTestId, getByText } = await renderWithProviders(<ForgotPassword />);
 
-    fireEvent.changeText(getByTestId("forgot-password.email"), "user@example.com");
-    fireEvent.press(getByTestId("forgot-password.submit"));
+    await fireEvent.changeText(getByTestId("forgot-password.email"), "user@example.com");
+    await fireEvent.press(getByTestId("forgot-password.submit"));
 
     await waitFor(() => {
       expect(getByText("stub-auth-code-form")).toBeTruthy();
@@ -63,16 +63,16 @@ describe("Forgot password screen", () => {
   it("navigates home when the AuthCodeForm signals it is done", async () => {
     mockBeginPasswordReset.mockResolvedValueOnce({ ok: true });
 
-    const { getByTestId } = renderWithProviders(<ForgotPassword />);
+    const { getByTestId } = await renderWithProviders(<ForgotPassword />);
 
-    fireEvent.changeText(getByTestId("forgot-password.email"), "user@example.com");
-    fireEvent.press(getByTestId("forgot-password.submit"));
+    await fireEvent.changeText(getByTestId("forgot-password.email"), "user@example.com");
+    await fireEvent.press(getByTestId("forgot-password.submit"));
 
     await waitFor(() => {
       expect(getByTestId("forgot-password.code.done")).toBeTruthy();
     });
 
-    fireEvent.press(getByTestId("forgot-password.code.done"));
+    await fireEvent.press(getByTestId("forgot-password.code.done"));
 
     expect(router.replace).toHaveBeenCalledWith("/");
   });
@@ -80,10 +80,10 @@ describe("Forgot password screen", () => {
   it("shows an error message when beginPasswordReset rejects", async () => {
     mockBeginPasswordReset.mockRejectedValueOnce(new Error("network down"));
 
-    const { getByTestId, getByText, queryByText } = renderWithProviders(<ForgotPassword />);
+    const { getByTestId, getByText, queryByText } = await renderWithProviders(<ForgotPassword />);
 
-    fireEvent.changeText(getByTestId("forgot-password.email"), "user@example.com");
-    fireEvent.press(getByTestId("forgot-password.submit"));
+    await fireEvent.changeText(getByTestId("forgot-password.email"), "user@example.com");
+    await fireEvent.press(getByTestId("forgot-password.submit"));
 
     await waitFor(() => {
       expect(getByText("Something went wrong. Please try again.")).toBeTruthy();

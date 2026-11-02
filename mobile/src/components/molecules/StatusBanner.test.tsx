@@ -46,60 +46,60 @@ function expectSilent({ queryByText }: RenderResult) {
 }
 
 describe("StatusBanner", () => {
-  it("stays out of the way while everything is healthy", () => {
+  it("stays out of the way while everything is healthy", async () => {
     useConnectivityStore.setState({ isOnline: true, apiReachable: true });
-    expectSilent(renderWithProviders(<StatusBanner />));
+    expectSilent(await renderWithProviders(<StatusBanner />));
   });
 
-  it("stays out of the way before the first connectivity signal", () => {
-    expectSilent(renderWithProviders(<StatusBanner />));
+  it("stays out of the way before the first connectivity signal", async () => {
+    expectSilent(await renderWithProviders(<StatusBanner />));
   });
 
-  it("says the device is offline when it has no network", () => {
+  it("says the device is offline when it has no network", async () => {
     useConnectivityStore.setState({ isOnline: false });
-    const { getByText } = renderWithProviders(<StatusBanner />);
+    const { getByText } = await renderWithProviders(<StatusBanner />);
     expect(getByText(OFFLINE_TEXT)).toBeTruthy();
   });
 
   // Telling someone they're offline while every other app works blames the
   // wrong thing.
-  it("names the server when the device is online but the API isn't answering", () => {
+  it("names the server when the device is online but the API isn't answering", async () => {
     useConnectivityStore.setState({ isOnline: true, apiReachable: false });
-    const { getByText } = renderWithProviders(<StatusBanner />);
+    const { getByText } = await renderWithProviders(<StatusBanner />);
     expect(getByText(SERVER_TEXT)).toBeTruthy();
   });
 
-  it("warns that changes aren't saving when storage is degraded", () => {
+  it("warns that changes aren't saving when storage is degraded", async () => {
     useConnectivityStore.setState({ isOnline: true, apiReachable: true });
     degradeStorage();
-    const { getByText } = renderWithProviders(<StatusBanner />);
+    const { getByText } = await renderWithProviders(<StatusBanner />);
     expect(getByText(STORAGE_TEXT)).toBeTruthy();
   });
 
   // "Your changes aren't being saved" outranks "your changes will sync later" —
   // the queue the connectivity copy promises can't be written to either.
-  it("shows only the storage warning when the device is also offline", () => {
+  it("shows only the storage warning when the device is also offline", async () => {
     useConnectivityStore.setState({ isOnline: false });
     degradeStorage();
-    const { getByText, queryByText } = renderWithProviders(<StatusBanner />);
+    const { getByText, queryByText } = await renderWithProviders(<StatusBanner />);
     expect(getByText(STORAGE_TEXT)).toBeTruthy();
     expect(queryByText(OFFLINE_TEXT)).toBeNull();
   });
 
   // A key nobody manages has no rehydrator and no claim to make about saving.
-  it("ignores a failure on a key no store registered", () => {
+  it("ignores a failure on a key no store registered", async () => {
     useConnectivityStore.setState({ isOnline: true, apiReachable: true });
     reportStorageFailure("themeMode.v1", "read");
-    expectSilent(renderWithProviders(<StatusBanner />));
+    expectSilent(await renderWithProviders(<StatusBanner />));
   });
 
-  it("clears once the backend answers again", () => {
+  it("clears once the backend answers again", async () => {
     useConnectivityStore.setState({ isOnline: true, apiReachable: true });
     degradeStorage();
-    const { queryByText } = renderWithProviders(<StatusBanner />);
+    const { queryByText } = await renderWithProviders(<StatusBanner />);
     expect(queryByText(STORAGE_TEXT)).toBeTruthy();
 
-    act(() => reportStorageOk("logEntries.v1"));
+    await act(() => reportStorageOk("logEntries.v1"));
     expect(queryByText(STORAGE_TEXT)).toBeNull();
   });
 
@@ -109,27 +109,27 @@ describe("StatusBanner", () => {
     it.each([
       ["the device has no network", { isOnline: false, apiReachable: null }],
       ["the server isn't answering", { isOnline: true, apiReachable: false }],
-    ])("says nothing when %s", (_label, connectivity) => {
+    ])("says nothing when %s", async (_label, connectivity) => {
       useConnectivityStore.setState(connectivity);
       signOut();
-      expectSilent(renderWithProviders(<StatusBanner />));
+      expectSilent(await renderWithProviders(<StatusBanner />));
     });
 
     // A device that can't save is a fact regardless of who is signed in.
-    it("still warns that changes aren't saving", () => {
+    it("still warns that changes aren't saving", async () => {
       useConnectivityStore.setState({ isOnline: false });
       signOut();
       degradeStorage();
-      const { getByText } = renderWithProviders(<StatusBanner />);
+      const { getByText } = await renderWithProviders(<StatusBanner />);
       expect(getByText(STORAGE_TEXT)).toBeTruthy();
     });
   });
 
   // The session resolves asynchronously on launch; showing a connectivity
   // message before it does would flash a claim we can't yet make.
-  it("says nothing about connectivity while the session is still loading", () => {
+  it("says nothing about connectivity while the session is still loading", async () => {
     useConnectivityStore.setState({ isOnline: false });
     useAuthStore.setState({ state: { status: "loading" } });
-    expectSilent(renderWithProviders(<StatusBanner />));
+    expectSilent(await renderWithProviders(<StatusBanner />));
   });
 });

@@ -144,11 +144,13 @@ function RootStack({ onboardingCompleted }: { onboardingCompleted: boolean }) {
     <Stack screenOptions={{ headerShown: false, ...stackTransition }}>
       {/* Mutually exclusive root screens: onboarding until it's completed
           (wizard finish/skip, or any successful sign-in — see
-          `stores/onboarding.ts`), the tab stack after. */}
-      <Stack.Protected guard={onboardingCompleted}>
+          `stores/onboarding.ts`), the tab stack after. Each guard names the
+          other root as its redirect: without one, expo-router falls back to
+          the first unguarded route in the tree, which is `login`. */}
+      <Stack.Protected guard={onboardingCompleted} redirectTo="/onboarding">
         <Stack.Screen name="(tabs)" />
       </Stack.Protected>
-      <Stack.Protected guard={!onboardingCompleted}>
+      <Stack.Protected guard={!onboardingCompleted} redirectTo="/">
         {/* No swipe/back dismiss — it's the sole initial route with nothing
             behind it, and a fade suits an app-launch transition better than a
             directional slide. */}

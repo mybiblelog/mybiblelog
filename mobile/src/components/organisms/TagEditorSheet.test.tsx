@@ -16,12 +16,12 @@ beforeEach(() => {
 });
 
 describe("TagEditorSheet", () => {
-  it("disables Save until a label is entered", () => {
-    const { getByLabelText, getByPlaceholderText } = renderWithProviders(
+  it("disables Save until a label is entered", async () => {
+    const { getByLabelText, getByPlaceholderText } = await renderWithProviders(
       <TagEditorSheet visible onClose={jest.fn()} />
     );
     expect(getByLabelText("Save")).toBeDisabled();
-    fireEvent.changeText(getByPlaceholderText("Tag name"), "Prayer");
+    await fireEvent.changeText(getByPlaceholderText("Tag name"), "Prayer");
     expect(getByLabelText("Save")).toBeEnabled();
   });
 
@@ -34,13 +34,13 @@ describe("TagEditorSheet", () => {
       noteCount: 0,
     });
     const onSaved = jest.fn();
-    const { getByLabelText, getByPlaceholderText } = renderWithProviders(
+    const { getByLabelText, getByPlaceholderText } = await renderWithProviders(
       <TagEditorSheet visible onClose={jest.fn()} onSaved={onSaved} />
     );
 
-    fireEvent.changeText(getByPlaceholderText("Tag name"), "Prayer");
-    fireEvent.press(getByLabelText(TAG_COLOR_PALETTE[3]));
-    fireEvent.press(getByLabelText("Save"));
+    await fireEvent.changeText(getByPlaceholderText("Tag name"), "Prayer");
+    await fireEvent.press(getByLabelText(TAG_COLOR_PALETTE[3]));
+    await fireEvent.press(getByLabelText("Save"));
 
     await waitFor(() => expect(onSaved).toHaveBeenCalled());
     expect(createTag).toHaveBeenCalledWith({
@@ -56,12 +56,12 @@ describe("TagEditorSheet", () => {
   it("names the connection as the reason when the save fails offline", async () => {
     (createTag as jest.Mock).mockRejectedValue(new ApiError({ code: "network_error", errors: [] }));
     const onClose = jest.fn();
-    const { getByLabelText, getByPlaceholderText, findByText } = renderWithProviders(
+    const { getByLabelText, getByPlaceholderText, findByText } = await renderWithProviders(
       <TagEditorSheet visible onClose={onClose} />
     );
 
-    fireEvent.changeText(getByPlaceholderText("Tag name"), "Prayer");
-    fireEvent.press(getByLabelText("Save"));
+    await fireEvent.changeText(getByPlaceholderText("Tag name"), "Prayer");
+    await fireEvent.press(getByLabelText("Save"));
 
     expect(
       await findByText("Can't reach the server. Please check your connection and try again.")
@@ -72,18 +72,18 @@ describe("TagEditorSheet", () => {
 
   it("falls back to the generic message for an unrecognized failure", async () => {
     (createTag as jest.Mock).mockRejectedValue(new Error("boom"));
-    const { getByLabelText, getByPlaceholderText, findByText } = renderWithProviders(
+    const { getByLabelText, getByPlaceholderText, findByText } = await renderWithProviders(
       <TagEditorSheet visible onClose={jest.fn()} />
     );
 
-    fireEvent.changeText(getByPlaceholderText("Tag name"), "Prayer");
-    fireEvent.press(getByLabelText("Save"));
+    await fireEvent.changeText(getByPlaceholderText("Tag name"), "Prayer");
+    await fireEvent.press(getByLabelText("Save"));
 
     expect(await findByText("Unable to save the tag.")).toBeTruthy();
   });
 
-  it("keeps an off-palette color choosable when editing a web-created tag", () => {
-    const { getByLabelText } = renderWithProviders(
+  it("keeps an off-palette color choosable when editing a web-created tag", async () => {
+    const { getByLabelText } = await renderWithProviders(
       <TagEditorSheet
         visible
         initialTag={{ id: "t1", label: "Web", color: "#123456", description: "", noteCount: 0 }}

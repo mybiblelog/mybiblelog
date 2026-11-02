@@ -17,8 +17,8 @@ const suggestion: DisplayReadingSuggestion = {
 };
 
 describe("ReadingSuggestionsSection", () => {
-  it("renders suggestion rows with passage, context, and new-verse meta", () => {
-    const { getByText } = renderWithProviders(
+  it("renders suggestion rows with passage, context, and new-verse meta", async () => {
+    const { getByText } = await renderWithProviders(
       <ReadingSuggestionsSection suggestions={[suggestion]} today="2026-07-03" />
     );
     expect(getByText("Reading Suggestions")).toBeTruthy();
@@ -27,8 +27,8 @@ describe("ReadingSuggestionsSection", () => {
     expect(getByText("25 new verses")).toBeTruthy();
   });
 
-  it("shows the empty state when there are no suggestions", () => {
-    const { getByText } = renderWithProviders(
+  it("shows the empty state when there are no suggestions", async () => {
+    const { getByText } = await renderWithProviders(
       <ReadingSuggestionsSection suggestions={[]} today="2026-07-03" />
     );
     expect(getByText("No Suggestions")).toBeTruthy();
@@ -36,12 +36,12 @@ describe("ReadingSuggestionsSection", () => {
 
   it("opens the passage in the Bible app from the row menu", async () => {
     (openPassageInBible as jest.Mock).mockResolvedValue(true);
-    const { getByText } = renderWithProviders(
+    const { getByText } = await renderWithProviders(
       <ReadingSuggestionsSection suggestions={[suggestion]} today="2026-07-03" />
     );
 
-    fireEvent.press(getByText("Matthew 1"));
-    fireEvent.press(getByText("Open in Bible"));
+    await fireEvent.press(getByText("Matthew 1"));
+    await fireEvent.press(getByText("Open in Bible"));
 
     await waitFor(() =>
       expect(openPassageInBible).toHaveBeenCalledWith(
@@ -52,13 +52,13 @@ describe("ReadingSuggestionsSection", () => {
     );
   });
 
-  it("opens the log-entry editor prefilled from Log Reading", () => {
-    const { getByText, getAllByText } = renderWithProviders(
+  it("opens the log-entry editor prefilled from Log Reading", async () => {
+    const { getByText, getAllByText } = await renderWithProviders(
       <ReadingSuggestionsSection suggestions={[suggestion]} today="2026-07-03" />
     );
 
-    fireEvent.press(getByText("Matthew 1"));
-    fireEvent.press(getByText("Log Reading"));
+    await fireEvent.press(getByText("Matthew 1"));
+    await fireEvent.press(getByText("Log Reading"));
 
     expect(getByText("Add Log Entry")).toBeTruthy();
     // The editor is seeded with the suggestion's passage: the full-chapter

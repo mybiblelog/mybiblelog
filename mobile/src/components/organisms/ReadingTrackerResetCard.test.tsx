@@ -62,46 +62,46 @@ beforeEach(() => {
 });
 
 describe("ReadingTrackerResetCard", () => {
-  it("offers to start fresh once the Bible is complete and nothing is logged today", () => {
-    renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
+  it("offers to start fresh once the Bible is complete and nothing is logged today", async () => {
+    await renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
     expect(screen.getByText("You've read the whole Bible!")).toBeTruthy();
     expect(screen.getByText("Start Fresh")).toBeTruthy();
   });
 
-  it("stays hidden while the Bible is incomplete", () => {
+  it("stays hidden while the Bible is incomplete", async () => {
     seed({ entries: [] });
-    renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
+    await renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
     expect(screen.queryByText("Start Fresh")).toBeNull();
   });
 
-  it("stays hidden when the whole Bible was read before the tracker start date", () => {
+  it("stays hidden when the whole Bible was read before the tracker start date", async () => {
     // Entries predate the tracker reset, so this pass still has unread portions.
     seed({ lookBackDate: "2026-06-01" });
-    renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
+    await renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
     expect(screen.queryByText("Start Fresh")).toBeNull();
   });
 
-  it("stays hidden once something is logged today", () => {
+  it("stays hidden once something is logged today", async () => {
     // Reading resumed — "start over" is no longer the obvious next step.
-    renderWithProviders(<ReadingTrackerResetCard hasEntriesToday />);
+    await renderWithProviders(<ReadingTrackerResetCard hasEntriesToday />);
     expect(screen.queryByText("Start Fresh")).toBeNull();
   });
 
-  it("stays hidden after being dismissed", () => {
+  it("stays hidden after being dismissed", async () => {
     seed({ dismissed: true });
-    renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
+    await renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
     expect(screen.queryByText("Start Fresh")).toBeNull();
   });
 
-  it("dismissing sets the transient flag rather than persisting it", () => {
-    renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
-    fireEvent.press(screen.getByText("Dismiss"));
+  it("dismissing sets the transient flag rather than persisting it", async () => {
+    await renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
+    await fireEvent.press(screen.getByText("Dismiss"));
     expect(useUserSettingsStore.getState().readingTrackerResetDelayed).toBe(true);
   });
 
   it("moves the tracker start date to today on the server", async () => {
-    renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
-    fireEvent.press(screen.getByText("Start Fresh"));
+    await renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
+    await fireEvent.press(screen.getByText("Start Fresh"));
     await waitFor(() => expect(updateServerSettings).toHaveBeenCalled());
     expect(updateServerSettings.mock.calls[0][0]).toEqual({
       lookBackDate: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
@@ -111,8 +111,8 @@ describe("ReadingTrackerResetCard", () => {
 
   it("falls back to local settings when the server save fails", async () => {
     updateServerSettings.mockResolvedValue(false);
-    renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
-    fireEvent.press(screen.getByText("Start Fresh"));
+    await renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
+    await fireEvent.press(screen.getByText("Start Fresh"));
     await waitFor(() => expect(setLocalSettings).toHaveBeenCalled());
     expect(setLocalSettings.mock.calls[0][0]).toEqual({
       lookBackDate: expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
@@ -121,8 +121,8 @@ describe("ReadingTrackerResetCard", () => {
 
   it("saves locally without attempting the server when signed out", async () => {
     useAuthStore.setState({ state: { status: "unauthenticated" } } as never);
-    renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
-    fireEvent.press(screen.getByText("Start Fresh"));
+    await renderWithProviders(<ReadingTrackerResetCard hasEntriesToday={false} />);
+    await fireEvent.press(screen.getByText("Start Fresh"));
     await waitFor(() => expect(setLocalSettings).toHaveBeenCalled());
     expect(updateServerSettings).not.toHaveBeenCalled();
   });

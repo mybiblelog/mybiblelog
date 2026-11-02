@@ -1,9 +1,11 @@
 import type { ReactElement, ReactNode } from "react";
 import { render, type RenderOptions } from "@testing-library/react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider } from "@/src/design";
 import type { ColorSchemeName } from "@/src/design";
 import { LocaleProvider } from "@/src/i18n/LocaleProvider";
+import { appStorage } from "@/src/storage/keys";
 import { ToastProvider } from "@/src/toast/ToastProvider";
 
 const safeAreaMetrics = {
@@ -19,15 +21,17 @@ const safeAreaMetrics = {
 function makeWrapper(scheme?: ColorSchemeName) {
   return function AllProviders({ children }: { children: ReactNode }) {
     return (
-      <SafeAreaProvider initialMetrics={safeAreaMetrics}>
-        <LocaleProvider>
-          {/* Pinning the mode beats stubbing what the OS reports: no spy to
-              leak its return value into the next test in the file. */}
-          <ThemeProvider initialMode={scheme ?? "system"}>
-            <ToastProvider>{children}</ToastProvider>
-          </ThemeProvider>
-        </LocaleProvider>
-      </SafeAreaProvider>
+      <GestureHandlerRootView>
+        <SafeAreaProvider initialMetrics={safeAreaMetrics}>
+          <LocaleProvider>
+            {/* Pinning the mode beats stubbing what the OS reports: no spy to
+                leak its return value into the next test in the file. */}
+            <ThemeProvider initialMode={scheme ?? "system"}>
+              <ToastProvider>{children}</ToastProvider>
+            </ThemeProvider>
+          </LocaleProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
     );
   };
 }
@@ -39,9 +43,12 @@ type Options = Omit<RenderOptions, "wrapper"> & {
   scheme?: ColorSchemeName;
 };
 
-export function renderWithProviders(ui: ReactElement, { scheme, ...options }: Options = {}) {
+export async function renderWithProviders(ui: ReactElement, { scheme, ...options }: Options = {}) {
+  // ThemeProvider adopts the persisted mode once it loads, so persist the pin too.
+  if (scheme) await appStorage.set("themeMode", scheme);
   return render(ui, { wrapper: scheme ? makeWrapper(scheme) : defaultWrapper, ...options });
 }
 
 // Re-export the testing library so tests import everything from one place.
 export * from "@testing-library/react-native";
+export type { TestInstance } from "test-renderer";

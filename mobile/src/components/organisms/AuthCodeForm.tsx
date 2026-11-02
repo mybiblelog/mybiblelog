@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, View, type TextInputInstance } from "react-native";
 import { mapFormErrors } from "@/src/api/apiError";
 import {
   completeEmailChange,
@@ -51,7 +51,7 @@ export function AuthCodeForm({
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const passwordRef = useRef<TextInput>(null);
+  const passwordRef = useRef<TextInputInstance>(null);
 
   const sessionEmail = resultEmail ?? email;
 

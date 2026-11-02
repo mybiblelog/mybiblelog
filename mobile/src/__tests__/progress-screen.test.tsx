@@ -63,7 +63,7 @@ beforeEach(() => {
 
 describe("Progress screen", () => {
   it("renders every section", async () => {
-    const { getByText } = renderWithProviders(<Progress />);
+    const { getByText } = await renderWithProviders(<Progress />);
 
     await waitFor(() => expect(getByText("Your Reading Settings")).toBeTruthy());
     expect(getByText("Your Progress So Far")).toBeTruthy();
@@ -75,13 +75,13 @@ describe("Progress screen", () => {
   });
 
   it("shows the reading settings values", async () => {
-    const { getByText } = renderWithProviders(<Progress />);
+    const { getByText } = await renderWithProviders(<Progress />);
     await waitFor(() => expect(getByText("86")).toBeTruthy());
   });
 
   it("shows verses read and total from the progress store", async () => {
     const total = Bible.getTotalVerseCount();
-    const { getAllByText, getByText } = renderWithProviders(<Progress />);
+    const { getAllByText, getByText } = await renderWithProviders(<Progress />);
     // "31" appears as Verses Read and as today's new-verse count.
     await waitFor(() => expect(getAllByText("31").length).toBeGreaterThanOrEqual(1));
     expect(getByText(total.toLocaleString("en"))).toBeTruthy();
@@ -93,23 +93,23 @@ describe("Progress screen", () => {
   it("projects Never at a zero reading rate", async () => {
     useLogEntriesStore.setState({ state: { status: "ready", entries: [], isSyncing: false } });
     useBibleProgressStore.setState({ progress: computeBibleProgress([]), jobs: 0 });
-    const { getAllByText } = renderWithProviders(<Progress />);
+    const { getAllByText } = await renderWithProviders(<Progress />);
     // Historical, 30-day, 7-day, and today outlooks all show Never twice
     // (days + date rows).
     await waitFor(() => expect(getAllByText("Never").length).toBe(8));
   });
 
   it("navigates to reading settings from Update Settings", async () => {
-    const { getByText } = renderWithProviders(<Progress />);
+    const { getByText } = await renderWithProviders(<Progress />);
     await waitFor(() => expect(getByText("Update Settings")).toBeTruthy());
 
-    fireEvent.press(getByText("Update Settings"));
+    await fireEvent.press(getByText("Update Settings"));
 
     expect(router.push).toHaveBeenCalledWith("/(tabs)/settings/reading");
   });
 
   it("shows placeholders until a goal date is chosen", async () => {
-    const { getAllByText, getByText } = renderWithProviders(<Progress />);
+    const { getAllByText, getByText } = await renderWithProviders(<Progress />);
     await waitFor(() => expect(getByText("Choose a date")).toBeTruthy());
     expect(getAllByText("?")).toHaveLength(2);
   });

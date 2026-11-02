@@ -8,12 +8,32 @@
 // React Native Gesture Handler — installs no-op gesture handlers.
 import "react-native-gesture-handler/jestSetup";
 
+// TECH-DEBT(rngh3-jest-ui-runtime-bindings): RNGH 3 calls worklets'
+// `getUIRuntimeHolder`, which throws in the web build that jest resolves to.
+// Mirrors RNGH's own web no-op.
+jest.mock(
+  "react-native-gesture-handler/lib/module/handlers/gestures/installUIRuntimeBindings",
+  () => ({ installUIRuntimeBindings: () => {} })
+);
+
+// Icon fonts reach expo-font as jest-expo's stubbed asset id, which expo-asset
+// rejects; RNTL 14's awaited act() surfaces that rejection, so report fonts as loaded.
+jest.mock("expo-font", () => ({
+  ...jest.requireActual("expo-font"),
+  isLoaded: () => true,
+  loadAsync: jest.fn(() => Promise.resolve()),
+}));
+
 // AsyncStorage — official in-memory mock.
 jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest/async-storage-mock")
 );
 
-// Reanimated 4 runs its jest-safe build via the worklets resolver (see
+// RNTL's awaited render lets providers' async storage loads (e.g. the persisted
+// theme mode) land before assertions, so state must not leak between tests.
+beforeEach(() => require("@react-native-async-storage/async-storage").clear());
+
+// Reanimated 4 runs its jest-safe build via its jest resolver (see
 // jest.config.js), so no manual mock is needed here.
 
 // expo-constants — deterministic config so `src/config.ts` resolves an API base.

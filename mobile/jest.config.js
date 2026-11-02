@@ -6,10 +6,9 @@
  */
 module.exports = {
   preset: 'jest-expo',
-  // Reanimated 4 / worklets ship a jest resolver that strips `.native`
-  // extensions so the jest-safe builds load (avoids "Native part of Worklets
-  // doesn't seem to be initialized").
-  resolver: '<rootDir>/node_modules/react-native-worklets/jest/resolver.js',
+  // Reanimated's resolver wraps the worklets one and also forces the web build
+  // of the modules that otherwise call `runOnUISync` at import time.
+  resolver: '<rootDir>/node_modules/react-native-reanimated/jest/resolver.js',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',

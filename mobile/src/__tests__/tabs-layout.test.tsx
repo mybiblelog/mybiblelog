@@ -31,11 +31,11 @@ function settingsIcon() {
   return renderWithProviders(options.tabBarIcon({ color: "#000", size: 20, focused: false }));
 }
 
-beforeEach(() => {
+beforeEach(async () => {
   capturedScreenOptions = undefined;
   capturedScreens.length = 0;
   useAuthStore.setState({ state: { status: "loading" } });
-  renderWithProviders(<TabsLayout />);
+  await renderWithProviders(<TabsLayout />);
 });
 
 describe("(tabs) layout", () => {
@@ -62,19 +62,19 @@ describe("(tabs) layout", () => {
     expect(withListeners).toHaveLength(0);
   });
 
-  it("shows an attention dot on the settings tab icon when signed out", () => {
+  it("shows an attention dot on the settings tab icon when signed out", async () => {
     useAuthStore.setState({ state: { status: "unauthenticated" } });
     capturedScreens.length = 0;
-    renderWithProviders(<TabsLayout />);
-    expect(settingsIcon().queryByTestId("attentionDot")).toBeTruthy();
+    await renderWithProviders(<TabsLayout />);
+    expect((await settingsIcon()).queryByTestId("attentionDot")).toBeTruthy();
   });
 
-  it("hides the attention dot once signed in", () => {
+  it("hides the attention dot once signed in", async () => {
     useAuthStore.setState({
       state: { status: "authenticated", session: { token: "t", user: { email: "a@b.com" } } },
     });
     capturedScreens.length = 0;
-    renderWithProviders(<TabsLayout />);
-    expect(settingsIcon().queryByTestId("attentionDot")).toBeNull();
+    await renderWithProviders(<TabsLayout />);
+    expect((await settingsIcon()).queryByTestId("attentionDot")).toBeNull();
   });
 });
