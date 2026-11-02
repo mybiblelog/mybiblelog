@@ -13,7 +13,7 @@
     "shared"
   ],
   "engines": {
-    "node": "24.22.1"
+    "node": "26.13.0"
   },
   "scripts": {
     "dev": "npm-run-all --parallel dev:api dev:web",
@@ -58,7 +58,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.51.1",
-    "@types/node": "^22.14.1",
+    "@types/node": "^26.6.6",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.1",
