@@ -2,7 +2,7 @@
 
 Workarounds and deferred follow-ups that should be undone later, kept in one place so they can be reviewed without searching the repo for them.
 
-**Last reviewed:** 2026-10-30
+**Last reviewed:** 2026-11-01
 
 ## What goes here
 
@@ -63,15 +63,6 @@ Permanent design decisions and constraints don't belong here, even when they're 
 - **Tracking:** none filed yet.
 - **Added:** 2026-10-30
 
-### jest-expo-jest-preset-override
-
-- **Where:** `mobile/package.json` (`overrides["@react-native/jest-preset"]`)
-- **Why:** `jest-expo@57` peer-depends on `@react-native/jest-preset@^0.85.0`, while React Native 0.86 needs `0.86.0`.
-- **Remove when:** a `jest-expo` release widens its peer range to cover the app's React Native version.
-- **Check:** `npm view jest-expo@57 peerDependencies` (or the next SDK's `jest-expo`).
-- **Tracking:** none.
-- **Added:** 2026-07-02
-
 ### mobile-eslint-9
 
 - **Where:** `mobile/package.json` (`eslint ^9`)
@@ -94,9 +85,9 @@ Permanent design decisions and constraints don't belong here, even when they're 
 
 - **Where:** `mobile/src/components/organisms/AnimatedList.tsx`
 - **Why:** On the New Architecture, Reanimated `exiting` animations inside a FlatList often never finish, leaving a permanent gap, so removed rows disappear instantly instead of animating out.
-- **Remove when:** the linked Reanimated issues are fixed; then restore an `exiting` animation on cells.
+- **Remove when:** the linked Reanimated issue is fixed; then restore an `exiting` animation on cells.
 - **Check:** issue status, then try an `exiting` animation on delete on an Android device.
-- **Tracking:** [software-mansion/react-native-reanimated#5656](https://github.com/software-mansion/react-native-reanimated/issues/5656), [#8665](https://github.com/software-mansion/react-native-reanimated/issues/8665)
+- **Tracking:** [software-mansion/react-native-reanimated#8665](https://github.com/software-mansion/react-native-reanimated/issues/8665)
 - **Added:** 2026-07
 
 ## Internal follow-ups

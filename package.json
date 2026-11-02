@@ -66,8 +66,6 @@
     "sharp": "^0.35.5"
   },
   "overrides": {
-    "vue": "^3.5.42",
-    "@vue/server-renderer": "^3.5.42",
     "@typescript-eslint/typescript-estree": {
       "minimatch": "^9.0.7"
     }

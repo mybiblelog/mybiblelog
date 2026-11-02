@@ -47,7 +47,7 @@ type CellProps = {
  * (this app runs `newArchEnabled`), exiting animations inside a FlatList are
  * unreliable: the removed cell's exit frequently never runs to completion, so
  * its snapshot is left holding the row's vertical space — a gap that never
- * closes (see reanimated#5656 / #8665). Removing on delete is therefore
+ * closes (see reanimated#8665). Removing on delete is therefore
  * instant; the layout animation still reflows the surviving rows into place.
  * TECH-DEBT(reanimated-flatlist-exiting): restore an exit animation once fixed.
  *
