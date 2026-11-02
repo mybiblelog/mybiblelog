@@ -48,7 +48,7 @@ Permanent design decisions and constraints don't belong here, even when they're 
 ### nuxt-i18n-nitro-auto-imports
 
 - **Where:** `web/nuxt.config.ts` (`experimental.nitroAutoImports: true`)
-- **Why:** `compatibilityVersion: 5` turns Nitro auto-imports off, and since Nuxt 4.6.2 that also removes them from `#imports` in the server bundle. `@nuxtjs/i18n`'s server runtime still imports `useRuntimeConfig` from `#imports`, so the build fails without the flag.
+- **Why:** `compatibilityVersion: 5` turns Nitro auto-imports off, and since Nuxt 4.6.2 that also removes them from `#imports` in the server bundle. `@nuxtjs/i18n`'s server runtime still imports `useRuntimeConfig` from `#imports`, so without the flag the web build fails with `"useRuntimeConfig" is not exported by "virtual:#imports"`.
 - **Remove when:** `@nuxtjs/i18n` imports from `nitropack/runtime` instead.
 - **Check:** `npm view @nuxtjs/i18n version` against the linked issue, then remove the flag and run `npm run build -w web`.
 - **Tracking:** [nuxt-modules/i18n#4175](https://github.com/nuxt-modules/i18n/issues/4175)
@@ -101,11 +101,4 @@ Permanent design decisions and constraints don't belong here, even when they're 
 
 ## Internal follow-ups
 
-### nuxt-typed-pages-disabled
-
-- **Where:** `web/nuxt.config.ts` (`experimental.typedPages: false`)
-- **Why:** Nuxt 4.6 turns typed pages on at `compatibilityVersion: 5`, which makes string arguments to `localePath('/some/path')` type errors throughout the app.
-- **Remove when:** the `localePath` / `navigateTo` call sites move to typed routes.
-- **Check:** remove the flag and run `npx nuxt typecheck` in `web/` to see how many call sites remain.
-- **Tracking:** none.
-- **Added:** 2026-10-30
+None currently.

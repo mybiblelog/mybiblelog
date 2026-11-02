@@ -287,10 +287,5 @@ export default defineNuxtConfig({
     // TECH-DEBT(nuxt-i18n-nitro-auto-imports): drop it once i18n imports from
     // `nitropack/runtime` instead.
     nitroAutoImports: true,
-    // Nuxt 4.6 turns typed pages on at compatibilityVersion 5, which makes
-    // `localePath('/some/path')` string arguments a type error throughout the
-    // app. TECH-DEBT(nuxt-typed-pages-disabled): keep the pre-4.6 behavior until
-    // the call sites move to typed routes.
-    typedPages: false,
   },
 });

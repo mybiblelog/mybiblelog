@@ -14,7 +14,7 @@
       </p>
       <i18n-t keypath="intro_2" tag="p">
         <template #link>
-          <NuxtLink :to="localePath('/about/guide--how-long-does-it-take-to-read-the-bible')">
+          <NuxtLink :to="localePath({ name: 'about-slug', params: { slug: 'guide--how-long-does-it-take-to-read-the-bible' } })">
             {{ t('intro_2_link') }}
           </NuxtLink>
         </template>
@@ -66,7 +66,7 @@
       <h2>{{ t('paper_heading') }}</h2>
       <i18n-t keypath="paper_text" tag="p">
         <template #link>
-          <NuxtLink :to="localePath('/resources/printable-bible-reading-tracker')">
+          <NuxtLink :to="localePath('resources-printable-bible-reading-tracker')">
             {{ t('paper_link') }}
           </NuxtLink>
         </template>
@@ -109,7 +109,7 @@ const units = { hour: t('units.hour'), minute: t('units.minute'), separator: loc
 const books = Bible.getBooks().map(book => ({
   index: book.bibleOrder,
   name: Bible.getBookName(book.bibleOrder, locale.value),
-  path: localePath(`/books-of-the-bible/${Bible.getBookSlug(book.bibleOrder)}`),
+  path: localePath({ name: 'books-of-the-bible-book', params: { book: Bible.getBookSlug(book.bibleOrder) } }),
   chapters: book.chapterCount,
   verses: Bible.getBookVerseCount(book.bibleOrder),
   readingTime: formatReadingTime(getBookReadingMinutes(book.bibleOrder), units),

@@ -49,19 +49,19 @@ onMounted(async () => {
       await authStore.refreshUser();
 
       // Redirect to the user's preferred locale.
-      const redirectUrl = localePath('/start', userLocale);
+      const redirectUrl = localePath('start', userLocale);
       await router.push(redirectUrl);
     }
     catch (error) {
       // eslint-disable-next-line no-console
       console.error('Google OAuth verification failed:', error);
       // Redirect to login page with error
-      await router.push(localePath('/login?error=oauth_failed'));
+      await router.push(localePath({ name: 'login', query: { error: 'oauth_failed' } }));
     }
   }
   else {
     // Missing required parameters, redirect to login
-    await router.push(localePath('/login?error=invalid_oauth_response'));
+    await router.push(localePath({ name: 'login', query: { error: 'invalid_oauth_response' } }));
   }
 });
 </script>

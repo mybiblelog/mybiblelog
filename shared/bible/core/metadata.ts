@@ -31,14 +31,14 @@ export const getChapterVerseCount = (bookIndex: number, chapterIndex: number): n
 export const getBookName = (bookIndex: number, lang: string = 'en'): string => {
   const targetBook = bibleBooks.find((b) => b.bibleOrder === bookIndex);
   if (!targetBook) { return ''; }
-  const localeData = targetBook.locales[lang] ?? targetBook.locales['en'];
+  const localeData = targetBook.locales[lang] ?? targetBook.locales.en;
   return localeData.name;
 };
 
 export const getBookIndex = (bookName: string, lang: string = 'en'): number => {
   const caseInsensitive = bookName.toLocaleLowerCase();
   const targetBook = bibleBooks.find((b) => {
-    const localeData = b.locales[lang] ?? b.locales['en'];
+    const localeData = b.locales[lang] ?? b.locales.en;
     if (localeData.name.toLocaleLowerCase() === caseInsensitive) { return true; }
     const insensitiveAbbreviations = localeData.abbreviations.map((a) => a.toLocaleLowerCase());
     if (insensitiveAbbreviations.includes(caseInsensitive)) { return true; }

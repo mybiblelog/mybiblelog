@@ -27,7 +27,6 @@ beforeEach(() => {
 
   pushMock = vi.fn();
   vi.stubGlobal('useRouter', () => ({ push: pushMock, replace: vi.fn(), back: vi.fn() }));
-  vi.stubGlobal('useLocalePath', () => (path: string) => path);
 
   // The default `useI18n` stub has no `n` (number formatter); BookReport renders
   // the read percentage via `n(value, 'percent')`.

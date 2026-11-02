@@ -11,6 +11,7 @@ import { useClickOutside } from '~/composables/useClickOutside';
 import { useEscapeKey } from '~/composables/useEscapeKey';
 import { useSlideDrawerTransition } from '~/composables/useSlideDrawerTransition';
 import { useHttp } from '~/composables/useHttp';
+import { stubLocalePath } from './locale-path-stub';
 
 // --- Vue reactivity / lifecycle / helpers (stable; set once) ---
 const vueGlobals = [
@@ -56,7 +57,7 @@ function installNuxtDefaults() {
     $i18n: { locale: Vue.ref('en'), t: (key: string) => key },
   }));
 
-  vi.stubGlobal('useLocalePath', () => (path: string) => path);
+  vi.stubGlobal('useLocalePath', () => stubLocalePath);
   vi.stubGlobal('useRoute', () => ({ query: {}, params: {}, path: '/', fullPath: '/' }));
   vi.stubGlobal('useRouter', () => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn() }));
   vi.stubGlobal('navigateTo', vi.fn());

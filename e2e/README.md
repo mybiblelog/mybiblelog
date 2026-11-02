@@ -10,6 +10,7 @@ npm run test:e2e            # boots api + web automatically, runs everything
 npm run test:e2e:ui         # interactive UI mode
 npx playwright test --project=app      # authenticated functional tests only
 npx playwright test --project=public   # SEO/content/marketing tests only
+npm run test:e2e:locale     # locale-prefixed routing (/es/ by default)
 npx playwright show-report  # open the HTML report
 ```
 
@@ -61,6 +62,17 @@ Alternatively, let Playwright start the servers (`npm run test:e2e`); it sets
 > compiles routes on demand, causing a few timing-sensitive specs (e.g. `log.spec.ts`) to flake.
 > Add `--workers=3` for a stable local run, or run against a production build. CI already uses
 > 1 worker + 2 retries.
+
+### Locale-prefixed routing
+
+The `app` and `public` specs run in English: they pin `i18n_redirected=en` and match English UI text. The `locale` project (`e2e/tests/locale/`) covers the other locales' routing. It signs in with a non-default locale and checks that every internal link and redirect keeps the `/<locale>/` prefix. It matches on hrefs, URLs and test IDs only, never on translated text.
+
+```bash
+npm run test:e2e:locale                   # Spanish (/es/)
+E2E_LOCALE=fr npm run test:e2e:locale     # any other prefixed locale
+```
+
+The locale comes from the `appLocale` fixture option in `e2e/fixtures.ts` (default `en`), so `app` and `public` are unaffected. `npm run test:e2e` runs the locale project too.
 
 ### How authentication works in tests
 

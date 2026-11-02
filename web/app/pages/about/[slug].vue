@@ -4,7 +4,7 @@
       <ContentRenderer v-if="page" :value="page" />
       <template v-if="slug !== 'overview'">
         <br>
-        <NuxtLink :to="localePath('/about/overview')">
+        <NuxtLink :to="localePath({ name: 'about-slug', params: { slug: 'overview' } })">
           {{ t('back') }}
         </NuxtLink>
       </template>

@@ -40,7 +40,7 @@ onMounted(async () => {
   // The link now carries both the code and the account email (a short code is
   // not globally unique). Missing either means it isn't a usable link.
   if (!code || !email) {
-    await router.push(localePath('/login'));
+    await router.push(localePath('login'));
     return;
   }
 
@@ -50,7 +50,7 @@ onMounted(async () => {
     await authStore.refreshUser();
     // Notify any tab waiting on the code modal for this flow.
     postAuthEvent({ type: 'completed', flow: 'verify-email', email });
-    await router.push(localePath('/start'));
+    await router.push(localePath('start'));
   }
   catch (err) {
     const formErrors = mapFormErrors(err instanceof ApiError ? err : new UnknownApiError());

@@ -33,7 +33,7 @@ const logEntriesStore = useLogEntriesStore();
 const logEntries = computed(() => logEntriesStore.currentLogEntries);
 
 function handleExitBookReport() {
-  router.push(localePath('/books'));
+  router.push(localePath('books'));
 }
 
 function handleViewBookNotes() {
@@ -43,7 +43,7 @@ function handleViewBookNotes() {
     filterPassageMatching: 'exclusive',
     offset: 0,
   });
-  router.push({ path: localePath('/notes'), query });
+  router.push({ path: localePath('notes'), query });
 }
 
 function handleViewBookLog() {
@@ -52,7 +52,7 @@ function handleViewBookLog() {
     filterPassageEndVerseId: Bible.getLastBookVerseId(bookIndex.value),
     offset: 0,
   });
-  router.push({ path: localePath('/log'), query });
+  router.push({ path: localePath('log'), query });
 }
 
 onMounted(async () => {

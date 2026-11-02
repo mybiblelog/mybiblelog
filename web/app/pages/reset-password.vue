@@ -40,7 +40,7 @@
           <p>{{ t('this_password_reset_link_is_expired') }}</p>
           <p>{{ t('you_can_send_a_new_password_reset_email_from_the_sign_in_page') }}</p>
         </div>
-        <NuxtLink class="mbl-button" :to="localePath('/login')">
+        <NuxtLink class="mbl-button" :to="localePath('login')">
           {{ t('sign_in') }}
         </NuxtLink>
       </template>
@@ -81,7 +81,7 @@ onMounted(async () => {
   const code = params.get('code');
   const email = params.get('email');
   if (!code || !email) {
-    await router.push(localePath('/login'));
+    await router.push(localePath('login'));
     return;
   }
   passwordResetCode.value = code;
@@ -121,7 +121,7 @@ const submitChangePassword = async () => {
     });
     await authStore.refreshUser();
     postAuthEvent({ type: 'completed', flow: 'reset-password', email: passwordResetEmail.value ?? '' });
-    await router.push(localePath('/start'));
+    await router.push(localePath('start'));
   }
   catch (err) {
     errors.value = err instanceof ApiError ? mapFormErrors(err) : mapFormErrors(new UnknownApiError());

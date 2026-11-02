@@ -4,7 +4,7 @@
       <h1 class="mbl-title">
         {{ t('progress') }}
       </h1>
-      <NuxtLink class="mbl-button" :to="localePath('/books')">
+      <NuxtLink class="mbl-button" :to="localePath('books')">
         {{ t('bible_books') }}
         <caret-right-icon style="margin-left: 0.2rem;" />
       </NuxtLink>
@@ -17,7 +17,7 @@
         </h2>
         <p>{{ t('your_reading_settings.description') }}</p>
         <div class="mbl-button-group">
-          <NuxtLink class="mbl-button" :to="localePath('/settings/reading')">
+          <NuxtLink class="mbl-button" :to="localePath('settings-reading')">
             {{ t('your_reading_settings.update_settings') }}
           </NuxtLink>
         </div>
