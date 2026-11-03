@@ -1,17 +1,4 @@
-import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
-import relativeTime from 'dayjs/plugin/relativeTime';
-
-// additional locales ('en' is already included)
-import 'dayjs/locale/es';
-import 'dayjs/locale/de';
-import 'dayjs/locale/fr';
-import 'dayjs/locale/ko';
-import 'dayjs/locale/pt';
-import 'dayjs/locale/uk';
-
-dayjs.extend(duration);
-dayjs.extend(relativeTime);
+import { isoDateToLocalDate, normalizeISODate, toISODate, todayISODate, diffDays } from './iso-date';
 
 /**
  * Returns the number of days in a given month.
@@ -50,8 +37,7 @@ export const weekFromDate = (year: number, month: number, date: number) => {
 
   const result = [];
   for (let i = 0; i < 7; i++) {
-    const dayDate = dayjs(referenceDate).format('YYYY-MM-DD');
-    result.push(dayDate);
+    result.push(toISODate(referenceDate));
     referenceDate.setDate(referenceDate.getDate() + 1);
   }
   return result;
@@ -68,59 +54,122 @@ export const getWeekStartAndEnd = (year: number, month: number, date: number) =>
 };
 
 export const displayDate = (dateString: string, locale = 'en') => {
-  const parsed = dayjs(dateString);
-  if (!parsed.isValid()) {
+  const isoDate = normalizeISODate(dateString);
+  if (!isoDate) {
     return '';
   }
-  const date = parsed.toDate();
   const options: Intl.DateTimeFormatOptions = {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   };
-  return date.toLocaleDateString(locale, options);
+  return isoDateToLocalDate(isoDate).toLocaleDateString(locale, options);
 };
 
 export const displayDateTime = (dateString: string, locale = 'en') => {
   const date = new Date(dateString);
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  };
-  const displayDate = date.toLocaleDateString(locale, options);
-  let hoursCount = date.getHours();
-  let amPm = 'am';
-  if (hoursCount > 12) {
-    hoursCount -= 12;
-    amPm = 'pm';
+  const displayDate = date.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
+  const displayTime = date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+  return `${displayDate} @ ${displayTime}`;
+};
+
+const relativeTimeFormatters = new Map<string, Intl.RelativeTimeFormat>();
+
+const getRelativeTimeFormatter = (locale: string, numeric: 'always' | 'auto') => {
+  const key = `${locale}|${numeric}`;
+  let formatter = relativeTimeFormatters.get(key);
+  if (!formatter) {
+    formatter = new Intl.RelativeTimeFormat(locale, { numeric });
+    relativeTimeFormatters.set(key, formatter);
   }
-  const hours = hoursCount.toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
-  return `${displayDate} @ ${hours}:${minutes} ${amPm}`;
+  return formatter;
 };
 
 /**
- * Returns the time duration between now and the given date/time in a
- * human readable format. For example: "a few seconds ago", "8 hours ago".
- * @param {string} dateString 'YYYY-MM-DD'
+ * Picks the largest sensible unit for a span of days, rounding the way people
+ * speak about it ("3 months ago", not "92 days ago").
+ */
+const toCoarseUnit = (days: number): [number, Intl.RelativeTimeFormatUnit] => {
+  const abs = Math.abs(days);
+  if (abs < 26) {
+    return [days, 'day'];
+  }
+  const sign = Math.sign(days);
+  const months = Math.round(abs / 30.4);
+  if (months < 11) {
+    return [sign * Math.max(1, months), 'month'];
+  }
+  return [sign * Math.max(1, Math.round(abs / 365)), 'year'];
+};
+
+/**
+ * Returns the time between now and the given date/time in a human readable
+ * format. For example: "12 seconds ago", "8 hours ago", "in 2 days".
+ *
+ * Mobile keeps its own version (`mobile/src/i18n/relative-time.ts`) because
+ * some Hermes builds lack `Intl.RelativeTimeFormat`.
+ * @param {string} dateTimeString ISO date/time
  * @param {string} locale 'en', 'es', etc.
  * @returns {string}
  */
 export const displayTimeSince = (dateTimeString: string, locale = 'en') => {
-  const difference = dayjs(dateTimeString).diff(dayjs());
-  return dayjs.duration(difference).locale(locale).humanize(true);
+  const formatter = getRelativeTimeFormatter(locale, 'always');
+  const ms = new Date(dateTimeString).getTime() - Date.now();
+  const sign = Math.sign(ms);
+  const seconds = Math.round(Math.abs(ms) / 1000);
+  if (seconds < 45) {
+    return formatter.format(sign * seconds, 'second');
+  }
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 45) {
+    return formatter.format(sign * minutes, 'minute');
+  }
+  const hours = Math.round(minutes / 60);
+  if (hours < 22) {
+    return formatter.format(sign * hours, 'hour');
+  }
+  const [value, unit] = toCoarseUnit(sign * Math.max(1, Math.round(hours / 24)));
+  return formatter.format(value, unit);
 };
 
 /**
- * Returns the number of days between now and the given date in a
- * human readable format. For example: "2 days ago", "in 3 days".
+ * Returns the number of calendar days between today and the given date in a
+ * human readable format. For example: "yesterday", "2 days ago", "in 3 days".
+ *
+ * Mobile keeps its own version (`mobile/src/i18n/relative-time.ts`) because
+ * some Hermes builds lack `Intl.RelativeTimeFormat`.
  * @param {string} dateString 'YYYY-MM-DD'
  * @param {string} locale 'en', 'es', etc.
  * @returns {string}
  */
 export const displayDaysSince = (dateString: string, locale = 'en') => {
-  const difference = dayjs(dateString).diff(dayjs(), 'day');
-  return dayjs.duration(difference, 'day').locale(locale).humanize(true);
+  const [value, unit] = toCoarseUnit(diffDays(dateString, todayISODate()));
+  return getRelativeTimeFormatter(locale, 'auto').format(value, unit);
+};
+
+const dateTimeFormatters = new Map<string, Intl.DateTimeFormat>();
+
+/**
+ * Formats a `YYYY-MM-DD` date with `Intl.DateTimeFormat`, e.g.
+ * `{ month: 'short', day: 'numeric' }` → "Jun 14" / "14. Juni". Formatters are
+ * cached per locale and options, since charts call this once per data point.
+ * Returns an empty string for an invalid date.
+ */
+export const formatCalendarDate = (
+  dateString: string,
+  locale: string,
+  options: Intl.DateTimeFormatOptions,
+): string => {
+  const isoDate = normalizeISODate(dateString);
+  if (!isoDate) {
+    return '';
+  }
+  const key = `${locale}|${JSON.stringify(options)}`;
+  let formatter = dateTimeFormatters.get(key);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat(locale, options);
+    dateTimeFormatters.set(key, formatter);
+  }
+  return formatter.format(isoDateToLocalDate(isoDate));
 };

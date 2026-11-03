@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
+import { formatCalendarDate } from '@mybiblelog/shared';
 import EngagementChart from '~/components/admin/EngagementChart.vue';
 import { useDialogStore } from '~/stores/dialog';
 
@@ -97,11 +97,11 @@ const loading = ref(true);
 const engagementData = ref<EngagementRow[]>([]);
 
 function formatWeekday(date: string) {
-  return dayjs(date).locale(locale.value).format('ddd');
+  return formatCalendarDate(date, locale.value, { weekday: 'short' });
 }
 
 function formatShortDate(date: string) {
-  return dayjs(date).locale(locale.value).format('MMM D');
+  return formatCalendarDate(date, locale.value, { month: 'short', day: 'numeric' });
 }
 
 onMounted(async () => {

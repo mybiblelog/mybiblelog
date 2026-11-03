@@ -1,17 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
 import {
   decodeLogEntriesRouteQuery,
   encodeLogEntriesQueryToRoute,
   defaultLogEntriesQuery,
 } from '~/helpers/log-entries-route-query';
-
-// The helper uses dayjs strict parsing (`dayjs(v, 'YYYY-MM-DD', true)`), which
-// only enforces the format when the customParseFormat plugin is registered. The
-// app extends it elsewhere; register it here so the test exercises the intended
-// strict-format behavior.
-dayjs.extend(customParseFormat);
 
 describe('decodeLogEntriesRouteQuery', () => {
   it('returns defaults for an empty query', () => {
@@ -44,6 +36,8 @@ describe('decodeLogEntriesRouteQuery', () => {
     expect(decodeLogEntriesRouteQuery({ startDate: '2026-06-28' }).startDate).toBe('2026-06-28');
     expect(decodeLogEntriesRouteQuery({ startDate: 'not-a-date' }).startDate).toBe('');
     expect(decodeLogEntriesRouteQuery({ endDate: '06/28/2026' }).endDate).toBe('');
+    expect(decodeLogEntriesRouteQuery({ startDate: '2026-02-30' }).startDate).toBe('');
+    expect(decodeLogEntriesRouteQuery({ startDate: '2026-6-28' }).startDate).toBe('');
   });
 
   it('requires both passage verse ids or zeroes both', () => {

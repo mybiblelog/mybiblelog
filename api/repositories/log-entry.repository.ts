@@ -1,13 +1,12 @@
 import { ObjectId } from 'mongodb';
-import dayjs from 'dayjs';
-import { Bible } from '@mybiblelog/shared';
+import { Bible, isISODate } from '@mybiblelog/shared';
 import type { Collections } from '../mongo/useCollections';
 import type { LogEntryDocument } from '../mongo/documents';
 import { LogEntryInput, LogEntryRecord } from './helpers/types';
 
 /** Replaces the LogEntry `date` schema validator. */
 const assertValidDate = (date: string): void => {
-  if (!dayjs(date, 'YYYY-MM-DD', true).isValid()) {
+  if (!isISODate(date)) {
     throw new Error(`${date} is not a valid date string`);
   }
 };

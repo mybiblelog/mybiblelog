@@ -1,5 +1,5 @@
-import dayjs from 'dayjs';
 import Bible from '../bible';
+import { normalizeISODate, todayISODate } from '../platform/iso-date';
 
 export type DateVerseCounts = {
   total: number;
@@ -74,10 +74,10 @@ export const computeDateVerseCounts = (
     return {};
   }
 
-  const effectiveStartDate = dayjs(startDate).format('YYYY-MM-DD');
-  const effectiveEndDate = endDate ? dayjs(endDate).format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD');
+  const effectiveStartDate = normalizeISODate(startDate) ?? startDate;
+  const effectiveEndDate = endDate ? (normalizeISODate(endDate) ?? endDate) : todayISODate();
   const effectiveTrackerStartDate = trackerStartDate
-    ? dayjs(trackerStartDate).format('YYYY-MM-DD')
+    ? (normalizeISODate(trackerStartDate) ?? trackerStartDate)
     : effectiveStartDate;
 
   if (effectiveStartDate > effectiveEndDate) {

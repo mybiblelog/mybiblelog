@@ -35,7 +35,6 @@
     "vitest": "^5.0.5"
   },
   "dependencies": {
-    "dayjs": "^1.11.13",
     "typescript": "^5.9.3"
   }
 }

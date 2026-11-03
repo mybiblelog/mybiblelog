@@ -109,8 +109,7 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import { Bible, BrowserCache, computeBibleProgress, filterAndSortBookOptions, getBookOptions } from '@mybiblelog/shared';
+import { Bible, BrowserCache, computeBibleProgress, filterAndSortBookOptions, getBookOptions, todayISODate } from '@mybiblelog/shared';
 import BookListToolbar from '~/components/bible/BookListToolbar.vue';
 import BusyBar from '~/components/ui/BusyBar.vue';
 import CompletionBar from '~/components/ui/CompletionBar.vue';
@@ -264,7 +263,7 @@ async function toggleChapter(bookIndex: number, chapterIndex: number) {
   // interaction; other chapters' celebrations are unaffected.
   endCelebration(key);
 
-  const date = dayjs().format('YYYY-MM-DD');
+  const date = todayISODate();
   const startVerseId = Bible.makeVerseId(bookIndex, chapterIndex, 1);
   const endVerseId = Bible.makeVerseId(bookIndex, chapterIndex, Bible.getChapterVerseCount(bookIndex, chapterIndex));
 

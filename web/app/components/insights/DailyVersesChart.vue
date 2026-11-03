@@ -82,16 +82,13 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
 import {
   DEFAULT_CHART_DIMENSIONS,
   buildLineChartGeometry,
   computeDailyVerseSeries,
   type InsightsLogEntry,
+  formatCalendarDate,
 } from '@mybiblelog/shared';
-
-dayjs.extend(localizedFormat);
 
 const props = defineProps({
   entries: {
@@ -133,7 +130,7 @@ const pointLabel = (count: number) => (averageWindow.value > 1
 // Decorate the framework-agnostic geometry points with a localized tooltip.
 const points = computed(() => geometry.value.points.map(p => ({
   ...p,
-  title: `${pointLabel(p.count)} — ${dayjs(p.date).locale(locale.value).format('LL')}`,
+  title: `${pointLabel(p.count)} — ${formatCalendarDate(p.date, locale.value, { year: 'numeric', month: 'long', day: 'numeric' })}`,
 })));
 
 const linePath = computed(() => geometry.value.linePath);
@@ -144,12 +141,12 @@ const yTicks = computed(() => geometry.value.yTicks);
 
 const firstLabel = computed(() => {
   const first = series.value[0];
-  return first ? dayjs(first.date).locale(locale.value).format('MMM D') : '';
+  return first ? formatCalendarDate(first.date, locale.value, { month: 'short', day: 'numeric' }) : '';
 });
 
 const lastLabel = computed(() => {
   const last = series.value[series.value.length - 1];
-  return last ? dayjs(last.date).locale(locale.value).format('MMM D') : '';
+  return last ? formatCalendarDate(last.date, locale.value, { month: 'short', day: 'numeric' }) : '';
 });
 </script>
 

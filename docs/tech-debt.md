@@ -2,7 +2,7 @@
 
 Workarounds and deferred follow-ups that should be undone later, kept in one place so they can be reviewed without searching the repo for them.
 
-**Last reviewed:** 2026-11-01
+**Last reviewed:** 2026-11-03
 
 ## What goes here
 
@@ -99,6 +99,31 @@ Permanent design decisions and constraints don't belong here, even when they're 
 - **Tracking:** none.
 - **Added:** 2026-11-01
 
+### temporal-types-package
+
+- **Where:** `api/types/temporal.d.ts`, `api/package.json` (`temporal-spec` devDependency)
+- **Why:** The API uses Node 26's built-in `Temporal`, but TypeScript 5.9's libs have no `Temporal` types. `temporal-spec` supplies the global declarations (types only, no runtime code).
+- **Remove when:** the repo's TypeScript ships the `esnext.temporal` lib.
+- **Check:** `npm view typescript version`; after upgrading, delete the file and the devDependency, add `"ESNext.Temporal"` to `lib` in `api/tsconfig.json`, and run `npm run -w api type-check`.
+- **Tracking:** none.
+- **Added:** 2026-11-03
+
+### mobile-relative-time-dayjs
+
+- **Where:** `mobile/src/i18n/relative-time.ts`
+- **Why:** Some Hermes/Android builds lack `Intl.RelativeTimeFormat`, so the app can't use shared's `displayTimeSince` / `displayDaysSince` and keeps dayjs-based copies (with their own locale imports).
+- **Remove when:** every Hermes build the app supports implements `Intl.RelativeTimeFormat`.
+- **Check:** in a release build on Android and iOS, `typeof Intl.RelativeTimeFormat === 'function'`; then switch both call sites to the shared functions and delete the file.
+- **Tracking:** none.
+- **Added:** 2026-11-03
+
 ## Internal follow-ups
 
-None currently.
+### shared-iso-date-temporal
+
+- **Where:** `shared/platform/iso-date.ts`
+- **Why:** The shared package runs in browsers and in Hermes as well as Node, so its `YYYY-MM-DD` helpers are built on `Date` instead of `Temporal.PlainDate`.
+- **Remove when:** every supported browser and the mobile app's Hermes ship `Temporal`.
+- **Check:** caniuse for Temporal; `typeof Temporal` in a mobile release build. Then reimplement the helpers on `Temporal.PlainDate` (callers don't change).
+- **Tracking:** none.
+- **Added:** 2026-11-03

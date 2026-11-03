@@ -64,8 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import { Bible, computeBookFrequencies, type InsightsLogEntry } from '@mybiblelog/shared';
+import { Bible, computeBookFrequencies, type InsightsLogEntry, addDays, todayISODate } from '@mybiblelog/shared';
 
 const props = defineProps({
   entries: {
@@ -84,8 +83,8 @@ const sort = ref<'bible' | 'alpha' | 'most' | 'least'>('bible');
 const stripLeadingNumbers = (str: string) => str.replace(/^\d+\s*/, '').trim();
 
 const rows = computed(() => {
-  const endDate = dayjs().format('YYYY-MM-DD');
-  const startDate = dayjs().subtract(days.value - 1, 'day').format('YYYY-MM-DD');
+  const endDate = todayISODate();
+  const startDate = addDays(endDate, -(days.value - 1));
   const frequencies = computeBookFrequencies(props.entries as InsightsLogEntry[], startDate, endDate);
 
   const useProportion = metric.value === 'proportional';

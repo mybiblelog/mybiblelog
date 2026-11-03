@@ -26,8 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import { buildMonthGrid } from '@mybiblelog/shared';
+import { buildMonthGrid, parseISODate, todayISODate } from '@mybiblelog/shared';
 import CalendarMonthDayItem from '~/components/calendar/CalendarMonthDayItem.vue';
 import CalendarDateIndicator from '~/components/calendar/CalendarDateIndicator.vue';
 import CalendarDateSelector from '~/components/calendar/CalendarDateSelector.vue';
@@ -42,12 +41,14 @@ const props = defineProps<{
 
 const emit = defineEmits<{ daySelected: [date: string | null] }>();
 
-const todayStr = dayjs().format('YYYY-MM-DD');
-const selectedDate = ref(dayjs());
+const todayStr = todayISODate();
+// Any day in the displayed month, as YYYY-MM-DD.
+const selectedDate = ref(todayStr);
 const selectedDay = ref(todayStr);
 
-const month = computed(() => Number(selectedDate.value.format('M')));
-const year = computed(() => Number(selectedDate.value.format('YYYY')));
+const selectedMonth = computed(() => parseISODate(selectedDate.value)!);
+const month = computed(() => selectedMonth.value.month);
+const year = computed(() => selectedMonth.value.year);
 
 const days = computed(() => buildMonthGrid({
   year: year.value,
@@ -57,9 +58,9 @@ const days = computed(() => buildMonthGrid({
   getDateVerseCounts: props.getDateVerseCounts,
 }));
 
-function selectDate(newDate: ReturnType<typeof dayjs>) {
+function selectDate(newDate: string) {
   selectedDate.value = newDate;
-  const firstMonthDay = dayjs(newDate).date(1).format('YYYY-MM-DD');
+  const firstMonthDay = `${newDate.slice(0, 7)}-01`;
   selectDay(firstMonthDay);
 }
 

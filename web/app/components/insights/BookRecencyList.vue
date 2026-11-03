@@ -82,13 +82,15 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
-import { Bible, computeBookRecency, type InsightsLogEntry } from '@mybiblelog/shared';
-
-dayjs.extend(relativeTime);
-dayjs.extend(localizedFormat);
+import {
+  Bible,
+  computeBookRecency,
+  type InsightsLogEntry,
+  addDays,
+  todayISODate,
+  displayDaysSince,
+  formatCalendarDate,
+} from '@mybiblelog/shared';
 
 const props = defineProps({
   entries: {
@@ -112,10 +114,10 @@ const stripLeadingNumbers = (str: string) => str.replace(/^\d+\s*/, '').trim();
 
 const rows = computed(() => {
   const entries = props.entries as InsightsLogEntry[];
-  const endDate = dayjs().format('YYYY-MM-DD');
+  const endDate = todayISODate();
   const startDate = timeframe.value === 'all'
     ? entries.reduce((min, e) => (e.date < min ? e.date : min), endDate)
-    : dayjs().subtract((timeframe.value as number) - 1, 'day').format('YYYY-MM-DD');
+    : addDays(endDate, -((timeframe.value as number) - 1));
 
   const data = computeBookRecency(entries, startDate, endDate)
     .filter((book) => {
@@ -128,8 +130,8 @@ const rows = computed(() => {
       bookName: Bible.getBookName(book.bookIndex, locale.value),
       level: book.level,
       lastReadDate: book.lastReadDate,
-      relative: book.lastReadDate ? dayjs(book.lastReadDate).locale(locale.value).fromNow() : '',
-      absolute: book.lastReadDate ? dayjs(book.lastReadDate).locale(locale.value).format('LL') : '',
+      relative: book.lastReadDate ? displayDaysSince(book.lastReadDate, locale.value) : '',
+      absolute: book.lastReadDate ? formatCalendarDate(book.lastReadDate, locale.value, { year: 'numeric', month: 'long', day: 'numeric' }) : '',
     }));
 
   return data.sort((a, b) => {

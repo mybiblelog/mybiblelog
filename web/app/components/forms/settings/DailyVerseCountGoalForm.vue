@@ -120,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
+import { addDays, addMonths, addYears, diffDays, isISODate, isoDateToLocalDate, todayISODate } from '@mybiblelog/shared';
 import { useUserSettingsStore } from '~/stores/user-settings';
 
 const TOTAL_BIBLE_VERSES = 31102;
@@ -165,13 +165,11 @@ const { isSaving, error, submit: handleSubmit } = useSettingsWizardStep({
   },
 });
 
-const minDate = computed(() => dayjs().add(1, 'day').format('YYYY-MM-DD'));
+const minDate = computed(() => addDays(todayISODate(), 1));
 
 const daysToFinish = computed(() => {
-  if (!goalFinishDate.value) { return null; }
-  const today = dayjs().startOf('day');
-  const goalDate = dayjs(goalFinishDate.value).startOf('day');
-  const difference = goalDate.diff(today, 'day');
+  if (!isISODate(goalFinishDate.value)) { return null; }
+  const difference = diffDays(goalFinishDate.value, todayISODate());
   return difference > 0 ? difference : null;
 });
 
@@ -187,49 +185,39 @@ const calculatedFinishDate = computed(() => {
     return null;
   }
   const daysNeeded = Math.ceil(TOTAL_BIBLE_VERSES / dailyVerseCountGoal.value);
-  return displayDate(dayjs().add(daysNeeded, 'day').format('YYYY-MM-DD'));
+  return displayDate(addDays(todayISODate(), daysNeeded));
 });
 
-function getDailyGoalForOption(option: GoalOption) {
-  const today = dayjs().startOf('day');
-  let days;
+/** The finish date for a preset option, or `null` for options without one. */
+function getTargetDateForOption(option: GoalOption): string | null {
+  const today = todayISODate();
   switch (option) {
-  case '2years': days = today.add(2, 'year').diff(today, 'day'); break;
-  case 'year': days = today.add(1, 'year').diff(today, 'day'); break;
-  case '6months': days = today.add(6, 'month').diff(today, 'day'); break;
-  default: return 0;
+  case '2years': return addYears(today, 2);
+  case 'year': return addYears(today, 1);
+  case '6months': return addMonths(today, 6);
+  default: return null;
   }
-  return Math.ceil(TOTAL_BIBLE_VERSES / days);
+}
+
+function getDailyGoalForOption(option: GoalOption) {
+  const targetDate = getTargetDateForOption(option);
+  if (!targetDate) { return 0; }
+  return Math.ceil(TOTAL_BIBLE_VERSES / diffDays(targetDate, todayISODate()));
 }
 
 function getFinishDateForOption(option: GoalOption) {
-  const today = dayjs().startOf('day');
-  let targetDate;
-  switch (option) {
-  case '2years': targetDate = today.add(2, 'year'); break;
-  case 'year': targetDate = today.add(1, 'year'); break;
-  case '6months': targetDate = today.add(6, 'month'); break;
-  default: return '';
-  }
-  return displayDate(targetDate.format('YYYY-MM-DD'));
+  const targetDate = getTargetDateForOption(option);
+  return targetDate ? displayDate(targetDate) : '';
 }
 
 function displayDate(dateString: string) {
-  const date = dayjs(dateString).toDate();
   const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-  return date.toLocaleDateString(locale.value, options);
+  return isoDateToLocalDate(dateString).toLocaleDateString(locale.value, options);
 }
 
 function updateDateFromOption(option: GoalOption) {
-  const today = dayjs().startOf('day');
-  let targetDate;
-  switch (option) {
-  case '2years': targetDate = today.add(2, 'year'); break;
-  case 'year': targetDate = today.add(1, 'year'); break;
-  case '6months': targetDate = today.add(6, 'month'); break;
-  default: return;
-  }
-  goalFinishDate.value = targetDate.format('YYYY-MM-DD');
+  const targetDate = getTargetDateForOption(option);
+  if (targetDate) { goalFinishDate.value = targetDate; }
 }
 
 watch(selectedOption, (newOption) => {

@@ -1,11 +1,11 @@
 // This is an evergreen migration script, meant to update MongoDB data to the latest schema.
 
-import dayjs from 'dayjs';
 import { Collection, Document } from 'mongodb';
 import useCollections, { closeConnection } from '../mongo/useCollections';
 import { CODE_LENGTH } from '../repositories/helpers/verification-codes';
 import { type PlatformActivityDocument } from '../mongo/documents';
 import { ALLOWED_PLATFORMS } from '../http/helpers/platform';
+import { normalizeISODate } from '@mybiblelog/shared';
 
 // Main — intentionally left uninvoked; uncomment the `main()` call at the bottom to run.
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -42,8 +42,7 @@ const main = async (): Promise<void> => {
   const usersWithInvalidLookBackDate = await users.find({ 'settings.lookBackDate': { $not: /^\d\d\d\d-\d\d-\d\d$/ } }).toArray();
   for (const user of usersWithInvalidLookBackDate) {
     console.log(`Migrating user ${user.email} to valid lookBackDate format...`);
-    const justDate = (user.settings?.lookBackDate ?? '').split('T')[0];
-    const fixed = justDate && dayjs(justDate, 'YYYY-MM-DD', true).isValid() ? justDate : dayjs().format('YYYY-MM-DD');
+    const fixed = normalizeISODate(user.settings?.lookBackDate ?? '') ?? Temporal.Now.plainDateISO().toString();
     await users.updateOne({ _id: user._id }, { $set: { 'settings.lookBackDate': fixed } });
   }
 

@@ -1,12 +1,5 @@
 import { defineStore } from 'pinia';
-import dayjs from 'dayjs';
-import {
-  Bible,
-  displayDaysSince,
-  getReadingSuggestions,
-  type ReadingSuggestionContext,
-  type ReadingSuggestionPassage,
-} from '@mybiblelog/shared';
+import { Bible, displayDaysSince, getReadingSuggestions, type ReadingSuggestionContext, type ReadingSuggestionPassage, todayISODate } from '@mybiblelog/shared';
 import { useLogEntriesStore } from '~/stores/log-entries';
 
 export type { ReadingSuggestionPassage };
@@ -49,7 +42,7 @@ export const useReadingSuggestionsStore = defineStore('reading-suggestions', {
       };
 
       const logEntries = useLogEntriesStore().currentLogEntries;
-      const today = dayjs().format('YYYY-MM-DD');
+      const today = todayISODate();
 
       this.passages = getReadingSuggestions(logEntries, today).map(suggestion => ({
         startVerseId: suggestion.startVerseId,

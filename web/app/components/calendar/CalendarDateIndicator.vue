@@ -7,14 +7,15 @@
 </template>
 
 <script setup lang="ts">
-import type { Dayjs } from 'dayjs';
-const props = defineProps<{ selectedDate: Dayjs }>();
+import { formatCalendarDate } from '@mybiblelog/shared';
+
+// Any day in the displayed month, as YYYY-MM-DD.
+const props = defineProps<{ selectedDate: string }>();
 const { locale } = useI18n();
 
 const selectedMonth = computed(() => {
-  const jsDate = props.selectedDate.toDate();
-  const month = jsDate.toLocaleString(locale.value, { month: 'long' });
-  return `${month} ${jsDate.getFullYear()}`;
+  const month = formatCalendarDate(props.selectedDate, locale.value, { month: 'long' });
+  return `${month} ${props.selectedDate.slice(0, 4)}`;
 });
 </script>
 

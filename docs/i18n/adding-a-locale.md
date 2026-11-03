@@ -37,9 +37,9 @@ Some locales may use **`{}`** where translations are missing. The app falls back
 
 Run `npm run -w web i18n:verify-keys` ([`web/scripts/i18n/verify-i18n-keys.ts`](../../web/scripts/i18n/verify-i18n-keys.ts)). It checks that every non-default locale matches English for **leaf keys** in [`locales.ts`](../../web/i18n/locales/locales.ts) and in each component/page **inline `<i18n>`** block (locale list from [`shared/platform/i18n.ts`](../../shared/platform/i18n.ts)).
 
-## 7. Relative dates (dayjs)
+## 7. Relative dates (mobile only)
 
-**[`shared/platform/date-helpers.ts`](../../shared/platform/date-helpers.ts)** — For localized strings from `displayTimeSince` / `displayDaysSince`, add `import 'dayjs/locale/<tag>'` using the module name that exists under `dayjs/locale` (often the same as the app locale code; confirm in `node_modules/dayjs/locale` if unsure).
+Web and the shared package format dates with the built-in `Intl` APIs, which already cover every locale. The mobile app keeps dayjs for relative times because some Hermes builds lack `Intl.RelativeTimeFormat`: in **[`mobile/src/i18n/relative-time.ts`](../../mobile/src/i18n/relative-time.ts)**, add `import "dayjs/locale/<tag>"` using the module name that exists under `dayjs/locale` (often the same as the app locale code; confirm in `mobile/node_modules/dayjs/locale` if unsure).
 
 ## 8. Bible versions, defaults, and book names
 

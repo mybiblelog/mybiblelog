@@ -1,11 +1,7 @@
-import {
-  Bible,
-  displayDaysSince,
-  getReadingSuggestions,
-  type ReadingSuggestionContext,
-} from "@mybiblelog/shared";
+import { Bible, getReadingSuggestions, type ReadingSuggestionContext } from "@mybiblelog/shared";
 import { useMemo } from "react";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
+import { displayDaysSince } from "@/src/i18n/relative-time";
 import type { StoredLogEntry } from "@/src/storage/logEntries";
 
 export type DisplayReadingSuggestion = {

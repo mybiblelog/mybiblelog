@@ -208,8 +208,7 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import { Bible } from '@mybiblelog/shared';
+import { Bible, addDays, diffDays, isISODate, isoDateToLocalDate, normalizeISODate, todayISODate } from '@mybiblelog/shared';
 import BusyBar from '~/components/ui/BusyBar.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
 import { useLogEntriesStore } from '~/stores/log-entries';
@@ -238,14 +237,12 @@ const userSettings = computed(() => userSettingsStore.settings);
 const totalBibleVerseCount = Bible.getTotalVerseCount();
 
 const newVersesReadToday = computed(() =>
-  dateVerseCountsStore.getDateVerseCounts(dayjs().format('YYYY-MM-DD')).unique,
+  dateVerseCountsStore.getDateVerseCounts(todayISODate()).unique,
 );
 
-const daysSinceLookBackDate = computed(() => {
-  const today = dayjs();
-  const lookBackDate = dayjs(userSettings.value.lookBackDate);
-  return today.diff(lookBackDate, 'day');
-});
+const lookBackDate = computed(() => normalizeISODate(userSettings.value.lookBackDate) ?? todayISODate());
+
+const daysSinceLookBackDate = computed(() => diffDays(todayISODate(), lookBackDate.value));
 
 const uniqueVersesReadSinceLookBackDate = computed(() =>
   Bible.countUniqueRangeVerses(logEntries.value),
@@ -268,7 +265,7 @@ const daysToFinishBibleBasedOnLookBackDateAverage = computed(() => {
 const dateToFinishBibleBasedOnLookBackDateAverage = computed(() => {
   const days = daysToFinishBibleBasedOnLookBackDateAverage.value;
   if (days === Infinity) { return 'Never'; }
-  return dayjs().add(days, 'day').format('YYYY-MM-DD');
+  return addDays(todayISODate(), days);
 });
 
 const daysToFinishBibleBasedOnToday = computed(() => {
@@ -280,22 +277,25 @@ const daysToFinishBibleBasedOnToday = computed(() => {
 const dateToFinishBibleBasedOnToday = computed(() => {
   const days = daysToFinishBibleBasedOnToday.value;
   if (days === Infinity) { return 'Never'; }
-  return dayjs().add(days, 'day').format('YYYY-MM-DD');
+  return addDays(todayISODate(), days);
 });
 
 function averageDailyVersesReadPastXDays(x: number): number {
-  const today = dayjs();
-  let targetDate = today.subtract(x, 'day');
-  const lookBackDate = dayjs(userSettings.value.lookBackDate);
-  if (targetDate.isBefore(lookBackDate)) { targetDate = lookBackDate; }
-  const daysAgo = Math.abs(targetDate.diff(today, 'day'));
+  const today = todayISODate();
+  let targetDate = addDays(today, -x);
+  // When clamped to the look-back date, the sum below includes today's verses
+  // (but `daysAgo` doesn't count today), as it did before this used ISO dates.
+  const clampedToLookBackDate = targetDate < lookBackDate.value;
+  if (clampedToLookBackDate) { targetDate = lookBackDate.value; }
+  const daysAgo = Math.abs(diffDays(targetDate, today));
 
   let cumulativeUniqueVerses = 0;
-  let currentDate = targetDate;
-  while (currentDate.isBefore(today)) {
-    const { unique } = dateVerseCountsStore.getDateVerseCounts(currentDate.format('YYYY-MM-DD'));
-    cumulativeUniqueVerses += unique;
-    currentDate = currentDate.add(1, 'day');
+  for (
+    let currentDate = targetDate;
+    clampedToLookBackDate ? currentDate <= today : currentDate < today;
+    currentDate = addDays(currentDate, 1)
+  ) {
+    cumulativeUniqueVerses += dateVerseCountsStore.getDateVerseCounts(currentDate).unique;
   }
   return cumulativeUniqueVerses / daysAgo;
 }
@@ -309,19 +309,24 @@ function daysToFinishBibleBasedOnXDayAverage(x: number): number {
 function dateToFinishBibleBasedOnXDayAverage(x: number): string {
   const days = daysToFinishBibleBasedOnXDayAverage(x);
   if (days === Infinity) { return 'Never'; }
-  return dayjs().add(days, 'day').format('YYYY-MM-DD');
+  return addDays(todayISODate(), days);
 }
 
 function displayDate(dateString: string): string {
   if (dateString === 'Never') { return t('never'); }
-  const date = dayjs(dateString).toDate();
-  return date.toLocaleDateString(locale.value, { year: 'numeric', month: 'short', day: 'numeric' });
+  const isoDate = normalizeISODate(dateString);
+  if (!isoDate) { return ''; }
+  return isoDateToLocalDate(isoDate).toLocaleDateString(locale.value, { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
 watch(goalFinishDate, (newVal) => {
-  const today = dayjs().startOf('day');
-  const goalDate = dayjs(newVal).startOf('day');
-  const difference = goalDate.diff(today, 'day');
+  if (!isISODate(newVal)) {
+    daysToFinishByGoalFinishDate.value = '?';
+    versesRequiredEachDayForGoal.value = '?';
+    goalFinishDateError.value = '';
+    return;
+  }
+  const difference = diffDays(newVal, todayISODate());
   if (difference <= 0) {
     goalFinishDateError.value = t('set_a_goal.goal_finish_date_error');
     daysToFinishByGoalFinishDate.value = '?';

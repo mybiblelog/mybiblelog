@@ -3,7 +3,6 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount, flushPromises } from '@vue/test-utils';
 import { nextTick } from 'vue';
 import { setActivePinia, createPinia } from 'pinia';
-import dayjs from 'dayjs';
 import DailyVerseCountGoalForm from '~/components/forms/settings/DailyVerseCountGoalForm.vue';
 import { useSettingsWizardStep } from '~/composables/useSettingsWizardStep';
 import { useUserSettingsStore } from '~/stores/user-settings';
@@ -11,25 +10,35 @@ import { useToastStore } from '~/stores/toast';
 
 const TOTAL_BIBLE_VERSES = 31102;
 
-// Mirrors the component's internal `getDailyGoalForOption`/date math so
-// assertions stay correct regardless of what day the suite runs on.
-function daysUntil(option: 'year' | '2years' | '6months') {
-  const today = dayjs().startOf('day');
-  switch (option) {
-  case '2years': return today.add(2, 'year').diff(today, 'day');
-  case '6months': return today.add(6, 'month').diff(today, 'day');
-  default: return today.add(1, 'year').diff(today, 'day');
-  }
+// Independent local-calendar date math (plain `Date`, not the component's
+// helpers) so assertions stay correct regardless of what day the suite runs on.
+// Month shifts clamp to the end of a shorter month, as the component does.
+function shiftedDate({ months = 0, days = 0 }: { months?: number; days?: number }): Date {
+  const now = new Date();
+  const target = new Date(now.getFullYear(), now.getMonth() + months, 1, 12);
+  const lastDayOfMonth = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+  target.setDate(Math.min(now.getDate(), lastDayOfMonth) + days);
+  return target;
 }
 
-function dailyGoalFor(option: 'year' | '2years' | '6months') {
-  return Math.ceil(TOTAL_BIBLE_VERSES / daysUntil(option));
+function ymd(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+function daysFromToday(date: Date) {
+  const now = new Date();
+  return Math.round(
+    (Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) -
+      Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())) / 86_400_000,
+  );
 }
 
 function finishDateFor(option: 'year' | '2years' | '6months') {
-  const today = dayjs().startOf('day');
-  const target = option === '2years' ? today.add(2, 'year') : option === '6months' ? today.add(6, 'month') : today.add(1, 'year');
-  return target.format('YYYY-MM-DD');
+  return shiftedDate({ months: option === '2years' ? 24 : option === '6months' ? 6 : 12 });
+}
+
+function dailyGoalFor(option: 'year' | '2years' | '6months') {
+  return Math.ceil(TOTAL_BIBLE_VERSES / daysFromToday(finishDateFor(option)));
 }
 
 async function mountForm(props: Record<string, unknown> = {}) {
@@ -79,18 +88,16 @@ describe('DailyVerseCountGoalForm', () => {
     await radioFor(wrapper, 'specific').setValue();
 
     expect(isChecked(wrapper, 'specific')).toBe(true);
-    expect(dateInputValue(wrapper)).toBe(finishDateFor('year'));
+    expect(dateInputValue(wrapper)).toBe(ymd(finishDateFor('year')));
   });
 
   it('editing goalFinishDate while "specific" is selected recalculates the daily goal', async () => {
     const wrapper = await mountForm();
     await radioFor(wrapper, 'specific').setValue();
 
-    const newDate = dayjs().add(30, 'day').format('YYYY-MM-DD');
-    await wrapper.find('input[type="date"]').setValue(newDate);
+    await wrapper.find('input[type="date"]').setValue(ymd(shiftedDate({ days: 30 })));
 
-    const expectedDays = dayjs(newDate).startOf('day').diff(dayjs().startOf('day'), 'day');
-    const expectedGoal = Math.ceil(TOTAL_BIBLE_VERSES / expectedDays);
+    const expectedGoal = Math.ceil(TOTAL_BIBLE_VERSES / 30);
     expect(dailyGoalInputValue(wrapper)).toBe(expectedGoal);
   });
 
@@ -101,7 +108,7 @@ describe('DailyVerseCountGoalForm', () => {
 
     expect(isChecked(wrapper, 'ownpace')).toBe(true);
     expect(dailyGoalInputValue(wrapper)).toBe(dailyGoalFor('year'));
-    const expectedDate = dayjs().add(Math.ceil(TOTAL_BIBLE_VERSES / dailyGoalFor('year')), 'day').toDate()
+    const expectedDate = shiftedDate({ days: Math.ceil(TOTAL_BIBLE_VERSES / dailyGoalFor('year')) })
       .toLocaleDateString('en', { year: 'numeric', month: 'long', day: 'numeric' });
     expect(ownpaceCard(wrapper).textContent).toContain(expectedDate);
   });
@@ -113,7 +120,7 @@ describe('DailyVerseCountGoalForm', () => {
     await wrapper.find('input[type="number"]').setValue(100);
 
     const daysNeeded = Math.ceil(TOTAL_BIBLE_VERSES / 100);
-    const expectedDateStr = dayjs().add(daysNeeded, 'day').toDate()
+    const expectedDateStr = shiftedDate({ days: daysNeeded })
       .toLocaleDateString('en', { year: 'numeric', month: 'long', day: 'numeric' });
     expect(ownpaceCard(wrapper).textContent).toContain(expectedDateStr);
   });
@@ -126,14 +133,14 @@ describe('DailyVerseCountGoalForm', () => {
     await radioFor(wrapper, 'year').setValue();
 
     expect(dailyGoalInputValue(wrapper)).toBe(dailyGoalFor('year'));
-    expect(dateInputValue(wrapper)).toBe(finishDateFor('year'));
+    expect(dateInputValue(wrapper)).toBe(ymd(finishDateFor('year')));
   });
 
   it('ignores a past or empty finish date while "specific" is selected', async () => {
     const wrapper = await mountForm();
     await radioFor(wrapper, 'specific').setValue();
 
-    await wrapper.find('input[type="date"]').setValue(dayjs().subtract(1, 'day').format('YYYY-MM-DD'));
+    await wrapper.find('input[type="date"]').setValue(ymd(shiftedDate({ days: -1 })));
     expect(dailyGoalInputValue(wrapper)).toBe(dailyGoalFor('year'));
 
     await wrapper.find('input[type="date"]').setValue('');
@@ -162,7 +169,7 @@ describe('DailyVerseCountGoalForm', () => {
 
       expect(isChecked(wrapper, 'year')).toBe(false);
       expect(isChecked(wrapper, 'ownpace')).toBe(false);
-      expect(dateInputValue(wrapper)).toBe(finishDateFor('2years'));
+      expect(dateInputValue(wrapper)).toBe(ymd(finishDateFor('2years')));
     });
 
     it('guesses the 6-month pace when initialValue matches it', async () => {
@@ -174,7 +181,7 @@ describe('DailyVerseCountGoalForm', () => {
 
       expect(isChecked(wrapper, 'year')).toBe(false);
       expect(isChecked(wrapper, 'ownpace')).toBe(false);
-      expect(dateInputValue(wrapper)).toBe(finishDateFor('6months'));
+      expect(dateInputValue(wrapper)).toBe(ymd(finishDateFor('6months')));
     });
 
     it('does not change the selected option when initialValue arrives after the user picked one', async () => {

@@ -48,8 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import { Bible } from '@mybiblelog/shared';
+import { Bible, todayISODate } from '@mybiblelog/shared';
 import { UnknownApiError } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useToastStore } from '~/stores/toast';
@@ -101,7 +100,7 @@ function downloadLogEntriesCSV() {
     ]);
     logCsvCache = rows.map(csvRow).join('\n') + '\n';
   }
-  const today = dayjs().format('YYYY-MM-DD');
+  const today = todayISODate();
   generateDownload(t('reading_log_filename', { today }), logCsvCache);
 }
 
@@ -145,7 +144,7 @@ async function downloadNotesTextFile() {
       return;
     }
   }
-  const today = dayjs().format('YYYY-MM-DD');
+  const today = todayISODate();
   generateDownload(t('notes_text_filename', { today }), notesTextCache);
 }
 
@@ -162,7 +161,7 @@ async function downloadNotesJsonFile() {
       return;
     }
   }
-  const today = dayjs().format('YYYY-MM-DD');
+  const today = todayISODate();
   generateDownload(t('notes_json_filename', { today }), notesJsonCache);
 }
 

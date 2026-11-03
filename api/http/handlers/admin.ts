@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import { generateUserJWT } from '../../repositories/helpers/user-auth';
 import { type Repositories } from '../../repositories/useRepositories';
 import { type AdminUserListQuery, type FeedbackStatus } from '../../repositories/helpers/types';
@@ -11,8 +9,6 @@ import { authCookie } from '../helpers/auth-cookie';
 import { validate } from '../../validation/validate';
 import { adminFeedbackIdParam, adminFeedbackPatchSchema } from '../../validation/schemas/admin';
 import { type RouteHandler } from '../types';
-
-dayjs.extend(utc);
 
 /**
  * Framework-agnostic admin handlers.
@@ -39,10 +35,11 @@ const getPastWeekEngagement = async (
 ): Promise<PastWeekEngagementData[]> => {
   const { users, logEntries, passageNotes } = repositories;
 
-  const dayRange = (date: string, hoursOffset = 0) => ({
-    startDate: dayjs.utc(date).startOf('day').add(hoursOffset, 'hour').toDate(),
-    endDate: dayjs.utc(date).endOf('day').add(hoursOffset, 'hour').toDate(),
-  });
+  const dayRange = (date: string, hoursOffset = 0) => {
+    const start = Temporal.PlainDate.from(date).toZonedDateTime('UTC').toInstant().add({ hours: hoursOffset });
+    const end = start.add({ hours: 24 }).subtract({ milliseconds: 1 });
+    return { startDate: new Date(start.epochMilliseconds), endDate: new Date(end.epochMilliseconds) };
+  };
 
   const countUsersWithNoteForDate = async (date: string, hoursOffset = 0) => {
     const { startDate, endDate } = dayRange(date, hoursOffset);
@@ -62,7 +59,7 @@ const getPastWeekEngagement = async (
 
   const dates: string[] = [];
   for (let i = 0; i < 7; i++) {
-    dates.push(dayjs.utc().subtract(i, 'day').format('YYYY-MM-DD'));
+    dates.push(Temporal.Now.plainDateISO('UTC').subtract({ days: i }).toString());
   }
 
   const engagementData: PastWeekEngagementData[] = [];

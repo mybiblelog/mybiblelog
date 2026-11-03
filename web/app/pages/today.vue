@@ -149,8 +149,7 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import { Bible } from '@mybiblelog/shared';
+import { Bible, todayISODate } from '@mybiblelog/shared';
 import BusyBar from '~/components/ui/BusyBar.vue';
 import DoubleProgressBar from '~/components/ui/DoubleProgressBar.vue';
 import ReadingTrackerResetCard from '~/components/ui/ReadingTrackerResetCard.vue';
@@ -197,7 +196,7 @@ const loadingReadingSuggestions = ref(true);
 const userSettings = computed(() => userSettingsStore.settings);
 const logEntries = computed(() => logEntriesStore.currentLogEntries);
 const addNewVerseCountToReadingSuggestion = (passage: Passage) => {
-  const today = dayjs().format('YYYY-MM-DD');
+  const today = todayISODate();
   const throughToday = logEntries.value.filter(e => e.date <= today);
   const uniqueToday = Bible.countUniqueRangeVerses(throughToday);
   const newVerseCount = Bible.countUniqueRangeVerses([...throughToday, passage]) - uniqueToday;
@@ -211,7 +210,7 @@ const readingSuggestionsWithNewVerseCounts = computed(() =>
 const recentNotes = computed(() => passageNotesStore.passageNotes.slice(0, 3));
 
 const logEntriesForToday = computed(() => {
-  const today = dayjs().format('YYYY-MM-DD');
+  const today = todayISODate();
   return logEntries.value
     .filter(entry => entry.date === today)
     .map(entry => addNewVerseCountToLogEntry(entry));
@@ -220,7 +219,7 @@ const logEntriesForToday = computed(() => {
 const versesReadToday = computed(() => Bible.countUniqueRangeVerses(logEntriesForToday.value));
 
 const newVersesReadToday = computed(() =>
-  dateVerseCountsStore.getDateVerseCounts(dayjs().format('YYYY-MM-DD')).unique,
+  dateVerseCountsStore.getDateVerseCounts(todayISODate()).unique,
 );
 
 const dailyGoalPercentComplete = computed(() => {
@@ -238,7 +237,7 @@ const dailyGoalPercentCompleteNew = computed(() => {
 type LogEntryLike = { id: number | string; date: string; startVerseId: number; endVerseId: number };
 
 const addNewVerseCountToLogEntry = (logEntry: LogEntryLike) => {
-  const today = dayjs().format('YYYY-MM-DD');
+  const today = todayISODate();
   const throughYesterday = logEntries.value.filter(e => e.date < today);
   const uniqueYesterday = Bible.countUniqueRangeVerses(throughYesterday);
   throughYesterday.push(logEntry);
@@ -293,7 +292,7 @@ const continueReadingPassage = (passage: { endVerseId: number }) => {
 const trackPassage = (passage: Passage) => {
   logEntryEditorStore.openEditor({
     id: null,
-    date: dayjs().format('YYYY-MM-DD'),
+    date: todayISODate(),
     startVerseId: passage.startVerseId,
     endVerseId: passage.endVerseId,
   });

@@ -38,8 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import { Bible } from '@mybiblelog/shared';
+import { Bible, todayISODate } from '@mybiblelog/shared';
 import AppModal from '~/components/popups/AppModal.vue';
 import { useJustOpenedStore } from '~/stores/just-opened';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
@@ -64,7 +63,7 @@ function logReading() {
   }
   useLogEntryEditorStore().openEditor({
     id: null,
-    date: dayjs().format('YYYY-MM-DD'),
+    date: todayISODate(),
     startVerseId,
     endVerseId,
   });

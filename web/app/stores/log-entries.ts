@@ -10,10 +10,10 @@ import {
   type CreateLogEntryInput,
   type LogEntry,
   type UpdateLogEntryInput,
+  todayISODate,
 } from '@mybiblelog/shared';
 import { useAchievementsStore } from '~/stores/achievements';
 import { useUserSettingsStore } from '~/stores/user-settings';
-import dayjs from 'dayjs';
 
 export type { CreateLogEntryInput, LogEntry, UpdateLogEntryInput };
 
@@ -58,7 +58,7 @@ export const useLogEntriesStore = defineStore('log-entries', {
       return isBibleComplete(this.currentLogEntries);
     },
     hasLogEntriesForToday(state): boolean {
-      const today = dayjs().format('YYYY-MM-DD');
+      const today = todayISODate();
       return state.logEntries.some(entry => entry.date === today);
     },
   },

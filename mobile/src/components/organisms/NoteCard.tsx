@@ -1,9 +1,10 @@
-import { Bible, displayTimeSince, linkifyText } from "@mybiblelog/shared";
+import { Bible, linkifyText } from "@mybiblelog/shared";
 import { Linking, Pressable, StyleSheet, View } from "react-native";
 import type { PassageNote } from "@/src/api/notesApi";
 import { openPassageInBible } from "@/src/bible/openInBible";
 import { spacing } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
+import { displayTimeSince } from "@/src/i18n/relative-time";
 import { useTagsList } from "@/src/stores/passageNoteTags";
 import { useSettingsValue } from "@/src/stores/userSettings";
 import { useToast } from "@/src/toast/ToastProvider";

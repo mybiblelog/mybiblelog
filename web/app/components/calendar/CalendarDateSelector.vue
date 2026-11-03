@@ -7,24 +7,25 @@
 </template>
 
 <script setup lang="ts">
-import dayjs, { type Dayjs } from 'dayjs';
+import { addMonths, todayISODate } from '@mybiblelog/shared';
 import TriangleLeftIcon from '~/components/svg/TriangleLeftIcon.vue';
 import TriangleRightIcon from '~/components/svg/TriangleRightIcon.vue';
 
-const props = defineProps<{ currentDate: string; selectedDate: Dayjs }>();
-const emit = defineEmits<{ dateSelected: [date: Dayjs]; daySelected: [date: string | null] }>();
+// Dates are YYYY-MM-DD; `selectedDate` is any day in the displayed month.
+const props = defineProps<{ currentDate: string; selectedDate: string }>();
+const emit = defineEmits<{ dateSelected: [date: string]; daySelected: [date: string | null] }>();
 const { t } = useI18n();
 
 function selectPrevious() {
-  emit('dateSelected', dayjs(props.selectedDate).subtract(1, 'month'));
+  emit('dateSelected', addMonths(props.selectedDate, -1));
   emit('daySelected', null);
 }
 function selectCurrent() {
-  emit('dateSelected', dayjs(props.currentDate));
-  emit('daySelected', dayjs().format('YYYY-MM-DD'));
+  emit('dateSelected', props.currentDate);
+  emit('daySelected', todayISODate());
 }
 function selectNext() {
-  emit('dateSelected', dayjs(props.selectedDate).add(1, 'month'));
+  emit('dateSelected', addMonths(props.selectedDate, 1));
   emit('daySelected', null);
 }
 </script>

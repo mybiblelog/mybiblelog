@@ -1,6 +1,6 @@
-import dayjs from 'dayjs';
 import Bible from '../bible';
 import { computeDateVerseCounts, type DateVerseCountLogEntry } from './date-verse-counts';
+import { addDays, diffDays, normalizeISODate, todayISODate, weekdayOf } from '../platform/iso-date';
 
 /**
  * A log entry shape sufficient for all insights computations:
@@ -8,7 +8,7 @@ import { computeDateVerseCounts, type DateVerseCountLogEntry } from './date-vers
  */
 export type InsightsLogEntry = DateVerseCountLogEntry;
 
-const formatDate = (date: string): string => dayjs(date).format('YYYY-MM-DD');
+const formatDate = (date: string): string => normalizeISODate(date) ?? date;
 
 /**
  * Returns the inclusive subset of entries whose date falls within
@@ -67,15 +67,12 @@ export const buildContributionCalendar = (
   entries: ReadonlyArray<Readonly<InsightsLogEntry>>,
   endDate?: string,
 ): ContributionCalendar => {
-  const end = endDate ? dayjs(endDate) : dayjs();
-  const endStr = end.format('YYYY-MM-DD');
+  const endStr = endDate ?? todayISODate();
 
-  // Window of 365 days ending on `end`, expanded outward to whole Sun–Sat weeks.
-  const windowStart = end.subtract(364, 'day');
-  const gridStart = windowStart.subtract(windowStart.day(), 'day'); // back to Sunday
-  const gridEnd = end.add(6 - end.day(), 'day'); // forward to Saturday
-  const gridStartStr = gridStart.format('YYYY-MM-DD');
-  const gridEndStr = gridEnd.format('YYYY-MM-DD');
+  // Window of 365 days ending on `endStr`, expanded outward to whole Sun–Sat weeks.
+  const windowStart = addDays(endStr, -364);
+  const gridStartStr = addDays(windowStart, -weekdayOf(windowStart)); // back to Sunday
+  const gridEndStr = addDays(endStr, 6 - weekdayOf(endStr)); // forward to Saturday
 
   const counts = computeDateVerseCounts(entries, gridStartStr, gridEndStr);
 
@@ -83,16 +80,13 @@ export const buildContributionCalendar = (
   type RawCell = { date: string; count: number; future: boolean };
   const rawCells: RawCell[] = [];
   let maxCount = 0;
-  let cursor = gridStart;
-  while (cursor.isBefore(gridEnd) || cursor.isSame(gridEnd, 'day')) {
-    const date = cursor.format('YYYY-MM-DD');
+  for (let date = gridStartStr; date <= gridEndStr; date = addDays(date, 1)) {
     const future = date > endStr;
     const count = future ? 0 : (counts[date]?.total ?? 0);
     if (!future && count > maxCount) {
       maxCount = count;
     }
     rawCells.push({ date, count, future });
-    cursor = cursor.add(1, 'day');
   }
 
   // Second pass: assign levels and group into week columns.
@@ -159,8 +153,8 @@ export const getRecencyLevel = (
   if (!lastReadDate) {
     return 0;
   }
-  const totalDays = dayjs(endDate).diff(dayjs(startDate), 'day');
-  const pos = dayjs(lastReadDate).diff(dayjs(startDate), 'day');
+  const totalDays = diffDays(endDate, startDate);
+  const pos = diffDays(lastReadDate, startDate);
   const fraction = totalDays > 0 ? pos / totalDays : 1;
   if (fraction < 0.25) { return 1; }
   if (fraction < 0.5) { return 2; }
@@ -249,21 +243,17 @@ export const computeDailyVerseSeries = (
   }
 
   const safeAverage = Math.max(1, Math.floor(averageWindow));
-  const end = endDate ? dayjs(endDate) : dayjs();
-  const start = end.subtract(safeDays - 1, 'day');
-  const readStart = start.subtract(safeAverage - 1, 'day');
+  const end = endDate ?? todayISODate();
+  const start = addDays(end, -(safeDays - 1));
+  const readStart = addDays(start, -(safeAverage - 1));
 
-  const counts = computeDateVerseCounts(
-    entries,
-    readStart.format('YYYY-MM-DD'),
-    end.format('YYYY-MM-DD'),
-  );
+  const counts = computeDateVerseCounts(entries, readStart, end);
 
   const totals: number[] = [];
   let cursor = readStart;
   for (let i = 0; i < safeDays + safeAverage - 1; i++) {
-    totals.push(counts[cursor.format('YYYY-MM-DD')]?.total ?? 0);
-    cursor = cursor.add(1, 'day');
+    totals.push(counts[cursor]?.total ?? 0);
+    cursor = addDays(cursor, 1);
   }
 
   const series: DailyVersePoint[] = [];
@@ -271,8 +261,8 @@ export const computeDailyVerseSeries = (
   for (let i = 0; i < safeDays; i++) {
     let sum = 0;
     for (let j = 0; j < safeAverage; j++) sum += totals[i + j]!;
-    series.push({ date: cursor.format('YYYY-MM-DD'), count: sum / safeAverage });
-    cursor = cursor.add(1, 'day');
+    series.push({ date: cursor, count: sum / safeAverage });
+    cursor = addDays(cursor, 1);
   }
   return series;
 };

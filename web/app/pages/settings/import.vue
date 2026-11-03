@@ -71,16 +71,12 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { Bible } from '@mybiblelog/shared';
+import { Bible, isISODate } from '@mybiblelog/shared';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useUserSettingsStore } from '~/stores/user-settings';
 import { useAppInitStore } from '~/stores/app-init';
 import { runWithConcurrencyLimit } from '~/helpers/run-with-concurrency-limit';
-
-dayjs.extend(customParseFormat);
 
 definePageMeta({ middleware: ['auth'] });
 const { t, locale } = useI18n();
@@ -150,7 +146,7 @@ function parseCsvToRows(csvText: string): ImportRow[] {
     return [];
   }
   return rows.map(([inputDate = '', verseRange = '']) => {
-    const isValidDate = dayjs(inputDate, 'YYYY-MM-DD', true).isValid();
+    const isValidDate = isISODate(inputDate);
     const date = isValidDate ? inputDate : null;
     let startVerseId: number | null = null;
     let endVerseId: number | null = null;

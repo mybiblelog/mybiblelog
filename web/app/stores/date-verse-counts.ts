@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
-import dayjs from 'dayjs';
-import { BrowserCache, computeDateVerseCounts } from '@mybiblelog/shared';
+import { BrowserCache, computeDateVerseCounts, todayISODate } from '@mybiblelog/shared';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useUserSettingsStore } from '~/stores/user-settings';
 
@@ -59,7 +58,7 @@ export const useDateVerseCountsStore = defineStore('date-verse-counts', {
         const dateVerseCounts = computeDateVerseCounts(
           logEntries,
           startDate,
-          dayjs().format('YYYY-MM-DD'),
+          todayISODate(),
           trackerStartDate,
         );
         Object.keys(dateVerseCounts).forEach((date) => {

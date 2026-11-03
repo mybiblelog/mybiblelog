@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import dayjs from 'dayjs';
 import { buildMonthGrid } from './calendar';
 
 const noCounts = () => ({ unique: 0, total: 0 });
@@ -27,7 +26,7 @@ describe('buildMonthGrid', () => {
     });
     expect(grid.length % 7).toBe(0);
     // First cell must be a Monday.
-    expect(dayjs(grid[0].date).day()).toBe(1);
+    expect(new Date(`${grid[0].date}T00:00:00Z`).getUTCDay()).toBe(1);
   });
 
   it('computes progress percentages against the goal', () => {

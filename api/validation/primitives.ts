@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import dayjs from 'dayjs';
-import { Bible } from '@mybiblelog/shared';
+import { Bible, isISODate } from '@mybiblelog/shared';
 import { isValidObjectId } from '../repositories/helpers/ids';
 
 /** A well-formed MongoDB ObjectId string. */
@@ -10,7 +9,8 @@ export const objectId = z.string().refine((id) => isValidObjectId(id));
 export const objectIdParam = z.object({ id: objectId });
 
 /** A strict `YYYY-MM-DD` date string. */
-export const dateString = z.string().refine((value) => dayjs(value, 'YYYY-MM-DD', true).isValid());
+/** A real calendar date as `YYYY-MM-DD` (rejects `2024-02-30`, `2024-1-5`, timestamps). */
+export const dateString = z.string().refine(isISODate);
 
 /** A numeric verse id that exists in the Bible. */
 export const verseId = z.number().int().refine((value) => Bible.verseExists(value));

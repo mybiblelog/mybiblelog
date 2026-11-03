@@ -49,8 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import { Bible, displayDate } from '@mybiblelog/shared';
+import { Bible, displayDate, todayISODate } from '@mybiblelog/shared';
 import BusyBar from '~/components/ui/BusyBar.vue';
 import CalendarMonth from '~/components/calendar/CalendarMonth.vue';
 import LogEntry from '~/components/log/LogEntry.vue';
@@ -158,7 +157,7 @@ function selectDate(date: string | null) {
 }
 
 onMounted(async () => {
-  currentDate.value = dayjs().format('YYYY-MM-DD');
+  currentDate.value = todayISODate();
   await useAppInitStore().loadUserData();
   setTimeout(() => { dateVerseCountsStore.cacheDateVerseCounts(); }, 0);
 });

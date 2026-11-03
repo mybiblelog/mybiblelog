@@ -171,7 +171,7 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
+import { toISODate } from '@mybiblelog/shared';
 import AdminUserDetailModal from '~/components/admin/AdminUserDetailModal.vue';
 import CaretLeftIcon from '~/components/svg/CaretLeftIcon.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
@@ -222,8 +222,12 @@ const emptyMessage = computed(() => {
   return t('empty_open');
 });
 
+/** e.g. "2026-01-15 03:30 pm", in local time. */
 function formatDateTime(dateStr: string) {
-  return dayjs(dateStr).format('YYYY-MM-DD hh:mm a');
+  const date = new Date(dateStr);
+  const hours = String(date.getHours() % 12 || 12).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${toISODate(date)} ${hours}:${minutes} ${date.getHours() < 12 ? 'am' : 'pm'}`;
 }
 
 // Kinds come back raw from the API; anything unrecognized (e.g. a kind retired

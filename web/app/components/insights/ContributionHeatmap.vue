@@ -76,11 +76,16 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
-import { buildContributionCalendar, type HeatmapCell, type HeatmapWeek, type InsightsLogEntry } from '@mybiblelog/shared';
-
-dayjs.extend(localizedFormat);
+import {
+  addDays,
+  addMonths,
+  buildContributionCalendar,
+  formatCalendarDate,
+  todayISODate,
+  type HeatmapCell,
+  type HeatmapWeek,
+  type InsightsLogEntry,
+} from '@mybiblelog/shared';
 
 // How much of the year the narrow-screen strip shows (the full year won't fit a
 // phone at a legible cell size, so we trim to the most recent months).
@@ -102,13 +107,16 @@ const calendar = computed(() => buildContributionCalendar(props.entries as Insig
 // readable so they can't be misread — e.g. Dec 2025 above Jan 2026.
 type MonthLabel = { month: string; year: string };
 function buildMonthLabels(weeks: HeatmapWeek[]): MonthLabel[] {
-  let lastMonth = -1;
+  let lastMonth = '';
   return weeks.map((week) => {
-    const d = dayjs(week[0]!.date).locale(locale.value);
-    const month = d.month();
+    const date = week[0]!.date;
+    const month = date.slice(0, 7); // YYYY-MM
     if (month !== lastMonth) {
       lastMonth = month;
-      return { month: d.format('MMM'), year: d.format('YYYY') };
+      return {
+        month: formatCalendarDate(date, locale.value, { month: 'short' }),
+        year: formatCalendarDate(date, locale.value, { year: 'numeric' }),
+      };
     }
     return { month: '', year: '' };
   });
@@ -120,7 +128,7 @@ function buildMonthLabels(weeks: HeatmapWeek[]): MonthLabel[] {
 // cells stay legible without horizontal scrolling.
 const strips = computed(() => {
   const weeks = calendar.value.weeks;
-  const cutoff = dayjs().subtract(NARROW_MONTHS, 'month').format('YYYY-MM-DD');
+  const cutoff = addMonths(todayISODate(), -NARROW_MONTHS);
   const idx = weeks.findIndex(week => week[week.length - 1]!.date >= cutoff);
   const splitAt = idx <= 0 ? 0 : idx;
   const recent = splitAt > 0 ? weeks.slice(splitAt) : weeks;
@@ -135,10 +143,10 @@ const strips = computed(() => {
 
 // Sunday → Saturday; only show Mon / Wed / Fri to reduce clutter (GitHub-style).
 const weekdayLabels = computed(() => {
-  const base = dayjs('2026-06-14'); // a Sunday
+  const base = '2026-06-14'; // a Sunday
   return [0, 1, 2, 3, 4, 5, 6].map((offset) => {
     if (offset === 1 || offset === 3 || offset === 5) {
-      return base.add(offset, 'day').locale(locale.value).format('ddd');
+      return formatCalendarDate(addDays(base, offset), locale.value, { weekday: 'short' });
     }
     return '';
   });
@@ -148,7 +156,7 @@ function cellTitle(cell: HeatmapCell): string {
   if (cell.future) {
     return '';
   }
-  const date = dayjs(cell.date).locale(locale.value).format('LL');
+  const date = formatCalendarDate(cell.date, locale.value, { year: 'numeric', month: 'long', day: 'numeric' });
   const verses = t('verses_read', { count: cell.count });
   return `${verses} — ${date}`;
 }

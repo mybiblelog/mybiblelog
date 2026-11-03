@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import { isISODate } from '@mybiblelog/shared';
 import { clamp, parseIntOr, pickEnum, MAX_PAGE_SIZE } from './route-query-codec';
 
 export type LogEntriesSortDirection = 'ascending' | 'descending';
@@ -29,7 +29,7 @@ const DEFAULT_LOG_ENTRIES_QUERY: LogEntriesQuery = {
 function normalizeDateString(value: unknown): string {
   const v = `${value ?? ''}`.trim();
   if (!v) { return ''; }
-  return dayjs(v, 'YYYY-MM-DD', true).isValid() ? v : '';
+  return isISODate(v) ? v : '';
 }
 
 export function decodeLogEntriesRouteQuery(routeQuery: RouteQueryLike = {}): LogEntriesQuery {

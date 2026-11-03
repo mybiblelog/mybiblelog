@@ -1,8 +1,5 @@
-import dayjs from 'dayjs';
-import weekday from 'dayjs/plugin/weekday';
 import type { DateVerseCounts } from './date-verse-counts';
-
-dayjs.extend(weekday);
+import { addDays, daysInMonthOf, formatISODate, weekdayOf } from '../platform/iso-date';
 
 /**
  * A single cell in a month grid. Days inside the target month carry verse-count
@@ -26,9 +23,6 @@ export type BuildMonthGridInput = {
   getDateVerseCounts: (date: string) => DateVerseCounts;
 };
 
-const formatDay = (year: number, month: number, day: number): string =>
-  dayjs(`${year}-${month}-${day}`).format('YYYY-MM-DD');
-
 const buildCurrentMonthDays = ({
   year,
   month,
@@ -36,9 +30,9 @@ const buildCurrentMonthDays = ({
   trackerStartDate,
   getDateVerseCounts,
 }: BuildMonthGridInput): MonthGridDay[] => {
-  const numberOfDays = dayjs(`${year}-${month}-01`).daysInMonth();
+  const numberOfDays = daysInMonthOf(year, month);
   return [...Array(numberOfDays)].map((_, index) => {
-    const date = formatDay(year, month, index + 1);
+    const date = formatISODate({ year, month, day: index + 1 });
     const { unique, total } = getDateVerseCounts(date);
     return {
       date,
@@ -51,29 +45,24 @@ const buildCurrentMonthDays = ({
   });
 };
 
-const buildPreviousMonthDays = (year: number, month: number, firstDate: string): MonthGridDay[] => {
-  const firstWeekday = dayjs(firstDate).weekday();
-  const previousMonth = dayjs(`${year}-${month}-01`).subtract(1, 'month');
+const buildPreviousMonthDays = (firstDate: string): MonthGridDay[] => {
+  const firstWeekday = weekdayOf(firstDate);
 
   // Weeks start on Monday; Sunday (weekday 0) needs six leading padding days.
   const visibleDays = firstWeekday ? firstWeekday - 1 : 6;
-  const lastMondayDayOfMonth = dayjs(firstDate).subtract(visibleDays, 'day').date();
 
   return [...Array(visibleDays)].map((_, index) => ({
-    date: dayjs(
-      `${previousMonth.year()}-${previousMonth.month() + 1}-${lastMondayDayOfMonth + index}`,
-    ).format('YYYY-MM-DD'),
+    date: addDays(firstDate, index - visibleDays),
     isCurrentMonth: false,
   }));
 };
 
-const buildNextMonthDays = (year: number, month: number, lastDate: string): MonthGridDay[] => {
-  const lastWeekday = dayjs(lastDate).weekday();
-  const nextMonth = dayjs(`${year}-${month}-01`).add(1, 'month');
+const buildNextMonthDays = (lastDate: string): MonthGridDay[] => {
+  const lastWeekday = weekdayOf(lastDate);
   const visibleDays = lastWeekday ? 7 - lastWeekday : lastWeekday;
 
   return [...Array(visibleDays)].map((_, index) => ({
-    date: dayjs(`${nextMonth.year()}-${nextMonth.month() + 1}-${index + 1}`).format('YYYY-MM-DD'),
+    date: addDays(lastDate, index + 1),
     isCurrentMonth: false,
   }));
 };
@@ -89,8 +78,8 @@ export const buildMonthGrid = (input: BuildMonthGridInput): MonthGridDay[] => {
   const firstDate = currentMonthDays[0]!.date;
   const lastDate = currentMonthDays[currentMonthDays.length - 1]!.date;
   return [
-    ...buildPreviousMonthDays(input.year, input.month, firstDate),
+    ...buildPreviousMonthDays(firstDate),
     ...currentMonthDays,
-    ...buildNextMonthDays(input.year, input.month, lastDate),
+    ...buildNextMonthDays(lastDate),
   ];
 };

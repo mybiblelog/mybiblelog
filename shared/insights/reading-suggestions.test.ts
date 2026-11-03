@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import dayjs from 'dayjs';
 import Bible from '../bible';
 import {
   getRecentDates,
@@ -34,12 +33,15 @@ describe('getRecentDates', () => {
   });
 
   it('excludes today', () => {
-    const today = dayjs().format('YYYY-MM-DD');
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     expect(getRecentDates(5)).not.toContain(today);
   });
 
   it('returns dates in descending order (yesterday first)', () => {
-    const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    const yesterday = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     const dates = getRecentDates(3);
     expect(dates[0]).toBe(yesterday);
   });
@@ -47,7 +49,7 @@ describe('getRecentDates', () => {
   it('returns consecutive days', () => {
     const dates = getRecentDates(4);
     for (let i = 0; i < dates.length - 1; i++) {
-      const diff = dayjs(dates[i]).diff(dayjs(dates[i + 1]), 'day');
+      const diff = (Date.parse(`${dates[i]}T00:00:00Z`) - Date.parse(`${dates[i + 1]}T00:00:00Z`)) / 86_400_000;
       expect(diff).toBe(1);
     }
   });

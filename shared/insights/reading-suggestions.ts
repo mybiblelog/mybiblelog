@@ -1,5 +1,5 @@
-import dayjs from 'dayjs';
 import Bible from '../bible';
+import { addDays, normalizeISODate, todayISODate } from '../platform/iso-date';
 
 /**
  * Reading-suggestion algorithm shared by the web and mobile apps.
@@ -44,10 +44,10 @@ export const readingPathWisdom = [19, 20, 21, 18, 22];
 
 export const getRecentDates = (daysBack: number, from?: string): string[] => {
   const dates: string[] = [];
-  let cursor = (from ? dayjs(from) : dayjs()).startOf('day');
+  let cursor = (from && normalizeISODate(from)) || todayISODate();
   for (let i = 0; i < daysBack; i++) {
-    cursor = cursor.subtract(1, 'day');
-    dates.push(cursor.format('YYYY-MM-DD'));
+    cursor = addDays(cursor, -1);
+    dates.push(cursor);
   }
   return dates;
 };

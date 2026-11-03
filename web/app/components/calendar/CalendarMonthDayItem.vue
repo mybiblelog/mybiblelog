@@ -23,7 +23,6 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
 import StarIcon from '~/components/svg/StarIcon.vue';
 
 const props = withDefaults(defineProps<{
@@ -39,7 +38,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{ daySelected: [date: string] }>();
 
-const label = computed(() => dayjs(props.day.date).format('D'));
+const label = computed(() => String(Number(props.day.date.slice(8, 10))));
 const calendarDayClass = computed(() => ({
   'calendar-day--not-current': !props.day.isCurrentMonth,
   'calendar-day--today': props.isToday,

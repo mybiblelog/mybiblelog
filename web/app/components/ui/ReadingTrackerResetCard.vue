@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
+import { todayISODate } from '@mybiblelog/shared';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useUserSettingsStore } from '~/stores/user-settings';
 import { useToastStore } from '~/stores/toast';
@@ -46,7 +46,7 @@ const showCard = computed(() =>
 
 async function startFresh() {
   saving.value = true;
-  const today = dayjs().format('YYYY-MM-DD');
+  const today = todayISODate();
   const success = await userSettingsStore.updateSettings({ lookBackDate: today });
   saving.value = false;
   if (!success) {

@@ -76,11 +76,7 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
-import { DEFAULT_CHART_DIMENSIONS, buildMultiLineChartGeometry, displayDate } from '@mybiblelog/shared';
-
-dayjs.extend(localizedFormat);
+import { DEFAULT_CHART_DIMENSIONS, buildMultiLineChartGeometry, displayDate, formatCalendarDate } from '@mybiblelog/shared';
 
 interface EngagementRow {
   date: string;
@@ -136,7 +132,7 @@ function formatDate(date: string) {
 }
 
 function formatShortDate(date: string) {
-  return dayjs(date).locale(locale.value).format('MMM D');
+  return formatCalendarDate(date, locale.value, { month: 'short', day: 'numeric' });
 }
 
 // The API returns newest-first; charts read oldest → newest, left to right.

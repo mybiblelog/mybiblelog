@@ -8,6 +8,7 @@ export * from './bible/apps';
 export * from './bible/translations';
 export * from './platform/device';
 export * from './platform/date-helpers';
+export * from './platform/iso-date';
 export { computeDateVerseCounts, type DateVerseCounts, type DateVerseCountsMap, type DateVerseCountLogEntry } from './insights/date-verse-counts';
 export {
   filterEntriesByDateRange,

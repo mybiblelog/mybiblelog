@@ -1,5 +1,4 @@
 import { expect, test } from 'vitest';
-import dayjs from 'dayjs';
 import Bible from '../bible';
 import {
   buildContributionCalendar,
@@ -67,8 +66,8 @@ test('buildContributionCalendar produces whole Sun–Sat weeks covering the year
 
   const flat = weeks.flat();
   // First cell is a Sunday, last cell is a Saturday.
-  expect(dayjs(flat[0].date).day()).toBe(0);
-  expect(dayjs(flat[flat.length - 1].date).day()).toBe(6);
+  expect(new Date(`${flat[0].date}T00:00:00Z`).getUTCDay()).toBe(0);
+  expect(new Date(`${flat[flat.length - 1].date}T00:00:00Z`).getUTCDay()).toBe(6);
 
   // The window spans a little over a year (53 weeks of cells).
   expect(flat.length).toBeGreaterThanOrEqual(365);

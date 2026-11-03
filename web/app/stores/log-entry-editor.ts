@@ -1,6 +1,5 @@
-import dayjs from 'dayjs';
 import { defineStore } from 'pinia';
-import { LogEntryEditorMachine, type LogEntryEditorModel } from '@mybiblelog/shared';
+import { LogEntryEditorMachine, type LogEntryEditorModel, todayISODate } from '@mybiblelog/shared';
 import { createEditorStore } from '~/helpers/create-editor-store';
 import type { EditorErrors } from '~/helpers/create-editor-store';
 import { useLogEntriesStore } from '~/stores/log-entries';
@@ -35,7 +34,7 @@ const editor = createEditorStore<LogEntryEditorModel, LogEntry, LogEntryEditorOp
     const model = LogEntryEditorMachine.emptyLogEntryEditorModel();
     model.date = isEmptyOpenPayload(payload) && payload.date
       ? String(payload.date)
-      : dayjs().format('YYYY-MM-DD');
+      : todayISODate();
     return model;
   },
   validate: model => LogEntryEditorMachine.isLogEntryEditorValid(model),

@@ -47,8 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import { Bible, withSegmentPercentages } from '@mybiblelog/shared';
+import { Bible, withSegmentPercentages, todayISODate } from '@mybiblelog/shared';
 import { encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
 import { encodeLogEntriesQueryToRoute } from '~/helpers/log-entries-route-query';
 import ChapterReport from '~/components/bible/ChapterReport.vue';
@@ -121,7 +120,7 @@ function openAddEntryForm(bookIndex: number, chapterIndex: number) {
   const chapterVerseCount = Bible.getChapterVerseCount(bookIndex, chapterIndex);
   useLogEntryEditorStore().openEditor({
     id: null,
-    date: dayjs().format('YYYY-MM-DD'),
+    date: todayISODate(),
     startVerseId: Bible.makeVerseId(bookIndex, chapterIndex, 1),
     endVerseId: Bible.makeVerseId(bookIndex, chapterIndex, chapterVerseCount),
   });

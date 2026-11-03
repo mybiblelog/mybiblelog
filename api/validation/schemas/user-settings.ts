@@ -1,14 +1,14 @@
 import { z } from 'zod';
-import dayjs from 'dayjs';
 import { BibleVersions, getLocaleCodes } from '@mybiblelog/shared';
 import { StartPages, PassageNoteTagSortOrders } from '../constants';
+import { dateString } from '../primitives';
 
 const bibleVersionKeys = Object.keys(BibleVersions);
 const localeCodes = getLocaleCodes();
 
 export const userSettingsBaseSchema = z.object({
   dailyVerseCountGoal: z.number().min(1).max(1111),
-  lookBackDate: z.string().refine((value) => dayjs(value, 'YYYY-MM-DD', true).isValid()),
+  lookBackDate: dateString,
   preferredBibleVersion: z.string().refine((value) => bibleVersionKeys.includes(value)),
   startPage: z.string().refine((value) => (StartPages as readonly string[]).includes(value)),
   passageNoteTagSortOrder: z.string().refine((value) => (PassageNoteTagSortOrders as readonly string[]).includes(value)),

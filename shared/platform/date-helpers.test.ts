@@ -1,6 +1,4 @@
-import dayjs from 'dayjs';
 import { afterEach, describe, it, expect, vi } from 'vitest';
-import { getLocaleCodes } from './i18n';
 import {
   daysInMonth,
   displayDate,
@@ -11,18 +9,6 @@ import {
   indexOfWeekday,
   weekFromDate,
 } from './date-helpers';
-
-describe('dayjs locale imports stay in sync with i18n locales', () => {
-  it('has a dayjs locale import for every configured locale', () => {
-    const configured = getLocaleCodes()
-      .filter((code) => code !== 'en')
-      .sort();
-    const loaded = Object.keys(dayjs.Ls)
-      .filter((code) => code !== 'en')
-      .sort();
-    expect(loaded).toEqual(configured);
-  });
-});
 
 describe('daysInMonth', () => {
   it('returns 29 for February in a leap year', () => {
@@ -94,16 +80,34 @@ describe('displayDate', () => {
 
   it('returns an empty string for an invalid date', () => {
     expect(displayDate('not-a-real-date')).toBe('');
+    expect(displayDate('2026-02-30')).toBe('');
+  });
+
+  it('uses the date part of a stored date/time', () => {
+    expect(displayDate('2026-01-15T00:00:00.000Z')).toBe('Thursday, January 15, 2026');
+  });
+
+  it('localizes', () => {
+    expect(displayDate('2026-01-15', 'de')).toBe('Donnerstag, 15. Januar 2026');
   });
 });
 
 describe('displayDateTime', () => {
-  it('formats a morning time using am', () => {
-    expect(displayDateTime('2026-01-15T09:05:00')).toBe('January 15, 2026 @ 09:05 am');
+  it('formats a morning time', () => {
+    expect(displayDateTime('2026-01-15T09:05:00')).toBe('January 15, 2026 @ 09:05 AM');
   });
 
-  it('formats an afternoon time using pm and converts to 12-hour', () => {
-    expect(displayDateTime('2026-01-15T15:30:00')).toBe('January 15, 2026 @ 03:30 pm');
+  it('formats an afternoon time in 12-hour English', () => {
+    expect(displayDateTime('2026-01-15T15:30:00')).toBe('January 15, 2026 @ 03:30 PM');
+  });
+
+  it('formats noon as PM and midnight as 12 AM', () => {
+    expect(displayDateTime('2026-01-15T12:00:00')).toBe('January 15, 2026 @ 12:00 PM');
+    expect(displayDateTime('2026-01-15T00:10:00')).toBe('January 15, 2026 @ 12:10 AM');
+  });
+
+  it('uses the locale clock convention', () => {
+    expect(displayDateTime('2026-01-15T15:30:00', 'de')).toBe('15. Januar 2026 @ 15:30');
   });
 });
 
@@ -123,6 +127,20 @@ describe('displayTimeSince', () => {
     vi.setSystemTime(new Date(2026, 0, 15, 12, 0, 0));
     expect(displayTimeSince('2026-01-15T14:00:00')).toBe('in 2 hours');
   });
+
+  it('rolls up to days and months', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 0, 15, 12, 0, 0));
+    expect(displayTimeSince('2026-01-12T12:00:00')).toBe('3 days ago');
+    expect(displayTimeSince('2025-10-15T12:00:00')).toBe('3 months ago');
+    expect(displayTimeSince('2024-01-15T12:00:00')).toBe('2 years ago');
+  });
+
+  it('localizes', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 0, 15, 12, 0, 0));
+    expect(displayTimeSince('2026-01-15T10:00:00', 'es')).toBe('hace 2 horas');
+  });
 });
 
 describe('displayDaysSince', () => {
@@ -140,5 +158,21 @@ describe('displayDaysSince', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 15));
     expect(displayDaysSince('2026-01-18')).toBe('in 3 days');
+  });
+
+  it('counts calendar days regardless of the time of day', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 0, 15, 23, 59));
+    expect(displayDaysSince('2026-01-15')).toBe('today');
+    expect(displayDaysSince('2026-01-14')).toBe('yesterday');
+    expect(displayDaysSince('2026-01-16')).toBe('tomorrow');
+  });
+
+  it('rolls up to months and years', () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 0, 15));
+    expect(displayDaysSince('2025-12-01')).toBe('last month');
+    expect(displayDaysSince('2025-10-15')).toBe('3 months ago');
+    expect(displayDaysSince('2024-01-15')).toBe('2 years ago');
   });
 });

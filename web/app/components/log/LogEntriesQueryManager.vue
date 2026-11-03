@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
+import { isISODate } from '@mybiblelog/shared';
 import VerseInput from '~/components/forms/VerseInput.vue';
 import { useDialogStore } from '~/stores/dialog';
 import type { LogEntriesSortDirection } from '~/helpers/log-entries-route-query';
@@ -125,7 +125,7 @@ const DEFAULT_DRAFT: ManagedDraft = {
 function normalizeDateString(value: unknown): string {
   const v = `${value ?? ''}`.trim();
   if (!v) { return ''; }
-  return dayjs(v, 'YYYY-MM-DD', true).isValid() ? v : '';
+  return isISODate(v) ? v : '';
 }
 
 function pickManagedQuery(query: AppliedQueryLike | null | undefined): ManagedDraft {

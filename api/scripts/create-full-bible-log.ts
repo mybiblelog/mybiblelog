@@ -1,13 +1,12 @@
 import useRepositories from '../repositories/useRepositories';
 import { closeConnection } from '../mongo/useCollections';
-import dayjs from 'dayjs';
 import { Bible } from '@mybiblelog/shared';
 
 // Update this email to the user you want to create entries for
 const EMAIL = 'user@example.com';
 
 // You can also update this date if you want to create entries for a different date
-const DATE = dayjs().format('YYYY-MM-DD'); // e.g. '2026-01-01'
+const DATE = Temporal.Now.plainDateISO().toString(); // e.g. '2026-01-01'
 
 const main = async (): Promise<void> => {
   const { users, logEntries } = await useRepositories();
