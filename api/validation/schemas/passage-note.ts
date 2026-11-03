@@ -1,18 +1,9 @@
 import { z } from 'zod';
-import { Bible } from '@mybiblelog/shared';
-import { verseId } from '../primitives';
-
-const passageSchema = z.object({
-  startVerseId: verseId,
-  endVerseId: verseId,
-}).refine(
-  (passage) => Bible.validateRange(passage.startVerseId, passage.endVerseId),
-  { path: ['endVerseId'] },
-);
+import { passageInputDocsSchema, passageInputSchema } from './passage';
 
 export const passageNoteBaseSchema = z.object({
   content: z.string().trim().max(3000).optional(),
-  passages: z.array(passageSchema).optional(),
+  passages: z.array(passageInputSchema).optional(),
 });
 
 /**
@@ -32,6 +23,17 @@ export const passageNoteCreateSchema = passageNoteBaseSchema.refine(
  */
 export const passageNoteUpdateSchema = passageNoteBaseSchema.partial();
 
+/**
+ * Documentation-only request body for creating/updating a note: identical to
+ * `passageNoteBaseSchema`, but documents every accepted passage form (see
+ * `passageInputDocsSchema`). Handlers validate with the schemas above.
+ */
+export const passageNoteBodyDocsSchema = passageNoteBaseSchema.extend({
+  content: passageNoteBaseSchema.shape.content.describe('Note text, up to 3000 characters'),
+  passages: z.array(passageInputDocsSchema).optional().describe('Passages the note is about'),
+  tags: z.array(z.string()).optional().describe('IDs of the user\'s tags to attach to the note'),
+}).describe('A note needs `content`, `passages`, or both. On update, omitted fields keep their values.');
+
 export type PassageNoteCreateBody = z.infer<typeof passageNoteCreateSchema>;
 export type PassageNoteUpdateBody = z.infer<typeof passageNoteUpdateSchema>;
 
@@ -39,6 +41,7 @@ export type PassageNoteUpdateBody = z.infer<typeof passageNoteUpdateSchema>;
 const passageRangeSchema = z.object({
   startVerseId: z.number().describe('The ID of the starting verse'),
   endVerseId: z.number().describe('The ID of the ending verse'),
+  passage: z.string().nullable().describe('The same range as a USFM reference, e.g. "JHN.3.16-18"; null if the stored range is not a valid passage'),
 });
 
 /**
@@ -74,7 +77,8 @@ export const passageNoteListQuerySchema = z.object({
   filterTags: z.array(z.string()).optional().describe('Tag IDs to filter by'),
   filterTagMatching: z.enum(['any', 'all', 'exact']).optional().describe('How to match tags (default any)'),
   searchText: z.string().optional().describe('Text to search for in notes'),
-  filterPassageStartVerseId: z.coerce.number().int().optional().describe('Start verse ID for passage filtering'),
-  filterPassageEndVerseId: z.coerce.number().int().optional().describe('End verse ID for passage filtering'),
+  filterPassage: z.string().optional().describe('USFM passage reference to filter by, e.g. "JHN.3"; takes precedence over the verse ID pair, and an invalid reference is a 400'),
+  filterPassageStartVerseId: z.coerce.number().int().optional().describe('Start verse ID for passage filtering; an invalid pair is ignored'),
+  filterPassageEndVerseId: z.coerce.number().int().optional().describe('End verse ID for passage filtering; an invalid pair is ignored'),
   filterPassageMatching: z.enum(['inclusive', 'exclusive']).optional().describe('How to match passages (default inclusive)'),
 });

@@ -2,8 +2,7 @@ import { z } from 'zod';
 import { type RouteDefinition } from '../types';
 import { objectIdParam } from '../../validation/primitives';
 import {
-  passageNoteCreateSchema,
-  passageNoteUpdateSchema,
+  passageNoteBodyDocsSchema,
   passageNoteListQuerySchema,
   passageNoteSchema,
   passageNoteSearchResultSchema,
@@ -58,7 +57,7 @@ export const passageNoteRoutes: RouteDefinition[] = [
     docs: {
       summary: 'Create a new passage note',
       tags,
-      request: { body: passageNoteCreateSchema },
+      request: { body: passageNoteBodyDocsSchema },
       response: { description: 'The created passage note', schema: passageNoteSchema },
       errors: [400, 401],
     },
@@ -70,7 +69,7 @@ export const passageNoteRoutes: RouteDefinition[] = [
     docs: {
       summary: 'Update a passage note',
       tags,
-      request: { params: objectIdParam, body: passageNoteUpdateSchema },
+      request: { params: objectIdParam, body: passageNoteBodyDocsSchema },
       response: { description: 'The updated passage note', schema: passageNoteSchema },
       errors: [400, 401, 404],
     },

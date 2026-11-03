@@ -8,6 +8,7 @@ Reference material for developing and operating My Bible Log. See the [root READ
 - **[Google OAuth2](oauth.md)** — configuring Google sign-in for web and mobile.
 - **[Bible Integrations](bible-integrations.md)** — adding a new Bible translation or reading app.
 - **[Tech Debt Register](tech-debt.md)** — workarounds waiting on upstream fixes and deferred follow-ups, with removal conditions.
+- **[USFM Passages](usfm-passages.md)** — why the API speaks USFM passage references but stores integer verse IDs, and what dropping verse IDs from the contract would take.
 
 ## Internationalization
 
