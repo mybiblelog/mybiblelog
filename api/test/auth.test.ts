@@ -579,6 +579,7 @@ describe('Auth routes', () => {
       const response = await requestApi
         .post('/api/auth/change-email')
         .set('Authorization', `Bearer ${testUser.token}`)
+        .set('x-test-bypass-secret', TEST_BYPASS_SECRET!)
         .send({
           newEmail: generateTestEmail(),
           password: testUser.password,
@@ -611,6 +612,7 @@ describe('Auth routes', () => {
       await requestApi
         .post('/api/auth/change-email')
         .set('Authorization', `Bearer ${testUser.token}`)
+        .set('x-test-bypass-secret', TEST_BYPASS_SECRET!)
         .send({ newEmail, password: testUser.password });
 
       const response = await requestApi
@@ -641,6 +643,7 @@ describe('Auth routes', () => {
       await requestApi
         .post('/api/auth/change-email')
         .set('Authorization', `Bearer ${testUser.token}`)
+        .set('x-test-bypass-secret', TEST_BYPASS_SECRET!)
         .send({ newEmail: generateTestEmail(), password: testUser.password });
 
       const cancelResponse = await requestApi
