@@ -17,3 +17,16 @@ export const verseId = z.number().int().refine((value) => Bible.verseExists(valu
 
 /** An email address (matching the same loose pattern the schemas used). */
 export const emailString = z.string().regex(/^\S+@\S+\.\S+$/);
+
+/**
+ * A USFM passage reference (e.g. "JHN.3.16-18", "PSA.23", "GEN"), parsed into
+ * a single-book verse range. See `parseUsfmReference` in `@mybiblelog/shared`.
+ */
+export const usfmPassage = z.string().describe('USFM passage reference within one book, e.g. "JHN.3.16-18", "GEN.1.1-2.3", "PSA.23", "GEN.1-3", or "GEN"').transform((value, ctx) => {
+  const range = Bible.parseUsfmReference(value);
+  if (!range) {
+    ctx.addIssue({ code: 'custom', message: 'Invalid USFM passage reference' });
+    return z.NEVER;
+  }
+  return range;
+});

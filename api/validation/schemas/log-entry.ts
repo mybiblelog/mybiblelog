@@ -1,30 +1,34 @@
 import { z } from 'zod';
-import { Bible } from '@mybiblelog/shared';
+import { type VerseRange } from '@mybiblelog/shared';
 import { dateString, verseId } from '../primitives';
+import { PASSAGE_FIELDS_DESCRIPTION, passageFields, requirePassage, resolvePassage } from './passage';
 
-const logEntryBaseSchema = z.object({
-  date: dateString,
-  startVerseId: verseId,
-  endVerseId: verseId,
-});
-
-/** Creating a log entry requires all fields and a valid verse range. */
-export const logEntryCreateSchema = logEntryBaseSchema.refine(
-  (value) => Bible.validateRange(value.startVerseId, value.endVerseId),
-  { path: ['endVerseId'] },
-);
+const readingDate = dateString.describe('YYYY-MM-DD date the passage was read');
 
 /**
- * Updating a log entry accepts any subset of the fields. The verse range is
- * only checked when both endpoints are provided in the same request.
+ * Creating a log entry requires a date and a valid passage, sent either as a
+ * USFM `passage` or as `startVerseId`/`endVerseId`. Either form resolves to
+ * `{ date, startVerseId, endVerseId }`.
  */
-export const logEntryUpdateSchema = logEntryBaseSchema.partial().refine(
-  (value) =>
-    value.startVerseId === undefined
-    || value.endVerseId === undefined
-    || Bible.validateRange(value.startVerseId, value.endVerseId),
-  { path: ['endVerseId'] },
-);
+export const logEntryCreateSchema = requirePassage(
+  z.object({ date: readingDate, ...passageFields }).describe(`A passage the user read. ${PASSAGE_FIELDS_DESCRIPTION}`),
+)
+  .transform((value, ctx) => ({
+    date: value.date,
+    ...(resolvePassage(value, ctx) as VerseRange),
+  }));
+
+/**
+ * Updating a log entry accepts any subset of the fields. A USFM `passage`
+ * replaces both endpoints; the integer verse range is only checked when both
+ * endpoints are provided in the same request.
+ */
+export const logEntryUpdateSchema = z.object({ date: readingDate.optional(), ...passageFields })
+  .describe(`All fields are optional. ${PASSAGE_FIELDS_DESCRIPTION}`)
+  .transform((value, ctx) => ({
+    ...(value.date === undefined ? {} : { date: value.date }),
+    ...resolvePassage(value, ctx),
+  }));
 
 export type LogEntryCreateBody = z.infer<typeof logEntryCreateSchema>;
 export type LogEntryUpdateBody = z.infer<typeof logEntryUpdateSchema>;
@@ -50,6 +54,7 @@ export const logEntrySchema = z.object({
   date: dateString,
   startVerseId: verseId,
   endVerseId: verseId,
+  passage: z.string().nullable().describe('The same range as a USFM reference, e.g. "JHN.3.16-18"; null if the stored range is not a valid passage'),
 });
 
 export type LogEntryJSON = z.infer<typeof logEntrySchema>;
