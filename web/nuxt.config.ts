@@ -1,7 +1,9 @@
 import { execSync } from 'node:child_process';
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { resolve } from 'node:path';
+import { createRequire } from 'node:module';
+import { dirname, resolve } from 'node:path';
 import { config as loadEnv } from 'dotenv';
+import type { Plugin } from 'vite';
 import { locales as sharedLocales, getLocaleCodes } from '../shared/platform/i18n';
 
 loadEnv({
@@ -23,6 +25,29 @@ const resolveAppVersion = (): string => {
   catch {
     return 'dev';
   }
+};
+
+// In `nuxt dev`, Nuxt's `nuxt:inlined-vue` plugin resolves the server's `vue`
+// import to `vue.runtime.esm-bundler.js`, which vite-node then inlines. From
+// Vue 3.6 that file also re-exports `@vue/runtime-vapor`, which needs
+// runtime-core internals that only the bundler builds export, while vite-node
+// still loads `@vue/runtime-dom`/`@vue/runtime-core` as Node's CJS builds. Every
+// SSR request then fails with "createInternalObject is not a function".
+// Server-compiled vapor SFCs only use the vdom SSR APIs, so resolve `vue` to
+// Node's own entry: the build the production server already loads.
+// `resolveId` is first-wins and Nuxt's plugin is also `enforce: 'pre'`, so the
+// `vite:extendConfig` hook below puts this one at the front of the list.
+// TECH-DEBT(nuxt-dev-ssr-vapor-runtime): remove once Nuxt's dev server stops
+// inlining Vue's bundler build when vapor is enabled.
+const devSsrNodeVue: Plugin = {
+  name: 'mbl:dev-ssr-node-vue',
+  enforce: 'pre',
+  apply: 'serve',
+  applyToEnvironment: environment => environment.config.consumer === 'server',
+  resolveId: {
+    filter: { id: /^vue$/ },
+    handler: () => resolve(dirname(createRequire(import.meta.url).resolve('vue/package.json')), 'index.mjs'),
+  },
 };
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
@@ -49,7 +74,9 @@ export default defineNuxtConfig({
   // mixing freely with vdom components (Nuxt's built-ins, library components).
   // Components under app/components/ opt in; pages, layouts and app.vue stay
   // vdom: pages run async setup under <NuxtPage>'s <Suspense>, which vapor
-  // components don't support.
+  // components don't support. Vapor templates have no component proxy, so app
+  // global properties (`$t`, `$terr`, `$route`, ...) don't resolve in them and
+  // throw at runtime; bind them in setup instead (`useI18n()`, `useNuxtApp()`).
   vue: {
     vapor: true,
   },
@@ -213,6 +240,14 @@ export default defineNuxtConfig({
     // TECH-DEBT(mdc-vapor-node-transform): remove once @nuxtjs/mdc guards for
     // the vapor compiler context.
     'vite:extendConfig': (config) => {
+      // See `devSsrNodeVue` above. The client and SSR passes share one plugin
+      // list, so insert it once.
+      const viteConfig = config as { plugins?: unknown[] };
+      viteConfig.plugins ??= [];
+      if (!viteConfig.plugins.includes(devSsrNodeVue)) {
+        viteConfig.plugins.unshift(devSsrNodeVue);
+      }
+
       const compilerOptions = (config as { vue?: { template?: { compilerOptions?: { nodeTransforms?: Array<(...args: never[]) => unknown> } } } })
         .vue?.template?.compilerOptions;
       const transforms = compilerOptions?.nodeTransforms;

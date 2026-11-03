@@ -117,6 +117,15 @@ Permanent design decisions and constraints don't belong here, even when they're 
 - **Tracking:** none filed yet.
 - **Added:** 2026-11-02
 
+### nuxt-dev-ssr-vapor-runtime
+
+- **Where:** `web/nuxt.config.ts` (`devSsrNodeVue`, inserted by `hooks['vite:extendConfig']`)
+- **Why:** In `nuxt dev`, Nuxt's `nuxt:inlined-vue` plugin resolves the server's `vue` import to `vue.runtime.esm-bundler.js`, and vite-node inlines it. From Vue 3.6 that build re-exports `@vue/runtime-vapor`, which needs runtime-core internals missing from the CJS `@vue/runtime-dom`/`@vue/runtime-core` that vite-node loads next to it. Every dev SSR request then fails with "createInternalObject is not a function". The plugin resolves `vue` to Node's entry for the server, as the production build already does. Production is unaffected.
+- **Remove when:** Nuxt's dev server loads a consistent Vue build on the server with `vue.vapor` on.
+- **Check:** `npm view nuxt version`, then remove the plugin and the hook lines, run `nuxt dev` and request `/`.
+- **Tracking:** none filed yet.
+- **Added:** 2026-11-02
+
 ### vtu-vapor-support
 
 - **Where:** `web/vitest.config.ts` (`stripVaporMarker`)

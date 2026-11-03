@@ -158,7 +158,7 @@ const authStore = useAuthStore();
 const toastStore = useToastStore();
 const localePath = useLocalePath();
 const router = useRouter();
-const { $http } = useNuxtApp();
+const { $http, $terr } = useNuxtApp();
 
 const code = ref('');
 const newPassword = ref('');

@@ -87,6 +87,7 @@ import mapFormErrors from '~/helpers/map-form-errors';
 import { confirmDiscardIfDirty } from '~/helpers/confirm-discard';
 
 const { t } = useI18n();
+const { $terr } = useNuxtApp();
 const authStore = useAuthStore();
 const dialogStore = useDialogStore();
 const feedbackModalStore = useFeedbackModalStore();
