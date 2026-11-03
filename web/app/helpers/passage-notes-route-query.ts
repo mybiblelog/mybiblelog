@@ -140,6 +140,7 @@ export function encodePassageNotesQueryToRoute(query: Partial<PassageNotesQuery>
     out.filterTagMatching = normalized.filterTagMatching;
   }
 
+  // TECH-DEBT(usfm-client-migration): encode a single `passage` param; keep decoding the legacy pair for old bookmarks.
   if (hasPassageFilter) {
     out.filterPassageStartVerseId = `${normalized.filterPassageStartVerseId}`;
     out.filterPassageEndVerseId = `${normalized.filterPassageEndVerseId}`;

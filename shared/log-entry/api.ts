@@ -32,6 +32,7 @@ export const fetchLogEntries = async (http: HttpClient): Promise<LogEntry[]> => 
   return Array.isArray(data) ? data : [];
 };
 
+// TECH-DEBT(usfm-client-migration): send USFM `passage` instead of the verse id pair.
 export const postLogEntry = async (
   http: HttpClient,
   input: CreateLogEntryInput,

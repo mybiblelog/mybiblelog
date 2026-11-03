@@ -7,12 +7,17 @@ const bibleVersionKeys = Object.keys(BibleVersions);
 const localeCodes = getLocaleCodes();
 
 export const userSettingsBaseSchema = z.object({
-  dailyVerseCountGoal: z.number().min(1).max(1111),
-  lookBackDate: z.string().refine((value) => dayjs(value, 'YYYY-MM-DD', true).isValid()),
-  preferredBibleVersion: z.string().refine((value) => bibleVersionKeys.includes(value)),
-  startPage: z.string().refine((value) => (StartPages as readonly string[]).includes(value)),
-  passageNoteTagSortOrder: z.string().refine((value) => (PassageNoteTagSortOrders as readonly string[]).includes(value)),
-  locale: z.string().refine((value) => (localeCodes as readonly string[]).includes(value)),
+  dailyVerseCountGoal: z.number().min(1).max(1111).describe('Number of verses the user aims to read each day (1–1111)'),
+  lookBackDate: z.string().refine((value) => dayjs(value, 'YYYY-MM-DD', true).isValid())
+    .describe('YYYY-MM-DD date from which reading progress is counted'),
+  preferredBibleVersion: z.string().refine((value) => bibleVersionKeys.includes(value))
+    .describe(`Bible translation used for reading links: one of ${bibleVersionKeys.join(', ')}`),
+  startPage: z.string().refine((value) => (StartPages as readonly string[]).includes(value))
+    .describe(`Page shown after sign-in: one of ${StartPages.join(', ')}`),
+  passageNoteTagSortOrder: z.string().refine((value) => (PassageNoteTagSortOrders as readonly string[]).includes(value))
+    .describe(`How tags are sorted: one of ${PassageNoteTagSortOrders.join(', ')}`),
+  locale: z.string().refine((value) => (localeCodes as readonly string[]).includes(value))
+    .describe(`UI locale code: one of ${localeCodes.join(', ')}`),
 });
 
 /** Settings updates accept any subset of the settings fields. */
@@ -22,8 +27,8 @@ export type UserSettingsPatch = z.infer<typeof userSettingsPatchSchema>;
 
 /** Body for `PUT /settings` — a `settings` object holding the patch. */
 export const settingsUpdateBodySchema = z.object({
-  settings: userSettingsPatchSchema,
-});
+  settings: userSettingsPatchSchema.describe('The settings to change; omitted fields keep their values'),
+}).describe('A partial update of the user\'s settings.');
 
 /**
  * The serialized shape of a user's settings as returned by the API. A stored
