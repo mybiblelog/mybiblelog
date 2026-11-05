@@ -231,6 +231,15 @@ test('computeBookFrequencies ignores entries outside the date range', () => {
   expect(result.find(b => b.bookIndex === 1)?.verseCount).toBe(0);
 });
 
+test('computeBookFrequencies counts every entry when no range is given (all time)', () => {
+  const entries = [
+    entry('2001-01-01', Bible.makeVerseId(1, 1, 1), Bible.makeVerseId(1, 1, 10)),
+    entry('2026-06-10', Bible.makeVerseId(1, 1, 5), Bible.makeVerseId(1, 1, 20)),
+  ];
+  const result = computeBookFrequencies(entries);
+  expect(result.find(b => b.bookIndex === 1)?.verseCount).toBe(20);
+});
+
 // ---------------------------------------------------------------------------
 // computeDailyVerseSeries
 // ---------------------------------------------------------------------------

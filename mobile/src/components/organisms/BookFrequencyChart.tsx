@@ -13,7 +13,9 @@ import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 type SortOrder = "bible" | "alpha" | "most" | "least";
 type Metric = "raw" | "proportional";
 
-const TIMEFRAME_OPTIONS = [30, 60, 90, 180, 365];
+// 0 is the "all time" sentinel: no date filtering.
+const ALL_TIME = 0;
+const TIMEFRAME_OPTIONS = [30, 60, 90, 180, 365, ALL_TIME];
 
 const stripLeadingNumbers = (str: string) => str.replace(/^\d+\s*/, "").trim();
 
@@ -28,7 +30,10 @@ export function BookFrequencyChart({ entries }: { entries: InsightsLogEntry[] })
 
   const timeframeOptions = TIMEFRAME_OPTIONS.map((n) => ({
     value: n,
-    label: t("insights_frequency_last_n_days", { count: n }),
+    label:
+      n === ALL_TIME
+        ? t("insights_frequency_all_time")
+        : t("insights_frequency_last_n_days", { count: n }),
   }));
 
   const sortOptions = [
@@ -39,11 +44,16 @@ export function BookFrequencyChart({ entries }: { entries: InsightsLogEntry[] })
   ];
 
   const rows = useMemo(() => {
-    const endDate = dayjs().format("YYYY-MM-DD");
-    const startDate = dayjs()
-      .subtract(days - 1, "day")
-      .format("YYYY-MM-DD");
-    const frequencies = computeBookFrequencies(entries, startDate, endDate);
+    const frequencies =
+      days === ALL_TIME
+        ? computeBookFrequencies(entries)
+        : computeBookFrequencies(
+            entries,
+            dayjs()
+              .subtract(days - 1, "day")
+              .format("YYYY-MM-DD"),
+            dayjs().format("YYYY-MM-DD")
+          );
 
     const useProportion = metric === "proportional";
     const enriched = frequencies.map((freq) => ({
