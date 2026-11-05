@@ -7,7 +7,7 @@ export type Translation = {
     unknown_error: string;
     validation_error: string;
     required: string;
-    is_invalid: string;
+    not_valid: string;
     unique: string;
     min_length: string;
     max_length: string;
