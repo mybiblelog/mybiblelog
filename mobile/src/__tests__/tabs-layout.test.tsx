@@ -43,18 +43,21 @@ describe("(tabs) layout", () => {
     expect(capturedScreenOptions).toMatchObject({ popToTopOnBlur: true, headerShown: false });
   });
 
-  it("registers all six routes", () => {
-    const names = capturedScreens.map((s) => s.name);
-    expect(names).toEqual(
-      expect.arrayContaining(["index", "bible", "calendar", "checklist", "notes", "settings"])
-    );
+  it("registers the five tabs in order", () => {
+    expect(capturedScreens.map((s) => s.name)).toEqual([
+      "(today)",
+      "bible",
+      "checklist",
+      "notes",
+      "settings",
+    ]);
   });
 
-  it("keeps calendar off the tab bar", () => {
-    const calendar = capturedScreens.find((s) => s.name === "calendar") as any;
-    expect(calendar.options.href).toBeNull();
-    const barred = capturedScreens.filter((s) => (s as any).options?.href !== null);
-    expect(barred.map((s) => s.name)).toEqual(["index", "bible", "checklist", "notes", "settings"]);
+  // expo-router 58 redirects a focused `href: null` (hidden) tab back to the
+  // initial tab, so pushing to one bounces straight back. Off-bar screens must
+  // live in a tab's nested stack instead (Calendar lives under `(today)`).
+  it("declares no hidden tabs", () => {
+    expect(capturedScreens.filter((s) => (s as any).options?.href !== undefined)).toEqual([]);
   });
 
   it("no longer uses a per-tab tabPress listener (popToTopOnBlur replaces it)", () => {

@@ -140,7 +140,6 @@ export default function Calendar() {
   const { openAdd, openMenu, overlays } = useLogEntryOverlays({
     entries: entriesForSelectedDay,
     presetDate: selectedDay,
-    createDate: selectedDay,
   });
 
   const verseCountForSelectedDay = useMemo(() => {
@@ -175,6 +174,7 @@ export default function Calendar() {
                 title rather than a section heading above one. */}
             <ScreenHeader
               padded
+              back
               eyebrow={yearLabel}
               title={monthName}
               style={styles.monthHeader}

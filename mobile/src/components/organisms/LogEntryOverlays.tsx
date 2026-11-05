@@ -19,12 +19,9 @@ import { NoteEditorModal } from "./NoteEditorModal";
 type Options = {
   /** The entries the overlays act on (usually the screen's visible list). */
   entries: StoredLogEntry[];
-  /** Date preset shown in the add editor (defaults to today inside the editor). */
+  /** Date the add editor starts on (defaults to today inside the editor). The
+   * user can still change it — whatever date the editor holds is what's saved. */
   presetDate?: string;
-  /** When set, force this date onto newly created entries (Today / Calendar). */
-  createDate?: string;
-  /** When set, force this date onto edited entries (Today). */
-  updateDate?: string;
 };
 
 type LogEntryOverlaysApi = {
@@ -45,12 +42,7 @@ type LogEntryOverlaysApi = {
  * render, so when a background sync replaces the list the selection simply
  * stops resolving and the overlay closes itself — no index bookkeeping.
  */
-export function useLogEntryOverlays({
-  entries,
-  presetDate,
-  createDate,
-  updateDate,
-}: Options): LogEntryOverlaysApi {
+export function useLogEntryOverlays({ entries, presetDate }: Options): LogEntryOverlaysApi {
   const t = useT();
   const { locale } = useLocale();
   const { showToast } = useToast();
@@ -132,7 +124,7 @@ export function useLogEntryOverlays({
         submitLabel={t("save")}
         presetDate={presetDate}
         onSubmit={(entry) => {
-          void logEntryActions.createEntry(createDate ? { ...entry, date: createDate } : entry);
+          void logEntryActions.createEntry(entry);
         }}
       />
 
@@ -144,10 +136,7 @@ export function useLogEntryOverlays({
         initialEntry={editingEntry}
         onSubmit={(entry) => {
           if (!editingEntry) return;
-          void logEntryActions.updateEntry(
-            editingEntry.clientId,
-            updateDate ? { ...entry, date: updateDate } : entry
-          );
+          void logEntryActions.updateEntry(editingEntry.clientId, entry);
           setEditingClientId(null);
         }}
       />
