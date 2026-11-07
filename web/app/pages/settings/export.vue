@@ -63,6 +63,7 @@ const { t, locale } = useI18n();
 useHead({ title: () => t('export'), meta: [{ name: 'robots', content: 'noindex' }] });
 
 const logEntriesStore = useLogEntriesStore();
+const { $http } = useNuxtApp();
 
 let logCsvCache = '';
 let notesTextCache = '';
@@ -111,13 +112,14 @@ async function loadAllNotes(): Promise<PassageNoteListItem[]> {
   // Defensive cap so a malformed/unexpected API response can never spin this loop forever.
   const MAX_PAGES = 1000;
   for (let page = 0; page < MAX_PAGES; page++) {
-    const res = await $fetch<{ data: PassageNoteListItem[]; meta: { pagination: { size: number; limit: number } } }>(`/api/passage-notes?offset=${offset}`);
-    if (!res.data.length) { break; }
-    allNotes.push(...res.data);
+    const { data, meta } = await $http.get<PassageNoteListItem[]>(`/api/passage-notes?offset=${offset}`);
+    if (!data.length) { break; }
+    allNotes.push(...data);
     // `meta.pagination.size` is the total matching record count, not the page size, so advance
     // the offset by the number of items actually returned rather than an assumed page size.
-    offset += res.data.length;
-    if (allNotes.length >= res.meta.pagination.size) { break; }
+    offset += data.length;
+    const total = (meta as { pagination?: { size?: number } } | undefined)?.pagination?.size;
+    if (typeof total === 'number' && allNotes.length >= total) { break; }
   }
   return allNotes;
 }
@@ -126,7 +128,7 @@ async function downloadNotesTextFile() {
   const toastStore = useToastStore();
   if (!notesTextCache) {
     try {
-      const tags = (await $fetch<{ data: PassageNoteTag[] }>('/api/passage-note-tags')).data;
+      const { data: tags } = await $http.get<PassageNoteTag[]>('/api/passage-note-tags');
       const notes = await loadAllNotes();
       const NOTES_HEADING = t('notes_export_heading_notes');
       const TAGS_HEADING = t('notes_export_heading_tags');
@@ -153,7 +155,7 @@ async function downloadNotesJsonFile() {
   const toastStore = useToastStore();
   if (!notesJsonCache) {
     try {
-      const tags = (await $fetch<{ data: PassageNoteTag[] }>('/api/passage-note-tags')).data;
+      const { data: tags } = await $http.get<PassageNoteTag[]>('/api/passage-note-tags');
       const notes = await loadAllNotes();
       notesJsonCache = JSON.stringify({ notes, tags });
     }

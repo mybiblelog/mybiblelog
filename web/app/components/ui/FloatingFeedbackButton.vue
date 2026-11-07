@@ -21,7 +21,7 @@
           <p>{{ t('intro_p1') }}</p>
           <p>{{ t('intro_p2') }}</p>
         </div>
-        <form data-testid="feedback-form" @submit.prevent="submitFeedback">
+        <form data-testid="feedback-form" novalidate @submit.prevent="submitFeedback">
           <div v-if="errors._form" class="mbl-help mbl-help--danger">
             {{ $terr(errors._form) }}
           </div>
@@ -36,6 +36,9 @@
                 :placeholder="t('your_email')"
                 :disabled="authStore.loggedIn"
               >
+              <div v-if="errors.email" class="mbl-help mbl-help--danger" data-testid="feedback-email-error">
+                {{ fieldError(errors.email) }}
+              </div>
             </div>
           </div>
           <div class="mbl-field">
@@ -59,7 +62,16 @@
           <div class="mbl-field">
             <label class="mbl-label">{{ t('feedback_details') }}</label>
             <div class="mbl-control">
-              <textarea v-model="form.message" class="mbl-textarea" data-testid="feedback-message" :placeholder="t('feedback_details')" />
+              <textarea
+                v-model="form.message"
+                class="mbl-textarea"
+                data-testid="feedback-message"
+                :maxlength="FEEDBACK_MESSAGE_MAX_LENGTH"
+                :placeholder="t('feedback_details')"
+              />
+              <div v-if="errors.message" class="mbl-help mbl-help--danger" data-testid="feedback-message-error">
+                {{ fieldError(errors.message) }}
+              </div>
             </div>
           </div>
           <div class="mbl-field">
@@ -85,8 +97,10 @@ import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { confirmDiscardIfDirty } from '~/helpers/confirm-discard';
+import { FEEDBACK_MESSAGE_MAX_LENGTH, validateFeedbackForm } from '~/helpers/feedback-form';
 
-const { t } = useI18n();
+const { t, te } = useI18n();
+const { $http, $terr } = useNuxtApp();
 const authStore = useAuthStore();
 const dialogStore = useDialogStore();
 const feedbackModalStore = useFeedbackModalStore();
@@ -120,21 +134,30 @@ async function close() {
   feedbackModalStore.closeModal();
 }
 
+// Prefer this form's own wording for the field errors it knows about (e.g.
+// `message_required`), falling back to the generic API error translation.
+const fieldError = (detail: ApiErrorDetail) => {
+  const key = `${detail.field}_${detail.code}`;
+  return te(key) ? t(key) : $terr(detail);
+};
+
 async function submitFeedback() {
   if (submitting.value) { return; }
+  errors.value = validateFeedbackForm(form.value);
+  if (Object.keys(errors.value).length) { return; }
   submitting.value = true;
-  errors.value = {};
   try {
-    await $fetch('/api/feedback', {
-      method: 'POST',
-      body: { email: form.value.email, kind: form.value.kind, message: form.value.message },
+    await $http.post('/api/feedback', {
+      email: form.value.email,
+      kind: form.value.kind,
+      message: form.value.message,
     });
     form.value = initialForm();
     await dialogStore.alert({ message: t('feedback_submitted') });
     feedbackModalStore.closeModal();
   }
   catch (err) {
-    errors.value = (err instanceof ApiError ? mapFormErrors(err) : null) || mapFormErrors(new UnknownApiError()) || {};
+    errors.value = mapFormErrors(err instanceof ApiError ? err : new UnknownApiError());
   }
   finally {
     submitting.value = false;
@@ -185,7 +208,10 @@ async function submitFeedback() {
     "feedback_details": "Feedback Details",
     "submit_feedback": "Submit Feedback",
     "feedback_submitted": "Feedback submitted successfully. Thank you!",
-    "are_you_sure_close": "Are you sure you want to close the feedback form? All unsaved changes will be lost."
+    "are_you_sure_close": "Are you sure you want to close the feedback form? All unsaved changes will be lost.",
+    "message_required": "Please enter your feedback.",
+    "email_required": "Please enter your email address.",
+    "email_not_valid": "Please enter a valid email address."
   },
   "de": {
     "give_feedback": "Feedback geben",
@@ -200,7 +226,10 @@ async function submitFeedback() {
     "feedback_details": "Feedback-Details",
     "submit_feedback": "Feedback einreichen",
     "feedback_submitted": "Feedback erfolgreich übermittelt. Vielen Dank!",
-    "are_you_sure_close": "Möchten Sie das Feedback-Formular wirklich schließen? Alle ungespeicherten Änderungen gehen verloren."
+    "are_you_sure_close": "Möchten Sie das Feedback-Formular wirklich schließen? Alle ungespeicherten Änderungen gehen verloren.",
+    "message_required": "Bitte geben Sie Ihr Feedback ein.",
+    "email_required": "Bitte geben Sie Ihre E-Mail-Adresse ein.",
+    "email_not_valid": "Bitte geben Sie eine gültige E-Mail-Adresse ein."
   },
   "es": {
     "give_feedback": "Dar Comentarios",
@@ -215,7 +244,10 @@ async function submitFeedback() {
     "feedback_details": "Detalles de los Comentarios",
     "submit_feedback": "Enviar Comentarios",
     "feedback_submitted": "Comentarios enviados con éxito. ¡Gracias!",
-    "are_you_sure_close": "¿Estás seguro de que quieres cerrar el formulario de comentarios? Todas las modificaciones no guardadas se perderán."
+    "are_you_sure_close": "¿Estás seguro de que quieres cerrar el formulario de comentarios? Todas las modificaciones no guardadas se perderán.",
+    "message_required": "Por favor, escriba sus comentarios.",
+    "email_required": "Por favor, ingrese su correo electrónico.",
+    "email_not_valid": "Por favor, ingrese un correo electrónico válido."
   },
   "fr": {
     "give_feedback": "Donner des Commentaires",
@@ -230,7 +262,10 @@ async function submitFeedback() {
     "feedback_details": "Détails des Commentaires",
     "submit_feedback": "Soumettre des Commentaires",
     "feedback_submitted": "Commentaires soumis avec succès. Merci!",
-    "are_you_sure_close": "Êtes-vous sûr de vouloir fermer le formulaire de commentaires ? Toutes les modifications non enregistrées seront perdues."
+    "are_you_sure_close": "Êtes-vous sûr de vouloir fermer le formulaire de commentaires ? Toutes les modifications non enregistrées seront perdues.",
+    "message_required": "Veuillez saisir vos commentaires.",
+    "email_required": "Veuillez saisir votre adresse e-mail.",
+    "email_not_valid": "Veuillez saisir une adresse e-mail valide."
   },
   "ko": {
     "give_feedback": "피드백 보내기",
@@ -245,7 +280,10 @@ async function submitFeedback() {
     "feedback_details": "피드백 내용",
     "submit_feedback": "피드백 제출하기",
     "feedback_submitted": "피드백이 성공적으로 제출되었습니다. 감사합니다!",
-    "are_you_sure_close": "피드백 양식을 닫을까요? 저장하지 않은 변경 내용이 사라집니다."
+    "are_you_sure_close": "피드백 양식을 닫을까요? 저장하지 않은 변경 내용이 사라집니다.",
+    "message_required": "피드백 내용을 입력해 주세요.",
+    "email_required": "이메일을 입력해 주세요.",
+    "email_not_valid": "올바른 이메일 주소를 입력해 주세요."
   },
   "pt": {
     "give_feedback": "Dar Feedback",
@@ -260,7 +298,10 @@ async function submitFeedback() {
     "feedback_details": "Detalhes do Feedback",
     "submit_feedback": "Enviar Feedback",
     "feedback_submitted": "Feedback enviado com sucesso. Obrigado!",
-    "are_you_sure_close": "Tem certeza de que deseja fechar o formulário de feedback? Todas as modificações não salvas serão perdidas."
+    "are_you_sure_close": "Tem certeza de que deseja fechar o formulário de feedback? Todas as modificações não salvas serão perdidas.",
+    "message_required": "Por favor, escreva seu feedback.",
+    "email_required": "Por favor, insira seu email.",
+    "email_not_valid": "Por favor, insira um email válido."
   },
   "uk": {
     "give_feedback": "Залишити відгук",
@@ -275,7 +316,10 @@ async function submitFeedback() {
     "feedback_details": "Деталі відгуку",
     "submit_feedback": "Надіслати відгук",
     "feedback_submitted": "Відгук успішно надіслано. Дякуємо!",
-    "are_you_sure_close": "Ви впевнені, що хочете закрити форму зворотного зв'язку? Всі незбережені зміни будуть втрачені."
+    "are_you_sure_close": "Ви впевнені, що хочете закрити форму зворотного зв'язку? Всі незбережені зміни будуть втрачені.",
+    "message_required": "Будь ласка, введіть ваш відгук.",
+    "email_required": "Будь ласка, введіть вашу електронну пошту.",
+    "email_not_valid": "Будь ласка, введіть дійсну адресу електронної пошти."
   }
 }
 </i18n>

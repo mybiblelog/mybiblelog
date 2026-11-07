@@ -27,7 +27,13 @@ const mapIssue = (issue: ZodIssue): ApiErrorDetail => {
     return { field, code: ApiErrorDetailCode.Required };
 
   case 'too_small':
-    // String/array length violations carry a meaningful minimum length;
+    // A string that must be non-empty (`.min(1)`, usually after `.trim()`) was
+    // left blank: that is a missing value, so report it as `required` rather
+    // than "must be 1 or more characters".
+    if (issue.origin === 'string' && Number(issue.minimum) === 1) {
+      return { field, code: ApiErrorDetailCode.Required };
+    }
+    // Other string/array length violations carry a meaningful minimum length;
     // numeric range violations are reported as a generic invalid value.
     return issue.origin === 'string' || issue.origin === 'array'
       ? { field, code: ApiErrorDetailCode.MinLength, properties: { minlength: Number(issue.minimum) } }

@@ -33,6 +33,15 @@ describe('zodErrorToApiDetails (unit)', () => {
     }]);
   });
 
+  it('maps a blank string that must be non-empty (min(1)) to required', () => {
+    const schema = z.object({ message: z.string().trim().min(1) });
+    const result = schema.safeParse({ message: '   ' });
+    expect(result.success).toBe(false);
+
+    const details = zodErrorToApiDetails(result.error!);
+    expect(details).toEqual([{ field: 'message', code: ApiErrorDetailCode.Required }]);
+  });
+
   it('maps too_small on a number to a generic not_valid (no length semantics)', () => {
     const schema = z.object({ age: z.number().min(3) });
     const result = schema.safeParse({ age: 1 });
