@@ -90,6 +90,15 @@ Permanent design decisions and constraints don't belong here, even when they're 
 - **Tracking:** [software-mansion/react-native-reanimated#8665](https://github.com/software-mansion/react-native-reanimated/issues/8665)
 - **Added:** 2026-07
 
+### reanimated-list-empty-entering
+
+- **Where:** `mobile/src/components/molecules/EmptyState.tsx`
+- **Why:** On the New Architecture (Reanimated 4.7.1, RN 0.88.1), an `entering` fade on a FlatList `ListEmptyComponent` intermittently never runs, so the empty state takes up its space but stays at opacity 0. It reproduced on about half of cold launches on the Android emulator, so empty states now appear without fading in.
+- **Remove when:** a Reanimated upgrade lets an `entering` fade on `EmptyState` show up on every cold launch.
+- **Check:** restore `entering={fadeIn()}`, then cold-launch the Today screen with no entries about 10 times on an Android emulator.
+- **Tracking:** none yet; possibly related to [software-mansion/react-native-reanimated#8665](https://github.com/software-mansion/react-native-reanimated/issues/8665)
+- **Added:** 2026-11
+
 ### rngh3-jest-ui-runtime-bindings
 
 - **Where:** `mobile/jest.setup.ts`
