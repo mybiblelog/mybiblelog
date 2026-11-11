@@ -150,6 +150,17 @@ test('computeBookLastRead attributes a multi-book entry to every book it spans',
   expect(result.find(b => b.bookIndex === 3)?.lastReadDate).toBe(null);
 });
 
+test('computeBookLastRead includes deuterocanonical books, in display order, only when asked', () => {
+  const TOBIT = 67;
+  const entries = [entry('2026-03-10', Bible.makeVerseId(TOBIT, 1, 1), Bible.makeVerseId(TOBIT, 1, 5))];
+
+  expect(computeBookLastRead(entries).some(b => b.bookIndex === TOBIT)).toBe(false);
+
+  const result = computeBookLastRead(entries, { includeDeuterocanonical: true });
+  expect(result.map(b => b.bookIndex)).toEqual(Bible.getBooksForCanon(true).map(book => book.bibleOrder));
+  expect(result.find(b => b.bookIndex === TOBIT)?.lastReadDate).toBe('2026-03-10');
+});
+
 // ---------------------------------------------------------------------------
 // getRecencyLevel
 // ---------------------------------------------------------------------------
@@ -296,4 +307,15 @@ test('computeDailyVerseSeries with averageWindow 1 matches daily totals', () => 
   const entries = [entry('2026-06-15', Bible.makeVerseId(1, 1, 1), Bible.makeVerseId(1, 1, 4))];
   expect(computeDailyVerseSeries(entries, 7, '2026-06-15', 1))
     .toEqual(computeDailyVerseSeries(entries, 7, '2026-06-15'));
+});
+
+test('computeBookFrequencies includes deuterocanonical books, in display order, only when asked', () => {
+  const TOBIT = 67;
+  const entries = [entry('2026-06-10', Bible.makeVerseId(TOBIT, 1, 1), Bible.makeVerseId(TOBIT, 1, 10))];
+
+  expect(computeBookFrequencies(entries)).toHaveLength(Bible.getBookCount());
+
+  const result = computeBookFrequencies(entries, undefined, { includeDeuterocanonical: true });
+  expect(result.map(b => b.bookIndex)).toEqual(Bible.getBooksForCanon(true).map(book => book.bibleOrder));
+  expect(result.find(b => b.bookIndex === TOBIT)?.verseCount).toBe(10);
 });

@@ -1,10 +1,13 @@
 import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
 import { ObjectId } from 'mongodb';
+import { Bible } from '@mybiblelog/shared';
 import type { PassageNoteSearchQuery } from '../../repositories/helpers/types';
 import { getRepos, ensureIndexes, clearCollections, makeOwner, sleep, expectObjectId } from './helpers';
 
 const GEN_1_1_5 = { startVerseId: 101001001, endVerseId: 101001005 };
 const GEN_1_6_10 = { startVerseId: 101001006, endVerseId: 101001010 };
+const TOBIT = 67;
+const TOBIT_1_1_5 = { startVerseId: Bible.makeVerseId(TOBIT, 1, 1), endVerseId: Bible.makeVerseId(TOBIT, 1, 5) };
 
 const baseSearch = (overrides: Partial<PassageNoteSearchQuery> = {}): PassageNoteSearchQuery => ({
   limit: 50,
@@ -235,6 +238,14 @@ describe('passage-note.repository', () => {
       const counts = await passageNotes.countByBook(ownerId);
       const total = Object.values(counts).reduce((sum, n) => sum + n, 0);
       expect(total).toBe(1);
+    });
+
+    it('countByBook counts notes on deuterocanonical books', async () => {
+      const { passageNotes } = await getRepos();
+      await passageNotes.create(ownerId, { passages: [TOBIT_1_1_5] });
+
+      const counts = await passageNotes.countByBook(ownerId);
+      expect(counts[TOBIT]).toBe(1);
     });
 
     it('findLatestCreatedAt returns the newest note time or null', async () => {

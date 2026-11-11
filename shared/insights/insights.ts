@@ -115,33 +115,40 @@ export type BookLastRead = {
   lastReadDate: string | null;
 };
 
+export type BookCanonOptions = {
+  /** Include the deuterocanonical books (in full-canon display order). Defaults to `false`. */
+  includeDeuterocanonical?: boolean;
+};
+
 /**
- * For every book (1–66), determines the most recent date it was read. An entry
- * whose range spans multiple books counts toward each book it touches. Books
- * never read have a `lastReadDate` of `null`. Returned in Bible order.
+ * For every book in the reader's canon, determines the most recent date it was
+ * read. An entry whose range spans multiple books counts toward each book it
+ * touches. Books never read have a `lastReadDate` of `null`. Returned in the
+ * canon's display order.
  */
 export const computeBookLastRead = (
   entries: ReadonlyArray<Readonly<InsightsLogEntry>>,
+  { includeDeuterocanonical = false }: BookCanonOptions = {},
 ): BookLastRead[] => {
-  const bookCount = Bible.getBookCount();
-  const lastRead: Array<string | null> = new Array(bookCount + 1).fill(null);
+  const canonBooks = Bible.getBooksForCanon(includeDeuterocanonical);
+  const lastRead = new Map<number, string | null>(canonBooks.map(book => [book.bibleOrder, null]));
 
   for (const entry of entries) {
     const startBook = Bible.parseVerseId(entry.startVerseId).book;
     const endBook = Bible.parseVerseId(entry.endVerseId).book;
     for (let book = startBook; book <= endBook; book++) {
-      if (book < 1 || book > bookCount) { continue; }
-      if (lastRead[book] === null || entry.date > (lastRead[book] as string)) {
-        lastRead[book] = entry.date;
+      if (!lastRead.has(book)) { continue; }
+      const current = lastRead.get(book);
+      if (!current || entry.date > current) {
+        lastRead.set(book, entry.date);
       }
     }
   }
 
-  const result: BookLastRead[] = [];
-  for (let book = 1; book <= bookCount; book++) {
-    result.push({ bookIndex: book, lastReadDate: lastRead[book] ?? null });
-  }
-  return result;
+  return canonBooks.map(book => ({
+    bookIndex: book.bibleOrder,
+    lastReadDate: lastRead.get(book.bibleOrder) ?? null,
+  }));
 };
 
 /**
@@ -176,17 +183,19 @@ export type BookRecency = {
 };
 
 /**
- * For every book (1–66), determines the most recent date it was read within
- * [startDate, endDate] and buckets it into a 0–4 recency level. Books not read
- * in that window get `lastReadDate: null` and `level: 0`. Returned in Bible order.
+ * For every book in the reader's canon, determines the most recent date it was
+ * read within [startDate, endDate] and buckets it into a 0–4 recency level.
+ * Books not read in that window get `lastReadDate: null` and `level: 0`.
+ * Returned in the canon's display order.
  */
 export const computeBookRecency = (
   entries: ReadonlyArray<Readonly<InsightsLogEntry>>,
   startDate: string,
   endDate: string,
+  options: BookCanonOptions = {},
 ): BookRecency[] => {
   const filtered = filterEntriesByDateRange(entries, startDate, endDate);
-  return computeBookLastRead(filtered).map(book => ({
+  return computeBookLastRead(filtered, options).map(book => ({
     bookIndex: book.bookIndex,
     lastReadDate: book.lastReadDate,
     level: getRecencyLevel(book.lastReadDate, startDate, endDate),
@@ -202,27 +211,25 @@ export type BookFrequency = {
 };
 
 /**
- * For every book (1–66), counts the unique verses read within the given date range
- * and the proportion of the book that represents. Omit the range to count across
- * all entries (all time). Returned in Bible order; the caller chooses whether to
- * plot raw counts or proportions and how to sort.
+ * For every book in the reader's canon, counts the unique verses read within the
+ * given date range and the proportion of the book that represents. Omit the range
+ * to count across all entries (all time). Returned in the canon's display order;
+ * the caller chooses whether to plot raw counts or proportions and how to sort.
  */
 export const computeBookFrequencies = (
   entries: ReadonlyArray<Readonly<InsightsLogEntry>>,
   range?: { startDate: string; endDate: string },
+  { includeDeuterocanonical = false }: BookCanonOptions = {},
 ): BookFrequency[] => {
   const filtered = range
     ? filterEntriesByDateRange(entries, range.startDate, range.endDate)
     : entries;
-  const bookCount = Bible.getBookCount();
-  const result: BookFrequency[] = [];
-  for (let book = 1; book <= bookCount; book++) {
+  return Bible.getBooksForCanon(includeDeuterocanonical).map(({ bibleOrder: book }) => {
     const verseCount = Bible.countUniqueBookRangeVerses(book, filtered);
     const totalVerses = Bible.getBookVerseCount(book);
     const proportion = totalVerses > 0 ? verseCount / totalVerses : 0;
-    result.push({ bookIndex: book, verseCount, proportion });
-  }
-  return result;
+    return { bookIndex: book, verseCount, proportion };
+  });
 };
 
 export type DailyVersePoint = {

@@ -277,7 +277,7 @@ export const createPassageNoteRepository = ({ passageNotes }: Collections) => {
       const facetQuery = {};
       const projectQuery = {};
 
-      for (const book of Bible.getBooks()) {
+      for (const book of Bible.getAllBooks()) {
         const { bibleOrder } = book;
 
         const firstVerseId = Bible.getFirstBookVerseId(bibleOrder);
