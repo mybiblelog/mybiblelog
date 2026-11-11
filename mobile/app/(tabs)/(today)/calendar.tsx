@@ -174,7 +174,6 @@ export default function Calendar() {
                 title rather than a section heading above one. */}
             <ScreenHeader
               padded
-              back
               eyebrow={yearLabel}
               title={monthName}
               style={styles.monthHeader}

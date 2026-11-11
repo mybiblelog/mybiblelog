@@ -24,7 +24,7 @@ export function useDailyReminderTapRouting(onboardingCompleted: boolean): void {
     if (!onboardingCompleted) return;
     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
       if (isDailyReminderResponse(response)) {
-        router.replace("/(tabs)");
+        router.replace("/");
       }
     });
     return () => subscription.remove();
