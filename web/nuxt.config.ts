@@ -69,7 +69,12 @@ export default defineNuxtConfig({
   nitro: {
     routeRules: {
       '/api/**': {
-        proxy: `${process.env.API_BASE_URL || 'http://localhost:8080'}/api/**`,
+        proxy: {
+          to: `${process.env.API_BASE_URL || 'http://localhost:8080'}/api/**`,
+          // Hand API redirects to the browser, as the production launcher does,
+          // instead of following them server-side (which broke /api/docs → /api/docs/).
+          fetchOptions: { redirect: 'manual' },
+        },
       },
     },
   },

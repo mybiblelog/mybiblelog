@@ -193,11 +193,7 @@ test.describe('Bible Books pages', () => {
     await page.getByTestId('book-report-view-notes').click();
 
     await expect(page).toHaveURL(/\/notes/);
-    const url = new URL(page.url());
-    const lastChapter = bookChapterCount(BOOK.GENESIS);
-    expect(url.searchParams.get('filterPassageStartVerseId')).toBe(String(verseId(BOOK.GENESIS, 1, 1)));
-    expect(url.searchParams.get('filterPassageEndVerseId'))
-      .toBe(String(verseId(BOOK.GENESIS, lastChapter, chapterVerseCount(BOOK.GENESIS, lastChapter))));
+    expect(new URL(page.url()).searchParams.get('passage')).toBe('GEN');
   });
 
   test('book report "Book Reading" button navigates to /log filtered to the whole book', async ({ page }) => {
@@ -230,9 +226,7 @@ test.describe('Bible Books pages', () => {
     await page.getByTestId('action-sheet-item').filter({ hasText: 'View Notes' }).click();
 
     await expect(page).toHaveURL(/\/notes/);
-    const url = new URL(page.url());
-    expect(url.searchParams.get('filterPassageStartVerseId')).toBe(String(verseId(BOOK.GENESIS, 1, 1)));
-    expect(url.searchParams.get('filterPassageEndVerseId')).toBe(String(verseId(BOOK.GENESIS, 1, chapterVerseCount(BOOK.GENESIS, 1))));
+    expect(new URL(page.url()).searchParams.get('passage')).toBe('GEN.1');
   });
 
   test('viewing the reading log for a chapter navigates to /log filtered to that chapter', async ({ page }) => {

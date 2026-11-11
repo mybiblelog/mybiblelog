@@ -74,6 +74,50 @@ describe('GET /api/scripture/passage', () => {
     }
   });
 
+  it('returns 400 for an invalid USFM passage', async () => {
+    const user = await createTestUser();
+    try {
+      const res = await requestApi
+        .get('/api/scripture/passage?passage=GEN.51')
+        .set('Authorization', `Bearer ${user.token}`);
+      expect(res.status).toBe(400);
+      expect(res.body.error.errors).toEqual([{ code: 'not_valid', field: 'passage' }]);
+    }
+    finally {
+      await deleteTestUser(user);
+    }
+  });
+
+  it('returns 400 when passage and the verse id pair disagree', async () => {
+    const user = await createTestUser();
+    try {
+      const res = await requestApi
+        .get(`/api/scripture/passage?passage=GEN.1.1-2&startVerseId=${GEN_1_1}&endVerseId=${GEN_1_1}`)
+        .set('Authorization', `Bearer ${user.token}`);
+      expect(res.status).toBe(400);
+      expect(res.body.error.errors).toEqual([{ code: 'passage_conflict', field: 'passage' }]);
+    }
+    finally {
+      await deleteTestUser(user);
+    }
+  });
+
+  it('reads a USFM passage and returns a USFM continuation cursor (integration)', async () => {
+    const user = await createTestUser();
+    try {
+      const res = await requestApi
+        .get(`/api/scripture/passage?passage=GEN.1.1-2.2&startVerseId=${GEN_1_1}&endVerseId=${GEN_2_2}`)
+        .set('Authorization', `Bearer ${user.token}`);
+      expect(res.status).toBe(200);
+      expect(res.body.data.next).toEqual({ startVerseId: GEN_2_1, endVerseId: GEN_2_2, passage: 'GEN.2.1-2' });
+      const verses = res.body.data.blocks.filter((b: { type: string }) => b.type === 'verse');
+      expect(verses.every((b: { chapter: number }) => b.chapter === 1)).toBe(true);
+    }
+    finally {
+      await deleteTestUser(user);
+    }
+  });
+
   it('returns a single chunk with no continuation for a single-chapter passage (integration)', async () => {
     const user = await createTestUser();
     try {
@@ -105,7 +149,7 @@ describe('GET /api/scripture/passage', () => {
         .get(`/api/scripture/passage?startVerseId=${GEN_1_1}&endVerseId=${GEN_2_2}`)
         .set('Authorization', `Bearer ${user.token}`);
       expect(first.status).toBe(200);
-      expect(first.body.data.next).toEqual({ startVerseId: GEN_2_1, endVerseId: GEN_2_2 });
+      expect(first.body.data.next).toMatchObject({ startVerseId: GEN_2_1, endVerseId: GEN_2_2 });
       const firstVerses = first.body.data.blocks.filter((b: { type: string }) => b.type === 'verse');
       expect(firstVerses.length).toBeGreaterThan(0);
       expect(firstVerses.every((b: { chapter: number }) => b.chapter === 1)).toBe(true);

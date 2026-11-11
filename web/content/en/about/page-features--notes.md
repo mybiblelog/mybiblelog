@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-23"
+dateModified: "2026-11-11"
 seo:
   title: "Bible Study Notes & Tags: Organize What You Learn"
   description: "Take Bible study notes linked to the passages you read, and organize them with custom tags to find questions, prayers, and insights later."
@@ -42,14 +42,33 @@ There are three different matching modes for the selected tags:
 * **All** - Notes with all of the selected tags will be included. If you select 2 tags, notes with only one of those tags will be excluded, but notes with both tags will be included. It doesn't matter if notes have tags other than the ones selected.
 * **Exact** - Notes with the exact combination of selected tags will be included. Notes that are missing any one of the selected tags will be excluded, as will notes that have additional tags beyond the ones selected.
 
-## Sorting by Date Created
+## Filtering by Passage
 
-The "Sort" button allows notes to be sorted in one of two ways:
+"Filter by Passage" narrows your notes to a single passage, such as a chapter or a few verses. There are two matching modes:
 
+* **Inclusive** - Notes with any verse that overlaps the passage are included.
+* **Exclusive** - Notes with any verse inside the passage are included.
+
+The passage appears in the page address in the short form many Bible apps use, so you can bookmark or share a filtered view. For example:
+
+| Passage | Address |
+| --- | --- |
+| John 3 | `/notes?passage=JHN.3` |
+| John 3:16-18 | `/notes?passage=JHN.3.16-18` |
+| Genesis 1-3 | `/notes?passage=GEN.1-3` |
+| All of Psalms | `/notes?passage=PSA` |
+
+Bookmarks saved before this change still open the same filtered view.
+
+## Sorting Notes
+
+The "Sort" button allows notes to be sorted in one of three ways:
+
+* Passage Order
 * Newest First
 * Oldest First
 
-Both sort orders are based on the date and time the note was originally created. Updating a note will not change this time.
+Passage Order follows the order of the Bible, and it is chosen automatically when you filter by passage. Newest First and Oldest First are based on the date and time the note was originally created. Updating a note will not change this time.
 
 ## Creating Tags to Organize Your Notes
 

@@ -282,6 +282,7 @@ export const de = {
   api_error_invalid_request: "Ungültige Anfrage",
   api_error_email_not_verified: "Email nicht verifiziert",
   api_error_verification_code_expired: "Verifizierungscode abgelaufen",
+  api_error_passage_conflict: "Die Stellenangabe stimmt nicht mit dem Versbereich überein",
 
   upgrade_required_title: "Update erforderlich",
   upgrade_required_message:

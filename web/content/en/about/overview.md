@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-24"
+dateModified: "2026-11-11"
 seo:
   title: "My Bible Log: Free Bible Reading Tracker — Features & Guides"
   description: "Everything My Bible Log can do: track your Bible reading by chapter, set daily goals, take study notes, and follow guides like how to read the Bible in a year."
@@ -47,6 +47,7 @@ My Bible Log is a free Bible reading tracker. Log the chapters you read, set a d
 * [Create Your Free Account](/about/page-features--login)
 * [Install on Any Device](/about/page-features--install)
 * [Frequently Asked Questions](/faq)
+* [Use an AI Agent with My Bible Log](/about/how-to--use-an-ai-agent-with-my-bible-log)
 
 ## Feedback
 

@@ -1,3 +1,4 @@
+import { Bible } from '@mybiblelog/shared';
 import { clamp, parseIntOr, pickEnum, MAX_PAGE_SIZE } from './route-query-codec';
 
 export type PassageNotesSortDirection = 'ascending' | 'descending';
@@ -59,13 +60,25 @@ function asStringArray(value: unknown): string[] {
   return [`${value}`];
 }
 
+// URLs carry a USFM `passage` (?passage=JHN.3); the legacy verse id pair is still
+// decoded because old bookmarks never expire.
+function decodePassageFilter(routeQuery: RouteQueryLike): { start: number; end: number } {
+  const range = typeof routeQuery.passage === 'string' ? Bible.parseUsfmReference(routeQuery.passage) : null;
+  if (range) {
+    return { start: range.startVerseId, end: range.endVerseId };
+  }
+  return {
+    start: parseIntOr(routeQuery.filterPassageStartVerseId, DEFAULT_PASSAGE_NOTES_QUERY.filterPassageStartVerseId),
+    end: parseIntOr(routeQuery.filterPassageEndVerseId, DEFAULT_PASSAGE_NOTES_QUERY.filterPassageEndVerseId),
+  };
+}
+
 export function decodePassageNotesRouteQuery(routeQuery: RouteQueryLike = {}): PassageNotesQuery {
   const filterTags = asStringArray(routeQuery.filterTags)
     .map(v => `${v}`.trim())
     .filter(Boolean);
 
-  const filterPassageStartVerseId = parseIntOr(routeQuery.filterPassageStartVerseId, DEFAULT_PASSAGE_NOTES_QUERY.filterPassageStartVerseId);
-  const filterPassageEndVerseId = parseIntOr(routeQuery.filterPassageEndVerseId, DEFAULT_PASSAGE_NOTES_QUERY.filterPassageEndVerseId);
+  const { start: filterPassageStartVerseId, end: filterPassageEndVerseId } = decodePassageFilter(routeQuery);
 
   const hasPassageFilter = !!(filterPassageStartVerseId && filterPassageEndVerseId);
   const sortDefaults = defaultPassageNotesSort(hasPassageFilter);
@@ -90,9 +103,11 @@ export function encodePassageNotesQueryToRoute(query: Partial<PassageNotesQuery>
   // (see the book/Bible report pages), so the contextual default has to be layered
   // in before the caller's own values — otherwise an absent sort would resolve to
   // createdAt and get written into the URL as an override.
-  const hasPassageFilter = !!(
-    parseIntOr(provided.filterPassageStartVerseId, 0) && parseIntOr(provided.filterPassageEndVerseId, 0)
+  const passage = Bible.formatUsfmReference(
+    parseIntOr(provided.filterPassageStartVerseId, 0),
+    parseIntOr(provided.filterPassageEndVerseId, 0),
   );
+  const hasPassageFilter = passage !== null;
   const sortDefaults = defaultPassageNotesSort(hasPassageFilter);
 
   const merged: PassageNotesQuery = { ...DEFAULT_PASSAGE_NOTES_QUERY, ...sortDefaults, ...provided };
@@ -140,9 +155,8 @@ export function encodePassageNotesQueryToRoute(query: Partial<PassageNotesQuery>
     out.filterTagMatching = normalized.filterTagMatching;
   }
 
-  if (hasPassageFilter) {
-    out.filterPassageStartVerseId = `${normalized.filterPassageStartVerseId}`;
-    out.filterPassageEndVerseId = `${normalized.filterPassageEndVerseId}`;
+  if (passage) {
+    out.passage = passage;
     if (normalized.filterPassageMatching !== DEFAULT_PASSAGE_NOTES_QUERY.filterPassageMatching) {
       out.filterPassageMatching = normalized.filterPassageMatching;
     }

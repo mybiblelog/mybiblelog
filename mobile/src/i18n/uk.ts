@@ -280,6 +280,7 @@ export const uk = {
   api_error_invalid_request: "Недійсний запит",
   api_error_email_not_verified: "Email не підтверджений",
   api_error_verification_code_expired: "Код підтвердження застарів",
+  api_error_passage_conflict: "Посилання на уривок не відповідає діапазону віршів",
 
   upgrade_required_title: "Потрібне оновлення",
   upgrade_required_message: "Для подальшого використання сервісу потрібна новіша версія додатку.",

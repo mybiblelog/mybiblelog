@@ -157,6 +157,13 @@
   vertical-align: top;
 }
 
+/* Long URLs and JSON in cells would otherwise widen the table past the column. */
+.mbl-content td code {
+  overflow-wrap: anywhere;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
 .mbl-content thead th {
   border-bottom-width: 2px;
   color: var(--mbl-text-strong);

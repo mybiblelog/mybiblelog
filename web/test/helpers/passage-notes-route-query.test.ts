@@ -41,6 +41,33 @@ describe('decodePassageNotesRouteQuery', () => {
     });
   });
 
+  it('decodes a USFM passage', () => {
+    expect(decodePassageNotesRouteQuery({ passage: 'GEN.1' })).toMatchObject({
+      filterPassageStartVerseId: 101001001,
+      filterPassageEndVerseId: 101001031,
+      sortOn: 'passage',
+    });
+  });
+
+  it('still decodes the legacy verse id pair', () => {
+    expect(decodePassageNotesRouteQuery({
+      filterPassageStartVerseId: '101001001',
+      filterPassageEndVerseId: '101001031',
+    })).toMatchObject({ filterPassageStartVerseId: 101001001, filterPassageEndVerseId: 101001031 });
+  });
+
+  it('prefers a valid USFM passage over the legacy pair, and falls back to the pair for an invalid one', () => {
+    const legacy = { filterPassageStartVerseId: '101001001', filterPassageEndVerseId: '101001031' };
+    expect(decodePassageNotesRouteQuery({ ...legacy, passage: 'JHN.3' })).toMatchObject({
+      filterPassageStartVerseId: 143003001,
+      filterPassageEndVerseId: 143003036,
+    });
+    expect(decodePassageNotesRouteQuery({ ...legacy, passage: 'GEN.51' })).toMatchObject({
+      filterPassageStartVerseId: 101001001,
+      filterPassageEndVerseId: 101001031,
+    });
+  });
+
   it('defaults to passage order when a passage filter is present', () => {
     expect(decodePassageNotesRouteQuery({
       filterPassageStartVerseId: '101001001',
@@ -101,17 +128,19 @@ describe('encodePassageNotesQueryToRoute', () => {
     expect(encodePassageNotesQueryToRoute({ filterTagMatching: 'exact', filterTags: [] })).toMatchObject({ filterTagMatching: 'exact' });
   });
 
-  it('emits the passage filter only when both ids are present, with matching', () => {
+  it('emits the passage filter as USFM only for a valid range, with matching', () => {
     expect(encodePassageNotesQueryToRoute({ filterPassageStartVerseId: 101001001 })).toEqual({});
+    expect(encodePassageNotesQueryToRoute({ filterPassageStartVerseId: 101001002, filterPassageEndVerseId: 101001001 })).toEqual({});
     expect(encodePassageNotesQueryToRoute({
       filterPassageStartVerseId: 101001001,
       filterPassageEndVerseId: 101001031,
       filterPassageMatching: 'exclusive',
     })).toEqual({
-      filterPassageStartVerseId: '101001001',
-      filterPassageEndVerseId: '101001031',
+      passage: 'GEN.1',
       filterPassageMatching: 'exclusive',
     });
+    expect(encodePassageNotesQueryToRoute({ filterPassageStartVerseId: 143003016, filterPassageEndVerseId: 143003018 }))
+      .toEqual({ passage: 'JHN.3.16-18' });
   });
 
   it('omits passage order when a passage filter makes it the default', () => {
@@ -120,10 +149,7 @@ describe('encodePassageNotesQueryToRoute', () => {
       filterPassageEndVerseId: 101001031,
       sortOn: 'passage',
       sortDirection: 'ascending',
-    })).toEqual({
-      filterPassageStartVerseId: '101001001',
-      filterPassageEndVerseId: '101001031',
-    });
+    })).toEqual({ passage: 'GEN.1' });
   });
 
   it('emits a createdAt sort chosen alongside a passage filter', () => {
@@ -133,8 +159,7 @@ describe('encodePassageNotesQueryToRoute', () => {
       sortOn: 'createdAt',
       sortDirection: 'descending',
     })).toEqual({
-      filterPassageStartVerseId: '101001001',
-      filterPassageEndVerseId: '101001031',
+      passage: 'GEN.1',
       sortOn: 'createdAt',
       sortDirection: 'descending',
     });

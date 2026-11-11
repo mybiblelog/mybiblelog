@@ -33,6 +33,7 @@ export const ApiErrorDetailCode = {
   MinLength: 'min_length', // properties.minlength
   MaxLength: 'max_length', // properties.maxlength
   Review: 'review',
+  PassageConflict: 'passage_conflict', // `passage` and the verse id pair name different ranges
 
   // Custom Errors
   InvalidLogin: 'invalid_login',

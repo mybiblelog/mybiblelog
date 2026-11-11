@@ -280,6 +280,7 @@ export const es = {
   api_error_invalid_request: "Solicitud inválida",
   api_error_email_not_verified: "Correo electrónico no verificado",
   api_error_verification_code_expired: "El código de verificación ha caducado",
+  api_error_passage_conflict: "La referencia del pasaje no coincide con el rango de versículos",
 
   upgrade_required_title: "Actualización requerida",
   upgrade_required_message:

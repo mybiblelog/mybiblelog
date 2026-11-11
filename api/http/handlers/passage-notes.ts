@@ -1,6 +1,6 @@
 import { Bible } from '@mybiblelog/shared';
 import { isValidObjectId } from '../../repositories/helpers/ids';
-import { toPassageNoteJSON } from '../../repositories/helpers/serializers';
+import { toPassageNoteJSON, toPassageNoteSearchResultJSON } from '../../repositories/helpers/serializers';
 import { type PassageNoteSearchQuery, type PassageNoteSortOn } from '../../repositories/helpers/types';
 import { ApiErrorDetailCode } from '../errors/error-codes';
 import { ValidationError } from '../errors/validation-errors';
@@ -110,6 +110,7 @@ const validateQuery = (
 
   // determine which passage to filter by
   if (query.filterPassageStartVerseId && query.filterPassageEndVerseId) {
+    // An invalid legacy pair is ignored rather than rejected, as older clients and bookmarks rely on it.
     const startVerseId = Number(query.filterPassageStartVerseId);
     const endVerseId = Number(query.filterPassageEndVerseId);
     const rangeIsValid = Bible.validateRange(startVerseId, endVerseId);
@@ -117,6 +118,20 @@ const validateQuery = (
       validated.filterPassageStartVerseId = startVerseId;
       validated.filterPassageEndVerseId = endVerseId;
     }
+  }
+  if (query.filterPassage) {
+    const range = Bible.parseUsfmReference(String(query.filterPassage));
+    if (!range) {
+      throw new InvalidRequestError([{ field: 'filterPassage', code: ApiErrorDetailCode.NotValid }]);
+    }
+    // As in request bodies, both forms may be sent only if they name the same range.
+    const conflictsWithPair = validated.filterPassageStartVerseId !== 0
+      && (validated.filterPassageStartVerseId !== range.startVerseId || validated.filterPassageEndVerseId !== range.endVerseId);
+    if (conflictsWithPair) {
+      throw new InvalidRequestError([{ field: 'filterPassage', code: ApiErrorDetailCode.PassageConflict }]);
+    }
+    validated.filterPassageStartVerseId = range.startVerseId;
+    validated.filterPassageEndVerseId = range.endVerseId;
   }
 
   // determine how to filter by passage
@@ -172,7 +187,7 @@ export const listPassageNotes: RouteHandler = async (req, deps) => {
   return {
     status: 200,
     body: {
-      data: results,
+      data: results.map(toPassageNoteSearchResultJSON),
       meta: {
         pagination: {
           offset: query.offset,
@@ -200,7 +215,7 @@ export const getPassageNote: RouteHandler = async (req, deps) => {
 export const createPassageNote: RouteHandler = async (req, deps) => {
   const currentUser = await deps.authenticate(req);
   const { body } = validate(req, { body: passageNoteCreateSchema });
-  const tags = normalizeTagIds((req.body as { tags?: unknown } | undefined)?.tags);
+  const tags = normalizeTagIds(body.tags);
 
   // Validate that all tags exist and belong to the current user.
   const tagsValid = await deps.repositories.passageNoteTags.ownsAll(currentUser.id, tags);
@@ -228,9 +243,8 @@ export const updatePassageNote: RouteHandler = async (req, deps) => {
   }
 
   let tagIds: string[] | undefined;
-  const rawTags = (req.body as { tags?: unknown } | undefined)?.tags;
-  if (rawTags) {
-    tagIds = normalizeTagIds(rawTags);
+  if (body.tags) {
+    tagIds = normalizeTagIds(body.tags);
     // Validate that all tags exist and belong to the current user.
     const tagsValid = await deps.repositories.passageNoteTags.ownsAll(currentUser.id, tagIds);
     if (!tagsValid) {

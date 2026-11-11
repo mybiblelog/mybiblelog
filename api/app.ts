@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import errorhandler from 'errorhandler';
 import swaggerUi from 'swagger-ui-express';
-import swaggerSpec from './config/swagger';
+import swaggerSpec, { publicSwaggerSpec } from './config/swagger';
 import { getConfig } from './config';
 import apiRouter from './express/router';
 import { ApiResponse } from './http/response';
@@ -127,16 +127,19 @@ const buildApp = (): express.Application => {
     next();
   });
 
+  // Mounted under /api because the single-process launcher only routes /api/* to Express.
   if (!isProduction) {
-    // Swagger API Documentation
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-    // Serve Swagger JSON
-    app.get('/api-docs.json', (req, res) => {
-      res.setHeader('Content-Type', 'application/json');
-      res.json(swaggerSpec);
-    });
+    app.use('/api/docs', (req, res, next) => {
+      // Swagger UI loads its assets by relative URL, which only resolve under /api/docs/.
+      if (req.originalUrl === '/api/docs') {
+        return res.redirect(301, '/api/docs/');
+      }
+      next();
+    }, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   }
+  app.get('/api/openapi.json', (req, res) => {
+    res.json(publicSwaggerSpec);
+  });
 
   // Router
   app.use('/api', apiRouter);

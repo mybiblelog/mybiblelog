@@ -66,6 +66,7 @@ export function buildNotesQueryString(query: NotesQuery): string {
   }
   if (query.searchText) params.set("searchText", query.searchText);
   if (query.filterTagMatching) params.set("filterTagMatching", query.filterTagMatching);
+  // TECH-DEBT(usfm-client-migration): send USFM `filterPassage` instead of the verse id pair.
   if (query.filterPassageStartVerseId && query.filterPassageEndVerseId) {
     params.set("filterPassageStartVerseId", `${query.filterPassageStartVerseId}`);
     params.set("filterPassageEndVerseId", `${query.filterPassageEndVerseId}`);

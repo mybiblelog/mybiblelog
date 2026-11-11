@@ -27,6 +27,7 @@ const locales: Locales = {
       email_not_verified: 'Email not verified',
       verification_code_expired: 'Verification code has expired',
       tag_in_use: 'This tag is still used by one or more notes',
+      passage_conflict: 'The passage reference does not match the verse range',
     },
     reading_suggestion: {
       new_testament: 'Read something new in the New Testament',
@@ -61,6 +62,7 @@ const locales: Locales = {
       email_not_verified: 'Email nicht verifiziert',
       verification_code_expired: 'Verifizierungscode abgelaufen',
       tag_in_use: 'Dieser Tag wird noch von einer oder mehreren Notizen verwendet',
+      passage_conflict: 'Die Stellenangabe stimmt nicht mit dem Versbereich überein',
     },
     reading_suggestion: {
       new_testament: 'Lese etwas Neues im Neuen Testament',
@@ -95,6 +97,7 @@ const locales: Locales = {
       email_not_verified: 'Correo electrónico no verificado',
       verification_code_expired: 'El código de verificación ha caducado',
       tag_in_use: 'Esta etiqueta todavía se usa en una o más notas',
+      passage_conflict: 'La referencia del pasaje no coincide con el rango de versículos',
     },
     reading_suggestion: {
       new_testament: 'Lee algo nuevo en el Nuevo Testamento',
@@ -129,6 +132,7 @@ const locales: Locales = {
       email_not_verified: 'Email non vérifié',
       verification_code_expired: 'Code de vérification expiré',
       tag_in_use: 'Ce tag est encore utilisé par une ou plusieurs notes',
+      passage_conflict: 'La référence du passage ne correspond pas à la plage de versets',
     },
     reading_suggestion: {
       new_testament: 'Lisez quelque chose de nouveau dans le Nouveau Testament',
@@ -163,6 +167,7 @@ const locales: Locales = {
       email_not_verified: '이메일이 인증되지 않았습니다',
       verification_code_expired: '인증 코드가 만료되었습니다',
       tag_in_use: '이 태그는 아직 하나 이상의 노트에서 사용 중입니다',
+      passage_conflict: '구절 참조가 절 범위와 일치하지 않습니다',
     },
     reading_suggestion: {
       new_testament: '신약성경에서 새로운 내용을 읽어보세요',
@@ -197,6 +202,7 @@ const locales: Locales = {
       email_not_verified: 'Email não verificado',
       verification_code_expired: 'Código de verificação expirado',
       tag_in_use: 'Esta tag ainda é usada por uma ou mais notas',
+      passage_conflict: 'A referência da passagem não corresponde ao intervalo de versículos',
     },
     reading_suggestion: {
       new_testament: 'Leia algo novo no Novo Testamento',
@@ -231,6 +237,7 @@ const locales: Locales = {
       email_not_verified: 'Email не підтверджений',
       verification_code_expired: 'Код підтвердження застарів',
       tag_in_use: 'Цей тег усе ще використовується в одній або кількох нотатках',
+      passage_conflict: 'Посилання на уривок не відповідає діапазону віршів',
     },
     reading_suggestion: {
       new_testament: 'Прочитайте щось нове в Новому Заповіті',

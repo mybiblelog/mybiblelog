@@ -280,6 +280,7 @@ export const fr = {
   api_error_invalid_request: "Requête invalide",
   api_error_email_not_verified: "Email non vérifié",
   api_error_verification_code_expired: "Code de vérification expiré",
+  api_error_passage_conflict: "La référence du passage ne correspond pas à la plage de versets",
 
   upgrade_required_title: "Mise à jour requise",
   upgrade_required_message:

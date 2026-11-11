@@ -3,10 +3,10 @@ import { type RouteDefinition } from '../types';
 import { objectIdParam } from '../../validation/primitives';
 import {
   passageNoteCreateSchema,
-  passageNoteUpdateSchema,
   passageNoteListQuerySchema,
   passageNoteSchema,
   passageNoteSearchResultSchema,
+  passageNoteUpdateSchema,
 } from '../../validation/schemas/passage-note';
 import {
   listPassageNotes,

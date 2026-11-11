@@ -306,6 +306,7 @@ export const en = {
   api_error_invalid_request: "Invalid request",
   api_error_email_not_verified: "Email not verified",
   api_error_verification_code_expired: "Verification code has expired",
+  api_error_passage_conflict: "The passage reference does not match the verse range",
 
   upgrade_required_title: "Update required",
   upgrade_required_message: "A newer version of the app is required to continue using the service.",

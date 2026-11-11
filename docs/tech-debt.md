@@ -110,4 +110,11 @@ Permanent design decisions and constraints don't belong here, even when they're 
 
 ## Internal follow-ups
 
-None currently.
+### usfm-client-migration
+
+- **Where:** `shared/log-entry/api.ts`, `web/app/stores/passage-notes.ts`, `mobile/src/api/notesApi.ts`
+- **Why:** the API accepts USFM passage references (see [USFM Passages](usfm-passages.md)), but the clients still send integer verse id pairs. Converting at these request boundaries moves them onto USFM without touching client state. Mobile's offline queue stays integer-based and converts at send time.
+- **Remove when:** every client sends `passage` / `filterPassage`.
+- **Check:** `git grep -n "TECH-DEBT(usfm-client-migration)"`.
+- **Tracking:** none.
+- **Added:** 2026-11-02
