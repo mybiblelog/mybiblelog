@@ -27,7 +27,7 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="(today)"
         options={{
           tabBarButtonTestID: "tab.today",
           title: t("tab_today"),
@@ -50,9 +50,6 @@ export default function TabsLayout() {
           ),
         }}
       />
-      {/* Calendar is off the tab bar: `href: null` keeps the route registered
-          (Today's "View All Reading" pushes to it) without rendering a tab. */}
-      <Tabs.Screen name="calendar" options={{ href: null, title: t("tab_calendar") }} />
       <Tabs.Screen
         name="checklist"
         options={{

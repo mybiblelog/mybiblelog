@@ -47,11 +47,7 @@ export default function Index() {
     [entries, today]
   );
 
-  const { openAdd, openMenu, overlays } = useLogEntryOverlays({
-    entries: todayEntries,
-    createDate: today,
-    updateDate: today,
-  });
+  const { openAdd, openMenu, overlays } = useLogEntryOverlays({ entries: todayEntries });
 
   const goal = settings?.dailyVerseCountGoal ?? 0;
   const lookBackDate = settings?.lookBackDate ?? "0000-00-00";
@@ -186,7 +182,7 @@ export default function Index() {
                 testID="today.view-all-reading"
                 // Mobile has no all-entries list screen; Calendar is the
                 // nearest surface for browsing past reading.
-                onPress={() => router.push("/(tabs)/calendar")}
+                onPress={() => router.push("/calendar")}
               />
             </View>
             <RecentNotesSection />

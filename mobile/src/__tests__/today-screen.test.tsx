@@ -2,6 +2,22 @@ jest.mock("expo-router", () => ({
   router: { push: jest.fn() },
   useFocusEffect: jest.fn(),
 }));
+// The native Android date dialog can't run under Jest — stub it so the
+// editor's date can be changed by driving its `onChange` callback.
+const mockAndroidOpen = jest.fn();
+jest.mock("@react-native-community/datetimepicker", () => ({
+  __esModule: true,
+  default: () => null,
+  DateTimePickerAndroid: { open: (...args: unknown[]) => mockAndroidOpen(...args) },
+}));
+jest.mock("@/src/stores/logEntries", () => ({
+  ...jest.requireActual("@/src/stores/logEntries"),
+  logEntryActions: {
+    ...jest.requireActual("@/src/stores/logEntries").logEntryActions,
+    createEntry: jest.fn(),
+    updateEntry: jest.fn(),
+  },
+}));
 jest.mock("@/src/api/notesApi", () => ({
   ...jest.requireActual("@/src/api/notesApi"),
   fetchNotesPage: jest.fn().mockResolvedValue({
@@ -13,13 +29,14 @@ jest.mock("@/src/api/notesApi", () => ({
 import { Bible } from "@mybiblelog/shared";
 import dayjs from "dayjs";
 import { router } from "expo-router";
-import Today from "@/app/(tabs)/index";
+import { Platform } from "react-native";
+import Today from "@/app/(tabs)/(today)/index";
 import { useAuthStore } from "@/src/stores/auth";
 import { useDateVerseCountsStore } from "@/src/stores/dateVerseCounts";
-import { useLogEntriesStore } from "@/src/stores/logEntries";
+import { logEntryActions, useLogEntriesStore } from "@/src/stores/logEntries";
 import { initialNotesQuery, useNotesStore } from "@/src/stores/passageNotes";
 import { useUserSettingsStore } from "@/src/stores/userSettings";
-import { fireEvent, renderWithProviders, screen } from "@/src/test-utils/renderWithProviders";
+import { act, fireEvent, renderWithProviders, screen } from "@/src/test-utils/renderWithProviders";
 
 // Local date, matching the screen's `dayjs().format(...)`. `toISOString()` is
 // UTC, so west of Greenwich it names tomorrow for part of every evening and the
@@ -193,7 +210,7 @@ describe("Today screen", () => {
   it("sends View All Reading to the calendar", async () => {
     await renderWithProviders(<Today />);
     await fireEvent.press(screen.getByTestId("today.view-all-reading"));
-    expect(router.push).toHaveBeenCalledWith("/(tabs)/calendar");
+    expect(router.push).toHaveBeenCalledWith("/calendar");
   });
 
   describe("guest backup warning", () => {
@@ -235,5 +252,53 @@ describe("Today screen", () => {
     expect(query.filterPassageEndVerseId).toBe(GEN_1_10);
     expect(query.filterPassageMatching).toBe("inclusive");
     expect(router.push).toHaveBeenCalledWith("/(tabs)/notes");
+  });
+
+  // Regression: Today used to force today's date onto every save, so logging
+  // or moving reading to an earlier day silently kept it on today.
+  describe("logging a previous day", () => {
+    const YESTERDAY = dayjs().subtract(1, "day");
+
+    beforeEach(() => {
+      Platform.OS = "android";
+      mockAndroidOpen.mockReset();
+      (logEntryActions.createEntry as jest.Mock).mockReset();
+      (logEntryActions.updateEntry as jest.Mock).mockReset();
+    });
+    afterEach(() => {
+      Platform.OS = "ios";
+    });
+
+    async function pickYesterday() {
+      await fireEvent.press(screen.getByLabelText("Date"));
+      const onChange = mockAndroidOpen.mock.calls[0][0].onChange;
+      await act(() => onChange({}, YESTERDAY.toDate()));
+    }
+
+    it("creates the entry on the date chosen in the editor", async () => {
+      await renderWithProviders(<Today />);
+      await fireEvent.press(screen.getByTestId("today.add-entry"));
+      await pickYesterday();
+      await fireEvent.press(screen.getByTestId("entry-editor.book"));
+      await fireEvent.press(screen.getByText(Bible.getBookName(1, "en")));
+      await fireEvent.press(screen.getByTestId("entry-editor.save"));
+
+      expect(logEntryActions.createEntry).toHaveBeenCalledWith(
+        expect.objectContaining({ date: YESTERDAY.format("YYYY-MM-DD") })
+      );
+    });
+
+    it("moves an edited entry to the date chosen in the editor", async () => {
+      await renderWithProviders(<Today />);
+      await fireEvent.press(screen.getByLabelText(Bible.displayVerseRange(GEN_1_1, GEN_1_10)));
+      await fireEvent.press(screen.getByText("Edit"));
+      await pickYesterday();
+      await fireEvent.press(screen.getByTestId("entry-editor.save"));
+
+      expect(logEntryActions.updateEntry).toHaveBeenCalledWith(
+        "e1",
+        expect.objectContaining({ date: YESTERDAY.format("YYYY-MM-DD") })
+      );
+    });
   });
 });
