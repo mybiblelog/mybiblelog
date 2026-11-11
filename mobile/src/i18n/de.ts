@@ -136,6 +136,7 @@ export const de = {
 
   insights_frequency_timeframe_label: "Zeitraum",
   insights_frequency_last_n_days: "Letzte %{count} Tage",
+  insights_frequency_all_time: "Gesamter Zeitraum",
   insights_frequency_metric_label: "Metrik",
   insights_frequency_metric_raw: "Versanzahl",
   insights_frequency_metric_proportional: "Proportional",

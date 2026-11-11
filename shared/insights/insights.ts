@@ -202,16 +202,18 @@ export type BookFrequency = {
 };
 
 /**
- * For every book (1–66), counts the unique verses read within [startDate, endDate]
- * and the proportion of the book that represents. Returned in Bible order; the
- * caller chooses whether to plot raw counts or proportions and how to sort.
+ * For every book (1–66), counts the unique verses read within the given date range
+ * and the proportion of the book that represents. Omit the range to count across
+ * all entries (all time). Returned in Bible order; the caller chooses whether to
+ * plot raw counts or proportions and how to sort.
  */
 export const computeBookFrequencies = (
   entries: ReadonlyArray<Readonly<InsightsLogEntry>>,
-  startDate: string,
-  endDate: string,
+  range?: { startDate: string; endDate: string },
 ): BookFrequency[] => {
-  const filtered = filterEntriesByDateRange(entries, startDate, endDate);
+  const filtered = range
+    ? filterEntriesByDateRange(entries, range.startDate, range.endDate)
+    : entries;
   const bookCount = Bible.getBookCount();
   const result: BookFrequency[] = [];
   for (let book = 1; book <= bookCount; book++) {

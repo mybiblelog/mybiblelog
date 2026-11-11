@@ -45,4 +45,21 @@ describe("BookFrequencyChart", () => {
     await fireEvent.press(getByText("Alphabetical"));
     expect(getByText(Bible.getBookName(9, "en"))).toBeTruthy();
   });
+
+  it("includes entries older than a year under the all-time timeframe", async () => {
+    const old = [
+      {
+        date: dayjs().subtract(3, "year").format("YYYY-MM-DD"),
+        startVerseId: Bible.makeVerseId(2, 1, 1), // Exodus
+        endVerseId: Bible.makeVerseId(2, 1, 22),
+      },
+    ];
+    const { getByTestId, getByText, queryByText } = await renderWithProviders(
+      <BookFrequencyChart entries={old} />
+    );
+    expect(queryByText("22")).toBeNull();
+    await fireEvent.press(getByTestId("insights.frequency-timeframe-row"));
+    await fireEvent.press(getByText("All time"));
+    expect(getByText("22")).toBeTruthy();
+  });
 });
