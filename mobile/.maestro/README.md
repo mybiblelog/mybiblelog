@@ -142,7 +142,8 @@ then runs `capture.yaml` once per locale, writing PNGs to
   Metro must stay running (started by the command above, or `npx expo start`
   separately) — a dev-client loads its JS bundle from it, unlike a release
   build.
-- **`npm run dev` at the repo root** (API on :8080, web on :3000). The mobile
+- **`npm run dev:api` and `npm run dev:web` at the repo root**, in separate
+  terminals (API on :8080, web on :3000). The mobile
   app's own `EXPO_PUBLIC_API_BASE_URL` (`mobile/.env`) points at :3000 — the
   web dev server's `/api` proxy, not the API port directly — so both must be
   running. The orchestrator runs `adb reverse` for `tcp:8080`, `tcp:3000`, and

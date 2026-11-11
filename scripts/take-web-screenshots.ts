@@ -7,7 +7,7 @@
  * script (`take-mobile-screenshots.ts`).
  *
  * Prerequisites:
- *  1. `npm run dev` is running (Nuxt at SITE_URL, API at API_BASE_URL)
+ *  1. `npm run dev:api` and `npm run dev:web` are running (Nuxt at SITE_URL, API at API_BASE_URL)
  *  2. SCREENSHOT_EMAIL and SCREENSHOT_PASSWORD set in .env (or uses defaults)
  *
  * Usage:

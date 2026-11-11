@@ -67,7 +67,7 @@ Run `npm run -w web i18n:verify-keys` ([`web/scripts/i18n/verify-i18n-keys.ts`](
 
 ## 13. Verify
 
-After **`shared/`** changes, run **`npm run heroku-prebuild`** (or `npm run build -w shared` and reinstall workspaces) before `npm run dev` so `api` and `web` pick up the rebuilt `@mybiblelog/shared` package.
+After **`shared/`** changes, run **`npm run heroku-prebuild`** (or `npm run build -w shared` and reinstall workspaces) before starting the dev servers (`npm run dev:api`, `npm run dev:web`) so `api` and `web` pick up the rebuilt `@mybiblelog/shared` package.
 
 ```bash
 npm run heroku-prebuild   # if shared package changed

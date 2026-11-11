@@ -25,11 +25,12 @@ $ docker compose up
 # both /web and /api projects check for the .env in this root directory
 $ touch .env
 
-# serve both with hot reload
-# web project served at localhost:3000
+# serve each with hot reload, in separate terminals
+# (one shared terminal interleaves their output and disrupts hot reload)
 # express api project served at localhost:8080
-# web project proxies /api/* requests to express api
-$ npm run dev
+$ npm run dev:api
+# web project served at localhost:3000, proxies /api/* requests to express api
+$ npm run dev:web
 ```
 
 See [Web & API Development](docs/web-api.md) for the full setup, environment variables, debugging, testing, and deployment details.

@@ -2,7 +2,7 @@
 
 How to add support for a new Bible **translation** or a new Bible **reading app / website**. Both are configured in [`shared/bible/apps.ts`](../shared/bible/apps.ts).
 
-> **Note:** After any change under `shared/`, run `npm run heroku-prebuild` before `npm run dev` to see your changes — this rebuilds the `shared` project and reinstalls it as a dependency in the `api` and `web` projects.
+> **Note:** After any change under `shared/`, run `npm run heroku-prebuild` before starting the dev servers (`npm run dev:api`, `npm run dev:web`) to see your changes — this rebuilds the `shared` project and reinstalls it as a dependency in the `api` and `web` projects.
 
 ## Adding support for a new Bible translation
 
