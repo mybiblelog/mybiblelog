@@ -1,4 +1,7 @@
+import { watch } from 'vue';
+import type { Ref } from 'vue';
 import type { ApiErrorDetail } from './api-error';
+import type { Terr } from '~/plugins/translate-api';
 
 /** Mirrors the API's `feedbackBodySchema` limit on `message`. */
 export const FEEDBACK_MESSAGE_MAX_LENGTH = 1500;
@@ -36,4 +39,27 @@ export const validateFeedbackForm = (form: FeedbackForm): Record<string, ApiErro
   }
 
   return errors;
+};
+
+/**
+ * Prefers the form's own wording for field errors it knows about (e.g.
+ * `message_required`), falling back to the generic API error translation.
+ * `t`/`te` must come from the calling component's local i18n scope.
+ */
+export const makeFeedbackFieldError = (
+  t: (key: string) => string,
+  te: (key: string) => boolean,
+  terr: Terr,
+) => (detail: ApiErrorDetail): string => {
+  const key = `${detail.field}_${detail.code}`;
+  return te(key) ? t(key) : terr(detail);
+};
+
+export const clearFeedbackErrorsOnEdit = (
+  form: Ref<FeedbackForm>,
+  errors: Ref<Record<string, ApiErrorDetail>>,
+) => {
+  for (const field of ['email', 'message'] as const) {
+    watch(() => form.value[field], () => { delete errors.value[field]; });
+  }
 };

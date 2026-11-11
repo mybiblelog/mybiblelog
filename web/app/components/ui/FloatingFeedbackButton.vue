@@ -97,7 +97,12 @@ import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { confirmDiscardIfDirty } from '~/helpers/confirm-discard';
-import { FEEDBACK_MESSAGE_MAX_LENGTH, validateFeedbackForm } from '~/helpers/feedback-form';
+import {
+  FEEDBACK_MESSAGE_MAX_LENGTH,
+  clearFeedbackErrorsOnEdit,
+  makeFeedbackFieldError,
+  validateFeedbackForm,
+} from '~/helpers/feedback-form';
 
 const { t, te } = useI18n();
 const { $http, $terr } = useNuxtApp();
@@ -134,12 +139,8 @@ async function close() {
   feedbackModalStore.closeModal();
 }
 
-// Prefer this form's own wording for the field errors it knows about (e.g.
-// `message_required`), falling back to the generic API error translation.
-const fieldError = (detail: ApiErrorDetail) => {
-  const key = `${detail.field}_${detail.code}`;
-  return te(key) ? t(key) : $terr(detail);
-};
+const fieldError = makeFeedbackFieldError(t, te, $terr);
+clearFeedbackErrorsOnEdit(form, errors);
 
 async function submitFeedback() {
   if (submitting.value) { return; }

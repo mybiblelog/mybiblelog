@@ -1,5 +1,6 @@
 import { test, expect } from '../../fixtures';
 import { env } from '../../helpers/env';
+import { waitForHydration } from '../../helpers/hydration';
 
 test.describe('/feedback page', () => {
   test('form is visible for anonymous visitors', async ({ browser }) => {
@@ -25,6 +26,24 @@ test.describe('/feedback page', () => {
     await expect(page.getByTestId('feedback-kind')).toBeVisible();
     await expect(page.getByTestId('feedback-message')).toBeVisible();
     await expect(page.getByTestId('feedback-submit')).toBeVisible();
+  });
+
+  test('shows a field error for an empty message without calling the API, and clears it on edit', async ({ page }) => {
+    await page.goto('/feedback');
+    await waitForHydration(page);
+
+    let posted = false;
+    page.on('request', (request) => {
+      if (request.url().includes('/api/feedback') && request.method() === 'POST') { posted = true; }
+    });
+
+    await page.getByTestId('feedback-submit').click();
+    const messageError = page.getByTestId('feedback-message-error');
+    await expect(messageError).toHaveText('Please enter your feedback.');
+    expect(posted).toBe(false);
+
+    await page.getByTestId('feedback-message').fill('now with content');
+    await expect(messageError).toHaveCount(0);
   });
 });
 

@@ -1,5 +1,12 @@
-import { describe, it, expect } from 'vitest';
-import { FEEDBACK_MESSAGE_MAX_LENGTH, validateFeedbackForm } from '~/helpers/feedback-form';
+import { describe, it, expect, vi } from 'vitest';
+import { nextTick, ref } from 'vue';
+import type { ApiErrorDetail } from '~/helpers/api-error';
+import {
+  FEEDBACK_MESSAGE_MAX_LENGTH,
+  clearFeedbackErrorsOnEdit,
+  makeFeedbackFieldError,
+  validateFeedbackForm,
+} from '~/helpers/feedback-form';
 
 const valid = { email: 'reader@example.com', kind: 'bug', message: 'Something is broken' };
 
@@ -42,5 +49,35 @@ describe('validateFeedbackForm', () => {
 
   it('reports every invalid field at once', () => {
     expect(Object.keys(validateFeedbackForm({ ...valid, email: '', message: '' }))).toEqual(['email', 'message']);
+  });
+});
+
+describe('makeFeedbackFieldError', () => {
+  const t = (key: string) => `local:${key}`;
+  const terr = vi.fn((detail: string | ApiErrorDetail) => `api:${typeof detail === 'string' ? detail : detail.code}`);
+
+  it('uses the form-specific translation when one exists', () => {
+    const fieldError = makeFeedbackFieldError(t, key => key === 'message_required', terr);
+    expect(fieldError({ field: 'message', code: 'required' })).toBe('local:message_required');
+  });
+
+  it('falls back to the generic API error translation', () => {
+    const fieldError = makeFeedbackFieldError(t, () => false, terr);
+    expect(fieldError({ field: 'message', code: 'max_length' })).toBe('api:max_length');
+  });
+});
+
+describe('clearFeedbackErrorsOnEdit', () => {
+  it('clears only the edited field\'s error', async () => {
+    const form = ref({ ...valid });
+    const errors = ref<Record<string, ApiErrorDetail>>({
+      email: { field: 'email', code: 'not_valid' },
+      message: { field: 'message', code: 'required' },
+    });
+    clearFeedbackErrorsOnEdit(form, errors);
+
+    form.value.message = 'edited';
+    await nextTick();
+    expect(Object.keys(errors.value)).toEqual(['email']);
   });
 });
