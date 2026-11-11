@@ -210,7 +210,7 @@ test('computeBookFrequencies counts unique verses and proportion per book', () =
   const entries = [
     entry('2026-06-10', Bible.makeVerseId(1, 1, 1), Bible.makeVerseId(1, 1, 10)),
   ];
-  const result = computeBookFrequencies(entries, '2026-06-01', '2026-06-30');
+  const result = computeBookFrequencies(entries, { startDate: '2026-06-01', endDate: '2026-06-30' });
 
   const genesis = result.find(b => b.bookIndex === 1);
   expect(genesis?.verseCount).toBe(10);
@@ -227,8 +227,17 @@ test('computeBookFrequencies ignores entries outside the date range', () => {
   const entries = [
     entry('2026-05-01', Bible.makeVerseId(1, 1, 1), Bible.makeVerseId(1, 1, 10)),
   ];
-  const result = computeBookFrequencies(entries, '2026-06-01', '2026-06-30');
+  const result = computeBookFrequencies(entries, { startDate: '2026-06-01', endDate: '2026-06-30' });
   expect(result.find(b => b.bookIndex === 1)?.verseCount).toBe(0);
+});
+
+test('computeBookFrequencies counts every entry when no range is given (all time)', () => {
+  const entries = [
+    entry('2001-01-01', Bible.makeVerseId(1, 1, 1), Bible.makeVerseId(1, 1, 10)),
+    entry('2026-06-10', Bible.makeVerseId(1, 1, 5), Bible.makeVerseId(1, 1, 20)),
+  ];
+  const result = computeBookFrequencies(entries);
+  expect(result.find(b => b.bookIndex === 1)?.verseCount).toBe(20);
 });
 
 // ---------------------------------------------------------------------------

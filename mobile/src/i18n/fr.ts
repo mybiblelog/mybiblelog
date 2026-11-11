@@ -136,6 +136,7 @@ export const fr = {
 
   insights_frequency_timeframe_label: "Période",
   insights_frequency_last_n_days: "%{count} derniers jours",
+  insights_frequency_all_time: "Depuis le début",
   insights_frequency_metric_label: "Mesure",
   insights_frequency_metric_raw: "Nombre de versets",
   insights_frequency_metric_proportional: "Proportionnel",

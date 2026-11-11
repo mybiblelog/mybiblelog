@@ -132,6 +132,7 @@ export const ko = {
 
   insights_frequency_timeframe_label: "기간",
   insights_frequency_last_n_days: "최근 %{count}일",
+  insights_frequency_all_time: "전체 기간",
   insights_frequency_metric_label: "지표",
   insights_frequency_metric_raw: "구절 수",
   insights_frequency_metric_proportional: "비율",
