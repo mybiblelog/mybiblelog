@@ -8,7 +8,7 @@ import { Bible } from "@mybiblelog/shared";
 import dayjs from "dayjs";
 import { StyleSheet } from "react-native";
 import type { ViewStyle } from "react-native";
-import Calendar from "@/app/(tabs)/calendar";
+import Calendar from "@/app/(tabs)/(today)/calendar";
 import { colorsByScheme } from "@/src/design";
 import { useAuthStore } from "@/src/stores/auth";
 import { useDateVerseCountsStore } from "@/src/stores/dateVerseCounts";

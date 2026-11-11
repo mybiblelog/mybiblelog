@@ -140,7 +140,6 @@ export default function Calendar() {
   const { openAdd, openMenu, overlays } = useLogEntryOverlays({
     entries: entriesForSelectedDay,
     presetDate: selectedDay,
-    createDate: selectedDay,
   });
 
   const verseCountForSelectedDay = useMemo(() => {
