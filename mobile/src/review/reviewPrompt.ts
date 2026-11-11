@@ -30,11 +30,7 @@ export function isEligible(state: ReviewPromptState | null, completedBooks: numb
 }
 
 export function countCompletedBooks(entries: readonly CompletionLogEntry[]): number {
-  let count = 0;
-  for (let i = 1; i <= Bible.getBookCount(); i++) {
-    if (isBookComplete(i, entries)) count++;
-  }
-  return count;
+  return Bible.getAllBooks().filter((book) => isBookComplete(book.bibleOrder, entries)).length;
 }
 
 /** Request the review card if the user is eligible. Never throws. */

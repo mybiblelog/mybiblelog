@@ -9,6 +9,7 @@ import { SegmentedControl } from "../molecules/SegmentedControl";
 import { SelectRow } from "../molecules/SelectRow";
 import { SelectSheet } from "./SelectSheet";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
+import { useIncludeDeuterocanonical } from "@/src/stores/userSettings";
 
 type SortOrder = "bible" | "alpha" | "most" | "least";
 type Metric = "raw" | "proportional";
@@ -21,6 +22,7 @@ const stripLeadingNumbers = (str: string) => str.replace(/^\d+\s*/, "").trim();
 export function BookFrequencyChart({ entries }: { entries: InsightsLogEntry[] }) {
   const t = useT();
   const { locale } = useLocale();
+  const includeDeuterocanonical = useIncludeDeuterocanonical();
   const [days, setDays] = useState(30);
   const [metric, setMetric] = useState<Metric>("raw");
   const [sort, setSort] = useState<SortOrder>("bible");
@@ -43,19 +45,21 @@ export function BookFrequencyChart({ entries }: { entries: InsightsLogEntry[] })
   ];
 
   const rows = useMemo(() => {
-    const frequencies =
+    const range =
       days === ALL_TIME
-        ? computeBookFrequencies(entries)
-        : computeBookFrequencies(entries, {
+        ? undefined
+        : {
             startDate: dayjs()
               .subtract(days - 1, "day")
               .format("YYYY-MM-DD"),
             endDate: dayjs().format("YYYY-MM-DD"),
-          });
+          };
+    const frequencies = computeBookFrequencies(entries, range, { includeDeuterocanonical });
 
     const useProportion = metric === "proportional";
-    const enriched = frequencies.map((freq) => ({
+    const enriched = frequencies.map((freq, order) => ({
       bookIndex: freq.bookIndex,
+      order,
       bookName: Bible.getBookName(freq.bookIndex, locale),
       value: useProportion ? freq.proportion : freq.verseCount,
       label: useProportion ? `${Math.round(freq.proportion * 100)}%` : String(freq.verseCount),
@@ -67,14 +71,14 @@ export function BookFrequencyChart({ entries }: { entries: InsightsLogEntry[] })
           stripLeadingNumbers(a.bookName).localeCompare(stripLeadingNumbers(b.bookName), locale)
         );
       case "most":
-        return enriched.sort((a, b) => b.value - a.value || a.bookIndex - b.bookIndex);
+        return enriched.sort((a, b) => b.value - a.value || a.order - b.order);
       case "least":
-        return enriched.sort((a, b) => a.value - b.value || a.bookIndex - b.bookIndex);
+        return enriched.sort((a, b) => a.value - b.value || a.order - b.order);
       case "bible":
       default:
-        return enriched.sort((a, b) => a.bookIndex - b.bookIndex);
+        return enriched.sort((a, b) => a.order - b.order);
     }
-  }, [entries, days, metric, sort, locale]);
+  }, [entries, days, metric, sort, locale, includeDeuterocanonical]);
 
   const max = useMemo(() => rows.reduce((m, r) => Math.max(m, r.value), 0), [rows]);
 

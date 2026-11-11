@@ -7,6 +7,7 @@ export type ServerUserSettings = {
   startPage?: string;
   locale?: string;
   passageNoteTagSortOrder?: string;
+  includeDeuterocanonical?: boolean;
 };
 
 function toNumber(v: unknown): number | undefined {
@@ -27,6 +28,8 @@ export function parseServerUserSettings(value: unknown): ServerUserSettings | nu
     locale: typeof v.locale === "string" ? v.locale : undefined,
     passageNoteTagSortOrder:
       typeof v.passageNoteTagSortOrder === "string" ? v.passageNoteTagSortOrder : undefined,
+    includeDeuterocanonical:
+      typeof v.includeDeuterocanonical === "boolean" ? v.includeDeuterocanonical : undefined,
   };
 }
 

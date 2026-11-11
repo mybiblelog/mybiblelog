@@ -26,6 +26,15 @@ describe("parseServerUserSettings", () => {
     });
   });
 
+  it("passes through a boolean canon choice and drops a non-boolean one", () => {
+    expect(
+      parseServerUserSettings({ includeDeuterocanonical: true })?.includeDeuterocanonical
+    ).toBe(true);
+    expect(
+      parseServerUserSettings({ includeDeuterocanonical: "yes" })?.includeDeuterocanonical
+    ).toBeUndefined();
+  });
+
   it("coerces a numeric goal that arrives as a string", () => {
     expect(parseServerUserSettings({ dailyVerseCountGoal: "42" })?.dailyVerseCountGoal).toBe(42);
   });

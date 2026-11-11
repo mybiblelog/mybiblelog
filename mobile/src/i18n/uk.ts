@@ -376,6 +376,11 @@ export const uk = {
   delete_account_unable: "Не вдалося видалити обліковий запис. Спробуйте пізніше.",
 
   settings_select_option: "Виберіть варіант",
+  settings_reading_canon_title: "Канон",
+  settings_reading_canon_common: "66 спільних книг",
+  settings_reading_canon_deuterocanonical: "Включити второканонічні книги",
+  settings_reading_canon_info:
+    "Виберіть, які книги відстежувати. Второканонічні книги додаються серед книг Старого Завіту за порядком NRSVUE і враховуються у вашому прогресі читання.",
   settings_reading_daily_goal_title: "Щоденна ціль з віршів",
   settings_reading_look_back_date_title: "Дата початку відстеження",
   settings_reading_preferred_bible_version_title: "Бажаний переклад Біблії",
@@ -405,6 +410,16 @@ export const uk = {
     "Давайте персоналізуємо ваші налаштування, щоб ви могли максимально використовувати додаток.",
   onboarding_welcome_next: "Персоналізувати мої налаштування",
   onboarding_welcome_skip: "Пропустити персоналізацію",
+  onboarding_canon_title: "Виберіть свій канон",
+  onboarding_canon_description:
+    "Які книги Біблії ви хочете відстежувати? Це визначає, які книги показуються та загальний обсяг Писання, за яким вимірюється ваш прогрес.",
+  onboarding_canon_total_verses: "Усього віршів",
+  onboarding_canon_common_title: "66 спільних книг",
+  onboarding_canon_common_description:
+    "66 книг, спільних для всіх християнських Біблій, від Буття до Об'явлення.",
+  onboarding_canon_deuterocanonical_title: "Включити второканонічні книги",
+  onboarding_canon_deuterocanonical_description:
+    "Додає второканонічні книги серед книг Старого Завіту за порядком NRSVUE.",
   onboarding_goal_title: "Щоденна мета читання",
   onboarding_goal_description:
     "Скільки віршів ви хочете читати кожного дня? My Bible Log покаже ваш прогрес до цієї мети.",

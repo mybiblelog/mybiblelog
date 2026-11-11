@@ -51,6 +51,7 @@ function applyServerTruth(local: LocalUserSettings, server: ServerUserSettings):
     lookBackDate: server.lookBackDate ?? local.lookBackDate,
     preferredBibleVersion: server.preferredBibleVersion ?? local.preferredBibleVersion,
     passageNoteTagSortOrder: server.passageNoteTagSortOrder ?? local.passageNoteTagSortOrder,
+    includeDeuterocanonical: server.includeDeuterocanonical ?? local.includeDeuterocanonical,
     // preferredBibleApp stays device-only
   };
 }
@@ -61,7 +62,8 @@ function shallowEqualReadingSettings(a: LocalUserSettings, b: LocalUserSettings)
     a.lookBackDate === b.lookBackDate &&
     a.preferredBibleVersion === b.preferredBibleVersion &&
     a.preferredBibleApp === b.preferredBibleApp &&
-    a.passageNoteTagSortOrder === b.passageNoteTagSortOrder
+    a.passageNoteTagSortOrder === b.passageNoteTagSortOrder &&
+    a.includeDeuterocanonical === b.includeDeuterocanonical
   );
 }
 
@@ -199,11 +201,13 @@ export const useUserSettingsStore = create<UserSettingsStore>((set, get) => ({
  * could push is the hydration default — and pushing that over an existing
  * account's tracker start hides all of that account's prior progress.
  */
-export type PendingServerPushField = "dailyVerseCountGoal" | "preferredBibleVersion";
+export type PendingServerPushField =
+  "dailyVerseCountGoal" | "preferredBibleVersion" | "includeDeuterocanonical";
 
 const PENDING_SERVER_PUSH_FIELDS: readonly PendingServerPushField[] = [
   "dailyVerseCountGoal",
   "preferredBibleVersion",
+  "includeDeuterocanonical",
 ];
 
 function isPendingServerPushField(key: string): key is PendingServerPushField {
@@ -371,6 +375,18 @@ async function rehydrateFromDisk(): Promise<void> {
  */
 export function useSettingsValue(): LocalUserSettings | null {
   return useUserSettingsStore((s) => (s.state.status === "ready" ? s.state.settings : null));
+}
+
+/** Whether the reader's canon includes the deuterocanonical books (non-reactive). */
+export function getIncludeDeuterocanonical(): boolean {
+  const { state } = useUserSettingsStore.getState();
+  return state.status === "ready" && state.settings.includeDeuterocanonical === true;
+}
+
+export function useIncludeDeuterocanonical(): boolean {
+  return useUserSettingsStore(
+    (s) => s.state.status === "ready" && s.state.settings.includeDeuterocanonical === true
+  );
 }
 
 /**

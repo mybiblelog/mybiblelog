@@ -29,6 +29,10 @@ describe("getVersesRead / getUnreadVerseCount", () => {
   it("returns the full Bible as unread with no entries", () => {
     expect(getUnreadVerseCount([], LOOK_BACK)).toBe(Bible.getTotalVerseCount());
   });
+
+  it("measures against the full canon when deuterocanonical books are included", () => {
+    expect(getUnreadVerseCount([], LOOK_BACK, true)).toBe(Bible.getTotalVerseCount(true));
+  });
 });
 
 describe("getHistoricalOutlook", () => {

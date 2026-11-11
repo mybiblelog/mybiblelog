@@ -2,6 +2,26 @@ import { Bible } from "@mybiblelog/shared";
 import dayjs from "dayjs";
 import { fireEvent, renderWithProviders } from "@/src/test-utils/renderWithProviders";
 import { BookFrequencyChart } from "@/src/components/organisms/BookFrequencyChart";
+import { useUserSettingsStore } from "@/src/stores/userSettings";
+
+function setCanon(includeDeuterocanonical: boolean) {
+  useUserSettingsStore.setState({
+    state: {
+      status: "ready",
+      settings: {
+        lookBackDate: "2020-01-01",
+        dailyVerseCountGoal: 86,
+        preferredBibleVersion: "ESV",
+        preferredBibleApp: "",
+        includeDeuterocanonical,
+      },
+      isRefreshingFromServer: false,
+    },
+  });
+}
+
+const initialSettingsState = useUserSettingsStore.getState().state;
+afterEach(() => useUserSettingsStore.setState({ state: initialSettingsState }));
 
 const today = dayjs().format("YYYY-MM-DD");
 
@@ -19,6 +39,18 @@ const entries = [
 ];
 
 describe("BookFrequencyChart", () => {
+  it("lists deuterocanonical books only when the canon includes them", async () => {
+    const tobit = Bible.getBookName(67, "en");
+    setCanon(false);
+    const common = await renderWithProviders(<BookFrequencyChart entries={entries} />);
+    expect(common.queryByText(tobit)).toBeNull();
+    await common.unmount();
+
+    setCanon(true);
+    const full = await renderWithProviders(<BookFrequencyChart entries={entries} />);
+    expect(full.getByText(tobit)).toBeTruthy();
+  });
+
   it("defaults to a 30-day timeframe and raw verse counts", async () => {
     const { getByTestId, getByText } = await renderWithProviders(
       <BookFrequencyChart entries={entries} />

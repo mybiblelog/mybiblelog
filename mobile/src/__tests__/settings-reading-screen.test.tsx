@@ -157,6 +157,23 @@ describe("Reading settings screen", () => {
     );
   });
 
+  it("saves the canon choice to the server", async () => {
+    mockUpdateSettings.mockResolvedValue({ ...SAVED, includeDeuterocanonical: true });
+    const { getByTestId, getByText } = await renderWithProviders(<ReadingSettings />);
+
+    await fireEvent.press(getByTestId("settings-reading.canon-select"));
+    await fireEvent.press(getByText("Include deuterocanonical books"));
+    await act(async () => {
+      await fireEvent.press(getByTestId("settings-reading.canon-save"));
+    });
+
+    expect(mockUpdateSettings).toHaveBeenCalledWith({ includeDeuterocanonical: true });
+    await waitFor(() => {
+      const state = useUserSettingsStore.getState().state;
+      expect(state.status === "ready" && state.settings.includeDeuterocanonical).toBe(true);
+    });
+  });
+
   it("falls back to device storage when signed out", async () => {
     seed({ authenticated: false });
     const { getByTestId } = await renderWithProviders(<ReadingSettings />);

@@ -4,7 +4,7 @@ import { useUserSettingsStore } from "@/src/stores/userSettings";
 /**
  * Shared subscription wiring for the derived stores (`dateVerseCounts`,
  * `bibleProgress`): run `recompute` once immediately, then again whenever the
- * log-entries array reference or the look-back date changes.
+ * log-entries array reference, the look-back date, or the canon changes.
  *
  * Recomputes are coalesced onto a short trailing timer so a burst of store
  * writes (e.g. an optimistic update followed by the queue-drain reload) costs
@@ -37,14 +37,18 @@ export function subscribeDerivedRecompute(recompute: () => void): void {
     prevReady = ready;
   });
 
-  // Recompute when the look-back date changes.
+  // Recompute when the look-back date or the canon changes.
   let prevLookBack: string | null = null;
+  let prevCanon: boolean | null = null;
   useUserSettingsStore.subscribe((store) => {
-    const lookBack = store.state.status === "ready" ? store.state.settings.lookBackDate : null;
-    if (lookBack && lookBack !== prevLookBack) {
-      prevLookBack = lookBack;
-      schedule();
-    }
+    if (store.state.status !== "ready") return;
+    const { lookBackDate, includeDeuterocanonical } = store.state.settings;
+    const canon = includeDeuterocanonical === true;
+    const lookBackChanged = !!lookBackDate && lookBackDate !== prevLookBack;
+    const canonChanged = prevCanon !== null && canon !== prevCanon;
+    prevLookBack = lookBackDate || prevLookBack;
+    prevCanon = canon;
+    if (lookBackChanged || canonChanged) schedule();
   });
 
   // Initial compute (cache hydrate + first calc) runs immediately.

@@ -24,6 +24,15 @@ describe("filterAndSortBooks", () => {
     expect(de[0].bookIndex).toBe(30); // Amos ("Apostelgeschichte" follows)
   });
 
+  it("interleaves deuterocanonical books in canon order when the input includes them", () => {
+    const withDc = [...books, { bookIndex: 67 }, { bookIndex: 68 }];
+    const sorted = indices(
+      filterAndSortBooks(withDc, { testament: "all", sortOrder: "numerical" }, "en")
+    );
+    expect(sorted).toHaveLength(68);
+    expect(sorted.slice(14, 19)).toEqual([15, 16, 67, 68, 17]); // Ezra, Nehemiah, Tobit, Judith, Esther
+  });
+
   it("returns the caller's items, not copies", () => {
     const [first] = filterAndSortBooks(books, { testament: "all", sortOrder: "numerical" }, "en");
     expect(first).toBe(books[0]);

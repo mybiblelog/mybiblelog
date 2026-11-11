@@ -3,7 +3,7 @@ import { type BibleProgress, computeBibleProgress } from "@mybiblelog/shared";
 import { getCache, setCache } from "@/src/storage/dateVerseCountsCache";
 import { subscribeDerivedRecompute } from "@/src/stores/derivedRecompute";
 import { useLogEntriesStore } from "@/src/stores/logEntries";
-import { useUserSettingsStore } from "@/src/stores/userSettings";
+import { getIncludeDeuterocanonical, useUserSettingsStore } from "@/src/stores/userSettings";
 
 /**
  * Bible-progress store (Zustand).
@@ -13,8 +13,8 @@ import { useUserSettingsStore } from "@/src/stores/userSettings";
  * `computeBibleProgress`, so the `/bible`, `/bible/[book]` and `/checklist`
  * screens read ready-made data instead of recomputing it on every render. Built
  * the same way as `dateVerseCounts`: hydrate from an AsyncStorage cache for an
- * instant first paint, then recompute whenever log entries or the look-back date
- * change. Entries are filtered by `lookBackDate` (tracker-reset) so all three
+ * instant first paint, then recompute whenever log entries, the look-back date
+ * or the canon change. Entries are filtered by `lookBackDate` (tracker-reset) so all three
  * screens share one consistent snapshot.
  */
 
@@ -48,7 +48,9 @@ export const useBibleProgressStore = create<BibleProgressStore>((set, get) => ({
         settingsState.status === "ready" ? settingsState.settings.lookBackDate : "0000-00-00";
 
       const ranges = logState.entries.filter((e) => e.date >= lookBackDate);
-      const computed = computeBibleProgress(ranges);
+      const computed = computeBibleProgress(ranges, {
+        includeDeuterocanonical: getIncludeDeuterocanonical(),
+      });
 
       set({ progress: computed });
       await setCache(BIBLE_PROGRESS_CACHE_KEY, computed, BIBLE_PROGRESS_CACHE_MINUTES);
@@ -69,7 +71,7 @@ export function useBibleProgress(): BibleProgress | null {
  * Equivalent to shared `isBibleComplete` over look-back-filtered entries: a
  * book's `versesRead` can never exceed its total, so the sums match iff every
  * book is complete. Reading it from this store (rather than re-running the
- * 66-book `isBibleComplete` scan per render) also means it reacts to a
+ * per-book `isBibleComplete` scan per render) also means it reacts to a
  * `lookBackDate` change for free. False until the first snapshot lands.
  */
 export function useIsBibleComplete(): boolean {

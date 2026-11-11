@@ -32,7 +32,13 @@ import { ScrollView, StyleSheet, View } from "react-native";
  */
 
 type SettingField =
-  "dailyVerseCountGoal" | "lookBackDate" | "preferredBibleVersion" | "preferredBibleApp";
+  | "includeDeuterocanonical"
+  | "dailyVerseCountGoal"
+  | "lookBackDate"
+  | "preferredBibleVersion"
+  | "preferredBibleApp";
+
+type Canon = "common" | "deuterocanonical";
 
 /** Every editable setting as a string, so drafts compare in one stable form. */
 type Drafts = Record<SettingField, string>;
@@ -42,6 +48,9 @@ const MAX_DAILY_GOAL = DAILY_GOAL_RANGE.max;
 
 function toDrafts(settings: LocalUserSettings): Drafts {
   return {
+    includeDeuterocanonical: (settings.includeDeuterocanonical
+      ? "deuterocanonical"
+      : "common") satisfies Canon,
     dailyVerseCountGoal: String(settings.dailyVerseCountGoal),
     lookBackDate: settings.lookBackDate,
     preferredBibleVersion: settings.preferredBibleVersion,
@@ -81,6 +90,7 @@ function ReadingSettingsForm({ settings }: { settings: LocalUserSettings }) {
   const { setLocalSettings, updateServerSettings } = userSettingsActions;
   const { showToast } = useToast();
 
+  const [canonOpen, setCanonOpen] = useState(false);
   const [bibleVersionOpen, setBibleVersionOpen] = useState(false);
   const [bibleAppOpen, setBibleAppOpen] = useState(false);
   const [savingField, setSavingField] = useState<SettingField | null>(null);
@@ -120,6 +130,12 @@ function ReadingSettingsForm({ settings }: { settings: LocalUserSettings }) {
   );
 
   const bibleVersionSections = useMemo(() => getBibleVersionSections(locale), [locale]);
+
+  const canonOptions: { value: Canon; label: string }[] = [
+    { value: "common", label: t("settings_reading_canon_common") },
+    { value: "deuterocanonical", label: t("settings_reading_canon_deuterocanonical") },
+  ];
+  const canonLabel = canonOptions.find((o) => o.value === drafts.includeDeuterocanonical)?.label;
 
   const bibleVersionLabel =
     bibleVersionOptions.find((o) => o.value === drafts.preferredBibleVersion)?.label ??
@@ -164,6 +180,14 @@ function ReadingSettingsForm({ settings }: { settings: LocalUserSettings }) {
     }
   }
 
+  async function saveCanon() {
+    await commit(
+      "includeDeuterocanonical",
+      { includeDeuterocanonical: drafts.includeDeuterocanonical === "deuterocanonical" },
+      { syncToServer: true }
+    );
+  }
+
   async function saveDailyGoal() {
     const value = Number(drafts.dailyVerseCountGoal.trim());
     if (!Number.isInteger(value) || value < MIN_DAILY_GOAL || value > MAX_DAILY_GOAL) {
@@ -205,6 +229,25 @@ function ReadingSettingsForm({ settings }: { settings: LocalUserSettings }) {
     <Screen>
       <ScreenHeader padded back title={t("settings_section_reading")} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+        <SettingSection
+          title={t("settings_reading_canon_title")}
+          dirty={drafts.includeDeuterocanonical !== saved.includeDeuterocanonical}
+          saving={savingField === "includeDeuterocanonical"}
+          onSave={() => void saveCanon()}
+          onDiscard={() => setDraft("includeDeuterocanonical", saved.includeDeuterocanonical)}
+          testIDPrefix="settings-reading.canon"
+        >
+          <SelectRow
+            value={canonLabel}
+            placeholder={t("settings_select_option")}
+            onPress={() => setCanonOpen(true)}
+            testID="settings-reading.canon-select"
+          />
+          <Text variant="caption" color="mutedText">
+            {t("settings_reading_canon_info")}
+          </Text>
+        </SettingSection>
+
         <SettingSection
           title={t("settings_reading_daily_goal_title")}
           dirty={drafts.dailyVerseCountGoal !== saved.dailyVerseCountGoal}
@@ -284,6 +327,15 @@ function ReadingSettingsForm({ settings }: { settings: LocalUserSettings }) {
           </Text>
         )}
       </ScrollView>
+
+      <SelectSheet
+        visible={canonOpen}
+        title={t("settings_reading_canon_title")}
+        options={canonOptions}
+        selectedValue={drafts.includeDeuterocanonical}
+        onSelect={(v) => setDraft("includeDeuterocanonical", String(v))}
+        onClose={() => setCanonOpen(false)}
+      />
 
       <SelectSheet
         visible={bibleVersionOpen}

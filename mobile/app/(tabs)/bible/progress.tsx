@@ -90,17 +90,18 @@ export default function Progress() {
 
   const today = useMemo(() => dayjs().format("YYYY-MM-DD"), []);
   const lookBackDate = settings?.lookBackDate ?? "0000-00-00";
+  const dc = settings?.includeDeuterocanonical === true;
 
   const stats = useMemo(() => {
     const all = entries ?? [];
     return {
-      unreadVerses: getUnreadVerseCount(all, lookBackDate),
-      historical: getHistoricalOutlook(all, lookBackDate, today),
-      thirtyDay: getRecentOutlook(dateVerseCounts, all, lookBackDate, today, 30),
-      sevenDay: getRecentOutlook(dateVerseCounts, all, lookBackDate, today, 7),
-      todayOutlook: getTodayOutlook(all, lookBackDate, today),
+      unreadVerses: getUnreadVerseCount(all, lookBackDate, dc),
+      historical: getHistoricalOutlook(all, lookBackDate, today, dc),
+      thirtyDay: getRecentOutlook(dateVerseCounts, all, lookBackDate, today, 30, dc),
+      sevenDay: getRecentOutlook(dateVerseCounts, all, lookBackDate, today, 7, dc),
+      todayOutlook: getTodayOutlook(all, lookBackDate, today, dc),
     };
-  }, [entries, lookBackDate, today, dateVerseCounts]);
+  }, [entries, lookBackDate, dc, today, dateVerseCounts]);
 
   const goalPlan = goalDate ? getGoalPlan(stats.unreadVerses, today, goalDate) : undefined;
 

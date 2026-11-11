@@ -5,6 +5,7 @@ import type { NotePassage } from "@/src/api/notesApi";
 import { radius, spacing, useTheme } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { usePassageSelection } from "@/src/notes/usePassageSelection";
+import { useIncludeDeuterocanonical } from "@/src/stores/userSettings";
 import { Button } from "../atoms/Button";
 import { Text } from "../atoms/Text";
 import { SelectRow } from "../molecules/SelectRow";
@@ -28,6 +29,7 @@ type Props = {
 export function PassageRangeSheet({ visible, title, initialRange, onSubmit, onClose }: Props) {
   const t = useT();
   const { locale } = useLocale();
+  const includeDeuterocanonical = useIncludeDeuterocanonical();
   const { colors } = useTheme();
 
   const selection = usePassageSelection(initialRange);
@@ -56,11 +58,11 @@ export function PassageRangeSheet({ visible, title, initialRange, onSubmit, onCl
 
   const bookOptions = useMemo(
     () =>
-      Bible.getBooks().map((b) => ({
+      Bible.getBooksForCanon(includeDeuterocanonical).map((b) => ({
         value: b.bibleOrder,
         label: Bible.getBookName(b.bibleOrder, locale),
       })),
-    [locale]
+    [locale, includeDeuterocanonical]
   );
 
   const displayRange = selection.range

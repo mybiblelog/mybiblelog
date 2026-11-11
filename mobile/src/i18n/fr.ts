@@ -382,6 +382,11 @@ export const fr = {
   delete_account_unable: "Impossible de supprimer le compte. Veuillez réessayer plus tard.",
 
   settings_select_option: "Sélectionner une option",
+  settings_reading_canon_title: "Canon",
+  settings_reading_canon_common: "Les 66 livres communs",
+  settings_reading_canon_deuterocanonical: "Inclure les livres deutérocanoniques",
+  settings_reading_canon_info:
+    "Choisissez les livres à suivre. Les livres deutérocanoniques sont ajoutés parmi les livres de l'Ancien Testament, selon l'ordre de la NRSVUE, et sont comptés dans votre progression de lecture.",
   settings_reading_daily_goal_title: "Objectif quotidien de versets",
   settings_reading_look_back_date_title: "Date de Début du Suivi",
   settings_reading_preferred_bible_version_title: "Version de la Bible préférée",
@@ -412,6 +417,16 @@ export const fr = {
     "Personnalisons vos paramètres pour que vous puissiez tirer le meilleur parti de l'application.",
   onboarding_welcome_next: "Personnaliser mes paramètres",
   onboarding_welcome_skip: "Ignorer la personnalisation",
+  onboarding_canon_title: "Choisissez Votre Canon",
+  onboarding_canon_description:
+    "Quels livres de la Bible souhaitez-vous suivre ? Cela détermine les livres affichés et la quantité totale d'Écriture par rapport à laquelle votre progression est mesurée.",
+  onboarding_canon_total_verses: "Total des versets",
+  onboarding_canon_common_title: "Les 66 livres communs",
+  onboarding_canon_common_description:
+    "Les 66 livres communs à toutes les Bibles chrétiennes, de la Genèse à l'Apocalypse.",
+  onboarding_canon_deuterocanonical_title: "Inclure les livres deutérocanoniques",
+  onboarding_canon_deuterocanonical_description:
+    "Ajoute les livres deutérocanoniques parmi les livres de l'Ancien Testament, selon l'ordre de la NRSVUE.",
   onboarding_goal_title: "Objectif de lecture quotidien",
   onboarding_goal_description:
     "Combien de versets voulez-vous lire chaque jour ? My Bible Log affichera vos progrès vers cet objectif.",

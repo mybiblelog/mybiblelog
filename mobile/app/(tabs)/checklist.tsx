@@ -177,7 +177,7 @@ export default function Checklist() {
   const { width: windowWidth } = useWindowDimensions();
 
   // Purely a view filter and order: `progress` and `toggleChapter` keep working
-  // off the full 66-book list, and `expandedBooks` is keyed by absolute book
+  // off the full canon book list, and `expandedBooks` is keyed by absolute book
   // index, so hiding a testament or reordering never disturbs what is expanded
   // or what gets saved.
   const filteredBooks = useMemo(() => {
@@ -313,7 +313,7 @@ export default function Checklist() {
           // sibling books overlapping the expanded chapter grid, so opt out.
           animateItemLayout={false}
           keyExtractor={(b: BookProgress) => String(b.bookIndex)}
-          // Fixed-size list (66 books at most): render it all up front instead
+          // Fixed-size list (77 books at most): render it all up front instead
           // of FlatList's default incremental backfill, so the page doesn't
           // visibly grow after mount.
           initialNumToRender={filteredBooks.length}
