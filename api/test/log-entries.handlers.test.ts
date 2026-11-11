@@ -193,6 +193,12 @@ describe('log entry handlers (unit)', () => {
       expect(received).toEqual({ date: '2024-01-01', startVerseId: 101001001, endVerseId: 101001031 });
     });
 
+    it('reports a non-object body once', async () => {
+      const deps = makeDeps({ logEntries: { create: async () => sampleEntry } });
+      const error = await createLogEntry(makeRequest({ method: 'POST', body: 'nope' }), deps).catch((e: unknown) => e);
+      expect((error as ValidationError).details).toEqual([{ field: null, code: 'required' }]);
+    });
+
     it('still requires verse ids when the passage is null', async () => {
       const deps = makeDeps({ logEntries: { create: async () => sampleEntry } });
       const error = await createLogEntry(makeRequest({ method: 'POST', body: { date: '2024-01-01', passage: null } }), deps)

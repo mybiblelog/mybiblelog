@@ -33,6 +33,7 @@ export const parseUsfmReference = (reference: string): VerseRange | null => {
   if (!match) { return null; }
   const [, bookCode, startChapterStr, startVerseStr, endBookCode, endFirstStr, endSecondStr] = match;
 
+  if (bookCode === undefined) { return null; }
   const book = getBookIndexByUsfmCode(bookCode);
   if (book === -1) { return null; }
   if (endBookCode !== undefined && endBookCode.toUpperCase() !== bookCode.toUpperCase()) { return null; }
@@ -80,11 +81,11 @@ export const parseUsfmReference = (reference: string): VerseRange | null => {
 
 /**
  * Formats a single-book verse range as the shortest USFM reference that
- * denotes it (inverse of parseUsfmReference). Returns an empty string for an
- * invalid range.
+ * denotes it (inverse of parseUsfmReference), or returns null if the range is
+ * not a valid single-book passage.
  */
-export const formatUsfmReference = (startVerseId: VerseId, endVerseId: VerseId): string => {
-  if (!validateRange(startVerseId, endVerseId)) { return ''; }
+export const formatUsfmReference = (startVerseId: VerseId, endVerseId: VerseId): string | null => {
+  if (!validateRange(startVerseId, endVerseId)) { return null; }
   const start = parseVerseId(startVerseId);
   const end = parseVerseId(endVerseId);
   const code = getBookUsfmCode(start.book);

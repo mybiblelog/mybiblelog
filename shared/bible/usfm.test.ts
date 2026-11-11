@@ -28,6 +28,7 @@ describe('parseUsfmReference', () => {
     ['PSA.23', v(19, 23, 1), v(19, 23, 6)],
     ['1SA.17.4', v(9, 17, 4), v(9, 17, 4)],
     ['jhn.3.16', v(43, 3, 16), v(43, 3, 16)],
+    [' gen.01.001 ', v(1, 1, 1), v(1, 1, 1)],
     ['GEN.1.1-GEN.2.3', v(1, 1, 1), v(1, 2, 3)],
     ['GEN.1.1-GEN.1.5', v(1, 1, 1), v(1, 1, 5)],
     ['GEN.1-GEN.3', v(1, 1, 1), v(1, 3, 24)],
@@ -77,25 +78,38 @@ describe('formatUsfmReference', () => {
     expect(Bible.formatUsfmReference(startVerseId, endVerseId)).toBe(expected);
   });
 
-  test('returns an empty string for invalid or cross-book ranges', () => {
-    expect(Bible.formatUsfmReference(v(1, 1, 5), v(1, 1, 1))).toBe('');
-    expect(Bible.formatUsfmReference(v(1, 50, 26), v(2, 1, 1))).toBe('');
+  test('returns null for invalid or cross-book ranges', () => {
+    expect(Bible.formatUsfmReference(v(1, 1, 5), v(1, 1, 1))).toBeNull();
+    expect(Bible.formatUsfmReference(v(1, 50, 26), v(2, 1, 1))).toBeNull();
   });
 
-  test('round-trips through parseUsfmReference', () => {
-    const ranges = [
-      [v(1, 1, 1), v(1, 50, 26)],
-      [v(19, 119, 1), v(19, 119, 176)],
-      [v(19, 1, 1), v(19, 150, 5)],
-      [v(43, 3, 16), v(43, 4, 2)],
-      [v(45, 8, 28), v(45, 8, 30)],
-      [v(66, 22, 21), v(66, 22, 21)],
-      [v(40, 5, 1), v(40, 7, 29)],
-      [v(40, 5, 2), v(40, 7, 29)],
-    ];
+  test('round-trips every chapter of every book through parseUsfmReference', () => {
+    const ranges: Array<[number, number]> = [];
+    for (let book = 1; book <= Bible.getBookCount(); book++) {
+      const chapterCount = Bible.getBookChapterCount(book);
+      ranges.push([Bible.getFirstBookVerseId(book), Bible.getLastBookVerseId(book)]);
+      for (let chapter = 1; chapter <= chapterCount; chapter++) {
+        const last = Bible.getChapterVerseCount(book, chapter);
+        ranges.push(
+          [v(book, chapter, 1), v(book, chapter, last)],
+          [v(book, chapter, 1), v(book, chapter, 1)],
+          [v(book, chapter, last), v(book, chapter, last)],
+        );
+        if (last > 1) {
+          ranges.push([v(book, chapter, 2), v(book, chapter, last)]);
+        }
+        if (chapter < chapterCount) {
+          ranges.push(
+            [v(book, chapter, last), v(book, chapter + 1, 1)],
+            [v(book, chapter, 1), v(book, chapter + 1, Bible.getChapterVerseCount(book, chapter + 1))],
+          );
+        }
+      }
+    }
     for (const [startVerseId, endVerseId] of ranges) {
       const reference = Bible.formatUsfmReference(startVerseId, endVerseId);
-      expect(Bible.parseUsfmReference(reference)).toEqual({ startVerseId, endVerseId });
+      expect(reference && Bible.parseUsfmReference(reference), `${startVerseId}-${endVerseId} as ${reference}`)
+        .toEqual({ startVerseId, endVerseId });
     }
   });
 });

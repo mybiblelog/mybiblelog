@@ -1,11 +1,10 @@
-import { Bible } from '@mybiblelog/shared';
+import { Bible, type VerseRange } from '@mybiblelog/shared';
 import {
   DailyReminderRecord,
   LogEntryRecord,
   PassageNoteRecord,
   PassageNoteSearchResultItem,
   PassageNoteTagRecord,
-  PassageRecord,
 } from './types';
 import { type LogEntryJSON } from '../../validation/schemas/log-entry';
 
@@ -14,16 +13,16 @@ import { type LogEntryJSON } from '../../validation/schemas/log-entry';
  * Mongoose schemas used to provide. Routes call these to build wire payloads.
  */
 
+/** Adds the USFM `passage` reference alongside a passage's integer verse ids. */
+export const toPassageJSON = <T extends VerseRange>(passage: T) => ({
+  ...passage,
+  passage: Bible.formatUsfmReference(passage.startVerseId, passage.endVerseId),
+});
+
 export const toLogEntryJSON = (logEntry: LogEntryRecord): LogEntryJSON => {
   const { id, date, startVerseId, endVerseId } = logEntry;
-  return { id, date, startVerseId, endVerseId, passage: Bible.formatUsfmReference(startVerseId, endVerseId) || null };
+  return { id, date, ...toPassageJSON({ startVerseId, endVerseId }) };
 };
-
-/** Adds the USFM `passage` reference alongside a passage's integer verse ids. */
-export const toPassageJSON = (passage: PassageRecord) => ({
-  ...passage,
-  passage: Bible.formatUsfmReference(passage.startVerseId, passage.endVerseId) || null,
-});
 
 export const toPassageNoteJSON = (passageNote: PassageNoteRecord) => {
   const { id, passages, content, tags } = passageNote;

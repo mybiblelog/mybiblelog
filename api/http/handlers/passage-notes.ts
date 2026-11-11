@@ -108,16 +108,8 @@ const validateQuery = (
     }
   }
 
-  // determine which passage to filter by (a USFM reference takes precedence over the verse id pair)
-  if (query.filterPassage) {
-    const range = Bible.parseUsfmReference(String(query.filterPassage));
-    if (!range) {
-      return;
-    }
-    validated.filterPassageStartVerseId = range.startVerseId;
-    validated.filterPassageEndVerseId = range.endVerseId;
-  }
-  else if (query.filterPassageStartVerseId && query.filterPassageEndVerseId) {
+  // determine which passage to filter by
+  if (query.filterPassageStartVerseId && query.filterPassageEndVerseId) {
     // An invalid legacy pair is ignored rather than rejected, as older clients and bookmarks rely on it.
     const startVerseId = Number(query.filterPassageStartVerseId);
     const endVerseId = Number(query.filterPassageEndVerseId);
@@ -126,6 +118,20 @@ const validateQuery = (
       validated.filterPassageStartVerseId = startVerseId;
       validated.filterPassageEndVerseId = endVerseId;
     }
+  }
+  if (query.filterPassage) {
+    const range = Bible.parseUsfmReference(String(query.filterPassage));
+    if (!range) {
+      return;
+    }
+    // As in request bodies, both forms may be sent only if they name the same range.
+    const conflictsWithPair = validated.filterPassageStartVerseId !== 0
+      && (validated.filterPassageStartVerseId !== range.startVerseId || validated.filterPassageEndVerseId !== range.endVerseId);
+    if (conflictsWithPair) {
+      return;
+    }
+    validated.filterPassageStartVerseId = range.startVerseId;
+    validated.filterPassageEndVerseId = range.endVerseId;
   }
 
   // determine how to filter by passage
@@ -209,7 +215,7 @@ export const getPassageNote: RouteHandler = async (req, deps) => {
 export const createPassageNote: RouteHandler = async (req, deps) => {
   const currentUser = await deps.authenticate(req);
   const { body } = validate(req, { body: passageNoteCreateSchema });
-  const tags = normalizeTagIds((req.body as { tags?: unknown } | undefined)?.tags);
+  const tags = normalizeTagIds(body.tags);
 
   // Validate that all tags exist and belong to the current user.
   const tagsValid = await deps.repositories.passageNoteTags.ownsAll(currentUser.id, tags);
@@ -237,9 +243,8 @@ export const updatePassageNote: RouteHandler = async (req, deps) => {
   }
 
   let tagIds: string[] | undefined;
-  const rawTags = (req.body as { tags?: unknown } | undefined)?.tags;
-  if (rawTags) {
-    tagIds = normalizeTagIds(rawTags);
+  if (body.tags) {
+    tagIds = normalizeTagIds(body.tags);
     // Validate that all tags exist and belong to the current user.
     const tagsValid = await deps.repositories.passageNoteTags.ownsAll(currentUser.id, tagIds);
     if (!tagsValid) {

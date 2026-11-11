@@ -1,38 +1,32 @@
 import { z } from 'zod';
-import { passageInputDocsSchema, passageInputSchema } from './passage';
+import { documentAs } from '../documented-as';
+import { USFM_PASSAGE_DESCRIPTION } from '../primitives';
+import { passageInputSchema } from './passage';
 
 export const passageNoteBaseSchema = z.object({
-  content: z.string().trim().max(3000).optional(),
-  passages: z.array(passageInputSchema).optional(),
+  content: z.string().trim().max(3000).optional().describe('Note text, up to 3000 characters'),
+  passages: z.array(passageInputSchema).optional().describe('Passages the note is about'),
+  // Passed through untouched: the handler normalizes the value and checks tag
+  // ownership, which needs a database lookup.
+  tags: documentAs(z.unknown(), z.array(z.string())).optional().describe('IDs of the user\'s tags to attach to the note'),
 });
 
 /**
  * Creating a note requires at least one of `content` or `passages`
- * (mirrors the former Mongoose `pre('validate')` rule). Tag ownership is
- * validated separately in the route since it requires a database lookup.
+ * (mirrors the former Mongoose `pre('validate')` rule).
  */
 export const passageNoteCreateSchema = passageNoteBaseSchema.refine(
   (value) => (value.content?.length ?? 0) > 0 || (value.passages?.length ?? 0) > 0,
   { path: [] },
-);
+).describe('A note needs `content`, `passages`, or both.');
 
 /**
  * Updating a note validates only the provided fields. The "one of content or
  * passages" rule is intentionally not enforced here, since unspecified fields
  * retain their existing values.
  */
-export const passageNoteUpdateSchema = passageNoteBaseSchema.partial();
-
-/**
- * Documentation-only request body for creating/updating a note: identical to
- * `passageNoteBaseSchema`, but documents every accepted passage form (see
- * `passageInputDocsSchema`). Handlers validate with the schemas above.
- */
-export const passageNoteBodyDocsSchema = passageNoteBaseSchema.extend({
-  content: passageNoteBaseSchema.shape.content.describe('Note text, up to 3000 characters'),
-  passages: z.array(passageInputDocsSchema).optional().describe('Passages the note is about'),
-  tags: z.array(z.string()).optional().describe('IDs of the user\'s tags to attach to the note'),
-}).describe('A note needs `content`, `passages`, or both. On update, omitted fields keep their values.');
+export const passageNoteUpdateSchema = passageNoteBaseSchema.partial()
+  .describe('All fields are optional; omitted fields keep their values.');
 
 export type PassageNoteCreateBody = z.infer<typeof passageNoteCreateSchema>;
 export type PassageNoteUpdateBody = z.infer<typeof passageNoteUpdateSchema>;
@@ -77,7 +71,7 @@ export const passageNoteListQuerySchema = z.object({
   filterTags: z.array(z.string()).optional().describe('Tag IDs to filter by'),
   filterTagMatching: z.enum(['any', 'all', 'exact']).optional().describe('How to match tags (default any)'),
   searchText: z.string().optional().describe('Text to search for in notes'),
-  filterPassage: z.string().optional().describe('USFM passage reference to filter by, e.g. "JHN.3"; takes precedence over the verse ID pair, and an invalid reference is a 400'),
+  filterPassage: z.string().optional().describe(`Passage to filter by. ${USFM_PASSAGE_DESCRIPTION} An invalid reference is a 400, as is one that names a different range than a valid verse ID pair sent with it.`),
   filterPassageStartVerseId: z.coerce.number().int().optional().describe('Start verse ID for passage filtering; an invalid pair is ignored'),
   filterPassageEndVerseId: z.coerce.number().int().optional().describe('End verse ID for passage filtering; an invalid pair is ignored'),
   filterPassageMatching: z.enum(['inclusive', 'exclusive']).optional().describe('How to match passages (default inclusive)'),

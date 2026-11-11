@@ -1091,7 +1091,7 @@ describe('passage-notes.test.js', () => {
           .send({ content: 'Bad passage', passages: ['GEN.1', 'GEN-EXO'] });
         expect(response.status).toBe(400);
         expect(response.body.error.code).toBe('validation_error');
-        expect(response.body.error.errors).toEqual([{ field: 'passages.1.passage', code: 'not_valid' }]);
+        expect(response.body.error.errors).toEqual([{ field: 'passages.1', code: 'not_valid' }]);
       }
       finally {
         await deleteTestUser(testUser);

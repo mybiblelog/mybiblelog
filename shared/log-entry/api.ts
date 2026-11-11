@@ -15,6 +15,7 @@ export type LogEntry = {
   date: string; // YYYY-MM-DD
   startVerseId: number;
   endVerseId: number;
+  passage?: string | null; // the same range as a USFM reference
 };
 
 export type CreateLogEntryInput = {

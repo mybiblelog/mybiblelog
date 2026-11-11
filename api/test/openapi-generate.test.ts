@@ -167,6 +167,7 @@ describe('generateOpenApiPaths', () => {
       }
     }
     expect(undescribed).toEqual([]);
+    expect(JSON.stringify(paths)).not.toContain('undefined');
   });
 
   // The docs schema can't express refinements, so it may accept more than the

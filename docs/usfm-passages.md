@@ -13,7 +13,7 @@ Clients adopt USFM by converting at the request boundary, not by changing their 
 
 ## Contract rules
 
-- **Both forms may be sent if they agree.** Responses carry `passage` next to `startVerseId`/`endVerseId`, so a client can send a response passage back unchanged (a null `passage` counts as absent). A body where the two forms describe different ranges is rejected with the `passage_conflict` detail code, which is what a client sees if it edits the integers of a fetched object and sends the stale `passage` back.
+- **Both forms may be sent if they agree.** Responses carry `passage` next to `startVerseId`/`endVerseId`, so a client can send a response passage back unchanged (a null `passage` counts as absent). A body where the two forms describe different ranges is rejected with the `passage_conflict` detail code, which is what a client sees if it edits the integers of a fetched object and sends the stale `passage` back. `GET /passage-notes` applies the same rule to `filterPassage` and the verse ID pair, except that an invalid pair is ignored, as it always was.
 - **One book per reference.** The end of a range never names a different book, which matches `Bible.validateRange`. "Genesis 50 to Exodus 2" is two passages.
 - **Many spellings, one range.** `GEN.1`, `GEN.1-1`, `GEN.1.1-31` and `GEN.1.1-GEN.1.31` are equal. Responses always use the shortest form, but clients must compare parsed ranges, never strings.
 - **The versification is the app's.** References are validated against the English/NASB table in `shared/bible/static/chapter-verses/`, so `MAL.4` is valid and `3JN.1.15` is not. Third parties that form references from another tradition will hit "verse doesn't exist" errors, so the `passage` field's OpenAPI description names the versification.

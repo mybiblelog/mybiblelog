@@ -1,4 +1,5 @@
 import { z, type ZodType } from 'zod';
+import { documentedAs } from '../../validation/documented-as';
 
 /**
  * Helpers for turning zod schemas into the JSON Schema fragments the OpenAPI
@@ -100,6 +101,11 @@ export const zodToOpenApiSchema = (
     // Passing the entity registry as `metadata` replaces zod's global registry,
     // which is where `.describe()` stores descriptions, so copy them back in.
     override: ({ zodSchema, jsonSchema }) => {
+      const standIn = documentedAs(zodSchema);
+      if (standIn) {
+        for (const key of Object.keys(jsonSchema)) { delete (jsonSchema as JsonSchema)[key]; }
+        Object.assign(jsonSchema, zodToOpenApiSchema(standIn, io, registry));
+      }
       const description = z.globalRegistry.get(zodSchema)?.description;
       if (description && jsonSchema.description === undefined) {
         jsonSchema.description = description;

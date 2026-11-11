@@ -88,7 +88,7 @@ describe('passage note handlers (USFM)', () => {
         body: { content: 'x', passages: ['GEN.1', 'GEN.50-EXO.1'] },
       }), deps).catch((e: unknown) => e);
       expect(error).toBeInstanceOf(ValidationError);
-      expect((error as ValidationError).details).toEqual([{ field: 'passages.1.passage', code: 'not_valid' }]);
+      expect((error as ValidationError).details).toEqual([{ field: 'passages.1', code: 'not_valid' }]);
     });
 
     it('accepts a passage with both forms when they agree, and rejects one where they conflict', async () => {
@@ -110,10 +110,16 @@ describe('passage note handlers (USFM)', () => {
       expect((error as ValidationError).details).toEqual([{ field: 'passages.1.passage', code: 'passage_conflict' }]);
     });
 
-    it('rejects null and non-string, non-object passages as validation errors', async () => {
+    it('reports null and non-string, non-object passages once each', async () => {
       const deps = makeDeps({ passageNotes: { create: async () => sampleNote } });
-      await expect(createPassageNote(makeRequest({ method: 'POST', body: { content: 'x', passages: [null, 5] } }), deps))
-        .rejects.toBeInstanceOf(ValidationError);
+      const error = await createPassageNote(makeRequest({ method: 'POST', body: { content: 'x', passages: [null, 5, {}] } }), deps)
+        .catch((e: unknown) => e);
+      expect((error as ValidationError).details).toEqual([
+        { field: 'passages.0', code: 'required' },
+        { field: 'passages.1', code: 'required' },
+        { field: 'passages.2.startVerseId', code: 'required' },
+        { field: 'passages.2.endVerseId', code: 'required' },
+      ]);
     });
 
     it('returns passages with their USFM reference', async () => {
@@ -160,10 +166,25 @@ describe('passage note handlers (USFM)', () => {
       expect(received?.filterPassageEndVerseId).toBe(143003036);
     });
 
-    it('prefers filterPassage over the verse id pair', async () => {
+    it('accepts filterPassage with a verse id pair naming the same range', async () => {
       let received: PassageNoteSearchQuery | undefined;
       await listPassageNotes(makeRequest({
+        query: { filterPassage: 'JHN.3', filterPassageStartVerseId: '143003001', filterPassageEndVerseId: '143003036' },
+      }), searchDeps((q) => { received = q; }));
+      expect(received?.filterPassageStartVerseId).toBe(143003001);
+      expect(received?.filterPassageEndVerseId).toBe(143003036);
+    });
+
+    it('rejects filterPassage with a verse id pair naming a different range', async () => {
+      await expect(listPassageNotes(makeRequest({
         query: { filterPassage: 'GEN.1.1', filterPassageStartVerseId: '143003001', filterPassageEndVerseId: '143003036' },
+      }), searchDeps())).rejects.toBeInstanceOf(InvalidRequestError);
+    });
+
+    it('ignores an invalid verse id pair sent with filterPassage', async () => {
+      let received: PassageNoteSearchQuery | undefined;
+      await listPassageNotes(makeRequest({
+        query: { filterPassage: 'GEN.1.1', filterPassageStartVerseId: '143003036', filterPassageEndVerseId: '143003001' },
       }), searchDeps((q) => { received = q; }));
       expect(received?.filterPassageStartVerseId).toBe(101001001);
       expect(received?.filterPassageEndVerseId).toBe(101001001);
