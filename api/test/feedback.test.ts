@@ -79,5 +79,16 @@ describe('Feedback routes', () => {
       expect(res.body.error.code).toBe('validation_error');
     }
   });
-});
 
+  test('POST /api/feedback rejects an empty message as a required field', async () => {
+    const res = await requestApi
+      .post('/api/feedback')
+      .send({ email: 'guest@example.com', kind: 'bug', message: '   ' });
+
+    expect([400, 429]).toContain(res.statusCode);
+    if (res.statusCode === 400) {
+      expect(res.body.error.code).toBe('validation_error');
+      expect(res.body.error.errors).toEqual([{ field: 'message', code: 'required' }]);
+    }
+  });
+});

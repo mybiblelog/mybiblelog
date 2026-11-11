@@ -9,9 +9,9 @@
         <p>{{ t('intro_p2') }}</p>
       </div>
 
-      <form data-testid="feedback-form" @submit.prevent="submitFeedback">
+      <form data-testid="feedback-form" novalidate @submit.prevent="submitFeedback">
         <div v-if="errors._form" class="mbl-help mbl-help--danger">
-          {{ errors._form }}
+          {{ $terr(errors._form) }}
         </div>
         <div class="mbl-field">
           <label class="mbl-label">{{ t('your_email') }}</label>
@@ -24,8 +24,8 @@
               :placeholder="t('your_email')"
               :disabled="authStore.loggedIn"
             >
-            <div v-if="errors.email" class="mbl-help mbl-help--danger">
-              {{ errors.email }}
+            <div v-if="errors.email" class="mbl-help mbl-help--danger" data-testid="feedback-email-error">
+              {{ fieldError(errors.email) }}
             </div>
           </div>
         </div>
@@ -50,7 +50,16 @@
         <div class="mbl-field">
           <label class="mbl-label">{{ t('feedback_details') }}</label>
           <div class="mbl-control">
-            <textarea v-model="form.message" class="mbl-textarea" data-testid="feedback-message" :placeholder="t('feedback_details')" />
+            <textarea
+              v-model="form.message"
+              class="mbl-textarea"
+              data-testid="feedback-message"
+              :maxlength="FEEDBACK_MESSAGE_MAX_LENGTH"
+              :placeholder="t('feedback_details')"
+            />
+            <div v-if="errors.message" class="mbl-help mbl-help--danger" data-testid="feedback-message-error">
+              {{ fieldError(errors.message) }}
+            </div>
           </div>
         </div>
         <div class="mbl-field">
@@ -70,10 +79,18 @@
 import ContentPageFooter from '~/components/content/PageFooter.vue';
 import { useAuthStore } from '~/stores/auth';
 import { useDialogStore } from '~/stores/dialog';
-import { ApiError } from '~/helpers/api-error';
+import { ApiError, UnknownApiError } from '~/helpers/api-error';
+import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
+import {
+  FEEDBACK_MESSAGE_MAX_LENGTH,
+  clearFeedbackErrorsOnEdit,
+  makeFeedbackFieldError,
+  validateFeedbackForm,
+} from '~/helpers/feedback-form';
 
-const { t } = useI18n();
+const { t, te } = useI18n();
+const { $http, $terr } = useNuxtApp();
 useHead({ title: () => t('feedback_form'), meta: [{ name: 'robots', content: 'noindex' }] });
 
 const authStore = useAuthStore();
@@ -86,24 +103,28 @@ const initialForm = () => ({
 });
 
 const form = ref(initialForm());
-const errors = ref<Record<string, string>>({});
+const errors = ref<Record<string, ApiErrorDetail>>({});
 const submitting = ref(false);
+
+const fieldError = makeFeedbackFieldError(t, te, $terr);
+clearFeedbackErrorsOnEdit(form, errors);
 
 async function submitFeedback() {
   if (submitting.value) { return; }
+  errors.value = validateFeedbackForm(form.value);
+  if (Object.keys(errors.value).length) { return; }
   submitting.value = true;
-  errors.value = {};
   try {
-    await $fetch('/api/feedback', {
-      method: 'POST',
-      body: { email: form.value.email, kind: form.value.kind, message: form.value.message },
+    await $http.post('/api/feedback', {
+      email: form.value.email,
+      kind: form.value.kind,
+      message: form.value.message,
     });
     form.value = initialForm();
     await dialogStore.alert({ message: t('feedback_submitted') });
   }
   catch (err) {
-    const mapped = err instanceof ApiError ? mapFormErrors(err) : null;
-    errors.value = (mapped || { _form: t('unknown_error') }) as Record<string, string>;
+    errors.value = mapFormErrors(err instanceof ApiError ? err : new UnknownApiError());
   }
   finally {
     submitting.value = false;
@@ -125,7 +146,9 @@ async function submitFeedback() {
     "feedback_details": "Feedback Details",
     "submit_feedback": "Submit Feedback",
     "feedback_submitted": "Feedback submitted successfully. Thank you!",
-    "unknown_error": "An unknown error occurred. Please try again."
+    "message_required": "Please enter your feedback.",
+    "email_required": "Please enter your email address.",
+    "email_not_valid": "Please enter a valid email address."
   },
   "de": {
     "feedback_form": "Feedback-Formular",
@@ -139,7 +162,9 @@ async function submitFeedback() {
     "feedback_details": "Feedback-Details",
     "submit_feedback": "Feedback einreichen",
     "feedback_submitted": "Feedback erfolgreich übermittelt. Vielen Dank!",
-    "unknown_error": "Ein unbekannter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    "message_required": "Bitte geben Sie Ihr Feedback ein.",
+    "email_required": "Bitte geben Sie Ihre E-Mail-Adresse ein.",
+    "email_not_valid": "Bitte geben Sie eine gültige E-Mail-Adresse ein."
   },
   "es": {
     "feedback_form": "Formulario de Comentarios",
@@ -153,7 +178,9 @@ async function submitFeedback() {
     "feedback_details": "Detalles de los Comentarios",
     "submit_feedback": "Enviar Comentarios",
     "feedback_submitted": "Comentarios enviados con éxito. ¡Gracias!",
-    "unknown_error": "Ocurrió un error desconocido. Por favor, inténtelo de nuevo."
+    "message_required": "Por favor, escriba sus comentarios.",
+    "email_required": "Por favor, ingrese su correo electrónico.",
+    "email_not_valid": "Por favor, ingrese un correo electrónico válido."
   },
   "fr": {
     "feedback_form": "Formulaire de Commentaires",
@@ -167,7 +194,9 @@ async function submitFeedback() {
     "feedback_details": "Détails des Commentaires",
     "submit_feedback": "Soumettre des Commentaires",
     "feedback_submitted": "Commentaires soumis avec succès. Merci!",
-    "unknown_error": "Une erreur inconnue s'est produite. Veuillez réessayer."
+    "message_required": "Veuillez saisir vos commentaires.",
+    "email_required": "Veuillez saisir votre adresse e-mail.",
+    "email_not_valid": "Veuillez saisir une adresse e-mail valide."
   },
   "ko": {
     "feedback_form": "피드백 양식",
@@ -181,7 +210,9 @@ async function submitFeedback() {
     "feedback_details": "피드백 내용",
     "submit_feedback": "피드백 제출하기",
     "feedback_submitted": "피드백이 성공적으로 제출되었습니다. 감사합니다!",
-    "unknown_error": "알 수 없는 오류가 발생했습니다. 다시 시도해 주세요."
+    "message_required": "피드백 내용을 입력해 주세요.",
+    "email_required": "이메일을 입력해 주세요.",
+    "email_not_valid": "올바른 이메일 주소를 입력해 주세요."
   },
   "pt": {
     "feedback_form": "Formulário de Feedback",
@@ -195,7 +226,9 @@ async function submitFeedback() {
     "feedback_details": "Detalhes do Feedback",
     "submit_feedback": "Enviar Feedback",
     "feedback_submitted": "Feedback enviado com sucesso. Obrigado!",
-    "unknown_error": "Ocorreu um erro desconhecido. Por favor, tente novamente."
+    "message_required": "Por favor, escreva seu feedback.",
+    "email_required": "Por favor, insira seu email.",
+    "email_not_valid": "Por favor, insira um email válido."
   },
   "uk": {
     "feedback_form": "Форма зворотнього зв'язку",
@@ -209,7 +242,9 @@ async function submitFeedback() {
     "feedback_details": "Деталі відгуку",
     "submit_feedback": "Надіслати відгук",
     "feedback_submitted": "Відгук успішно надіслано. Дякуємо!",
-    "unknown_error": "Сталася невідома помилка. Будь ласка, спробуйте ще раз."
+    "message_required": "Будь ласка, введіть ваш відгук.",
+    "email_required": "Будь ласка, введіть вашу електронну пошту.",
+    "email_not_valid": "Будь ласка, введіть дійсну адресу електронної пошти."
   }
 }
 </i18n>
