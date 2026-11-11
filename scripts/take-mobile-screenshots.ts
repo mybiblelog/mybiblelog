@@ -10,8 +10,9 @@
  *  1. Android emulator running with a dev-client build installed:
  *       cd mobile && npx expo run:android --device
  *  2. Metro running (started by the command above, or `npx expo start`
- *     separately) and `npm run dev` running at the repo root (API on :8080,
- *     web on :3000). The mobile app's own EXPO_PUBLIC_API_BASE_URL
+ *     separately), plus `npm run dev:api` and `npm run dev:web` running at
+ *     the repo root in separate terminals (API on :8080, web on :3000).
+ *     The mobile app's own EXPO_PUBLIC_API_BASE_URL
  *     (mobile/.env) points at :3000 — the web dev server's /api proxy, not
  *     the API port directly — so both need to be up. `adb reverse` bridges
  *     the emulator's localhost:8080/:3000/:8081 (API/web/Metro) to the host.
@@ -187,7 +188,7 @@ async function preflight(): Promise<void> {
   // 3. The API and web dev server must both be reachable (any HTTP response
   // counts; only a connection failure means it's down). The mobile app talks
   // to the web server's :3000 /api proxy, not :8080 directly — both need to
-  // be up, which `npm run dev` (dev:api + dev:web) does together.
+  // be up (`npm run dev:api` and `npm run dev:web`).
   async function checkReachable(url: string): Promise<boolean> {
     try {
       const controller = new AbortController();
@@ -206,10 +207,10 @@ async function preflight(): Promise<void> {
   }
 
   if (!(await checkReachable(API_URL))) {
-    throw new Error(`API not reachable at ${API_URL} — start it with \`npm run dev\`.`);
+    throw new Error(`API not reachable at ${API_URL} — start it with \`npm run dev:api\`.`);
   }
   if (!(await checkReachable(WEB_URL))) {
-    throw new Error(`Web dev server not reachable at ${WEB_URL} — start it with \`npm run dev\`.`);
+    throw new Error(`Web dev server not reachable at ${WEB_URL} — start it with \`npm run dev:web\`.`);
   }
 }
 

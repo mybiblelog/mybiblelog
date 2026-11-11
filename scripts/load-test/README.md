@@ -30,7 +30,7 @@ script exercises both — only `BASE_URL` changes.
 
 ## Quick start
 
-Start the app first (`npm run dev` from the repo root runs both API and web), then:
+Start the app first (`npm run dev:api` and `npm run dev:web` from the repo root, in separate terminals), then:
 
 ```sh
 # API, hit directly on :8080

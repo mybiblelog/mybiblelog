@@ -16,7 +16,6 @@
     "node": "26.13.0"
   },
   "scripts": {
-    "dev": "npm-run-all --parallel dev:api dev:web",
     "dev:api": "npm run -w api dev:ts",
     "dev:web": "npm run -w web dev",
     "start": "cross-env NODE_ENV=production node scripts/start-single-process.mjs",

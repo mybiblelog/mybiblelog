@@ -14,7 +14,7 @@ npm run test:e2e:locale     # locale-prefixed routing (/es/ by default)
 npx playwright show-report  # open the HTML report
 ```
 
-The Playwright `webServer` config starts both dev servers with `REQUIRE_EMAIL_VERIFICATION=false` (required for the UI registration flow) and reuses servers that are already running. If you run `npm run dev` yourself, make sure `REQUIRE_EMAIL_VERIFICATION=false` is set or the registration test will fail.
+The Playwright `webServer` config starts both dev servers with `REQUIRE_EMAIL_VERIFICATION=false` (required for the UI registration flow) and reuses servers that are already running. If you run `npm run dev:api` and `npm run dev:web` yourself, make sure `REQUIRE_EMAIL_VERIFICATION=false` is set or the registration test will fail.
 
 ### Required `.env` vars
 
