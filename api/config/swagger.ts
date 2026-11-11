@@ -7,7 +7,9 @@ const swaggerDefinition = {
   info: {
     title: 'My Bible Log API',
     version: '1.0.0',
-    description: 'API documentation for the My Bible Log application',
+    description: 'API documentation for the My Bible Log application. '
+      + 'Passages can be sent as USFM references (`JHN.3.16-18`) in place of integer verse IDs, and responses include both. '
+      + '[Guide for scripts and AI agents](/about/how-to--use-an-ai-agent-with-my-bible-log).',
     license: {
       name: 'MIT',
       url: 'https://opensource.org/licenses/MIT',
@@ -28,7 +30,7 @@ const swaggerDefinition = {
         type: 'http',
         scheme: 'bearer',
         bearerFormat: 'JWT',
-        description: 'JWT token authentication. Obtain a token by logging in via /auth/login or /auth/google endpoints.',
+        description: 'JWT bearer token, valid for 30 days. `POST /auth/login` returns it as `data.token` (omitted for requests that send `X-Platform: web`, which get a cookie instead).',
       },
     },
   },
@@ -88,6 +90,25 @@ const swaggerSpec = {
     ...swaggerDefinition.components,
     schemas: generateOpenApiComponents().schemas,
   },
+};
+
+const INTERNAL_TAGS = new Set(['Admin', 'Test', 'Sitemap', 'Mobile']);
+
+const isInternalOperation = (operation: { tags?: string[] }): boolean =>
+  operation.tags?.some((tag) => INTERNAL_TAGS.has(tag)) ?? false;
+
+// Published spec for third-party clients: routes only our own apps, crawlers, or
+// admins can use would just mislead them.
+export const publicSwaggerSpec = {
+  ...swaggerSpec,
+  paths: Object.fromEntries(
+    Object.entries(swaggerSpec.paths).flatMap(([path, operations]) => {
+      const publicOperations = Object.fromEntries(
+        Object.entries(operations).filter(([, operation]) => !isInternalOperation(operation as { tags?: string[] })),
+      );
+      return Object.keys(publicOperations).length ? [[path, publicOperations]] : [];
+    }),
+  ),
 };
 
 export default swaggerSpec;

@@ -48,7 +48,7 @@ const { listener } = await import(
 );
 
 // Only true /api requests go to Express — a bare startsWith('/api') would
-// also capture unrelated paths like /api-docs.
+// also capture unrelated paths like /api-foo.
 const isApiRequest = (url) =>
   url === '/api' || url.startsWith('/api/') || url.startsWith('/api?');
 

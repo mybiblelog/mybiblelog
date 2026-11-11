@@ -341,7 +341,7 @@ onMounted(async () => {
 });
 </script>
 
-<style>
+<style scoped>
 .progress-section + .progress-section {
   margin-top: var(--mbl-space-xl);
 }
