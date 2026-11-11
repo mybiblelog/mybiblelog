@@ -71,7 +71,7 @@ export const passageNoteListQuerySchema = z.object({
   filterTags: z.array(z.string()).optional().describe('Tag IDs to filter by'),
   filterTagMatching: z.enum(['any', 'all', 'exact']).optional().describe('How to match tags (default any)'),
   searchText: z.string().optional().describe('Text to search for in notes'),
-  filterPassage: z.string().optional().describe(`Passage to filter by. ${USFM_PASSAGE_DESCRIPTION} An invalid reference is a 400, as is one that names a different range than a valid verse ID pair sent with it.`),
+  filterPassage: z.string().optional().describe(`Passage to filter by. ${USFM_PASSAGE_DESCRIPTION} An invalid reference is a 400 (not_valid), as is one that names a different range than a valid verse ID pair sent with it (passage_conflict).`),
   filterPassageStartVerseId: z.coerce.number().int().optional().describe('Start verse ID for passage filtering; an invalid pair is ignored'),
   filterPassageEndVerseId: z.coerce.number().int().optional().describe('End verse ID for passage filtering; an invalid pair is ignored'),
   filterPassageMatching: z.enum(['inclusive', 'exclusive']).optional().describe('How to match passages (default inclusive)'),

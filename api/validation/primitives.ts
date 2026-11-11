@@ -27,11 +27,15 @@ export const USFM_PASSAGE_DESCRIPTION = 'USFM passage reference within one book,
   + 'Chapters and verses follow the versification of English Protestant Bibles (as in the NASB): '
   + 'Malachi has 4 chapters, 3 John has 14 verses, and Psalm titles are not numbered verses.';
 
-export const usfmPassage = z.string().describe(USFM_PASSAGE_DESCRIPTION).transform((value, ctx) => {
+/** Parses a USFM reference inside a zod transform, reporting an invalid one on `ctx`. */
+export const parseUsfmPassage = (value: string, ctx: z.RefinementCtx) => {
   const range = Bible.parseUsfmReference(value);
   if (!range) {
     ctx.addIssue({ code: 'custom' });
     return z.NEVER;
   }
   return range;
-});
+};
+
+/** Left undescribed: each use site documents it, which keeps the docs from repeating the description. */
+export const usfmPassage = z.string().transform(parseUsfmPassage);

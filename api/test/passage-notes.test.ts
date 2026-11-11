@@ -1175,6 +1175,7 @@ describe('passage-notes.test.js', () => {
           .set('Authorization', `Bearer ${testUser.token}`);
         expect(response.status).toBe(400);
         expect(response.body).not.toHaveProperty('data');
+        expect(response.body.error.errors).toEqual([{ field: 'filterPassage', code: 'not_valid' }]);
       }
       finally {
         await deleteTestUser(testUser);

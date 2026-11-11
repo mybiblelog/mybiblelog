@@ -24,8 +24,11 @@ import { validateRange } from './validation';
  * book (GEN.1.1-GEN.2.3) but never names a different one.
  */
 
-// book, then optional chapter[.verse], then optional -end ([book.]chapter, verse, or [book.]chapter.verse)
-const USFM_REFERENCE = /^([1-4]?[A-Z]{2,3})(?:\.(\d+)(?:\.(\d+))?)?(?:-(?:([1-4]?[A-Z]{2,3})\.)?(\d+)(?:\.(\d+))?)?$/i;
+// book, then optional chapter[.verse], then optional -end ([book.]chapter, verse, or [book.]chapter.verse).
+// A book code is 3 characters with at least one letter in the first two (GEN, 1SA, S3Y, 5EZ), so an
+// all-digit chapter like the "119" in PSA.119.1-119.5 is never read as a book.
+const BOOK = String.raw`(?:\d[A-Z]|[A-Z][A-Z\d])[A-Z\d]`;
+const USFM_REFERENCE = new RegExp(String.raw`^(${BOOK})(?:\.(\d+)(?:\.(\d+))?)?(?:-(?:(${BOOK})\.)?(\d+)(?:\.(\d+))?)?$`, 'i');
 
 /** Parses a USFM reference into a verse range, or returns null if it is not a valid single-book passage. */
 export const parseUsfmReference = (reference: string): VerseRange | null => {

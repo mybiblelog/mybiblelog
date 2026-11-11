@@ -30,6 +30,7 @@ const API_ERROR_MESSAGE_KEYS = {
   invalid_request: "api_error_invalid_request",
   email_not_verified: "api_error_email_not_verified",
   verification_code_expired: "api_error_verification_code_expired",
+  passage_conflict: "api_error_passage_conflict",
 } satisfies Record<string, TranslationKey>;
 
 type TFn = (key: TranslationKey, options?: Record<string, unknown>) => string;

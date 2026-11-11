@@ -273,6 +273,7 @@ export const ko = {
   api_error_invalid_request: "잘못된 요청입니다",
   api_error_email_not_verified: "이메일이 인증되지 않았습니다",
   api_error_verification_code_expired: "인증 코드가 만료되었습니다",
+  api_error_passage_conflict: "구절 참조가 절 범위와 일치하지 않습니다",
 
   upgrade_required_title: "업데이트 필요",
   upgrade_required_message: "서비스를 계속 사용하려면 최신 버전의 앱이 필요합니다.",

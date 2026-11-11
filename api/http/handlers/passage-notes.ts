@@ -122,13 +122,13 @@ const validateQuery = (
   if (query.filterPassage) {
     const range = Bible.parseUsfmReference(String(query.filterPassage));
     if (!range) {
-      return;
+      throw new InvalidRequestError([{ field: 'filterPassage', code: ApiErrorDetailCode.NotValid }]);
     }
     // As in request bodies, both forms may be sent only if they name the same range.
     const conflictsWithPair = validated.filterPassageStartVerseId !== 0
       && (validated.filterPassageStartVerseId !== range.startVerseId || validated.filterPassageEndVerseId !== range.endVerseId);
     if (conflictsWithPair) {
-      return;
+      throw new InvalidRequestError([{ field: 'filterPassage', code: ApiErrorDetailCode.PassageConflict }]);
     }
     validated.filterPassageStartVerseId = range.startVerseId;
     validated.filterPassageEndVerseId = range.endVerseId;

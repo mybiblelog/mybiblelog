@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { Bible, type VerseRange } from '@mybiblelog/shared';
 import { ApiErrorDetailCode } from '../../http/errors/error-codes';
 import { documentAs } from '../documented-as';
-import { USFM_PASSAGE_DESCRIPTION, usfmPassage, verseId } from '../primitives';
+import { USFM_PASSAGE_DESCRIPTION, parseUsfmPassage, usfmPassage, verseId } from '../primitives';
 
 /**
  * Passage fields accepted in request bodies. A passage is sent either as a USFM
@@ -78,7 +78,7 @@ export const resolvePassage = (value: PassageFieldValues, ctx: z.RefinementCtx):
  * produces, which would hide the bare-string form.
  */
 export const passageInputDocsSchema = z.union([
-  usfmPassage,
+  usfmPassage.describe(USFM_PASSAGE_DESCRIPTION),
   z.object(passageFields).describe(PASSAGE_FIELDS_DESCRIPTION),
 ]);
 
@@ -91,15 +91,7 @@ export const passageInputDocsSchema = z.union([
  */
 export const passageInputSchema = documentAs(
   z.preprocess(
-    (value, ctx) => {
-      if (typeof value !== 'string') { return value; }
-      const range = Bible.parseUsfmReference(value);
-      if (!range) {
-        ctx.addIssue({ code: 'custom' });
-        return z.NEVER;
-      }
-      return range;
-    },
+    (value, ctx) => (typeof value === 'string' ? parseUsfmPassage(value, ctx) : value),
     requirePassage(z.object(passageFields))
       .transform((value, ctx) => resolvePassage(value, ctx) as VerseRange),
   ),

@@ -33,6 +33,7 @@ describe('parseUsfmReference', () => {
     ['GEN.1.1-GEN.1.5', v(1, 1, 1), v(1, 1, 5)],
     ['GEN.1-GEN.3', v(1, 1, 1), v(1, 3, 24)],
     ['1sa.17.4-1SA.18.2', v(9, 17, 4), v(9, 18, 2)],
+    ['PSA.118.1-119.5', v(19, 118, 1), v(19, 119, 5)],
   ])('%s', (reference, startVerseId, endVerseId) => {
     expect(Bible.parseUsfmReference(reference)).toEqual({ startVerseId, endVerseId });
   });

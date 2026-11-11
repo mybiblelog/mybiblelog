@@ -176,9 +176,11 @@ describe('passage note handlers (USFM)', () => {
     });
 
     it('rejects filterPassage with a verse id pair naming a different range', async () => {
-      await expect(listPassageNotes(makeRequest({
+      const error = await listPassageNotes(makeRequest({
         query: { filterPassage: 'GEN.1.1', filterPassageStartVerseId: '143003001', filterPassageEndVerseId: '143003036' },
-      }), searchDeps())).rejects.toBeInstanceOf(InvalidRequestError);
+      }), searchDeps()).catch((e: unknown) => e);
+      expect(error).toBeInstanceOf(InvalidRequestError);
+      expect((error as InvalidRequestError).details).toEqual([{ field: 'filterPassage', code: 'passage_conflict' }]);
     });
 
     it('ignores an invalid verse id pair sent with filterPassage', async () => {
@@ -191,8 +193,10 @@ describe('passage note handlers (USFM)', () => {
     });
 
     it('rejects an invalid filterPassage', async () => {
-      await expect(listPassageNotes(makeRequest({ query: { filterPassage: 'GEN-EXO' } }), searchDeps()))
-        .rejects.toBeInstanceOf(InvalidRequestError);
+      const error = await listPassageNotes(makeRequest({ query: { filterPassage: 'GEN-EXO' } }), searchDeps())
+        .catch((e: unknown) => e);
+      expect(error).toBeInstanceOf(InvalidRequestError);
+      expect((error as InvalidRequestError).details).toEqual([{ field: 'filterPassage', code: 'not_valid' }]);
     });
 
     it('returns passages with their USFM reference', async () => {

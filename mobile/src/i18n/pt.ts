@@ -278,6 +278,7 @@ export const pt = {
   api_error_invalid_request: "Solicitação inválida",
   api_error_email_not_verified: "Email não verificado",
   api_error_verification_code_expired: "Código de verificação expirado",
+  api_error_passage_conflict: "A referência da passagem não corresponde ao intervalo de versículos",
 
   upgrade_required_title: "Atualização necessária",
   upgrade_required_message:
