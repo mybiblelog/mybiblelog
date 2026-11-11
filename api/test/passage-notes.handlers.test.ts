@@ -107,7 +107,7 @@ describe('passage note handlers (USFM)', () => {
         body: { passages: ['GEN.1', { startVerseId: 101001001, endVerseId: 101001005, passage: 'GEN.1' }] },
       }), deps).catch((e: unknown) => e);
       expect(error).toBeInstanceOf(ValidationError);
-      expect((error as ValidationError).details).toEqual([{ field: 'passages.1.passage', code: 'not_valid' }]);
+      expect((error as ValidationError).details).toEqual([{ field: 'passages.1.passage', code: 'passage_conflict' }]);
     });
 
     it('rejects null and non-string, non-object passages as validation errors', async () => {

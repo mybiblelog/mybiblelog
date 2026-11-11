@@ -604,10 +604,10 @@ describe('log-entries.test.js', () => {
     });
 
     it.each([
-      ['an unknown book', { passage: 'XYZ.1.1' }],
-      ['a passage that crosses books', { passage: 'GEN.50-EXO.1' }],
-      ['a passage alongside conflicting verse IDs', { passage: 'GEN.1', startVerseId: 101001001, endVerseId: 101001005 }],
-    ])('rejects %s', async (_label, passageFields) => {
+      ['an unknown book', { passage: 'XYZ.1.1' }, 'not_valid'],
+      ['a passage that crosses books', { passage: 'GEN.50-EXO.1' }, 'not_valid'],
+      ['a passage alongside conflicting verse IDs', { passage: 'GEN.1', startVerseId: 101001001, endVerseId: 101001005 }, 'passage_conflict'],
+    ])('rejects %s', async (_label, passageFields, code) => {
       const testUser = await createTestUser();
       try {
         const response = await requestApi
@@ -616,7 +616,7 @@ describe('log-entries.test.js', () => {
           .send({ date: '2024-01-01', ...passageFields });
         expect(response.status).toBe(400);
         expect(response.body.error.code).toBe('validation_error');
-        expect(response.body.error.errors).toEqual([{ field: 'passage', code: 'not_valid' }]);
+        expect(response.body.error.errors).toEqual([{ field: 'passage', code }]);
       }
       finally {
         await deleteTestUser(testUser);

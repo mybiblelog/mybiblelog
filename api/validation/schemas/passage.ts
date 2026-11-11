@@ -6,22 +6,22 @@ import { usfmPassage, verseId } from '../primitives';
 /**
  * Passage fields accepted in request bodies. A passage is sent either as a USFM
  * reference in `passage` or as the integer `startVerseId`/`endVerseId` pair.
- * Both may be sent if they agree, so a response passage can be echoed back
- * unchanged. `resolvePassage` turns either form into a verse range, so
+ * Both may be sent if they agree, and `passage` may be null as it is in
+ * responses, so a response passage can be echoed back unchanged. `resolvePassage` turns either form into a verse range, so
  * handlers and repositories only ever see integer verse ids.
  */
 export const passageFields = {
   startVerseId: verseId.optional().describe('Integer ID of the first verse: 100000000 + book × 1000000 + chapter × 1000 + verse (Genesis 1:1 = 101001001)'),
   endVerseId: verseId.optional().describe('Integer ID of the last verse, in the same book as `startVerseId`'),
-  passage: usfmPassage.optional(),
+  passage: usfmPassage.nullish().describe(`${usfmPassage.description} Null is treated as absent.`),
 };
 
-export const PASSAGE_FIELDS_DESCRIPTION = 'Provide either `passage` (a USFM reference) or both `startVerseId` and `endVerseId`. If both forms are sent, they must describe the same range.';
+export const PASSAGE_FIELDS_DESCRIPTION = 'Provide either `passage` (a USFM reference) or both `startVerseId` and `endVerseId`. If both forms are sent, they must describe the same range, or the request fails with `passage_conflict`.';
 
 type PassageFieldValues = {
   startVerseId?: number;
   endVerseId?: number;
-  passage?: VerseRange;
+  passage?: VerseRange | null;
 };
 
 /**
@@ -36,9 +36,10 @@ export const requirePassage = <T extends z.ZodType<PassageFieldValues>>(schema: 
     params: { apiCode: ApiErrorDetailCode.Required },
     when: () => true,
   });
+  const hasPassage = (value: PassageFieldValues) => value?.passage !== undefined && value?.passage !== null;
   return schema
-    .refine((value) => value?.passage !== undefined || value?.startVerseId !== undefined, requiredIssue('startVerseId'))
-    .refine((value) => value?.passage !== undefined || value?.endVerseId !== undefined, requiredIssue('endVerseId'));
+    .refine((value) => hasPassage(value) || value?.startVerseId !== undefined, requiredIssue('startVerseId'))
+    .refine((value) => hasPassage(value) || value?.endVerseId !== undefined, requiredIssue('endVerseId'));
 };
 
 /**
@@ -55,7 +56,7 @@ export const resolvePassage = (value: PassageFieldValues, ctx: z.RefinementCtx):
     const conflicts = (startVerseId !== undefined && startVerseId !== passage.startVerseId)
       || (endVerseId !== undefined && endVerseId !== passage.endVerseId);
     if (conflicts) {
-      ctx.addIssue({ code: 'custom', path: ['passage'], message: 'passage and startVerseId/endVerseId describe different ranges' });
+      ctx.addIssue({ code: 'custom', path: ['passage'], params: { apiCode: ApiErrorDetailCode.PassageConflict } });
     }
     return passage;
   }

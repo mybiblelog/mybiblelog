@@ -168,15 +168,39 @@ describe('log entry handlers (unit)', () => {
     });
 
     it.each([
-      ['an unknown book', { passage: 'XYZ.1.1' }, 'passage'],
-      ['a passage crossing books', { passage: 'GEN.50-EXO.1' }, 'passage'],
-      ['conflicting passage forms', { passage: 'GEN.1', startVerseId: 101001001, endVerseId: 101001005 }, 'passage'],
-    ])('rejects %s', async (_label, passageFields, field) => {
+      ['an unknown book', { passage: 'XYZ.1.1' }, 'not_valid'],
+      ['a passage crossing books', { passage: 'GEN.50-EXO.1' }, 'not_valid'],
+      ['conflicting passage forms', { passage: 'GEN.1', startVerseId: 101001001, endVerseId: 101001005 }, 'passage_conflict'],
+    ])('rejects %s', async (_label, passageFields, code) => {
       const deps = makeDeps({ logEntries: { create: async () => sampleEntry } });
       const error = await createLogEntry(makeRequest({ method: 'POST', body: { date: '2024-01-01', ...passageFields } }), deps)
         .catch((e: unknown) => e);
       expect(error).toBeInstanceOf(ValidationError);
-      expect((error as ValidationError).details).toEqual([{ field, code: 'not_valid' }]);
+      expect((error as ValidationError).details).toEqual([{ field: 'passage', code }]);
+    });
+
+    it.each([
+      ['a null passage beside verse ids', { passage: null, startVerseId: 101001001, endVerseId: 101001031 }],
+      ['a range end that repeats the book', { passage: 'GEN.1.1-GEN.1.31' }],
+    ])('accepts %s', async (_label, passageFields) => {
+      let received: unknown;
+      const deps = makeDeps({
+        logEntries: {
+          create: async (_ownerId, input) => { received = input; return sampleEntry; },
+        },
+      });
+      await createLogEntry(makeRequest({ method: 'POST', body: { date: '2024-01-01', ...passageFields } }), deps);
+      expect(received).toEqual({ date: '2024-01-01', startVerseId: 101001001, endVerseId: 101001031 });
+    });
+
+    it('still requires verse ids when the passage is null', async () => {
+      const deps = makeDeps({ logEntries: { create: async () => sampleEntry } });
+      const error = await createLogEntry(makeRequest({ method: 'POST', body: { date: '2024-01-01', passage: null } }), deps)
+        .catch((e: unknown) => e);
+      expect((error as ValidationError).details).toEqual([
+        { field: 'startVerseId', code: 'required' },
+        { field: 'endVerseId', code: 'required' },
+      ]);
     });
 
     it('accepts both passage forms when they describe the same range', async () => {
@@ -257,10 +281,23 @@ describe('log entry handlers (unit)', () => {
 
     it('rejects a passage sent alongside a conflicting verse id', async () => {
       const deps = makeDeps({ logEntries: { update: async () => sampleEntry } });
-      await expect(updateLogEntry(
+      const error = await updateLogEntry(
         makeRequest({ method: 'PATCH', params: { id: ENTRY_ID }, body: { passage: 'PSA.23', endVerseId: 119023005 } }),
         deps,
-      )).rejects.toBeInstanceOf(ValidationError);
+      ).catch((e: unknown) => e);
+      expect((error as ValidationError).details).toEqual([{ field: 'passage', code: 'passage_conflict' }]);
+    });
+
+    it('treats a null passage as absent', async () => {
+      let received: unknown;
+      const deps = makeDeps({
+        logEntries: { update: async (_ownerId, _id, patch) => { received = patch; return sampleEntry; } },
+      });
+      await updateLogEntry(
+        makeRequest({ method: 'PATCH', params: { id: ENTRY_ID }, body: { passage: null, date: '2024-02-02' } }),
+        deps,
+      );
+      expect(received).toEqual({ date: '2024-02-02' });
     });
   });
 

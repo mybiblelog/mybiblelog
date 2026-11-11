@@ -20,20 +20,22 @@ import { validateRange } from './validation';
  *   GEN.1.1-5      verses 1–5 of chapter 1
  *   GEN.1.1-2.3    Genesis 1:1 through 2:3
  *
- * Passages never cross book boundaries, so the range end never names a book.
+ * Passages never cross book boundaries. The range end may repeat the start's
+ * book (GEN.1.1-GEN.2.3) but never names a different one.
  */
 
-// book, then optional chapter[.verse], then optional -end (chapter, verse, or chapter.verse)
-const USFM_REFERENCE = /^([1-4]?[A-Z]{2,3})(?:\.(\d+)(?:\.(\d+))?)?(?:-(\d+)(?:\.(\d+))?)?$/i;
+// book, then optional chapter[.verse], then optional -end ([book.]chapter, verse, or [book.]chapter.verse)
+const USFM_REFERENCE = /^([1-4]?[A-Z]{2,3})(?:\.(\d+)(?:\.(\d+))?)?(?:-(?:([1-4]?[A-Z]{2,3})\.)?(\d+)(?:\.(\d+))?)?$/i;
 
 /** Parses a USFM reference into a verse range, or returns null if it is not a valid single-book passage. */
 export const parseUsfmReference = (reference: string): VerseRange | null => {
   const match = USFM_REFERENCE.exec(reference.trim());
   if (!match) { return null; }
-  const [, bookCode, startChapterStr, startVerseStr, endFirstStr, endSecondStr] = match;
+  const [, bookCode, startChapterStr, startVerseStr, endBookCode, endFirstStr, endSecondStr] = match;
 
   const book = getBookIndexByUsfmCode(bookCode);
   if (book === -1) { return null; }
+  if (endBookCode !== undefined && endBookCode.toUpperCase() !== bookCode.toUpperCase()) { return null; }
 
   const startChapter = startChapterStr === undefined ? undefined : Number(startChapterStr);
   const startVerse = startVerseStr === undefined ? undefined : Number(startVerseStr);
@@ -62,6 +64,8 @@ export const parseUsfmReference = (reference: string): VerseRange | null => {
   }
   else {
     // Verse (range): the end is a verse in the same chapter, or chapter.verse.
+    // After a repeated book the end restarts at the chapter, so GEN.1.1-GEN.5 has no end verse.
+    if (endBookCode !== undefined && endSecond === undefined) { return null; }
     const endChapter = endSecond === undefined ? startChapter : endFirst!;
     const endVerse = endSecond ?? endFirst ?? startVerse;
     if (!chapterExists(startChapter) || !verseExists(startChapter, startVerse)) { return null; }

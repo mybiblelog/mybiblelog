@@ -22,10 +22,15 @@ export const emailString = z.string().regex(/^\S+@\S+\.\S+$/);
  * A USFM passage reference (e.g. "JHN.3.16-18", "PSA.23", "GEN"), parsed into
  * a single-book verse range. See `parseUsfmReference` in `@mybiblelog/shared`.
  */
-export const usfmPassage = z.string().describe('USFM passage reference within one book, e.g. "JHN.3.16-18", "GEN.1.1-2.3", "PSA.23", "GEN.1-3", or "GEN"').transform((value, ctx) => {
+export const usfmPassage = z.string().describe(
+  'USFM passage reference within one book, e.g. "JHN.3.16-18", "GEN.1.1-2.3", "PSA.23", "GEN.1-3", or "GEN". '
+  + 'The range end may repeat the book ("GEN.1.1-GEN.2.3"). '
+  + 'Chapters and verses follow the versification of English Protestant Bibles (as in the NASB): '
+  + 'Malachi has 4 chapters, 3 John has 14 verses, and Psalm titles are not numbered verses.',
+).transform((value, ctx) => {
   const range = Bible.parseUsfmReference(value);
   if (!range) {
-    ctx.addIssue({ code: 'custom', message: 'Invalid USFM passage reference' });
+    ctx.addIssue({ code: 'custom' });
     return z.NEVER;
   }
   return range;

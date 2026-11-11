@@ -28,6 +28,10 @@ describe('parseUsfmReference', () => {
     ['PSA.23', v(19, 23, 1), v(19, 23, 6)],
     ['1SA.17.4', v(9, 17, 4), v(9, 17, 4)],
     ['jhn.3.16', v(43, 3, 16), v(43, 3, 16)],
+    ['GEN.1.1-GEN.2.3', v(1, 1, 1), v(1, 2, 3)],
+    ['GEN.1.1-GEN.1.5', v(1, 1, 1), v(1, 1, 5)],
+    ['GEN.1-GEN.3', v(1, 1, 1), v(1, 3, 24)],
+    ['1sa.17.4-1SA.18.2', v(9, 17, 4), v(9, 18, 2)],
   ])('%s', (reference, startVerseId, endVerseId) => {
     expect(Bible.parseUsfmReference(reference)).toEqual({ startVerseId, endVerseId });
   });
@@ -47,6 +51,11 @@ describe('parseUsfmReference', () => {
     'GEN-EXO',
     'GEN.1-EXO.1',
     'GEN.1.1-EXO.2.3',
+    'GEN-GEN',
+    'GEN-GEN.2',
+    'GEN.1.1-GEN.5',
+    'GEN.1-GEN.2.3',
+    'GEN.1.1-GEN',
     'GEN.1.1.1',
     'GEN 1:1',
     'GEN.1.1x',
