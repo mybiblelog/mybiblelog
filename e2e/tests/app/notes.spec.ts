@@ -487,7 +487,7 @@ test.describe('Notes page', () => {
     // Ordered by each note's earliest passage overlapping the filter: the
     // multi-passage note leads on Genesis 1:2, ahead of Genesis 1:10.
     await expect(page.getByTestId('passage-note').first()).toContainText('Opening and closing');
-    await expect(page).toHaveURL(/filterPassageStartVerseId=/);
+    await expect(page).toHaveURL(/passage=GEN\.1(&|$)/);
     await expect(page).not.toHaveURL(/sortOn=/);
 
     // Clearing the passage filter reverts to newest first.
@@ -554,7 +554,7 @@ test.describe('Notes page', () => {
     // stomped to passage order, "Opening and closing" (earliest passage,
     // Genesis 1:2) would lead instead.
     await expect(page.getByTestId('passage-note').first()).toContainText('Middle of the chapter');
-    await expect(page).toHaveURL(/filterPassageStartVerseId=/);
+    await expect(page).toHaveURL(/passage=GEN\.1(&|$)/);
     // With a passage filter set, the contextual default sort is passage order,
     // so an unstomped createdAt sort is the one that has to be spelled out in
     // the URL (sortDirection=ascending is omitted here because it happens to
