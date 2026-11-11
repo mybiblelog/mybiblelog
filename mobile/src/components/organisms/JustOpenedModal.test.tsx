@@ -40,7 +40,7 @@ describe("JustOpenedModal", () => {
     // The prompt closes and the prefilled editor opens.
     expect(useJustOpenedStore.getState().open).toBe(false);
     await waitFor(() => expect(getByText("Add Log Entry")).toBeTruthy());
-    expect(queryByText("Just Opened")).toBeNull();
+    await waitFor(() => expect(queryByText("Just Opened")).toBeNull());
   });
 
   it("hands off to the note editor from Take Note", async () => {
@@ -52,6 +52,6 @@ describe("JustOpenedModal", () => {
     // The prompt closes and the prefilled note editor opens.
     expect(useJustOpenedStore.getState().open).toBe(false);
     await waitFor(() => expect(getByText("New Note")).toBeTruthy());
-    expect(queryByText("Just Opened")).toBeNull();
+    await waitFor(() => expect(queryByText("Just Opened")).toBeNull());
   });
 });

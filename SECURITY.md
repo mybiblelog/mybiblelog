@@ -27,7 +27,7 @@ We regularly audit and update dependencies. Known vulnerabilities in dependencie
 For security-related questions or concerns, please contact:
 
 - Email: [mybiblelog.com@gmail.com](mailto:mybiblelog.com@gmail.com)
-- GitHub: [Create a private security advisory](https://github.com/mybiblelog/mybiblelog-v2-nuxt2/security/advisories/new)
+- GitHub: [Create a private security advisory](https://github.com/mybiblelog/mybiblelog/security/advisories/new)
 
 ---
 
