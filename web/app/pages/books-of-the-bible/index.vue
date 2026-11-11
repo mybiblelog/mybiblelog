@@ -63,6 +63,29 @@
         />
       </section>
 
+      <h2>{{ t('dc_heading', { books: booksText(dcBooks.length) }) }}</h2>
+      <p>{{ t('dc_intro') }}</p>
+      <div class="mbl-box">
+        <div class="mbl-table-wrap">
+          <table class="mbl-table mbl-table--striped">
+            <thead>
+              <tr>
+                <th>{{ t('table.book') }}</th>
+                <th>{{ t('table.chapters') }}</th>
+                <th>{{ t('table.verses') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="book in dcBooks" :key="book.index">
+                <td>{{ book.name }}</td>
+                <td>{{ book.chapters }}</td>
+                <td>{{ formatNumber(book.verses) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <h2>{{ t('paper_heading') }}</h2>
       <i18n-t keypath="paper_text" tag="p">
         <template #link>
@@ -136,6 +159,16 @@ const groups = [
   { testament: 'new', label: t('testament_new'), books: books.filter(b => b.newTestament) },
 ].map(group => ({ ...group, sections: groupBySection(group.books) }));
 
+// No guide pages or word counts exist for these, so they're listed without links or reading time.
+const dcBooks = Bible.getBooksForCanon(true)
+  .filter(book => book.deuterocanonical)
+  .map(book => ({
+    index: book.bibleOrder,
+    name: Bible.getBookName(book.bibleOrder, locale.value),
+    chapters: book.chapterCount,
+    verses: Bible.getBookVerseCount(book.bibleOrder),
+  }));
+
 const totalChapters = books.reduce((sum, b) => sum + b.chapters, 0);
 const totalVerses = Bible.getTotalVerseCount();
 const totalHours = Math.round(getTotalWordCount() / WORDS_PER_MINUTE / 60);
@@ -189,7 +222,7 @@ useContentSeo({
 {
   "en": {
     "h1": "Books of the Bible: All 66 Books with Chapters, Verses & Reading Time",
-    "intro_1": "The Protestant Bible contains {books}: {ot} in the Old Testament and {nt} in the New Testament. Together they have {chapters} and {verses}. At an average adult reading speed, reading the whole Bible takes about {hours}.",
+    "intro_1": "Christian Bibles share a common core of {books}: {ot} in the Old Testament and {nt} in the New Testament. Together they have {chapters} and {verses}. At an average adult reading speed, reading all 66 takes about {hours}.",
     "intro_2": "Choose a book below to see its chapters, verse counts, reading time, and a short overview. Or learn {link} at different paces.",
     "intro_2_link": "how long it takes to read the Bible",
     "books_count": "{n} book | {n} books",
@@ -215,6 +248,8 @@ useContentSeo({
       "button": "Start Tracking Free",
       "note": "Completely free. No ads. Sign up with email or Google."
     },
+    "dc_heading": "Deuterocanonical Books ({books})",
+    "dc_intro": "Catholic and Orthodox Bibles also include the deuterocanonical books, placed among the Old Testament books. My Bible Log can track them too: turn them on in your reading settings.",
     "paper_heading": "Prefer paper?",
     "paper_text": "Download the free {link} with a checkbox for every chapter of the Bible.",
     "paper_link": "printable Bible reading tracker",
@@ -243,7 +278,7 @@ useContentSeo({
   },
   "de": {
     "h1": "Bücher der Bibel: Alle 66 Bücher mit Kapiteln, Versen & Lesezeit",
-    "intro_1": "Die Bibel (in der evangelischen Zählung) enthält {books}: {ot} im Alten Testament und {nt} im Neuen Testament. Zusammen haben sie {chapters} und {verses}. Bei durchschnittlicher Lesegeschwindigkeit dauert es etwa {hours}, die ganze Bibel zu lesen.",
+    "intro_1": "Christliche Bibeln haben einen gemeinsamen Kern von {books}: {ot} im Alten Testament und {nt} im Neuen Testament. Zusammen haben sie {chapters} und {verses}. Bei durchschnittlicher Lesegeschwindigkeit dauert es etwa {hours}, alle 66 zu lesen.",
     "intro_2": "Wählen Sie unten ein Buch aus, um Kapitel, Verszahlen, Lesezeit und einen kurzen Überblick zu sehen. Oder erfahren Sie, {link} – bei verschiedenen Lesetempi.",
     "intro_2_link": "wie lange es dauert, die Bibel zu lesen",
     "books_count": "{n} Buch | {n} Bücher",
@@ -269,6 +304,8 @@ useContentSeo({
       "button": "Kostenlos loslegen",
       "note": "Völlig kostenlos. Keine Werbung. Mit E-Mail oder Google anmelden."
     },
+    "dc_heading": "Deuterokanonische Bücher ({books})",
+    "dc_intro": "Katholische und orthodoxe Bibeln enthalten außerdem die deuterokanonischen Bücher, die zwischen den Büchern des Alten Testaments stehen. My Bible Log kann auch diese verfolgen: Aktivieren Sie sie in Ihren Leseeinstellungen.",
     "paper_heading": "Lieber auf Papier?",
     "paper_text": "Laden Sie den kostenlosen {link} mit einem Kästchen für jedes Kapitel der Bibel herunter.",
     "paper_link": "druckbaren Bibellese-Tracker",
@@ -297,7 +334,7 @@ useContentSeo({
   },
   "es": {
     "h1": "Libros de la Biblia: los 66 libros con capítulos, versículos y tiempo de lectura",
-    "intro_1": "La Biblia protestante contiene {books}: {ot} en el Antiguo Testamento y {nt} en el Nuevo Testamento. Entre todos suman {chapters} y {verses}. A una velocidad de lectura media, leer toda la Biblia lleva unas {hours}.",
+    "intro_1": "Las Biblias cristianas comparten un núcleo común de {books}: {ot} en el Antiguo Testamento y {nt} en el Nuevo Testamento. Entre todos suman {chapters} y {verses}. A una velocidad de lectura media, leer los 66 lleva unas {hours}.",
     "intro_2": "Elige un libro para ver sus capítulos, el número de versículos, el tiempo de lectura y un breve resumen. O descubre {link} a distintos ritmos.",
     "intro_2_link": "cuánto se tarda en leer la Biblia",
     "books_count": "{n} libro | {n} libros",
@@ -323,6 +360,8 @@ useContentSeo({
       "button": "Empieza gratis",
       "note": "Totalmente gratis. Sin anuncios. Regístrate con correo o con Google."
     },
+    "dc_heading": "Libros deuterocanónicos ({books})",
+    "dc_intro": "Las Biblias católicas y ortodoxas incluyen además los libros deuterocanónicos, situados entre los libros del Antiguo Testamento. My Bible Log también puede registrarlos: actívalos en tu configuración de lectura.",
     "paper_heading": "¿Prefieres el papel?",
     "paper_text": "Descarga gratis el {link} con una casilla para cada capítulo de la Biblia.",
     "paper_link": "registro de lectura bíblica imprimible",
@@ -351,7 +390,7 @@ useContentSeo({
   },
   "fr": {
     "h1": "Livres de la Bible : les 66 livres avec chapitres, versets et durée de lecture",
-    "intro_1": "La Bible protestante compte {books} : {ot} dans l'Ancien Testament et {nt} dans le Nouveau Testament. Ensemble, ils totalisent {chapters} et {verses}. À une vitesse de lecture moyenne, lire toute la Bible prend environ {hours}.",
+    "intro_1": "Les Bibles chrétiennes ont en commun {books} : {ot} dans l'Ancien Testament et {nt} dans le Nouveau Testament. Ensemble, ils totalisent {chapters} et {verses}. À une vitesse de lecture moyenne, lire les 66 prend environ {hours}.",
     "intro_2": "Choisissez un livre ci-dessous pour voir ses chapitres, son nombre de versets, sa durée de lecture et un bref aperçu. Ou découvrez {link} selon différents rythmes.",
     "intro_2_link": "combien de temps il faut pour lire la Bible",
     "books_count": "{n} livre | {n} livres",
@@ -377,6 +416,8 @@ useContentSeo({
       "button": "Commencer gratuitement",
       "note": "Entièrement gratuit. Sans publicité. Inscription par e-mail ou avec Google."
     },
+    "dc_heading": "Livres deutérocanoniques ({books})",
+    "dc_intro": "Les Bibles catholiques et orthodoxes comprennent aussi les livres deutérocanoniques, placés parmi les livres de l'Ancien Testament. My Bible Log peut aussi les suivre : activez-les dans vos paramètres de lecture.",
     "paper_heading": "Vous préférez le papier ?",
     "paper_text": "Téléchargez gratuitement le {link} avec une case à cocher pour chaque chapitre de la Bible.",
     "paper_link": "suivi de lecture biblique imprimable",
@@ -405,7 +446,7 @@ useContentSeo({
   },
   "pt": {
     "h1": "Livros da Bíblia: os 66 livros com capítulos, versículos e tempo de leitura",
-    "intro_1": "A Bíblia protestante contém {books}: {ot} no Antigo Testamento e {nt} no Novo Testamento. Juntos, somam {chapters} e {verses}. Em uma velocidade média de leitura, ler a Bíblia inteira leva cerca de {hours}.",
+    "intro_1": "As Bíblias cristãs compartilham um núcleo comum de {books}: {ot} no Antigo Testamento e {nt} no Novo Testamento. Juntos, somam {chapters} e {verses}. Em uma velocidade média de leitura, ler os 66 leva cerca de {hours}.",
     "intro_2": "Escolha um livro abaixo para ver seus capítulos, o número de versículos, o tempo de leitura e um breve resumo. Ou descubra {link} em diferentes ritmos.",
     "intro_2_link": "quanto tempo leva para ler a Bíblia",
     "books_count": "{n} livro | {n} livros",
@@ -431,6 +472,8 @@ useContentSeo({
       "button": "Comece grátis",
       "note": "Totalmente grátis. Sem anúncios. Cadastre-se com e-mail ou Google."
     },
+    "dc_heading": "Livros deuterocanônicos ({books})",
+    "dc_intro": "As Bíblias católicas e ortodoxas também incluem os livros deuterocanônicos, situados entre os livros do Antigo Testamento. O My Bible Log também pode acompanhá-los: ative-os nas suas configurações de leitura.",
     "paper_heading": "Prefere papel?",
     "paper_text": "Baixe grátis o {link} com uma caixinha para cada capítulo da Bíblia.",
     "paper_link": "registro de leitura da Bíblia para imprimir",
@@ -459,7 +502,7 @@ useContentSeo({
   },
   "uk": {
     "h1": "Книги Біблії: усі 66 книг із розділами, віршами та часом читання",
-    "intro_1": "Протестантська Біблія містить {books}: {ot} у Старому Заповіті та {nt} у Новому Заповіті. Разом це {chapters} і {verses}. За середньої швидкості читання, щоб прочитати всю Біблію, потрібно приблизно {hours}.",
+    "intro_1": "Християнські Біблії мають спільне ядро з {books}: {ot} у Старому Заповіті та {nt} у Новому Заповіті. Разом це {chapters} і {verses}. За середньої швидкості читання, щоб прочитати всі 66, потрібно приблизно {hours}.",
     "intro_2": "Оберіть книгу нижче, щоб побачити її розділи, кількість віршів, час читання та короткий огляд. Або дізнайтеся, {link} за різного темпу.",
     "intro_2_link": "скільки часу потрібно, щоб прочитати Біблію",
     "books_count": "{n} книга | {n} книги | {n} книг",
@@ -485,6 +528,8 @@ useContentSeo({
       "button": "Почати безкоштовно",
       "note": "Цілком безкоштовно. Без реклами. Реєстрація через пошту або Google."
     },
+    "dc_heading": "Второканонічні книги ({books})",
+    "dc_intro": "Католицькі та православні Біблії також містять второканонічні книги, розміщені серед книг Старого Заповіту. My Bible Log може відстежувати й їх: увімкніть їх у налаштуваннях читання.",
     "paper_heading": "Віддаєте перевагу паперу?",
     "paper_text": "Завантажте безкоштовний {link} із віконцем для кожного розділу Біблії.",
     "paper_link": "трекер читання Біблії для друку",
@@ -513,7 +558,7 @@ useContentSeo({
   },
   "ko": {
     "h1": "성경 66권: 장 수, 절 수, 읽는 시간 한눈에 보기",
-    "intro_1": "개신교 성경은 구약 {ot}과 신약 {nt}을 합쳐 모두 {books}으로 이루어져 있습니다. 전체 분량은 {chapters}, {verses}이며, 성인 평균 읽기 속도로 성경 전체를 읽는 데 약 {hours}이 걸립니다.",
+    "intro_1": "기독교 성경은 공통으로 구약 {ot}과 신약 {nt}, 모두 {books}을 담고 있습니다. 전체 분량은 {chapters}, {verses}이며, 성인 평균 읽기 속도로 66권 전체를 읽는 데 약 {hours}이 걸립니다.",
     "intro_2": "아래에서 책을 선택하면 장 수와 절 수, 읽는 시간, 간단한 소개를 볼 수 있습니다. 또는 읽는 속도별로 {link}도 확인해 보세요.",
     "intro_2_link": "성경을 다 읽는 데 얼마나 걸리는지",
     "books_count": "{n}권",
@@ -539,6 +584,8 @@ useContentSeo({
       "button": "무료로 시작하기",
       "note": "완전 무료입니다. 광고가 없습니다. 이메일 또는 Google로 가입하세요."
     },
+    "dc_heading": "제2경전 ({books})",
+    "dc_intro": "가톨릭과 정교회 성경에는 구약 책들 사이에 제2경전도 들어 있습니다. My Bible Log에서도 기록할 수 있습니다. 읽기 설정에서 켜 보세요.",
     "paper_heading": "종이가 더 편하신가요?",
     "paper_text": "성경 모든 장마다 체크 칸이 있는 무료 {link}를 내려받으세요.",
     "paper_link": "인쇄용 성경 읽기 추적표",

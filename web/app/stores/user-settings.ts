@@ -23,6 +23,7 @@ export type UserSettings = {
   startPage: string;
   passageNoteTagSortOrder: string;
   locale: string;
+  includeDeuterocanonical: boolean;
 };
 
 export type UserSettingsUpdate = Partial<Pick<UserSettings,
@@ -33,6 +34,7 @@ export type UserSettingsUpdate = Partial<Pick<UserSettings,
   | 'startPage'
   | 'passageNoteTagSortOrder'
   | 'locale'
+  | 'includeDeuterocanonical'
 >>;
 
 // The `/api/settings` payload. Fields are validated at runtime below (the
@@ -44,6 +46,7 @@ type ServerSettingsResponse = {
   startPage?: string;
   passageNoteTagSortOrder?: string;
   locale?: string;
+  includeDeuterocanonical?: boolean;
 };
 
 const defaultSettings: UserSettings = {
@@ -54,6 +57,7 @@ const defaultSettings: UserSettings = {
   startPage: 'start',
   passageNoteTagSortOrder: 'label:ascending',
   locale: 'en',
+  includeDeuterocanonical: false,
 };
 
 export const useUserSettingsStore = defineStore('user-settings', {
@@ -79,6 +83,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
         startPage,
         passageNoteTagSortOrder,
         locale,
+        includeDeuterocanonical,
       } = update;
 
       if (lookBackDate !== undefined) {
@@ -103,6 +108,9 @@ export const useUserSettingsStore = defineStore('user-settings', {
       if (locale !== undefined) {
         this.settings.locale = locale;
       }
+      if (includeDeuterocanonical !== undefined) {
+        this.settings.includeDeuterocanonical = includeDeuterocanonical;
+      }
     },
 
     async updateSettings(update: UserSettingsUpdate): Promise<boolean> {
@@ -115,6 +123,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
         startPage,
         passageNoteTagSortOrder,
         locale,
+        includeDeuterocanonical,
       } = update;
 
       try {
@@ -130,6 +139,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
             startPage,
             passageNoteTagSortOrder,
             locale,
+            includeDeuterocanonical,
           },
         });
 
@@ -141,6 +151,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
           startPage,
           passageNoteTagSortOrder,
           locale,
+          includeDeuterocanonical,
         });
 
         return true;
@@ -166,6 +177,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
         startPage,
         passageNoteTagSortOrder,
         locale,
+        includeDeuterocanonical,
       } = data || {};
 
       this.applySettingsUpdate({
@@ -180,6 +192,7 @@ export const useUserSettingsStore = defineStore('user-settings', {
         startPage: typeof startPage === 'string' ? startPage : undefined,
         passageNoteTagSortOrder: typeof passageNoteTagSortOrder === 'string' ? passageNoteTagSortOrder : undefined,
         locale: typeof locale === 'string' ? locale : undefined,
+        includeDeuterocanonical: typeof includeDeuterocanonical === 'boolean' ? includeDeuterocanonical : undefined,
       });
 
       this.isLoaded = true;

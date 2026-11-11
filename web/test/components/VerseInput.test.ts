@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { setActivePinia, createPinia } from 'pinia';
 import { Bible, formatVerseRange } from '@mybiblelog/shared';
 import VerseInput from '~/components/forms/VerseInput.vue';
 import GridSelector from '~/components/forms/GridSelector.vue';
@@ -19,6 +20,10 @@ const john316to18Text = formatVerseRange(
   { startVerseId: john316to18Start, endVerseId: john316to18End },
   'en',
 );
+
+beforeEach(() => {
+  setActivePinia(createPinia());
+});
 
 describe('VerseInput (single-verse mode)', () => {
   it('emits update:modelValue with the parsed verse id on valid input', async () => {

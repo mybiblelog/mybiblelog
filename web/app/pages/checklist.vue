@@ -122,6 +122,7 @@ import TriangleDownIcon from '~/components/svg/TriangleDownIcon.vue';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useAppInitStore } from '~/stores/app-init';
 import { useToastStore } from '~/stores/toast';
+import { useUserSettingsStore } from '~/stores/user-settings';
 
 definePageMeta({ middleware: ['auth'] });
 const { t, locale } = useI18n();
@@ -129,7 +130,6 @@ useHead({ title: () => t('chapter_checklist') });
 
 const localePath = useLocalePath();
 
-const CACHE_KEY = 'chapterChecklist';
 const CACHE_MINUTES = 60;
 
 type ChapterReport = { bookIndex: number; chapterIndex: number; complete: boolean };
@@ -144,6 +144,7 @@ type BookReport = {
 };
 
 const logEntriesStore = useLogEntriesStore();
+const userSettingsStore = useUserSettingsStore();
 const computeBusy = ref(false);
 // Keyed by `bookIndex.chapterIndex`. Sets rather than a single key so several
 // chapters can be in flight — and celebrating — at once: tapping a second
@@ -151,13 +152,20 @@ const computeBusy = ref(false);
 const busyChapters = ref(new Set<string>());
 const bookReports = ref<BookReport[]>([]);
 
+// Reader's selected canon; drives which books are listed and how progress is
+// computed (the 66 common books vs. the full canon including deuterocanonical books).
+const includeDeuterocanonical = computed(() => userSettingsStore.settings.includeDeuterocanonical);
+const cacheKey = computed(() =>
+  includeDeuterocanonical.value ? 'chapterChecklist:dc' : 'chapterChecklist',
+);
+
 // Purely a view filter and order: `bookReports`, the cached snapshot and
-// `toggleChapter` all keep working off the full 66-book list, so hiding a
+// `toggleChapter` all keep working off the full canon's book list, so hiding a
 // testament or reordering can never change what gets computed or saved.
 const { testament: testamentFilter, sortOrder } = useBookListPrefs();
 const visibleBookReports = computed(() => {
   const reportsByBook = new Map(bookReports.value.map(report => [report.bookIndex, report]));
-  return filterAndSortBookOptions(getBookOptions(locale.value), {
+  return filterAndSortBookOptions(getBookOptions(locale.value, includeDeuterocanonical.value), {
     testament: testamentFilter.value,
     sortOrder: sortOrder.value,
     locale: locale.value,
@@ -166,11 +174,7 @@ const visibleBookReports = computed(() => {
     .filter((report): report is BookReport => report !== undefined);
 });
 
-const bookCount = Bible.getBookCount();
 const expandedBooks = ref<Record<number, boolean>>({});
-for (let i = 1; i <= bookCount; i++) {
-  expandedBooks.value[i] = false;
-}
 
 const busy = computed(() => Boolean(busyChapters.value.size || computeBusy.value));
 
@@ -223,13 +227,15 @@ function getBookReports() {
   // and render a full stale grid microseconds before the fresh one replaces it —
   // a wasted render that lands right on top of the completion animation.
   if (!bookReports.value.length) {
-    const cached = BrowserCache.get(CACHE_KEY);
+    const cached = BrowserCache.get(cacheKey.value);
     if (cached) {
       bookReports.value = JSON.parse(cached) as BookReport[];
     }
   }
 
-  const progress = computeBibleProgress(logEntriesStore.currentLogEntries);
+  const progress = computeBibleProgress(logEntriesStore.currentLogEntries, {
+    includeDeuterocanonical: includeDeuterocanonical.value,
+  });
   const reports: BookReport[] = progress.books.map(book => ({
     bookIndex: book.bookIndex,
     bookName: Bible.getBookName(book.bookIndex, locale.value),
@@ -244,7 +250,7 @@ function getBookReports() {
     })),
   }));
 
-  BrowserCache.set(CACHE_KEY, JSON.stringify(reports), CACHE_MINUTES);
+  BrowserCache.set(cacheKey.value, JSON.stringify(reports), CACHE_MINUTES);
   bookReports.value = reports;
   computeBusy.value = false;
 }
@@ -327,6 +333,12 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(endAllCelebrations);
+
+// Recompute when the reader switches canon so the checklist reflects the new
+// book set immediately.
+watch(includeDeuterocanonical, () => {
+  if (logEntriesStore.currentLogEntries) { getBookReports(); }
+});
 </script>
 
 <style scoped>

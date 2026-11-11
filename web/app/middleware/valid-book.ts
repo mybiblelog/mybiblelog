@@ -12,8 +12,7 @@ export default defineNuxtRouteMiddleware((to) => {
   const raw = 'book' in to.params ? String(to.params.book) : '';
   const bookIndex = Number(raw);
   const isValidBookIndex = /^\d+$/.test(raw) &&
-    bookIndex >= 1 &&
-    bookIndex <= Bible.getBookCount();
+    Bible.getAllBooks().some(book => book.bibleOrder === bookIndex);
   if (!isValidBookIndex) {
     return navigateTo(localePath('books'));
   }

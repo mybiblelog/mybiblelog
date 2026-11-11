@@ -142,6 +142,7 @@ describe('settings.test.js', () => {
       { name: 'startPage not allowed', settings: { startPage: 'not-a-page' } },
       { name: 'passageNoteTagSortOrder not allowed', settings: { passageNoteTagSortOrder: 'not-a-sort-order' } },
       { name: 'locale not supported', settings: { locale: 'xx' } },
+      { name: 'includeDeuterocanonical not a boolean', settings: { includeDeuterocanonical: 'yes' } },
     ];
 
     for (const { name, settings } of invalidSettingCases) {

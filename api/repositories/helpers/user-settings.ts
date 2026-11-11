@@ -16,5 +16,6 @@ export const buildDefaultUserSettings = (locale?: string): UserSettingsDocument 
     startPage: 'start',
     passageNoteTagSortOrder: 'label:ascending',
     locale: resolvedLocale,
+    includeDeuterocanonical: false,
   };
 };
