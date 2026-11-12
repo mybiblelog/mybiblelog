@@ -4,7 +4,7 @@
       <skeleton-loader v-if="!readingGoalsStore.isLoaded" />
       <div v-else-if="!goal" class="mbl-empty-state" data-testid="reading-goal-not-found">
         <p>{{ t('not_found') }}</p>
-        <NuxtLink class="mbl-button" :to="localePath('/settings/goals')">
+        <NuxtLink class="mbl-button" :to="localePath('settings-goals')">
           {{ t('all_goals') }}
         </NuxtLink>
       </div>
@@ -13,7 +13,7 @@
           <h1 class="mbl-title mbl-title--3" data-testid="reading-goal-detail-title">
             {{ goal.title }}
           </h1>
-          <NuxtLink class="mbl-button" :to="localePath({ path: '/settings/goals', query: { edit: goal.id } })" data-testid="reading-goal-detail-edit">
+          <NuxtLink class="mbl-button" :to="localePath({ name: 'settings-goals', query: { edit: goal.id } })" data-testid="reading-goal-detail-edit">
             {{ t('edit') }}
           </NuxtLink>
         </header>

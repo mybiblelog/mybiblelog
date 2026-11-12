@@ -2,7 +2,7 @@
   <NuxtLink
     class="mbl-card mbl-card--list-item reading-goal-card"
     :class="{ 'reading-goal-card--complete': progress.isComplete }"
-    :to="localePath(`/goals/${goal.id}`)"
+    :to="localePath({ name: 'goals-id', params: { id: goal.id } })"
     data-testid="reading-goal-card"
     :data-goal-id="goal.id"
     :data-complete="progress.isComplete"

@@ -67,7 +67,7 @@
           :data-goal-id="goal.id"
         >
           <div class="reading-goals__summary">
-            <NuxtLink class="reading-goals__title" :to="localePath(`/goals/${goal.id}`)" data-testid="reading-goal-row-title">
+            <NuxtLink class="reading-goals__title" :to="localePath({ name: 'goals-id', params: { id: goal.id } })" data-testid="reading-goal-row-title">
               {{ goal.title }}
             </NuxtLink>
             <span class="mbl-text-small mbl-text-muted">
