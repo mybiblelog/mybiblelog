@@ -286,7 +286,7 @@ select {
         "deuterocanonical": "Include deuterocanonical books"
       },
       "info": {
-        "1": "Choose which books to track. Deuterocanonical books are added among the Old Testament books, following the NRSVUE order, and are counted in your reading progress."
+        "1": "Choose which books to track. Deuterocanonical books are added among the Old Testament books, following the Catholic canonical order, and are counted in your reading progress."
       }
     },
     "daily_verse_count_goal": {
@@ -346,7 +346,7 @@ select {
         "deuterocanonical": "Deuterokanonische Bücher einschließen"
       },
       "info": {
-        "1": "Wählen Sie, welche Bücher verfolgt werden. Deuterokanonische Bücher werden gemäß der NRSVUE-Reihenfolge zwischen die Bücher des Alten Testaments eingefügt und in Ihrem Lesefortschritt gezählt."
+        "1": "Wählen Sie, welche Bücher verfolgt werden. Deuterokanonische Bücher werden gemäß der katholischen kanonischen Reihenfolge zwischen die Bücher des Alten Testaments eingefügt und in Ihrem Lesefortschritt gezählt."
       }
     },
     "daily_verse_count_goal": {
@@ -406,7 +406,7 @@ select {
         "deuterocanonical": "Incluir libros deuterocanónicos"
       },
       "info": {
-        "1": "Elija qué libros seguir. Los libros deuterocanónicos se agregan entre los libros del Antiguo Testamento, siguiendo el orden de la NRSVUE, y se cuentan en su progreso de lectura."
+        "1": "Elija qué libros seguir. Los libros deuterocanónicos se agregan entre los libros del Antiguo Testamento, siguiendo el orden canónico católico, y se cuentan en su progreso de lectura."
       }
     },
     "daily_verse_count_goal": {
@@ -466,7 +466,7 @@ select {
         "deuterocanonical": "Inclure les livres deutérocanoniques"
       },
       "info": {
-        "1": "Choisissez les livres à suivre. Les livres deutérocanoniques sont ajoutés parmi les livres de l'Ancien Testament, selon l'ordre de la NRSVUE, et sont comptés dans votre progression de lecture."
+        "1": "Choisissez les livres à suivre. Les livres deutérocanoniques sont ajoutés parmi les livres de l'Ancien Testament, selon l'ordre canonique catholique, et sont comptés dans votre progression de lecture."
       }
     },
     "daily_verse_count_goal": {
@@ -526,7 +526,7 @@ select {
         "deuterocanonical": "제2경전 포함"
       },
       "info": {
-        "1": "추적할 책을 선택하세요. 제2경전은 NRSVUE 순서에 따라 구약 책들 사이에 추가되며 읽기 진도에 포함됩니다."
+        "1": "추적할 책을 선택하세요. 제2경전은 가톨릭 정경 순서에 따라 구약 책들 사이에 추가되며 읽기 진도에 포함됩니다."
       }
     },
     "daily_verse_count_goal": {
@@ -586,7 +586,7 @@ select {
         "deuterocanonical": "Incluir livros deuterocanônicos"
       },
       "info": {
-        "1": "Escolha quais livros acompanhar. Os livros deuterocanônicos são adicionados entre os livros do Antigo Testamento, seguindo a ordem da NRSVUE, e são contados no seu progresso de leitura."
+        "1": "Escolha quais livros acompanhar. Os livros deuterocanônicos são adicionados entre os livros do Antigo Testamento, seguindo a ordem canônica católica, e são contados no seu progresso de leitura."
       }
     },
     "daily_verse_count_goal": {
@@ -646,7 +646,7 @@ select {
         "deuterocanonical": "Включити второканонічні книги"
       },
       "info": {
-        "1": "Виберіть, які книги відстежувати. Второканонічні книги додаються серед книг Старого Завіту за порядком NRSVUE та враховуються у вашому прогресі читання."
+        "1": "Виберіть, які книги відстежувати. Второканонічні книги додаються серед книг Старого Завіту за католицьким канонічним порядком та враховуються у вашому прогресі читання."
       }
     },
     "daily_verse_count_goal": {

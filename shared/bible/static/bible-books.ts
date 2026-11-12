@@ -10,7 +10,7 @@ export type BibleBook = {
   /** True for deuterocanonical books not among the 66 common books. */
   deuterocanonical: boolean;
   /** Display position (1-based) when deuterocanonical books are interleaved,
-   * following the NRSVUE full-canon order. Unique across all books; used to sort
+   * following the Catholic canonical order. Unique across all books; used to sort
    * book lists so DC books slot in between the common books they neighbour. */
   dcBookOrder: number;
   chapterCount: number;

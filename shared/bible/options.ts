@@ -24,7 +24,7 @@ export type FilterAndSortBookOptions = {
 /**
  * Builds the localized list of book options for a reader's canon, in display
  * order. Deuterocanonical books are opt-in and, when included, are interleaved
- * between the common books following the NRSVUE full-canon order.
+ * between the common books following the Catholic canonical order.
  * Pure: depends only on the shared `Bible` data, so it can back a React hook,
  * a Pinia store, or a plain component identically.
  */

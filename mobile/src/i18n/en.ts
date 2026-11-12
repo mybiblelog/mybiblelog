@@ -407,7 +407,7 @@ export const en = {
   settings_reading_canon_common: "The 66 common books",
   settings_reading_canon_deuterocanonical: "Include deuterocanonical books",
   settings_reading_canon_info:
-    "Choose which books to track. Deuterocanonical books are added among the Old Testament books, following the NRSVUE order, and are counted in your reading progress.",
+    "Choose which books to track. Deuterocanonical books are added among the Old Testament books, following the Catholic canonical order, and are counted in your reading progress.",
   settings_reading_daily_goal_title: "Daily Verse Count Goal",
   settings_reading_look_back_date_title: "Tracker Start Date",
   settings_reading_preferred_bible_version_title: "Preferred Bible Version",
@@ -446,7 +446,7 @@ export const en = {
     "The 66 books shared by all Christian Bibles, from Genesis to Revelation.",
   onboarding_canon_deuterocanonical_title: "Include deuterocanonical books",
   onboarding_canon_deuterocanonical_description:
-    "Adds the deuterocanonical books among the Old Testament books, following the NRSVUE order.",
+    "Adds the deuterocanonical books among the Old Testament books, following the Catholic canonical order.",
   onboarding_goal_title: "Daily Reading Goal",
   onboarding_goal_description:
     "How many verses do you want to read each day? My Bible Log will show your progress toward this goal.",

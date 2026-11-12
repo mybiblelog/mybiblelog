@@ -234,7 +234,7 @@ function handlePrevious() {
         },
         "deuterocanonical": {
           "title": "Include deuterocanonical books",
-          "description": "Adds the deuterocanonical books among the Old Testament books, following the NRSVUE order."
+          "description": "Adds the deuterocanonical books among the Old Testament books, following the Catholic canonical order."
         },
         "change_hint": "You can change this setting at any time."
       }
@@ -256,7 +256,7 @@ function handlePrevious() {
         },
         "deuterocanonical": {
           "title": "Deuterokanonische Bücher einschließen",
-          "description": "Fügt die deuterokanonischen Bücher gemäß der NRSVUE-Reihenfolge zwischen die Bücher des Alten Testaments ein."
+          "description": "Fügt die deuterokanonischen Bücher gemäß der katholischen kanonischen Reihenfolge zwischen die Bücher des Alten Testaments ein."
         },
         "change_hint": "Sie können diese Einstellung jederzeit ändern."
       }
@@ -278,7 +278,7 @@ function handlePrevious() {
         },
         "deuterocanonical": {
           "title": "Incluir libros deuterocanónicos",
-          "description": "Agrega los libros deuterocanónicos entre los libros del Antiguo Testamento, siguiendo el orden de la NRSVUE."
+          "description": "Agrega los libros deuterocanónicos entre los libros del Antiguo Testamento, siguiendo el orden canónico católico."
         },
         "change_hint": "Puede cambiar esta configuración en cualquier momento."
       }
@@ -300,7 +300,7 @@ function handlePrevious() {
         },
         "deuterocanonical": {
           "title": "Inclure les livres deutérocanoniques",
-          "description": "Ajoute les livres deutérocanoniques parmi les livres de l'Ancien Testament, selon l'ordre de la NRSVUE."
+          "description": "Ajoute les livres deutérocanoniques parmi les livres de l'Ancien Testament, selon l'ordre canonique catholique."
         },
         "change_hint": "Vous pouvez modifier ce paramètre à tout moment."
       }
@@ -322,7 +322,7 @@ function handlePrevious() {
         },
         "deuterocanonical": {
           "title": "제2경전 포함",
-          "description": "NRSVUE 순서에 따라 구약 책들 사이에 제2경전을 추가합니다."
+          "description": "가톨릭 정경 순서에 따라 구약 책들 사이에 제2경전을 추가합니다."
         },
         "change_hint": "이 설정은 언제든지 바꿀 수 있습니다."
       }
@@ -344,7 +344,7 @@ function handlePrevious() {
         },
         "deuterocanonical": {
           "title": "Incluir livros deuterocanônicos",
-          "description": "Adiciona os livros deuterocanônicos entre os livros do Antigo Testamento, seguindo a ordem da NRSVUE."
+          "description": "Adiciona os livros deuterocanônicos entre os livros do Antigo Testamento, seguindo a ordem canônica católica."
         },
         "change_hint": "Você pode alterar esta configuração a qualquer momento."
       }
@@ -366,7 +366,7 @@ function handlePrevious() {
         },
         "deuterocanonical": {
           "title": "Включити второканонічні книги",
-          "description": "Додає второканонічні книги серед книг Старого Завіту за порядком NRSVUE."
+          "description": "Додає второканонічні книги серед книг Старого Завіту за католицьким канонічним порядком."
         },
         "change_hint": "Ви можете змінити це налаштування в будь-який час."
       }

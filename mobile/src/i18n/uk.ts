@@ -380,7 +380,7 @@ export const uk = {
   settings_reading_canon_common: "66 спільних книг",
   settings_reading_canon_deuterocanonical: "Включити второканонічні книги",
   settings_reading_canon_info:
-    "Виберіть, які книги відстежувати. Второканонічні книги додаються серед книг Старого Завіту за порядком NRSVUE і враховуються у вашому прогресі читання.",
+    "Виберіть, які книги відстежувати. Второканонічні книги додаються серед книг Старого Завіту за католицьким канонічним порядком і враховуються у вашому прогресі читання.",
   settings_reading_daily_goal_title: "Щоденна ціль з віршів",
   settings_reading_look_back_date_title: "Дата початку відстеження",
   settings_reading_preferred_bible_version_title: "Бажаний переклад Біблії",
@@ -419,7 +419,7 @@ export const uk = {
     "66 книг, спільних для всіх християнських Біблій, від Буття до Об'явлення.",
   onboarding_canon_deuterocanonical_title: "Включити второканонічні книги",
   onboarding_canon_deuterocanonical_description:
-    "Додає второканонічні книги серед книг Старого Завіту за порядком NRSVUE.",
+    "Додає второканонічні книги серед книг Старого Завіту за католицьким канонічним порядком.",
   onboarding_goal_title: "Щоденна мета читання",
   onboarding_goal_description:
     "Скільки віршів ви хочете читати кожного дня? My Bible Log покаже ваш прогрес до цієї мети.",

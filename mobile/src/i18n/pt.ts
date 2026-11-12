@@ -381,7 +381,7 @@ export const pt = {
   settings_reading_canon_common: "Os 66 livros comuns",
   settings_reading_canon_deuterocanonical: "Incluir livros deuterocanônicos",
   settings_reading_canon_info:
-    "Escolha quais livros acompanhar. Os livros deuterocanônicos são adicionados entre os livros do Antigo Testamento, seguindo a ordem da NRSVUE, e são contados no seu progresso de leitura.",
+    "Escolha quais livros acompanhar. Os livros deuterocanônicos são adicionados entre os livros do Antigo Testamento, seguindo a ordem canônica católica, e são contados no seu progresso de leitura.",
   settings_reading_daily_goal_title: "Meta Diária de Versículos",
   settings_reading_look_back_date_title: "Data de Início do Rastreador",
   settings_reading_preferred_bible_version_title: "Versão da Bíblia Preferida",
@@ -420,7 +420,7 @@ export const pt = {
     "Os 66 livros comuns a todas as Bíblias cristãs, de Gênesis a Apocalipse.",
   onboarding_canon_deuterocanonical_title: "Incluir livros deuterocanônicos",
   onboarding_canon_deuterocanonical_description:
-    "Adiciona os livros deuterocanônicos entre os livros do Antigo Testamento, seguindo a ordem da NRSVUE.",
+    "Adiciona os livros deuterocanônicos entre os livros do Antigo Testamento, seguindo a ordem canônica católica.",
   onboarding_goal_title: "Meta Diária de Leitura",
   onboarding_goal_description:
     "Quantos versículos você quer ler cada dia? My Bible Log mostrará seu progresso em direção a este objetivo.",

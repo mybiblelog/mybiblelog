@@ -53,7 +53,7 @@ describe('getBooksForCanon', () => {
     );
   });
 
-  it('interleaves DC books in NRSVUE display order when included', () => {
+  it('interleaves DC books in Catholic canonical order when included', () => {
     const books = Bible.getBooksForCanon(true);
     expect(books).toHaveLength(77);
     // Sorted by dcBookOrder.

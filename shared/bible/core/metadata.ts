@@ -32,7 +32,7 @@ export const getAllBooks = (): BibleBook[] =>
 /**
  * The books that make up a reader's selected canon, sorted into display order.
  * When deuterocanonical books are included they are interleaved between the
- * common books following the NRSVUE full-canon order (via `dcBookOrder`);
+ * common books following the Catholic canonical order (via `dcBookOrder`);
  * otherwise this is exactly the 66-book common canon.
  */
 export const getBooksForCanon = (includeDeuterocanonical = false): BibleBook[] => {

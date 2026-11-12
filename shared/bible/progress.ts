@@ -86,7 +86,7 @@ export const computeBibleProgress = (
   ranges: ReadonlyArray<Readonly<VerseRange>>,
   { includeDeuterocanonical = false }: ComputeBibleProgressOptions = {},
 ): BibleProgress => {
-  // The reader's canon, in NRSVUE display order. We walk it in ascending
+  // The reader's canon, in Catholic canonical order. We walk it in ascending
   // bibleOrder for the single-pointer range scan, then return the per-book
   // results in display order below.
   const canonBooks = getBooksForCanon(includeDeuterocanonical);

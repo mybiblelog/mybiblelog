@@ -372,7 +372,7 @@ export const ko = {
   settings_reading_canon_common: "공통 66권",
   settings_reading_canon_deuterocanonical: "제2경전 포함",
   settings_reading_canon_info:
-    "추적할 책을 선택하세요. 제2경전은 NRSVUE 순서에 따라 구약 책들 사이에 추가되며 읽기 진도에 포함됩니다.",
+    "추적할 책을 선택하세요. 제2경전은 가톨릭 정경 순서에 따라 구약 책들 사이에 추가되며 읽기 진도에 포함됩니다.",
   settings_reading_daily_goal_title: "일일 구절 목표",
   settings_reading_look_back_date_title: "추적기 시작일",
   settings_reading_preferred_bible_version_title: "선호하는 성경 번역본",
@@ -411,7 +411,7 @@ export const ko = {
     "모든 기독교 성경에 공통으로 들어 있는 66권으로, 창세기부터 요한계시록까지입니다.",
   onboarding_canon_deuterocanonical_title: "제2경전 포함",
   onboarding_canon_deuterocanonical_description:
-    "NRSVUE 순서에 따라 구약 책들 사이에 제2경전을 추가합니다.",
+    "가톨릭 정경 순서에 따라 구약 책들 사이에 제2경전을 추가합니다.",
   onboarding_goal_title: "일일 읽기 목표",
   onboarding_goal_description:
     "매일 몇 구절을 읽고 싶으신가요? My Bible Log는 이 목표를 향한 진도를 표시해줍니다.",

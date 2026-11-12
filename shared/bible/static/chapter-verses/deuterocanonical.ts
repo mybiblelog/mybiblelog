@@ -7,11 +7,12 @@
  * versification, which mirrors the RSV/NRSV deuterocanonical structure. Baruch
  * chapter 6 is the Letter of Jeremiah, matching the NRSV six-chapter Baruch. The
  * Greek additions that a Catholic Bible folds into Esther and Daniel are modelled
- * here as separate books (as the NRSVUE lists them), so Esther and Daniel keep
- * their common-canon verse counts: Susanna, Bel and the Dragon and the Prayer of
- * Azariah are single-chapter books, and the Additions to Esther are the six
- * conventional additions (A-F). Merged into the main chapter-verse map in
- * `core/metadata` so all metadata helpers resolve DC books.
+ * here as separate books (as Apocrypha editions such as the NRSVUE list them),
+ * so Esther and Daniel keep their common-canon verse counts:
+ * Susanna, Bel and the Dragon and the Prayer of Azariah are single-chapter books,
+ * and the Additions to Esther are the six conventional additions (A-F).
+ * Merged into the main chapter-verse map in `core/metadata` so
+ * all metadata helpers resolve DC books.
  */
 const deuterocanonicalChapterVerseCounts: { [key: number]: number } = {
   // Tobit (book 67)

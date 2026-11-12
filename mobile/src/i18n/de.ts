@@ -388,7 +388,7 @@ export const de = {
   settings_reading_canon_common: "Die 66 gemeinsamen Bücher",
   settings_reading_canon_deuterocanonical: "Deuterokanonische Bücher einschließen",
   settings_reading_canon_info:
-    "Wählen Sie, welche Bücher verfolgt werden. Deuterokanonische Bücher werden gemäß der NRSVUE-Reihenfolge zwischen die Bücher des Alten Testaments eingefügt und in Ihrem Lesefortschritt gezählt.",
+    "Wählen Sie, welche Bücher verfolgt werden. Deuterokanonische Bücher werden gemäß der katholischen kanonischen Reihenfolge zwischen die Bücher des Alten Testaments eingefügt und in Ihrem Lesefortschritt gezählt.",
   settings_reading_daily_goal_title: "Tägliches Versziel",
   settings_reading_look_back_date_title: "Tracker-Startdatum",
   settings_reading_preferred_bible_version_title: "Bevorzugte Bibelübersetzung",
@@ -428,7 +428,7 @@ export const de = {
     "Die 66 Bücher, die alle christlichen Bibeln gemeinsam haben, von Genesis bis Offenbarung.",
   onboarding_canon_deuterocanonical_title: "Deuterokanonische Bücher einschließen",
   onboarding_canon_deuterocanonical_description:
-    "Fügt die deuterokanonischen Bücher gemäß der NRSVUE-Reihenfolge zwischen die Bücher des Alten Testaments ein.",
+    "Fügt die deuterokanonischen Bücher gemäß der katholischen kanonischen Reihenfolge zwischen die Bücher des Alten Testaments ein.",
   onboarding_goal_title: "Tägliches Leseziel",
   onboarding_goal_description:
     "Wie viele Verse möchten Sie jeden Tag lesen? My Bible Log zeigt Ihnen Ihren Fortschritt zu diesem Ziel.",
