@@ -167,7 +167,7 @@ const deuterocanonicalChapterVerseCounts: { [key: number]: number } = {
   174005000: 24,
   174006000: 11,
   // Prayer of Azariah and the Song of the Three Jews (book 75)
-  175001000: 67,
+  175001000: 68,
   // Susanna (book 76)
   176001000: 64,
   // Bel and the Dragon (book 77)

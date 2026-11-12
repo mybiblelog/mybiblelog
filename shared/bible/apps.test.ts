@@ -91,3 +91,51 @@ describe('getAppReadingUrl - Olive Tree', () => {
     expect(url).toBe('olivetree://bible/45.8.1');
   });
 });
+
+describe('getAppReadingUrl - deuterocanonical books', () => {
+  const tobit = 67;
+  const sirach = 72;
+  const baruch = 73;
+  const additionsToEsther = 74;
+  const susanna = 76;
+
+  it('opens Bible.com and YouVersion in KJV with Apocrypha, whatever the version', () => {
+    expect(getAppReadingUrl(BibleApps.BIBLECOM, BibleVersions.NIV, tobit, 3))
+      .toBe('https://www.bible.com/bible/546/TOB.3.KJVAAE');
+    expect(getAppReadingUrl(BibleApps.YOUVERSIONAPP, BibleVersions.NIV, tobit, 3))
+      .toBe('youversion://bible?reference=TOB.3.KJVAAE');
+  });
+
+  it('uses KJVAAE chapter codes for Sirach 1, Susanna and the Esther additions', () => {
+    expect(getAppReadingUrl(BibleApps.BIBLECOM, BibleVersions.NIV, sirach, 1)).toBe('https://www.bible.com/bible/546/SIR.1_2.KJVAAE');
+    expect(getAppReadingUrl(BibleApps.BIBLECOM, BibleVersions.NIV, sirach, 2)).toBe('https://www.bible.com/bible/546/SIR.2.KJVAAE');
+    expect(getAppReadingUrl(BibleApps.BIBLECOM, BibleVersions.NIV, susanna, 1)).toBe('https://www.bible.com/bible/546/SUS.1_1.KJVAAE');
+    // Addition A is KJV Esther 11:2-12:6; addition F is 10:4-11:1.
+    expect(getAppReadingUrl(BibleApps.BIBLECOM, BibleVersions.NIV, additionsToEsther, 1)).toBe('https://www.bible.com/bible/546/ESG.2_1.KJVAAE');
+    expect(getAppReadingUrl(BibleApps.BIBLECOM, BibleVersions.NIV, additionsToEsther, 6)).toBe('https://www.bible.com/bible/546/ESG.1_1.KJVAAE');
+  });
+
+  it('opens Bible Gateway in the NRSV with Apocrypha', () => {
+    expect(getAppReadingUrl(BibleApps.BIBLEGATEWAY, BibleVersions.NASB2020, sirach, 51))
+      .toBe('https://www.biblegateway.com/passage/?version=NRSVA&search=Sirach%2051');
+    expect(getAppReadingUrl(BibleApps.BIBLEGATEWAY, BibleVersions.NASB2020, additionsToEsther, 2))
+      .toBe('https://www.biblegateway.com/passage/?version=NRSVA&search=Greek%20Esther%203');
+    // Addition D: NRSVA prints it in Greek Esther 4, NRSVue in Greek Esther 5.
+    expect(getAppReadingUrl(BibleApps.BIBLEGATEWAY, BibleVersions.NASB2020, additionsToEsther, 4))
+      .toBe('https://www.biblegateway.com/passage/?version=NRSVA&search=Greek%20Esther%204');
+    expect(getAppReadingUrl(BibleApps.BIBLEGATEWAY, BibleVersions.NASB2020, baruch, 6))
+      .toBe('https://www.biblegateway.com/passage/?version=NRSVA&search=Letter%20of%20Jeremiah%201');
+  });
+
+  it('falls back to Bible Gateway for Blue Letter Bible and Olive Tree', () => {
+    const gateway = 'https://www.biblegateway.com/passage/?version=NRSVA&search=Tobit%201';
+    expect(getAppReadingUrl(BibleApps.BLUELETTERBIBLE, BibleVersions.KJV, tobit, 1)).toBe(gateway);
+    expect(getAppReadingUrl(BibleApps.OLIVETREE, BibleVersions.KJV, tobit, 1)).toBe(gateway);
+  });
+
+  it('opens Logos in the NRSV', () => {
+    expect(getAppReadingUrl(BibleApps.LOGOS, BibleVersions.NIV, tobit, 14)).toBe('https://ref.ly/Tobit%2014;NRSV');
+    expect(getAppReadingUrl(BibleApps.LOGOS, BibleVersions.NIV, baruch, 6)).toBe('https://ref.ly/Letter%20of%20Jeremiah;NRSV');
+    expect(getAppReadingUrl(BibleApps.LOGOS, BibleVersions.NIV, additionsToEsther, 4)).toBe('https://ref.ly/Greek%20Esther%205;NRSV');
+  });
+});

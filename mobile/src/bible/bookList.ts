@@ -1,4 +1,4 @@
-import { filterAndSortBookOptions, getBookOptions } from "@mybiblelog/shared";
+import { filterAndSortBookOptions, getAllBookOptions } from "@mybiblelog/shared";
 import type { BookListPrefs } from "@/src/stores/bookListPrefs";
 
 /**
@@ -13,7 +13,7 @@ export function filterAndSortBooks<T extends { bookIndex: number }>(
   locale: string
 ): T[] {
   const byIndex = new Map(books.map((book) => [book.bookIndex, book]));
-  return filterAndSortBookOptions(getBookOptions(locale, true), { testament, sortOrder, locale })
+  return filterAndSortBookOptions(getAllBookOptions(locale), { testament, sortOrder, locale })
     .map((option) => byIndex.get(option.value))
     .filter((book): book is T => book !== undefined);
 }

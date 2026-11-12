@@ -33,6 +33,8 @@ describe('deuterocanonical book data', () => {
     // Susanna and Bel and the Dragon are single-chapter books.
     expect(Bible.getBookChapterCount(76)).toBe(1);
     expect(Bible.getChapterVerseCount(76, 1)).toBe(64);
+    // KJV-1611 and NRSV number the Prayer of Azariah 1-68 (NRSVue and CEB use 67).
+    expect(Bible.getChapterVerseCount(75, 1)).toBe(68);
     expect(Bible.getChapterVerseCount(67, 1)).toBe(22);
     expect(Bible.getBookVerseCount(67)).toBeGreaterThan(0);
   });
@@ -116,5 +118,46 @@ describe('computeBibleProgress with deuterocanonical books', () => {
     expect(progress.versesRead).toBe(22);
     const tobit = progress.books.find((b) => b.bookIndex === 67);
     expect(tobit?.chapters[0]?.complete).toBe(true);
+  });
+});
+
+describe('getNextReadingVerseId', () => {
+  const lastVerseOf = (book: number) => Bible.getLastBookVerseId(book);
+  const nehemiah = 16;
+  const esther = 17;
+  const tobit = 67;
+  const judith = 68;
+  const bel = 77;
+  const hosea = 28;
+  const revelation = 66;
+
+  it('stays in the book until its last verse', () => {
+    expect(Bible.getNextReadingVerseId(Bible.makeVerseId(tobit, 1, 22), true)).toBe(Bible.makeVerseId(tobit, 2, 1));
+  });
+
+  it('steps into the next book of the canon in display order', () => {
+    expect(Bible.getNextReadingVerseId(lastVerseOf(nehemiah), true)).toBe(Bible.makeVerseId(tobit, 1, 1));
+    expect(Bible.getNextReadingVerseId(lastVerseOf(nehemiah), false)).toBe(Bible.makeVerseId(esther, 1, 1));
+    expect(Bible.getNextReadingVerseId(lastVerseOf(tobit), true)).toBe(Bible.makeVerseId(judith, 1, 1));
+    expect(Bible.getNextReadingVerseId(lastVerseOf(bel), true)).toBe(Bible.makeVerseId(hosea, 1, 1));
+  });
+
+  it('continues into the next common book from a deuterocanonical book outside the canon', () => {
+    expect(Bible.getNextReadingVerseId(lastVerseOf(tobit), false)).toBe(Bible.makeVerseId(esther, 1, 1));
+  });
+
+  it('returns 0 after the last book', () => {
+    expect(Bible.getNextReadingVerseId(lastVerseOf(revelation), true)).toBe(0);
+    expect(Bible.getNextReadingVerseId(lastVerseOf(revelation), false)).toBe(0);
+  });
+});
+
+describe('filterRangesToCanon', () => {
+  const genesis = { startVerseId: Bible.makeVerseId(1, 1, 1), endVerseId: Bible.makeVerseId(1, 1, 5) };
+  const tobit = { startVerseId: Bible.makeVerseId(67, 1, 1), endVerseId: Bible.makeVerseId(67, 1, 5) };
+
+  it('drops deuterocanonical ranges unless they are included', () => {
+    expect(Bible.filterRangesToCanon([genesis, tobit], false)).toEqual([genesis]);
+    expect(Bible.filterRangesToCanon([genesis, tobit], true)).toEqual([genesis, tobit]);
   });
 });

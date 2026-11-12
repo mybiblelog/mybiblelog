@@ -9,7 +9,7 @@ import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { logEntryActions } from "@/src/stores/logEntries";
 import { notesActions } from "@/src/stores/passageNotes";
 import { tagActions } from "@/src/stores/passageNoteTags";
-import { useSettingsValue } from "@/src/stores/userSettings";
+import { useIncludeDeuterocanonical, useSettingsValue } from "@/src/stores/userSettings";
 import { useToast } from "@/src/toast/ToastProvider";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { LogEntryEditorModal } from "./LogEntryEditorModal";
@@ -47,6 +47,7 @@ export function useLogEntryOverlays({ entries, presetDate }: Options): LogEntryO
   const { locale } = useLocale();
   const { showToast } = useToast();
   const settings = useSettingsValue();
+  const includeDeuterocanonical = useIncludeDeuterocanonical();
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [menuClientId, setMenuClientId] = useState<string | null>(null);
@@ -91,8 +92,10 @@ export function useLogEntryOverlays({ entries, presetDate }: Options): LogEntryO
 
   // Continue reading from the verse after this entry's end, through the end of
   // that chapter (matches web `today.vue`). Only offered when a next verse
-  // exists (i.e. not the final verse of Revelation).
-  const nextVerseId = menuEntry ? Bible.getNextVerseId(menuEntry.endVerseId, true) : 0;
+  // exists (i.e. not the final verse of the reader's canon).
+  const nextVerseId = menuEntry
+    ? Bible.getNextReadingVerseId(menuEntry.endVerseId, includeDeuterocanonical)
+    : 0;
 
   const handleViewNotes = () => {
     if (!menuEntry) return;

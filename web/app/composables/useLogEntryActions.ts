@@ -1,4 +1,5 @@
 import { Bible } from '@mybiblelog/shared';
+import { useUserSettingsStore } from '~/stores/user-settings';
 
 type IdLike = number | string;
 
@@ -27,8 +28,11 @@ export function useLogEntryActions<E extends LogEntryLike>(
     continueReading?: (entry: E) => void;
   },
 ) {
+  const userSettingsStore = useUserSettingsStore();
+
   function actionsForLogEntry(entry: E): LogEntryAction[] {
-    const canContinue = Boolean(handlers.continueReading) && Boolean(Bible.getNextVerseId(entry.endVerseId, true));
+    const nextVerseId = Bible.getNextReadingVerseId(entry.endVerseId, userSettingsStore.settings.includeDeuterocanonical);
+    const canContinue = Boolean(handlers.continueReading) && Boolean(nextVerseId);
     return [
       { label: t('open_bible'), callback: () => handlers.openInBible(entry) },
       ...(canContinue

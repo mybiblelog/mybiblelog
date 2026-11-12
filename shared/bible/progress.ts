@@ -10,6 +10,7 @@ import {
   consolidateRanges,
   cropRangeToBookChapter,
   filterRangesByBookChapter,
+  filterRangesToCanon,
 } from './core/ranges';
 import { generateSegments } from './core/segments';
 import { parseVerseId } from './core/encoding';
@@ -90,15 +91,12 @@ export const computeBibleProgress = (
   // bibleOrder for the single-pointer range scan, then return the per-book
   // results in display order below.
   const canonBooks = getBooksForCanon(includeDeuterocanonical);
-  const canonBookIndexes = new Set(canonBooks.map((book) => book.bibleOrder));
-  const ascendingBookIndexes = [...canonBookIndexes].sort((a, b) => a - b);
+  const ascendingBookIndexes = canonBooks.map((book) => book.bibleOrder).sort((a, b) => a - b);
 
   // One consolidation for the whole input; ranges never span books, and the
   // result is sorted in Bible order so we can walk it with a single pointer.
   // Ranges outside the canon are dropped so they can't stall the pointer.
-  const consolidatedRanges = consolidateRanges(ranges).filter((range) =>
-    canonBookIndexes.has(parseVerseId(range.startVerseId).book),
-  );
+  const consolidatedRanges = filterRangesToCanon(consolidateRanges(ranges), includeDeuterocanonical);
 
   const booksByIndex = new Map<number, BookProgress>();
   let rangeIndex = 0;

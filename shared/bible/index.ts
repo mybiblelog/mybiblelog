@@ -17,6 +17,7 @@ import {
   getChapterVerses,
   getTotalVerseCount,
   isNewTestament,
+  isDeuterocanonical,
 } from './core/metadata';
 import {
   getFirstBookChapterVerseId,
@@ -24,6 +25,7 @@ import {
   getLastBookChapterVerseId,
   getLastBookVerseId,
   getNextVerseId,
+  getNextReadingVerseId,
   getPreviousVerseId,
 } from './core/navigation';
 import { validateRange, verseExists } from './core/validation';
@@ -38,6 +40,7 @@ import {
   cropRangeToBookChapter,
   filterRangesByBook,
   filterRangesByBookChapter,
+  filterRangesToCanon,
   getRangesBetweenVerseIds,
 } from './core/ranges';
 import {
@@ -69,12 +72,14 @@ const Bible = {
   getBookIndexByUsfmCode,
   getBookBlbCode,
   isNewTestament,
+  isDeuterocanonical,
   verseExists,
   validateRange,
   countRangeVerses,
   getBookVerseCount,
   getTotalVerseCount,
   getNextVerseId,
+  getNextReadingVerseId,
   getPreviousVerseId,
   getFirstBookChapterVerseId,
   getFirstBookVerseId,
@@ -86,6 +91,7 @@ const Bible = {
   countUniqueBookRangeVerses,
   filterRangesByBook,
   filterRangesByBookChapter,
+  filterRangesToCanon,
   cropRangeToBookChapter,
   countUniqueBookChapterRangeVerses,
   consolidateRanges,

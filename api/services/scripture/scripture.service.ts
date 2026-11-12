@@ -58,7 +58,7 @@ export const getPassageChunk = async ({ startVerseId, endVerseId, bibleVersion }
   bibleVersion: keyof typeof BibleVersions;
 }): Promise<ScripturePassageChunk> => {
   const bounds = computePassageChunkBounds(startVerseId, endVerseId);
-  const translationId = getHelloaoTranslationId(bibleVersion);
+  const translationId = getHelloaoTranslationId(bibleVersion, Bible.parseVerseId(startVerseId).book);
   const payload = await fetchHelloaoChapter(translationId, bounds.usfm, bounds.chapter);
   return {
     blocks: extractPassageBlocksFromChapter(payload, bounds.chapter, bounds.fromVerse, bounds.toVerse),

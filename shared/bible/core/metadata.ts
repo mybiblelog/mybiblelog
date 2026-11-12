@@ -42,6 +42,12 @@ export const getBooksForCanon = (includeDeuterocanonical = false): BibleBook[] =
 
 export const getChapterVerses = () => chapterVerses;
 
+const deuterocanonicalIndices = new Set(
+  bibleBooks.filter((b) => b.deuterocanonical).map((b) => b.bibleOrder),
+);
+
+export const isDeuterocanonical = (bookIndex: number): boolean => deuterocanonicalIndices.has(bookIndex);
+
 export const getBookCount = (): number => getBooks().length;
 
 // Built once at module scope: testament membership is static, and the book-list

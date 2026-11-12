@@ -34,6 +34,12 @@ export const getBookOptions = (locale = 'en', includeDeuterocanonical = false): 
     value: book.bibleOrder,
   }));
 
+/**
+ * Every book, deuterocanonical ones included, in full-canon display order. For
+ * lists whose items already reflect the reader's canon and only need ordering.
+ */
+export const getAllBookOptions = (locale = 'en'): BookOption[] => getBookOptions(locale, true);
+
 // The optional dot covers ordinals written like German "1. Korinther".
 const stripLeadingNumbers = (str: string): string => str.replace(/^\d+\.?\s*/, '').trim();
 

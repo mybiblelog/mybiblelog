@@ -1,5 +1,5 @@
 import { makeVerseId, parseVerseId, type VerseId, type VerseRange } from './encoding';
-import { getAllBooks, getBookChapterCount, getBookVerseCount, getChapterVerseCount } from './metadata';
+import { getAllBooks, getBookChapterCount, getBooksForCanon, getBookVerseCount, getChapterVerseCount } from './metadata';
 import { getFirstBookVerseId, getLastBookVerseId, getNextVerseId, getPreviousVerseId } from './navigation';
 
 /**
@@ -122,6 +122,18 @@ export const countUniqueRangeVerses = (ranges: ReadonlyArray<Readonly<VerseRange
 export const countUniqueBookRangeVerses = (bookIndex: number, ranges: ReadonlyArray<Readonly<VerseRange>>): number => {
   ranges = filterRangesByBook(bookIndex, ranges);
   return countUniqueRangeVerses(ranges);
+};
+
+/**
+ * Returns a new array comprised only of ranges whose book is in the reader's canon,
+ * so verses logged in deuterocanonical books don't count once they're excluded.
+ */
+export const filterRangesToCanon = <T extends Readonly<VerseRange>>(
+  ranges: ReadonlyArray<T>,
+  includeDeuterocanonical = false,
+): T[] => {
+  const canonBookIndexes = new Set(getBooksForCanon(includeDeuterocanonical).map((book) => book.bibleOrder));
+  return ranges.filter((range) => canonBookIndexes.has(parseVerseId(range.startVerseId).book));
 };
 
 /**

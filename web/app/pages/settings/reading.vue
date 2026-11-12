@@ -212,7 +212,7 @@ const groupedBibleVersionOptions = computed(() => {
 
 const bibleReadingDays = computed(() => {
   if (!form.dailyVerseCountGoal) { return '?'; }
-  const totalVerses = Bible.getTotalVerseCount(settings.value.includeDeuterocanonical);
+  const totalVerses = Bible.getTotalVerseCount(form.canon === 'deuterocanonical');
   return Math.ceil(totalVerses / form.dailyVerseCountGoal);
 });
 

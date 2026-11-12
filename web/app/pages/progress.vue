@@ -252,7 +252,9 @@ const daysSinceLookBackDate = computed(() => {
 });
 
 const uniqueVersesReadSinceLookBackDate = computed(() =>
-  Bible.countUniqueRangeVerses(logEntries.value),
+  Bible.countUniqueRangeVerses(
+    Bible.filterRangesToCanon(logEntries.value, userSettings.value.includeDeuterocanonical),
+  ),
 );
 
 const averageUniqueVersesReadDailySinceLookBackDate = computed(() =>

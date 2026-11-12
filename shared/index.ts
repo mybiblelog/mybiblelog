@@ -31,6 +31,7 @@ export {
 // Framework-agnostic UI/domain logic (consumable from a React hook, a Pinia
 // store, or a plain component).
 export {
+  getAllBookOptions,
   getBookOptions,
   filterAndSortBookOptions,
   type BookOption,

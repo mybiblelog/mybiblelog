@@ -1,5 +1,5 @@
 import { makeVerseId, parseVerseId, type VerseId } from './encoding';
-import { getBookChapterCount, getBookCount, getChapterVerseCount } from './metadata';
+import { getAllBooks, getBookChapterCount, getBookCount, getBooksForCanon, getChapterVerseCount } from './metadata';
 
 /**
  * Returns the next verseId. Especially used to jump from
@@ -60,6 +60,24 @@ export const getPreviousVerseId = (verseId: number, crossBooks = false): VerseId
     return 0;
   }
   return makeVerseId(book, chapter, verse);
+};
+
+/**
+ * Returns the verse a reader continues to after `verseId`: the next verse in the
+ * same book, or else the first verse of the next book in the reader's canon
+ * display order (deuterocanonical books interleaved when included). Unlike
+ * `getNextVerseId(id, true)`, which steps by bibleOrder, this never jumps from
+ * Nehemiah past Tobit or dead-ends after a deuterocanonical book.
+ * Returns `0` after the last book of the canon.
+ */
+export const getNextReadingVerseId = (verseId: number, includeDeuterocanonical = false): VerseId => {
+  const nextInBook = getNextVerseId(verseId);
+  if (nextInBook) { return nextInBook; }
+  const { book } = parseVerseId(verseId);
+  const currentOrder = getAllBooks().find((b) => b.bibleOrder === book)?.dcBookOrder;
+  if (currentOrder === undefined) { return 0; }
+  const nextBook = getBooksForCanon(includeDeuterocanonical).find((b) => b.dcBookOrder > currentOrder);
+  return nextBook ? makeVerseId(nextBook.bibleOrder, 1, 1) : 0;
 };
 
 export const getFirstBookChapterVerseId = (bookIndex: number, chapterIndex: number): VerseId => {
