@@ -1,6 +1,8 @@
-import { describe, it, expect, vi } from 'vitest';
+import { beforeEach, describe, it, expect, vi } from 'vitest';
+import { createPinia, setActivePinia } from 'pinia';
 import { Bible } from '@mybiblelog/shared';
 import { useLogEntryActions } from '~/composables/useLogEntryActions';
+import { useUserSettingsStore } from '~/stores/user-settings';
 
 const t = (key: string) => key;
 
@@ -22,6 +24,10 @@ const makeHandlers = () => ({
 });
 
 describe('useLogEntryActions', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia());
+  });
+
   it('omits continue_reading when no handler is provided (log page)', () => {
     const handlers = makeHandlers();
     const { actionsForLogEntry } = useLogEntryActions<Entry>(t, {
@@ -46,10 +52,17 @@ describe('useLogEntryActions', () => {
     const handlers = makeHandlers();
     const lastVerseId = Bible.getLastBookChapterVerseId(66, 22);
     const lastEntry: Entry = { id: 2, startVerseId: lastVerseId, endVerseId: lastVerseId };
-    expect(Bible.getNextVerseId(lastVerseId, true)).toBeFalsy();
     const { actionsForLogEntry } = useLogEntryActions<Entry>(t, handlers);
     const labels = actionsForLogEntry(lastEntry).map(a => a.label);
     expect(labels).not.toContain('continue_reading');
+  });
+
+  it('continues from the end of a deuterocanonical book when they are included', () => {
+    const lastTobitVerseId = Bible.getLastBookVerseId(67);
+    const tobitEntry: Entry = { id: 3, startVerseId: lastTobitVerseId, endVerseId: lastTobitVerseId };
+    useUserSettingsStore().settings.includeDeuterocanonical = true;
+    const { actionsForLogEntry } = useLogEntryActions<Entry>(t, makeHandlers());
+    expect(actionsForLogEntry(tobitEntry).map(a => a.label)).toContain('continue_reading');
   });
 
   it('wires callbacks to the matching handlers', () => {

@@ -155,6 +155,17 @@ const RECENT_DAY_CHAPTERS: { daysAgo: number; chapters: [number, number][] }[] =
   { daysAgo: 1, chapters: [[40, 5], [19, 100]] }, // Matthew 5; Psalm 100
 ];
 
+// Deuterocanonical reading for sc17: Tobit complete (earns its star), the rest partway.
+// Progress views ignore these while the user's canon excludes the deuterocanonical books.
+const DEUTEROCANONICAL_CHAPTERS: [book: number, chapters: number][] = [
+  [67, 14], // Tobit (all)
+  [68, 9], // Judith
+  [69, 5], // 1 Maccabees
+  [71, 7], // Wisdom
+  [72, 12], // Sirach
+];
+const DEUTEROCANONICAL_START_DAYS_AGO = 200;
+
 // Persisted for the whole run (not cleaned up like seedTodayGoalEntries's temporary block) so
 // the Today page's own entries list has realistic, varied content on every screenshot.
 const TODAY_PASSAGES: { book: number; chapter: number; startVerse?: number; endVerse?: number }[] = [
@@ -355,6 +366,18 @@ export async function setupUser(): Promise<void> {
     }
   }
 
+  let dcDaysAgo = DEUTEROCANONICAL_START_DAYS_AGO;
+  for (const [book, chapterCount] of DEUTEROCANONICAL_CHAPTERS) {
+    for (let chapter = 1; chapter <= chapterCount; chapter++) {
+      await repositories.logEntries.create(screenshotUserId, {
+        date: dateString(dcDaysAgo--),
+        startVerseId: Bible.makeVerseId(book, chapter, 1),
+        endVerseId: Bible.makeVerseId(book, chapter, Bible.getChapterVerseCount(book, chapter)),
+      });
+      logEntryCount++;
+    }
+  }
+
   // Last few days: curated multi-book reading so reading suggestions have distinct
   // "continue where you left off" books to offer.
   for (const { daysAgo, chapters } of RECENT_DAY_CHAPTERS) {
@@ -395,6 +418,10 @@ export async function resetLocaleData(): Promise<void> {
       await repositories.logEntries.deleteByIdForOwner(screenshotUserId, entry.id);
     }
   }
+}
+
+export async function setCanon(includeDeuterocanonical: boolean): Promise<void> {
+  await repositories.users.updateSettings(screenshotUserId, { includeDeuterocanonical });
 }
 
 export async function seedLocaleContent(locale: Locale): Promise<void> {

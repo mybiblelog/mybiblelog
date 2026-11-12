@@ -1,5 +1,6 @@
 // Language-neutral data for the public Books of the Bible pages
-// (pages/books-of-the-bible). Index 0 = Genesis (bibleOrder 1).
+// (pages/books-of-the-bible). Index 0 = Genesis (bibleOrder 1); the
+// deuterocanonical books (bibleOrder 67-77) follow Revelation.
 // The per-locale overview prose lives in ./bible-book-overviews/<locale>.ts;
 // passage references are built per locale from Bible.getBookName(book, locale).
 
@@ -12,7 +13,8 @@ export type BibleBookSection =
   | 'gospels'
   | 'letters_of_paul'
   | 'general_letters'
-  | 'prophecy';
+  | 'prophecy'
+  | 'deuterocanonical';
 
 export type BibleBookGuide = {
   section: BibleBookSection;
@@ -87,6 +89,17 @@ const bibleBookGuides: readonly BibleBookGuide[] = [
   { section: 'general_letters', keyPassages: ['1:4', '1:11'] },
   { section: 'general_letters', keyPassages: ['1:3', '1:24–25'] },
   { section: 'prophecy', keyPassages: ['1:4–8', '5', '21:1–5'] },
+  { section: 'deuterocanonical', keyPassages: ['4:15', '8:4–8', '12:6–15'] },
+  { section: 'deuterocanonical', keyPassages: ['8:11–27', '9', '13:1–10'] },
+  { section: 'deuterocanonical', keyPassages: ['1:41–64', '2:15–28', '4:36–59'] },
+  { section: 'deuterocanonical', keyPassages: ['7', '12:43–45', '15:12–16'] },
+  { section: 'deuterocanonical', keyPassages: ['3:1–9', '7:22–30', '11:24–26'] },
+  { section: 'deuterocanonical', keyPassages: ['2:1–6', '6:14–17', '44:1–15'] },
+  { section: 'deuterocanonical', keyPassages: ['3:9–14', '5:1–9'] },
+  { section: 'deuterocanonical', keyPassages: ['3:1–11', '3:12–30', '4:1–16'] },
+  { section: 'deuterocanonical', keyPassages: ['1:3–22', '1:35–66'] },
+  { section: 'deuterocanonical', keyPassages: ['1:22–23', '1:42–62'] },
+  { section: 'deuterocanonical', keyPassages: ['1:3–7', '1:23–27'] },
 ];
 
 export default bibleBookGuides;

@@ -52,11 +52,12 @@ useContentSeo({
       softwareVersion: '1.0',
       url: siteUrl,
       screenshot: [
-        `${siteUrl}/screenshots/sc7-bible-progress.webp`,
-        `${siteUrl}/screenshots/sc12-checklist.webp`,
-        `${siteUrl}/screenshots/sc10-notes.webp`,
-        `${siteUrl}/screenshots/sc9-calendar.webp`,
-        `${siteUrl}/screenshots/sc4-daily-goal.webp`,
+        `${siteUrl}/screenshots/${locale.value}/sc7-bible-progress.webp`,
+        `${siteUrl}/screenshots/${locale.value}/sc17-deuterocanonical.webp`,
+        `${siteUrl}/screenshots/${locale.value}/sc12-checklist.webp`,
+        `${siteUrl}/screenshots/${locale.value}/sc10-notes.webp`,
+        `${siteUrl}/screenshots/${locale.value}/sc9-calendar.webp`,
+        `${siteUrl}/screenshots/${locale.value}/sc4-daily-goal.webp`,
       ],
       offers: {
         '@type': 'Offer',

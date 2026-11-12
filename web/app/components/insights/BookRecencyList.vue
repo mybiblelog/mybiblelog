@@ -86,6 +86,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import { Bible, computeBookRecency, type InsightsLogEntry } from '@mybiblelog/shared';
+import { useUserSettingsStore } from '~/stores/user-settings';
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
@@ -98,6 +99,7 @@ const props = defineProps({
 });
 
 const { locale, t } = useI18n();
+const userSettingsStore = useUserSettingsStore();
 
 const timeframeOptions = [30, 60, 90, 180, 365];
 const timeframe = ref<number | 'all'>(365);
@@ -105,7 +107,7 @@ const bookScope = ref<'all' | 'old' | 'new'>('all');
 const sortDir = ref<'bible' | 'alpha' | 'recent' | 'oldest'>('recent');
 
 const newTestamentBooks = new Set(
-  Bible.getBooks().filter(book => book.newTestament).map(book => book.bibleOrder),
+  Bible.getAllBooks().filter(book => book.newTestament).map(book => book.bibleOrder),
 );
 
 const stripLeadingNumbers = (str: string) => str.replace(/^\d+\s*/, '').trim();
@@ -117,14 +119,17 @@ const rows = computed(() => {
     ? entries.reduce((min, e) => (e.date < min ? e.date : min), endDate)
     : dayjs().subtract((timeframe.value as number) - 1, 'day').format('YYYY-MM-DD');
 
-  const data = computeBookRecency(entries, startDate, endDate)
+  const data = computeBookRecency(entries, startDate, endDate, {
+    includeDeuterocanonical: userSettingsStore.settings.includeDeuterocanonical,
+  })
     .filter((book) => {
       if (bookScope.value === 'old') { return !newTestamentBooks.has(book.bookIndex); }
       if (bookScope.value === 'new') { return newTestamentBooks.has(book.bookIndex); }
       return true;
     })
-    .map(book => ({
+    .map((book, order) => ({
       bookIndex: book.bookIndex,
+      order,
       bookName: Bible.getBookName(book.bookIndex, locale.value),
       level: book.level,
       lastReadDate: book.lastReadDate,
@@ -133,10 +138,10 @@ const rows = computed(() => {
     }));
 
   return data.sort((a, b) => {
-    if (sortDir.value === 'bible') { return a.bookIndex - b.bookIndex; }
+    if (sortDir.value === 'bible') { return a.order - b.order; }
     if (sortDir.value === 'alpha') { return stripLeadingNumbers(a.bookName).localeCompare(stripLeadingNumbers(b.bookName), locale.value); }
     // Books not read in the timeframe always sort last.
-    if (!a.lastReadDate && !b.lastReadDate) { return a.bookIndex - b.bookIndex; }
+    if (!a.lastReadDate && !b.lastReadDate) { return a.order - b.order; }
     if (!a.lastReadDate) { return 1; }
     if (!b.lastReadDate) { return -1; }
     return sortDir.value === 'recent'

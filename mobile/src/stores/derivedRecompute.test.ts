@@ -14,12 +14,13 @@ function setEntriesReady(entries: unknown[]): void {
   });
 }
 
-function setSettingsReady(lookBackDate: string): void {
+function setSettingsReady(lookBackDate: string, includeDeuterocanonical?: boolean): void {
   useUserSettingsStore.setState({
     state: {
       status: "ready",
       settings: {
         lookBackDate,
+        includeDeuterocanonical,
         dailyVerseCountGoal: 86,
         preferredBibleVersion: "kjv",
         preferredBibleApp: "",
@@ -107,6 +108,22 @@ describe("subscribeDerivedRecompute", () => {
     setSettingsReady("2026-01-01");
     jest.advanceTimersByTime(50);
     expect(recompute).toHaveBeenCalledTimes(2);
+  });
+
+  it("recomputes when the canon changes, but not on an unrelated settings write", () => {
+    const recompute = jest.fn();
+    subscribeDerivedRecompute(recompute);
+    setSettingsReady("2026-01-01");
+    jest.advanceTimersByTime(50);
+    recompute.mockClear();
+
+    setSettingsReady("2026-01-01", true);
+    jest.advanceTimersByTime(50);
+    expect(recompute).toHaveBeenCalledTimes(1);
+
+    setSettingsReady("2026-01-01", true);
+    jest.advanceTimersByTime(50);
+    expect(recompute).toHaveBeenCalledTimes(1);
   });
 
   it("does not recompute again when the entries reference is unchanged", () => {

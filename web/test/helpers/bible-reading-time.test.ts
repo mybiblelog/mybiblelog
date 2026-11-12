@@ -11,16 +11,18 @@ import {
 
 describe('bible reading time', () => {
   it('has a word count for every book', () => {
-    expect(bibleBookWordCounts).toHaveLength(66);
+    expect(bibleBookWordCounts).toHaveLength(77);
     bibleBookWordCounts.forEach(count => expect(count).toBeGreaterThan(0));
     expect(getBookWordCount(0)).toBe(0);
-    expect(getBookWordCount(67)).toBe(0);
+    expect(getBookWordCount(67)).toBeGreaterThan(0);
+    expect(getBookWordCount(78)).toBe(0);
   });
 
   it('estimates reading minutes at 238 words per minute', () => {
     expect(getBookReadingMinutes(1)).toBe(Math.round(getBookWordCount(1) / 238));
     // very short books still round up to at least a minute
     expect(getBookReadingMinutes(64)).toBeGreaterThanOrEqual(1);
+    // the total covers only the 66 common books
     expect(Math.round(getTotalWordCount() / 238 / 60)).toBe(51);
   });
 

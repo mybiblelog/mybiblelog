@@ -18,6 +18,8 @@ export const userSettingsBaseSchema = z.object({
     .describe(`How tags are sorted: one of ${PassageNoteTagSortOrders.join(', ')}`),
   locale: z.string().refine((value) => (localeCodes as readonly string[]).includes(value))
     .describe(`UI locale code: one of ${localeCodes.join(', ')}`),
+  includeDeuterocanonical: z.boolean()
+    .describe('Whether deuterocanonical books are included in the reader\'s canon'),
 });
 
 /** Settings updates accept any subset of the settings fields. */

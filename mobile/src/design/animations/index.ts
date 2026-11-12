@@ -1,4 +1,5 @@
 export { useScalePress } from "./useScalePress";
+export { useEntering } from "./entering";
 export { fadeIn, fadeOut } from "./fade";
 export { slideUp, slideDown } from "./slide";
 export { listItemEnter, listItemExit, listLayout } from "./listItem";

@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-11-11"
+dateModified: "2026-11-12"
 seo:
   title: "My Bible Log: Free Bible Reading Tracker — Features & Guides"
   description: "Everything My Bible Log can do: track your Bible reading by chapter, set daily goals, take study notes, and follow guides like how to read the Bible in a year."
@@ -12,7 +12,7 @@ og:
 
 <img src="/share.jpg" alt="My Bible Log - free Bible reading tracker">
 
-My Bible Log is a free Bible reading tracker. Log the chapters you read, set a daily reading goal, see your progress through all 66 books of the Bible, and take organized study notes. You can follow any reading plan, or none at all. There are no ads and no subscriptions.
+My Bible Log is a free Bible reading tracker. Log the chapters you read, set a daily reading goal, see your progress through all 66 books of the Bible (and the deuterocanonical books, if your Bible includes them), and take organized study notes. You can follow any reading plan, or none at all. There are no ads and no subscriptions.
 
 ## Guides
 
@@ -29,7 +29,7 @@ My Bible Log is a free Bible reading tracker. Log the chapters you read, set a d
 
 ## Free Resources
 
-* [Books of the Bible: All 66 Books with Chapters, Verses & Reading Time](/books-of-the-bible)
+* [Books of the Bible: All 66 Books Plus the Deuterocanon, with Chapters, Verses & Reading Time](/books-of-the-bible)
 * [Printable Bible Reading Tracker](/resources/printable-bible-reading-tracker)
 
 ## Features

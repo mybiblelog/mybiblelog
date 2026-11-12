@@ -3,9 +3,14 @@ Lee toda la Biblia — a tu manera.
 La mayoría de los planes de lectura te dicen qué leer y cuándo. My Bible Log funciona diferente: simplemente registras lo que ya leíste — de sermones, devocionales, grupos pequeños o estudio personal — y todo cuenta para tu progreso. Sin horarios rígidos. Sin culpa si te pierdes un día. Además, puedes llevar un diario de estudio con notas ligadas a los pasajes de los que tratan.
 
 SIGUE TU PROGRESO
-• Ve tu progreso en cada capítulo, cada libro y toda la Biblia — los 66 libros, los 1.189 capítulos
+• Ve tu progreso en cada capítulo, cada libro y toda la Biblia — los 66 libros y 1.189 capítulos, y también los deuterocanónicos si tu Biblia los incluye
 • Gana estrellas al completar cada libro
 • Recibe una fecha estimada de finalización según tu ritmo real de lectura
+
+TU BIBLIA, TU CANON
+• ¿Lees una Biblia católica u ortodoxa? Activa los libros deuterocanónicos — Tobías, Judit, 1 y 2 Macabeos, Sabiduría, Eclesiástico, Baruc y más
+• Aparecen en el orden canónico católico entre los libros del Antiguo Testamento y cuentan para tu progreso, tu lista de capítulos y tu meta diaria
+• Cambia tu canon cuando quieras en la configuración
 
 LLEVA UN DIARIO DE ESTUDIO BÍBLICO
 • Guarda preguntas, descubrimientos, oraciones y notas de sermones ligadas a los pasajes de los que tratan

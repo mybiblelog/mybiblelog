@@ -235,7 +235,11 @@ const dateVerseCountsBusy = computed(() => dateVerseCountsStore.busy);
 const logEntries = computed(() => logEntriesStore.currentLogEntries);
 const userSettings = computed(() => userSettingsStore.settings);
 
-const totalBibleVerseCount = Bible.getTotalVerseCount();
+// Total verses for the reader's selected canon, so progress is measured against
+// the same book set shown on the /books and /checklist pages.
+const totalBibleVerseCount = computed(() =>
+  Bible.getTotalVerseCount(userSettings.value.includeDeuterocanonical),
+);
 
 const newVersesReadToday = computed(() =>
   dateVerseCountsStore.getDateVerseCounts(dayjs().format('YYYY-MM-DD')).unique,
@@ -248,7 +252,9 @@ const daysSinceLookBackDate = computed(() => {
 });
 
 const uniqueVersesReadSinceLookBackDate = computed(() =>
-  Bible.countUniqueRangeVerses(logEntries.value),
+  Bible.countUniqueRangeVerses(
+    Bible.filterRangesToCanon(logEntries.value, userSettings.value.includeDeuterocanonical),
+  ),
 );
 
 const averageUniqueVersesReadDailySinceLookBackDate = computed(() =>
@@ -256,7 +262,7 @@ const averageUniqueVersesReadDailySinceLookBackDate = computed(() =>
 );
 
 const unreadVerses = computed(() =>
-  totalBibleVerseCount - uniqueVersesReadSinceLookBackDate.value,
+  totalBibleVerseCount.value - uniqueVersesReadSinceLookBackDate.value,
 );
 
 const daysToFinishBibleBasedOnLookBackDateAverage = computed(() => {

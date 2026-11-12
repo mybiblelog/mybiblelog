@@ -45,10 +45,11 @@ test('can get book names', () => {
 
 test('should get empty string for nonexistant book names', () => {
   const bookName0 = Bible.getBookName(0);
-  const bookName67 = Bible.getBookName(67);
+  // 78 is beyond the last deuterocanonical book (Bel and the Dragon = 77).
+  const bookName78 = Bible.getBookName(78);
 
   expect(bookName0).toBe('');
-  expect(bookName67).toBe('');
+  expect(bookName78).toBe('');
 });
 
 test('can convert between book slugs and indexes', () => {
@@ -82,10 +83,10 @@ test('can get book USFM codes', () => {
 
 test('should get empty string for nonexistant book USFM codes', () => {
   const usfmCode0 = Bible.getBookUsfmCode(0);
-  const usfmCode67 = Bible.getBookUsfmCode(67);
+  const usfmCode78 = Bible.getBookUsfmCode(78);
 
   expect(usfmCode0).toBe('');
-  expect(usfmCode67).toBe('');
+  expect(usfmCode78).toBe('');
 });
 
 test('can get book Blue Letter Bible codes', () => {
@@ -95,10 +96,10 @@ test('can get book Blue Letter Bible codes', () => {
 
 test('should get empty string for nonexistant book Blue Letter Bible codes', () => {
   const blbCode0 = Bible.getBookBlbCode(0);
-  const blbCode67 = Bible.getBookBlbCode(67);
+  const blbCode78 = Bible.getBookBlbCode(78);
 
   expect(blbCode0).toBe('');
-  expect(blbCode67).toBe('');
+  expect(blbCode78).toBe('');
 });
 
 test('can identify which testament a book belongs to', () => {
@@ -147,7 +148,8 @@ test('getBookIndex falls back to English when a locale has no data for a book', 
 });
 
 test('should fail verse validation if book invalid', () => {
-  const valid = Bible.verseExists(167001001);
+  // 78 is beyond the last deuterocanonical book (Bel and the Dragon = 77).
+  const valid = Bible.verseExists(178001001);
   expect(valid).toBe(false);
 });
 
@@ -196,10 +198,11 @@ test('should get book chapter counts', () => {
 
 test('should get zero for nonexistant book chapter counts', () => {
   const bookChapterCount0 = Bible.getBookChapterCount(0);
-  const bookChapterCount67 = Bible.getBookChapterCount(67);
+  // 78 is beyond the last deuterocanonical book (Bel and the Dragon = 77).
+  const bookChapterCount78 = Bible.getBookChapterCount(78);
 
   expect(bookChapterCount0).toBe(0);
-  expect(bookChapterCount67).toBe(0);
+  expect(bookChapterCount78).toBe(0);
 });
 
 test('should get chapter verse counts', () => {
@@ -216,8 +219,8 @@ test('should get zero for nonexistant chapter verse counts', () => {
   // chapter < count
   const nonChapterVerses2 = Bible.getChapterVerseCount(1, 0);
 
-  // book > count
-  const nonChapterVerses3 = Bible.getChapterVerseCount(67, 1);
+  // book > count (78 is beyond the last deuterocanonical book, Bel and the Dragon = 77)
+  const nonChapterVerses3 = Bible.getChapterVerseCount(78, 1);
 
   // chapter > count
   const nonChapterVerses4 = Bible.getChapterVerseCount(66, 23);

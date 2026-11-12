@@ -5,6 +5,7 @@ import {
   evaluateAchievement,
 } from "@mybiblelog/shared";
 import { countCompletedBooks, maybeRequestReview } from "@/src/review/reviewPrompt";
+import { getIncludeDeuterocanonical } from "@/src/stores/userSettings";
 
 /**
  * Achievements store (Zustand).
@@ -65,7 +66,9 @@ export const achievementActions = {
     before: readonly CompletionLogEntry[],
     after: readonly CompletionLogEntry[]
   ): void => {
-    const event: AchievementEvent = evaluateAchievement(bookIndex, before, after);
+    const event: AchievementEvent = evaluateAchievement(bookIndex, before, after, {
+      includeDeuterocanonical: getIncludeDeuterocanonical(),
+    });
     if (event) {
       pendingReviewEntries = after;
       useAchievementsStore.getState().show(event);

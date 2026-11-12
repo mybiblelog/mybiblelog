@@ -128,7 +128,7 @@ function openEditEntryForm(id: number | string) {
 }
 
 function continueReadingPassage(passage: { endVerseId: number }) {
-  const nextVerseId = Bible.getNextVerseId(passage.endVerseId, true);
+  const nextVerseId = Bible.getNextReadingVerseId(passage.endVerseId, userSettingsStore.settings.includeDeuterocanonical);
   if (!nextVerseId) { return; }
   const { book, chapter } = Bible.parseVerseId(nextVerseId);
   openPassageInBible({

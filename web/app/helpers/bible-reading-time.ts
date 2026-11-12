@@ -10,7 +10,9 @@ export const getBookWordCount = (bookIndex: number): number => bibleBookWordCoun
 export const getBookReadingMinutes = (bookIndex: number): number =>
   Math.max(1, Math.round(getBookWordCount(bookIndex) / WORDS_PER_MINUTE));
 
-export const getTotalWordCount = (): number => bibleBookWordCounts.reduce((sum, count) => sum + count, 0);
+/** Total words in the 66 common books (deuterocanonical books excluded). */
+export const getTotalWordCount = (): number =>
+  bibleBookWordCounts.slice(0, Bible.getBookCount()).reduce((sum, count) => sum + count, 0);
 
 export type ReadingTimeUnits = {
   hour: string;

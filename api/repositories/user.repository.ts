@@ -25,6 +25,7 @@ const USER_SETTINGS_KEYS: (keyof UserSettingsRecord)[] = [
   'startPage',
   'passageNoteTagSortOrder',
   'locale',
+  'includeDeuterocanonical',
 ];
 
 const toUserSettingsRecord = (settings: UserSettingsDocument): UserSettingsRecord => {
@@ -35,6 +36,8 @@ const toUserSettingsRecord = (settings: UserSettingsDocument): UserSettingsRecor
     startPage: settings.startPage,
     passageNoteTagSortOrder: settings.passageNoteTagSortOrder,
     locale: settings.locale,
+    // Default legacy documents (created before this field existed) to false.
+    includeDeuterocanonical: settings.includeDeuterocanonical ?? false,
   };
 };
 
@@ -457,10 +460,10 @@ export const createUserRepository = ({ users }: Collections) => {
     },
 
     async updateSettings(userId: string, patch: Partial<UserSettingsRecord>): Promise<UserSettingsRecord> {
-      const set: Record<string, string | number> = {};
+      const set: Record<string, string | number | boolean> = {};
       for (const key of USER_SETTINGS_KEYS) {
         if (typeof patch[key] !== 'undefined') {
-          set[`settings.${key}`] = patch[key] as string | number;
+          set[`settings.${key}`] = patch[key] as string | number | boolean;
         }
       }
 

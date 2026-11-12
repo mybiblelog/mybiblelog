@@ -67,6 +67,14 @@ export const defaultLocaleBibleVersions = {
  */
 export const HELLOAO_DEFAULT_TRANSLATION_ID = 'BSB';
 
+/**
+ * HelloAO translation for deuterocanonical passages (King James Version +
+ * Apocrypha), whatever the reader's version: most mapped translations, BSB
+ * included, have no deuterocanonical books, and this one matches the KJV-1611
+ * Apocrypha versification the deuterocanonical verse data follows.
+ */
+export const HELLOAO_DEUTEROCANONICAL_TRANSLATION_ID = 'eng_kja';
+
 /*
  * Where to find each provider's own currently-supported-translations list,
  * for whoever adds the next entry to {@link bibleVersions} below:

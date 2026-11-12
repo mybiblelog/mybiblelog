@@ -136,9 +136,10 @@ export default function BibleIndex() {
     const totalVerses = books.reduce((sum, book) => sum + book.totalVerses, 0);
     const versesRead = books.reduce((sum, book) => sum + book.versesRead, 0);
     const percentage = totalVerses ? Math.floor((versesRead / totalVerses) * 100) : 0;
-    // The overall bar always reads Genesis → Revelation, whatever the list order.
-    const segments = [...books]
-      .sort((a, b) => a.bookIndex - b.bookIndex)
+    // The overall bar always reads in canon order (Genesis → Revelation), whatever the list order.
+    const visible = new Set(books.map((book) => book.bookIndex));
+    const segments = progress.books
+      .filter((book) => visible.has(book.bookIndex))
       .flatMap((book) => book.segments);
     return { books, percentage, segments };
   }, [progress, bookListPrefs, locale]);
@@ -194,7 +195,7 @@ export default function BibleIndex() {
         key={`${testament}-${sortOrder}`}
         data={filtered.books}
         keyExtractor={(item) => String(item.bookIndex)}
-        // Fixed-size list (66 books): render it all up front instead of
+        // Fixed-size list (66 or 77 books): render it all up front instead of
         // FlatList's default incremental backfill, so the page doesn't
         // visibly grow after mount.
         initialNumToRender={filtered.books.length}

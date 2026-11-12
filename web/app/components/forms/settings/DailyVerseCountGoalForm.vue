@@ -121,9 +121,14 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
+import { Bible } from '@mybiblelog/shared';
 import { useUserSettingsStore } from '~/stores/user-settings';
 
-const TOTAL_BIBLE_VERSES = 31102;
+// Total verses depend on the reader's canon, which is chosen earlier in the
+// onboarding flow, so the "read in a year" style goals reflect that choice.
+const totalBibleVerses = computed(() =>
+  Bible.getTotalVerseCount(useUserSettingsStore().settings.includeDeuterocanonical),
+);
 
 type GoalOption = 'year' | '2years' | '6months' | 'specific' | 'ownpace';
 
@@ -179,14 +184,14 @@ const calculatedDailyGoal = computed(() => {
   if (selectedOption.value !== 'specific' || !daysToFinish.value || daysToFinish.value <= 0) {
     return null;
   }
-  return Math.ceil(TOTAL_BIBLE_VERSES / daysToFinish.value);
+  return Math.ceil(totalBibleVerses.value / daysToFinish.value);
 });
 
 const calculatedFinishDate = computed(() => {
   if (selectedOption.value !== 'ownpace' || !dailyVerseCountGoal.value || dailyVerseCountGoal.value <= 0) {
     return null;
   }
-  const daysNeeded = Math.ceil(TOTAL_BIBLE_VERSES / dailyVerseCountGoal.value);
+  const daysNeeded = Math.ceil(totalBibleVerses.value / dailyVerseCountGoal.value);
   return displayDate(dayjs().add(daysNeeded, 'day').format('YYYY-MM-DD'));
 });
 
@@ -199,7 +204,7 @@ function getDailyGoalForOption(option: GoalOption) {
   case '6months': days = today.add(6, 'month').diff(today, 'day'); break;
   default: return 0;
   }
-  return Math.ceil(TOTAL_BIBLE_VERSES / days);
+  return Math.ceil(totalBibleVerses.value / days);
 }
 
 function getFinishDateForOption(option: GoalOption) {

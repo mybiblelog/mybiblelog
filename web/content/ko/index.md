@@ -1,7 +1,8 @@
 ---
+dateModified: "2026-11-11"
 seo:
   title: My Bible Log - 무료 성경읽기 기록 서비스
-  description: My Bible Log로 성경읽기 진도를 기록할 수 있는 무료 온라인 성경 진도 기록 서비스입니다. 매일 목표를 세우고, 노트를 남기고, 66권 전체 진도를 확인하세요. 무광고, 무월정액 — 완전히 무료입니다.
+  description: My Bible Log로 성경읽기 진도를 기록할 수 있는 무료 온라인 성경 진도 기록 서비스입니다. 매일 목표를 세우고, 노트를 남기고, 66권 전체와 제2경전까지 진도를 확인하세요. 무광고, 무월정액 — 완전히 무료입니다.
 og:
   title: My Bible Log - 무료 성경읽기 기록 서비스
   description: My Bible Log로 성경읽기 진도를 기록할 수 있는 무료 온라인 성경 진도 기록 서비스입니다. 매일 목표를 세우고,
@@ -90,6 +91,27 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/ko/sc17-deuterocanonical.webp
+image-alt: "토빗기, 유딧기, 마카베오상이 구약 책들 사이에 읽기 진도와 함께 표시된 My Bible Log 성경 목록 화면"
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: "내 성경의 모든 책을 기록하세요"
+subtitle: "가톨릭·정교회 정경 지원"
+description: >-
+  가톨릭이나 정교회 성경으로 읽으시나요? <strong>제2경전</strong>을 켜면 토빗기, 유딧기, 마카베오상·하, 지혜서, 집회서, 바룩서 등이 가톨릭 정경 순서에 따라 구약 책들 사이에 배치됩니다.
+list:
+  - "읽기 설정에서 언제든지 정경을 바꿀 수 있습니다"
+  - "진도, 장 체크리스트, 매일 목표가 선택한 정경 전체에 적용됩니다"
+  - "웹과 Android에서 모두 사용할 수 있습니다"
+button-text: 무료로 시작하기
+button-destination: /register
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/ko/sc15-insights-activity.webp
 image-alt: 매일의 성경읽기 활동을 GitHub 스타일 그래프로 보여주는 My Bible Log 통계 페이지
 image-width: "750"
@@ -103,7 +125,7 @@ list:
   - 읽기 습관의 패턴을 발견할 수 있습니다
   - 긴 연속 읽기 기록을 기념할 수 있습니다
   - 1년치 활동을 한 화면에서 볼 수 있습니다
-reverse: false
+reverse: true
 ---
 ::
 
@@ -123,7 +145,7 @@ list:
   - 언제든지 읽기 기록을 내보내거나 불러올 수 있습니다
 button-text: 무료로 시작하기
 button-destination: /register
-reverse: true
+reverse: false
 ---
 ::
 
@@ -138,7 +160,7 @@ title: 읽으며 바로 메모
 subtitle: 유연한 성경 읽기 노트
 description: >-
   성경을 공부하면서 떠오르는 질문, 통찰, 묵상을 기록하세요. <strong>사용자 정의 태그</strong>로 노트를 정리하면 자신만의 공부 스타일에 맞게 활용할 수 있습니다. 암송구절, 주제별 정리, 열린 질문 등 다양하게 활용해 보세요.
-reverse: false
+reverse: true
 ---
 ::
 
@@ -153,7 +175,7 @@ title: 기록은 몇 초 컷
 subtitle: 빠른 장별 기록
 description: >-
   시간이 부족한가요? <strong>클릭 한 번</strong>으로 읽은 장을 표시할 수 있습니다. 타이핑이 필요 없습니다.
-reverse: true
+reverse: false
 ---
 ::
 
@@ -172,6 +194,6 @@ list:
   - 무료입니다
 button-text: 무료로 시작하기
 button-destination: /register
-reverse: false
+reverse: true
 ---
 ::

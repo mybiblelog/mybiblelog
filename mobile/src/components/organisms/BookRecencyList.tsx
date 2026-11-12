@@ -10,6 +10,7 @@ import { SelectRow } from "../molecules/SelectRow";
 import { SelectSheet } from "./SelectSheet";
 import { getRelativeDateInfo } from "@/src/i18n/date";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
+import { useIncludeDeuterocanonical } from "@/src/stores/userSettings";
 
 type SortOrder = "bible" | "alpha" | "recent" | "oldest";
 type Timeframe = number | "all";
@@ -19,7 +20,7 @@ type T = ReturnType<typeof useT>;
 const TIMEFRAME_OPTIONS = [30, 60, 90, 180, 365];
 
 const newTestamentBooks = new Set(
-  Bible.getBooks()
+  Bible.getAllBooks()
     .filter((book) => book.newTestament)
     .map((book) => book.bibleOrder)
 );
@@ -58,6 +59,7 @@ export function BookRecencyList({ entries }: { entries: InsightsLogEntry[] }) {
   const { locale } = useLocale();
   const { colors, scheme } = useTheme();
   const recency = recencyByScheme[scheme];
+  const includeDeuterocanonical = useIncludeDeuterocanonical();
   const [days, setDays] = useState<Timeframe>(365);
   const [testament, setTestament] = useState<Testament>("all");
   const [sort, setSort] = useState<SortOrder>("recent");
@@ -94,21 +96,22 @@ export function BookRecencyList({ entries }: { entries: InsightsLogEntry[] }) {
             .subtract(days - 1, "day")
             .format("YYYY-MM-DD");
 
-    const data = computeBookRecency(entries, startDate, endDate)
+    const data = computeBookRecency(entries, startDate, endDate, { includeDeuterocanonical })
       .filter((book) => {
         if (testament === "old") return !newTestamentBooks.has(book.bookIndex);
         if (testament === "new") return newTestamentBooks.has(book.bookIndex);
         return true;
       })
-      .map((book) => ({
+      .map((book, order) => ({
         bookIndex: book.bookIndex,
+        order,
         bookName: Bible.getBookName(book.bookIndex, locale),
         level: book.level,
         lastReadDate: book.lastReadDate,
       }));
 
     return data.sort((a, b) => {
-      if (sort === "bible") return a.bookIndex - b.bookIndex;
+      if (sort === "bible") return a.order - b.order;
       if (sort === "alpha") {
         return stripLeadingNumbers(a.bookName).localeCompare(
           stripLeadingNumbers(b.bookName),
@@ -116,14 +119,14 @@ export function BookRecencyList({ entries }: { entries: InsightsLogEntry[] }) {
         );
       }
       // Books not read in the timeframe always sort last.
-      if (!a.lastReadDate && !b.lastReadDate) return a.bookIndex - b.bookIndex;
+      if (!a.lastReadDate && !b.lastReadDate) return a.order - b.order;
       if (!a.lastReadDate) return 1;
       if (!b.lastReadDate) return -1;
       return sort === "recent"
         ? b.lastReadDate.localeCompare(a.lastReadDate)
         : a.lastReadDate.localeCompare(b.lastReadDate);
     });
-  }, [entries, days, testament, sort, locale]);
+  }, [entries, days, testament, sort, locale, includeDeuterocanonical]);
 
   return (
     <View style={styles.container}>

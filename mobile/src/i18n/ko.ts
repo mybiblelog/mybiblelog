@@ -368,6 +368,11 @@ export const ko = {
   delete_account_unable: "계정을 삭제할 수 없습니다. 나중에 다시 시도해 주세요.",
 
   settings_select_option: "옵션 선택",
+  settings_reading_canon_title: "정경",
+  settings_reading_canon_common: "공통 66권",
+  settings_reading_canon_deuterocanonical: "제2경전 포함",
+  settings_reading_canon_info:
+    "추적할 책을 선택하세요. 제2경전은 가톨릭 정경 순서에 따라 구약 책들 사이에 추가되며 읽기 진도에 포함됩니다.",
   settings_reading_daily_goal_title: "일일 구절 목표",
   settings_reading_look_back_date_title: "추적기 시작일",
   settings_reading_preferred_bible_version_title: "선호하는 성경 번역본",
@@ -397,6 +402,16 @@ export const ko = {
     "My Bible Log를 최대한 유용하게 활용할 수 있도록 개인화 설정을 도와드리겠습니다.",
   onboarding_welcome_next: "내 설정 개인화하기",
   onboarding_welcome_skip: "개인화 설정 건너뛰기",
+  onboarding_canon_title: "정경 선택",
+  onboarding_canon_description:
+    "성경의 어떤 책을 추적하시겠습니까? 이 선택은 표시되는 책과 진도를 측정하는 성경 전체 분량을 결정합니다.",
+  onboarding_canon_total_verses: "전체 구절 수",
+  onboarding_canon_common_title: "공통 66권",
+  onboarding_canon_common_description:
+    "모든 기독교 성경에 공통으로 들어 있는 66권으로, 창세기부터 요한계시록까지입니다.",
+  onboarding_canon_deuterocanonical_title: "제2경전 포함",
+  onboarding_canon_deuterocanonical_description:
+    "가톨릭 정경 순서에 따라 구약 책들 사이에 제2경전을 추가합니다.",
   onboarding_goal_title: "일일 읽기 목표",
   onboarding_goal_description:
     "매일 몇 구절을 읽고 싶으신가요? My Bible Log는 이 목표를 향한 진도를 표시해줍니다.",

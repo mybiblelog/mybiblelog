@@ -15,6 +15,8 @@ export type LocalUserSettings = {
    * Server-persisted tag sort order for the Tags screen (shared with web).
    */
   passageNoteTagSortOrder?: string;
+  /** Server-persisted canon choice; absent means the 66-book common canon. */
+  includeDeuterocanonical?: boolean;
 };
 
 export const DEFAULT_LOCAL_USER_SETTINGS: LocalUserSettings = {

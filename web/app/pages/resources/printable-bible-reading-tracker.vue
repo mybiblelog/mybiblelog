@@ -12,6 +12,16 @@
             </button>
           </div>
         </header>
+        <div class="mbl-box tracker-options">
+          <label class="mbl-checkbox">
+            <input
+              v-model="includeDeuterocanonical"
+              type="checkbox"
+              data-testid="printable-tracker-include-dc"
+              :disabled="!mounted"
+            > {{ t('include_dc') }}
+          </label>
+        </div>
         <div class="mbl-content">
           <p>{{ t('content.this_is') }}</p>
           <p>{{ t('content.printer_friendly') }}</p>
@@ -22,6 +32,7 @@
           </i18n-t>
           <h2>{{ t('content.chapters_in_the_bible') }}</h2>
           <p>{{ t('content.there_are_66_books') }}</p>
+          <p>{{ t('content.dc_note', { books: dcBooks.length, chapters: formatNumber(dcChapterCount) }) }}</p>
           <h2>{{ t('content.track_your_progress_online') }}</h2>
           <i18n-t keypath="content.if_you_would_like" tag="p">
             <template #appLink>
@@ -58,12 +69,28 @@
 
 <script setup lang="ts">
 import { Bible } from '@mybiblelog/shared';
+import { useUserSettingsStore } from '~/stores/user-settings';
 
 const { locale, t } = useI18n();
 const config = useRuntimeConfig();
+const userSettingsStore = useUserSettingsStore();
 
 const siteUrl = config.public.siteUrl as string;
-const books = Bible.getBooks();
+
+const includeDeuterocanonical = ref(userSettingsStore.settings.includeDeuterocanonical);
+watch(() => userSettingsStore.settings.includeDeuterocanonical, (value) => {
+  includeDeuterocanonical.value = value;
+});
+const books = computed(() => Bible.getBooksForCanon(includeDeuterocanonical.value));
+
+const dcBooks = Bible.getAllBooks().filter(book => book.deuterocanonical);
+const dcChapterCount = dcBooks.reduce((sum, book) => sum + book.chapterCount, 0);
+const formatNumber = (n: number) => n.toLocaleString(locale.value);
+
+const mounted = ref(false);
+onMounted(() => {
+  mounted.value = true;
+});
 
 function print() {
   window.print();
@@ -80,6 +107,10 @@ useContentSeo({
 </script>
 
 <style>
+.tracker-options {
+  margin-bottom: var(--mbl-space-lg);
+}
+
 @media print {
   body.has-site-nav-fixed { padding-top: 0; }
   .container { max-width: 100%; margin: 0; padding: 0; }
@@ -146,6 +177,7 @@ useContentSeo({
       "description": "Free printable Bible reading tracker with checkboxes for each chapter of the Bible. Keep track of your progress as you read through the books of the Bible."
     },
     "print": "Print",
+    "include_dc": "Include deuterocanonical books",
     "site_title": "My Bible Log",
     "site_description": "Free Bible Reading Tracker",
     "content": {
@@ -156,6 +188,7 @@ useContentSeo({
       "download_pdf_text": "here",
       "chapters_in_the_bible": "Chapters in the Bible",
       "there_are_66_books": "There are 66 books in the Bible, and a total of 1,189 chapters. If you read 3.25 chapters each day (or a total of 23 chapters each week), you can read the entire Bible in one year.",
+      "dc_note": "Catholic and Orthodox Bibles also include the {books} deuterocanonical books, with {chapters} more chapters. Check \"Include deuterocanonical books\" above to add them to the tracker.",
       "track_your_progress_online": "Track Your Progress Online",
       "if_you_would_like": "If you would like to track your Bible reading from your device, check out the free {appLink} app and website!",
       "app_href": "/"
@@ -167,6 +200,7 @@ useContentSeo({
       "description": "Druckbare Bibel-Lesetrack mit Kontrollkästchen für jeden Kapitel der Bibel."
     },
     "print": "Drucken",
+    "include_dc": "Deuterokanonische Bücher einschließen",
     "site_title": "My Bible Log",
     "site_description": "Druckbare Bibel-Lesetrack",
     "content": {
@@ -177,6 +211,7 @@ useContentSeo({
       "download_pdf_text": "hier",
       "chapters_in_the_bible": "Kapitel in der Bibel",
       "there_are_66_books": "Es gibt 66 Bücher in der Bibel und insgesamt 1.189 Kapitel.",
+      "dc_note": "Katholische und orthodoxe Bibeln enthalten außerdem die {books} deuterokanonischen Bücher mit {chapters} weiteren Kapiteln. Aktivieren Sie oben „Deuterokanonische Bücher einschließen“, um sie in die Liste aufzunehmen.",
       "track_your_progress_online": "Verfolgen Sie Ihren Fortschritt online",
       "if_you_would_like": "Schauen Sie sich die kostenlosen {appLink} App und Website an!",
       "app_href": "/de"
@@ -188,6 +223,7 @@ useContentSeo({
       "description": "Rastreador de lectura de la Biblia imprimible gratuito con casillas de verificación para cada capítulo de la Biblia."
     },
     "print": "Imprimir",
+    "include_dc": "Incluir los libros deuterocanónicos",
     "site_title": "My Bible Log",
     "site_description": "Rastreador de la Biblia gratuito",
     "content": {
@@ -198,6 +234,7 @@ useContentSeo({
       "download_pdf_text": "aquí",
       "chapters_in_the_bible": "Capítulos en la Biblia",
       "there_are_66_books": "Hay 66 libros en la Biblia y un total de 1,189 capítulos.",
+      "dc_note": "Las Biblias católicas y ortodoxas incluyen además los {books} libros deuterocanónicos, con {chapters} capítulos más. Marca «Incluir los libros deuterocanónicos» arriba para añadirlos al registro.",
       "track_your_progress_online": "Rastrea tu progreso en línea",
       "if_you_would_like": "¡Consulte la aplicación y el sitio web gratuitos de {appLink}!",
       "app_href": "/es"
@@ -209,6 +246,7 @@ useContentSeo({
       "description": "Feuille de suivi de lecture de la Bible imprimable gratuite avec des cases à cocher pour chaque chapitre de la Bible."
     },
     "print": "Imprimer",
+    "include_dc": "Inclure les livres deutérocanoniques",
     "site_title": "My Bible Log",
     "site_description": "Feuille de suivi de lecture de la Bible gratuite",
     "content": {
@@ -219,6 +257,7 @@ useContentSeo({
       "download_pdf_text": "ici",
       "chapters_in_the_bible": "Chapitres dans la Bible",
       "there_are_66_books": "Il y a 66 livres dans la Bible, et un total de 1 189 chapitres.",
+      "dc_note": "Les Bibles catholiques et orthodoxes comprennent aussi les {books} livres deutérocanoniques, soit {chapters} chapitres de plus. Cochez « Inclure les livres deutérocanoniques » ci-dessus pour les ajouter à la feuille.",
       "track_your_progress_online": "Suivez votre progression en ligne",
       "if_you_would_like": "Consultez l'application et le site Web gratuits {appLink} !",
       "app_href": "/fr"
@@ -230,16 +269,18 @@ useContentSeo({
       "description": "성경 각 장 옆 체크박스가 있는 무료 인쇄용 성경읽기표입니다."
     },
     "print": "인쇄",
+    "include_dc": "제2경전 포함",
     "site_title": "My Bible Log",
     "site_description": "무료 성경 읽기표",
     "content": {
       "this_is": "성경 각 장별 체크박스가 있는 무료 인쇄용 성경읽기표입니다.",
       "printer_friendly": "이 페이지는 인쇄에 최적화되어 있습니다.",
       "download_directly": "PDF 파일은 {link}을 눌러 직접 다운로드 받을 수 있습니다.",
-      "download_pdf_href": "/downloads/인쇄용 성경 읽기표.pdf",
+      "download_pdf_href": "/downloads/인쇄용 성경 읽기 추적표.pdf",
       "download_pdf_text": "이곳",
       "chapters_in_the_bible": "성경 장 수",
       "there_are_66_books": "성경에는 66권의 책과 총 1,189개의 장이 있습니다.",
+      "dc_note": "가톨릭과 정교회 성경에는 {books}권의 제2경전, {chapters}개의 장이 더 들어 있습니다. 위의 '제2경전 포함'을 선택하면 읽기표에 추가됩니다.",
       "track_your_progress_online": "온라인으로 진도 기록하기",
       "if_you_would_like": "무료 {appLink} 앱과 웹사이트를 확인해 보세요!",
       "app_href": "/ko"
@@ -251,6 +292,7 @@ useContentSeo({
       "description": "Rastreador de leitura da Bíblia para imprimir gratuitamente com caixas de seleção para cada capítulo da Bíblia."
     },
     "print": "Imprimir",
+    "include_dc": "Incluir os livros deuterocanônicos",
     "site_title": "My Bible Log",
     "site_description": "Rastreador de Leitura da Bíblia Gratuito",
     "content": {
@@ -261,6 +303,7 @@ useContentSeo({
       "download_pdf_text": "aqui",
       "chapters_in_the_bible": "Capítulos na Bíblia",
       "there_are_66_books": "Existem 66 livros na Bíblia e um total de 1.189 capítulos.",
+      "dc_note": "As Bíblias católicas e ortodoxas também incluem os {books} livros deuterocanônicos, com mais {chapters} capítulos. Marque \"Incluir os livros deuterocanônicos\" acima para adicioná-los ao rastreador.",
       "track_your_progress_online": "Acompanhe seu progresso online",
       "if_you_would_like": "Confira o aplicativo e site gratuito {appLink}!",
       "app_href": "/pt"
@@ -272,6 +315,7 @@ useContentSeo({
       "description": "Безкоштовний друкований відстежувач читання Біблії з прапорцями для кожної глави Біблії."
     },
     "print": "Друк",
+    "include_dc": "Додати девтероканонічні книги",
     "site_title": "My Bible Log (Мій Біблійний Журнал)",
     "site_description": "Безкоштовний трекер Біблії",
     "content": {
@@ -282,6 +326,7 @@ useContentSeo({
       "download_pdf_text": "тут",
       "chapters_in_the_bible": "Глави в Біблії",
       "there_are_66_books": "У Біблії 66 книг і всього 1 189 глав.",
+      "dc_note": "Католицькі та православні Біблії також містять {books} девтероканонічних книг, у яких ще {chapters} глав. Позначте «Додати девтероканонічні книги» вище, щоб додати їх до відстежувача.",
       "track_your_progress_online": "Відстежуйте свій прогрес онлайн",
       "if_you_would_like": "Перегляньте безкоштовний додаток та веб-сайт {appLink}!",
       "app_href": "/uk"

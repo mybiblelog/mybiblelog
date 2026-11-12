@@ -403,6 +403,11 @@ export const en = {
   delete_account_unable: "Unable to delete account. Please try again later.",
 
   settings_select_option: "Select an option",
+  settings_reading_canon_title: "Canon",
+  settings_reading_canon_common: "The 66 common books",
+  settings_reading_canon_deuterocanonical: "Include deuterocanonical books",
+  settings_reading_canon_info:
+    "Choose which books to track. Deuterocanonical books are added among the Old Testament books, following the Catholic canonical order, and are counted in your reading progress.",
   settings_reading_daily_goal_title: "Daily Verse Count Goal",
   settings_reading_look_back_date_title: "Tracker Start Date",
   settings_reading_preferred_bible_version_title: "Preferred Bible Version",
@@ -432,6 +437,16 @@ export const en = {
     "Let's personalize your settings so you can get the most out of the app.",
   onboarding_welcome_next: "Personalize My Settings",
   onboarding_welcome_skip: "Skip Personalization",
+  onboarding_canon_title: "Choose Your Canon",
+  onboarding_canon_description:
+    "Which books of the Bible would you like to track? This determines the books shown and the total amount of Scripture your progress is measured against.",
+  onboarding_canon_total_verses: "Total verses",
+  onboarding_canon_common_title: "The 66 common books",
+  onboarding_canon_common_description:
+    "The 66 books shared by all Christian Bibles, from Genesis to Revelation.",
+  onboarding_canon_deuterocanonical_title: "Include deuterocanonical books",
+  onboarding_canon_deuterocanonical_description:
+    "Adds the deuterocanonical books among the Old Testament books, following the Catholic canonical order.",
   onboarding_goal_title: "Daily Reading Goal",
   onboarding_goal_description:
     "How many verses do you want to read each day? My Bible Log will show your progress toward this goal.",

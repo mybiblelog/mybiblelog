@@ -1,6 +1,12 @@
-import { BibleVersions, bibleVersions, HELLOAO_DEFAULT_TRANSLATION_ID } from '@mybiblelog/shared';
+import {
+  Bible,
+  BibleVersions,
+  bibleVersions,
+  HELLOAO_DEFAULT_TRANSLATION_ID,
+  HELLOAO_DEUTEROCANONICAL_TRANSLATION_ID,
+} from '@mybiblelog/shared';
 
-export { HELLOAO_DEFAULT_TRANSLATION_ID };
+export { HELLOAO_DEFAULT_TRANSLATION_ID, HELLOAO_DEUTEROCANONICAL_TRANSLATION_ID };
 
 /**
  * Translation ids for https://bible.helloao.org/api/{id}/{USFM}/{chapter}.json
@@ -11,5 +17,9 @@ export { HELLOAO_DEFAULT_TRANSLATION_ID };
  * `shared/bible/translations.ts` so it can't drift out of sync with the rest
  * of that translation's data.
  */
-export const getHelloaoTranslationId = (version: keyof typeof BibleVersions): string =>
-  bibleVersions[version]?.helloaoId ?? HELLOAO_DEFAULT_TRANSLATION_ID;
+export const getHelloaoTranslationId = (version: keyof typeof BibleVersions, bookIndex?: number): string => {
+  if (bookIndex !== undefined && Bible.isDeuterocanonical(bookIndex)) {
+    return HELLOAO_DEUTEROCANONICAL_TRANSLATION_ID;
+  }
+  return bibleVersions[version]?.helloaoId ?? HELLOAO_DEFAULT_TRANSLATION_ID;
+};

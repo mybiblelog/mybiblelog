@@ -66,6 +66,7 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
 import { Bible, computeBookFrequencies, type InsightsLogEntry } from '@mybiblelog/shared';
+import { useUserSettingsStore } from '~/stores/user-settings';
 
 const props = defineProps({
   entries: {
@@ -75,6 +76,7 @@ const props = defineProps({
 });
 
 const { locale, t } = useI18n();
+const userSettingsStore = useUserSettingsStore();
 
 const ALL_TIME = 0;
 const timeframeOptions = [30, 60, 90, 180, 365, ALL_TIME];
@@ -86,16 +88,20 @@ const stripLeadingNumbers = (str: string) => str.replace(/^\d+\s*/, '').trim();
 
 const rows = computed(() => {
   const entries = props.entries as InsightsLogEntry[];
-  const frequencies = days.value === ALL_TIME
-    ? computeBookFrequencies(entries)
-    : computeBookFrequencies(entries, {
+  const range = days.value === ALL_TIME
+    ? undefined
+    : {
       startDate: dayjs().subtract(days.value - 1, 'day').format('YYYY-MM-DD'),
       endDate: dayjs().format('YYYY-MM-DD'),
-    });
+    };
+  const frequencies = computeBookFrequencies(entries, range, {
+    includeDeuterocanonical: userSettingsStore.settings.includeDeuterocanonical,
+  });
 
   const useProportion = metric.value === 'proportional';
-  const enriched = frequencies.map(freq => ({
+  const enriched = frequencies.map((freq, order) => ({
     bookIndex: freq.bookIndex,
+    order,
     bookName: Bible.getBookName(freq.bookIndex, locale.value),
     value: useProportion ? freq.proportion : freq.verseCount,
     label: useProportion
@@ -114,12 +120,12 @@ const rows = computed(() => {
   case 'alpha':
     return withWidth.sort((a, b) => stripLeadingNumbers(a.bookName).localeCompare(stripLeadingNumbers(b.bookName), locale.value));
   case 'most':
-    return withWidth.sort((a, b) => b.value - a.value || a.bookIndex - b.bookIndex);
+    return withWidth.sort((a, b) => b.value - a.value || a.order - b.order);
   case 'least':
-    return withWidth.sort((a, b) => a.value - b.value || a.bookIndex - b.bookIndex);
+    return withWidth.sort((a, b) => a.value - b.value || a.order - b.order);
   case 'bible':
   default:
-    return withWidth.sort((a, b) => a.bookIndex - b.bookIndex);
+    return withWidth.sort((a, b) => a.order - b.order);
   }
 });
 </script>

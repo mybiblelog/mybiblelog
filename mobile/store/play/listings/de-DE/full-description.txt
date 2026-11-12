@@ -3,9 +3,14 @@ Lies die ganze Bibel — auf deine Weise.
 Die meisten Bibellesepläne sagen dir, was du wann lesen sollst. My Bible Log funktioniert anders: Du protokollierst einfach, was du bereits gelesen hast — aus Predigten, Andachten, Kleingruppen oder persönlichem Studium — und alles zählt zu deinem Fortschritt. Keine starren Zeitpläne. Kein schlechtes Gewissen, wenn du einen Tag verpasst. Nebenbei führst du ein Bibelstudien-Tagebuch mit Notizen zu den Bibelstellen, um die es geht.
 
 VERFOLGE DEINEN FORTSCHRITT
-• Sieh deinen Lesefortschritt für jedes Kapitel, jedes Buch und die ganze Bibel — alle 66 Bücher, alle 1.189 Kapitel
+• Sieh deinen Lesefortschritt für jedes Kapitel, jedes Buch und die ganze Bibel — alle 66 Bücher und 1.189 Kapitel, dazu die deuterokanonischen Bücher, wenn deine Bibel sie enthält
 • Verdiene Sterne, wenn du ein Buch abschließt
 • Erhalte eine Prognose, wann du fertig wirst — basierend auf deinem tatsächlichen Lesetempo
+
+DEINE BIBEL, DEIN KANON
+• Du liest eine katholische oder orthodoxe Bibel? Aktiviere die deuterokanonischen Bücher — Tobit, Judit, 1. und 2. Makkabäer, Weisheit, Jesus Sirach, Baruch und weitere
+• Sie erscheinen in katholischer kanonischer Reihenfolge zwischen den Büchern des Alten Testaments und zählen für Fortschritt, Checkliste und Tagesziel
+• Wechsle deinen Kanon jederzeit in den Einstellungen
 
 FÜHRE EIN BIBELSTUDIEN-TAGEBUCH
 • Halte Fragen, Erkenntnisse, Gebete und Predigtnotizen fest — verknüpft mit den Bibelstellen, um die es geht

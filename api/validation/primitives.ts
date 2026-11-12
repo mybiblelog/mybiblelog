@@ -24,8 +24,11 @@ export const emailString = z.string().regex(/^\S+@\S+\.\S+$/);
  */
 export const USFM_PASSAGE_DESCRIPTION = 'USFM passage reference within one book, e.g. "JHN.3.16-18", "GEN.1.1-2.3", "PSA.23", "GEN.1-3", or "GEN". '
   + 'The range end may repeat the book ("GEN.1.1-GEN.2.3"). '
-  + 'Chapters and verses follow the versification of English Protestant Bibles (as in the NASB): '
-  + 'Malachi has 4 chapters, 3 John has 14 verses, and Psalm titles are not numbered verses.';
+  + 'The 66 books from Genesis to Revelation follow NASB versification: '
+  + 'Malachi has 4 chapters, 3 John has 14 verses, and Psalm titles are not numbered verses. '
+  + 'Deuterocanonical books follow KJV-1611 Apocrypha versification, with Baruch 6 as the Letter of Jeremiah. '
+  + 'The Greek additions to Esther and Daniel are separate books (ESG, S3Y, SUS, BEL), '
+  + 'so EST and DAN keep their Hebrew-text verse counts.';
 
 /** Parses a USFM reference inside a zod transform, reporting an invalid one on `ctx`. */
 export const parseUsfmPassage = (value: string, ctx: z.RefinementCtx) => {

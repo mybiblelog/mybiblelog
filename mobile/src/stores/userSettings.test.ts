@@ -79,6 +79,15 @@ describe("setLocalSettingsWithPendingSync", () => {
 
     setSpy.mockRestore();
   });
+
+  it("stages the onboarding canon choice for the next sign-in", async () => {
+    const setSpy = jest.spyOn(appStorage, "set").mockResolvedValue(true);
+
+    await userSettingsActions.setLocalSettingsWithPendingSync({ includeDeuterocanonical: true });
+
+    expect(setSpy).toHaveBeenCalledWith("settingsPendingServerPush", ["includeDeuterocanonical"]);
+    setSpy.mockRestore();
+  });
 });
 
 describe("refreshFromServer", () => {
@@ -88,6 +97,13 @@ describe("refreshFromServer", () => {
     const state = useUserSettingsStore.getState().state;
     expect(state.status === "ready" && state.settings.dailyVerseCountGoal).toBe(100);
     expect(saveLocalUserSettings).toHaveBeenCalled();
+  });
+
+  it("applies the server's canon choice", async () => {
+    (getSettings as jest.Mock).mockResolvedValue({ includeDeuterocanonical: true });
+    await actions().refreshFromServer();
+    const state = useUserSettingsStore.getState().state;
+    expect(state.status === "ready" && state.settings.includeDeuterocanonical).toBe(true);
   });
 
   it("does not persist when server values match local settings", async () => {

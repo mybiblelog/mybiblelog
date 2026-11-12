@@ -20,12 +20,13 @@ const SENTINEL = { overall: { percent: 0.5 }, books: [] } as unknown as BiblePro
 function setEntries(entries: StoredLogEntry[]) {
   useLogEntriesStore.setState({ state: { status: "ready", entries, isSyncing: false } });
 }
-function setLookBack(lookBackDate: string) {
+function setLookBack(lookBackDate: string, includeDeuterocanonical?: boolean) {
   useUserSettingsStore.setState({
     state: {
       status: "ready",
       settings: {
         lookBackDate,
+        includeDeuterocanonical,
         dailyVerseCountGoal: 86,
         preferredBibleVersion: "ESV",
         preferredBibleApp: "",
@@ -57,6 +58,17 @@ describe("cacheBibleProgress", () => {
     expect(ranges.map((e: StoredLogEntry) => e.clientId)).toEqual(["new"]); // "old" excluded
     expect(useBibleProgressStore.getState().progress).toBe(SENTINEL);
     expect(setCache).toHaveBeenCalled();
+  });
+
+  it("computes against the reader's canon", async () => {
+    setEntries([]);
+    setLookBack("2020-01-01");
+    await useBibleProgressStore.getState().cacheBibleProgress();
+    expect(mockComputeBibleProgress.mock.calls[0][1]).toEqual({ includeDeuterocanonical: false });
+
+    setLookBack("2020-01-01", true);
+    await useBibleProgressStore.getState().cacheBibleProgress();
+    expect(mockComputeBibleProgress.mock.calls[1][1]).toEqual({ includeDeuterocanonical: true });
   });
 
   it("does not compute when log entries are not ready", async () => {

@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { Bible, LogEntryEditorMachine, type LogEntryEditorModel } from "@mybiblelog/shared";
 import { useCallback, useMemo, useState } from "react";
+import { useIncludeDeuterocanonical } from "@/src/stores/userSettings";
 import type { LogEntry } from "@/src/types/log-entry";
 
 /**
@@ -20,7 +21,7 @@ import type { LogEntry } from "@/src/types/log-entry";
 
 export type LogEntryEditorValue = {
   date: string;
-  book: number; // Bible order (1..66), 0 for unset
+  book: number; // Bible order (bibleOrder), 0 for unset
   startChapter: number;
   startVerse: number;
   endChapter: number;
@@ -83,7 +84,11 @@ export function useLogEntryEditor(init?: Init) {
     };
   }, [model, value.date, cleanJson]);
 
-  const books = useMemo(() => Bible.getBooks(), []);
+  const includeDeuterocanonical = useIncludeDeuterocanonical();
+  const books = useMemo(
+    () => Bible.getBooksForCanon(includeDeuterocanonical),
+    [includeDeuterocanonical]
+  );
 
   const startChapters = useMemo(() => {
     if (value.book <= 0) return [];

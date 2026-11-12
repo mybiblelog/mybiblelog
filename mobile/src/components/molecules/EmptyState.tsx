@@ -1,5 +1,6 @@
 import { StyleSheet, View } from "react-native";
-import { radius, spacing, useTheme, type ThemeColors } from "@/src/design";
+import Animated from "react-native-reanimated";
+import { fadeIn, radius, spacing, useEntering, useTheme, type ThemeColors } from "@/src/design";
 import { Button } from "../atoms/Button";
 import { Icon, type IconName } from "../atoms/Icon";
 import { Text } from "../atoms/Text";
@@ -8,12 +9,7 @@ const ICON_SIZE = 40;
 
 /**
  * Centered empty-list state: optional icon, title, supporting text, and an
- * optional CTA.
- *
- * No `entering` fade: every caller renders this as a FlatList
- * `ListEmptyComponent`, and on the New Architecture the fade intermittently
- * never runs, leaving the state laid out but stuck at opacity 0.
- * TECH-DEBT(reanimated-list-empty-entering): restore the fade once fixed.
+ * optional CTA. Fades in so it doesn't pop when a list finishes loading empty.
  *
  * `background` wraps icon/title/text/CTA in a tinted, rounded card that sets
  * the whole state apart from the screen — pair it with `iconColor` (defaults
@@ -46,8 +42,9 @@ export function EmptyState({
 }) {
   const { colors } = useTheme();
   const filled = pops || !!background;
+  const entering = useEntering(fadeIn());
   return (
-    <View style={styles.container}>
+    <Animated.View entering={entering} style={styles.container}>
       <View
         style={[
           styles.card,
@@ -78,7 +75,7 @@ export function EmptyState({
         )}
         {!!ctaLabel && !!onPressCta && <Button label={ctaLabel} onPress={onPressCta} />}
       </View>
-    </View>
+    </Animated.View>
   );
 }
 

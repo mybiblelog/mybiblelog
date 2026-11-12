@@ -32,7 +32,9 @@ const applyAchievement = (
   before: LogEntry[],
   after: LogEntry[],
 ): void => {
-  const achievement = evaluateAchievement(bookIndex, before, after);
+  const achievement = evaluateAchievement(bookIndex, before, after, {
+    includeDeuterocanonical: useUserSettingsStore().settings.includeDeuterocanonical,
+  });
   if (achievement?.type === 'bible') {
     useAchievementsStore().showBibleCompleteAchievement();
   }
@@ -55,7 +57,9 @@ export const useLogEntriesStore = defineStore('log-entries', {
       return state.logEntries.filter(logEntry => logEntry.date >= lookBackDate);
     },
     isBibleComplete(): boolean {
-      return isBibleComplete(this.currentLogEntries);
+      return isBibleComplete(this.currentLogEntries, {
+        includeDeuterocanonical: useUserSettingsStore().settings.includeDeuterocanonical,
+      });
     },
     hasLogEntriesForToday(state): boolean {
       const today = dayjs().format('YYYY-MM-DD');

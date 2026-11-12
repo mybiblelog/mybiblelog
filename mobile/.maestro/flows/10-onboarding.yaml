@@ -32,6 +32,21 @@ tags:
 - tapOn:
     id: "onboarding.welcome-next"
 
+# --- Canon step: toggle both options, exercise Back, keep the common canon
+- assertVisible:
+    id: "onboarding.canon-common"
+- tapOn:
+    id: "onboarding.canon-deuterocanonical"
+- tapOn:
+    id: "onboarding.canon-common"
+- tapOn: "Back"
+- assertVisible:
+    id: "onboarding.welcome-next"
+- tapOn:
+    id: "onboarding.welcome-next"
+- tapOn:
+    id: "onboarding.canon-next"
+
 # --- Goal step: verify prefilled value, adjust via steppers, exercise Back
 - assertVisible:
     id: "onboarding.goal-verses-input"
@@ -41,9 +56,9 @@ tags:
     id: "onboarding.goal-decrease"
 - tapOn: "Back"
 - assertVisible:
-    id: "onboarding.welcome-next"
+    id: "onboarding.canon-next"
 - tapOn:
-    id: "onboarding.welcome-next"
+    id: "onboarding.canon-next"
 - tapOn:
     id: "onboarding.goal-next"
 

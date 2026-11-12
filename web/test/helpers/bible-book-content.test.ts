@@ -7,17 +7,41 @@ const overviewFiles = import.meta.glob('../../app/helpers/bible-book-overviews/*
 
 describe('bible book content', () => {
   it('has guide data for every book', () => {
-    expect(bibleBookGuides).toHaveLength(Bible.getBookCount());
+    expect(bibleBookGuides).toHaveLength(Bible.getAllBooks().length);
     bibleBookGuides.forEach((guide) => {
       expect(guide.keyPassages.length).toBeGreaterThan(0);
     });
   });
 
-  it.each(locales.map(locale => locale.code))('has 66 non-empty overviews for %s', async (code) => {
+  it('keeps every key passage within its book', () => {
+    bibleBookGuides.forEach((guide, i) => {
+      const book = i + 1;
+      for (const ref of guide.keyPassages) {
+        // "c", "c–c", "c:v–v" or "c:v–c:v"
+        for (const point of ref.split('–')) {
+          const [chapter, verse] = point.includes(':') ? point.split(':').map(Number) : [Number(point), undefined];
+          const label = `${Bible.getBookName(book)} ${ref}`;
+          if (verse === undefined && ref.includes(':')) {
+            // the end of a "c:v–v" range is a verse in the starting chapter
+            const startChapter = Number(ref.split(':')[0]);
+            expect(chapter, label).toBeLessThanOrEqual(Bible.getChapterVerseCount(book, startChapter));
+            continue;
+          }
+          expect(chapter, label).toBeGreaterThanOrEqual(1);
+          expect(chapter, label).toBeLessThanOrEqual(Bible.getBookChapterCount(book));
+          if (verse !== undefined) {
+            expect(verse, label).toBeLessThanOrEqual(Bible.getChapterVerseCount(book, chapter!));
+          }
+        }
+      }
+    });
+  });
+
+  it.each(locales.map(locale => locale.code))('has a non-empty overview for every book in %s', async (code) => {
     // loadBookOverviews falls back to English, so check the locale's own file exists
     expect(Object.keys(overviewFiles)).toContain(`../../app/helpers/bible-book-overviews/${code}.ts`);
     const overviews = await loadBookOverviews(code);
-    expect(overviews).toHaveLength(Bible.getBookCount());
+    expect(overviews).toHaveLength(Bible.getAllBooks().length);
     overviews.forEach((overview, i) => {
       expect(overview.trim().length, `${code} book ${i + 1}`).toBeGreaterThan(40);
     });

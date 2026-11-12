@@ -6,6 +6,7 @@ import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } f
 import {
   Button,
   Card,
+  Icon,
   IconButton,
   InputField,
   OnboardingFrame,
@@ -24,10 +25,15 @@ import { getGoalPlan } from "@/src/progress/outlook";
 import { onboardingActions } from "@/src/stores/onboarding";
 import { userSettingsActions, useSettingsValue } from "@/src/stores/userSettings";
 
-type OnboardingStep = "choice" | "welcome" | "goal" | "bible" | "finish";
+type OnboardingStep = "choice" | "welcome" | "canon" | "goal" | "bible" | "finish";
 
-const TOTAL_STEPS = 3; // welcome, goal, bible — matches web's PillProgressBar count
-const STEP_INDEX: Partial<Record<OnboardingStep, number>> = { welcome: 0, goal: 1, bible: 2 };
+const TOTAL_STEPS = 4; // welcome, canon, goal, bible — matches web's PillProgressBar count
+const STEP_INDEX: Partial<Record<OnboardingStep, number>> = {
+  welcome: 0,
+  canon: 1,
+  goal: 2,
+  bible: 3,
+};
 
 async function finishOnboarding() {
   await onboardingActions.markOnboardingCompleted();
@@ -59,13 +65,24 @@ export default function Onboarding() {
         {step === "choice" ? <ChoiceStep onNew={() => setStep("welcome")} /> : null}
         {step === "welcome" ? (
           <WelcomeStep
-            onNext={() => setStep("goal")}
+            onNext={() => setStep("canon")}
             onSkip={() => void finishOnboarding()}
             onBack={() => setStep("choice")}
           />
         ) : null}
+        {step === "canon" ? (
+          <CanonStep
+            initialValue={settings?.includeDeuterocanonical === true}
+            onBack={() => setStep("welcome")}
+            onNext={() => setStep("goal")}
+          />
+        ) : null}
         {step === "goal" ? (
-          <GoalStep onBack={() => setStep("welcome")} onNext={() => setStep("bible")} />
+          <GoalStep
+            includeDeuterocanonical={settings?.includeDeuterocanonical === true}
+            onBack={() => setStep("canon")}
+            onNext={() => setStep("bible")}
+          />
         ) : null}
         {step === "bible" ? (
           <BibleStep
@@ -169,10 +186,123 @@ function DetailRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-function GoalStep({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
+function CanonOption({
+  selected,
+  title,
+  description,
+  totalVerses,
+  onPress,
+  testID,
+}: {
+  selected: boolean;
+  title: string;
+  description: string;
+  totalVerses: string;
+  onPress: () => void;
+  testID: string;
+}) {
+  const t = useT();
+  return (
+    <Card
+      tone={selected ? "info" : "neutral"}
+      onPress={onPress}
+      accessibilityLabel={title}
+      testID={testID}
+      style={styles.canonCard}
+    >
+      <View style={styles.canonRow}>
+        <Icon
+          name={selected ? "radio-button-on" : "radio-button-off"}
+          size={22}
+          color={selected ? "primary" : "mutedText"}
+        />
+        <View style={styles.canonBody}>
+          <Text variant="bodyStrong">{title}</Text>
+          <Text variant="caption" color="mutedText">
+            {description}
+          </Text>
+          <DetailRow label={t("onboarding_canon_total_verses")} value={totalVerses} />
+        </View>
+      </View>
+    </Card>
+  );
+}
+
+function CanonStep({
+  initialValue,
+  onBack,
+  onNext,
+}: {
+  initialValue: boolean;
+  onBack: () => void;
+  onNext: () => void;
+}) {
   const t = useT();
   const { locale } = useLocale();
-  const totalVerses = Bible.getTotalVerseCount();
+  const [includeDeuterocanonical, setIncludeDeuterocanonical] = useState(initialValue);
+
+  async function handleNext() {
+    await userSettingsActions.setLocalSettingsWithPendingSync({ includeDeuterocanonical });
+    onNext();
+  }
+
+  return (
+    <View style={styles.flex}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Text variant="title" style={styles.title}>
+          {t("onboarding_canon_title")}
+        </Text>
+        <Text variant="body" color="mutedText" style={styles.description}>
+          {t("onboarding_canon_description")}
+        </Text>
+
+        <CanonOption
+          selected={!includeDeuterocanonical}
+          title={t("onboarding_canon_common_title")}
+          description={t("onboarding_canon_common_description")}
+          totalVerses={Bible.getTotalVerseCount(false).toLocaleString(locale)}
+          onPress={() => setIncludeDeuterocanonical(false)}
+          testID="onboarding.canon-common"
+        />
+        <CanonOption
+          selected={includeDeuterocanonical}
+          title={t("onboarding_canon_deuterocanonical_title")}
+          description={t("onboarding_canon_deuterocanonical_description")}
+          totalVerses={Bible.getTotalVerseCount(true).toLocaleString(locale)}
+          onPress={() => setIncludeDeuterocanonical(true)}
+          testID="onboarding.canon-deuterocanonical"
+        />
+
+        <Text variant="caption" color="mutedText" style={styles.hint}>
+          {t("onboarding_goal_change_hint")}
+        </Text>
+
+        <View style={styles.stepButtons}>
+          <Button
+            label={t("onboarding_continue")}
+            testID="onboarding.canon-next"
+            fullWidth
+            onPress={() => void handleNext()}
+          />
+          <Button label={t("back")} variant="ghost" size="sm" onPress={onBack} />
+        </View>
+      </ScrollView>
+    </View>
+  );
+}
+
+function GoalStep({
+  includeDeuterocanonical,
+  onBack,
+  onNext,
+}: {
+  includeDeuterocanonical: boolean;
+  onBack: () => void;
+  onNext: () => void;
+}) {
+  const t = useT();
+  const { locale } = useLocale();
+  const totalVerses = Bible.getTotalVerseCount(includeDeuterocanonical);
   const today = dayjs().format("YYYY-MM-DD");
   const yearDate = dayjs(today).add(1, "year").format("YYYY-MM-DD");
   const yearPlan = getGoalPlan(totalVerses, today, yearDate);
@@ -441,5 +571,8 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   hint: { marginTop: spacing.xs },
+  canonCard: { marginHorizontal: spacing["2xs"] },
+  canonRow: { flexDirection: "row", alignItems: "flex-start", gap: spacing.sm },
+  canonBody: { flex: 1, gap: spacing.xs },
   fieldGroup: { gap: spacing["2xs"], marginBottom: spacing.md, marginHorizontal: spacing["2xs"] },
 });

@@ -1,7 +1,7 @@
-import { type ComponentType, type ReactNode, useCallback, useEffect, useRef } from "react";
+import { type ComponentType, type ReactNode, useCallback, useEffect, useMemo, useRef } from "react";
 import { StyleSheet, type FlatListProps, type ViewStyle } from "react-native";
 import Animated from "react-native-reanimated";
-import { listItemEnter, listLayout, spacing } from "@/src/design";
+import { listItemEnter, listLayout, spacing, useEntering } from "@/src/design";
 
 /**
  * Room reserved for row shadows. A scroll view clips to its own bounds, so a
@@ -68,6 +68,8 @@ export function AnimatedList<T>({
   // A ref (not state) so flipping it doesn't change the cell component's
   // identity and remount every row; each cell reads the value when it mounts.
   const animateInsertions = useRef(false);
+  // Memoized so the cell component below keeps its identity across renders.
+  const insertEntering = useEntering(useMemo(() => listItemEnter(), []));
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
@@ -80,13 +82,13 @@ export function AnimatedList<T>({
     ({ children, index: _index, item: _item, cellKey: _cellKey, ...cellProps }: CellProps) => (
       <Animated.View
         {...cellProps}
-        entering={animateInsertions.current ? listItemEnter() : undefined}
+        entering={animateInsertions.current ? insertEntering : undefined}
         layout={animateItemLayout ? listLayout() : undefined}
       >
         {children}
       </Animated.View>
     ),
-    [animateItemLayout]
+    [animateItemLayout, insertEntering]
   );
 
   // Grow the list past its container by the bleed and hand the same amount back

@@ -4,7 +4,7 @@ import bibleBookGuides from '~/helpers/bible-book-guides';
 // One overview file per locale, code-split so a visitor only downloads their own language.
 const overviewLoaders = import.meta.glob<{ default: readonly string[] }>('./bible-book-overviews/*.ts');
 
-/** Overview prose for all 66 books (index 0 = Genesis) in the given locale, falling back to English. */
+/** Overview prose for every book (index 0 = Genesis, deuterocanonical books after Revelation) in the given locale, falling back to English. */
 export const loadBookOverviews = async (locale: string): Promise<readonly string[]> => {
   const load = overviewLoaders[`./bible-book-overviews/${locale}.ts`] ?? overviewLoaders['./bible-book-overviews/en.ts']!;
   return (await load()).default;

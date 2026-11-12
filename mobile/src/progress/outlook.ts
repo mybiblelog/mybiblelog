@@ -36,26 +36,42 @@ const projectFinish = (
   return { daysToFinish, finishDate: dayjs(today).add(daysToFinish, "day").format("YYYY-MM-DD") };
 };
 
-/** Unique verses read since the look-back date. */
-export function getVersesRead(entries: OutlookEntry[], lookBackDate: string): number {
-  return Bible.countUniqueRangeVerses(scopeEntries(entries, lookBackDate));
+/** Unique verses read since the look-back date, in the reader's canon. */
+export function getVersesRead(
+  entries: OutlookEntry[],
+  lookBackDate: string,
+  includeDeuterocanonical = false
+): number {
+  return Bible.countUniqueRangeVerses(
+    Bible.filterRangesToCanon(scopeEntries(entries, lookBackDate), includeDeuterocanonical)
+  );
 }
 
-export function getUnreadVerseCount(entries: OutlookEntry[], lookBackDate: string): number {
-  return Bible.getTotalVerseCount() - getVersesRead(entries, lookBackDate);
+export function getUnreadVerseCount(
+  entries: OutlookEntry[],
+  lookBackDate: string,
+  includeDeuterocanonical = false
+): number {
+  return (
+    Bible.getTotalVerseCount(includeDeuterocanonical) -
+    getVersesRead(entries, lookBackDate, includeDeuterocanonical)
+  );
 }
 
 /** Average since the look-back date (web "historical outlook"). */
 export function getHistoricalOutlook(
   entries: OutlookEntry[],
   lookBackDate: string,
-  today: string
+  today: string,
+  includeDeuterocanonical = false
 ): Outlook & { daysSinceLookBack: number } {
   const daysSinceLookBack = Math.max(0, dayjs(today).diff(dayjs(lookBackDate), "day"));
-  const unread = getUnreadVerseCount(entries, lookBackDate);
+  const unread = getUnreadVerseCount(entries, lookBackDate, includeDeuterocanonical);
   const averageDailyVerses =
     daysSinceLookBack > 0
-      ? Math.floor(getVersesRead(entries, lookBackDate) / daysSinceLookBack)
+      ? Math.floor(
+          getVersesRead(entries, lookBackDate, includeDeuterocanonical) / daysSinceLookBack
+        )
       : 0;
   return {
     daysSinceLookBack,
@@ -74,7 +90,8 @@ export function getRecentOutlook(
   entries: OutlookEntry[],
   lookBackDate: string,
   today: string,
-  daysBack: number
+  daysBack: number,
+  includeDeuterocanonical = false
 ): Outlook {
   const todayDate = dayjs(today);
   let targetDate = todayDate.subtract(daysBack, "day");
@@ -93,7 +110,7 @@ export function getRecentOutlook(
   }
 
   const averageDailyVerses = daysAgo > 0 ? cumulativeUniqueVerses / daysAgo : 0;
-  const unread = getUnreadVerseCount(entries, lookBackDate);
+  const unread = getUnreadVerseCount(entries, lookBackDate, includeDeuterocanonical);
   return { averageDailyVerses, ...projectFinish(unread, averageDailyVerses, today) };
 }
 
@@ -101,14 +118,15 @@ export function getRecentOutlook(
 export function getTodayOutlook(
   entries: OutlookEntry[],
   lookBackDate: string,
-  today: string
+  today: string,
+  includeDeuterocanonical = false
 ): Outlook & { newVersesToday: number } {
   const scoped = scopeEntries(entries, lookBackDate);
   const throughYesterday = scoped.filter((e) => e.date < today);
   const throughToday = scoped.filter((e) => e.date <= today);
   const newVersesToday =
     Bible.countUniqueRangeVerses(throughToday) - Bible.countUniqueRangeVerses(throughYesterday);
-  const unread = getUnreadVerseCount(entries, lookBackDate);
+  const unread = getUnreadVerseCount(entries, lookBackDate, includeDeuterocanonical);
   return {
     newVersesToday,
     averageDailyVerses: newVersesToday,

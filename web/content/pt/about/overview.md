@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-29"
+dateModified: "2026-11-12"
 seo:
   title: "My Bible Log: registro de leitura da Bíblia grátis – guias"
   description: "Tudo o que o My Bible Log faz: registrar sua leitura da Bíblia por capítulo, definir metas diárias, fazer anotações de estudo e seguir guias como ler a Bíblia em um ano."
@@ -12,7 +12,7 @@ og:
 
 <img src="/share.jpg" alt="My Bible Log: registro de leitura da Bíblia grátis">
 
-O My Bible Log é um registro gratuito de leitura da Bíblia. Anote os capítulos que você lê, defina uma meta diária de leitura, veja seu progresso pelos 66 livros da Bíblia e faça anotações de estudo bem organizadas. Você pode seguir qualquer plano de leitura, ou nenhum. Sem anúncios e sem assinaturas.
+O My Bible Log é um registro gratuito de leitura da Bíblia. Anote os capítulos que você lê, defina uma meta diária de leitura, veja seu progresso pelos 66 livros da Bíblia (e pelos deuterocanônicos, se a sua Bíblia os incluir) e faça anotações de estudo bem organizadas. Você pode seguir qualquer plano de leitura, ou nenhum. Sem anúncios e sem assinaturas.
 
 ## Guias
 
@@ -29,7 +29,7 @@ O My Bible Log é um registro gratuito de leitura da Bíblia. Anote os capítulo
 
 ## Recursos gratuitos
 
-* [Livros da Bíblia: os 66 livros com capítulos, versículos e tempo de leitura](/pt/books-of-the-bible)
+* [Livros da Bíblia: os 66 livros e os deuterocanônicos, com capítulos, versículos e tempo de leitura](/pt/books-of-the-bible)
 * [Registro de leitura da Bíblia para imprimir](/pt/resources/printable-bible-reading-tracker)
 
 ## Recursos do app

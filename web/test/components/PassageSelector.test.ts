@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { setActivePinia, createPinia } from 'pinia';
 import { Bible } from '@mybiblelog/shared';
 import PassageSelector from '~/components/forms/PassageSelector.vue';
 import GridSelector from '~/components/forms/GridSelector.vue';
@@ -19,6 +20,10 @@ async function tapRange(wrapper: ReturnType<typeof mount>, from: number, to: num
   await wrapper.findComponent(TapRangeSelector).vm.$emit('selection', { from, to });
   await wrapper.vm.$nextTick();
 }
+
+beforeEach(() => {
+  setActivePinia(createPinia());
+});
 
 describe('PassageSelector auto-advance mode', () => {
   it('chains book → chapters → verses within the modal instead of exiting after the book', async () => {

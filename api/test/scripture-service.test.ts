@@ -8,6 +8,7 @@ import {
 } from '../services/scripture/helloao-parser';
 import {
   HELLOAO_DEFAULT_TRANSLATION_ID,
+  HELLOAO_DEUTEROCANONICAL_TRANSLATION_ID,
   getHelloaoTranslationId,
 } from '../services/scripture/helloao-translations';
 
@@ -232,6 +233,13 @@ describe('getHelloaoTranslationId', () => {
     expect(getHelloaoTranslationId('NASB2020')).toBe(HELLOAO_DEFAULT_TRANSLATION_ID);
     expect(getHelloaoTranslationId('ESV')).toBe(HELLOAO_DEFAULT_TRANSLATION_ID);
     expect(getHelloaoTranslationId('MSG')).toBe(HELLOAO_DEFAULT_TRANSLATION_ID);
+  });
+
+  it('uses the KJV + Apocrypha translation for deuterocanonical books, whatever the version', () => {
+    const tobit = Bible.getBookIndexByUsfmCode('TOB');
+    expect(getHelloaoTranslationId('NASB2020', tobit)).toBe(HELLOAO_DEUTEROCANONICAL_TRANSLATION_ID);
+    expect(getHelloaoTranslationId('RVR1960', tobit)).toBe(HELLOAO_DEUTEROCANONICAL_TRANSLATION_ID);
+    expect(getHelloaoTranslationId('NASB2020', 1)).toBe(HELLOAO_DEFAULT_TRANSLATION_ID);
   });
 });
 

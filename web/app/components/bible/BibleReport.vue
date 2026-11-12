@@ -46,6 +46,7 @@
 import { Bible, filterAndSortBookOptions, getBookOptions, withSegmentPercentages } from '@mybiblelog/shared';
 import type { LogEntry } from '@mybiblelog/shared';
 import { usePassageNotesStore } from '~/stores/passage-notes';
+import { useUserSettingsStore } from '~/stores/user-settings';
 import SegmentBar from '~/components/bible/SegmentBar.vue';
 import BookListToolbar from '~/components/bible/BookListToolbar.vue';
 import StarIcon from '~/components/svg/StarIcon.vue';
@@ -64,6 +65,7 @@ const localePath = useLocalePath();
 const router = useRouter();
 
 const passageNotesStore = usePassageNotesStore();
+const userSettingsStore = useUserSettingsStore();
 
 const hydrated = ref(false);
 onMounted(() => { hydrated.value = true; });
@@ -77,9 +79,11 @@ function navigateToBook(bookIndex: number) {
 const bookNotesCounts = computed(() => passageNotesStore.bookNoteCounts);
 const anyBooksHaveNotes = computed(() => passageNotesStore.anyBooksHaveNotes);
 
+const includeDeuterocanonical = computed(() => userSettingsStore.settings.includeDeuterocanonical);
+
 /** Books shown in the list, filtered and in the chosen display order. */
 const visibleBookIndices = computed(() =>
-  filterAndSortBookOptions(getBookOptions(locale.value), {
+  filterAndSortBookOptions(getBookOptions(locale.value, includeDeuterocanonical.value), {
     testament: testamentFilter.value,
     sortOrder: sortOrder.value,
     locale: locale.value,
@@ -87,9 +91,12 @@ const visibleBookIndices = computed(() =>
 );
 
 /** The same books in canonical order, so the overall bar reads Genesis → Revelation whatever the list order. */
-const canonicalBookIndices = computed(() =>
-  [...visibleBookIndices.value].sort((a, b) => a - b),
-);
+const canonicalBookIndices = computed(() => {
+  const visible = new Set(visibleBookIndices.value);
+  return Bible.getBooksForCanon(includeDeuterocanonical.value)
+    .map(book => book.bibleOrder)
+    .filter(bookIndex => visible.has(bookIndex));
+});
 
 const totalVisibleVerses = computed(() =>
   visibleBookIndices.value.reduce((sum, bookIndex) => sum + Bible.getBookVerseCount(bookIndex), 0),

@@ -13,9 +13,20 @@
         @next="handleNext"
       />
 
+      <!-- Canon selection (chosen first, as it changes the total verse count) -->
+      <canon-selection-form
+        v-if="progressTab === 1"
+        :initial-value="userSettings.includeDeuterocanonical"
+        :next-button-text="t('start_page.save_and_continue')"
+        :previous-button-text="t('start_page.back')"
+        :show-toast="false"
+        @next="handleNext"
+        @previous="handlePrevious"
+      />
+
       <!-- Daily Verse Count Goal -->
       <daily-verse-count-goal-form
-        v-if="progressTab === 1"
+        v-if="progressTab === 2"
         :initial-value="userSettings.dailyVerseCountGoal"
         :next-button-text="t('start_page.save_and_continue')"
         :previous-button-text="t('start_page.back')"
@@ -26,7 +37,7 @@
 
       <!-- Preferred Bible Version and App -->
       <preferred-bible-version-form
-        v-if="progressTab === 2"
+        v-if="progressTab === 3"
         :initial-value="userSettings.preferredBibleVersion"
         :initial-bible-app="userSettings.preferredBibleApp"
         :next-button-text="t('start_page.save_and_finish')"
@@ -44,6 +55,7 @@
 
 <script setup lang="ts">
 import WelcomeStep from '~/components/forms/settings/WelcomeStep.vue';
+import CanonSelectionForm from '~/components/forms/settings/CanonSelectionForm.vue';
 import DailyVerseCountGoalForm from '~/components/forms/settings/DailyVerseCountGoalForm.vue';
 import PreferredBibleVersionForm from '~/components/forms/settings/PreferredBibleVersionForm.vue';
 import GetStartedModal from '~/components/popups/GetStartedModal.vue';
@@ -58,9 +70,9 @@ useHead({ title: () => t('start_page.welcome.title') });
 const userSettingsStore = useUserSettingsStore();
 const userSettings = computed(() => userSettingsStore.settings);
 
-// 0: Welcome, 1: Daily Verse Count Goal, 2: Preferred Bible Version and App
+// 0: Welcome, 1: Canon, 2: Daily Verse Count Goal, 3: Preferred Bible Version and App
 const progressTab = ref(0);
-const totalSteps = 3;
+const totalSteps = 4;
 const showGetStartedModal = ref(false);
 
 onMounted(() => {
@@ -68,7 +80,7 @@ onMounted(() => {
 });
 
 function handleNext() {
-  if (progressTab.value === 2) {
+  if (progressTab.value === totalSteps - 1) {
     showGetStartedModal.value = true;
   }
   else if (progressTab.value < totalSteps - 1) {

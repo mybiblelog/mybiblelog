@@ -1,5 +1,5 @@
 import { makeVerseId, parseVerseId, type VerseId, type VerseRange } from './encoding';
-import { getBookChapterCount, getBookCount, getBookVerseCount, getChapterVerseCount } from './metadata';
+import { getAllBooks, getBookChapterCount, getBooksForCanon, getBookVerseCount, getChapterVerseCount } from './metadata';
 import { getFirstBookVerseId, getLastBookVerseId, getNextVerseId, getPreviousVerseId } from './navigation';
 
 /**
@@ -125,6 +125,18 @@ export const countUniqueBookRangeVerses = (bookIndex: number, ranges: ReadonlyAr
 };
 
 /**
+ * Returns a new array comprised only of ranges whose book is in the reader's canon,
+ * so verses logged in deuterocanonical books don't count once they're excluded.
+ */
+export const filterRangesToCanon = <T extends Readonly<VerseRange>>(
+  ranges: ReadonlyArray<T>,
+  includeDeuterocanonical = false,
+): T[] => {
+  const canonBookIndexes = new Set(getBooksForCanon(includeDeuterocanonical).map((book) => book.bibleOrder));
+  return ranges.filter((range) => canonBookIndexes.has(parseVerseId(range.startVerseId).book));
+};
+
+/**
  * Returns a new array comprised only of ranges in the given book.
  */
 export const filterRangesByBook = (bookIndex: number, ranges: ReadonlyArray<Readonly<VerseRange>>): VerseRange[] => {
@@ -191,17 +203,23 @@ export const consolidateRanges = (ranges: ReadonlyArray<Readonly<VerseRange>>): 
   const sortedIndices = createSortedIndices(ranges, compareRanges);
   const result: VerseRange[] = [];
 
-  // Sort ranges into constituent books
+  // Sort ranges into constituent books. This walks every known book
+  // (including the deuterocanonical ones) in ascending bibleOrder so the
+  // consolidated result stays sorted by verse id.
+  const bookIndexes = getAllBooks()
+    .map((book) => book.bibleOrder)
+    .sort((a, b) => a - b);
   const allBookRanges: { [index: number]: VerseRange[] } = {};
-  for (let i = 1, l = getBookCount(); i <= l; i++) {
-    allBookRanges[i] = [];
+  for (const bookIndex of bookIndexes) {
+    allBookRanges[bookIndex] = [];
   }
   for (const index of sortedIndices) {
     const range = ranges[index]!;
     const { book } = parseVerseId(range.startVerseId);
-    allBookRanges[book]!.push({ ...range });
+    // Skip ranges for unknown book indices rather than crashing.
+    allBookRanges[book]?.push({ ...range });
   }
-  for (let bookIndex = 1, l = getBookCount(); bookIndex <= l; bookIndex++) {
+  for (const bookIndex of bookIndexes) {
     const bookRanges = allBookRanges[bookIndex]!;
     const consolidatedBookRanges: VerseRange[] = [];
     let holdingRange: VerseRange | null = null;

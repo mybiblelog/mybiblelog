@@ -384,6 +384,11 @@ export const de = {
     "Das Konto konnte nicht gelöscht werden. Bitte versuchen Sie es später erneut.",
 
   settings_select_option: "Eine Option auswählen",
+  settings_reading_canon_title: "Kanon",
+  settings_reading_canon_common: "Die 66 gemeinsamen Bücher",
+  settings_reading_canon_deuterocanonical: "Deuterokanonische Bücher einschließen",
+  settings_reading_canon_info:
+    "Wählen Sie, welche Bücher verfolgt werden. Deuterokanonische Bücher werden gemäß der katholischen kanonischen Reihenfolge zwischen die Bücher des Alten Testaments eingefügt und in Ihrem Lesefortschritt gezählt.",
   settings_reading_daily_goal_title: "Tägliches Versziel",
   settings_reading_look_back_date_title: "Tracker-Startdatum",
   settings_reading_preferred_bible_version_title: "Bevorzugte Bibelübersetzung",
@@ -414,6 +419,16 @@ export const de = {
     "Lassen Sie uns Ihre Einstellungen personalisieren, damit Sie das Beste aus der App herausholen können.",
   onboarding_welcome_next: "Meine Einstellungen personalisieren",
   onboarding_welcome_skip: "Personalisierung überspringen",
+  onboarding_canon_title: "Wählen Sie Ihren Kanon",
+  onboarding_canon_description:
+    "Welche Bücher der Bibel möchten Sie verfolgen? Dies bestimmt die angezeigten Bücher und die Gesamtmenge der Schrift, an der Ihr Fortschritt gemessen wird.",
+  onboarding_canon_total_verses: "Verse insgesamt",
+  onboarding_canon_common_title: "Die 66 gemeinsamen Bücher",
+  onboarding_canon_common_description:
+    "Die 66 Bücher, die alle christlichen Bibeln gemeinsam haben, von Genesis bis Offenbarung.",
+  onboarding_canon_deuterocanonical_title: "Deuterokanonische Bücher einschließen",
+  onboarding_canon_deuterocanonical_description:
+    "Fügt die deuterokanonischen Bücher gemäß der katholischen kanonischen Reihenfolge zwischen die Bücher des Alten Testaments ein.",
   onboarding_goal_title: "Tägliches Leseziel",
   onboarding_goal_description:
     "Wie viele Verse möchten Sie jeden Tag lesen? My Bible Log zeigt Ihnen Ihren Fortschritt zu diesem Ziel.",

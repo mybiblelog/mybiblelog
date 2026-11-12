@@ -16,7 +16,7 @@ import {
   Spinner,
   Text,
 } from "@/src/components";
-import { fadeIn, radius, spacing, useTheme } from "@/src/design";
+import { fadeIn, radius, spacing, useEntering, useTheme } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { filterAndSortBooks } from "@/src/bible/bookList";
 import { useBibleProgress } from "@/src/stores/bibleProgress";
@@ -102,6 +102,7 @@ const BookCard = memo(function BookCard({
   onToggleBook: (bookIndex: number) => void;
   onToggleChapter: (bookIndex: number, chapterIndex: number) => void;
 }) {
+  const chaptersEntering = useEntering(fadeIn());
   return (
     <Card padding="none" style={styles.bookCard}>
       <Pressable
@@ -145,7 +146,7 @@ const BookCard = memo(function BookCard({
       />
 
       {isExpanded && (
-        <Animated.View entering={fadeIn()} style={styles.chaptersWrap}>
+        <Animated.View entering={chaptersEntering} style={styles.chaptersWrap}>
           {book.chapters.map((c) => (
             <ChapterCell
               key={c.chapterIndex}
@@ -177,7 +178,7 @@ export default function Checklist() {
   const { width: windowWidth } = useWindowDimensions();
 
   // Purely a view filter and order: `progress` and `toggleChapter` keep working
-  // off the full 66-book list, and `expandedBooks` is keyed by absolute book
+  // off the full canon book list, and `expandedBooks` is keyed by absolute book
   // index, so hiding a testament or reordering never disturbs what is expanded
   // or what gets saved.
   const filteredBooks = useMemo(() => {
@@ -313,7 +314,7 @@ export default function Checklist() {
           // sibling books overlapping the expanded chapter grid, so opt out.
           animateItemLayout={false}
           keyExtractor={(b: BookProgress) => String(b.bookIndex)}
-          // Fixed-size list (66 books at most): render it all up front instead
+          // Fixed-size list (77 books at most): render it all up front instead
           // of FlatList's default incremental backfill, so the page doesn't
           // visibly grow after mount.
           initialNumToRender={filteredBooks.length}

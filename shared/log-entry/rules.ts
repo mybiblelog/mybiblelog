@@ -25,16 +25,18 @@ export const isBookComplete = (
   return versesRead === totalVerses;
 };
 
-/** True when every book of the Bible is complete. */
-export const isBibleComplete = (logEntries: ReadonlyArray<CompletionLogEntry>): boolean => {
-  const totalBooks = Bible.getBookCount();
-  for (let i = 1; i <= totalBooks; i++) {
-    if (!isBookComplete(i, logEntries)) {
-      return false;
-    }
-  }
-  return true;
+export type BibleCompleteOptions = {
+  /** Require the deuterocanonical books too. Defaults to `false` (66-book canon). */
+  includeDeuterocanonical?: boolean;
 };
+
+/** True when every book of the reader's canon is complete. */
+export const isBibleComplete = (
+  logEntries: ReadonlyArray<CompletionLogEntry>,
+  { includeDeuterocanonical = false }: BibleCompleteOptions = {},
+): boolean =>
+  Bible.getBooksForCanon(includeDeuterocanonical)
+    .every(book => isBookComplete(book.bibleOrder, logEntries));
 
 export type AchievementEvent =
   | { type: 'bible' }
@@ -50,11 +52,12 @@ export const evaluateAchievement = (
   bookIndex: number,
   before: ReadonlyArray<CompletionLogEntry>,
   after: ReadonlyArray<CompletionLogEntry>,
+  options: BibleCompleteOptions = {},
 ): AchievementEvent => {
   const wasBookComplete = isBookComplete(bookIndex, before);
-  const wasBibleComplete = isBibleComplete(before);
+  const wasBibleComplete = isBibleComplete(before, options);
   const isBookNowComplete = isBookComplete(bookIndex, after);
-  const isBibleNowComplete = isBibleComplete(after);
+  const isBibleNowComplete = isBibleComplete(after, options);
 
   if (!wasBibleComplete && isBibleNowComplete) {
     return { type: 'bible' };
