@@ -16,7 +16,7 @@ import {
   Spinner,
   Text,
 } from "@/src/components";
-import { fadeIn, radius, spacing, useTheme } from "@/src/design";
+import { fadeIn, radius, spacing, useEntering, useTheme } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { filterAndSortBooks } from "@/src/bible/bookList";
 import { useBibleProgress } from "@/src/stores/bibleProgress";
@@ -102,6 +102,7 @@ const BookCard = memo(function BookCard({
   onToggleBook: (bookIndex: number) => void;
   onToggleChapter: (bookIndex: number, chapterIndex: number) => void;
 }) {
+  const chaptersEntering = useEntering(fadeIn());
   return (
     <Card padding="none" style={styles.bookCard}>
       <Pressable
@@ -145,7 +146,7 @@ const BookCard = memo(function BookCard({
       />
 
       {isExpanded && (
-        <Animated.View entering={fadeIn()} style={styles.chaptersWrap}>
+        <Animated.View entering={chaptersEntering} style={styles.chaptersWrap}>
           {book.chapters.map((c) => (
             <ChapterCell
               key={c.chapterIndex}

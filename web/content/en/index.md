@@ -1,8 +1,8 @@
 ---
-dateModified: "2026-10-05"
+dateModified: "2026-11-11"
 seo:
   title: My Bible Log - Free Bible Reading Tracker
-  description: Track your Bible reading progress with My Bible Log, a free online Bible reading tracker. Set daily goals, take notes, and see your progress across all 66 books. No ads, no subscriptions — completely free.
+  description: Track your Bible reading progress with My Bible Log, a free online Bible reading tracker. Set daily goals, take notes, and see your progress across all 66 books — plus the deuterocanonical books. No ads, no subscriptions — completely free.
 og:
   title: My Bible Log - Free Bible Reading Tracker
   description: Track your Bible reading at your own pace with My Bible Log. Set daily goals, take notes, and make progress toward reading the entire Bible. Free, no ads, no subscriptions.
@@ -106,6 +106,27 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/en/sc17-deuterocanonical.webp
+image-alt: "The My Bible Log Bible Books page listing Tobit, Judith, and 1 Maccabees with reading progress among the Old Testament books"
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: "Track Every Book in Your Bible"
+subtitle: "Catholic & Orthodox Canons Supported"
+description: >-
+  Reading a Catholic or Orthodox Bible? Turn on the <strong>deuterocanonical books</strong> — Tobit, Judith, 1 and 2 Maccabees, Wisdom, Sirach, Baruch, and more — and they're placed in Catholic canonical order among the Old Testament books.
+list:
+  - "Switch your canon anytime in reading settings"
+  - "Progress, the chapter checklist, and daily goals all cover your full canon"
+  - "Works on the web and on Android"
+button-text: Get Started Free
+button-destination: /register
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/en/sc15-insights-activity.webp
 image-alt: The My Bible Log Insights page showing a GitHub-style activity heatmap of daily Bible reading
 image-width: "750"
@@ -119,7 +140,7 @@ list:
   - Spot patterns in your reading habits
   - Celebrate long reading streaks
   - See a full year of activity in one view
-reverse: false
+reverse: true
 ---
 ::
 
@@ -139,7 +160,7 @@ list:
   - Export or import your reading log anytime
 button-text: Get Started Free
 button-destination: /register
-reverse: true
+reverse: false
 ---
 ::
 
@@ -154,7 +175,7 @@ title: Take Notes as You Read
 subtitle: Flexible Bible Reading Notes
 description: >-
   Write down questions, insights, or reflections as you study. Organize notes with <strong>custom tags</strong> to match your personal study style — memory verses, topics, unanswered questions, and more.
-reverse: false
+reverse: true
 ---
 ::
 
@@ -169,7 +190,7 @@ title: Log Reading in Seconds
 subtitle: Quick Chapter Logging
 description: >-
   Short on time? Mark chapters as read with <strong>a single click</strong> — no typing required.
-reverse: true
+reverse: false
 ---
 ::
 
@@ -188,6 +209,6 @@ list:
   - Free to use
 button-text: Get Started Free
 button-destination: /register
-reverse: false
+reverse: true
 ---
 ::

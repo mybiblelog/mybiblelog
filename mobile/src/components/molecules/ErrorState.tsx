@@ -1,6 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import Animated from "react-native-reanimated";
-import { fadeIn, spacing } from "@/src/design";
+import { fadeIn, spacing, useEntering } from "@/src/design";
 import { Button } from "../atoms/Button";
 import { Icon } from "../atoms/Icon";
 import { Text } from "../atoms/Text";
@@ -17,8 +17,9 @@ export function ErrorState({
   retryLabel?: string;
   onRetry?: () => void;
 }) {
+  const entering = useEntering(fadeIn());
   return (
-    <Animated.View entering={fadeIn()} style={styles.container}>
+    <Animated.View entering={entering} style={styles.container}>
       <View style={styles.icon}>
         <Icon name="alert-circle-outline" size={40} color="destructive" />
       </View>

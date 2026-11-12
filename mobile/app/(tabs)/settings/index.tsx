@@ -68,6 +68,7 @@ export default function SettingsIndex() {
           title={t("settings_section_reading")}
           subtitle={t("settings_section_reading_subtitle")}
           onPress={() => router.push("/settings/reading")}
+          testID="settings.reading-link"
         />
         <SectionRow
           icon="stats-chart-outline"

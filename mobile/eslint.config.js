@@ -51,6 +51,11 @@ module.exports = defineConfig([
           message:
             "Use a semantic color from useTheme().colors instead of a hex literal. Add the role to tokens/colors.ts if it does not exist yet.",
         },
+        {
+          selector: "JSXAttribute[name.name='entering'] CallExpression",
+          message:
+            "Build the entering animation with useEntering() (src/design/animations/entering.ts) and pass the result; a bare entering animation can leave the view invisible on Android under reduced motion.",
+        },
       ],
     },
   },

@@ -28,6 +28,7 @@ import {
   resetLocaleData,
   seedLocaleContent,
   seedTodayGoalEntries,
+  setCanon,
   setupUser,
   teardownUser,
 } from './lib/screenshot-seed';
@@ -129,6 +130,20 @@ async function prepareChecklist(page: Page): Promise<void> {
   await page.waitForTimeout(400);
 }
 
+async function prepareDeuterocanonical(page: Page): Promise<void> {
+  await setCanon(true);
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  // Tobit (67) only renders once the reloaded settings include the deuterocanonical books;
+  // its button is disabled until hydration, which would otherwise reset the scroll below.
+  await page.waitForSelector('[data-testid="bible-report-book"][data-book-index="67"]:not([disabled])', { timeout: 10000 });
+  // Nehemiah lands under the sticky navbar, leaving Tobit first with the other
+  // deuterocanonical books interleaved among Esther, Job and Psalms below it.
+  await page
+    .locator('[data-testid="bible-report-book"][data-book-index="16"]')
+    .evaluate(el => el.scrollIntoView({ block: 'start' }));
+  await page.waitForTimeout(400);
+}
+
 // --- Screen list ---
 
 const SCREENS: Screen[] = [
@@ -158,6 +173,14 @@ const SCREENS: Screen[] = [
   { slug: 'sc15-insights-activity', path: '/insights', prepare: prepareInsightsActivity },
   // Insights page — daily verses trend chart
   { slug: 'sc16-insights-trend', path: '/insights/trend', prepare: prepareInsightsTrend },
+  // Bible Books page with the deuterocanonical books enabled. Kept last: the screens above
+  // locate books by list position, which assumes the 66-book canon.
+  {
+    slug: 'sc17-deuterocanonical',
+    path: '/books',
+    prepare: prepareDeuterocanonical,
+    cleanup: () => setCanon(false),
+  },
 ];
 
 // --- Screenshot helpers ---

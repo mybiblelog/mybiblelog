@@ -1,8 +1,8 @@
 ---
-dateModified: "2026-10-05"
+dateModified: "2026-11-11"
 seo:
   title: My Bible Log - suivi de lecture biblique gratuit
-  description: Suivez votre lecture de la Bible avec My Bible Log, un outil en ligne gratuit. Fixez un objectif quotidien, prenez des notes et visualisez votre progression dans les 66 livres. Sans publicité ni abonnement, entièrement gratuit.
+  description: Suivez votre lecture de la Bible avec My Bible Log, un outil en ligne gratuit. Fixez un objectif quotidien, prenez des notes et visualisez votre progression dans les 66 livres, et aussi dans les livres deutérocanoniques. Sans publicité ni abonnement, entièrement gratuit.
 og:
   title: My Bible Log - suivi de lecture biblique gratuit
   description: Lisez la Bible à votre rythme et gardez-en la trace avec My Bible Log. Fixez un objectif quotidien, prenez des notes et avancez vers la Bible entière. Gratuit, sans publicité ni abonnement.
@@ -106,6 +106,27 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/fr/sc17-deuterocanonical.webp
+image-alt: "La page Livres de la Bible de My Bible Log affichant Tobie, Judith et 1 Maccabées avec leur progression parmi les livres de l'Ancien Testament"
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: "Suivez chaque livre de votre Bible"
+subtitle: "Canons catholique et orthodoxe pris en charge"
+description: >-
+  Vous lisez une Bible catholique ou orthodoxe ? Activez les <strong>livres deutérocanoniques</strong> — Tobie, Judith, 1 et 2 Maccabées, Sagesse, Siracide, Baruch et d'autres — et ils prennent place dans l'ordre canonique catholique parmi les livres de l'Ancien Testament.
+list:
+  - "Changez de canon à tout moment dans les paramètres de lecture"
+  - "La progression, la liste des chapitres et l'objectif quotidien couvrent tout votre canon"
+  - "Sur le web et sur Android"
+button-text: Commencer gratuitement
+button-destination: /register
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/fr/sc15-insights-activity.webp
 image-alt: La page Analyses de My Bible Log montrant un graphique d'activité de style GitHub de la lecture biblique quotidienne
 image-width: "750"
@@ -119,7 +140,7 @@ list:
   - Repérez des tendances dans vos habitudes de lecture
   - Célébrez vos longues séries de lecture
   - Voyez une année entière d'activité en une seule vue
-reverse: false
+reverse: true
 ---
 ::
 
@@ -139,7 +160,7 @@ list:
   - Exportez ou importez votre journal quand vous voulez
 button-text: Commencer gratuitement
 button-destination: /register
-reverse: true
+reverse: false
 ---
 ::
 
@@ -154,7 +175,7 @@ title: Prenez des notes en lisant
 subtitle: Des notes bibliques souples
 description: >-
   Notez vos questions, vos découvertes et vos réflexions au fil de l'étude. Classez vos notes avec <strong>vos propres tags</strong>, selon votre façon de travailler : versets à mémoriser, thèmes, questions en suspens, et tout ce que vous voudrez.
-reverse: false
+reverse: true
 ---
 ::
 
@@ -169,7 +190,7 @@ title: Notez vos lectures en quelques secondes
 subtitle: Cocher un chapitre, c'est tout
 description: >-
   Peu de temps ? Marquez un chapitre comme lu <strong>en un seul clic</strong>, sans rien taper.
-reverse: true
+reverse: false
 ---
 ::
 
@@ -188,6 +209,6 @@ list:
   - Gratuit
 button-text: Commencer gratuitement
 button-destination: /register
-reverse: false
+reverse: true
 ---
 ::

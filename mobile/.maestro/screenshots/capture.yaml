@@ -405,3 +405,84 @@ appId: com.mybiblelog.app
 - tapOn:
     id: "appearance.option-system"
 - back
+
+# --- Deuterocanonical: canon picker (sc17-canon-picker) + Bible books (sc17) --
+# Turned on through Settings > Reading like a real user would, then turned back
+# off so the next locale's run starts from the 66-book canon the earlier
+# screens' book positions assume. Starts on the Settings root (see above).
+- tapOn:
+    id: "settings.reading-link"
+- tapOn:
+    id: "settings-reading.canon-select"
+- tapOn:
+    id: "settings-reading.canon-option-deuterocanonical"
+# Re-open the sheet so the capture shows the deuterocanonical option checked.
+- tapOn:
+    id: "settings-reading.canon-select"
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${OUTPUT_DIR}/sc17-canon-picker
+- tapOn:
+    id: "settings-reading.canon-option-deuterocanonical"
+- tapOn:
+    id: "settings-reading.canon-save"
+# Save stays rendered (disabled when clean); Discard only shows while the
+# draft is dirty and not saving, so its disappearance plus a settle covers the
+# API round-trip.
+- extendedWaitUntil:
+    notVisible:
+      id: "settings-reading.canon-discard"
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 3000
+- back
+
+- tapOn:
+    id: "tab.bible"
+# Scroll until 1 Maccabees (69) shows, leaving Nehemiah → Tobit → Judith →
+# Esther → Additions to Esther on screen above it.
+- repeat:
+    times: 20
+    while:
+      notVisible:
+        id: "bible.book-69"
+    commands:
+      - swipe:
+          start: 50%, 70%
+          end: 50%, 45%
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${OUTPUT_DIR}/sc17-deuterocanonical
+# The Bible tab stays mounted: scroll back to Genesis so the next locale's sc7
+# and sc6 start from the top. (The whole-Bible card is pinned, so it can't
+# signal the top.)
+- repeat:
+    times: 20
+    while:
+      notVisible:
+        id: "bible.book-1"
+    commands:
+      - swipe:
+          start: 50%, 30%
+          end: 50%, 80%
+
+- tapOn:
+    id: "tab.settings"
+- tapOn:
+    id: "settings.reading-link"
+- tapOn:
+    id: "settings-reading.canon-select"
+- tapOn:
+    id: "settings-reading.canon-option-common"
+- tapOn:
+    id: "settings-reading.canon-save"
+# Save stays rendered (disabled when clean); Discard only shows while the
+# draft is dirty and not saving, so its disappearance plus a settle covers the
+# API round-trip.
+- extendedWaitUntil:
+    notVisible:
+      id: "settings-reading.canon-discard"
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 3000
+- back

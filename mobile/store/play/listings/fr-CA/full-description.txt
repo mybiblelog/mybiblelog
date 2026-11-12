@@ -3,9 +3,14 @@ Lisez toute la Bible — à votre façon.
 La plupart des plans de lecture vous disent quoi lire et quand. My Bible Log fonctionne autrement : vous enregistrez simplement ce que vous avez déjà lu — prédications, méditations, groupes de maison ou étude personnelle — et tout compte pour votre progression. Pas d'horaires rigides. Pas de culpabilité si vous manquez un jour. En chemin, tenez un journal d'étude avec des notes liées aux passages dont elles parlent.
 
 SUIVEZ VOTRE PROGRESSION
-• Visualisez votre progression chapitre par chapitre, livre par livre et sur toute la Bible — les 66 livres, les 1 189 chapitres
+• Visualisez votre progression chapitre par chapitre, livre par livre et sur toute la Bible — les 66 livres et 1 189 chapitres, plus les livres deutérocanoniques si votre Bible les contient
 • Gagnez une étoile à chaque livre terminé
 • Obtenez une date de fin estimée à partir de votre rythme de lecture réel
+
+VOTRE BIBLE, VOTRE CANON
+• Vous lisez une Bible catholique ou orthodoxe? Activez les livres deutérocanoniques — Tobie, Judith, 1 et 2 Maccabées, Sagesse, Siracide, Baruch et d'autres
+• Ils prennent place dans l'ordre canonique catholique parmi les livres de l'Ancien Testament et comptent dans votre progression, votre liste de chapitres et votre objectif quotidien
+• Changez de canon à tout moment dans les paramètres
 
 TENEZ UN JOURNAL D'ÉTUDE BIBLIQUE
 • Notez questions, découvertes, prières et notes de prédication liées aux passages dont elles parlent

@@ -79,7 +79,7 @@ published.
 cd mobile
 npm run play:graphics -- --serve                 # live preview: edit the JSON, reload
 npm run play:graphics                            # render every locale
-npm run play:graphics -- --locales de-DE --slides 04-calendar
+npm run play:graphics -- --locales de-DE --slides 05-calendar
 ```
 
 Render after every `npm run screenshots:mobile`. The fonts load from Google

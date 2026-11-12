@@ -22,6 +22,8 @@ type BaseProps<T extends string | number> = {
   selectedValue: T | null;
   onSelect: (value: T) => void;
   onClose: () => void;
+  /** Each option gets the testID `${optionTestIDPrefix}-${value}`. */
+  optionTestIDPrefix?: string;
 };
 
 type Props<T extends string | number> = BaseProps<T> &
@@ -43,6 +45,7 @@ export function SelectSheet<T extends string | number>({
   selectedValue,
   onSelect,
   onClose,
+  optionTestIDPrefix,
 }: Props<T>) {
   const { colors } = useTheme();
   const data = sections ?? [{ label: "", options: options ?? [] }];
@@ -78,6 +81,7 @@ export function SelectSheet<T extends string | number>({
               }}
               trailing={selected ? <Icon name="checkmark" size={20} color="primary" /> : undefined}
               style={selected ? { backgroundColor: colors.surfaceMuted } : undefined}
+              testID={optionTestIDPrefix ? `${optionTestIDPrefix}-${item.value}` : undefined}
             />
           );
         }}

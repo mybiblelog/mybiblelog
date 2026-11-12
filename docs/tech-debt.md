@@ -90,14 +90,14 @@ Permanent design decisions and constraints don't belong here, even when they're 
 - **Tracking:** [software-mansion/react-native-reanimated#8665](https://github.com/software-mansion/react-native-reanimated/issues/8665)
 - **Added:** 2026-07
 
-### reanimated-list-empty-entering
+### reanimated-reduced-motion-entering
 
-- **Where:** `mobile/src/components/molecules/EmptyState.tsx`
-- **Why:** On the New Architecture (Reanimated 4.7.1, RN 0.88.1), an `entering` fade on a FlatList `ListEmptyComponent` intermittently never runs, so the empty state takes up its space but stays at opacity 0. It reproduced on about half of cold launches on the Android emulator, so empty states now appear without fading in.
-- **Remove when:** a Reanimated upgrade lets an `entering` fade on `EmptyState` show up on every cold launch.
-- **Check:** restore `entering={fadeIn()}`, then cold-launch the Today screen with no entries about 10 times on an Android emulator.
-- **Tracking:** none yet; possibly related to [software-mansion/react-native-reanimated#8665](https://github.com/software-mansion/react-native-reanimated/issues/8665)
-- **Added:** 2026-11
+- **Where:** `mobile/src/design/animations/entering.ts` (`useEntering`), used by every Reanimated `entering` in the app
+- **Why:** Reanimated inserts a view with an `entering` animation at opacity 0 and relies on the animation to show it. On Android under reduced motion (latched at bundle load from "Remove animations" or zeroed animation scales), the animation finishes before the view mounts and the view stays invisible while still taking up space (checklist chapter grids, empty states). `useEntering` skips `entering` under reduced motion, where it would be instant anyway.
+- **Remove when:** a Reanimated release includes the fix (4.7.2 or 4.8.0); then replace `useEntering(x)` with `x`.
+- **Check:** zero the three animation scales, cold-launch the app, restore the scales, then expand and collapse a book on the Checklist tab about 10 times; every chapter grid must show.
+- **Tracking:** [software-mansion/react-native-reanimated#11174](https://github.com/software-mansion/react-native-reanimated/issues/11174) (fixed by #10811, unreleased as of 4.7.1)
+- **Added:** 2026-11-12
 
 ### rngh3-jest-ui-runtime-bindings
 

@@ -1,8 +1,8 @@
 ---
-dateModified: "2026-10-05"
+dateModified: "2026-11-11"
 seo:
   title: My Bible Log - registro gratuito de lectura bíblica
-  description: Lleva el registro de tu lectura de la Biblia con My Bible Log, una herramienta en línea gratuita. Ponte metas diarias, toma notas y mira tu avance en los 66 libros. Sin anuncios, sin suscripciones, totalmente gratis.
+  description: Lleva el registro de tu lectura de la Biblia con My Bible Log, una herramienta en línea gratuita. Ponte metas diarias, toma notas y mira tu avance en los 66 libros, y también en los deuterocanónicos. Sin anuncios, sin suscripciones, totalmente gratis.
 og:
   title: My Bible Log - registro gratuito de lectura bíblica
   description: Lee la Biblia a tu propio ritmo y registra tu avance con My Bible Log. Ponte metas diarias, toma notas y avanza hacia leer la Biblia completa. Gratis, sin anuncios y sin suscripciones.
@@ -106,6 +106,27 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/es/sc17-deuterocanonical.webp
+image-alt: "La página Libros de la Biblia de My Bible Log con Tobías, Judit y 1 Macabeos y su progreso de lectura entre los libros del Antiguo Testamento"
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: "Registra cada libro de tu Biblia"
+subtitle: "Canon católico y ortodoxo"
+description: >-
+  ¿Lees una Biblia católica u ortodoxa? Activa los <strong>libros deuterocanónicos</strong> — Tobías, Judit, 1 y 2 Macabeos, Sabiduría, Eclesiástico, Baruc y más — y aparecerán en el orden canónico católico entre los libros del Antiguo Testamento.
+list:
+  - "Cambia tu canon cuando quieras en la configuración de lectura"
+  - "El progreso, la lista de capítulos y las metas diarias abarcan todo tu canon"
+  - "Funciona en la web y en Android"
+button-text: Empieza gratis
+button-destination: /register
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/es/sc15-insights-activity.webp
 image-alt: La página de Estadísticas de My Bible Log mostrando un mapa de actividad al estilo GitHub de la lectura bíblica diaria
 image-width: "750"
@@ -119,7 +140,7 @@ list:
   - Detecta patrones en tus hábitos de lectura
   - Celebra rachas de lectura largas
   - Ve un año completo de actividad en una sola vista
-reverse: false
+reverse: true
 ---
 ::
 
@@ -139,7 +160,7 @@ list:
   - Exporta o importa tu registro cuando quieras
 button-text: Empieza gratis
 button-destination: /register
-reverse: true
+reverse: false
 ---
 ::
 
@@ -154,7 +175,7 @@ title: Toma notas mientras lees
 subtitle: Notas bíblicas a tu medida
 description: >-
   Anota preguntas, descubrimientos o reflexiones mientras estudias. Ordena tus notas con <strong>etiquetas propias</strong>, según tu forma de estudiar: versículos para memorizar, temas, preguntas pendientes y lo que se te ocurra.
-reverse: false
+reverse: true
 ---
 ::
 
@@ -169,7 +190,7 @@ title: Registra tu lectura en segundos
 subtitle: Marca capítulos al instante
 description: >-
   ¿Poco tiempo? Marca los capítulos como leídos con <strong>un solo clic</strong>, sin escribir nada.
-reverse: true
+reverse: false
 ---
 ::
 
@@ -188,6 +209,6 @@ list:
   - Gratis
 button-text: Empieza gratis
 button-destination: /register
-reverse: false
+reverse: true
 ---
 ::

@@ -335,6 +335,7 @@ function ReadingSettingsForm({ settings }: { settings: LocalUserSettings }) {
         selectedValue={drafts.includeDeuterocanonical}
         onSelect={(v) => setDraft("includeDeuterocanonical", String(v))}
         onClose={() => setCanonOpen(false)}
+        optionTestIDPrefix="settings-reading.canon-option"
       />
 
       <SelectSheet

@@ -1,8 +1,8 @@
 ---
-dateModified: "2026-10-05"
+dateModified: "2026-11-11"
 seo:
   title: My Bible Log - kostenloser Bibellese-Tracker
-  description: Halten Sie Ihr Bibellesen mit My Bible Log fest, dem kostenlosen Online-Tracker. Tagesziele setzen, Notizen machen und den Fortschritt durch alle 66 Bücher sehen. Keine Werbung, kein Abo — völlig kostenlos.
+  description: Halten Sie Ihr Bibellesen mit My Bible Log fest, dem kostenlosen Online-Tracker. Tagesziele setzen, Notizen machen und den Fortschritt durch alle 66 Bücher sehen — auch mit den deuterokanonischen Büchern. Keine Werbung, kein Abo — völlig kostenlos.
 og:
   title: My Bible Log - kostenloser Bibellese-Tracker
   description: Lesen Sie die Bibel in Ihrem eigenen Tempo und halten Sie es mit My Bible Log fest. Tagesziele setzen, Notizen machen und Schritt für Schritt durch die ganze Bibel kommen. Kostenlos, ohne Werbung, ohne Abo.
@@ -106,6 +106,27 @@ reverse: true
 
 ::content-fifty-fifty
 ---
+image-src: /screenshots/de/sc17-deuterocanonical.webp
+image-alt: "Die Seite „Bücher der Bibel“ in My Bible Log mit Tobit, Judit und 1. Makkabäer samt Lesefortschritt zwischen den Büchern des Alten Testaments"
+image-width: "750"
+image-height: "1334"
+image-container-class: phone-frame
+title: "Verfolgen Sie jedes Buch Ihrer Bibel"
+subtitle: "Katholischer & orthodoxer Kanon unterstützt"
+description: >-
+  Sie lesen eine katholische oder orthodoxe Bibel? Aktivieren Sie die <strong>deuterokanonischen Bücher</strong> — Tobit, Judit, 1. und 2. Makkabäer, Weisheit, Jesus Sirach, Baruch und weitere — und sie erscheinen in katholischer kanonischer Reihenfolge zwischen den Büchern des Alten Testaments.
+list:
+  - "Kanon jederzeit in den Leseeinstellungen wechseln"
+  - "Fortschritt, Kapitel-Checkliste und Tagesziele umfassen Ihren ganzen Kanon"
+  - "Im Web und auf Android"
+button-text: Kostenlos loslegen
+button-destination: /register
+reverse: false
+---
+::
+
+::content-fifty-fifty
+---
 image-src: /screenshots/de/sc15-insights-activity.webp
 image-alt: Die My Bible Log Insights-Seite zeigt ein GitHub-artiges Aktivitätsdiagramm des täglichen Bibellesens
 image-width: "750"
@@ -119,7 +140,7 @@ list:
   - Erkenne Muster in deinen Lesegewohnheiten
   - Feiere lange Lese-Streaks
   - Sieh ein ganzes Jahr Aktivität auf einen Blick
-reverse: false
+reverse: true
 ---
 ::
 
@@ -139,7 +160,7 @@ list:
   - Leseprotokoll jederzeit exportieren oder importieren
 button-text: Kostenlos loslegen
 button-destination: /register
-reverse: true
+reverse: false
 ---
 ::
 
@@ -154,7 +175,7 @@ title: Notizen machen, während Sie lesen
 subtitle: Bibelnotizen ganz nach Ihrem Stil
 description: >-
   Halten Sie Fragen, Einsichten und Gedanken fest, während Sie lesen. Mit <strong>eigenen Tags</strong> ordnen Sie Ihre Notizen so, wie Sie arbeiten — Merkverse, Themen, offene Fragen und mehr.
-reverse: false
+reverse: true
 ---
 ::
 
@@ -169,7 +190,7 @@ title: In Sekunden eingetragen
 subtitle: Kapitel schnell abhaken
 description: >-
   Wenig Zeit? Markieren Sie Kapitel mit <strong>einem einzigen Klick</strong> als gelesen — ganz ohne Tippen.
-reverse: true
+reverse: false
 ---
 ::
 
@@ -188,6 +209,6 @@ list:
   - Kostenlos
 button-text: Kostenlos loslegen
 button-destination: /register
-reverse: false
+reverse: true
 ---
 ::
