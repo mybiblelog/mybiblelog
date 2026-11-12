@@ -10,7 +10,7 @@ export type GoalPassage = {
   endVerseId: number;
 };
 
-export const MAX_GOAL_PASSAGES = 66;
+export const MAX_GOAL_PASSAGES = Bible.getAllBooks().length;
 
 export type GoalPassageError =
   | 'empty'

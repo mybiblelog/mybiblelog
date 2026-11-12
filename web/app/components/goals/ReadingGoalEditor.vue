@@ -262,15 +262,24 @@ const stepCount = customSteps.length;
 
 const dailyVerseCountGoal = computed(() => userSettingsStore.settings.dailyVerseCountGoal || 1);
 
-const templates = READING_GOAL_TEMPLATES.map(template => ({
+const includeDeuterocanonical = computed(() => userSettingsStore.settings.includeDeuterocanonical);
+
+const templates = computed(() => READING_GOAL_TEMPLATES.map(template => ({
   id: template.id,
-  totalVerses: getGoalTotalVerses(getTemplatePassages(template.id)),
-}));
+  totalVerses: getGoalTotalVerses(getTemplatePassages(template.id, includeDeuterocanonical.value)),
+})));
 
 const bookName = (bookIndex: number) => Bible.getBookName(bookIndex, locale.value);
 
+const displayOrder = new Map(Bible.getAllBooks().map(book => [book.bibleOrder, book.dcBookOrder]));
+const byDisplayOrder = (a: number, b: number) => displayOrder.get(a)! - displayOrder.get(b)!;
+
 const testaments = computed(() => {
-  const books = Bible.getBooks().map((_, i) => ({ index: i + 1, name: bookName(i + 1) }));
+  // Books already in the goal stay listed even if the reader's canon no longer
+  // includes them, so editing never silently drops a deuterocanonical book.
+  const indexes = new Set(Bible.getBooksForCanon(includeDeuterocanonical.value).map(book => book.bibleOrder));
+  selectedBooks.value.forEach(bookIndex => indexes.add(bookIndex));
+  const books = [...indexes].sort(byDisplayOrder).map(index => ({ index, name: bookName(index) }));
   return [
     { key: 'old_testament', books: books.filter(b => !Bible.isNewTestament(b.index)) },
     { key: 'new_testament', books: books.filter(b => Bible.isNewTestament(b.index)) },
@@ -300,7 +309,7 @@ const toggleBook = (bookIndex: number) => {
 
 const reconcileOrder = () => {
   const kept = orderedBooks.value.filter(b => selectedBooks.value.has(b));
-  const added = [...selectedBooks.value].filter(b => !kept.includes(b)).sort((a, b) => a - b);
+  const added = [...selectedBooks.value].filter(b => !kept.includes(b)).sort(byDisplayOrder);
   orderedBooks.value = [...kept, ...added];
 };
 
@@ -350,7 +359,7 @@ const back = () => {
 };
 
 const chooseTemplate = (id: string) => {
-  const passages = getTemplatePassages(id);
+  const passages = getTemplatePassages(id, includeDeuterocanonical.value);
   fromTemplate.value = true;
   title.value = t(`template.${id}`);
   selectedBooks.value = new Set(passages.map(passageBookIndex));

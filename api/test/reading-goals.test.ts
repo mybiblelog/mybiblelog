@@ -4,6 +4,8 @@ import { requestApi, createTestUser, deleteTestUser } from './helpers';
 
 const JUDE = 65;
 const PHILEMON = 57;
+const NEHEMIAH = 16;
+const TOBIT = 67;
 
 const goal = {
   title: 'Short letters',
@@ -48,6 +50,20 @@ describe('reading-goals.test.js', () => {
       expect(deleted.status).toBe(200);
       const missing = await requestApi.get(`/api/reading-goals/${id}`).set('Authorization', auth);
       expect(missing.status).toBe(404);
+    }
+    finally {
+      await deleteTestUser(testUser);
+    }
+  });
+
+  it('accepts deuterocanonical books', async () => {
+    const testUser = await createTestUser();
+    try {
+      const passages = [bookToPassage(NEHEMIAH), bookToPassage(TOBIT)];
+      const created = await requestApi.post('/api/reading-goals').set('Authorization', `Bearer ${testUser.token}`)
+        .send({ ...goal, passages });
+      expect(created.status).toBe(200);
+      expect(created.body.data.passages).toEqual(passages);
     }
     finally {
       await deleteTestUser(testUser);

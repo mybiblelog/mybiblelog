@@ -17,10 +17,11 @@ import {
   isGoalVisibleToday,
   type ReadingGoal,
 } from './progress';
-import { READING_GOAL_TEMPLATES, getTemplatePassages } from './templates';
+import { READING_GOAL_TEMPLATES, getTemplateBookIndexes, getTemplatePassages } from './templates';
 
 const JUDE = 65;
 const PHILEMON = 57;
+const TOBIT = 67;
 const v = Bible.makeVerseId;
 const judeVerses = Bible.getBookVerseCount(JUDE); // 25
 
@@ -86,14 +87,36 @@ describe('passages', () => {
 });
 
 describe('templates', () => {
+  const templateBooks = (includeDeuterocanonical: boolean) => Object.fromEntries(
+    READING_GOAL_TEMPLATES.map(t => [t.id, getTemplateBookIndexes(t.id, includeDeuterocanonical)]),
+  );
+
   test('book lists', () => {
-    const books = Object.fromEntries(READING_GOAL_TEMPLATES.map(t => [t.id, t.bookIndexes]));
+    const books = templateBooks(false);
     expect(books.whole_bible).toHaveLength(66);
     expect(books.old_testament).toEqual(Array.from({ length: 39 }, (_, i) => i + 1));
     expect(books.new_testament![0]).toBe(40);
     expect(books.new_testament).toHaveLength(27);
     expect(books.gospels).toEqual([40, 41, 42, 43]);
     expect(books.wisdom).toEqual([18, 19, 20, 21, 22]);
+  });
+
+  test('book lists with deuterocanonical books, in canonical order', () => {
+    const books = templateBooks(true);
+    expect(books.whole_bible).toEqual(Bible.getBooksForCanon(true).map(b => b.bibleOrder));
+    expect(books.whole_bible).toHaveLength(77);
+    expect(books.old_testament).toHaveLength(50);
+    const nehemiah = books.old_testament!.indexOf(16);
+    expect(books.old_testament![nehemiah + 1]).toBe(TOBIT);
+    expect(books.new_testament).toEqual(templateBooks(false).new_testament);
+    expect(books.gospels).toEqual([40, 41, 42, 43]);
+    expect(books.wisdom).toEqual([18, 19, 20, 21, 22, 71, 72]);
+    expect(getGoalTotalVerses(getTemplatePassages('whole_bible', true))).toBe(Bible.getTotalVerseCount(true));
+  });
+
+  test('a goal may hold every book of the full canon', () => {
+    expect(validateGoalPassages(getTemplatePassages('whole_bible', true))).toEqual([]);
+    expect(validateGoalPassages([bookToPassage(TOBIT)])).toEqual([]);
   });
 
   test('verse totals', () => {

@@ -104,4 +104,66 @@ describe('ReadingGoalEditor', () => {
     expect(wrapper.find('[data-template-id="gospels"]').exists()).toBe(false);
     expect((wrapper.find(testId('reading-goal-title')).element as HTMLInputElement).value).toBe('Existing');
   });
+
+  describe('deuterocanonical books', () => {
+    const NEHEMIAH = 16;
+    const TOBIT = 67;
+
+    it('are offered only when the reader includes them', async () => {
+      const wrapper = mountEditor();
+      await wrapper.find(testId('reading-goal-template-custom')).trigger('click');
+      await wrapper.find(testId('reading-goal-title')).setValue('Goal');
+      await wrapper.find(testId('reading-goal-next')).trigger('click');
+      expect(wrapper.find(`[data-book="${TOBIT}"]`).exists()).toBe(false);
+
+      useUserSettingsStore().settings.includeDeuterocanonical = true;
+      await wrapper.vm.$nextTick();
+      expect(wrapper.find(`[data-book="${TOBIT}"]`).exists()).toBe(true);
+    });
+
+    it('join templates and keep canonical order', async () => {
+      useUserSettingsStore().settings.includeDeuterocanonical = true;
+      const store = useReadingGoalsStore();
+      const createGoal = vi.spyOn(store, 'createGoal').mockImplementation(input => Promise.resolve({ id: 'g1', ...input }));
+      const wrapper = mountEditor();
+      await wrapper.find('[data-template-id="wisdom"]').trigger('click');
+      await wrapper.find(testId('reading-goal-save')).trigger('click');
+
+      expect(createGoal).toHaveBeenCalledWith(expect.objectContaining({
+        passages: [18, 19, 20, 21, 22, 71, 72].map(bookToPassage),
+      }));
+    });
+
+    it('newly added books are ordered canonically, not by index', async () => {
+      useUserSettingsStore().settings.includeDeuterocanonical = true;
+      const wrapper = mountEditor();
+      await wrapper.find(testId('reading-goal-template-custom')).trigger('click');
+      await wrapper.find(testId('reading-goal-title')).setValue('Goal');
+      await wrapper.find(testId('reading-goal-next')).trigger('click');
+      await wrapper.find(`[data-book="${TOBIT}"]`).setValue(true);
+      await wrapper.find(`[data-book="${NEHEMIAH}"]`).setValue(true);
+      await wrapper.find(testId('reading-goal-next')).trigger('click');
+
+      const items = wrapper.findAll(`${testId('reading-goal-order')} li`);
+      expect(items.map(li => li.text())).toEqual([
+        expect.stringContaining('Nehemiah'),
+        expect.stringContaining('Tobit'),
+      ]);
+    });
+
+    it('stay listed when editing a goal after the reader excludes them', async () => {
+      const wrapper = mountEditor({
+        id: 'g1',
+        title: 'Existing',
+        passages: [bookToPassage(TOBIT)],
+        startDate: '2026-01-01',
+        endDate: '2026-01-10',
+        active: true,
+      });
+      await wrapper.find(testId('reading-goal-next')).trigger('click');
+      const tobit = wrapper.find(`[data-book="${TOBIT}"]`);
+      expect(tobit.exists()).toBe(true);
+      expect((tobit.element as HTMLInputElement).checked).toBe(true);
+    });
+  });
 });

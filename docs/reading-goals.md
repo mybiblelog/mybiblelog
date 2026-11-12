@@ -19,7 +19,7 @@ ReadingGoal {
   id: string;
   owner: ObjectId;            // server-side only
   title: string;              // trimmed, 1–100 chars
-  passages: GoalPassage[];    // ordered, length 1–66, non-overlapping
+  passages: GoalPassage[];    // ordered, length 1–77 (every book incl. deuterocanonical), non-overlapping
   startDate: string;          // 'YYYY-MM-DD'
   endDate: string;            // 'YYYY-MM-DD', >= startDate
   active: boolean;            // default true
@@ -81,7 +81,7 @@ Endpoints (all authenticated; 401 otherwise):
 
 Validation (reject with the repo's standard validation error response):
 - `title` is trimmed and 1–100 chars.
-- `passages` has 1–66 items, and each item is a valid range (`Bible.validateRange`).
+- `passages` has 1–`MAX_GOAL_PASSAGES` (77) items, and each item is a valid range (`Bible.validateRange`).
 - No two passages may overlap (`Bible.checkRangeOverlap`). This also rules out duplicate books.
 - **Whole-book restriction (for now):** each passage must exactly match one book: `startVerseId === getFirstBookVerseId(b)` and `endVerseId === getLastBookVerseId(b)` for the same book `b`. Put this check in its own clearly named zod refinement so it can be removed when arbitrary passages are allowed.
 - Dates are valid `YYYY-MM-DD` strings and `endDate >= startDate`. `startDate` may be in the past.
@@ -112,15 +112,15 @@ Reuse the following:
 - `countUniqueBookRangeVerses`
 - the UTC date-walk and range-union approach in `shared/insights/date-verse-counts.ts`
 
-Goal templates live in **`shared/reading-goals/templates.ts`** so mobile can reuse them. `READING_GOAL_TEMPLATES` is an ordered list of `{ id, bookIndexes }` (book indexes here only *define* the template; goals created from it store `passages`), and `getTemplatePassages(id)` converts a template to passages.
+Goal templates live in **`shared/reading-goals/templates.ts`** so mobile can reuse them. `READING_GOAL_TEMPLATES` is an ordered list of `{ id, includes(book) }`. A template selects books from the reader's canon (`Bible.getBooksForCanon`), so `getTemplateBookIndexes(id, includeDeuterocanonical)` / `getTemplatePassages(id, includeDeuterocanonical)` add deuterocanonical books, in canonical order, only for readers who include them. Goals created from a template store `passages` and keep no reference to it.
 
 | id | Books |
 |---|---|
-| `whole_bible` | 1–66 (Genesis–Revelation) |
-| `old_testament` | 1–39 (Genesis–Malachi) |
+| `whole_bible` | Every book in the reader's canon |
+| `old_testament` | Genesis–Malachi, plus the deuterocanonical books when included |
 | `new_testament` | 40–66 (Matthew–Revelation) |
 | `gospels` | 40–43 (Matthew–John) |
-| `wisdom` | 18–22 (Job, Psalms, Proverbs, Ecclesiastes, Song of Songs) |
+| `wisdom` | Job, Psalms, Proverbs, Ecclesiastes, Song of Songs, plus Wisdom and Sirach when included |
 
 Edge cases to test (in addition, test each template's book list and verse total):
 - no reading
@@ -178,7 +178,7 @@ Edge cases to test (in addition, test each template's book list and verse total)
 The book step works with book indexes and converts to and from `passages` with `bookToPassage` / `isWholeBookPassage` when loading and saving.
 
 1. **Name** — title input.
-2. **Books** — a checkbox grid/list of all 66 books (consider `components/forms/GridSelector.vue`) with a live **total selected verses** count.
+2. **Books** — a checkbox grid/list of the reader's canon (plus any deuterocanonical books already in the goal), in canonical order, (consider `components/forms/GridSelector.vue`) with a live **total selected verses** count.
 3. **Order** — reorder the selected books with accessible up/down controls (no drag-and-drop dependency).
 4. **Dates**
    - Start date: defaults to today; past dates allowed.
