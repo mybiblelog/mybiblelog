@@ -48,6 +48,7 @@ const PUBLIC_PAGES = [
   '',
   '/books-of-the-bible',
   '/books-of-the-bible/genesis',
+  '/books-of-the-bible/tobit',
   '/about/overview',
 ];
 

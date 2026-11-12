@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-09-29"
+dateModified: "2026-11-12"
 seo:
   title: "My Bible Log : suivi de lecture biblique gratuit – guides"
   description: "Tout ce que My Bible Log peut faire : suivre votre lecture chapitre par chapitre, fixer des objectifs quotidiens, prendre des notes d'étude et suivre des guides de lecture."
@@ -12,7 +12,7 @@ og:
 
 <img src="/share.jpg" alt="My Bible Log : suivi de lecture biblique gratuit">
 
-My Bible Log est un suivi de lecture biblique gratuit. Notez les chapitres que vous lisez, fixez un objectif de lecture quotidien, voyez votre progression dans les 66 livres de la Bible et prenez des notes d'étude bien organisées. Vous pouvez suivre n'importe quel plan de lecture, ou aucun. Sans publicité et sans abonnement.
+My Bible Log est un suivi de lecture biblique gratuit. Notez les chapitres que vous lisez, fixez un objectif de lecture quotidien, voyez votre progression dans les 66 livres de la Bible (et les deutérocanoniques, si votre Bible les contient) et prenez des notes d'étude bien organisées. Vous pouvez suivre n'importe quel plan de lecture, ou aucun. Sans publicité et sans abonnement.
 
 ## Guides
 
@@ -29,7 +29,7 @@ My Bible Log est un suivi de lecture biblique gratuit. Notez les chapitres que v
 
 ## Ressources gratuites
 
-* [Livres de la Bible : les 66 livres avec chapitres, versets et durée de lecture](/fr/books-of-the-bible)
+* [Livres de la Bible : les 66 livres et les deutérocanoniques, avec chapitres, versets et durée de lecture](/fr/books-of-the-bible)
 * [Tableau de lecture biblique à imprimer](/fr/resources/printable-bible-reading-tracker)
 
 ## Fonctionnalités

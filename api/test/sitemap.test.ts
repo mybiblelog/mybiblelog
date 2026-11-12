@@ -92,10 +92,12 @@ describe('Sitemap routes', () => {
     expect(bookUrls.some((url) => url.endsWith('/books-of-the-bible'))).toBe(true);
     expect(bookUrls.some((url) => url.endsWith('/books-of-the-bible/genesis'))).toBe(true);
     expect(bookUrls.some((url) => url.endsWith('/books-of-the-bible/song-of-songs'))).toBe(true);
-    // 1 hub + 66 books, in each of the 7 locales
-    expect(bookUrls).toHaveLength(67 * 7);
+    expect(bookUrls.some((url) => url.endsWith('/books-of-the-bible/tobit'))).toBe(true);
+    // 1 hub + 66 common books + 11 deuterocanonical books, in each of the 7 locales
+    expect(bookUrls).toHaveLength(78 * 7);
     for (const code of ['de', 'es', 'fr', 'ko', 'pt', 'uk']) {
       expect(bookUrls.some((url) => url.includes(`/${code}/books-of-the-bible/genesis`))).toBe(true);
+      expect(bookUrls.some((url) => url.includes(`/${code}/books-of-the-bible/bel-and-the-dragon`))).toBe(true);
     }
   });
 });

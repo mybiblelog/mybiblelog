@@ -11,7 +11,7 @@
 
       <h1>{{ t('h1', { book: bookName }) }}</h1>
       <p class="book-section-label">
-        {{ t('meta_line', { testament, section: t(`section.${guide.section}`), n: bookIndex }) }}
+        {{ metaLine }}
       </p>
 
       <dl class="book-stats">
@@ -74,7 +74,7 @@
 
       <content-app-callout
         :title="t('callout.title', { book: bookName })"
-        :description="t('callout.description')"
+        :description="isDeuterocanonical ? `${t('callout.description')} ${t('callout.dc_settings')}` : t('callout.description')"
         :list="[
           t('callout.item_1', { book: bookName }),
           t('callout.item_2'),
@@ -126,7 +126,7 @@
       </ul>
 
       <p class="book-footnote">
-        {{ t('footnote', { wpm: WORDS_PER_MINUTE }) }}
+        {{ t(isDeuterocanonical ? 'footnote_dc' : 'footnote', { wpm: WORDS_PER_MINUTE }) }}
       </p>
     </article>
     <content-page-footer />
@@ -167,6 +167,11 @@ const versesText = (n: number) => t('verses_count', { n: formatNumber(n) }, n);
 
 const bookName = Bible.getBookName(bookIndex, locale.value);
 const testament = t(Bible.isNewTestament(bookIndex) ? 'testament_new' : 'testament_old');
+const isDeuterocanonical = guide.section === 'deuterocanonical';
+// DC books have no place in the 66-book numbering, so their meta line drops "Book n of 66".
+const metaLine = isDeuterocanonical
+  ? t('meta_line_dc', { testament, section: t('section.deuterocanonical') })
+  : t('meta_line', { testament, section: t(`section.${guide.section}`), n: bookIndex });
 const chapterCount = Bible.getBookChapterCount(bookIndex);
 const verseCount = Bible.getBookVerseCount(bookIndex);
 const wordCount = getBookWordCount(bookIndex);
@@ -190,11 +195,16 @@ const paces = [1, 2, 3].map(perDay => ({
   days: getDaysAtChaptersPerDay(bookIndex, perDay),
 })).concat([{ label: t('pace.minutes_per_day', { n: 10 }), days: getDaysAtMinutesPerDay(bookIndex, 10) }]);
 
-const bookLink = (index: number) => (index >= 1 && index <= Bible.getBookCount()
+const bookLink = (index: number | undefined) => (index
   ? { name: Bible.getBookName(index, locale.value), path: localePath({ name: 'books-of-the-bible-book', params: { book: Bible.getBookSlug(index) } }) }
   : null);
-const previousBook = bookLink(bookIndex - 1);
-const nextBook = bookLink(bookIndex + 1);
+// Neighbours come from the same group: common books by bibleOrder, DC books in Catholic canonical order.
+const siblingIndices = Bible.getBooksForCanon(true)
+  .filter(book => book.deuterocanonical === isDeuterocanonical)
+  .map(book => book.bibleOrder);
+const position = siblingIndices.indexOf(bookIndex);
+const previousBook = bookLink(siblingIndices[position - 1]);
+const nextBook = bookLink(siblingIndices[position + 1]);
 
 const siteUrl = config.public.siteUrl as string;
 const localeSegment = locale.value === 'en' ? '' : `/${locale.value}`;
@@ -317,6 +327,7 @@ useContentSeo({
     "hub": "Books of the Bible",
     "h1": "{book}: Chapters, Verses & Reading Time",
     "meta_line": "{testament} · {section} · Book {n} of 66",
+    "meta_line_dc": "{testament} · {section}",
     "testament_old": "Old Testament",
     "testament_new": "New Testament",
     "section": {
@@ -328,7 +339,8 @@ useContentSeo({
       "gospels": "Gospels",
       "letters_of_paul": "Letters of Paul",
       "general_letters": "General Letters",
-      "prophecy": "Prophecy"
+      "prophecy": "Prophecy",
+      "deuterocanonical": "Deuterocanonical Books"
     },
     "stat": {
       "chapters": "Chapters",
@@ -354,6 +366,7 @@ useContentSeo({
     "callout": {
       "title": "Track your reading of {book}",
       "description": "My Bible Log is a free Bible reading tracker. Check off chapters as you read them, in any order, and watch your progress grow.",
+      "dc_settings": "Deuterocanonical books are optional: turn them on in your reading settings.",
       "item_1": "See exactly which chapters of {book} you've read",
       "item_2": "Set a daily goal and get a predicted finish date",
       "item_3": "Take notes and tag passages as you study",
@@ -374,6 +387,7 @@ useContentSeo({
       "plans_guide": "Bible reading plans compared"
     },
     "footnote": "* Word counts are from the Berean Standard Bible (public domain), an English translation. Reading time assumes {wpm} words per minute, the average adult silent reading speed for English non-fiction; your pace, language, and translation will vary. Verse counts follow the versification My Bible Log uses for tracking.",
+    "footnote_dc": "* Word counts are from the King James Version 1611 Apocrypha (public domain), an English translation. Reading time assumes {wpm} words per minute, the average adult silent reading speed for English non-fiction; your pace, language, and translation will vary. Verse counts follow the versification My Bible Log uses for tracking.",
     "units": {
       "hour": "hr",
       "minute": "min"
@@ -389,6 +403,7 @@ useContentSeo({
     "hub": "Bücher der Bibel",
     "h1": "{book}: Kapitel, Verse & Lesezeit",
     "meta_line": "{testament} · {section} · Buch {n} von 66",
+    "meta_line_dc": "{testament} · {section}",
     "testament_old": "Altes Testament",
     "testament_new": "Neues Testament",
     "section": {
@@ -400,7 +415,8 @@ useContentSeo({
       "gospels": "Evangelien",
       "letters_of_paul": "Briefe des Paulus",
       "general_letters": "Allgemeine Briefe",
-      "prophecy": "Prophetie"
+      "prophecy": "Prophetie",
+      "deuterocanonical": "Deuterokanonische Bücher"
     },
     "stat": {
       "chapters": "Kapitel",
@@ -426,6 +442,7 @@ useContentSeo({
     "callout": {
       "title": "Halten Sie fest, was Sie in {book} gelesen haben",
       "description": "My Bible Log ist ein kostenloser Bibellese-Tracker. Haken Sie Kapitel ab, sobald Sie sie gelesen haben – in beliebiger Reihenfolge – und sehen Sie Ihren Fortschritt wachsen.",
+      "dc_settings": "Deuterokanonische Bücher sind optional: Aktivieren Sie sie in Ihren Leseeinstellungen.",
       "item_1": "Sehen Sie genau, welche Kapitel von {book} Sie schon gelesen haben",
       "item_2": "Setzen Sie ein Tagesziel und erhalten Sie ein voraussichtliches Enddatum",
       "item_3": "Machen Sie Notizen und versehen Sie Bibelstellen mit Tags",
@@ -446,6 +463,7 @@ useContentSeo({
       "plans_guide": "Bibelleseplan-Vergleich"
     },
     "footnote": "* Die Wortzahlen stammen aus der Berean Standard Bible (gemeinfrei), einer englischen Übersetzung. Die Lesezeit geht von {wpm} Wörtern pro Minute aus, der durchschnittlichen stillen Lesegeschwindigkeit Erwachsener bei englischen Sachtexten; Ihr Tempo, Ihre Sprache und Ihre Übersetzung können abweichen. Die Verszahlen folgen der Verszählung, die My Bible Log für das Tracking verwendet.",
+    "footnote_dc": "* Die Wortzahlen stammen aus den Apokryphen der King-James-Bibel von 1611 (gemeinfrei), einer englischen Übersetzung. Die Lesezeit geht von {wpm} Wörtern pro Minute aus, der durchschnittlichen stillen Lesegeschwindigkeit Erwachsener bei englischen Sachtexten; Ihr Tempo, Ihre Sprache und Ihre Übersetzung können abweichen. Die Verszahlen folgen der Verszählung, die My Bible Log für das Tracking verwendet.",
     "units": {
       "hour": "Std.",
       "minute": "Min."
@@ -461,6 +479,7 @@ useContentSeo({
     "hub": "Libros de la Biblia",
     "h1": "{book}: capítulos, versículos y tiempo de lectura",
     "meta_line": "{testament} · {section} · Libro {n} de 66",
+    "meta_line_dc": "{testament} · {section}",
     "testament_old": "Antiguo Testamento",
     "testament_new": "Nuevo Testamento",
     "section": {
@@ -472,7 +491,8 @@ useContentSeo({
       "gospels": "Evangelios",
       "letters_of_paul": "Cartas de Pablo",
       "general_letters": "Cartas generales",
-      "prophecy": "Profecía"
+      "prophecy": "Profecía",
+      "deuterocanonical": "Libros deuterocanónicos"
     },
     "stat": {
       "chapters": "Capítulos",
@@ -498,6 +518,7 @@ useContentSeo({
     "callout": {
       "title": "Registra tu lectura de {book}",
       "description": "My Bible Log es un registro gratuito de lectura bíblica. Marca los capítulos a medida que los lees, en el orden que quieras, y mira cómo crece tu avance.",
+      "dc_settings": "Los libros deuterocanónicos son opcionales: actívalos en tu configuración de lectura.",
       "item_1": "Mira exactamente qué capítulos de {book} ya leíste",
       "item_2": "Fija una meta diaria y obtén una fecha estimada de finalización",
       "item_3": "Toma notas y etiqueta los pasajes mientras estudias",
@@ -518,6 +539,7 @@ useContentSeo({
       "plans_guide": "Planes de lectura bíblica comparados"
     },
     "footnote": "* El número de palabras procede de la Berean Standard Bible (dominio público), una traducción al inglés. El tiempo de lectura supone {wpm} palabras por minuto, la velocidad media de lectura silenciosa de un adulto con textos no literarios en inglés; tu ritmo, tu idioma y tu traducción pueden variar. El número de versículos sigue la versificación que My Bible Log usa para el seguimiento.",
+    "footnote_dc": "* El número de palabras procede de los apócrifos de la King James Version de 1611 (dominio público), una traducción al inglés. El tiempo de lectura supone {wpm} palabras por minuto, la velocidad media de lectura silenciosa de un adulto con textos no literarios en inglés; tu ritmo, tu idioma y tu traducción pueden variar. El número de versículos sigue la versificación que My Bible Log usa para el seguimiento.",
     "units": {
       "hour": "h",
       "minute": "min"
@@ -533,6 +555,7 @@ useContentSeo({
     "hub": "Livres de la Bible",
     "h1": "{book} : chapitres, versets et durée de lecture",
     "meta_line": "{testament} · {section} · Livre {n} sur 66",
+    "meta_line_dc": "{testament} · {section}",
     "testament_old": "Ancien Testament",
     "testament_new": "Nouveau Testament",
     "section": {
@@ -544,7 +567,8 @@ useContentSeo({
       "gospels": "Évangiles",
       "letters_of_paul": "Lettres de Paul",
       "general_letters": "Lettres générales",
-      "prophecy": "Prophétie"
+      "prophecy": "Prophétie",
+      "deuterocanonical": "Livres deutérocanoniques"
     },
     "stat": {
       "chapters": "Chapitres",
@@ -570,6 +594,7 @@ useContentSeo({
     "callout": {
       "title": "Suivez votre lecture de {book}",
       "description": "My Bible Log est un suivi de lecture biblique gratuit. Cochez les chapitres au fur et à mesure, dans l'ordre de votre choix, et regardez votre progression grandir.",
+      "dc_settings": "Les livres deutérocanoniques sont facultatifs : activez-les dans vos paramètres de lecture.",
       "item_1": "Voyez précisément quels chapitres de {book} vous avez lus",
       "item_2": "Fixez un objectif quotidien et obtenez une date de fin estimée",
       "item_3": "Prenez des notes et ajoutez des étiquettes aux passages que vous étudiez",
@@ -590,6 +615,7 @@ useContentSeo({
       "plans_guide": "Plans de lecture de la Bible comparés"
     },
     "footnote": "* Le nombre de mots provient de la Berean Standard Bible (domaine public), une traduction anglaise. La durée de lecture suppose {wpm} mots par minute, la vitesse moyenne de lecture silencieuse d'un adulte pour un texte non littéraire en anglais ; votre rythme, votre langue et votre traduction peuvent différer. Le nombre de versets suit la numérotation utilisée par My Bible Log pour le suivi.",
+    "footnote_dc": "* Le nombre de mots provient des apocryphes de la King James Version de 1611 (domaine public), une traduction anglaise. La durée de lecture suppose {wpm} mots par minute, la vitesse moyenne de lecture silencieuse d'un adulte pour un texte non littéraire en anglais ; votre rythme, votre langue et votre traduction peuvent différer. Le nombre de versets suit la numérotation utilisée par My Bible Log pour le suivi.",
     "units": {
       "hour": "h",
       "minute": "min"
@@ -605,6 +631,7 @@ useContentSeo({
     "hub": "Livros da Bíblia",
     "h1": "{book}: capítulos, versículos e tempo de leitura",
     "meta_line": "{testament} · {section} · Livro {n} de 66",
+    "meta_line_dc": "{testament} · {section}",
     "testament_old": "Antigo Testamento",
     "testament_new": "Novo Testamento",
     "section": {
@@ -616,7 +643,8 @@ useContentSeo({
       "gospels": "Evangelhos",
       "letters_of_paul": "Cartas de Paulo",
       "general_letters": "Cartas gerais",
-      "prophecy": "Profecia"
+      "prophecy": "Profecia",
+      "deuterocanonical": "Livros deuterocanônicos"
     },
     "stat": {
       "chapters": "Capítulos",
@@ -642,6 +670,7 @@ useContentSeo({
     "callout": {
       "title": "Registre sua leitura de {book}",
       "description": "O My Bible Log é um registro gratuito de leitura da Bíblia. Marque os capítulos conforme você lê, na ordem que quiser, e veja seu progresso crescer.",
+      "dc_settings": "Os livros deuterocanônicos são opcionais: ative-os nas suas configurações de leitura.",
       "item_1": "Veja exatamente quais capítulos de {book} você já leu",
       "item_2": "Defina uma meta diária e receba uma data prevista de conclusão",
       "item_3": "Faça anotações e marque passagens com etiquetas enquanto estuda",
@@ -662,6 +691,7 @@ useContentSeo({
       "plans_guide": "Planos de leitura da Bíblia comparados"
     },
     "footnote": "* A contagem de palavras vem da Berean Standard Bible (domínio público), uma tradução em inglês. O tempo de leitura considera {wpm} palavras por minuto, a velocidade média de leitura silenciosa de um adulto em textos não literários em inglês; seu ritmo, seu idioma e sua tradução podem variar. A contagem de versículos segue a versificação que o My Bible Log usa no acompanhamento.",
+    "footnote_dc": "* A contagem de palavras vem dos apócrifos da King James Version de 1611 (domínio público), uma tradução em inglês. O tempo de leitura considera {wpm} palavras por minuto, a velocidade média de leitura silenciosa de um adulto em textos não literários em inglês; seu ritmo, seu idioma e sua tradução podem variar. A contagem de versículos segue a versificação que o My Bible Log usa no acompanhamento.",
     "units": {
       "hour": "h",
       "minute": "min"
@@ -677,6 +707,7 @@ useContentSeo({
     "hub": "Книги Біблії",
     "h1": "{book}: розділи, вірші та час читання",
     "meta_line": "{testament} · {section} · Книга {n} із 66",
+    "meta_line_dc": "{testament} · {section}",
     "testament_old": "Старий Заповіт",
     "testament_new": "Новий Заповіт",
     "section": {
@@ -688,7 +719,8 @@ useContentSeo({
       "gospels": "Євангелії",
       "letters_of_paul": "Послання Павла",
       "general_letters": "Соборні послання",
-      "prophecy": "Пророцтво"
+      "prophecy": "Пророцтво",
+      "deuterocanonical": "Девтероканонічні книги"
     },
     "stat": {
       "chapters": "Розділи",
@@ -714,6 +746,7 @@ useContentSeo({
     "callout": {
       "title": "Відстежуйте читання: книга {book}",
       "description": "My Bible Log — безкоштовний трекер читання Біблії. Позначайте розділи, щойно прочитали їх, у будь-якому порядку, і спостерігайте, як зростає ваш поступ.",
+      "dc_settings": "Девтероканонічні книги необов’язкові: увімкніть їх у налаштуваннях читання.",
       "item_1": "Одразу бачте, які розділи книги {book} ви вже прочитали",
       "item_2": "Ставте щоденну мету та отримуйте орієнтовну дату завершення",
       "item_3": "Робіть нотатки й позначайте уривки тегами під час вивчення",
@@ -734,6 +767,7 @@ useContentSeo({
       "plans_guide": "Порівняння планів читання Біблії"
     },
     "footnote": "* Кількість слів взято з Berean Standard Bible (суспільне надбання) — англійського перекладу. Час читання розраховано за {wpm} слів на хвилину — середньої швидкості мовчазного читання дорослого під час читання англомовних нехудожніх текстів; ваш темп, мова та переклад можуть відрізнятися. Кількість віршів відповідає нумерації, яку My Bible Log використовує для відстеження.",
+    "footnote_dc": "* Кількість слів взято з апокрифів Біблії короля Якова 1611 року (суспільне надбання) — англійського перекладу. Час читання розраховано за {wpm} слів на хвилину — середньої швидкості мовчазного читання дорослого під час читання англомовних нехудожніх текстів; ваш темп, мова та переклад можуть відрізнятися. Кількість віршів відповідає нумерації, яку My Bible Log використовує для відстеження.",
     "units": {
       "hour": "год",
       "minute": "хв"
@@ -749,6 +783,7 @@ useContentSeo({
     "hub": "성경 66권",
     "h1": "{book}: 장 수, 절 수, 읽는 시간",
     "meta_line": "{testament} · {section} · 66권 중 {n}번째 책",
+    "meta_line_dc": "{testament} · {section}",
     "testament_old": "구약",
     "testament_new": "신약",
     "section": {
@@ -760,7 +795,8 @@ useContentSeo({
       "gospels": "복음서",
       "letters_of_paul": "바울 서신",
       "general_letters": "일반 서신",
-      "prophecy": "예언서"
+      "prophecy": "예언서",
+      "deuterocanonical": "제2경전"
     },
     "stat": {
       "chapters": "장",
@@ -786,6 +822,7 @@ useContentSeo({
     "callout": {
       "title": "{book} 읽기 기록하기",
       "description": "My Bible Log는 무료 성경읽기 기록 서비스입니다. 읽은 장을 순서에 관계없이 체크하고, 진도가 쌓이는 모습을 확인해 보세요.",
+      "dc_settings": "제2경전은 선택 사항입니다. 읽기 설정에서 켤 수 있습니다.",
       "item_1": "{book}에서 어느 장을 읽었는지 바로 확인할 수 있습니다",
       "item_2": "하루 목표를 정하고 완독 예상 날짜를 확인할 수 있습니다",
       "item_3": "공부하면서 메모를 남기고 구절에 태그를 붙일 수 있습니다",
@@ -806,6 +843,7 @@ useContentSeo({
       "plans_guide": "성경 읽기 계획 비교"
     },
     "footnote": "* 단어 수는 영어 번역본인 Berean Standard Bible(퍼블릭 도메인)을 기준으로 한 것입니다. 읽는 시간은 영어 비문학 텍스트를 읽는 성인의 평균 묵독 속도인 분당 {wpm}단어를 기준으로 계산했으며, 읽는 속도와 언어, 번역본에 따라 달라질 수 있습니다. 절 수는 My Bible Log가 진도 기록에 사용하는 절 구분을 따릅니다.",
+    "footnote_dc": "* 단어 수는 영어 번역본인 1611년 킹제임스 성경 외경(퍼블릭 도메인)을 기준으로 한 것입니다. 읽는 시간은 영어 비문학 텍스트를 읽는 성인의 평균 묵독 속도인 분당 {wpm}단어를 기준으로 계산했으며, 읽는 속도와 언어, 번역본에 따라 달라질 수 있습니다. 절 수는 My Bible Log가 진도 기록에 사용하는 절 구분을 따릅니다.",
     "units": {
       "hour": "시간",
       "minute": "분"

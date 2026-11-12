@@ -73,13 +73,19 @@
                 <th>{{ t('table.book') }}</th>
                 <th>{{ t('table.chapters') }}</th>
                 <th>{{ t('table.verses') }}</th>
+                <th>{{ t('table.reading_time') }}</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="book in dcBooks" :key="book.index">
-                <td>{{ book.name }}</td>
+                <td>
+                  <NuxtLink :to="book.path">
+                    {{ book.name }}
+                  </NuxtLink>
+                </td>
                 <td>{{ book.chapters }}</td>
                 <td>{{ formatNumber(book.verses) }}</td>
+                <td>{{ book.readingTime }}</td>
               </tr>
             </tbody>
           </table>
@@ -159,14 +165,15 @@ const groups = [
   { testament: 'new', label: t('testament_new'), books: books.filter(b => b.newTestament) },
 ].map(group => ({ ...group, sections: groupBySection(group.books) }));
 
-// No guide pages or word counts exist for these, so they're listed without links or reading time.
 const dcBooks = Bible.getBooksForCanon(true)
   .filter(book => book.deuterocanonical)
   .map(book => ({
     index: book.bibleOrder,
     name: Bible.getBookName(book.bibleOrder, locale.value),
+    path: localePath({ name: 'books-of-the-bible-book', params: { book: Bible.getBookSlug(book.bibleOrder) } }),
     chapters: book.chapterCount,
     verses: Bible.getBookVerseCount(book.bibleOrder),
+    readingTime: formatReadingTime(getBookReadingMinutes(book.bibleOrder), units),
   }));
 
 const totalChapters = books.reduce((sum, b) => sum + b.chapters, 0);
@@ -221,7 +228,7 @@ useContentSeo({
 <i18n lang="json">
 {
   "en": {
-    "h1": "Books of the Bible: All 66 Books with Chapters, Verses & Reading Time",
+    "h1": "Books of the Bible: All 66 Books Plus the Deuterocanon, with Chapters, Verses & Reading Time",
     "intro_1": "Christian Bibles share a common core of {books}: {ot} in the Old Testament and {nt} in the New Testament. Together they have {chapters} and {verses}. At an average adult reading speed, reading all 66 takes about {hours}.",
     "intro_2": "Choose a book below to see its chapters, verse counts, reading time, and a short overview. Or learn {link} at different paces.",
     "intro_2_link": "how long it takes to read the Bible",
@@ -240,7 +247,7 @@ useContentSeo({
     },
     "callout": {
       "title": "Track every book you read",
-      "description": "My Bible Log is a free Bible reading tracker. Log the chapters you read from any plan, sermon, or small group, and see your progress across all 66 books.",
+      "description": "My Bible Log is a free Bible reading tracker. Log the chapters you read from any plan, sermon, or small group, and see your progress across all 66 books, plus the deuterocanonical books if your Bible includes them.",
       "item_1": "Check off chapters in any order",
       "item_2": "Set a daily goal and see when you will finish",
       "item_3": "Take notes and organize them with tags",
@@ -253,14 +260,14 @@ useContentSeo({
     "paper_heading": "Prefer paper?",
     "paper_text": "Download the free {link} with a checkbox for every chapter of the Bible.",
     "paper_link": "printable Bible reading tracker",
-    "footnote": "* Reading times are estimates based on word counts from the Berean Standard Bible (public domain), an English translation, at {wpm} words per minute, the average adult silent reading speed for English non-fiction. Your pace, language, and translation will vary.",
+    "footnote": "* Reading times are estimates based on word counts from the Berean Standard Bible (public domain), an English translation, at {wpm} words per minute, the average adult silent reading speed for English non-fiction. Deuterocanonical books use word counts from the King James Version 1611 Apocrypha (public domain). Your pace, language, and translation will vary.",
     "units": {
       "hour": "hr",
       "minute": "min"
     },
     "seo": {
-      "title": "Books of the Bible: All 66 Books with Chapters & Reading Time",
-      "description": "A complete list of the 66 books of the Bible in order, with the number of chapters and verses in each book, estimated reading times, and a short overview of every book."
+      "title": "Books of the Bible: 66 Books + Deuterocanon, Chapters & Reading Time",
+      "description": "A complete list of the 66 books of the Bible in order, plus the deuterocanonical books of Catholic and Orthodox Bibles, with the number of chapters and verses in each book, estimated reading times, and a short overview of every book."
     },
     "list_name": "Books of the Bible",
     "home": "Home",
@@ -277,7 +284,7 @@ useContentSeo({
     }
   },
   "de": {
-    "h1": "Bücher der Bibel: Alle 66 Bücher mit Kapiteln, Versen & Lesezeit",
+    "h1": "Bücher der Bibel: Alle 66 Bücher plus die deuterokanonischen Bücher, mit Kapiteln, Versen & Lesezeit",
     "intro_1": "Christliche Bibeln haben einen gemeinsamen Kern von {books}: {ot} im Alten Testament und {nt} im Neuen Testament. Zusammen haben sie {chapters} und {verses}. Bei durchschnittlicher Lesegeschwindigkeit dauert es etwa {hours}, alle 66 zu lesen.",
     "intro_2": "Wählen Sie unten ein Buch aus, um Kapitel, Verszahlen, Lesezeit und einen kurzen Überblick zu sehen. Oder erfahren Sie, {link} – bei verschiedenen Lesetempi.",
     "intro_2_link": "wie lange es dauert, die Bibel zu lesen",
@@ -296,7 +303,7 @@ useContentSeo({
     },
     "callout": {
       "title": "Halten Sie fest, welche Bücher Sie gelesen haben",
-      "description": "My Bible Log ist ein kostenloser Bibellese-Tracker. Tragen Sie die Kapitel ein, die Sie lesen – aus jedem Plan, jeder Predigt oder Gruppe – und sehen Sie Ihren Fortschritt durch alle 66 Bücher.",
+      "description": "My Bible Log ist ein kostenloser Bibellese-Tracker. Tragen Sie die Kapitel ein, die Sie lesen – aus jedem Plan, jeder Predigt oder Gruppe – und sehen Sie Ihren Fortschritt durch alle 66 Bücher – und die deuterokanonischen, falls Ihre Bibel sie enthält.",
       "item_1": "Kapitel in beliebiger Reihenfolge abhaken",
       "item_2": "Ein Tagesziel setzen und sehen, wann Sie fertig sind",
       "item_3": "Notizen machen und mit Tags ordnen",
@@ -309,14 +316,14 @@ useContentSeo({
     "paper_heading": "Lieber auf Papier?",
     "paper_text": "Laden Sie den kostenlosen {link} mit einem Kästchen für jedes Kapitel der Bibel herunter.",
     "paper_link": "druckbaren Bibellese-Tracker",
-    "footnote": "* Die Lesezeiten sind Schätzungen auf Grundlage der Wortzahlen der Berean Standard Bible (gemeinfrei), einer englischen Übersetzung, bei {wpm} Wörtern pro Minute – der durchschnittlichen stillen Lesegeschwindigkeit Erwachsener bei englischen Sachtexten. Ihr Tempo, Ihre Sprache und Ihre Übersetzung können abweichen.",
+    "footnote": "* Die Lesezeiten sind Schätzungen auf Grundlage der Wortzahlen der Berean Standard Bible (gemeinfrei), einer englischen Übersetzung, bei {wpm} Wörtern pro Minute – der durchschnittlichen stillen Lesegeschwindigkeit Erwachsener bei englischen Sachtexten. Für die deuterokanonischen Bücher stammen die Wortzahlen aus den Apokryphen der King-James-Bibel von 1611 (gemeinfrei). Ihr Tempo, Ihre Sprache und Ihre Übersetzung können abweichen.",
     "units": {
       "hour": "Std.",
       "minute": "Min."
     },
     "seo": {
-      "title": "Bücher der Bibel: Alle 66 Bücher mit Kapiteln & Lesezeit",
-      "description": "Die vollständige Liste der 66 Bücher der Bibel in der richtigen Reihenfolge – mit Kapitel- und Verszahl, geschätzter Lesezeit und einem kurzen Überblick über jedes Buch."
+      "title": "Bücher der Bibel: 66 Bücher + Deuterokanon, Kapitel & Lesezeit",
+      "description": "Die vollständige Liste der 66 Bücher der Bibel in der richtigen Reihenfolge, dazu die deuterokanonischen Bücher katholischer und orthodoxer Bibeln – mit Kapitel- und Verszahl, geschätzter Lesezeit und einem kurzen Überblick über jedes Buch."
     },
     "list_name": "Bücher der Bibel",
     "home": "Startseite",
@@ -333,7 +340,7 @@ useContentSeo({
     }
   },
   "es": {
-    "h1": "Libros de la Biblia: los 66 libros con capítulos, versículos y tiempo de lectura",
+    "h1": "Libros de la Biblia: los 66 libros y los deuterocanónicos, con capítulos, versículos y tiempo de lectura",
     "intro_1": "Las Biblias cristianas comparten un núcleo común de {books}: {ot} en el Antiguo Testamento y {nt} en el Nuevo Testamento. Entre todos suman {chapters} y {verses}. A una velocidad de lectura media, leer los 66 lleva unas {hours}.",
     "intro_2": "Elige un libro para ver sus capítulos, el número de versículos, el tiempo de lectura y un breve resumen. O descubre {link} a distintos ritmos.",
     "intro_2_link": "cuánto se tarda en leer la Biblia",
@@ -352,7 +359,7 @@ useContentSeo({
     },
     "callout": {
       "title": "Registra cada libro que lees",
-      "description": "My Bible Log es un registro gratuito de lectura bíblica. Anota los capítulos que lees de cualquier plan, sermón o grupo pequeño y mira tu avance por los 66 libros.",
+      "description": "My Bible Log es un registro gratuito de lectura bíblica. Anota los capítulos que lees de cualquier plan, sermón o grupo pequeño y mira tu avance por los 66 libros, y por los deuterocanónicos si tu Biblia los incluye.",
       "item_1": "Marca capítulos en el orden que quieras",
       "item_2": "Fija una meta diaria y mira cuándo terminarás",
       "item_3": "Toma notas y organízalas con etiquetas",
@@ -365,14 +372,14 @@ useContentSeo({
     "paper_heading": "¿Prefieres el papel?",
     "paper_text": "Descarga gratis el {link} con una casilla para cada capítulo de la Biblia.",
     "paper_link": "registro de lectura bíblica imprimible",
-    "footnote": "* Los tiempos de lectura son estimaciones basadas en el número de palabras de la Berean Standard Bible (dominio público), una traducción al inglés, a {wpm} palabras por minuto, la velocidad media de lectura silenciosa de un adulto con textos no literarios en inglés. Tu ritmo, tu idioma y tu traducción pueden variar.",
+    "footnote": "* Los tiempos de lectura son estimaciones basadas en el número de palabras de la Berean Standard Bible (dominio público), una traducción al inglés, a {wpm} palabras por minuto, la velocidad media de lectura silenciosa de un adulto con textos no literarios en inglés. Para los libros deuterocanónicos se usan los apócrifos de la King James Version de 1611 (dominio público). Tu ritmo, tu idioma y tu traducción pueden variar.",
     "units": {
       "hour": "h",
       "minute": "min"
     },
     "seo": {
-      "title": "Libros de la Biblia: los 66 libros con capítulos y tiempo de lectura",
-      "description": "Lista completa de los 66 libros de la Biblia en orden, con el número de capítulos y versículos de cada uno, el tiempo de lectura estimado y un breve resumen de cada libro."
+      "title": "Libros de la Biblia: 66 libros + deuterocanónicos, capítulos y tiempo de lectura",
+      "description": "Lista completa de los 66 libros de la Biblia en orden, más los libros deuterocanónicos de las Biblias católicas y ortodoxas, con el número de capítulos y versículos de cada uno, el tiempo de lectura estimado y un breve resumen de cada libro."
     },
     "list_name": "Libros de la Biblia",
     "home": "Inicio",
@@ -389,7 +396,7 @@ useContentSeo({
     }
   },
   "fr": {
-    "h1": "Livres de la Bible : les 66 livres avec chapitres, versets et durée de lecture",
+    "h1": "Livres de la Bible : les 66 livres et les deutérocanoniques, avec chapitres, versets et durée de lecture",
     "intro_1": "Les Bibles chrétiennes ont en commun {books} : {ot} dans l'Ancien Testament et {nt} dans le Nouveau Testament. Ensemble, ils totalisent {chapters} et {verses}. À une vitesse de lecture moyenne, lire les 66 prend environ {hours}.",
     "intro_2": "Choisissez un livre ci-dessous pour voir ses chapitres, son nombre de versets, sa durée de lecture et un bref aperçu. Ou découvrez {link} selon différents rythmes.",
     "intro_2_link": "combien de temps il faut pour lire la Bible",
@@ -408,7 +415,7 @@ useContentSeo({
     },
     "callout": {
       "title": "Suivez chaque livre que vous lisez",
-      "description": "My Bible Log est un suivi de lecture biblique gratuit. Notez les chapitres lus, quel que soit le plan, la prédication ou le groupe, et voyez votre progression dans les 66 livres.",
+      "description": "My Bible Log est un suivi de lecture biblique gratuit. Notez les chapitres lus, quel que soit le plan, la prédication ou le groupe, et voyez votre progression dans les 66 livres, et dans les deutérocanoniques si votre Bible les contient.",
       "item_1": "Cochez les chapitres dans l'ordre de votre choix",
       "item_2": "Fixez un objectif quotidien et voyez quand vous aurez terminé",
       "item_3": "Prenez des notes et organisez-les avec des étiquettes",
@@ -421,14 +428,14 @@ useContentSeo({
     "paper_heading": "Vous préférez le papier ?",
     "paper_text": "Téléchargez gratuitement le {link} avec une case à cocher pour chaque chapitre de la Bible.",
     "paper_link": "suivi de lecture biblique imprimable",
-    "footnote": "* Les durées de lecture sont des estimations fondées sur le nombre de mots de la Berean Standard Bible (domaine public), une traduction anglaise, à {wpm} mots par minute, la vitesse moyenne de lecture silencieuse d'un adulte pour un texte non littéraire en anglais. Votre rythme, votre langue et votre traduction peuvent différer.",
+    "footnote": "* Les durées de lecture sont des estimations fondées sur le nombre de mots de la Berean Standard Bible (domaine public), une traduction anglaise, à {wpm} mots par minute, la vitesse moyenne de lecture silencieuse d'un adulte pour un texte non littéraire en anglais. Pour les livres deutérocanoniques, le nombre de mots provient des apocryphes de la King James Version de 1611 (domaine public). Votre rythme, votre langue et votre traduction peuvent différer.",
     "units": {
       "hour": "h",
       "minute": "min"
     },
     "seo": {
-      "title": "Livres de la Bible : les 66 livres, chapitres et durée de lecture",
-      "description": "La liste complète des 66 livres de la Bible dans l'ordre, avec le nombre de chapitres et de versets de chacun, la durée de lecture estimée et un bref aperçu de chaque livre."
+      "title": "Livres de la Bible : 66 livres + deutérocanoniques, chapitres et durée de lecture",
+      "description": "La liste complète des 66 livres de la Bible dans l'ordre, ainsi que des livres deutérocanoniques des Bibles catholiques et orthodoxes, avec le nombre de chapitres et de versets de chacun, la durée de lecture estimée et un bref aperçu de chaque livre."
     },
     "list_name": "Livres de la Bible",
     "home": "Accueil",
@@ -445,7 +452,7 @@ useContentSeo({
     }
   },
   "pt": {
-    "h1": "Livros da Bíblia: os 66 livros com capítulos, versículos e tempo de leitura",
+    "h1": "Livros da Bíblia: os 66 livros e os deuterocanônicos, com capítulos, versículos e tempo de leitura",
     "intro_1": "As Bíblias cristãs compartilham um núcleo comum de {books}: {ot} no Antigo Testamento e {nt} no Novo Testamento. Juntos, somam {chapters} e {verses}. Em uma velocidade média de leitura, ler os 66 leva cerca de {hours}.",
     "intro_2": "Escolha um livro abaixo para ver seus capítulos, o número de versículos, o tempo de leitura e um breve resumo. Ou descubra {link} em diferentes ritmos.",
     "intro_2_link": "quanto tempo leva para ler a Bíblia",
@@ -464,7 +471,7 @@ useContentSeo({
     },
     "callout": {
       "title": "Registre cada livro que você lê",
-      "description": "O My Bible Log é um registro gratuito de leitura da Bíblia. Anote os capítulos que você lê, de qualquer plano, sermão ou pequeno grupo, e veja seu progresso pelos 66 livros.",
+      "description": "O My Bible Log é um registro gratuito de leitura da Bíblia. Anote os capítulos que você lê, de qualquer plano, sermão ou pequeno grupo, e veja seu progresso pelos 66 livros, e pelos deuterocanônicos se a sua Bíblia os incluir.",
       "item_1": "Marque capítulos na ordem que quiser",
       "item_2": "Defina uma meta diária e veja quando você termina",
       "item_3": "Faça anotações e organize-as com etiquetas",
@@ -477,14 +484,14 @@ useContentSeo({
     "paper_heading": "Prefere papel?",
     "paper_text": "Baixe grátis o {link} com uma caixinha para cada capítulo da Bíblia.",
     "paper_link": "registro de leitura da Bíblia para imprimir",
-    "footnote": "* Os tempos de leitura são estimativas baseadas na contagem de palavras da Berean Standard Bible (domínio público), uma tradução em inglês, a {wpm} palavras por minuto, a velocidade média de leitura silenciosa de um adulto em textos não literários em inglês. Seu ritmo, seu idioma e sua tradução podem variar.",
+    "footnote": "* Os tempos de leitura são estimativas baseadas na contagem de palavras da Berean Standard Bible (domínio público), uma tradução em inglês, a {wpm} palavras por minuto, a velocidade média de leitura silenciosa de um adulto em textos não literários em inglês. Para os livros deuterocanônicos, a contagem vem dos apócrifos da King James Version de 1611 (domínio público). Seu ritmo, seu idioma e sua tradução podem variar.",
     "units": {
       "hour": "h",
       "minute": "min"
     },
     "seo": {
-      "title": "Livros da Bíblia: os 66 livros com capítulos e tempo de leitura",
-      "description": "Lista completa dos 66 livros da Bíblia em ordem, com o número de capítulos e versículos de cada um, o tempo de leitura estimado e um breve resumo de cada livro."
+      "title": "Livros da Bíblia: 66 livros + deuterocanônicos, capítulos e tempo de leitura",
+      "description": "Lista completa dos 66 livros da Bíblia em ordem, além dos livros deuterocanônicos das Bíblias católicas e ortodoxas, com o número de capítulos e versículos de cada um, o tempo de leitura estimado e um breve resumo de cada livro."
     },
     "list_name": "Livros da Bíblia",
     "home": "Início",
@@ -501,7 +508,7 @@ useContentSeo({
     }
   },
   "uk": {
-    "h1": "Книги Біблії: усі 66 книг із розділами, віршами та часом читання",
+    "h1": "Книги Біблії: усі 66 книг і второканонічні, з розділами, віршами та часом читання",
     "intro_1": "Християнські Біблії мають спільне ядро з {books}: {ot} у Старому Заповіті та {nt} у Новому Заповіті. Разом це {chapters} і {verses}. За середньої швидкості читання, щоб прочитати всі 66, потрібно приблизно {hours}.",
     "intro_2": "Оберіть книгу нижче, щоб побачити її розділи, кількість віршів, час читання та короткий огляд. Або дізнайтеся, {link} за різного темпу.",
     "intro_2_link": "скільки часу потрібно, щоб прочитати Біблію",
@@ -520,7 +527,7 @@ useContentSeo({
     },
     "callout": {
       "title": "Відстежуйте кожну прочитану книгу",
-      "description": "My Bible Log — безкоштовний трекер читання Біблії. Записуйте прочитані розділи з будь-якого плану, проповіді чи малої групи та спостерігайте за своїм поступом у всіх 66 книгах.",
+      "description": "My Bible Log — безкоштовний трекер читання Біблії. Записуйте прочитані розділи з будь-якого плану, проповіді чи малої групи та спостерігайте за своїм поступом у всіх 66 книгах, а також у второканонічних, якщо вони є у вашій Біблії.",
       "item_1": "Позначайте розділи в будь-якому порядку",
       "item_2": "Ставте щоденну мету й дізнавайтеся, коли завершите",
       "item_3": "Робіть нотатки та впорядковуйте їх за допомогою тегів",
@@ -533,14 +540,14 @@ useContentSeo({
     "paper_heading": "Віддаєте перевагу паперу?",
     "paper_text": "Завантажте безкоштовний {link} із віконцем для кожного розділу Біблії.",
     "paper_link": "трекер читання Біблії для друку",
-    "footnote": "* Час читання — це оцінка на основі кількості слів у Berean Standard Bible (суспільне надбання), англійському перекладі, за {wpm} слів на хвилину — середньої швидкості мовчазного читання дорослого під час читання англомовних нехудожніх текстів. Ваш темп, мова та переклад можуть відрізнятися.",
+    "footnote": "* Час читання — це оцінка на основі кількості слів у Berean Standard Bible (суспільне надбання), англійському перекладі, за {wpm} слів на хвилину — середньої швидкості мовчазного читання дорослого під час читання англомовних нехудожніх текстів. Для девтероканонічних книг кількість слів взято з апокрифів Біблії короля Якова 1611 року (суспільне надбання). Ваш темп, мова та переклад можуть відрізнятися.",
     "units": {
       "hour": "год",
       "minute": "хв"
     },
     "seo": {
-      "title": "Книги Біблії: усі 66 книг із розділами та часом читання",
-      "description": "Повний перелік 66 книг Біблії по порядку: кількість розділів і віршів у кожній книзі, орієнтовний час читання та короткий огляд кожної книги."
+      "title": "Книги Біблії: 66 книг + второканонічні, розділи та час читання",
+      "description": "Повний перелік 66 книг Біблії по порядку, а також второканонічних книг католицьких і православних Біблій: кількість розділів і віршів у кожній книзі, орієнтовний час читання та короткий огляд кожної книги."
     },
     "list_name": "Книги Біблії",
     "home": "Головна",
@@ -557,7 +564,7 @@ useContentSeo({
     }
   },
   "ko": {
-    "h1": "성경 66권: 장 수, 절 수, 읽는 시간 한눈에 보기",
+    "h1": "성경 66권과 제2경전: 장 수, 절 수, 읽는 시간 한눈에 보기",
     "intro_1": "기독교 성경은 공통으로 구약 {ot}과 신약 {nt}, 모두 {books}을 담고 있습니다. 전체 분량은 {chapters}, {verses}이며, 성인 평균 읽기 속도로 66권 전체를 읽는 데 약 {hours}이 걸립니다.",
     "intro_2": "아래에서 책을 선택하면 장 수와 절 수, 읽는 시간, 간단한 소개를 볼 수 있습니다. 또는 읽는 속도별로 {link}도 확인해 보세요.",
     "intro_2_link": "성경을 다 읽는 데 얼마나 걸리는지",
@@ -576,7 +583,7 @@ useContentSeo({
     },
     "callout": {
       "title": "읽은 책을 모두 기록하세요",
-      "description": "My Bible Log는 무료 성경읽기 기록 서비스입니다. 어떤 읽기 계획이든, 설교나 소그룹에서 읽은 내용이든 장별로 기록하고, 66권 전체의 진도를 확인해 보세요.",
+      "description": "My Bible Log는 무료 성경읽기 기록 서비스입니다. 어떤 읽기 계획이든, 설교나 소그룹에서 읽은 내용이든 장별로 기록하고, 66권 전체(성경에 포함된 경우 제2경전까지)의 진도를 확인해 보세요.",
       "item_1": "읽은 장을 순서에 상관없이 체크할 수 있습니다",
       "item_2": "하루 목표를 정하고 완독 시점을 확인할 수 있습니다",
       "item_3": "메모를 남기고 태그로 정리할 수 있습니다",
@@ -589,14 +596,14 @@ useContentSeo({
     "paper_heading": "종이가 더 편하신가요?",
     "paper_text": "성경 모든 장마다 체크 칸이 있는 무료 {link}를 내려받으세요.",
     "paper_link": "인쇄용 성경 읽기 추적표",
-    "footnote": "* 읽는 시간은 영어 번역본인 Berean Standard Bible(퍼블릭 도메인)의 단어 수를 바탕으로, 영어 비문학 텍스트를 읽는 성인의 평균 묵독 속도인 분당 {wpm}단어로 계산한 추정치입니다. 읽는 속도와 언어, 번역본에 따라 달라질 수 있습니다.",
+    "footnote": "* 읽는 시간은 영어 번역본인 Berean Standard Bible(퍼블릭 도메인)의 단어 수를 바탕으로, 영어 비문학 텍스트를 읽는 성인의 평균 묵독 속도인 분당 {wpm}단어로 계산한 추정치입니다. 제2경전의 단어 수는 1611년 킹제임스 성경 외경(퍼블릭 도메인)을 기준으로 했습니다. 읽는 속도와 언어, 번역본에 따라 달라질 수 있습니다.",
     "units": {
       "hour": "시간",
       "minute": "분"
     },
     "seo": {
-      "title": "성경 66권: 장 수와 읽는 시간 한눈에 보기",
-      "description": "성경 66권을 순서대로 정리한 전체 목록입니다. 각 책의 장 수와 절 수, 예상 읽는 시간, 간단한 소개를 확인해 보세요."
+      "title": "성경 66권과 제2경전: 장 수와 읽는 시간 한눈에 보기",
+      "description": "성경 66권과 가톨릭·정교회 성경의 제2경전을 순서대로 정리한 전체 목록입니다. 각 책의 장 수와 절 수, 예상 읽는 시간, 간단한 소개를 확인해 보세요."
     },
     "list_name": "성경 66권",
     "home": "홈",
