@@ -20,7 +20,7 @@ beforeEach(() => {
   vi.useFakeTimers({ toFake: ['Date'] });
   vi.setSystemTime(new Date('2026-01-01T12:00:00'));
   vi.stubGlobal('useI18n', () => ({
-    t: (key: string) => key,
+    t: (key: string, params?: Record<string, unknown>) => (params ? `${key} ${JSON.stringify(params)}` : key),
     n: (value: number) => String(value),
     locale: Vue.ref('en'),
   }));
@@ -105,43 +105,104 @@ describe('ReadingGoalEditor', () => {
     expect((wrapper.find(testId('reading-goal-title')).element as HTMLInputElement).value).toBe('Existing');
   });
 
-  describe('deuterocanonical books', () => {
+  describe('deuterocanonical setting', () => {
     const NEHEMIAH = 16;
+    const JUDE = 65;
     const TOBIT = 67;
-
-    it('are offered only when the reader includes them', async () => {
-      const wrapper = mountEditor();
+    const SIRACH = 72;
+    const settings = () => useUserSettingsStore().settings;
+    const book = (wrapper: ReturnType<typeof mountEditor>, index: number) => wrapper.find(`[data-book="${index}"]`);
+    const isChecked = (wrapper: ReturnType<typeof mountEditor>, index: number) =>
+      (book(wrapper, index).element as HTMLInputElement).checked;
+    const templateVerses = (wrapper: ReturnType<typeof mountEditor>, id: string) =>
+      wrapper.find(`[data-template-id="${id}"]`).text();
+    const existingGoal = (books: number[]): ReadingGoal => ({
+      id: 'g1',
+      title: 'Existing',
+      passages: books.map(bookToPassage),
+      startDate: '2026-01-01',
+      endDate: '2026-01-10',
+      active: true,
+    });
+    const startCustom = async (wrapper: ReturnType<typeof mountEditor>) => {
       await wrapper.find(testId('reading-goal-template-custom')).trigger('click');
       await wrapper.find(testId('reading-goal-title')).setValue('Goal');
       await wrapper.find(testId('reading-goal-next')).trigger('click');
-      expect(wrapper.find(`[data-book="${TOBIT}"]`).exists()).toBe(false);
+    };
+    const mockSave = (action: 'createGoal' | 'updateGoal') => {
+      const store = useReadingGoalsStore();
+      return action === 'createGoal'
+        ? vi.spyOn(store, 'createGoal').mockImplementation(input => Promise.resolve({ id: 'g1', ...input }))
+        : vi.spyOn(store, 'updateGoal').mockImplementation((id, input) => Promise.resolve({ id, ...input }));
+    };
 
-      useUserSettingsStore().settings.includeDeuterocanonical = true;
-      await wrapper.vm.$nextTick();
-      expect(wrapper.find(`[data-book="${TOBIT}"]`).exists()).toBe(true);
+    it('off: the picker offers only common-canon books', async () => {
+      const wrapper = mountEditor();
+      await startCustom(wrapper);
+      expect(wrapper.findAll(testId('reading-goal-book'))).toHaveLength(66);
+      expect(book(wrapper, TOBIT).exists()).toBe(false);
     });
 
-    it('join templates and keep canonical order', async () => {
-      useUserSettingsStore().settings.includeDeuterocanonical = true;
-      const store = useReadingGoalsStore();
-      const createGoal = vi.spyOn(store, 'createGoal').mockImplementation(input => Promise.resolve({ id: 'g1', ...input }));
+    it('on: the picker offers all 77 books, deuterocanonical ones in canonical position', async () => {
+      settings().includeDeuterocanonical = true;
+      const wrapper = mountEditor();
+      await startCustom(wrapper);
+      const books = wrapper.findAll(testId('reading-goal-book')).map(input => Number(input.attributes('data-book')));
+      expect(books).toHaveLength(77);
+      expect(books[books.indexOf(NEHEMIAH) + 1]).toBe(TOBIT);
+    });
+
+    it('on: templates include deuterocanonical books in canonical order', async () => {
+      settings().includeDeuterocanonical = true;
+      const createGoal = mockSave('createGoal');
       const wrapper = mountEditor();
       await wrapper.find('[data-template-id="wisdom"]').trigger('click');
       await wrapper.find(testId('reading-goal-save')).trigger('click');
 
       expect(createGoal).toHaveBeenCalledWith(expect.objectContaining({
-        passages: [18, 19, 20, 21, 22, 71, 72].map(bookToPassage),
+        passages: [18, 19, 20, 21, 22, 71, SIRACH].map(bookToPassage),
       }));
     });
 
-    it('newly added books are ordered canonically, not by index', async () => {
-      useUserSettingsStore().settings.includeDeuterocanonical = true;
+    it('template verse totals follow the setting while the editor is open', async () => {
       const wrapper = mountEditor();
-      await wrapper.find(testId('reading-goal-template-custom')).trigger('click');
-      await wrapper.find(testId('reading-goal-title')).setValue('Goal');
-      await wrapper.find(testId('reading-goal-next')).trigger('click');
-      await wrapper.find(`[data-book="${TOBIT}"]`).setValue(true);
-      await wrapper.find(`[data-book="${NEHEMIAH}"]`).setValue(true);
+      const commonOnly = templateVerses(wrapper, 'old_testament');
+      const nt = templateVerses(wrapper, 'new_testament');
+      settings().includeDeuterocanonical = true;
+      await wrapper.vm.$nextTick();
+      expect(templateVerses(wrapper, 'old_testament')).not.toBe(commonOnly);
+      expect(templateVerses(wrapper, 'new_testament')).toBe(nt);
+    });
+
+    it('a chosen template keeps its books if the setting changes before saving', async () => {
+      settings().includeDeuterocanonical = true;
+      const createGoal = mockSave('createGoal');
+      const wrapper = mountEditor();
+      await wrapper.find('[data-template-id="wisdom"]').trigger('click');
+      settings().includeDeuterocanonical = false;
+      await wrapper.vm.$nextTick();
+      await wrapper.find(testId('reading-goal-save')).trigger('click');
+
+      expect(createGoal).toHaveBeenCalledWith(expect.objectContaining({
+        passages: [18, 19, 20, 21, 22, 71, SIRACH].map(bookToPassage),
+      }));
+    });
+
+    it('turning the setting on mid-edit makes deuterocanonical books selectable', async () => {
+      const wrapper = mountEditor();
+      await startCustom(wrapper);
+      expect(book(wrapper, TOBIT).exists()).toBe(false);
+      settings().includeDeuterocanonical = true;
+      await wrapper.vm.$nextTick();
+      expect(book(wrapper, TOBIT).exists()).toBe(true);
+    });
+
+    it('newly added books are ordered canonically, not by index', async () => {
+      settings().includeDeuterocanonical = true;
+      const wrapper = mountEditor();
+      await startCustom(wrapper);
+      await book(wrapper, TOBIT).setValue(true);
+      await book(wrapper, NEHEMIAH).setValue(true);
       await wrapper.find(testId('reading-goal-next')).trigger('click');
 
       const items = wrapper.findAll(`${testId('reading-goal-order')} li`);
@@ -151,19 +212,65 @@ describe('ReadingGoalEditor', () => {
       ]);
     });
 
-    it('stay listed when editing a goal after the reader excludes them', async () => {
-      const wrapper = mountEditor({
-        id: 'g1',
-        title: 'Existing',
-        passages: [bookToPassage(TOBIT)],
-        startDate: '2026-01-01',
-        endDate: '2026-01-10',
-        active: true,
-      });
+    it('goal created with the setting off, edited after turning it on: deuterocanonical books are addable', async () => {
+      settings().includeDeuterocanonical = true;
+      const updateGoal = mockSave('updateGoal');
+      const wrapper = mountEditor(existingGoal([JUDE]));
       await wrapper.find(testId('reading-goal-next')).trigger('click');
-      const tobit = wrapper.find(`[data-book="${TOBIT}"]`);
-      expect(tobit.exists()).toBe(true);
-      expect((tobit.element as HTMLInputElement).checked).toBe(true);
+      expect(isChecked(wrapper, TOBIT)).toBe(false);
+      await book(wrapper, TOBIT).setValue(true);
+      await wrapper.find(testId('reading-goal-next')).trigger('click');
+      await wrapper.find(testId('reading-goal-next')).trigger('click');
+      await wrapper.find(testId('reading-goal-save')).trigger('click');
+
+      expect(updateGoal).toHaveBeenCalledWith('g1', expect.objectContaining({
+        passages: [bookToPassage(JUDE), bookToPassage(TOBIT)],
+      }));
+    });
+
+    it('goal with deuterocanonical books, edited after turning the setting off: they stay listed and checked', async () => {
+      const wrapper = mountEditor(existingGoal([JUDE, TOBIT]));
+      await wrapper.find(testId('reading-goal-next')).trigger('click');
+      expect(isChecked(wrapper, TOBIT)).toBe(true);
+      // Other hidden books are still not offered.
+      expect(book(wrapper, SIRACH).exists()).toBe(false);
+    });
+
+    it('setting off: unchecking a deuterocanonical book keeps it listed so it can be re-checked', async () => {
+      const wrapper = mountEditor(existingGoal([JUDE, TOBIT]));
+      await wrapper.find(testId('reading-goal-next')).trigger('click');
+      await book(wrapper, TOBIT).setValue(false);
+      expect(book(wrapper, TOBIT).exists()).toBe(true);
+      expect(isChecked(wrapper, TOBIT)).toBe(false);
+      await book(wrapper, TOBIT).setValue(true);
+      expect(isChecked(wrapper, TOBIT)).toBe(true);
+    });
+
+    it('setting off: saving without the deuterocanonical book removes it from the goal', async () => {
+      const updateGoal = mockSave('updateGoal');
+      const wrapper = mountEditor(existingGoal([JUDE, TOBIT]));
+      await wrapper.find(testId('reading-goal-next')).trigger('click');
+      await book(wrapper, TOBIT).setValue(false);
+      await wrapper.find(testId('reading-goal-next')).trigger('click');
+      await wrapper.find(testId('reading-goal-next')).trigger('click');
+      await wrapper.find(testId('reading-goal-save')).trigger('click');
+
+      expect(updateGoal).toHaveBeenCalledWith('g1', expect.objectContaining({ passages: [bookToPassage(JUDE)] }));
+    });
+
+    it('setting off: a goal of only deuterocanonical books edits and saves unchanged', async () => {
+      const updateGoal = mockSave('updateGoal');
+      const wrapper = mountEditor(existingGoal([TOBIT, SIRACH]));
+      await wrapper.find(testId('reading-goal-next')).trigger('click');
+      expect(isChecked(wrapper, TOBIT)).toBe(true);
+      expect(isChecked(wrapper, SIRACH)).toBe(true);
+      await wrapper.find(testId('reading-goal-next')).trigger('click');
+      await wrapper.find(testId('reading-goal-next')).trigger('click');
+      await wrapper.find(testId('reading-goal-save')).trigger('click');
+
+      expect(updateGoal).toHaveBeenCalledWith('g1', expect.objectContaining({
+        passages: [bookToPassage(TOBIT), bookToPassage(SIRACH)],
+      }));
     });
   });
 });

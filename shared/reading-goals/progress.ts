@@ -1,5 +1,5 @@
 import Bible from '../bible';
-import type { GoalPassage } from './passages';
+import { passageBookIndex, type GoalPassage } from './passages';
 
 export type ReadingGoal = {
   id: string;
@@ -261,3 +261,20 @@ export const evaluateGoalCompletions = <T extends ReadingGoal>(
   !computeGoalProgress(goal, before, today).isComplete &&
   computeGoalProgress(goal, after, today).isComplete,
   );
+
+/**
+ * Books the reader still has to read for this goal but cannot log, because
+ * their canon setting excludes them. Goals keep their books when the setting
+ * changes, so the UI uses this to explain why the goal can't be finished.
+ */
+export const getUnreadBooksOutsideCanon = (
+  progress: Pick<ReadingGoalProgress, 'perPassage'>,
+  includeDeuterocanonical: boolean,
+): number[] => {
+  if (includeDeuterocanonical) { return []; }
+  const books = progress.perPassage
+    .filter(p => p.versesRead < p.totalVerses)
+    .map(p => passageBookIndex(p.passage))
+    .filter(Bible.isDeuterocanonical);
+  return [...new Set(books)];
+};

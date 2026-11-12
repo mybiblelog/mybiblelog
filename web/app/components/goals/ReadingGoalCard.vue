@@ -37,6 +37,7 @@
     <div v-if="nextUpLabel" class="reading-goal-card__next mbl-text-small" data-testid="reading-goal-card-next-up">
       {{ t('next_up', { passage: nextUpLabel }) }}
     </div>
+    <reading-goal-outside-canon-note :progress="progress" data-testid="reading-goal-card-outside-canon" />
   </NuxtLink>
 </template>
 
@@ -45,6 +46,7 @@ import dayjs from 'dayjs';
 import { Bible, inclusiveDays, type ReadingGoal, type ReadingGoalProgress } from '@mybiblelog/shared';
 import CompletionBar from '~/components/ui/CompletionBar.vue';
 import CheckmarkIcon from '~/components/svg/CheckmarkIcon.vue';
+import ReadingGoalOutsideCanonNote from '~/components/goals/ReadingGoalOutsideCanonNote.vue';
 
 const props = defineProps<{
   goal: ReadingGoal;

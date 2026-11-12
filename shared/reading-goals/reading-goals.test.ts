@@ -13,6 +13,7 @@ import {
   getDefaultEndDate,
   getGoalTotalVerses,
   getRequiredVersesPerDay,
+  getUnreadBooksOutsideCanon,
   inclusiveDays,
   isGoalVisibleToday,
   type ReadingGoal,
@@ -22,6 +23,7 @@ import { READING_GOAL_TEMPLATES, getTemplateBookIndexes, getTemplatePassages } f
 const JUDE = 65;
 const PHILEMON = 57;
 const TOBIT = 67;
+const SIRACH = 72;
 const v = Bible.makeVerseId;
 const judeVerses = Bible.getBookVerseCount(JUDE); // 25
 
@@ -259,5 +261,56 @@ describe('evaluateGoalCompletions', () => {
     const after = [...before, entry('2026-01-02', JUDE, 1, 21, 1, 25)];
     expect(evaluateGoalCompletions(goals, before, after, '2026-01-02').map(g => g.id)).toEqual(['g1']);
     expect(evaluateGoalCompletions(goals, after, after, '2026-01-02')).toEqual([]);
+  });
+});
+
+describe('deuterocanonical books in goals', () => {
+  const tobitVerses = Bible.getBookVerseCount(TOBIT);
+  const tobitGoal = (passages = [bookToPassage(TOBIT), bookToPassage(JUDE)]) => makeGoal({ passages });
+  const readAllOfTobit = entry('2026-01-01', TOBIT, 1, 1, 14, Bible.getChapterVerseCount(TOBIT, 14));
+
+  test('progress counts deuterocanonical reading without consulting the canon setting', () => {
+    const progress = computeGoalProgress(tobitGoal(), [readAllOfTobit], '2026-01-02');
+    expect(progress.totalVerses).toBe(tobitVerses + judeVerses);
+    expect(progress.versesRead).toBe(tobitVerses);
+    expect(progress.nextUp).toEqual({ startVerseId: v(JUDE, 1, 1), endVerseId: v(JUDE, 1, 25) });
+  });
+
+  test('next up walks into a deuterocanonical book in passage order', () => {
+    const goal = tobitGoal([bookToPassage(JUDE), bookToPassage(TOBIT)]);
+    const progress = computeGoalProgress(goal, [entry('2026-01-01', JUDE, 1, 1, 1, 25)], '2026-01-01');
+    expect(progress.nextUp).toEqual({ startVerseId: v(TOBIT, 1, 1), endVerseId: Bible.getLastBookChapterVerseId(TOBIT, 1) });
+  });
+
+  test('completing a deuterocanonical book completes the goal', () => {
+    const goal = tobitGoal([bookToPassage(TOBIT)]);
+    expect(evaluateGoalCompletions([goal], [], [readAllOfTobit], '2026-01-01').map(g => g.id)).toEqual(['g1']);
+  });
+
+  describe('getUnreadBooksOutsideCanon', () => {
+    const unread = (goal: ReadingGoal, entries: ReturnType<typeof entry>[], includeDeuterocanonical: boolean) =>
+      getUnreadBooksOutsideCanon(computeGoalProgress(goal, entries, '2026-01-02'), includeDeuterocanonical);
+
+    test('nothing when the canon includes deuterocanonical books', () => {
+      expect(unread(tobitGoal(), [], true)).toEqual([]);
+    });
+
+    test('unread or partly read deuterocanonical books when the canon excludes them', () => {
+      expect(unread(tobitGoal(), [], false)).toEqual([TOBIT]);
+      expect(unread(tobitGoal(), [entry('2026-01-01', TOBIT, 1, 1, 1, 5)], false)).toEqual([TOBIT]);
+    });
+
+    test('nothing once the deuterocanonical books are fully read', () => {
+      expect(unread(tobitGoal(), [readAllOfTobit], false)).toEqual([]);
+    });
+
+    test('common-canon books never count', () => {
+      expect(unread(makeGoal(), [], false)).toEqual([]);
+    });
+
+    test('a goal of only deuterocanonical books', () => {
+      const goal = tobitGoal([bookToPassage(TOBIT), bookToPassage(SIRACH)]);
+      expect(unread(goal, [], false)).toEqual([TOBIT, SIRACH]);
+    });
   });
 });

@@ -75,6 +75,7 @@
               · {{ $n(Math.floor(progress.percent) / 100, 'percent') }}
               <template v-if="progress.isComplete">· {{ t('complete') }}</template>
             </span>
+            <reading-goal-outside-canon-note :progress="progress" data-testid="reading-goal-row-outside-canon" />
           </div>
           <div class="reading-goals__actions">
             <label class="mbl-checkbox mbl-text-small">
@@ -105,6 +106,7 @@ import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import type { ReadingGoal } from '@mybiblelog/shared';
 import ReadingGoalEditor from '~/components/goals/ReadingGoalEditor.vue';
+import ReadingGoalOutsideCanonNote from '~/components/goals/ReadingGoalOutsideCanonNote.vue';
 import SkeletonLoader from '~/components/ui/SkeletonLoader.vue';
 import { useAppInitStore } from '~/stores/app-init';
 import { useReadingGoalsStore } from '~/stores/reading-goals';

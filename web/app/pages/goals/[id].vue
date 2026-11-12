@@ -28,6 +28,15 @@
           </div>
         </div>
 
+        <div v-if="booksOutsideCanon" class="mbl-message mbl-message--info" data-testid="reading-goal-detail-outside-canon">
+          <div class="mbl-message__body">
+            {{ t('outside_canon', { books: booksOutsideCanon }) }}
+            <NuxtLink :to="localePath('settings-reading')" data-testid="reading-goal-detail-reading-settings">
+              {{ t('reading_settings') }}
+            </NuxtLink>
+          </div>
+        </div>
+
         <div class="mbl-box goal-detail__chart">
           <reading-goal-chart
             :series="series"
@@ -102,6 +111,7 @@ import {
 import ReadingGoalChart from '~/components/goals/ReadingGoalChart.vue';
 import CompletionBar from '~/components/ui/CompletionBar.vue';
 import SkeletonLoader from '~/components/ui/SkeletonLoader.vue';
+import { useGoalBooksOutsideCanon } from '~/composables/useGoalBooksOutsideCanon';
 import { useAppInitStore } from '~/stores/app-init';
 import { useLogEntriesStore } from '~/stores/log-entries';
 import { useReadingGoalsStore } from '~/stores/reading-goals';
@@ -118,6 +128,7 @@ const logEntriesStore = useLogEntriesStore();
 
 const goal = computed(() => readingGoalsStore.getGoal(String(route.params.id)));
 const progress = computed(() => (goal.value ? readingGoalsStore.getProgress(goal.value) : null));
+const booksOutsideCanon = useGoalBooksOutsideCanon(progress);
 const series = computed(() => (goal.value
   ? computeGoalChartSeries(goal.value, logEntriesStore.logEntries, dayjs().format('YYYY-MM-DD'))
   : []));
@@ -192,6 +203,8 @@ onMounted(async () => {
 <i18n lang="json">
 {
   "en": {
+    "outside_canon": "This goal includes {books}, but deuterocanonical books are turned off in your reading settings, so you can't log them. Turn them back on, or edit the goal to remove those books.",
+    "reading_settings": "Reading settings",
     "goal": "Goal",
     "not_found": "This goal could not be found.",
     "all_goals": "All goals",
@@ -208,6 +221,8 @@ onMounted(async () => {
     "books": "Books"
   },
   "de": {
+    "outside_canon": "Dieses Ziel enthält {books}, aber deuterokanonische Bücher sind in Ihren Leseeinstellungen ausgeschaltet, daher können Sie sie nicht erfassen. Schalten Sie sie wieder ein oder bearbeiten Sie das Ziel, um diese Bücher zu entfernen.",
+    "reading_settings": "Leseeinstellungen",
     "goal": "Ziel",
     "not_found": "Dieses Ziel wurde nicht gefunden.",
     "all_goals": "Alle Ziele",
@@ -224,6 +239,8 @@ onMounted(async () => {
     "books": "Bücher"
   },
   "es": {
+    "outside_canon": "Esta meta incluye {books}, pero los libros deuterocanónicos están desactivados en tu configuración de lectura, así que no puedes registrarlos. Vuelve a activarlos o edita la meta para quitar esos libros.",
+    "reading_settings": "Configuración de lectura",
     "goal": "Meta",
     "not_found": "No se encontró esta meta.",
     "all_goals": "Todas las metas",
@@ -240,6 +257,8 @@ onMounted(async () => {
     "books": "Libros"
   },
   "fr": {
+    "outside_canon": "Cet objectif comprend {books}, mais les livres deutérocanoniques sont désactivés dans vos paramètres de lecture : vous ne pouvez donc pas les enregistrer. Réactivez-les ou modifiez l'objectif pour retirer ces livres.",
+    "reading_settings": "Paramètres de lecture",
     "goal": "Objectif",
     "not_found": "Cet objectif est introuvable.",
     "all_goals": "Tous les objectifs",
@@ -256,6 +275,8 @@ onMounted(async () => {
     "books": "Livres"
   },
   "ko": {
+    "outside_canon": "이 목표에는 {books}이(가) 포함되어 있지만 읽기 설정에서 제2경전이 꺼져 있어 기록할 수 없습니다. 다시 켜거나 목표를 편집하여 해당 책을 제거하세요.",
+    "reading_settings": "읽기 설정",
     "goal": "목표",
     "not_found": "이 목표를 찾을 수 없습니다.",
     "all_goals": "모든 목표",
@@ -272,6 +293,8 @@ onMounted(async () => {
     "books": "책"
   },
   "pt": {
+    "outside_canon": "Esta meta inclui {books}, mas os livros deuterocanônicos estão desativados nas suas configurações de leitura, então você não pode registrá-los. Ative-os novamente ou edite a meta para remover esses livros.",
+    "reading_settings": "Configurações de leitura",
     "goal": "Meta",
     "not_found": "Esta meta não foi encontrada.",
     "all_goals": "Todas as metas",
@@ -288,6 +311,8 @@ onMounted(async () => {
     "books": "Livros"
   },
   "uk": {
+    "outside_canon": "Ця ціль містить {books}, але девтероканонічні книги вимкнено в налаштуваннях читання, тому їх не можна записати. Увімкніть їх знову або відредагуйте ціль, щоб прибрати ці книги.",
+    "reading_settings": "Налаштування читання",
     "goal": "Мета",
     "not_found": "Цю мету не знайдено.",
     "all_goals": "Усі цілі",

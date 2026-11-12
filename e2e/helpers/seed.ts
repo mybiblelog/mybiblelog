@@ -44,6 +44,7 @@ export interface UserSettingsPatch {
   startPage?: string;
   passageNoteTagSortOrder?: string;
   locale?: string;
+  includeDeuterocanonical?: boolean;
 }
 
 const ensureOk = async (response: APIResponse, label: string): Promise<APIResponse> => {

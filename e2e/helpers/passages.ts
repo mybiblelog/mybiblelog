@@ -44,6 +44,7 @@ export const chapterRange = (book: number, chapter: number): { startVerseId: num
 export const BOOK = {
   GENESIS: 1,
   EXODUS: 2,
+  NEHEMIAH: 16,
   PSALMS: 19,
   MATTHEW: 40,
   MARK: 41,
@@ -53,6 +54,8 @@ export const BOOK = {
   PHILEMON: 57,
   JUDE: 65,
   REVELATION: 66,
+  TOBIT: 67,
+  SIRACH: 72,
 } as const;
 
 /** A whole book as a single passage, the form reading goals store books in. */

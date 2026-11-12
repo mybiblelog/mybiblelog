@@ -275,9 +275,10 @@ const displayOrder = new Map(Bible.getAllBooks().map(book => [book.bibleOrder, b
 const byDisplayOrder = (a: number, b: number) => displayOrder.get(a)! - displayOrder.get(b)!;
 
 const testaments = computed(() => {
-  // Books already in the goal stay listed even if the reader's canon no longer
-  // includes them, so editing never silently drops a deuterocanonical book.
+  // Books in the goal being edited stay listed even when the reader's canon
+  // excludes them, so they can be unchecked and checked again before saving.
   const indexes = new Set(Bible.getBooksForCanon(includeDeuterocanonical.value).map(book => book.bibleOrder));
+  (props.goal?.passages ?? []).forEach(passage => indexes.add(passageBookIndex(passage)));
   selectedBooks.value.forEach(bookIndex => indexes.add(bookIndex));
   const books = [...indexes].sort(byDisplayOrder).map(index => ({ index, name: bookName(index) }));
   return [

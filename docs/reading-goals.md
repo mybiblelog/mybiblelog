@@ -57,6 +57,21 @@ GoalPassage {
 | **Projected finish** | `startDate + ceil(totalVerses / averagePace) - 1`. If the average is 0, show a "Not enough reading yet" state. If complete, show the actual completion date. |
 | **Passage order** | Controls display order (editor, detail page) and the **"Next up"** hint: the first unread verse range in the first incomplete passage, in goal order. While passages are whole books, they are labelled with the book name. |
 
+### Deuterocanonical setting changes
+
+Goals are snapshots: changing `includeDeuterocanonical` never changes a goal's books, totals, or progress. Since the log entry form only offers books in the reader's canon, the UI flags goals the reader can't finish.
+
+| Scenario | Behavior |
+|---|---|
+| Setting off, creating a goal | Picker and templates use the 66-book canon. |
+| Setting on, creating a goal | Picker offers all 77 books; Whole Bible, Old Testament, and Wisdom templates include deuterocanonical books in Catholic order. |
+| Goal made with the setting off, then turned on | Goal unchanged; editing offers the deuterocanonical books, unchecked. |
+| Goal with deuterocanonical books, then turned off | Goal unchanged. If any of those books are still unread, the Today card, goals list row, and detail page name them (`getUnreadBooksOutsideCanon`); the detail page links to Reading settings. |
+| …those books are already fully read | No notice; their reading still counts. |
+| …setting turned back on | Notice disappears; the books can be logged again. |
+| …editing while off | The goal's deuterocanonical books stay listed and checked, and remain listed after unchecking. Saving without them removes them and the notice. |
+| Setting changes while the editor is open | Picker and template totals update; a template already chosen keeps its books. |
+
 ---
 
 ## 3. API
