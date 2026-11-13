@@ -19,7 +19,7 @@ const books = useGoalBooksOutsideCanon(() => props.progress);
 <style scoped>
 .goal-outside-canon {
   margin: 0;
-  color: var(--mbl-warning-fg);
+  color: var(--mbl-message-warning-fg);
 }
 </style>
 

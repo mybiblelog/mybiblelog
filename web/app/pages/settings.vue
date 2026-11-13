@@ -22,9 +22,6 @@
               <NuxtLink class="mbl-dropdown__item" :to="localePath('settings-reading')">
                 {{ t('reading') }}
               </NuxtLink>
-              <NuxtLink class="mbl-dropdown__item" :to="localePath('settings-goals')">
-                {{ t('goals') }}
-              </NuxtLink>
               <NuxtLink class="mbl-dropdown__item" :to="localePath('settings-reminder')">
                 {{ t('reminder') }}
               </NuxtLink>
@@ -53,11 +50,6 @@
           <li>
             <NuxtLink :to="localePath('settings-reading')">
               {{ t('reading') }}
-            </NuxtLink>
-          </li>
-          <li>
-            <NuxtLink :to="localePath('settings-goals')" data-testid="settings-tab-goals">
-              {{ t('goals') }}
             </NuxtLink>
           </li>
           <li>
@@ -104,8 +96,7 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
     "reading": "Reading",
     "reminder": "Reminder",
     "export": "Export",
-    "import": "Import",
-    "goals": "Goals"
+    "import": "Import"
   },
   "de": {
     "settings": "Einstellungen",
@@ -115,8 +106,7 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
     "reading": "Lesen",
     "reminder": "Erinnerung",
     "export": "Exportieren",
-    "import": "Importieren",
-    "goals": "Ziele"
+    "import": "Importieren"
   },
   "es": {
     "settings": "Configuración",
@@ -126,8 +116,7 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
     "reading": "Lectura",
     "reminder": "Recordatorio",
     "export": "Exportar",
-    "import": "Importar",
-    "goals": "Metas"
+    "import": "Importar"
   },
   "fr": {
     "settings": "Paramètres",
@@ -137,8 +126,7 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
     "reading": "Lecture",
     "reminder": "Rappel",
     "export": "Exporter",
-    "import": "Importer",
-    "goals": "Objectifs"
+    "import": "Importer"
   },
   "ko": {
     "settings": "설정",
@@ -148,8 +136,7 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
     "reading": "읽기",
     "reminder": "알림",
     "export": "내보내기",
-    "import": "불러오기",
-    "goals": "목표"
+    "import": "불러오기"
   },
   "pt": {
     "settings": "Configurações",
@@ -159,8 +146,7 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
     "reading": "Leitura",
     "reminder": "Lembrete",
     "export": "Exportar",
-    "import": "Importar",
-    "goals": "Metas"
+    "import": "Importar"
   },
   "uk": {
     "settings": "Налаштування",
@@ -170,8 +156,7 @@ function toggleMenu() { menuOpen.value = !menuOpen.value; }
     "reading": "Читання",
     "reminder": "Нагадування",
     "export": "Експорт",
-    "import": "Імпорт",
-    "goals": "Цілі"
+    "import": "Імпорт"
   }
 }
 </i18n>

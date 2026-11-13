@@ -61,6 +61,7 @@ module.exports = {
     // Project composables (app/composables/)
     useContentSeo: 'readonly',
     useOpenInBible: 'readonly',
+    useLocalizedDate: 'readonly',
     useClickOutside: 'readonly',
     useEscapeKey: 'readonly',
     useSlideDrawerTransition: 'readonly',

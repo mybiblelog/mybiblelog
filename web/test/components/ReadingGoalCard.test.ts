@@ -99,3 +99,43 @@ describe('ReadingGoalCard outside-canon notice', () => {
     expect(off).toContain(String(Bible.getBookVerseCount(TOBIT)));
   });
 });
+
+describe('ReadingGoalCard progress summary', () => {
+  const entry = (date: string, from: number, to: number) => ({
+    date,
+    startVerseId: Bible.makeVerseId(JUDE, 1, from),
+    endVerseId: Bible.makeVerseId(JUDE, 1, to),
+  });
+  const find = (wrapper: ReturnType<typeof mountCard>, id: string) => wrapper.find(`[data-testid="${id}"]`);
+
+  beforeEach(() => {
+    useUserSettingsStore().settings.includeDeuterocanonical = true;
+  });
+
+  it('shows today\'s reading against today\'s target, and what to read next', () => {
+    // Jude (25 verses) over ten days; day 2 with 3 read yesterday and 2 today.
+    const wrapper = mountCard([JUDE], [entry('2026-01-01', 1, 3), entry(TODAY, 4, 5)]);
+    expect(find(wrapper, 'reading-goal-status').attributes('data-status')).toBe('on_track');
+    expect(find(wrapper, 'reading-goal-card-today').text()).toContain('{"read":"2","target":"3"}');
+    expect(find(wrapper, 'reading-goal-next-up-passage').text()).toBe('Jude 1:6-25');
+  });
+
+  it('a completed goal drops the daily target and next-up', () => {
+    const wrapper = mountCard([JUDE], [readWholeBook(JUDE)]);
+    expect(wrapper.attributes('data-complete')).toBe('true');
+    expect(find(wrapper, 'reading-goal-status').attributes('data-status')).toBe('complete');
+    expect(find(wrapper, 'reading-goal-card-today').exists()).toBe(false);
+    expect(find(wrapper, 'reading-goal-card-next-up').exists()).toBe(false);
+  });
+
+  it('a next-up passage outside the reader\'s canon is shown without log actions', () => {
+    useUserSettingsStore().settings.includeDeuterocanonical = false;
+    const wrapper = mountCard([TOBIT]);
+    expect(find(wrapper, 'reading-goal-next-up-passage').text()).toBe('Tobit 1');
+    expect(find(wrapper, 'reading-goal-next-up-log').exists()).toBe(false);
+  });
+
+  it('only manageable cards carry the edit / archive / delete menu', () => {
+    expect(find(mountCard([JUDE]), 'action-menu-toggle').exists()).toBe(false);
+  });
+});

@@ -326,6 +326,10 @@
   --mbl-message-success-accent: #48c774;
   --mbl-message-success-icon: #23874a;
 
+  --mbl-message-warning-border: #ecd590;
+  --mbl-message-warning-bg: #fff8e1;
+  --mbl-message-warning-fg: #6f5200;
+
   --mbl-notification-info-bg: var(--mbl-info);
   --mbl-notification-info-fg: var(--mbl-on-accent);
 
@@ -427,6 +431,10 @@
   --mbl-message-success-fg: #b8f5cc;
   --mbl-message-success-accent: #3a9e5c;
   --mbl-message-success-icon: #4cc779;
+
+  --mbl-message-warning-border: #57460f;
+  --mbl-message-warning-bg: #2a2208;
+  --mbl-message-warning-fg: #ffe39a;
   --mbl-scripture-words-of-jesus: #e08a73;
   --mbl-star-earned: #d08a2f;
   /* Visible on #191919 surfaces; was #2c2c2c (too low contrast) */

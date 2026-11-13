@@ -67,6 +67,36 @@ describe('reading-goals store', () => {
     expect(store.todayGoals.map(({ goal }) => goal.id)).toEqual(['soon', 'late']);
   });
 
+  it('sections puts every goal in one group: in progress, upcoming, completed, archived', () => {
+    const store = useReadingGoalsStore();
+    store.goals = [
+      makeGoal({ id: 'later', endDate: '2026-02-01' }),
+      makeGoal({ id: 'sooner' }),
+      makeGoal({ id: 'future', startDate: '2026-01-04' }),
+      makeGoal({ id: 'archived', active: false }),
+      makeGoal({ id: 'done-archived', active: false, startDate: '2025-12-01', endDate: '2025-12-05' }),
+    ];
+    useLogEntriesStore().logEntries = [judeEntry('e1', '2025-12-02', 1, 25)];
+    const ids = (section: keyof typeof store.sections) => store.sections[section].map(({ goal }) => goal.id);
+
+    expect(ids('current')).toEqual(['sooner', 'later']);
+    expect(ids('upcoming')).toEqual(['future']);
+    expect(ids('completed')).toEqual(['done-archived']);
+    expect(ids('archived')).toEqual(['archived']);
+  });
+
+  it('setGoalActive sends the whole goal with only the flag changed', async () => {
+    const goal = makeGoal();
+    const http = stubHttp({ patch: vi.fn().mockResolvedValue({ data: { ...goal, active: false } }) });
+    const store = useReadingGoalsStore();
+    store.goals = [goal];
+    await store.setGoalActive(goal, false);
+
+    const { id: _id, ...input } = goal;
+    expect(http.patch).toHaveBeenCalledWith('/api/reading-goals/g1', { ...input, active: false });
+    expect(store.inactiveGoals.map(g => g.id)).toEqual(['g1']);
+  });
+
   it('counts log entries from before the reading-tracker reset date', () => {
     const store = useReadingGoalsStore();
     store.goals = [makeGoal()];

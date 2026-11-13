@@ -82,6 +82,7 @@ function installNuxtDefaults() {
   vi.stubGlobal('useEscapeKey', useEscapeKey);
   vi.stubGlobal('useSlideDrawerTransition', useSlideDrawerTransition);
   vi.stubGlobal('useHttp', useHttp);
+  vi.stubGlobal('useLocalizedDate', () => (date: string) => date);
 }
 
 installNuxtDefaults();

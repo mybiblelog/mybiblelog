@@ -22,8 +22,29 @@ export type GoalPassageProgress = {
   totalVerses: number;
 };
 
+/**
+ * Where the reader stands against the plan's even daily pace.
+ * `behind` means yesterday's mark was missed by more than half a day's reading;
+ * `ahead` means today's reading plus at least one more full day is already done.
+ */
+export type ReadingGoalStatus = 'upcoming' | 'on_track' | 'ahead' | 'behind' | 'overdue' | 'complete';
+
 export type ReadingGoalProgress = {
+  status: ReadingGoalStatus;
+  /** Whole days ahead of (positive) or behind (negative) the plan; 0 unless `ahead` or `behind`. */
+  scheduleDays: number;
+  /** Days from today through the goal date, counting both (0 once overdue). */
+  daysLeft: number;
   versesRead: number;
+  versesRemaining: number;
+  /** Goal verses first read today. */
+  versesReadToday: number;
+  /**
+   * Verses to read today to finish on the goal date: what was left this
+   * morning spread over the days left. Everything left once overdue; 0 when
+   * the goal hasn't started or is complete.
+   */
+  todayTarget: number;
   totalVerses: number;
   /** 0–100. */
   percent: number;
@@ -59,6 +80,12 @@ export const inclusiveDays = (start: string, end: string): number =>
 
 export const getGoalTotalVerses = (passages: ReadonlyArray<GoalPassage>): number =>
   Bible.countUniqueRangeVerses(passages);
+
+/** Reading comes in chapters, so landing a little short of a day's mark isn't "behind". */
+const BEHIND_TOLERANCE_DAYS = 0.5;
+
+/** Longest plan the API accepts (ten years); keeps per-day series bounded. */
+export const MAX_GOAL_DAYS = 3660;
 
 /** The start day is day 1, so N days of reading end N - 1 days after the start. */
 export const getDefaultEndDate = (
@@ -199,14 +226,48 @@ export const computeGoalProgress = (
     ),
   }));
 
+  const requiredPerDay = getRequiredVersesPerDay(totalVerses, goal.startDate, goal.endDate);
+  const started = today >= goal.startDate;
+  const daysLeft = inclusiveDays(started ? today : goal.startDate, goal.endDate);
+  const readBeforeToday = cumulative.filter(point => point.date < today).pop()?.count ?? 0;
+  const readThroughToday = cumulative.filter(point => point.date <= today).pop()?.count ?? 0;
+
+  let status: ReadingGoalStatus = 'on_track';
+  let scheduleDays = 0;
+  if (isComplete) { status = 'complete'; }
+  else if (!started) { status = 'upcoming'; }
+  else if (today > goal.endDate) { status = 'overdue'; }
+  else if (totalVerses > 0) {
+    // Days of the plan already read, against the days that had fully passed
+    // this morning. Rounded so float division can't flip an exact boundary.
+    const planDaysRead = versesRead * inclusiveDays(goal.startDate, goal.endDate) / totalVerses;
+    const delta = Math.round((planDaysRead - (inclusiveDays(goal.startDate, today) - 1)) * 1e6) / 1e6;
+    if (delta < -BEHIND_TOLERANCE_DAYS) {
+      status = 'behind';
+      scheduleDays = Math.min(-1, Math.round(delta));
+    }
+    else if (delta >= 2) {
+      status = 'ahead';
+      scheduleDays = Math.floor(delta - 1);
+    }
+  }
+
   return {
+    status,
+    scheduleDays,
+    daysLeft,
     versesRead,
+    versesRemaining: Math.max(0, totalVerses - versesRead),
+    versesReadToday: readThroughToday - readBeforeToday,
+    todayTarget: isComplete || !started
+      ? 0
+      : Math.ceil(Math.max(0, totalVerses - readBeforeToday) / Math.max(1, daysLeft)),
     totalVerses,
     percent: totalVerses > 0 ? Math.min(100, (versesRead / totalVerses) * 100) : 0,
     isComplete,
     completedDate,
     averagePerDay,
-    requiredPerDay: getRequiredVersesPerDay(totalVerses, goal.startDate, goal.endDate),
+    requiredPerDay,
     projectedFinishDate,
     nextUp: isComplete ? null : findNextUp(goal.passages, perPassage, covered),
     perPassage,

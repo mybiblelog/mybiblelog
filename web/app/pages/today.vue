@@ -60,9 +60,14 @@
     </div>
     <br>
     <div v-if="todayGoals.length" class="today-page__goals-section" data-testid="reading-goals-section">
-      <h3 class="mbl-title mbl-title--5">
-        {{ t('goals') }}
-      </h3>
+      <div class="today-page__goals-header">
+        <h3 class="mbl-title mbl-title--5">
+          {{ t('goals') }}
+        </h3>
+        <NuxtLink :to="localePath('goals')" data-testid="reading-goals-all">
+          {{ t('all_goals') }}
+        </NuxtLink>
+      </div>
       <div class="today-page__goals" role="list" data-testid="reading-goals">
         <reading-goal-card
           v-for="{ goal, progress } of todayGoals"
@@ -391,7 +396,18 @@ onMounted(async () => {
 .today-page__goals {
   display: flex;
   flex-direction: column;
-  gap: var(--mbl-space-xs);
+  gap: var(--mbl-space-sm);
+}
+
+.today-page__goals-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mbl-space-md);
+}
+
+.today-page__goals-header a {
+  font-size: 0.9rem;
 }
 
 .today-page__goals-section {
@@ -422,6 +438,7 @@ onMounted(async () => {
     "no_entries": "No Entries",
     "view_all_reading": "View All Reading",
     "goals": "Goals",
+    "all_goals": "All goals",
     "reading_suggestions": "Reading Suggestions",
     "open_bible": "Open Bible",
     "continue_reading": "Continue Reading",
@@ -448,6 +465,7 @@ onMounted(async () => {
     "no_entries": "Keine Einträge",
     "view_all_reading": "Alle Lesungen ansehen",
     "goals": "Ziele",
+    "all_goals": "Alle Ziele",
     "reading_suggestions": "Lesevorschläge",
     "open_bible": "Bibel öffnen",
     "continue_reading": "Weiterlesen",
@@ -474,6 +492,7 @@ onMounted(async () => {
     "no_entries": "No hay entradas",
     "view_all_reading": "Ver toda la lectura",
     "goals": "Metas",
+    "all_goals": "Todas las metas",
     "reading_suggestions": "Sugerencias de Lectura",
     "open_bible": "Abrir en la Biblia",
     "continue_reading": "Seguir leyendo",
@@ -500,6 +519,7 @@ onMounted(async () => {
     "no_entries": "Pas d'entrées",
     "view_all_reading": "Voir toute la lecture",
     "goals": "Objectifs",
+    "all_goals": "Tous les objectifs",
     "reading_suggestions": "Suggestions de Lecture",
     "open_bible": "Ouvrir dans la Bible",
     "continue_reading": "Continuer la lecture",
@@ -526,6 +546,7 @@ onMounted(async () => {
     "no_entries": "항목 없음",
     "view_all_reading": "모든 기록 보기",
     "goals": "목표",
+    "all_goals": "모든 목표",
     "reading_suggestions": "읽기 제안",
     "open_bible": "성경 열기",
     "continue_reading": "이어서 읽기",
@@ -552,6 +573,7 @@ onMounted(async () => {
     "no_entries": "Sem Entradas",
     "view_all_reading": "Ver toda a leitura",
     "goals": "Metas",
+    "all_goals": "Todas as metas",
     "reading_suggestions": "Sugestões de Leitura",
     "open_bible": "Ler na Biblia",
     "continue_reading": "Continuar lendo",
@@ -578,6 +600,7 @@ onMounted(async () => {
     "no_entries": "Немає записів",
     "view_all_reading": "Переглянути все читання",
     "goals": "Цілі",
+    "all_goals": "Усі цілі",
     "reading_suggestions": "Рекомендації для Читання",
     "open_bible": "Читати в Біблії",
     "continue_reading": "Продовжити читання",

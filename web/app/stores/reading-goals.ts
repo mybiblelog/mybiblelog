@@ -18,6 +18,8 @@ export type ReadingGoalWithProgress = {
   progress: ReadingGoalProgress;
 };
 
+export type ReadingGoalSection = 'current' | 'upcoming' | 'completed' | 'archived';
+
 const today = (): string => dayjs().format('YYYY-MM-DD');
 
 export const useReadingGoalsStore = defineStore('reading-goals', {
@@ -35,9 +37,18 @@ export const useReadingGoalsStore = defineStore('reading-goals', {
     /**
      * Progress counts every log entry (not `currentLogEntries`): a goal's own
      * start date bounds its reading, so the reading-tracker reset date doesn't apply.
+     * Computed once per goal here so every view of a goal shares the result.
      */
-    getProgress: () => (goal: ReadingGoal): ReadingGoalProgress =>
-      computeGoalProgress(goal, useLogEntriesStore().logEntries, today()),
+    progressById(state): Record<string, ReadingGoalProgress> {
+      const logEntries = useLogEntriesStore().logEntries;
+      const date = today();
+      return Object.fromEntries(state.goals.map(goal => [goal.id, computeGoalProgress(goal, logEntries, date)]));
+    },
+
+    getProgress() {
+      return (goal: ReadingGoal): ReadingGoalProgress =>
+        this.progressById[goal.id] ?? computeGoalProgress(goal, useLogEntriesStore().logEntries, today());
+    },
 
     todayGoals(state): ReadingGoalWithProgress[] {
       const date = today();
@@ -45,6 +56,32 @@ export const useReadingGoalsStore = defineStore('reading-goals', {
         .map(goal => ({ goal, progress: this.getProgress(goal) }))
         .filter(({ goal, progress }) => isGoalVisibleToday(goal, progress, date))
         .sort((a, b) => a.goal.endDate.localeCompare(b.goal.endDate));
+    },
+
+    /**
+     * Every goal in exactly one group for the goals page. Finished goals are
+     * `completed` whether or not they're archived; `archived` holds the
+     * unfinished goals the reader has hidden from Today.
+     */
+    sections(state): Record<ReadingGoalSection, ReadingGoalWithProgress[]> {
+      const sections: Record<ReadingGoalSection, ReadingGoalWithProgress[]> = {
+        current: [],
+        upcoming: [],
+        completed: [],
+        archived: [],
+      };
+      for (const goal of state.goals) {
+        const progress = this.getProgress(goal);
+        let section: ReadingGoalSection = 'current';
+        if (progress.isComplete) { section = 'completed'; }
+        else if (!goal.active) { section = 'archived'; }
+        else if (progress.status === 'upcoming') { section = 'upcoming'; }
+        sections[section].push({ goal, progress });
+      }
+      sections.current.sort((a, b) => a.goal.endDate.localeCompare(b.goal.endDate));
+      sections.upcoming.sort((a, b) => a.goal.startDate.localeCompare(b.goal.startDate));
+      sections.completed.sort((a, b) => b.progress.completedDate!.localeCompare(a.progress.completedDate!));
+      return sections;
     },
   },
 

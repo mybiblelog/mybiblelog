@@ -17,3 +17,5 @@ export const daysAgo = (days: number): string => {
   date.setDate(date.getDate() - days);
   return isoDate(date);
 };
+
+export const daysFromNow = (days: number): string => daysAgo(-days);

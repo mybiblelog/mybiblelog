@@ -214,6 +214,53 @@ describe('computeGoalProgress', () => {
   });
 });
 
+describe('schedule status and today target', () => {
+  // Jude over five days is 5 verses a day; "today" is day 3.
+  const today = '2026-01-03';
+  const progressAfter = (...entries: ReturnType<typeof entry>[]) => computeGoalProgress(makeGoal(), entries, today);
+
+  test('on track when yesterday\'s mark is met; today\'s target spreads what is left over the days left', () => {
+    const progress = progressAfter(entry('2026-01-02', JUDE, 1, 1, 1, 10));
+    expect(progress).toMatchObject({ status: 'on_track', scheduleDays: 0, daysLeft: 3, todayTarget: 5, versesReadToday: 0, versesRemaining: 15 });
+  });
+
+  test('behind by whole days, and the target grows to catch up', () => {
+    const progress = progressAfter(entry('2026-01-01', JUDE, 1, 1, 1, 5));
+    expect(progress).toMatchObject({ status: 'behind', scheduleDays: -1, todayTarget: 7 });
+    expect(progressAfter()).toMatchObject({ status: 'behind', scheduleDays: -2, todayTarget: 9 });
+  });
+
+  test('a little short of yesterday\'s mark still counts as on track', () => {
+    expect(progressAfter(entry('2026-01-01', JUDE, 1, 1, 1, 8))).toMatchObject({ status: 'on_track', scheduleDays: 0 });
+    expect(progressAfter(entry('2026-01-01', JUDE, 1, 1, 1, 7))).toMatchObject({ status: 'behind', scheduleDays: -1 });
+  });
+
+  test('reading today counts toward today without moving the target', () => {
+    const progress = progressAfter(entry('2026-01-02', JUDE, 1, 1, 1, 10), entry(today, JUDE, 1, 11, 1, 13));
+    expect(progress).toMatchObject({ status: 'on_track', todayTarget: 5, versesReadToday: 3 });
+  });
+
+  test('ahead once today plus another full day is done', () => {
+    expect(progressAfter(entry(today, JUDE, 1, 1, 1, 15))).toMatchObject({ status: 'on_track', scheduleDays: 0 });
+    expect(progressAfter(entry(today, JUDE, 1, 1, 1, 20))).toMatchObject({ status: 'ahead', scheduleDays: 1 });
+  });
+
+  test('upcoming goals have no target and count the whole plan as days left', () => {
+    const progress = computeGoalProgress(makeGoal(), [], '2025-12-30');
+    expect(progress).toMatchObject({ status: 'upcoming', todayTarget: 0, daysLeft: 5 });
+  });
+
+  test('overdue goals target everything left', () => {
+    const progress = computeGoalProgress(makeGoal(), [entry('2026-01-01', JUDE, 1, 1, 1, 5)], '2026-01-09');
+    expect(progress).toMatchObject({ status: 'overdue', daysLeft: 0, todayTarget: 20 });
+  });
+
+  test('complete goals have no target', () => {
+    const progress = progressAfter(entry('2026-01-02', JUDE, 1, 1, 1, judeVerses));
+    expect(progress).toMatchObject({ status: 'complete', todayTarget: 0, versesRemaining: 0 });
+  });
+});
+
 describe('isGoalVisibleToday', () => {
   const incomplete = { isComplete: false, completedDate: null };
   test('active goals show from the start date and past the end date while incomplete', () => {

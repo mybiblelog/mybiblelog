@@ -114,6 +114,7 @@ describe('reading-goals.test.js', () => {
       ['overlapping passages', { ...goal, passages: [bookToPassage(JUDE), { ...bookToPassage(JUDE), startVerseId: bookToPassage(JUDE).startVerseId + 2 }] }],
       ['an end date before the start date', { ...goal, startDate: '2026-02-01', endDate: '2026-01-31' }],
       ['an invalid date', { ...goal, startDate: '2026-13-01' }],
+      ['a plan longer than ten years', { ...goal, startDate: '2026-01-01', endDate: '2037-01-01' }],
     ];
 
     for (const [label, body] of invalidBodies) {

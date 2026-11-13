@@ -1,133 +1,150 @@
 <template>
-  <div class="goal-chart">
-    <svg
-      class="goal-chart__svg"
-      :viewBox="`0 0 ${width} ${height}`"
-      role="img"
-      :aria-label="t('chart_label', { read: versesRead, total: totalVerses })"
-      data-testid="reading-goal-chart"
-    >
-      <!-- horizontal gridlines + y-axis labels -->
-      <template v-for="tick in yTicks" :key="`tick-${tick.value}`">
-        <line class="goal-chart__gridline" :x1="padLeft" :y1="tick.y" :x2="width - padRight" :y2="tick.y" />
-        <text class="goal-chart__axis-text" :x="padLeft - 6" :y="tick.y + 3" text-anchor="end">
-          {{ tick.label }}
-        </text>
-      </template>
-
-      <!-- cumulative verses read, one bar per elapsed day -->
-      <rect
-        v-for="bar in bars"
-        :key="bar.date"
-        class="goal-chart__bar"
-        :x="bar.x"
-        :y="bar.y"
-        :width="barWidth"
-        :height="bar.height"
-        data-testid="reading-goal-chart-bar"
+  <figure class="goal-chart" :class="{ 'goal-chart--complete': complete }">
+    <div class="goal-chart__plot">
+      <span class="goal-chart__y-label goal-chart__y-label--top">{{ $n(totalVerses, 'grouped') }}</span>
+      <span class="goal-chart__y-label goal-chart__y-label--bottom">0</span>
+      <!-- Stretched to the plot box (strokes don't scale), so every label is HTML and stays legible on a phone. -->
+      <svg
+        class="goal-chart__svg"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        role="img"
+        :aria-label="t('chart_label', { read: versesRead, total: totalVerses })"
+        data-testid="reading-goal-chart"
       >
-        <title>{{ bar.title }}</title>
-      </rect>
-
-      <!-- target pace -->
-      <line v-if="targetLine" class="goal-chart__target" v-bind="targetLine" data-testid="reading-goal-chart-target" />
-      <!-- projected pace from the average so far -->
-      <line v-if="projectionLine" class="goal-chart__projection" v-bind="projectionLine" data-testid="reading-goal-chart-projection" />
-
-      <!-- x-axis end labels -->
-      <text class="goal-chart__axis-text" :x="padLeft" :y="height - 4" text-anchor="start">
-        {{ formatAxisDate(series[0]?.date) }}
-      </text>
-      <text class="goal-chart__axis-text" :x="width - padRight" :y="height - 4" text-anchor="end">
-        {{ formatAxisDate(series[series.length - 1]?.date) }}
-      </text>
-    </svg>
-    <ul class="goal-chart__legend mbl-text-small">
-      <li><span class="goal-chart__swatch goal-chart__swatch--bar" />{{ t('legend_read') }}</li>
-      <li><span class="goal-chart__swatch goal-chart__swatch--target" />{{ t('legend_target') }}</li>
-      <li v-if="projectionLine">
-        <span class="goal-chart__swatch goal-chart__swatch--projection" />{{ t('legend_projection') }}
-      </li>
-    </ul>
-  </div>
+        <line
+          v-for="y in [yAt(0), yAt(total / 2), yAt(total)]"
+          :key="y"
+          class="goal-chart__gridline"
+          x1="0"
+          :y1="y"
+          x2="100"
+          :y2="y"
+        />
+        <line
+          v-if="isPastGoalDate"
+          class="goal-chart__goal-date"
+          :x1="planEndX"
+          y1="0"
+          :x2="planEndX"
+          y2="100"
+        />
+        <path class="goal-chart__area" :d="areaPath" />
+        <polyline class="goal-chart__target" :points="targetPoints" data-testid="reading-goal-chart-target" />
+        <line v-if="projection" class="goal-chart__projection" v-bind="projection" data-testid="reading-goal-chart-projection" />
+        <polyline class="goal-chart__line" :points="linePoints" data-testid="reading-goal-chart-line" />
+      </svg>
+      <span
+        v-if="marker"
+        class="goal-chart__marker"
+        :style="{ left: `${marker.x}%`, top: `${marker.y}%` }"
+        data-testid="reading-goal-chart-marker"
+      />
+    </div>
+    <div class="goal-chart__x-labels">
+      <span>{{ formatDate(series[0]?.date ?? '', 'MMM D') }}</span>
+      <span>{{ formatDate(series[series.length - 1]?.date ?? '', 'MMM D') }}</span>
+    </div>
+    <figcaption class="goal-chart__legend">
+      <span><i class="goal-chart__swatch goal-chart__swatch--read" />{{ t('legend_read') }}</span>
+      <span><i class="goal-chart__swatch goal-chart__swatch--target" />{{ t('legend_target') }}</span>
+      <span v-if="projection"><i class="goal-chart__swatch goal-chart__swatch--projection" />{{ t('legend_projection') }}</span>
+    </figcaption>
+  </figure>
 </template>
 
 <script setup lang="ts">
-import dayjs from 'dayjs';
-import { DEFAULT_CHART_DIMENSIONS, type GoalChartPoint } from '@mybiblelog/shared';
+import type { GoalChartPoint } from '@mybiblelog/shared';
 
 const props = defineProps<{
   series: GoalChartPoint[];
   totalVerses: number;
-  requiredPerDay: number;
+  /** `YYYY-MM-DD`; the plan line reaches the total at the end of this day. */
+  endDate: string;
   averagePerDay: number;
+  complete?: boolean;
 }>();
 
-const { t, locale, n } = useI18n();
+const { t } = useI18n();
+const formatDate = useLocalizedDate();
 
-const { width, height, padLeft, padRight, padTop, padBottom } = { ...DEFAULT_CHART_DIMENSIONS, height: 540, padLeft: 44 };
-const innerW = width - padLeft - padRight;
-const innerH = height - padTop - padBottom;
+const TOP = 6;
+const BOTTOM = 96;
 
 const dayCount = computed(() => Math.max(1, props.series.length));
-const slotWidth = computed(() => innerW / dayCount.value);
-const barWidth = computed(() => Math.max(1, slotWidth.value * 0.7));
 const total = computed(() => Math.max(1, props.totalVerses));
 
-/** Day `i` (0-based) → x at the center of that day's slot. */
-const xAt = (i: number) => padLeft + slotWidth.value * (i + 0.5);
-/** Day `i` (0-based, fractional allowed) → x at the end of that day. */
-const xEndOf = (i: number) => padLeft + slotWidth.value * (i + 1);
-const yAt = (verses: number) => padTop + innerH - (Math.min(verses, total.value) / total.value) * innerH;
+/** The end of day `i` (0-based, fractional allowed); the start of day 0 is x = 0. */
+const xEndOf = (i: number) => ((i + 1) / dayCount.value) * 100;
+const yAt = (verses: number) => BOTTOM - (Math.min(verses, total.value) / total.value) * (BOTTOM - TOP);
+const point = (x: number, y: number) => `${x.toFixed(2)},${y.toFixed(2)}`;
 
-const versesRead = computed(() => {
-  const read = props.series.filter(p => p.count !== null);
-  return read.length ? read[read.length - 1]!.count! : 0;
+const readPoints = computed(() => props.series.flatMap((p, i) => (p.count === null ? [] : [{ i, count: p.count }])));
+const lastRead = computed(() => readPoints.value[readPoints.value.length - 1] ?? null);
+const versesRead = computed(() => lastRead.value?.count ?? 0);
+
+const linePoints = computed(() =>
+  [point(0, yAt(0)), ...readPoints.value.map(p => point(xEndOf(p.i), yAt(p.count)))].join(' '));
+
+const areaPath = computed(() => {
+  if (!lastRead.value) { return ''; }
+  return `M${linePoints.value.replaceAll(' ', ' L')} L${point(xEndOf(lastRead.value.i), yAt(0))} Z`;
 });
 
-const yTicks = computed(() => [0, 0.25, 0.5, 0.75, 1].map((fraction) => {
-  const value = Math.round(total.value * fraction);
-  return { value, y: yAt(value), label: n(value, 'grouped') };
-}));
+const planEndIndex = computed(() => {
+  const index = props.series.findIndex(p => p.date === props.endDate);
+  return index === -1 ? dayCount.value - 1 : index;
+});
+const planEndX = computed(() => xEndOf(planEndIndex.value));
+const isPastGoalDate = computed(() => planEndIndex.value < dayCount.value - 1);
 
-const bars = computed(() => props.series.flatMap((point, i) => {
-  if (point.count === null) { return []; }
-  const y = yAt(point.count);
-  return [{
-    date: point.date,
-    x: xAt(i) - barWidth.value / 2,
-    y,
-    height: padTop + innerH - y,
-    title: `${dayjs(point.date).locale(locale.value).format('LL')}: ${t('verses_read', { count: n(point.count, 'grouped') })}`,
-  }];
-}));
+const targetPoints = computed(() =>
+  [point(0, yAt(0)), point(planEndX.value, yAt(total.value)), point(100, yAt(total.value))].join(' '));
 
-/**
- * Cumulative verses at a constant pace: 0 at the start of day 0 and
- * rate × (i + 1) at the end of day i, clipped where it reaches the total.
- */
-const paceLine = (rate: number) => {
-  if (rate <= 0) { return null; }
-  const lastDay = Math.min(dayCount.value - 1, total.value / rate - 1);
+/** From today's point onward at the average pace so far, until it reaches the total or the chart's edge. */
+const projection = computed(() => {
+  const from = lastRead.value;
+  if (props.complete || !from || props.averagePerDay <= 0 || from.i >= dayCount.value - 1) { return null; }
+  const daysToFinish = (total.value - from.count) / props.averagePerDay;
+  const days = Math.min(daysToFinish, dayCount.value - 1 - from.i);
   return {
-    x1: padLeft,
-    y1: yAt(0),
-    x2: xEndOf(lastDay),
-    y2: yAt(rate * (lastDay + 1)),
+    x1: xEndOf(from.i),
+    y1: yAt(from.count),
+    x2: xEndOf(from.i + days),
+    y2: yAt(from.count + props.averagePerDay * days),
   };
-};
+});
 
-const targetLine = computed(() => paceLine(props.requiredPerDay));
-const projectionLine = computed(() => paceLine(props.averagePerDay));
-
-const formatAxisDate = (date?: string) => (date ? dayjs(date).locale(locale.value).format('MMM D') : '');
+const marker = computed(() => (lastRead.value
+  ? { x: xEndOf(lastRead.value.i), y: yAt(lastRead.value.count) }
+  : null));
 </script>
 
 <style scoped>
+.goal-chart {
+  --goal-chart-accent: var(--mbl-link-bright);
+
+  margin: 0;
+}
+
+.goal-chart--complete {
+  --goal-chart-accent: var(--mbl-success);
+}
+
+.goal-chart__plot {
+  position: relative;
+  height: clamp(140px, 30vw, 200px);
+}
+
 .goal-chart__svg {
+  display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   overflow: visible;
+}
+
+.goal-chart__svg * {
+  vector-effect: non-scaling-stroke;
 }
 
 .goal-chart__gridline {
@@ -135,41 +152,89 @@ const formatAxisDate = (date?: string) => (date ? dayjs(date).locale(locale.valu
   stroke-width: 1;
 }
 
-.goal-chart__axis-text {
-  fill: var(--mbl-text-muted);
-  font-size: 11px;
+.goal-chart__goal-date {
+  stroke: var(--mbl-border-strong);
+  stroke-width: 1;
+  stroke-dasharray: 2 4;
 }
 
-.goal-chart__bar {
-  fill: var(--mbl-success);
-  opacity: 0.55;
+.goal-chart__area {
+  fill: var(--goal-chart-accent);
+  opacity: 0.12;
 }
 
+.goal-chart__line,
 .goal-chart__target,
 .goal-chart__projection {
-  stroke-width: 2;
-  stroke-dasharray: 6 5;
+  fill: none;
   stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.goal-chart__line {
+  stroke: var(--goal-chart-accent);
+  stroke-width: 2.5;
 }
 
 .goal-chart__target {
   stroke: var(--mbl-text-muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 5;
 }
 
 .goal-chart__projection {
-  stroke: var(--mbl-link-bright);
+  stroke: var(--goal-chart-accent);
+  stroke-width: 2;
+  stroke-dasharray: 1 5;
+}
+
+.goal-chart__marker {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--mbl-radius-circle);
+  background: var(--goal-chart-accent);
+  box-shadow: var(--mbl-ring-knockout);
+  transform: translate(-50%, -50%);
+}
+
+.goal-chart__y-label {
+  position: absolute;
+  left: 0;
+  color: var(--mbl-text-muted);
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.goal-chart__y-label--top {
+  top: 6%;
+  transform: translateY(-130%);
+}
+
+.goal-chart__y-label--bottom {
+  top: 96%;
+  transform: translateY(-130%);
+}
+
+.goal-chart__x-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--mbl-space-2xs);
+  color: var(--mbl-text-muted);
+  font-size: 0.75rem;
 }
 
 .goal-chart__legend {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--mbl-space-xs) var(--mbl-space-lg);
-  margin: var(--mbl-space-md) 0 0;
-  padding: 0;
-  list-style: none;
+  gap: var(--mbl-space-2xs) var(--mbl-space-lg);
+  margin-top: var(--mbl-space-sm);
+  color: var(--mbl-text-muted);
+  font-size: 0.8rem;
 }
 
-.goal-chart__legend li {
+.goal-chart__legend span {
   display: inline-flex;
   align-items: center;
   gap: var(--mbl-space-xs);
@@ -178,19 +243,15 @@ const formatAxisDate = (date?: string) => (date ? dayjs(date).locale(locale.valu
 .goal-chart__swatch {
   display: inline-block;
   width: 18px;
-  height: 0;
+  border-top: 2px solid var(--goal-chart-accent);
+}
+
+.goal-chart__swatch--target {
   border-top: 2px dashed var(--mbl-text-muted);
 }
 
-.goal-chart__swatch--bar {
-  height: 10px;
-  border: 0;
-  background: var(--mbl-success);
-  opacity: 0.55;
-}
-
 .goal-chart__swatch--projection {
-  border-top-color: var(--mbl-link-bright);
+  border-top-style: dotted;
 }
 </style>
 
@@ -199,51 +260,44 @@ const formatAxisDate = (date?: string) => (date ? dayjs(date).locale(locale.valu
   "en": {
     "chart_label": "Reading goal progress: {read} of {total} verses read",
     "legend_read": "Verses read",
-    "legend_target": "Target pace",
-    "legend_projection": "Your pace so far",
-    "verses_read": "{count} verses read"
+    "legend_target": "Plan",
+    "legend_projection": "At your pace"
   },
   "de": {
     "chart_label": "Fortschritt des Leseziels: {read} von {total} Versen gelesen",
     "legend_read": "Gelesene Verse",
-    "legend_target": "Zieltempo",
-    "legend_projection": "Ihr bisheriges Tempo",
-    "verses_read": "{count} Verse gelesen"
+    "legend_target": "Plan",
+    "legend_projection": "In Ihrem Tempo"
   },
   "es": {
     "chart_label": "Progreso de la meta de lectura: {read} de {total} versículos leídos",
     "legend_read": "Versículos leídos",
-    "legend_target": "Ritmo objetivo",
-    "legend_projection": "Tu ritmo hasta ahora",
-    "verses_read": "{count} versículos leídos"
+    "legend_target": "Plan",
+    "legend_projection": "A tu ritmo"
   },
   "fr": {
     "chart_label": "Progression de l'objectif de lecture : {read} versets lus sur {total}",
     "legend_read": "Versets lus",
-    "legend_target": "Rythme visé",
-    "legend_projection": "Votre rythme jusqu'ici",
-    "verses_read": "{count} versets lus"
+    "legend_target": "Plan",
+    "legend_projection": "À votre rythme"
   },
   "ko": {
     "chart_label": "읽기 목표 진행 상황: {total}절 중 {read}절 읽음",
     "legend_read": "읽은 구절",
-    "legend_target": "목표 속도",
-    "legend_projection": "지금까지의 속도",
-    "verses_read": "{count}절 읽음"
+    "legend_target": "계획",
+    "legend_projection": "현재 속도"
   },
   "pt": {
     "chart_label": "Progresso da meta de leitura: {read} de {total} versículos lidos",
     "legend_read": "Versículos lidos",
-    "legend_target": "Ritmo planejado",
-    "legend_projection": "Seu ritmo até agora",
-    "verses_read": "{count} versículos lidos"
+    "legend_target": "Plano",
+    "legend_projection": "No seu ritmo"
   },
   "uk": {
     "chart_label": "Прогрес мети читання: прочитано {read} з {total} віршів",
     "legend_read": "Прочитані вірші",
-    "legend_target": "Цільовий темп",
-    "legend_projection": "Ваш темп дотепер",
-    "verses_read": "прочитано віршів: {count}"
+    "legend_target": "План",
+    "legend_projection": "У вашому темпі"
   }
 }
 </i18n>

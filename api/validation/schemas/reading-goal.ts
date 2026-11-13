@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Bible, MAX_GOAL_PASSAGES, isWholeBookPassage } from '@mybiblelog/shared';
+import { Bible, MAX_GOAL_DAYS, MAX_GOAL_PASSAGES, inclusiveDays, isWholeBookPassage } from '@mybiblelog/shared';
 import { dateString, verseId } from '../primitives';
 
 const goalPassageSchema = z.object({
@@ -51,6 +51,10 @@ export const readingGoalBodySchema = z.object({
 }).refine(
   (goal) => goal.endDate >= goal.startDate,
   { path: ['endDate'], message: 'End date may not be before start date' },
+).refine(
+  // Clients build one chart point per plan day, so an unbounded range could hang them.
+  (goal) => inclusiveDays(goal.startDate, goal.endDate) <= MAX_GOAL_DAYS,
+  { path: ['endDate'], message: `A goal may not span more than ${MAX_GOAL_DAYS} days` },
 );
 
 export type ReadingGoalBody = z.infer<typeof readingGoalBodySchema>;
