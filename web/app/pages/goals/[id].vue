@@ -17,9 +17,12 @@
             {{ t('edit') }}
           </NuxtLink>
         </header>
-        <p class="mbl-text-muted">
-          {{ formatDate(goal.startDate) }} – {{ formatDate(goal.endDate) }}
-          <span v-if="!goal.active">· {{ t('inactive') }}</span>
+        <p class="goal-detail__dates mbl-text-muted">
+          <span>
+            {{ formatDate(goal.startDate) }} – {{ formatDate(goal.endDate) }}
+            <span v-if="!goal.active">· {{ t('inactive') }}</span>
+          </span>
+          <span data-testid="reading-goal-detail-plan-days">{{ t('plan_days', { count: planDays }, planDays) }}</span>
         </p>
 
         <div v-if="progress.isComplete" class="mbl-message mbl-message--success" data-testid="reading-goal-detail-complete">
@@ -47,23 +50,23 @@
         </div>
 
         <dl class="goal-detail__stats">
-          <div>
+          <div class="mbl-box">
             <dt>{{ progress.isComplete ? t('finished') : t('projected_finish') }}</dt>
             <dd data-testid="reading-goal-detail-projected-finish">
               {{ progress.projectedFinishDate ? formatDate(progress.projectedFinishDate) : t('not_enough_reading') }}
             </dd>
           </div>
-          <div>
+          <div class="mbl-box">
             <dt>{{ t('average_per_day') }}</dt>
             <dd data-testid="reading-goal-detail-average">
               {{ $n(roundTenth(progress.averagePerDay)) }}
             </dd>
           </div>
-          <div>
+          <div class="mbl-box">
             <dt>{{ t('required_per_day') }}</dt>
             <dd>{{ $n(roundTenth(progress.requiredPerDay)) }}</dd>
           </div>
-          <div>
+          <div class="mbl-box">
             <dt>{{ t('verses_read') }}</dt>
             <dd>
               {{ $n(progress.versesRead, 'grouped') }} / {{ $n(progress.totalVerses, 'grouped') }}
@@ -72,27 +75,32 @@
           </div>
         </dl>
 
-        <p v-if="nextUpLabel" class="goal-detail__next-up" data-testid="reading-goal-detail-next-up">
-          {{ t('next_up', { passage: nextUpLabel }) }}
-        </p>
+        <reading-goal-next-up
+          v-if="progress.nextUp"
+          class="goal-detail__next-up"
+          data-testid="reading-goal-detail-next-up"
+          :passage="progress.nextUp"
+        />
 
-        <h2 class="mbl-title mbl-title--5">
-          {{ t('books') }}
-        </h2>
-        <ol class="goal-detail__books" data-testid="reading-goal-detail-books">
-          <li v-for="item in progress.perPassage" :key="item.passage.startVerseId" class="goal-detail__book">
-            <div class="goal-detail__book-label">
-              <span>{{ passageLabel(item.passage) }}</span>
-              <span class="mbl-text-small mbl-text-muted">
-                {{ $n(item.versesRead, 'grouped') }} / {{ $n(item.totalVerses, 'grouped') }}
-              </span>
-            </div>
-            <completion-bar
-              :percentage="item.versesRead / item.totalVerses * 100"
-              :foreground-color="item.versesRead >= item.totalVerses ? 'var(--mbl-success)' : 'var(--mbl-link-bright)'"
-            />
-          </li>
-        </ol>
+        <section class="mbl-box">
+          <h2 class="mbl-title mbl-title--5">
+            {{ t('books') }}
+          </h2>
+          <ol class="goal-detail__books" data-testid="reading-goal-detail-books">
+            <li v-for="item in progress.perPassage" :key="item.passage.startVerseId" class="goal-detail__book">
+              <div class="goal-detail__book-label">
+                <span>{{ passageLabel(item.passage) }}</span>
+                <span class="mbl-text-small mbl-text-muted">
+                  {{ $n(item.versesRead, 'grouped') }} / {{ $n(item.totalVerses, 'grouped') }}
+                </span>
+              </div>
+              <completion-bar
+                :percentage="item.versesRead / item.totalVerses * 100"
+                :foreground-color="item.versesRead >= item.totalVerses ? 'var(--mbl-success)' : 'var(--mbl-link-bright)'"
+              />
+            </li>
+          </ol>
+        </section>
       </template>
     </div>
   </main>
@@ -104,11 +112,13 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 import {
   Bible,
   computeGoalChartSeries,
+  inclusiveDays,
   isWholeBookPassage,
   passageBookIndex,
   type GoalPassage,
 } from '@mybiblelog/shared';
 import ReadingGoalChart from '~/components/goals/ReadingGoalChart.vue';
+import ReadingGoalNextUp from '~/components/goals/ReadingGoalNextUp.vue';
 import CompletionBar from '~/components/ui/CompletionBar.vue';
 import SkeletonLoader from '~/components/ui/SkeletonLoader.vue';
 import { useGoalBooksOutsideCanon } from '~/composables/useGoalBooksOutsideCanon';
@@ -146,10 +156,7 @@ const passageLabel = (passage: GoalPassage) => (isWholeBookPassage(passage)
   ? Bible.getBookName(passageBookIndex(passage), locale.value)
   : Bible.displayVerseRange(passage.startVerseId, passage.endVerseId, locale.value));
 
-const nextUpLabel = computed(() => {
-  const nextUp = progress.value?.nextUp;
-  return nextUp ? Bible.displayVerseRange(nextUp.startVerseId, nextUp.endVerseId, locale.value) : '';
-});
+const planDays = computed(() => (goal.value ? inclusiveDays(goal.value.startDate, goal.value.endDate) : 0));
 
 onMounted(async () => {
   await useAppInitStore().loadUserData();
@@ -157,6 +164,13 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.goal-detail__dates {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--mbl-space-3xs) var(--mbl-space-md);
+}
+
 .goal-detail__chart {
   margin: var(--mbl-space-lg) 0;
 }
@@ -181,7 +195,7 @@ onMounted(async () => {
 }
 
 .goal-detail__next-up {
-  margin-bottom: var(--mbl-space-lg);
+  margin: 0 0 var(--mbl-space-lg);
 }
 
 .goal-detail__books {
@@ -203,6 +217,7 @@ onMounted(async () => {
 <i18n lang="json">
 {
   "en": {
+    "plan_days": "{count}-day plan",
     "outside_canon": "This goal includes {books}, but deuterocanonical books are turned off in your reading settings, so you can't log them. Turn them back on, or edit the goal to remove those books.",
     "reading_settings": "Reading settings",
     "goal": "Goal",
@@ -217,10 +232,10 @@ onMounted(async () => {
     "average_per_day": "Average verses per day",
     "required_per_day": "Verses per day needed",
     "verses_read": "Verses read",
-    "next_up": "Next up: {passage}",
     "books": "Books"
   },
   "de": {
+    "plan_days": "Plan über {count} Tag | Plan über {count} Tage",
     "outside_canon": "Dieses Ziel enthält {books}, aber deuterokanonische Bücher sind in Ihren Leseeinstellungen ausgeschaltet, daher können Sie sie nicht erfassen. Schalten Sie sie wieder ein oder bearbeiten Sie das Ziel, um diese Bücher zu entfernen.",
     "reading_settings": "Leseeinstellungen",
     "goal": "Ziel",
@@ -235,10 +250,10 @@ onMounted(async () => {
     "average_per_day": "Durchschnittliche Verse pro Tag",
     "required_per_day": "Benötigte Verse pro Tag",
     "verses_read": "Gelesene Verse",
-    "next_up": "Als Nächstes: {passage}",
     "books": "Bücher"
   },
   "es": {
+    "plan_days": "Plan de {count} día | Plan de {count} días",
     "outside_canon": "Esta meta incluye {books}, pero los libros deuterocanónicos están desactivados en tu configuración de lectura, así que no puedes registrarlos. Vuelve a activarlos o edita la meta para quitar esos libros.",
     "reading_settings": "Configuración de lectura",
     "goal": "Meta",
@@ -253,10 +268,10 @@ onMounted(async () => {
     "average_per_day": "Promedio de versículos al día",
     "required_per_day": "Versículos necesarios al día",
     "verses_read": "Versículos leídos",
-    "next_up": "Siguiente: {passage}",
     "books": "Libros"
   },
   "fr": {
+    "plan_days": "Plan de {count} jour | Plan de {count} jours",
     "outside_canon": "Cet objectif comprend {books}, mais les livres deutérocanoniques sont désactivés dans vos paramètres de lecture : vous ne pouvez donc pas les enregistrer. Réactivez-les ou modifiez l'objectif pour retirer ces livres.",
     "reading_settings": "Paramètres de lecture",
     "goal": "Objectif",
@@ -271,10 +286,10 @@ onMounted(async () => {
     "average_per_day": "Moyenne de versets par jour",
     "required_per_day": "Versets nécessaires par jour",
     "verses_read": "Versets lus",
-    "next_up": "À suivre : {passage}",
     "books": "Livres"
   },
   "ko": {
+    "plan_days": "{count}일 계획",
     "outside_canon": "이 목표에는 {books}이(가) 포함되어 있지만 읽기 설정에서 제2경전이 꺼져 있어 기록할 수 없습니다. 다시 켜거나 목표를 편집하여 해당 책을 제거하세요.",
     "reading_settings": "읽기 설정",
     "goal": "목표",
@@ -289,10 +304,10 @@ onMounted(async () => {
     "average_per_day": "하루 평균 구절 수",
     "required_per_day": "하루 필요한 구절 수",
     "verses_read": "읽은 구절",
-    "next_up": "다음 읽을 곳: {passage}",
     "books": "책"
   },
   "pt": {
+    "plan_days": "Plano de {count} dia | Plano de {count} dias",
     "outside_canon": "Esta meta inclui {books}, mas os livros deuterocanônicos estão desativados nas suas configurações de leitura, então você não pode registrá-los. Ative-os novamente ou edite a meta para remover esses livros.",
     "reading_settings": "Configurações de leitura",
     "goal": "Meta",
@@ -307,10 +322,10 @@ onMounted(async () => {
     "average_per_day": "Média de versículos por dia",
     "required_per_day": "Versículos necessários por dia",
     "verses_read": "Versículos lidos",
-    "next_up": "A seguir: {passage}",
     "books": "Livros"
   },
   "uk": {
+    "plan_days": "План на {count} день | План на {count} дні | План на {count} днів",
     "outside_canon": "Ця ціль містить {books}, але девтероканонічні книги вимкнено в налаштуваннях читання, тому їх не можна записати. Увімкніть їх знову або відредагуйте ціль, щоб прибрати ці книги.",
     "reading_settings": "Налаштування читання",
     "goal": "Мета",
@@ -325,7 +340,6 @@ onMounted(async () => {
     "average_per_day": "Середня кількість віршів на день",
     "required_per_day": "Потрібно віршів на день",
     "verses_read": "Прочитані вірші",
-    "next_up": "Далі: {passage}",
     "books": "Книги"
   }
 }

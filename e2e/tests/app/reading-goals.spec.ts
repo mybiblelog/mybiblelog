@@ -212,7 +212,7 @@ test.describe('Reading goals with the deuterocanonical setting', () => {
     await page.goto(`/goals/${goal.id}`);
 
     await waitForHydration(page);
-    await expect(page.getByTestId('reading-goal-detail-next-up')).toHaveText('Next up: Jude');
+    await expect(page.getByTestId('reading-goal-detail-next-up').getByTestId('log-entry-passage')).toHaveText('Jude');
     await expect(page.getByTestId('reading-goal-detail-outside-canon')).toHaveCount(0);
     await page.goto('/today');
     await waitForHydration(page);
