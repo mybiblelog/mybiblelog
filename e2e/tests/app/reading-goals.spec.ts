@@ -36,10 +36,12 @@ test.describe('Reading goals', () => {
     await waitForHydration(page);
     const card = page.getByTestId('reading-goal-card');
     await expect(card.getByTestId('reading-goal-card-title')).toHaveText('Jude this week');
-    await expect(card.getByTestId('reading-goal-card-next-up')).toHaveText('Next up: Jude');
+    const nextUp = card.getByTestId('reading-goal-card-next-up');
+    await expect(nextUp.getByTestId('log-entry-passage')).toHaveText('Jude');
 
-    await page.getByRole('button', { name: 'Add Entry' }).click();
-    await page.getByRole('dialog').getByLabel('Book').selectOption('Jude');
+    // Jude is one chapter, so logging the next-up suggestion completes the goal.
+    await nextUp.getByTestId('action-menu-toggle').click();
+    await page.getByTestId('action-menu-item').filter({ hasText: 'Log Reading' }).click();
     await page.getByTestId('log-entry-editor-submit').click();
 
     await expect(page.getByTestId('achievements-modal')).toContainText('Goal Complete!');
@@ -47,7 +49,9 @@ test.describe('Reading goals', () => {
     await page.getByTestId('achievements-ok').click();
     await expect(card.getByTestId('reading-goal-card-complete')).toBeVisible();
 
-    await card.click();
+    await expect(nextUp).toHaveCount(0);
+
+    await card.getByTestId('reading-goal-card-title').click();
     await expect(page.getByTestId('reading-goal-detail-title')).toHaveText('Jude this week');
     await expect(page.getByTestId('reading-goal-chart')).toBeVisible();
     await expect(page.getByTestId('reading-goal-detail-complete')).toBeVisible();
