@@ -22,7 +22,7 @@
             {{ formatDate(goal.startDate) }} – {{ formatDate(goal.endDate) }}
             <span v-if="!goal.active">· {{ t('inactive') }}</span>
           </span>
-          <span data-testid="reading-goal-detail-plan-days">{{ t('plan_days', { count: planDays }, planDays) }}</span>
+          <span data-testid="reading-goal-detail-plan-days">{{ t('day_of_plan', { day: currentDay, total: planDays }) }}</span>
         </p>
 
         <div v-if="progress.isComplete" class="mbl-message mbl-message--success" data-testid="reading-goal-detail-complete">
@@ -54,6 +54,9 @@
             <dt>{{ progress.isComplete ? t('finished') : t('projected_finish') }}</dt>
             <dd data-testid="reading-goal-detail-projected-finish">
               {{ progress.projectedFinishDate ? formatDate(progress.projectedFinishDate) : t('not_enough_reading') }}
+            </dd>
+            <dd v-if="finishDays" class="goal-detail__stat-note" data-testid="reading-goal-detail-finish-days">
+              {{ t('day_count', { count: finishDays }, finishDays) }}
             </dd>
           </div>
           <div class="mbl-box">
@@ -157,6 +160,12 @@ const passageLabel = (passage: GoalPassage) => (isWholeBookPassage(passage)
   : Bible.displayVerseRange(passage.startVerseId, passage.endVerseId, locale.value));
 
 const planDays = computed(() => (goal.value ? inclusiveDays(goal.value.startDate, goal.value.endDate) : 0));
+const currentDay = computed(() => (goal.value
+  ? Math.min(planDays.value, inclusiveDays(goal.value.startDate, dayjs().format('YYYY-MM-DD')))
+  : 0));
+const finishDays = computed(() => (goal.value && progress.value?.projectedFinishDate
+  ? inclusiveDays(goal.value.startDate, progress.value.projectedFinishDate)
+  : 0));
 
 onMounted(async () => {
   await useAppInitStore().loadUserData();
@@ -194,6 +203,12 @@ onMounted(async () => {
   font-weight: 600;
 }
 
+.goal-detail__stats .goal-detail__stat-note {
+  color: var(--mbl-text-muted);
+  font-size: var(--mbl-title-6);
+  font-weight: 400;
+}
+
 .goal-detail__next-up {
   margin: 0 0 var(--mbl-space-lg);
 }
@@ -217,7 +232,8 @@ onMounted(async () => {
 <i18n lang="json">
 {
   "en": {
-    "plan_days": "{count}-day plan",
+    "day_of_plan": "Day {day} / {total}",
+    "day_count": "{count} day | {count} days",
     "outside_canon": "This goal includes {books}, but deuterocanonical books are turned off in your reading settings, so you can't log them. Turn them back on, or edit the goal to remove those books.",
     "reading_settings": "Reading settings",
     "goal": "Goal",
@@ -235,7 +251,8 @@ onMounted(async () => {
     "books": "Books"
   },
   "de": {
-    "plan_days": "Plan über {count} Tag | Plan über {count} Tage",
+    "day_of_plan": "Tag {day} / {total}",
+    "day_count": "{count} Tag | {count} Tage",
     "outside_canon": "Dieses Ziel enthält {books}, aber deuterokanonische Bücher sind in Ihren Leseeinstellungen ausgeschaltet, daher können Sie sie nicht erfassen. Schalten Sie sie wieder ein oder bearbeiten Sie das Ziel, um diese Bücher zu entfernen.",
     "reading_settings": "Leseeinstellungen",
     "goal": "Ziel",
@@ -253,7 +270,8 @@ onMounted(async () => {
     "books": "Bücher"
   },
   "es": {
-    "plan_days": "Plan de {count} día | Plan de {count} días",
+    "day_of_plan": "Día {day} / {total}",
+    "day_count": "{count} día | {count} días",
     "outside_canon": "Esta meta incluye {books}, pero los libros deuterocanónicos están desactivados en tu configuración de lectura, así que no puedes registrarlos. Vuelve a activarlos o edita la meta para quitar esos libros.",
     "reading_settings": "Configuración de lectura",
     "goal": "Meta",
@@ -271,7 +289,8 @@ onMounted(async () => {
     "books": "Libros"
   },
   "fr": {
-    "plan_days": "Plan de {count} jour | Plan de {count} jours",
+    "day_of_plan": "Jour {day} / {total}",
+    "day_count": "{count} jour | {count} jours",
     "outside_canon": "Cet objectif comprend {books}, mais les livres deutérocanoniques sont désactivés dans vos paramètres de lecture : vous ne pouvez donc pas les enregistrer. Réactivez-les ou modifiez l'objectif pour retirer ces livres.",
     "reading_settings": "Paramètres de lecture",
     "goal": "Objectif",
@@ -289,7 +308,8 @@ onMounted(async () => {
     "books": "Livres"
   },
   "ko": {
-    "plan_days": "{count}일 계획",
+    "day_of_plan": "{day}일차 / {total}일",
+    "day_count": "{count}일",
     "outside_canon": "이 목표에는 {books}이(가) 포함되어 있지만 읽기 설정에서 제2경전이 꺼져 있어 기록할 수 없습니다. 다시 켜거나 목표를 편집하여 해당 책을 제거하세요.",
     "reading_settings": "읽기 설정",
     "goal": "목표",
@@ -307,7 +327,8 @@ onMounted(async () => {
     "books": "책"
   },
   "pt": {
-    "plan_days": "Plano de {count} dia | Plano de {count} dias",
+    "day_of_plan": "Dia {day} / {total}",
+    "day_count": "{count} dia | {count} dias",
     "outside_canon": "Esta meta inclui {books}, mas os livros deuterocanônicos estão desativados nas suas configurações de leitura, então você não pode registrá-los. Ative-os novamente ou edite a meta para remover esses livros.",
     "reading_settings": "Configurações de leitura",
     "goal": "Meta",
@@ -325,7 +346,8 @@ onMounted(async () => {
     "books": "Livros"
   },
   "uk": {
-    "plan_days": "План на {count} день | План на {count} дні | План на {count} днів",
+    "day_of_plan": "День {day} / {total}",
+    "day_count": "{count} день | {count} дні | {count} днів",
     "outside_canon": "Ця ціль містить {books}, але девтероканонічні книги вимкнено в налаштуваннях читання, тому їх не можна записати. Увімкніть їх знову або відредагуйте ціль, щоб прибрати ці книги.",
     "reading_settings": "Налаштування читання",
     "goal": "Мета",

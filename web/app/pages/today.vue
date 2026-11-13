@@ -33,15 +33,6 @@
         </div>
       </div>
     </div>
-    <div v-if="todayGoals.length" class="today-page__goals" role="list" data-testid="reading-goals">
-      <reading-goal-card
-        v-for="{ goal, progress } of todayGoals"
-        :key="goal.id"
-        role="listitem"
-        :goal="goal"
-        :progress="progress"
-      />
-    </div>
     <reading-tracker-reset-card />
     <div class="entry-container" role="list" data-testid="log-entries">
       <ClientOnly>
@@ -68,6 +59,20 @@
       </ClientOnly>
     </div>
     <br>
+    <div v-if="todayGoals.length" class="today-page__goals-section" data-testid="reading-goals-section">
+      <h3 class="mbl-title mbl-title--5">
+        {{ t('goals') }}
+      </h3>
+      <div class="today-page__goals" role="list" data-testid="reading-goals">
+        <reading-goal-card
+          v-for="{ goal, progress } of todayGoals"
+          :key="goal.id"
+          role="listitem"
+          :goal="goal"
+          :progress="progress"
+        />
+      </div>
+    </div>
     <div data-testid="reading-suggestions-section">
       <h3 class="mbl-title mbl-title--5">
         {{ t('reading_suggestions') }}
@@ -387,7 +392,10 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: var(--mbl-space-xs);
-  margin-bottom: var(--mbl-space-md);
+}
+
+.today-page__goals-section {
+  margin-bottom: var(--mbl-space-xl);
 }
 
 .today-page__progress-bar-container {
@@ -413,6 +421,7 @@ onMounted(async () => {
     "view_notes": "View Notes",
     "no_entries": "No Entries",
     "view_all_reading": "View All Reading",
+    "goals": "Goals",
     "reading_suggestions": "Reading Suggestions",
     "open_bible": "Open Bible",
     "continue_reading": "Continue Reading",
@@ -438,6 +447,7 @@ onMounted(async () => {
     "view_notes": "Notizen ansehen",
     "no_entries": "Keine Einträge",
     "view_all_reading": "Alle Lesungen ansehen",
+    "goals": "Ziele",
     "reading_suggestions": "Lesevorschläge",
     "open_bible": "Bibel öffnen",
     "continue_reading": "Weiterlesen",
@@ -463,6 +473,7 @@ onMounted(async () => {
     "view_notes": "Ver notas",
     "no_entries": "No hay entradas",
     "view_all_reading": "Ver toda la lectura",
+    "goals": "Metas",
     "reading_suggestions": "Sugerencias de Lectura",
     "open_bible": "Abrir en la Biblia",
     "continue_reading": "Seguir leyendo",
@@ -488,6 +499,7 @@ onMounted(async () => {
     "view_notes": "Voir les notes",
     "no_entries": "Pas d'entrées",
     "view_all_reading": "Voir toute la lecture",
+    "goals": "Objectifs",
     "reading_suggestions": "Suggestions de Lecture",
     "open_bible": "Ouvrir dans la Bible",
     "continue_reading": "Continuer la lecture",
@@ -513,6 +525,7 @@ onMounted(async () => {
     "view_notes": "노트 보기",
     "no_entries": "항목 없음",
     "view_all_reading": "모든 기록 보기",
+    "goals": "목표",
     "reading_suggestions": "읽기 제안",
     "open_bible": "성경 열기",
     "continue_reading": "이어서 읽기",
@@ -538,6 +551,7 @@ onMounted(async () => {
     "view_notes": "Ver notas",
     "no_entries": "Sem Entradas",
     "view_all_reading": "Ver toda a leitura",
+    "goals": "Metas",
     "reading_suggestions": "Sugestões de Leitura",
     "open_bible": "Ler na Biblia",
     "continue_reading": "Continuar lendo",
@@ -563,6 +577,7 @@ onMounted(async () => {
     "view_notes": "Переглянути записи",
     "no_entries": "Немає записів",
     "view_all_reading": "Переглянути все читання",
+    "goals": "Цілі",
     "reading_suggestions": "Рекомендації для Читання",
     "open_bible": "Читати в Біблії",
     "continue_reading": "Продовжити читання",

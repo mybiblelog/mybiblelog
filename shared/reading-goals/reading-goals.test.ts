@@ -101,6 +101,7 @@ describe('templates', () => {
     expect(books.new_testament).toHaveLength(27);
     expect(books.gospels).toEqual([40, 41, 42, 43]);
     expect(books.wisdom).toEqual([18, 19, 20, 21, 22]);
+    expect(books.deuterocanonical).toEqual([]);
   });
 
   test('book lists with deuterocanonical books, in canonical order', () => {
@@ -113,6 +114,8 @@ describe('templates', () => {
     expect(books.new_testament).toEqual(templateBooks(false).new_testament);
     expect(books.gospels).toEqual([40, 41, 42, 43]);
     expect(books.wisdom).toEqual([18, 19, 20, 21, 22, 71, 72]);
+    expect(books.deuterocanonical).toEqual(Bible.getBooksForCanon(true).filter(b => b.deuterocanonical).map(b => b.bibleOrder));
+    expect(books.deuterocanonical).toHaveLength(11);
     expect(getGoalTotalVerses(getTemplatePassages('whole_bible', true))).toBe(Bible.getTotalVerseCount(true));
   });
 

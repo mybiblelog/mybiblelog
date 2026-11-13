@@ -7,7 +7,8 @@ export type ReadingGoalTemplateId =
   | 'old_testament'
   | 'new_testament'
   | 'gospels'
-  | 'wisdom';
+  | 'wisdom'
+  | 'deuterocanonical';
 
 export type ReadingGoalTemplate = {
   id: ReadingGoalTemplateId;
@@ -23,7 +24,8 @@ const inRange = (first: number, last: number) => (book: BibleBook): boolean =>
 /**
  * Pre-made goals offered at the start of goal creation. A template selects
  * books from the reader's canon, so deuterocanonical books join the matching
- * templates (in canonical order) only when the reader includes them. Goals
+ * templates (in canonical order) only when the reader includes them, and a
+ * template that selects nothing from the reader's canon isn't offered. Goals
  * created from one store `passages` and keep no reference to the template.
  */
 export const READING_GOAL_TEMPLATES: ReadonlyArray<ReadingGoalTemplate> = [
@@ -35,6 +37,7 @@ export const READING_GOAL_TEMPLATES: ReadonlyArray<ReadingGoalTemplate> = [
     id: 'wisdom',
     includes: book => inRange(18, 22)(book) || book.bibleOrder === WISDOM_OF_SOLOMON || book.bibleOrder === SIRACH,
   },
+  { id: 'deuterocanonical', includes: book => book.deuterocanonical },
 ];
 
 export const getReadingGoalTemplate = (id: string): ReadingGoalTemplate | undefined =>

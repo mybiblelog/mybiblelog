@@ -65,7 +65,7 @@ const props = defineProps<{
 
 const { t, locale, n } = useI18n();
 
-const { width, height, padLeft, padRight, padTop, padBottom } = { ...DEFAULT_CHART_DIMENSIONS, padLeft: 44 };
+const { width, height, padLeft, padRight, padTop, padBottom } = { ...DEFAULT_CHART_DIMENSIONS, height: 540, padLeft: 44 };
 const innerW = width - padLeft - padRight;
 const innerH = height - padTop - padBottom;
 

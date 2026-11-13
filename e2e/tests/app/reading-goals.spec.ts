@@ -34,6 +34,7 @@ test.describe('Reading goals', () => {
     // The goal shows on Today; log the whole book to complete it.
     await page.goto('/today');
     await waitForHydration(page);
+    await expect(page.getByTestId('reading-goals-section').getByRole('heading')).toHaveText('Goals');
     const card = page.getByTestId('reading-goal-card');
     await expect(card.getByTestId('reading-goal-card-title')).toHaveText('Jude this week');
     const nextUp = card.getByTestId('reading-goal-card-next-up');
@@ -88,6 +89,8 @@ test.describe('Reading goals', () => {
     await waitForHydration(page);
     await expect(page.getByTestId('reading-goal-detail-average')).toHaveText('5');
     await expect(page.getByTestId('reading-goal-detail-projected-finish')).not.toBeEmpty();
+    await expect(page.getByTestId('reading-goal-detail-finish-days')).toHaveText('10 days');
+    await expect(page.getByTestId('reading-goal-detail-plan-days')).toHaveText('Day 2 / 2');
     await expect(page.getByTestId('reading-goal-chart-bar')).toHaveCount(2);
     await expect(page.getByTestId('reading-goal-chart-projection')).toBeVisible();
     await expect(page.getByTestId('reading-goal-detail-next-up')).toContainText('Jude 1:11-25');
@@ -224,6 +227,7 @@ test.describe('Reading goals with the deuterocanonical setting', () => {
     await setSettings(api, { includeDeuterocanonical: false });
     await page.goto('/settings/goals?new');
     await waitForHydration(page);
+    await expect(page.locator('[data-testid="reading-goal-template"][data-template-id="deuterocanonical"]')).toHaveCount(0);
     await page.getByTestId('reading-goal-template-custom').click();
     await page.getByTestId('reading-goal-title').fill('Jude');
     await page.getByTestId('reading-goal-next').click();
@@ -253,6 +257,18 @@ test.describe('Reading goals with the deuterocanonical setting', () => {
 
     await page.getByTestId('reading-goal-row-title').click();
     await expect(page.getByTestId('reading-goal-detail-books')).toContainText('Tobit');
+  });
+
+  test('the Deuterocanonical template offers exactly the deuterocanonical books', async ({ page, api }) => {
+    await setSettings(api, { includeDeuterocanonical: true });
+    await page.goto('/settings/goals?new');
+    await waitForHydration(page);
+    await page.locator('[data-testid="reading-goal-template"][data-template-id="deuterocanonical"]').click();
+
+    await expect(page.getByTestId('reading-goal-title')).toHaveValue('Deuterocanonical');
+    const books = page.getByTestId('reading-goal-template-books');
+    await expect(books).toContainText('Tobit');
+    await expect(books).not.toContainText('Genesis');
   });
 
   test('editing with the setting off keeps deuterocanonical books re-checkable, and removing them clears the notice', async ({ page, api }) => {

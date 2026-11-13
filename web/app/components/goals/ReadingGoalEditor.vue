@@ -264,10 +264,12 @@ const dailyVerseCountGoal = computed(() => userSettingsStore.settings.dailyVerse
 
 const includeDeuterocanonical = computed(() => userSettingsStore.settings.includeDeuterocanonical);
 
-const templates = computed(() => READING_GOAL_TEMPLATES.map(template => ({
-  id: template.id,
-  totalVerses: getGoalTotalVerses(getTemplatePassages(template.id, includeDeuterocanonical.value)),
-})));
+const templates = computed(() => READING_GOAL_TEMPLATES
+  .map(template => ({
+    id: template.id,
+    totalVerses: getGoalTotalVerses(getTemplatePassages(template.id, includeDeuterocanonical.value)),
+  }))
+  .filter(template => template.totalVerses > 0));
 
 const bookName = (bookIndex: number) => Bible.getBookName(bookIndex, locale.value);
 
@@ -529,7 +531,8 @@ const save = async () => {
       "old_testament": "Old Testament",
       "new_testament": "New Testament",
       "gospels": "Gospels",
-      "wisdom": "Wisdom"
+      "wisdom": "Wisdom",
+      "deuterocanonical": "Deuterocanonical"
     },
     "verse_count": "{count} verses",
     "name": {
@@ -571,7 +574,8 @@ const save = async () => {
       "old_testament": "Altes Testament",
       "new_testament": "Neues Testament",
       "gospels": "Evangelien",
-      "wisdom": "Weisheit"
+      "wisdom": "Weisheit",
+      "deuterocanonical": "Deuterokanonische Bücher"
     },
     "verse_count": "{count} Verse",
     "name": {
@@ -613,7 +617,8 @@ const save = async () => {
       "old_testament": "Antiguo Testamento",
       "new_testament": "Nuevo Testamento",
       "gospels": "Evangelios",
-      "wisdom": "Sabiduría"
+      "wisdom": "Sabiduría",
+      "deuterocanonical": "Deuterocanónicos"
     },
     "verse_count": "{count} versículos",
     "name": {
@@ -655,7 +660,8 @@ const save = async () => {
       "old_testament": "Ancien Testament",
       "new_testament": "Nouveau Testament",
       "gospels": "Évangiles",
-      "wisdom": "Sagesse"
+      "wisdom": "Sagesse",
+      "deuterocanonical": "Deutérocanoniques"
     },
     "verse_count": "{count} versets",
     "name": {
@@ -697,7 +703,8 @@ const save = async () => {
       "old_testament": "구약",
       "new_testament": "신약",
       "gospels": "복음서",
-      "wisdom": "지혜서"
+      "wisdom": "지혜서",
+      "deuterocanonical": "제2경전"
     },
     "verse_count": "{count}절",
     "name": {
@@ -739,7 +746,8 @@ const save = async () => {
       "old_testament": "Antigo Testamento",
       "new_testament": "Novo Testamento",
       "gospels": "Evangelhos",
-      "wisdom": "Sabedoria"
+      "wisdom": "Sabedoria",
+      "deuterocanonical": "Deuterocanônicos"
     },
     "verse_count": "{count} versículos",
     "name": {
@@ -781,7 +789,8 @@ const save = async () => {
       "old_testament": "Старий Заповіт",
       "new_testament": "Новий Заповіт",
       "gospels": "Євангелія",
-      "wisdom": "Мудрість"
+      "wisdom": "Мудрість",
+      "deuterocanonical": "Девтероканонічні книги"
     },
     "verse_count": "Віршів: {count}",
     "name": {
