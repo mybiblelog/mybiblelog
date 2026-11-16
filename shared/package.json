@@ -19,8 +19,8 @@
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint --ext .ts .",
-    "lint:fix": "eslint --ext .ts . --fix",
+    "lint": "eslint --ext .ts --ignore-pattern dist/ .",
+    "lint:fix": "eslint --ext .ts --ignore-pattern dist/ . --fix",
     "prepare": "npm run build"
   },
   "keywords": [
