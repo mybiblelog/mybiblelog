@@ -44,6 +44,13 @@ export default defineNuxtConfig({
     },
   },
 
+  // Dev server port. NUXT_PORT comes from the root .env so a git worktree can
+  // move off 3000 (see scripts/worktree-env.mjs); the root .env is loaded at
+  // the top of this file, which the nuxt CLI's own env handling can't see.
+  devServer: {
+    port: Number(process.env.NUXT_PORT) || 3000,
+  },
+
   // Page transitions matching the original app
   app: {
     pageTransition: { name: 'page', mode: 'out-in', duration: 100 },

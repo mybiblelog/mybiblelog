@@ -97,6 +97,29 @@ SCREENSHOT_PASSWORD=password
 
 For the Google OAuth2 variables, see the [OAuth guide](oauth.md).
 
+## Running Multiple Worktrees Side by Side
+
+Each git worktree is a full checkout, but by default every one of them binds the same ports (web 3000, API 8080, Metro 8081) and talks to the same MongoDB database. To run a second worktree's dev servers next to the main checkout's, give it a **slot**:
+
+```bash
+# inside the worktree; its .env and mobile/.env must already exist
+# (Claude Code copies them via .worktreeinclude; otherwise copy them by hand)
+$ npm install && (cd mobile && npm install)
+$ npm run worktree:env -- 2     # web :3200, API :8280, Metro :8083, database <db>_wt2
+$ npm run script:migrate        # the new database starts empty
+$ npm run script:seed           # optional sample data
+$ npm run dev:api               # then dev:web, in separate terminals
+```
+
+The script (`scripts/worktree-env.mjs`) appends a marked block to the worktree's own `.env` and `mobile/.env`. dotenv lets the later key win, so the copied values stay untouched underneath, and `npm run worktree:env -- 0` removes the block. Run it with no argument to see the current slot. It refuses to assign a slot in the main checkout, which keeps the defaults. Use a different slot for each worktree running at the same time.
+
+What the block overrides: `API_PORT`, `API_BASE_URL`, `NUXT_PORT` (read by `devServer.port` in `web/nuxt.config.ts`), `SITE_URL`, `MONGODB_URI`, `TEST_SITE_URL`/`TEST_API_URL`, and, for localhost redirects, `GOOGLE_REDIRECT`. The e2e URLs matter: Playwright reuses any server already listening, so without them `npm run test:e2e` in a worktree would quietly test the main checkout's servers.
+
+Limits:
+
+- **Google sign-in** only works on a slot whose `http://localhost:<web port>/google-login` is registered in the Google console; email/password login works everywhere.
+- **Mobile**: start Metro on the slot's port (`npx expo start --port <metro port>`; the script prints it) and bridge the slot's ports with `adb reverse`. A dev build installed on a device is shared by every worktree (one bundle ID), so parallel work is fine for JS changes, but worktrees with different *native* changes need separate emulators. The Maestro runner bridges port 8080 only.
+
 ## Debugging (VS Code / Cursor)
 
 Debug launch configs live in `.vscode/launch.json`.

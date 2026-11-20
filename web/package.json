@@ -7,7 +7,7 @@
     "i18n:export-crowdin": "tsx ./scripts/i18n/export-crowdin-locales.ts",
     "i18n:import-crowdin": "tsx ./scripts/i18n/import-crowdin-locales.ts",
     "i18n:verify-keys": "tsx ./scripts/i18n/verify-i18n-keys.ts",
-    "dev": "nuxt dev --port 3000",
+    "dev": "nuxt dev",
     "build": "nuxt build",
     "preview": "nuxt preview --port 3000",
     "start": "node ../scripts/start-web-standalone.mjs",
