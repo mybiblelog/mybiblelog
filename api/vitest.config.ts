@@ -8,6 +8,7 @@ export default defineConfig({
     // they redirect the data layer at a dedicated test database and do not need
     // the API server, so they must not be picked up by the default run.
     exclude: [...configDefaults.exclude, 'test/repositories/**'],
+    setupFiles: ['test/setup-env.ts'],
     fileParallelism: false,
   },
 });

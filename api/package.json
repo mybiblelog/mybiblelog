@@ -11,6 +11,7 @@
     "postbuild": "cp -r services/email/assets dist/services/email/assets",
     "start": "cross-env NODE_ENV=production node dist/server.js",
     "test": "vitest run",
+    "test:unit": "vitest run -c vitest.unit.config.ts",
     "test:watch": "vitest",
     "test:repositories": "vitest run --config vitest.repositories.config.ts",
     "type-check": "tsc --noEmit",

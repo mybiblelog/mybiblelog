@@ -110,6 +110,15 @@ Permanent design decisions and constraints don't belong here, even when they're 
 
 ## Internal follow-ups
 
+### api-live-server-tests-ci
+
+- **Where:** `api/vitest.unit.config.ts`, `.github/workflows/api-ci.yml`
+- **Why:** 12 API suites call a running API through `api/test/helpers.ts`, and `test:repositories` needs MongoDB. API CI runs only the server-free suites (`test:unit`), so those don't gate merges.
+- **Remove when:** API CI starts a Mongo service container and the API, then runs `npm test` and `test:repositories`.
+- **Check:** `git grep -n "TECH-DEBT(api-live-server-tests-ci)"`.
+- **Tracking:** none.
+- **Added:** 2026-11-16
+
 ### usfm-client-migration
 
 - **Where:** `shared/log-entry/api.ts`, `web/app/stores/passage-notes.ts`, `mobile/src/api/notesApi.ts`
