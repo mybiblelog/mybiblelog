@@ -22,6 +22,7 @@
     "start:legacy": "npm-run-all --parallel start:api start:web",
     "start:api": "npm run -w api start",
     "start:web": "npm run -w web start",
+    "worktree:env": "node scripts/worktree-env.mjs",
     "build": "npm run build -w api && npm run build -w web",
     "build:web": "npm run -w web build",
     "heroku-prebuild": "npm install --include=dev && npm install --include=dev -w shared && npm install -w web && npm install -w api",
