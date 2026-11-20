@@ -1,6 +1,6 @@
-import express from 'express';
+import express, { type ErrorRequestHandler, type RequestHandler } from 'express';
 import compression from 'compression';
-import cors from 'cors';
+import cors, { type CorsOptions } from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import errorhandler from 'errorhandler';
@@ -40,7 +40,7 @@ const buildApp = (): express.Application => {
   }));
 
   // Configure CORS to only allow specific origins
-  const corsOptions = {
+  const corsOptions: CorsOptions = {
     origin(origin, callback) {
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) { return callback(null, true); }
@@ -129,13 +129,14 @@ const buildApp = (): express.Application => {
 
   // Mounted under /api because the single-process launcher only routes /api/* to Express.
   if (!isProduction) {
-    app.use('/api/docs', (req, res, next) => {
-      // Swagger UI loads its assets by relative URL, which only resolve under /api/docs/.
+    // Swagger UI loads its assets by relative URL, which only resolve under /api/docs/.
+    const redirectToTrailingSlash: RequestHandler = (req, res, next) => {
       if (req.originalUrl === '/api/docs') {
         return res.redirect(301, '/api/docs/');
       }
       next();
-    }, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    };
+    app.use('/api/docs', redirectToTrailingSlash, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   }
   app.get('/api/openapi.json', (req, res) => {
     res.json(publicSwaggerSpec);
@@ -151,7 +152,7 @@ const buildApp = (): express.Application => {
 
   // Handle any other errors
   // Express identifies error handlers by their 4-argument arity, so `_next` must stay.
-  const apiRouterErrorHandler = (err, req, res, _next) => {
+  const apiRouterErrorHandler: ErrorRequestHandler = (err, req, res, _next) => {
     const error =
       err instanceof AppError ?
         err :

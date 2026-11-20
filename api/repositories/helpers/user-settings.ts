@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { defaultLocaleBibleVersions } from '@mybiblelog/shared';
+import { defaultLocaleBibleVersions, isValidLocaleCode } from '@mybiblelog/shared';
 import { UserSettingsDocument } from '../../mongo/documents';
 
 /**
@@ -12,7 +12,7 @@ export const buildDefaultUserSettings = (locale?: string): UserSettingsDocument 
   return {
     dailyVerseCountGoal: 86,
     lookBackDate: dayjs().format('YYYY-MM-DD'),
-    preferredBibleVersion: defaultLocaleBibleVersions[resolvedLocale] ?? defaultLocaleBibleVersions.en,
+    preferredBibleVersion: isValidLocaleCode(resolvedLocale) ? defaultLocaleBibleVersions[resolvedLocale] : defaultLocaleBibleVersions.en,
     startPage: 'start',
     passageNoteTagSortOrder: 'label:ascending',
     locale: resolvedLocale,

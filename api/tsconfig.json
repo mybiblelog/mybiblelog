@@ -4,8 +4,7 @@
     "module": "commonjs",
     "lib": ["ES2020"],
     "outDir": "./dist",
-    "strict": false,
-    "strictNullChecks": true,
+    "strict": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
@@ -15,19 +14,7 @@
     "declarationMap": false,
     "sourceMap": true,
     "removeComments": false,
-    "noImplicitAny": false,
-    "noImplicitReturns": false,
-    "noImplicitThis": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "exactOptionalPropertyTypes": false,
-    "noImplicitOverride": false,
-    "noPropertyAccessFromIndexSignature": false,
     "noUncheckedIndexedAccess": true,
-    "allowUnusedLabels": true,
-    "allowUnreachableCode": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
@@ -39,8 +26,7 @@
   ],
   "exclude": [
     "node_modules",
-    "dist",
-    "test"
+    "dist"
   ],
   "ts-node": {
     "esm": false,

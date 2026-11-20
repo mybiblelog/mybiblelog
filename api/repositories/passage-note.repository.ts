@@ -274,8 +274,8 @@ export const createPassageNoteRepository = ({ passageNotes }: Collections) => {
      * keyed by each book's bibleOrder value.
      */
     async countByBook(ownerId: string): Promise<Record<string, number>> {
-      const facetQuery = {};
-      const projectQuery = {};
+      const facetQuery: Record<number, object[]> = {};
+      const projectQuery: Record<number, object> = {};
 
       for (const book of Bible.getAllBooks()) {
         const { bibleOrder } = book;

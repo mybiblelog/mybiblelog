@@ -3,7 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 // deleteUserAccount delegates the actual deletion work to this helper; mock it
 // so the failure branch (helper returns false -> InternalError) is testable
 // without needing real repositories to fail.
-const mockDeleteAccount = vi.fn(async () => true);
+const mockDeleteAccount = vi.fn(async (..._args: unknown[]) => true);
 vi.mock('../http/helpers/delete-account', () => ({
   default: (...args: unknown[]) => mockDeleteAccount(...args),
 }));
@@ -29,7 +29,7 @@ const makeDeps = (): RouteDependencies => ({
   repositories: {} as RouteDependencies['repositories'],
   authenticate: async () => verifiedUser,
   emailService: {} as RouteDependencies['emailService'],
-  rateLimiter: { check: async () => {} } as RouteDependencies['rateLimiter'],
+  rateLimiter: { check: async () => {} } as unknown as RouteDependencies['rateLimiter'],
 });
 
 const makeRequest = (overrides: Partial<HttpRequest> = {}): HttpRequest => ({

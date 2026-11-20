@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { requestApi, createTestUser, deleteTestUser } from './helpers';
+import { requestApi, createTestUser, deleteTestUser, type TestUser } from './helpers';
 
 // Test data
 const tag1 = { label: 'Theology', color: '#FF0000', description: 'Theological concepts' };
 const tag2 = { label: 'Application', color: '#00FF00', description: 'Practical applications' };
 
 // Helper function to create tags
-async function createPassageNoteTags(testUser, tags) {
+async function createPassageNoteTags(testUser: TestUser, tags: (typeof tag1)[]) {
   const tagResponses = await Promise.all(
     tags.map((tag) =>
       requestApi

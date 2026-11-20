@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import swaggerSpec, { publicSwaggerSpec } from '../config/swagger';
 
-const operationTags = (spec: { paths: Record<string, Record<string, { tags?: string[] }>> }) =>
-  new Set(Object.values(spec.paths).flatMap((ops) => Object.values(ops).flatMap((op) => op.tags ?? [])));
+const operationTags = (spec: { paths: Record<string, Record<string, unknown>> }) =>
+  new Set(Object.values(spec.paths).flatMap((ops) => Object.values(ops).flatMap((op) => (op as { tags?: string[] }).tags ?? [])));
 
 describe('publicSwaggerSpec', () => {
   it('omits admin, test, sitemap, and mobile operations', () => {

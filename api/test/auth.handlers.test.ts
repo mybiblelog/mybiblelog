@@ -684,7 +684,7 @@ describe('auth handlers (unit)', () => {
 
       expect(findByEmail).not.toHaveBeenCalled();
       expect(check).toHaveBeenCalledTimes(2);
-      const emailScopedCall = check.mock.calls[1];
+      const emailScopedCall = check.mock.calls[1]!;
       expect(emailScopedCall[1].keyFn).toBeInstanceOf(Function);
       expect(emailScopedCall[1].keyFn?.(makeRequest())).toBe('email:user@example.com');
     });
@@ -771,7 +771,7 @@ describe('auth handlers (unit)', () => {
 
       expect(findByEmail).not.toHaveBeenCalled();
       expect(check).toHaveBeenCalledTimes(2);
-      const emailScopedCall = check.mock.calls[1];
+      const emailScopedCall = check.mock.calls[1]!;
       expect(emailScopedCall[1].keyFn).toBeInstanceOf(Function);
       expect(emailScopedCall[1].keyFn?.(makeRequest())).toBe('email:user@example.com');
     });
@@ -1036,7 +1036,7 @@ describe('auth handlers (unit)', () => {
     it('links the Google account to an existing user without a googleId', async () => {
       mockVerifyState.mockReturnValue(true);
       const existing = { ...verifiedUser, email: 'g@example.com', googleId: null } as unknown as UserRecord;
-      const linkGoogleAccount = vi.fn(async () => existing);
+      const linkGoogleAccount = vi.fn(async () => {});
       const deps = makeDeps({ users: { findByEmail: async () => existing, linkGoogleAccount } });
 
       await verifyGoogleOauth(makeRequest({ body: { code: 'c', state: 'ok', locale: 'en' } }), deps);

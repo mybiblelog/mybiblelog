@@ -57,7 +57,7 @@ export const generateSegments = (firstVerseId: VerseId, finalVerseId: VerseId, r
 
     // Create initial UNREAD segment before first range if needed
     if (rangeIndex === 0) {
-      const { startVerseId, endVerseId } = range; // eslint-disable-line
+      const { startVerseId } = range;
       if (firstVerseId !== startVerseId) {
         const unreadEndVerseId = getPreviousVerseId(startVerseId);
         segments.push({

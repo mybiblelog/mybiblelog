@@ -43,12 +43,12 @@ const makeDeps = (overrides: {
         ...overrides.users,
       },
     } as RouteDependencies['repositories'],
-    authenticate: overrides.authenticate ?? (async () => null),
+    authenticate: overrides.authenticate ?? ((async () => null) as unknown as RouteDependencies['authenticate']),
     emailService: {
       queueNewFeedbackNotification: vi.fn(),
       ...overrides.emailService,
     } as RouteDependencies['emailService'],
-    rateLimiter: { check: async () => {} } as RouteDependencies['rateLimiter'],
+    rateLimiter: { check: async () => {} } as unknown as RouteDependencies['rateLimiter'],
   };
 };
 
