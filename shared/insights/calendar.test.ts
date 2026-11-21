@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import dayjs from 'dayjs';
-import { buildMonthGrid } from './calendar';
+import { buildMonthGrid } from './calendar.js';
 
 const noCounts = () => ({ unique: 0, total: 0 });
 

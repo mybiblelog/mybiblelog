@@ -4,8 +4,8 @@ import {
   defaultLocaleBibleVersions,
   isBibleVersionKey,
   localeVersionGroups,
-} from './translations';
-import type { LocaleCode } from '../platform/i18n';
+} from './translations.js';
+import type { LocaleCode } from '../platform/i18n.js';
 
 test('isBibleVersionKey returns true for a known key', () => {
   expect(isBibleVersionKey('KJV')).toBe(true);

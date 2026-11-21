@@ -41,6 +41,6 @@ Do not flag:
   is about *unexplained* divergence, not enforcing one pattern
   repo-wide when two coexist for a documented reason (e.g. mobile's
   separate design system, or `mobile/` using its own ESLint 9 flat
-  config + Prettier rather than root's legacy `.eslintrc.js`).
+  config + Prettier rather than root's `eslint.config.mjs`).
 - Legacy Options API Vue components — tracked separately, not a
   consistency defect per file.

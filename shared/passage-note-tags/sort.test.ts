@@ -10,7 +10,7 @@ import {
   rgbToHue,
   sortPassageNoteTags,
   type PassageNoteTag,
-} from './sort';
+} from './sort.js';
 
 const tag = (overrides: Partial<PassageNoteTag> & { id: number | string }): PassageNoteTag => ({ ...overrides });
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { linkifyText } from './linkify';
+import { linkifyText } from './linkify.js';
 
 describe('linkifyText', () => {
   it('returns plain text untouched', () => {

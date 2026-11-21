@@ -29,7 +29,6 @@
  *   npm run screenshots:mobile
  */
 
-/* eslint-disable no-console */
 import { execFileSync, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';

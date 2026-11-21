@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { displayVerseRange } from './display';
-import { makeVerseId } from './encoding';
+import { displayVerseRange } from './display.js';
+import { makeVerseId } from './encoding.js';
 
 test('displays a cross-chapter range of whole chapters without verse numbers', () => {
   const startVerseId = makeVerseId(1, 1, 1);

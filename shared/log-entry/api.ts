@@ -1,4 +1,4 @@
-import type { HttpClient } from '../platform/http-client';
+import type { HttpClient } from '../platform/http-client.js';
 
 /**
  * Data-access functions for log entries, expressed as

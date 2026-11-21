@@ -1,4 +1,4 @@
-import type { LocaleCode } from '../platform/i18n';
+import type { LocaleCode } from '../platform/i18n.js';
 
 /**
  * This is an enum of translations *internal* to My Bible Log.

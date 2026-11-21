@@ -176,7 +176,7 @@ const lastAppliedLogRouteQueryKey = ref<string | null>(null);
 const query = ref<LogEntriesQuery>(defaultLogEntriesQuery());
 const resultsBarHeightPx = ref(0);
 const resultsBarRef = ref<HTMLElement | null>(null);
-const sidebarQueryManagerRef = ref<{ confirmAndReset:() => Promise<void> } | null>(null);
+const sidebarQueryManagerRef = ref<{ confirmAndReset: () => Promise<void> } | null>(null);
 
 let resultsBarObserver: ResizeObserver | null = null;
 

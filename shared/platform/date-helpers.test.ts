@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { afterEach, describe, it, expect, vi } from 'vitest';
-import { getLocaleCodes } from './i18n';
+import { getLocaleCodes } from './i18n.js';
 import {
   daysInMonth,
   displayDate,
@@ -10,7 +10,7 @@ import {
   getWeekStartAndEnd,
   indexOfWeekday,
   weekFromDate,
-} from './date-helpers';
+} from './date-helpers.js';
 
 describe('dayjs locale imports stay in sync with i18n locales', () => {
   it('has a dayjs locale import for every configured locale', () => {

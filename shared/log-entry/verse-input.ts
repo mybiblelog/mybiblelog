@@ -1,5 +1,5 @@
-import Bible from '../bible';
-import type { VerseRange } from '../bible';
+import Bible from '../bible/index.js';
+import type { VerseRange } from '../bible/index.js';
 
 export type ParseVerseInputOptions = {
   locale?: string;
@@ -52,7 +52,7 @@ export const parseVerseInput = (
     return { range: null, isValid: true, hasText: false };
   }
 
-  let range: VerseRange | null = null;
+  let range: VerseRange | null;
   try {
     range = Bible.parseVerseRange(raw, locale) || null;
   }

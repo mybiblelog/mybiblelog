@@ -1,6 +1,6 @@
-import { makeVerseId, parseVerseId, type Segment, type VerseId, type VerseRange } from './encoding';
-import { getBookChapterCount, getBookCount, getChapterVerseCount } from './metadata';
-import { getNextVerseId, getPreviousVerseId } from './navigation';
+import { makeVerseId, parseVerseId, type Segment, type VerseId, type VerseRange } from './encoding.js';
+import { getBookChapterCount, getBookCount, getChapterVerseCount } from './metadata.js';
+import { getNextVerseId, getPreviousVerseId } from './navigation.js';
 import {
   consolidateRanges,
   countRangeVerses,
@@ -8,7 +8,7 @@ import {
   filterRangesByBook,
   filterRangesByBookChapter,
   getRangesBetweenVerseIds,
-} from './ranges';
+} from './ranges.js';
 
 /**
  * Generates an array of segments, each indicating a read/unread range of verses.

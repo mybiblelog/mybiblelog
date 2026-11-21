@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import Bible from '../bible';
+import Bible from '../bible/index.js';
 import {
   buildPassageOptions,
   computePassageRange,
@@ -15,7 +15,7 @@ import {
   singleSelectChapter,
   singleSelectVerse,
   singleSelectionFromVerseId,
-} from './passage-selection';
+} from './passage-selection.js';
 
 const GENESIS = 1; // 50 chapters
 const JOHN = 43;

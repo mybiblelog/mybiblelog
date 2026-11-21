@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-import Bible from '../bible';
-import { computeDateVerseCounts, type DateVerseCountLogEntry } from './date-verse-counts';
+import Bible from '../bible/index.js';
+import { computeDateVerseCounts, type DateVerseCountLogEntry } from './date-verse-counts.js';
 
 /**
  * A log entry shape sufficient for all insights computations:

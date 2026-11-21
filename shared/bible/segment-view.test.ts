@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { withSegmentPercentages } from './segment-view';
-import type { Segment } from './core/encoding';
+import { withSegmentPercentages } from './segment-view.js';
+import type { Segment } from './core/encoding.js';
 
 const makeSegment = (verseCount: number, read: boolean): Segment => ({
   startVerseId: 0,

@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-html -- props are trusted repo-authored content -->
   <aside class="app-callout">
     <div v-if="imageSrc" class="app-callout-image">
       <img :src="imageSrc" :alt="imageAlt" width="750" height="1334" loading="lazy">

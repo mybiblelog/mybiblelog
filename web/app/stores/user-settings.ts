@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
+import type { BibleApps } from '@mybiblelog/shared';
 import {
-  BibleApps,
   BibleVersions,
   getAppReadingUrl,
   getDefaultBibleApp,

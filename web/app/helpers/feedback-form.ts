@@ -60,6 +60,7 @@ export const clearFeedbackErrorsOnEdit = (
   errors: Ref<Record<string, ApiErrorDetail>>,
 ) => {
   for (const field of ['email', 'message'] as const) {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete -- `field` is the fixed 'email' | 'message' union
     watch(() => form.value[field], () => { delete errors.value[field]; });
   }
 };

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import Bible from './index';
+import Bible from './index.js';
 
 const v = Bible.makeVerseId;
 

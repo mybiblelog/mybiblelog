@@ -119,6 +119,6 @@ export function parseInlineI18nBlockJson(raw: string, filePath: string): Record<
   }
   catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
-    throw new Error(`${filePath}: ${msg}`);
+    throw new Error(`${filePath}: ${msg}`, { cause: e });
   }
 }

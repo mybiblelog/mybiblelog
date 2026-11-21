@@ -1,12 +1,12 @@
-import { makeVerseId, parseVerseId, type VerseId, type VerseRange } from './encoding';
-import { getBookChapterCount, getBookIndexByUsfmCode, getBookUsfmCode, getChapterVerseCount } from './metadata';
+import { makeVerseId, parseVerseId, type VerseId, type VerseRange } from './encoding.js';
+import { getBookChapterCount, getBookIndexByUsfmCode, getBookUsfmCode, getChapterVerseCount } from './metadata.js';
 import {
   getFirstBookChapterVerseId,
   getFirstBookVerseId,
   getLastBookChapterVerseId,
   getLastBookVerseId,
-} from './navigation';
-import { validateRange } from './validation';
+} from './navigation.js';
+import { validateRange } from './validation.js';
 
 /**
  * USFM-style passage references in the dot notation YouVersion and Bible.com

@@ -174,7 +174,7 @@ const singleSelected = ref(PassageSelection.emptySingleVerseSelection());
 const passageSelectorKey = ref(0);
 type PassageSeed = { empty: true } | { empty?: false; startVerseId: number; endVerseId: number };
 const passageSelectorPopulateWith = ref<PassageSeed>({ empty: true });
-const passageSelectorRef = ref<{ openSelectBook:() => void } | null>(null);
+const passageSelectorRef = ref<{ openSelectBook: () => void } | null>(null);
 
 const valueRange = computed(() => coerceVerseRange(props.modelValue));
 

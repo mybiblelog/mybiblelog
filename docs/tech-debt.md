@@ -72,15 +72,6 @@ Permanent design decisions and constraints don't belong here, even when they're 
 - **Tracking:** none.
 - **Added:** 2026-07
 
-### typescript-estree-minimatch-override
-
-- **Where:** root `package.json` (`overrides["@typescript-eslint/typescript-estree"].minimatch`)
-- **Why:** The root ESLint 8 setup uses `@typescript-eslint` v6, whose `typescript-estree` pins `minimatch@9.0.3`. The override forces `^9.0.7`. The reason wasn't recorded; it's presumably a security patch.
-- **Remove when:** the root moves to a `@typescript-eslint` major that depends on a patched `minimatch`.
-- **Check:** `npm ls minimatch` after removing the override, then `npm audit`.
-- **Tracking:** none.
-- **Added:** 2026-10-30
-
 ### reanimated-flatlist-exiting
 
 - **Where:** `mobile/src/components/organisms/AnimatedList.tsx`

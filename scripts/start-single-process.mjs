@@ -13,7 +13,7 @@
 import http from 'node:http';
 
 const apiModule = await import(
-  new URL('../api/dist/bootstrap.js', import.meta.url).href
+  new URL('../api/dist/bootstrap.js', import.meta.url).href,
 );
 const { bootApi, closeConnection } = apiModule;
 if (typeof bootApi !== 'function' || typeof closeConnection !== 'function') {
@@ -44,7 +44,7 @@ apiServer.listen(apiPort, '127.0.0.1', () => {
 });
 
 const { listener } = await import(
-  new URL('../web/.output/server/index.mjs', import.meta.url).href
+  new URL('../web/.output/server/index.mjs', import.meta.url).href,
 );
 
 // Only true /api requests go to Express — a bare startsWith('/api') would

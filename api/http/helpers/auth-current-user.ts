@@ -50,12 +50,12 @@ async function authCurrentUser(
 
 async function authCurrentUser(
   req: AuthRequest,
-  opts: { optional?: false; adminOnly?: boolean }
+  opts: { optional?: false; adminOnly?: boolean },
 ): Promise<UserRecord>;
 
 async function authCurrentUser(
   req: AuthRequest,
-  opts: { optional: true; adminOnly?: boolean }
+  opts: { optional: true; adminOnly?: boolean },
 ): Promise<UserRecord | null>;
 
 async function authCurrentUser(req: AuthRequest, { optional = false, adminOnly = false } = {}): Promise<UserRecord | null> {
@@ -88,7 +88,7 @@ async function authCurrentUser(req: AuthRequest, { optional = false, adminOnly =
       });
     });
   }
-  catch (err) {
+  catch {
     if (!optional) {
       throw new UnauthenticatedError();
     }

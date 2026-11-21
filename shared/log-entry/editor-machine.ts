@@ -1,4 +1,4 @@
-import Bible from '../bible';
+import Bible from '../bible/index.js';
 
 /**
  * Pure state machine for the log-entry editor form.

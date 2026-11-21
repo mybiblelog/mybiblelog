@@ -50,7 +50,7 @@ const props = defineProps<{
     content?: string;
     createdAt?: string;
   };
-  actions?: Array<{ label: string; callback:() => void }>;
+  actions?: Array<{ label: string; callback: () => void }>;
   getReadingUrl?: (bookIndex: number, chapterIndex: number) => string;
 }>();
 

@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import Bible from '../bible';
-import { computeDateVerseCounts } from './date-verse-counts';
+import Bible from '../bible/index.js';
+import { computeDateVerseCounts } from './date-verse-counts.js';
 
 test('returns empty counts when no log entries are provided', () => {
   const counts = computeDateVerseCounts([], '2026-06-10', '2026-06-12');

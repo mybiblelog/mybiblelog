@@ -1,4 +1,4 @@
-import Bible from './index';
+import Bible from './index.js';
 
 /**
  * A selectable Bible book, decoupled from any UI framework.

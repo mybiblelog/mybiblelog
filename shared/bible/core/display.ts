@@ -1,6 +1,6 @@
-import { makeVerseId, parseVerseId, type VerseRange } from './encoding';
-import { getBookChapterCount, getBookIndex, getBookName, getChapterVerseCount } from './metadata';
-import { validateRange } from './validation';
+import { makeVerseId, parseVerseId, type VerseRange } from './encoding.js';
+import { getBookChapterCount, getBookIndex, getBookName, getChapterVerseCount } from './metadata.js';
+import { validateRange } from './validation.js';
 
 export const displayVerseRange = (startVerseId: number, endVerseId: number, lang: string = 'en'): string => {
   const start = parseVerseId(startVerseId);
