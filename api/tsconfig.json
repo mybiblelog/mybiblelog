@@ -3,6 +3,7 @@
     "target": "ES2020",
     "module": "commonjs",
     "lib": ["ES2020"],
+    "rootDir": ".",
     "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
@@ -15,11 +16,7 @@
     "sourceMap": true,
     "removeComments": false,
     "noUncheckedIndexedAccess": true,
-    "moduleResolution": "node",
-    "baseUrl": ".",
-    "paths": {
-      "@shared/*": ["../shared/*"]
-    }
+    "moduleResolution": "bundler"
   },
   "include": [
     "**/*.ts"
@@ -27,12 +24,5 @@
   "exclude": [
     "node_modules",
     "dist"
-  ],
-  "ts-node": {
-    "esm": false,
-    "experimentalSpecifierResolution": "node",
-    "transpileOnly": true,
-    "files": true,
-    "require": ["tsconfig-paths/register"]
-  }
+  ]
 }

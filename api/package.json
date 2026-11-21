@@ -5,8 +5,7 @@
   "description": "My Bible Log API",
   "main": "server.ts",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon --exec ts-node server.ts --watch . --watch ../.env --ext ts,js,json",
-    "dev:ts": "cross-env NODE_ENV=development nodemon --exec ts-node --transpile-only server.ts --watch . --watch ../.env --ext ts,js,json",
+    "dev": "cross-env NODE_ENV=development nodemon --exec tsx server.ts --watch . --watch ../.env --ext ts,js,json",
     "build": "tsc -p tsconfig.build.json",
     "postbuild": "cp -r services/email/assets dist/services/email/assets",
     "start": "cross-env NODE_ENV=production node dist/server.js",
@@ -18,12 +17,12 @@
     "lint": "eslint --ext .ts,.js .",
     "lint:fix": "eslint --ext .ts,.js . --fix",
     "clean": "rm -rf node_modules dist",
-    "script:seed": "ts-node ./scripts/seed.ts",
-    "script:backup": "ts-node ./scripts/backup.ts",
-    "script:restore": "ts-node ./scripts/restore.ts",
-    "script:delete-test-users": "ts-node ./scripts/delete-test-users.ts",
-    "script:delete-stranded-data": "ts-node ./scripts/delete-stranded-data.ts",
-    "script:migrate": "ts-node ./scripts/migrate.ts"
+    "script:seed": "tsx ./scripts/seed.ts",
+    "script:backup": "tsx ./scripts/backup.ts",
+    "script:restore": "tsx ./scripts/restore.ts",
+    "script:delete-test-users": "tsx ./scripts/delete-test-users.ts",
+    "script:delete-stranded-data": "tsx ./scripts/delete-stranded-data.ts",
+    "script:migrate": "tsx ./scripts/migrate.ts"
   },
   "author": "Aaron Smith",
   "license": "MIT",
@@ -66,9 +65,8 @@
     "@types/xml": "^1.0.11",
     "@types/xml2js": "^0.4.14",
     "nodemon": "^3.1.10",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.9.3",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3",
     "vitest": "^5.0.5"
   }
 }

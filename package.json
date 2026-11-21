@@ -16,7 +16,7 @@
     "node": "26.13.0"
   },
   "scripts": {
-    "dev:api": "npm run -w api dev:ts",
+    "dev:api": "npm run -w api dev",
     "dev:web": "npm run -w web dev",
     "start": "cross-env NODE_ENV=production node scripts/start-single-process.mjs",
     "start:legacy": "npm-run-all --parallel start:api start:web",
@@ -63,7 +63,8 @@
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.1",
-    "sharp": "^0.35.5"
+    "sharp": "^0.35.5",
+    "typescript": "~6.0.3"
   },
   "overrides": {
     "@typescript-eslint/typescript-estree": {
