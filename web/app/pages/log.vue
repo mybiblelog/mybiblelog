@@ -137,9 +137,8 @@
 </template>
 
 <script setup lang="ts">
-import { Bible, displayDate as sharedDisplayDate } from '@mybiblelog/shared';
+import { displayDate as sharedDisplayDate } from '@mybiblelog/shared';
 import { decodeLogEntriesRouteQuery, encodeLogEntriesQueryToRoute, defaultLogEntriesQuery } from '~/helpers/log-entries-route-query';
-import { encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
 import { buildResultsSummary } from '~/helpers/results-summary';
 import type { LogEntriesQuery } from '~/helpers/log-entries-route-query';
 import LogEntry from '~/components/log/LogEntry.vue';
@@ -148,11 +147,8 @@ import AppModal from '~/components/popups/AppModal.vue';
 import CaretLeftIcon from '~/components/svg/CaretLeftIcon.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
 import SkeletonLoader from '~/components/ui/SkeletonLoader.vue';
-import { useDialogStore } from '~/stores/dialog';
-import { useToastStore } from '~/stores/toast';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 import { useLogEntriesStore } from '~/stores/log-entries';
-import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
 import { useAppInitStore } from '~/stores/app-init';
 
 definePageMeta({ middleware: ['auth'] });
@@ -165,160 +161,51 @@ const router = useRouter();
 useHead({ title: () => t('log') });
 
 const logEntriesStore = useLogEntriesStore();
-const dialogStore = useDialogStore();
-const toastStore = useToastStore();
 const logEntryEditorStore = useLogEntryEditorStore();
-const { openPassageInBible } = useOpenInBible();
 
 const loading = ref(true);
 const showQueryManagerModal = ref(false);
 const lastAppliedLogRouteQueryKey = ref<string | null>(null);
 const query = ref<LogEntriesQuery>(defaultLogEntriesQuery());
-const resultsBarHeightPx = ref(0);
 const resultsBarRef = ref<HTMLElement | null>(null);
 const sidebarQueryManagerRef = ref<{ confirmAndReset: () => Promise<void> } | null>(null);
 
-let resultsBarObserver: ResizeObserver | null = null;
+const resultsBarHeightPx = useElementHeight(resultsBarRef);
 
-type LogEntryLike = {
-  id: number | string;
-  date: string;
-  startVerseId: number;
-  endVerseId: number;
-};
+const {
+  resultsSize,
+  effectiveLimit,
+  effectiveOffset,
+  page: pagerPage,
+  totalPages: pagerTotalPages,
+  pagedEntries: pagedLogEntries,
+  pagedEntryGroups: pagedLogEntryGroups,
+  offsetForPage,
+} = useLogEntriesPaging(query, computed(() => logEntriesStore.logEntries));
 
-const logEntries = computed(() => logEntriesStore.logEntries as LogEntryLike[]);
-
-const hasAppliedViewOptions = computed(() => {
-  const q = query.value || {};
-  const hasDateFilters = !!(q.startDate || q.endDate);
-  const hasPassageFilter = !!(q.filterPassageStartVerseId && q.filterPassageEndVerseId);
-  const hasSortOverride = q.sortDirection && q.sortDirection !== 'descending';
-  const hasPageSizeOverride = Number(q.limit || 10) !== 10;
-  return hasDateFilters || hasPassageFilter || hasSortOverride || hasPageSizeOverride;
+const { actionsForLogEntry } = useLogEntryActions(t, {
+  continueReading: false,
+  deleteMessageKeys: {
+    confirm: 'messaging.are_you_sure_delete_entry',
+    failed: 'messaging.log_entry_could_not_be_deleted',
+  },
 });
 
 const hasAppliedFilters = computed(() => {
-  const q = query.value || {};
+  const q = query.value;
   return !!(q.startDate || q.endDate || (q.filterPassageStartVerseId && q.filterPassageEndVerseId));
 });
 
-function stableCompare(a: string | number, b: string | number): number {
-  if (a === b) { return 0; }
-  return a < b ? -1 : 1;
-}
-
-const filteredSortedLogEntries = computed(() => {
-  const q = query.value || {};
-  const startDate = `${q.startDate || ''}`.trim();
-  const endDate = `${q.endDate || ''}`.trim();
-  const hasPassageFilter = !!(q.filterPassageStartVerseId && q.filterPassageEndVerseId);
-  const filterRange = hasPassageFilter
-    ? { startVerseId: Number(q.filterPassageStartVerseId), endVerseId: Number(q.filterPassageEndVerseId) }
-    : null;
-
-  const filtered = (Array.isArray(logEntries.value) ? logEntries.value : []).filter((entry) => {
-    if (startDate && entry.date < startDate) { return false; }
-    if (endDate && entry.date > endDate) { return false; }
-    if (filterRange) {
-      const entryRange = { startVerseId: entry.startVerseId, endVerseId: entry.endVerseId };
-      if (!Bible.checkRangeOverlap(entryRange, filterRange)) { return false; }
-    }
-    return true;
-  });
-
-  const direction = q.sortDirection === 'ascending' ? 1 : -1;
-  return [...filtered].sort((a, b) => {
-    const cmpDate = stableCompare(a.date, b.date) * direction;
-    if (cmpDate !== 0) { return cmpDate; }
-    const cmpStart = stableCompare(Number(a.startVerseId), Number(b.startVerseId));
-    if (cmpStart !== 0) { return cmpStart; }
-    const cmpEnd = stableCompare(Number(a.endVerseId), Number(b.endVerseId));
-    if (cmpEnd !== 0) { return cmpEnd; }
-    return stableCompare(`${a.id}`, `${b.id}`);
-  });
+const hasAppliedViewOptions = computed(() => {
+  const q = query.value;
+  const hasSortOverride = q.sortDirection && q.sortDirection !== 'descending';
+  const hasPageSizeOverride = Number(q.limit || 10) !== 10;
+  return hasAppliedFilters.value || hasSortOverride || hasPageSizeOverride;
 });
-
-const resultsSize = computed(() => filteredSortedLogEntries.value.length);
 
 const pageCssVars = computed(() => ({
-  '--logResultsBarHeight': `${Number(resultsBarHeightPx.value || 0)}px`,
+  '--logResultsBarHeight': `${resultsBarHeightPx.value}px`,
 }));
-
-const effectiveLimit = computed(() => Math.max(1, Number((query.value && query.value.limit) || 10)));
-
-const pageStartOffsets = computed(() => {
-  const entries = filteredSortedLogEntries.value;
-  const limit = Math.max(1, Number(effectiveLimit.value || 10));
-
-  if (!entries.length) { return [0]; }
-
-  const dayGroups: Array<{ start: number; count: number }> = [];
-  let i = 0;
-  while (i < entries.length) {
-    const date = entries[i]!.date;
-    let j = i + 1;
-    while (j < entries.length && entries[j]!.date === date) { j += 1; }
-    dayGroups.push({ start: i, count: j - i });
-    i = j;
-  }
-
-  const starts = [0];
-  let g = 0;
-  while (g < dayGroups.length) {
-    let pageCount = 0;
-    while (g < dayGroups.length && pageCount < limit) {
-      pageCount += dayGroups[g]!.count;
-      g += 1;
-    }
-    if (g < dayGroups.length) {
-      starts.push(dayGroups[g]!.start);
-    }
-  }
-
-  return starts;
-});
-
-const pagerPageIndex = computed(() => {
-  const starts = pageStartOffsets.value;
-  const requested = Math.max(0, Number((query.value && query.value.offset) || 0));
-  let idx = 0;
-  for (let i = 0; i < starts.length; i++) {
-    if (starts[i]! <= requested) { idx = i; }
-    else { break; }
-  }
-  return Math.max(0, Math.min(idx, starts.length - 1));
-});
-
-const pagerTotalPages = computed(() => Math.max(1, pageStartOffsets.value.length));
-
-const effectiveOffset = computed(() => Number(pageStartOffsets.value[pagerPageIndex.value] || 0));
-
-const pagerPage = computed(() => pagerPageIndex.value + 1);
-
-const pagedLogEntries = computed(() => {
-  const entries = filteredSortedLogEntries.value;
-  const starts = pageStartOffsets.value;
-  const start = Number(starts[pagerPageIndex.value] || 0);
-  const end = Number(starts[pagerPageIndex.value + 1] ?? entries.length);
-  return entries.slice(start, end);
-});
-
-const pagedLogEntryGroups = computed(() => {
-  const entries = pagedLogEntries.value;
-  if (!entries.length) { return []; }
-
-  const groups: Array<{ date: string; entries: LogEntryLike[] }> = [];
-  let current: { date: string; entries: LogEntryLike[] } | null = null;
-  for (const entry of entries) {
-    if (!current || current.date !== entry.date) {
-      current = { date: entry.date, entries: [] };
-      groups.push(current);
-    }
-    current.entries.push(entry);
-  }
-  return groups;
-});
 
 const querySummary = computed(() => {
   const noun = hasAppliedFilters.value ? 'results' : 'entries';
@@ -359,9 +246,7 @@ async function loadPageData() {
 }
 
 function pushLogQuery(nextQuery: Partial<LogEntriesQuery>, { replace = false } = {}) {
-  const path = localePath('log');
-  const q = encodeLogEntriesQueryToRoute(nextQuery);
-  const nav = { path, query: q };
+  const nav = { path: localePath('log'), query: encodeLogEntriesQueryToRoute(nextQuery) };
   return replace ? router.replace(nav) : router.push(nav);
 }
 
@@ -370,100 +255,22 @@ function closeQueryManagerModal() { showQueryManagerModal.value = false; }
 
 function resetViewOptions() {
   if (!hasAppliedViewOptions.value) { return; }
-  const mgr = sidebarQueryManagerRef.value;
-  if (mgr && typeof mgr.confirmAndReset === 'function') {
-    mgr.confirmAndReset();
-  }
+  sidebarQueryManagerRef.value?.confirmAndReset();
 }
 
 async function applyQueryManager(update: Partial<LogEntriesQuery>) {
   await pushLogQuery({ ...query.value, ...update, offset: 0 });
-  if (showQueryManagerModal.value) {
-    closeQueryManagerModal();
-  }
+  closeQueryManagerModal();
 }
 
 function onPageChanged(newPage: number) {
-  const clampedPage = Math.min(Math.max(Number(newPage || 1), 1), pagerTotalPages.value);
-  if (clampedPage === pagerPage.value) { return; }
-  const starts = pageStartOffsets.value;
-  const offset = Number(starts[clampedPage - 1] || 0);
+  const offset = offsetForPage(newPage);
+  if (offset === effectiveOffset.value) { return; }
   pushLogQuery({ ...query.value, offset, limit: effectiveLimit.value });
 }
 
 function openAddEntryForm() {
   logEntryEditorStore.openEditor({ empty: true });
-}
-
-const { actionsForLogEntry } = useLogEntryActions<LogEntryLike>(t, {
-  openInBible: openPassageInBible,
-  takeNote: takeNoteOnPassage,
-  viewNotes: viewNotesForPassage,
-  edit: openEditEntryForm,
-  remove: deleteEntry,
-});
-
-function takeNoteOnPassage(passage: LogEntryLike) {
-  const { startVerseId, endVerseId } = passage;
-  usePassageNoteEditorStore().openEditor({ passages: [{ startVerseId, endVerseId }], content: '' });
-}
-
-function viewNotesForPassage(passage: LogEntryLike) {
-  const { startVerseId, endVerseId } = passage;
-  const q = encodePassageNotesQueryToRoute({
-    filterPassageStartVerseId: startVerseId,
-    filterPassageEndVerseId: endVerseId,
-    offset: 0,
-  });
-  router.push({ path: localePath('notes'), query: q as Record<string, string | string[]> });
-}
-
-function openEditEntryForm(id: number | string) {
-  const targetEntry = logEntries.value.find(e => e.id === id);
-  if (!targetEntry) { return; }
-  const { date, startVerseId, endVerseId } = targetEntry;
-  logEntryEditorStore.openEditor({ id, date, startVerseId, endVerseId });
-}
-
-async function deleteEntry(id: number | string) {
-  const confirmed = await dialogStore.confirm({
-    message: t('messaging.are_you_sure_delete_entry'),
-    confirmButtonType: 'danger',
-  });
-  if (!confirmed) { return; }
-  const success = await logEntriesStore.deleteLogEntry(id);
-  if (!success) {
-    toastStore.add({ type: 'error', text: t('messaging.log_entry_could_not_be_deleted') });
-  }
-}
-
-function detachResultsBarObserver() {
-  if (resultsBarObserver) {
-    try { resultsBarObserver.disconnect(); }
-    catch { /* ignore */ }
-  }
-  resultsBarObserver = null;
-  resultsBarHeightPx.value = 0;
-}
-
-function attachResultsBarObserver() {
-  if (!import.meta.client) { return; }
-  if (typeof ResizeObserver === 'undefined') { return; }
-
-  const el = resultsBarRef.value;
-  if (!el) {
-    detachResultsBarObserver();
-    return;
-  }
-
-  detachResultsBarObserver();
-  resultsBarObserver = new ResizeObserver((entries) => {
-    const entry = entries?.[0];
-    const height = entry?.target ? entry.target.getBoundingClientRect().height : 0;
-    resultsBarHeightPx.value = Math.max(0, Math.ceil(height || 0));
-  });
-  resultsBarObserver.observe(el);
-  resultsBarHeightPx.value = Math.max(0, Math.ceil(el.getBoundingClientRect().height || 0));
 }
 
 watch(() => route.query, async (routeQuery) => {
@@ -479,8 +286,7 @@ watch(() => route.query, async (routeQuery) => {
 }, { deep: true, immediate: true });
 
 watch(effectiveOffset, (nextOffset) => {
-  if (!query.value) { return; }
-  if (Number(query.value.offset || 0) === Number(nextOffset || 0)) { return; }
+  if (Number(query.value.offset || 0) === nextOffset) { return; }
   pushLogQuery({ ...query.value, offset: nextOffset }, { replace: true });
 });
 
@@ -489,20 +295,10 @@ watch(pagerPage, () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-watch(loading, (nextLoading) => {
-  if (nextLoading) { return; }
-  nextTick(() => attachResultsBarObserver());
-});
-
 onMounted(async () => {
   if (loading.value) {
     await loadPageData();
   }
-  nextTick(() => attachResultsBarObserver());
-});
-
-onBeforeUnmount(() => {
-  detachResultsBarObserver();
 });
 </script>
 

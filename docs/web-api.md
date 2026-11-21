@@ -19,9 +19,8 @@ $ npm run heroku-prebuild
 # docker-compose.yml is one option
 $ docker compose up
 
-# ensure env vars are set: see below example
-# both /web and /api projects check for the .env in this root directory
-$ touch .env
+# both /web and /api projects read the .env in this root directory
+$ cp .env.example .env
 
 # serve each with hot reload, in separate terminals
 # (one shared terminal interleaves their output and disrupts hot reload)
@@ -37,65 +36,7 @@ $ npm run start
 
 ## Environment Variables
 
-In development, create a `.env` file at the root of the project:
-
-```bash
-# Base site URL (used for canonical links)
-# Also used to resolve absolute URL links in emails and axios requests
-SITE_URL=https://xxxxxxxxxx
-
-# Optional: set a custom API port
-# Below values are used if no env var is set
-# the Express API listens on this port
-API_PORT=8080
-# Nuxt proxies /api/* requests here
-API_BASE_URL=http://localhost:8080
-
-# Connection URL for MongoDB (example matches docker-compose.yml file)
-MONGODB_URI=mongodb://root:examplepassword@localhost:27017
-
-# JSON Web Token secret
-JWT_SECRET=xxxxxxxxxx
-
-# Whether email verification is required before users can sign in
-REQUIRE_EMAIL_VERIFICATION=xxxxxxxxxx
-
-# Custom "FROM" domain for email sending
-EMAIL_SENDING_DOMAIN=xxxxxxxxxx
-
-# Email address to receive your unsubscribe links
-# See reminder.service.ts for usage
-EMAIL_UNSUBSCRIBE_ADDRESS=xxxxx@xxxxx.xxxxx
-
-# Resend API key - only needed if developing/using email features
-# (pre-login email verification, reminder emails, password reset)
-RESEND_API_KEY=xxxxxxxxxx
-
-# Google OAuth2 (only needed if using Google login)
-GOOGLE_CLIENT_ID=xxxxxxxxxx.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=xxxxxxxxxx
-GOOGLE_REDIRECT=http://xxxxxxxxxx:xxxx/google-login
-# Comma-separated extra Google client IDs accepted as the audience of a
-# native-mobile id_token (iOS / Android / web). GOOGLE_CLIENT_ID is always allowed.
-GOOGLE_ALLOWED_CLIENT_IDS=xxxxxxxxxx-ios.apps.googleusercontent.com,xxxxxxxxxx-web.apps.googleusercontent.com
-
-# Google Analytics ID (only needed if verifying GA connection)
-GA_MEASUREMENT_ID=G-xxxxxxxxxx
-
-# Open AI API Key (for scripted <i18n> block translations)
-OPENAI_API_KEY=xxxxxxxxxx
-
-# Test Data
-TEST_SITE_URL=http://localhost:3000 # for e2e tests
-TEST_BYPASS_SECRET=xxxxxxxxxx # for api tests (do NOT set in prod)
-
-# Screenshot Script (optional config)
-SCREENSHOT_HEADLESS=false
-SCREENSHOT_EMAIL=demo@example.com
-SCREENSHOT_PASSWORD=password
-```
-
-For the Google OAuth2 variables, see the [OAuth guide](oauth.md).
+[`.env.example`](../.env.example) lists every variable with comments. Its values run the app and both test suites locally against `docker-compose.yml`'s MongoDB, and CI uses it as-is. For the Google OAuth2 variables, see the [OAuth guide](oauth.md).
 
 ## Running Multiple Worktrees Side by Side
 

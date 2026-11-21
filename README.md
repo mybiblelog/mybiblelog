@@ -21,9 +21,8 @@ $ npm run heroku-prebuild
 # docker-compose.yml is one option
 $ docker compose up
 
-# ensure env vars are set: see docs/web-api.md for the full .env example
-# both /web and /api projects check for the .env in this root directory
-$ touch .env
+# both /web and /api projects read the .env in this root directory
+$ cp .env.example .env
 
 # serve each with hot reload, in separate terminals
 # (one shared terminal interleaves their output and disrupts hot reload)

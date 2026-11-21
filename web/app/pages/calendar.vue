@@ -56,27 +56,19 @@ import CalendarMonth from '~/components/calendar/CalendarMonth.vue';
 import LogEntry from '~/components/log/LogEntry.vue';
 import ReadingTrackerResetCard from '~/components/ui/ReadingTrackerResetCard.vue';
 import PlusIcon from '~/components/svg/PlusIcon.vue';
-import { useDialogStore } from '~/stores/dialog';
-import { useToastStore } from '~/stores/toast';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 import { useLogEntriesStore } from '~/stores/log-entries';
-import type { LogEntry as LogEntryModel } from '~/stores/log-entries';
-import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
 import { useDateVerseCountsStore } from '~/stores/date-verse-counts';
 import { useUserSettingsStore } from '~/stores/user-settings';
 import { useAppInitStore } from '~/stores/app-init';
-import { encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
 
 definePageMeta({ middleware: ['auth'] });
 const { t, locale } = useI18n();
 useHead({ title: () => t('page_title') });
 
-const localePath = useLocalePath();
-const router = useRouter();
 const logEntriesStore = useLogEntriesStore();
 const userSettingsStore = useUserSettingsStore();
 const dateVerseCountsStore = useDateVerseCountsStore();
-const { openPassageInBible } = useOpenInBible();
 
 const userSettings = computed(() => userSettingsStore.settings);
 const currentDate = ref<string | null>(null);
@@ -95,62 +87,13 @@ const entryDate = computed(() => {
 
 const displayDateFormatted = computed(() => displayDate(currentDate.value ?? '', locale.value));
 
-const { actionsForLogEntry } = useLogEntryActions<LogEntryModel>(t, {
-  openInBible: openPassageInBible,
-  continueReading: continueReadingPassage,
-  takeNote: takeNoteOnPassage,
-  viewNotes: viewNotesForPassage,
-  edit: openEditEntryForm,
-  remove: deleteEntry,
+const { actionsForLogEntry } = useLogEntryActions(t, {
+  continueReading: true,
+  deleteMessageKeys: { confirm: 'are_you_sure', failed: 'could_not_delete' },
 });
-
-async function deleteEntry(id: number | string) {
-  const confirmed = await useDialogStore().confirm({
-    message: t('are_you_sure'),
-    confirmButtonType: 'danger',
-  });
-  if (!confirmed) { return; }
-  const success = await logEntriesStore.deleteLogEntry(id);
-  if (!success) {
-    useToastStore().add({ type: 'error', text: t('could_not_delete') });
-  }
-}
 
 function openAddEntryFormForDate(date: string | null) {
   useLogEntryEditorStore().openEditor({ empty: true, date: date ?? '' });
-}
-
-function openEditEntryForm(id: number | string) {
-  const targetEntry = logEntriesStore.logEntries.find(e => e.id === id);
-  if (!targetEntry) { return; }
-  const { date, startVerseId, endVerseId } = targetEntry;
-  useLogEntryEditorStore().openEditor({ id, date, startVerseId, endVerseId });
-}
-
-function continueReadingPassage(passage: { endVerseId: number }) {
-  const nextVerseId = Bible.getNextReadingVerseId(passage.endVerseId, userSettingsStore.settings.includeDeuterocanonical);
-  if (!nextVerseId) { return; }
-  const { book, chapter } = Bible.parseVerseId(nextVerseId);
-  openPassageInBible({
-    startVerseId: nextVerseId,
-    endVerseId: Bible.getLastBookChapterVerseId(book, chapter),
-  });
-}
-
-function takeNoteOnPassage(passage: { startVerseId: number; endVerseId: number }) {
-  usePassageNoteEditorStore().openEditor({
-    passages: [{ startVerseId: passage.startVerseId, endVerseId: passage.endVerseId }],
-    content: '',
-  });
-}
-
-function viewNotesForPassage(passage: { startVerseId: number; endVerseId: number }) {
-  const q = encodePassageNotesQueryToRoute({
-    filterPassageStartVerseId: passage.startVerseId,
-    filterPassageEndVerseId: passage.endVerseId,
-    offset: 0,
-  });
-  router.push({ path: localePath('notes'), query: q as Record<string, string | string[]> });
 }
 
 function selectDate(date: string | null) {
