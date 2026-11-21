@@ -23,17 +23,17 @@
 </template>
 
 <script setup lang="ts">
-type TagOption = { id: string | number; label?: string; color?: string; [key: string]: unknown };
+type TagOption = { id: string; label?: string; color?: string; [key: string]: unknown };
 
 const props = withDefaults(defineProps<{
   passageNoteTags?: TagOption[];
-  selectedTagIds?: Array<string | number>;
+  selectedTagIds?: Array<string>;
 }>(), {
   passageNoteTags: () => [],
   selectedTagIds: () => [],
 });
 
-const emit = defineEmits<{ change: [tagIds: Array<string | number>] }>();
+const emit = defineEmits<{ change: [tagIds: Array<string>] }>();
 
 const { t } = useI18n();
 
@@ -48,7 +48,7 @@ function passageNoteTagStyle(tag: TagOption) {
   return { '--tag-color': tag?.color || 'var(--mbl-bg-disabled)' };
 }
 
-function toggle(tagId: string | number) {
+function toggle(tagId: string) {
   const selected = new Set(props.selectedTagIds ?? []);
   if (selected.has(tagId)) {
     selected.delete(tagId);

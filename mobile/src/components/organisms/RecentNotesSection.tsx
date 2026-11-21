@@ -1,7 +1,7 @@
+import type { PassageNote } from "@mybiblelog/shared";
 import { router } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import type { PassageNote } from "@/src/api/notesApi";
 import { spacing } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { getNoteMenuTitle } from "@/src/notes/noteMenuTitle";

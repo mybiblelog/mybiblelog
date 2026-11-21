@@ -135,6 +135,7 @@
 </template>
 
 <script setup lang="ts">
+import { beginPasswordReset, completeEmailChange, completePasswordReset, validatePasswordResetCode, verifyEmail } from '@mybiblelog/shared';
 import AppModal from '~/components/popups/AppModal.vue';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import type { ApiErrorDetail } from '~/helpers/api-error';
@@ -251,13 +252,13 @@ function showVerifiedNotice() {
 }
 
 async function submitVerify() {
-  await $http.post('/api/auth/verify-email', { email: store.email, code: code.value });
+  await verifyEmail($http, { email: store.email, code: code.value });
   await showVerifiedNotice();
   await completeSignedIn();
 }
 
 async function submitChangeEmail() {
-  await $http.post('/api/auth/change-email/complete', { email: store.email, code: code.value });
+  await completeEmailChange($http, { email: store.email, code: code.value });
   await showVerifiedNotice();
   await authStore.refreshUser();
   postAuthEvent({ type: 'completed', flow: store.flow, email: store.email });
@@ -278,7 +279,7 @@ async function submitEmailRequest() {
   submitting.value = true;
   formError.value = null;
   try {
-    await $http.post('/api/auth/password/reset', { email });
+    await beginPasswordReset($http, { email });
     store.email = email;
     requestSent.value = true;
     focusCode();
@@ -292,11 +293,8 @@ async function submitEmailRequest() {
 }
 
 async function validateResetCode() {
-  const { data } = await $http.post<{ valid: boolean }>(
-    '/api/auth/password/reset/validate',
-    { email: store.email, code: code.value },
-  );
-  if (!data.valid) {
+  const valid = await validatePasswordResetCode($http, { email: store.email, code: code.value });
+  if (!valid) {
     formError.value = t('code_invalid');
     code.value = '';
     focusCode();
@@ -334,7 +332,7 @@ async function submitResetComplete() {
   }
   submitting.value = true;
   try {
-    await $http.post('/api/auth/password/reset/complete', {
+    await completePasswordReset($http, {
       email: store.email,
       code: code.value,
       newPassword: newPassword.value,

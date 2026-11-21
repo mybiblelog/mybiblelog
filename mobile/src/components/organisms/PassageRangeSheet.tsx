@@ -1,7 +1,6 @@
-import { Bible } from "@mybiblelog/shared";
+import { Bible, type NotePassage } from "@mybiblelog/shared";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import type { NotePassage } from "@/src/api/notesApi";
 import { radius, spacing, useTheme } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { usePassageSelection } from "@/src/notes/usePassageSelection";

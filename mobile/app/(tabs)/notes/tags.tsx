@@ -1,7 +1,11 @@
+import {
+  type PassageNoteTag,
+  type PassageNoteTagSortOrder,
+  TagSortOrders,
+} from "@mybiblelog/shared";
 import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import type { PassageNoteTag } from "@/src/api/tagsApi";
 import {
   AnimatedList,
   Button,
@@ -24,7 +28,6 @@ import {
 import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { translateApiErrorCode } from "@/src/i18n/translateApiError";
-import { TagSortOrders, type PassageNoteTagSortOrder } from "@/src/notes/tagSort";
 import { notesActions } from "@/src/stores/passageNotes";
 import { tagActions, useTagsSortOrder, useTagsState } from "@/src/stores/passageNoteTags";
 import { useToast } from "@/src/toast/ToastProvider";

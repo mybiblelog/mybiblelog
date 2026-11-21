@@ -1,6 +1,6 @@
+import type { PassageNote } from "@mybiblelog/shared";
 import { router } from "expo-router";
 import { StyleSheet, View } from "react-native";
-import type { PassageNote } from "@/src/api/notesApi";
 import { spacing } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { useIsUnauthenticated } from "@/src/stores/auth";

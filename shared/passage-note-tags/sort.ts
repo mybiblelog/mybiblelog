@@ -20,7 +20,8 @@ export const TagSortOrders = [
 
 export type PassageNoteTagSortOrder = typeof TagSortOrders[number];
 
-export type PassageNoteTag = {
+/** The fields the comparators read; any tag shape carrying them sorts. */
+export type SortablePassageNoteTag = {
   id: number | string;
   _id?: string;
   label?: string;
@@ -42,7 +43,7 @@ const getPassageNoteTagSortKey = (label: unknown): string => {
     .replace(/^[^\p{L}\p{N}]+/u, '');
 };
 
-export const compareByLabelAsc = (a: PassageNoteTag, b: PassageNoteTag): number => {
+export const compareByLabelAsc = (a: SortablePassageNoteTag, b: SortablePassageNoteTag): number => {
   const aKey = getPassageNoteTagSortKey(a?.label);
   const bKey = getPassageNoteTagSortKey(b?.label);
   const byKey = passageNoteTagLabelCollator.compare(aKey, bKey);
@@ -67,7 +68,7 @@ export const getObjectIdCreatedMsOrNull = (id: unknown): number | null => {
   return seconds * 1000;
 };
 
-export const getTagCreatedMsOrNull = (tag: PassageNoteTag | null | undefined): number | null => {
+export const getTagCreatedMsOrNull = (tag: SortablePassageNoteTag | null | undefined): number | null => {
   return getDateMsOrNull(tag?.createdAt) ??
     getObjectIdCreatedMsOrNull(tag?.id) ??
     getObjectIdCreatedMsOrNull(tag?._id);
@@ -131,7 +132,7 @@ const compareNullableNumberAscNullLast = (a: number | null, b: number | null): n
 
 export const makeTagComparator = (
   sortOrder: PassageNoteTagSortOrder,
-): ((a: PassageNoteTag, b: PassageNoteTag) => number) => {
+): ((a: SortablePassageNoteTag, b: SortablePassageNoteTag) => number) => {
   switch (sortOrder) {
   case 'createdAt:descending':
     return (a, b) => {
@@ -183,10 +184,10 @@ export const normalizeSortOrder = (sortOrder: unknown): PassageNoteTagSortOrder 
     : 'label:ascending';
 };
 
-export const sortPassageNoteTags = (
-  tags: PassageNoteTag[],
+export const sortPassageNoteTags = <T extends SortablePassageNoteTag>(
+  tags: T[],
   sortOrder: PassageNoteTagSortOrder,
-): PassageNoteTag[] => {
+): T[] => {
   const comparator = makeTagComparator(normalizeSortOrder(sortOrder));
-  return tags.sort(comparator);
+  return [...tags].sort(comparator);
 };

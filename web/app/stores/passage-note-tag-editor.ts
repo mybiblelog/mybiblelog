@@ -5,7 +5,7 @@ import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
 import type { PassageNoteTag } from '~/stores/passage-note-tags';
 
 export type PassageNoteTagModel = {
-  id: number | string | null;
+  id: string | null;
   label: string;
   color: string;
   description: string;

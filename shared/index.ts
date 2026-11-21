@@ -94,7 +94,7 @@ export {
   makeTagComparator,
   normalizeSortOrder,
   sortPassageNoteTags,
-  type PassageNoteTag,
+  type SortablePassageNoteTag,
   type PassageNoteTagSortOrder,
 } from './passage-note-tags/sort.js';
 export {
@@ -125,6 +125,69 @@ export {
   type CreateLogEntryInput,
   type UpdateLogEntryInput,
 } from './log-entry/api.js';
+export {
+  TAG_LABEL_MAX_LENGTH,
+  TAG_DESCRIPTION_MAX_LENGTH,
+  parsePassageNoteTag,
+  fetchPassageNoteTags,
+  createPassageNoteTag,
+  updatePassageNoteTag,
+  deletePassageNoteTag,
+  type PassageNoteTag,
+  type PassageNoteTagInput,
+  type UpdatePassageNoteTagInput,
+} from './passage-note-tags/api.js';
+export {
+  defaultPassageNotesSort,
+  buildPassageNotesQueryString,
+  parsePassageNote,
+  parsePassageNotes,
+  fetchPassageNotesPage,
+  fetchBookNoteCounts,
+  createPassageNote,
+  updatePassageNote,
+  deletePassageNote,
+  type NotePassage,
+  type PassageNote,
+  type PassageNoteInput,
+  type UpdatePassageNoteInput,
+  type PassageNotesQuery,
+  type PassageNotesPageMeta,
+  type PassageNotesSortOn,
+  type PassageNotesSortDirection,
+  type PassageNotesTagMatching,
+  type PassageNotesPassageMatching,
+} from './passage-notes/api.js';
+export {
+  parseServerUserSettings,
+  fetchUserSettings,
+  patchUserSettings,
+  deleteUserAccount,
+  type ServerUserSettings,
+} from './user-settings/api.js';
+export {
+  FEEDBACK_MESSAGE_MAX_LENGTH,
+  postFeedback,
+  type FeedbackKind,
+  type FeedbackInput,
+} from './feedback/api.js';
+export {
+  login,
+  loginWithGoogleIdToken,
+  fetchAuthUser,
+  logout,
+  register,
+  verifyEmail,
+  resendVerificationEmail,
+  beginPasswordReset,
+  validatePasswordResetCode,
+  completePasswordReset,
+  beginEmailChange,
+  completeEmailChange,
+  type AuthUser,
+  type AuthSession,
+  type ResendVerificationResult,
+} from './auth/api.js';
 export type { HttpClient, ApiResponse } from './platform/http-client.js';
 export { identityTranslator, type Translator } from './platform/translator.js';
 

@@ -1,12 +1,12 @@
-import { Bible } from "@mybiblelog/shared";
+import {
+  Bible,
+  defaultPassageNotesSort,
+  type PassageNotesQuery,
+  type PassageNotesSortDirection,
+  type PassageNotesSortOn,
+} from "@mybiblelog/shared";
 import { useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import {
-  type NotesQuery,
-  type NotesSortDirection,
-  type NotesSortOn,
-  defaultNotesSort,
-} from "@/src/api/notesApi";
 import { spacing } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { useTagsList } from "@/src/stores/passageNoteTags";
@@ -23,13 +23,13 @@ import { TagSelectorSheet } from "./TagSelectorSheet";
 
 type Props = {
   visible: boolean;
-  appliedQuery: NotesQuery;
-  onApply: (update: Partial<NotesQuery>) => void;
+  appliedQuery: PassageNotesQuery;
+  onApply: (update: Partial<PassageNotesQuery>) => void;
   onClose: () => void;
 };
 
 type QueryDraft = Pick<
-  NotesQuery,
+  PassageNotesQuery,
   | "searchText"
   | "filterTags"
   | "filterTagMatching"
@@ -41,7 +41,7 @@ type QueryDraft = Pick<
   | "limit"
 >;
 
-const toDraft = (query: NotesQuery): QueryDraft => ({
+const toDraft = (query: PassageNotesQuery): QueryDraft => ({
   searchText: query.searchText,
   filterTags: [...query.filterTags],
   filterTagMatching: query.filterTagMatching,
@@ -54,12 +54,15 @@ const toDraft = (query: NotesQuery): QueryDraft => ({
 });
 
 /** The sort as one segmented-control value, since it spans two query fields. */
-type SortToken = `${NotesSortOn}:${NotesSortDirection}`;
+type SortToken = `${PassageNotesSortOn}:${PassageNotesSortDirection}`;
 
 const toSortToken = (draft: QueryDraft): SortToken => `${draft.sortOn}:${draft.sortDirection}`;
 
 const fromSortToken = (token: SortToken): Pick<QueryDraft, "sortOn" | "sortDirection"> => {
-  const [sortOn, sortDirection] = token.split(":") as [NotesSortOn, NotesSortDirection];
+  const [sortOn, sortDirection] = token.split(":") as [
+    PassageNotesSortOn,
+    PassageNotesSortDirection,
+  ];
   return { sortOn, sortDirection };
 };
 
@@ -73,14 +76,14 @@ function withSortForPassageChange(draft: QueryDraft, hadPassageFilter: boolean):
     draft.filterPassageStartVerseId && draft.filterPassageEndVerseId
   );
   if (hasPassageFilter === hadPassageFilter) return draft;
-  const previousDefault = defaultNotesSort(hadPassageFilter);
+  const previousDefault = defaultPassageNotesSort(hadPassageFilter);
   if (
     draft.sortOn !== previousDefault.sortOn ||
     draft.sortDirection !== previousDefault.sortDirection
   ) {
     return draft;
   }
-  return { ...draft, ...defaultNotesSort(hasPassageFilter) };
+  return { ...draft, ...defaultPassageNotesSort(hasPassageFilter) };
 }
 
 /**

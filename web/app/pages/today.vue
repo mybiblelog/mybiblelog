@@ -164,7 +164,7 @@ import { useDateVerseCountsStore } from '~/stores/date-verse-counts';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 import { useReadingSuggestionsStore } from '~/stores/reading-suggestions';
 import type { ReadingSuggestionPassage } from '~/stores/reading-suggestions';
-import { usePassageNotesStore, type PassageNoteListItem } from '~/stores/passage-notes';
+import { usePassageNotesStore, type PassageNote as PassageNoteRecord } from '~/stores/passage-notes';
 import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
 import { useUserSettingsStore } from '~/stores/user-settings';
 import { useDialogStore } from '~/stores/dialog';
@@ -327,12 +327,12 @@ const openNewNoteEditor = () => {
   passageNoteEditorStore.openEditor();
 };
 
-const actionsForRecentNote = (note: PassageNoteListItem) => [
+const actionsForRecentNote = (note: PassageNoteRecord) => [
   { label: t('edit'), callback: () => passageNoteEditorStore.openEditor(note as Parameters<typeof passageNoteEditorStore.openEditor>[0]) },
   { label: t('delete'), callback: () => deletePassageNote(note.id) },
 ];
 
-const deletePassageNote = async (id: number | string) => {
+const deletePassageNote = async (id: string) => {
   const confirmed = await dialogStore.confirm({
     message: t('are_you_sure_you_want_to_delete_this_note'),
     confirmButtonType: 'danger',

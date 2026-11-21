@@ -1,4 +1,4 @@
-import type { NoteInput } from "@/src/api/notesApi";
+import type { PassageNoteInput } from "@mybiblelog/shared";
 import type { PendingNoteMutation, StoredLocalNote } from "@/src/storage/passageNotes";
 
 /**
@@ -56,7 +56,7 @@ export function normalizeNoteQueue(mutations: PendingNoteMutation[]): PendingNot
 export function coalesceCreate(
   mutations: PendingNoteMutation[],
   clientId: string,
-  input: NoteInput
+  input: PassageNoteInput
 ): PendingNoteMutation[] {
   // A pending delete wins — the user wants the note gone.
   const hasDelete = mutations.some((m) => m.clientId === clientId && m.type === "delete");
@@ -70,7 +70,7 @@ export function coalesceUpdate(
   mutations: PendingNoteMutation[],
   clientId: string,
   id: string | undefined,
-  input: NoteInput
+  input: PassageNoteInput
 ): PendingNoteMutation[] {
   const hasDelete = mutations.some((m) => m.clientId === clientId && m.type === "delete");
   if (hasDelete) return mutations;

@@ -1,5 +1,5 @@
 import { mapFormErrors } from "@/src/api/apiError";
-import { beginEmailChange } from "@/src/api/authApi";
+import { sendEmailChangeCode } from "@/src/api/authApi";
 import { useAuth } from "@/src/stores/auth";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { translateApiError } from "@/src/i18n/translateApiError";
@@ -67,7 +67,7 @@ export default function ChangeEmail() {
 
     setIsSubmitting(true);
     try {
-      const r = await beginEmailChange(token, trimmed, password);
+      const r = await sendEmailChangeCode(token, trimmed, password);
       if (!r.ok) {
         const fieldMap = mapFormErrors(r.error);
         setNewEmailError(fieldMap.newEmail ? translateApiError(t, fieldMap.newEmail) : null);

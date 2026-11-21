@@ -2,12 +2,12 @@ import type { ComputedRef, MaybeRefOrGetter } from 'vue';
 import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
 
 export type ResolvedPassageNoteTag = {
-  id: string | number;
+  id: string;
   label: string;
   color: string;
 };
 
-type TagLike = { id: string | number; label?: string; color?: string };
+type TagLike = { id: string; label?: string; color?: string };
 
 const DEFAULT_TAG_COLOR = 'var(--mbl-text-strong)';
 
@@ -24,7 +24,7 @@ const DEFAULT_TAG_COLOR = 'var(--mbl-text-strong)';
  * - `defaultColor` — fallback colour for a tag with no colour and for unknown/placeholder tags.
  */
 export function useResolvedPassageNoteTags(
-  tagIds: MaybeRefOrGetter<Array<string | number> | undefined | null>,
+  tagIds: MaybeRefOrGetter<Array<string> | undefined | null>,
   options: {
     tags?: MaybeRefOrGetter<TagLike[] | undefined | null>;
     placeholderLabel?: () => string;

@@ -1,3 +1,5 @@
+import { fetchUserSettings } from '@mybiblelog/shared';
+
 const REDIRECT_MAP = {
   today: 'today',
   books: 'books',
@@ -10,8 +12,7 @@ export default defineNuxtRouteMiddleware(async () => {
   const nuxtApp = useNuxtApp();
   const localePath = useLocalePath();
   try {
-    const { data } = await nuxtApp.$http.get<{ startPage?: string }>('/api/settings');
-    const startPage = data?.startPage;
+    const { startPage } = await fetchUserSettings(nuxtApp.$http);
     if (startPage && startPage !== 'start') {
       // Own-key check, so inherited names like `constructor` never match.
       if (Object.hasOwn(REDIRECT_MAP, startPage)) {

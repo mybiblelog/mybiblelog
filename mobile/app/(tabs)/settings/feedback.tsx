@@ -1,9 +1,6 @@
+import { FEEDBACK_MESSAGE_MAX_LENGTH, type FeedbackKind } from "@mybiblelog/shared";
 import { ApiError, mapFormErrors } from "@/src/api/apiError";
-import {
-  FEEDBACK_MESSAGE_MAX_LENGTH,
-  type FeedbackKind,
-  submitFeedback,
-} from "@/src/api/feedbackApi";
+import { submitFeedback } from "@/src/api/feedbackApi";
 import { useAuth } from "@/src/stores/auth";
 import { useCanReachServer } from "@/src/stores/connectivity";
 import { useT } from "@/src/i18n/LocaleProvider";

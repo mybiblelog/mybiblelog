@@ -76,6 +76,7 @@
 </template>
 
 <script setup lang="ts">
+import { FEEDBACK_MESSAGE_MAX_LENGTH, postFeedback, type FeedbackInput } from '@mybiblelog/shared';
 import ContentPageFooter from '~/components/content/PageFooter.vue';
 import { useAuthStore } from '~/stores/auth';
 import { useDialogStore } from '~/stores/dialog';
@@ -83,7 +84,6 @@ import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import {
-  FEEDBACK_MESSAGE_MAX_LENGTH,
   clearFeedbackErrorsOnEdit,
   makeFeedbackFieldError,
   validateFeedbackForm,
@@ -96,7 +96,7 @@ useHead({ title: () => t('feedback_form'), meta: [{ name: 'robots', content: 'no
 const authStore = useAuthStore();
 const dialogStore = useDialogStore();
 
-const initialForm = () => ({
+const initialForm = (): FeedbackInput => ({
   email: authStore.user?.email || '',
   kind: 'bug',
   message: '',
@@ -115,7 +115,7 @@ async function submitFeedback() {
   if (Object.keys(errors.value).length) { return; }
   submitting.value = true;
   try {
-    await $http.post('/api/feedback', {
+    await postFeedback($http, {
       email: form.value.email,
       kind: form.value.kind,
       message: form.value.message,

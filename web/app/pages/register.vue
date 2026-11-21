@@ -52,6 +52,7 @@
 
 <script setup lang="ts">
 import GoogleLoginButton from '~/components/forms/GoogleLoginButton.vue';
+import { register } from '@mybiblelog/shared';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
@@ -107,7 +108,7 @@ const onSubmit = async () => {
   submitting.value = true;
   email.value = email.value.trim();
   try {
-    await $http.post('/api/auth/register', { email: email.value, password: password.value, locale: locale.value });
+    await register($http, { email: email.value, password: password.value, locale: locale.value });
   }
   catch (err) {
     errors.value = (err instanceof ApiError ? mapFormErrors(err) : null) ?? mapFormErrors(new UnknownApiError());

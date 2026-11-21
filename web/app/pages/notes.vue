@@ -138,10 +138,10 @@ import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
 import { useUserSettingsStore } from '~/stores/user-settings';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
-import { decodePassageNotesRouteQuery, defaultPassageNotesSort, encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
-import type { PassageNotesQuery } from '~/helpers/passage-notes-route-query';
+import { defaultPassageNotesSort, type PassageNotesQuery } from '@mybiblelog/shared';
+import { decodePassageNotesRouteQuery, encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
 import { buildResultsSummary } from '~/helpers/results-summary';
-import type { PassageNoteListItem } from '~/stores/passage-notes';
+import type { PassageNote as PassageNoteRecord } from '~/stores/passage-notes';
 
 definePageMeta({ middleware: ['auth'] });
 const { t, n } = useI18n();
@@ -226,10 +226,10 @@ function getReadingUrl(bookIndex: number, chapterIndex: number) {
   return useUserSettingsStore().getReadingUrl(bookIndex, chapterIndex);
 }
 
-function actionsForNote(note: PassageNoteListItem) {
+function actionsForNote(note: PassageNoteRecord) {
   return [
     { label: t('edit'), callback: () => openEditNoteEditor(note) },
-    { label: t('delete'), callback: () => deleteNote(note.id as string | number) },
+    { label: t('delete'), callback: () => deleteNote(note.id) },
   ];
 }
 
@@ -251,11 +251,11 @@ function openNewNoteEditor() {
   passageNoteEditorStore.openEditor(null);
 }
 
-function openEditNoteEditor(note: PassageNoteListItem) {
+function openEditNoteEditor(note: PassageNoteRecord) {
   passageNoteEditorStore.openEditor(note as Parameters<typeof passageNoteEditorStore.openEditor>[0]);
 }
 
-async function deleteNote(id: string | number) {
+async function deleteNote(id: string) {
   const confirmed = await useDialogStore().confirm({
     message: t('are_you_sure_delete'),
     confirmButtonType: 'danger',

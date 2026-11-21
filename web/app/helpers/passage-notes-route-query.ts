@@ -1,26 +1,12 @@
-import { Bible } from '@mybiblelog/shared';
+import {
+  Bible,
+  defaultPassageNotesSort,
+  type PassageNotesQuery,
+} from '@mybiblelog/shared';
 import { clamp, parseIntOr, pickEnum, MAX_PAGE_SIZE } from './route-query-codec';
-
-export type PassageNotesSortDirection = 'ascending' | 'descending';
-export type PassageNotesSortOn = 'createdAt' | 'passage';
-export type PassageNotesTagMatching = 'any' | 'all' | 'exact';
-export type PassageNotesPassageMatching = 'inclusive' | 'exclusive';
 
 const SORT_ON_VALUES = ['createdAt', 'passage'] as const;
 const SORT_DIRECTION_VALUES = ['ascending', 'descending'] as const;
-
-export type PassageNotesQuery = {
-  limit: number;
-  offset: number;
-  sortOn: PassageNotesSortOn;
-  sortDirection: PassageNotesSortDirection;
-  filterTags: string[];
-  filterTagMatching: PassageNotesTagMatching;
-  searchText: string;
-  filterPassageStartVerseId: number;
-  filterPassageEndVerseId: number;
-  filterPassageMatching: PassageNotesPassageMatching;
-};
 
 type RouteQueryLike = Record<string, unknown>;
 type RouteQueryOut = Record<string, string | string[]>;
@@ -37,21 +23,6 @@ const DEFAULT_PASSAGE_NOTES_QUERY: PassageNotesQuery = {
   filterPassageEndVerseId: 0,
   filterPassageMatching: 'inclusive',
 };
-
-/**
- * Sorting defaults to scripture order whenever a passage filter is in effect —
- * reading order is the point of a passage-scoped list. Both the decoder and the
- * encoder route through this so URL round-trips stay symmetric, which also means
- * deep links that only carry passage params land in Passage Order for free.
- */
-export function defaultPassageNotesSort(hasPassageFilter: boolean): {
-  sortOn: PassageNotesSortOn;
-  sortDirection: PassageNotesSortDirection;
-} {
-  return hasPassageFilter
-    ? { sortOn: 'passage', sortDirection: 'ascending' }
-    : { sortOn: 'createdAt', sortDirection: 'descending' };
-}
 
 function asStringArray(value: unknown): string[] {
   if (value === null || value === undefined) { return []; }

@@ -1,5 +1,5 @@
+import type { PassageNote } from "@mybiblelog/shared";
 import { type ReactNode, useCallback, useState } from "react";
-import type { PassageNote } from "@/src/api/notesApi";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { getNoteMenuTitle } from "@/src/notes/noteMenuTitle";
 import { notesActions, useNotesQuery } from "@/src/stores/passageNotes";

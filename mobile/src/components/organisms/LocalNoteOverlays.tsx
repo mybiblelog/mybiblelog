@@ -1,5 +1,5 @@
+import type { PassageNote, PassageNoteInput } from "@mybiblelog/shared";
 import { type ReactNode, useCallback, useState } from "react";
-import type { NoteInput, PassageNote } from "@/src/api/notesApi";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { getNoteMenuTitle } from "@/src/notes/noteMenuTitle";
 import { offlineNoteActions } from "@/src/stores/offlineNotes";
@@ -17,7 +17,7 @@ type LocalNoteOverlaysApi = {
   overlays: ReactNode;
 };
 
-const toInput = (input: NoteInput & { id?: string }): NoteInput => ({
+const toInput = (input: PassageNoteInput & { id?: string }): PassageNoteInput => ({
   content: input.content,
   passages: input.passages,
   tags: input.tags,

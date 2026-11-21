@@ -1,6 +1,6 @@
+import type { PassageNoteInput } from "@mybiblelog/shared";
 import { create } from "zustand";
 import {
-  type NoteInput,
   createNote as apiCreateNote,
   deleteNote as apiDeleteNote,
   updateNote as apiUpdateNote,
@@ -54,8 +54,8 @@ export type OfflineNotesState =
 
 type OfflineNotesStore = {
   state: OfflineNotesState;
-  createNote: (input: NoteInput) => Promise<StoredLocalNote | null>;
-  updateNote: (clientId: string, input: NoteInput) => Promise<StoredLocalNote | null>;
+  createNote: (input: PassageNoteInput) => Promise<StoredLocalNote | null>;
+  updateNote: (clientId: string, input: PassageNoteInput) => Promise<StoredLocalNote | null>;
   deleteNote: (clientId: string) => Promise<boolean>;
   syncNow: () => Promise<void>;
 };
@@ -215,8 +215,8 @@ export function useIsSyncingNotes(): boolean {
 
 /** Stable actions — safe to call from event handlers without subscribing. */
 export const offlineNoteActions = {
-  createNote: (input: NoteInput) => useOfflineNotesStore.getState().createNote(input),
-  updateNote: (clientId: string, input: NoteInput) =>
+  createNote: (input: PassageNoteInput) => useOfflineNotesStore.getState().createNote(input),
+  updateNote: (clientId: string, input: PassageNoteInput) =>
     useOfflineNotesStore.getState().updateNote(clientId, input),
   deleteNote: (clientId: string) => useOfflineNotesStore.getState().deleteNote(clientId),
   syncNow: () => useOfflineNotesStore.getState().syncNow(),

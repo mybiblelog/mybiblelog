@@ -1,19 +1,18 @@
 import { defineStore } from 'pinia';
+import {
+  createPassageNote,
+  deletePassageNote,
+  fetchBookNoteCounts,
+  fetchPassageNotesPage,
+  updatePassageNote,
+  type PassageNote,
+  type PassageNoteInput,
+  type PassageNotesQuery,
+  type UpdatePassageNoteInput,
+} from '@mybiblelog/shared';
 import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
-import type { PassageNotesQuery } from '~/helpers/passage-notes-route-query';
 
-export type { PassageNotesQuery };
-
-export type PassageNoteListItem = {
-  id: number | string;
-  // Present on list/search results; omitted from the single-note create/update/get
-  // responses (see `toPassageNoteJSON` on the API side).
-  createdAt?: string;
-  updatedAt?: string;
-  passages: Array<{ startVerseId: number; endVerseId: number; _id?: string }>;
-  tags: Array<number | string>;
-  content: string;
-};
+export type { PassageNote, PassageNotesQuery };
 
 export type PassageNotesPagination = {
   limit: number;
@@ -63,57 +62,12 @@ const emptyPagination: PassageNotesPagination = {
 
 export type PassageNotesState = {
   loading: boolean;
-  activePassageNote: PassageNoteListItem | null;
+  activePassageNote: PassageNote | null;
   query: PassageNotesQuery;
-  passageNotes: PassageNoteListItem[];
+  passageNotes: PassageNote[];
   pagination: PassageNotesPagination;
   hasLoadedOnce: boolean;
   bookNoteCounts: Record<number, number>;
-};
-
-type ApiMetaPagination = {
-  offset?: number;
-  limit?: number;
-  size?: number;
-};
-
-const buildQueryString = (query: PassageNotesQuery): string => {
-  const params = new URLSearchParams();
-
-  if (Array.isArray(query.filterTags) && query.filterTags.length) {
-    for (const filterTag of query.filterTags) {
-      params.append('filterTags', `${filterTag}`);
-    }
-  }
-  if (query.searchText) {
-    params.set('searchText', query.searchText);
-  }
-  if (query.filterTagMatching) {
-    params.set('filterTagMatching', query.filterTagMatching);
-  }
-  // TECH-DEBT(usfm-client-migration): send USFM `filterPassage` instead of the verse id pair.
-  if (query.filterPassageStartVerseId && query.filterPassageEndVerseId) {
-    params.set('filterPassageStartVerseId', `${query.filterPassageStartVerseId}`);
-    params.set('filterPassageEndVerseId', `${query.filterPassageEndVerseId}`);
-    if (query.filterPassageMatching) {
-      params.set('filterPassageMatching', query.filterPassageMatching);
-    }
-  }
-  if (query.sortOn) {
-    params.set('sortOn', query.sortOn);
-  }
-  if (query.sortDirection) {
-    params.set('sortDirection', query.sortDirection);
-  }
-  if (query.limit) {
-    params.set('limit', `${query.limit}`);
-  }
-  if (query.offset) {
-    params.set('offset', `${query.offset}`);
-  }
-
-  const out = params.toString();
-  return out ? `?${out}` : '';
 };
 
 export const usePassageNotesStore = defineStore('passage-notes', {
@@ -135,8 +89,7 @@ export const usePassageNotesStore = defineStore('passage-notes', {
     async loadBookNoteCounts(): Promise<void> {
       const http = useHttp();
       try {
-        const { data } = await http.get<Record<number, number>>('/api/passage-notes/count/books');
-        this.bookNoteCounts = data || {};
+        this.bookNoteCounts = await fetchBookNoteCounts(http);
       }
       catch {
         // Leave bookNoteCounts as-is (an empty map) on error.
@@ -185,17 +138,8 @@ export const usePassageNotesStore = defineStore('passage-notes', {
       const http = useHttp();
       this.loading = true;
       try {
-        const search = buildQueryString(this.query);
-        const result = await http.get<PassageNoteListItem[]>(`/api/passage-notes${search}`);
-        const results = result.data;
-        const meta = result.meta;
-
-        const pagination = (meta as { pagination?: ApiMetaPagination } | undefined)?.pagination || {};
-        const offset = Number(pagination.offset || 0);
-        const limit = Number(pagination.limit || this.query.limit || 10);
-        const size = Number(pagination.size || 0);
-
-        this.passageNotes = Array.isArray(results) ? results : [];
+        const { notes, meta: { offset, limit, size } } = await fetchPassageNotesPage(http, this.query);
+        this.passageNotes = notes;
         this.pagination = {
           limit,
           page: Math.floor(offset / limit) + 1,
@@ -214,38 +158,32 @@ export const usePassageNotesStore = defineStore('passage-notes', {
     // in place after a write means reloading the current page rather than
     // optimistically splicing the result into `passageNotes` — a local merge
     // can't reproduce the server's sort position or the page's total count.
-    async createPassageNote(newPassageNote: Record<string, unknown>): Promise<PassageNoteListItem | null> {
+    async createPassageNote(newPassageNote: Partial<PassageNoteInput>): Promise<PassageNote> {
       const http = useHttp();
       const passageNoteTagsStore = usePassageNoteTagsStore();
-      const { data } = await http.post<PassageNoteListItem>('/api/passage-notes', newPassageNote);
-      if (data) {
-        await Promise.all([
-          this.hasLoadedOnce ? this.loadPassageNotesPage() : Promise.resolve(),
-          refreshPassageNoteTags(passageNoteTagsStore),
-        ]);
-      }
-      return data || null;
+      const created = await createPassageNote(http, newPassageNote);
+      await Promise.all([
+        this.hasLoadedOnce ? this.loadPassageNotesPage() : Promise.resolve(),
+        refreshPassageNoteTags(passageNoteTagsStore),
+      ]);
+      return created;
     },
 
-    async updatePassageNote(passageNoteUpdate: Record<string, unknown> & { id: number | string }): Promise<PassageNoteListItem | null> {
+    async updatePassageNote(passageNoteUpdate: UpdatePassageNoteInput): Promise<PassageNote> {
       const http = useHttp();
       const passageNoteTagsStore = usePassageNoteTagsStore();
-      const { id } = passageNoteUpdate;
-      const { data } = await http.patch<PassageNoteListItem>(`/api/passage-notes/${id}`, passageNoteUpdate);
-      if (data) {
-        await Promise.all([
-          this.hasLoadedOnce ? this.loadPassageNotesPage() : Promise.resolve(),
-          refreshPassageNoteTags(passageNoteTagsStore),
-        ]);
-      }
-      return data || null;
+      const updated = await updatePassageNote(http, passageNoteUpdate);
+      await Promise.all([
+        this.hasLoadedOnce ? this.loadPassageNotesPage() : Promise.resolve(),
+        refreshPassageNoteTags(passageNoteTagsStore),
+      ]);
+      return updated;
     },
 
-    async deletePassageNote(passageNoteId: number | string): Promise<boolean> {
+    async deletePassageNote(passageNoteId: string): Promise<boolean> {
       const http = useHttp();
       const passageNoteTagsStore = usePassageNoteTagsStore();
-      const { data } = await http.delete<unknown>(`/api/passage-notes/${passageNoteId}`);
-      if (data) {
+      if (await deletePassageNote(http, passageNoteId)) {
         await Promise.all([
           this.loadPassageNotesPage(),
           refreshPassageNoteTags(passageNoteTagsStore),

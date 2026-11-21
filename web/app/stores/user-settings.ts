@@ -2,6 +2,8 @@ import { defineStore } from 'pinia';
 import type { BibleApps } from '@mybiblelog/shared';
 import {
   BibleVersions,
+  fetchUserSettings,
+  patchUserSettings,
   getAppReadingUrl,
   getDefaultBibleApp,
   getDefaultBibleVersion,
@@ -36,18 +38,6 @@ export type UserSettingsUpdate = Partial<Pick<UserSettings,
   | 'locale'
   | 'includeDeuterocanonical'
 >>;
-
-// The `/api/settings` payload. Fields are validated at runtime below (the
-// server contract isn't guaranteed), so each is narrowed before use.
-type ServerSettingsResponse = {
-  lookBackDate?: string;
-  dailyVerseCountGoal?: number;
-  preferredBibleVersion?: string;
-  startPage?: string;
-  passageNoteTagSortOrder?: string;
-  locale?: string;
-  includeDeuterocanonical?: boolean;
-};
 
 const defaultSettings: UserSettings = {
   lookBackDate: '',
@@ -131,16 +121,14 @@ export const useUserSettingsStore = defineStore('user-settings', {
           localStore.set('preferredBibleApp', preferredBibleApp);
         }
 
-        await http.patch('/api/settings', {
-          settings: {
-            lookBackDate,
-            dailyVerseCountGoal,
-            preferredBibleVersion,
-            startPage,
-            passageNoteTagSortOrder,
-            locale,
-            includeDeuterocanonical,
-          },
+        await patchUserSettings(http, {
+          lookBackDate,
+          dailyVerseCountGoal,
+          preferredBibleVersion,
+          startPage,
+          passageNoteTagSortOrder,
+          locale,
+          includeDeuterocanonical,
         });
 
         this.applySettingsUpdate({
@@ -169,7 +157,6 @@ export const useUserSettingsStore = defineStore('user-settings', {
 
     async loadServerSettings(): Promise<void> {
       const http = useHttp();
-      const { data } = await http.get<ServerSettingsResponse>('/api/settings');
       const {
         lookBackDate,
         dailyVerseCountGoal,
@@ -178,21 +165,18 @@ export const useUserSettingsStore = defineStore('user-settings', {
         passageNoteTagSortOrder,
         locale,
         includeDeuterocanonical,
-      } = data || {};
+      } = await fetchUserSettings(http);
 
       this.applySettingsUpdate({
-        lookBackDate: typeof lookBackDate === 'string' ? lookBackDate : undefined,
-        dailyVerseCountGoal: typeof dailyVerseCountGoal === 'number' ? dailyVerseCountGoal : undefined,
-        preferredBibleVersion: (
-          typeof preferredBibleVersion === 'string' &&
-          (BibleVersions as Record<string, unknown>)[preferredBibleVersion]
-        )
+        lookBackDate,
+        dailyVerseCountGoal,
+        preferredBibleVersion: preferredBibleVersion && (BibleVersions as Record<string, unknown>)[preferredBibleVersion]
           ? preferredBibleVersion as PreferredBibleVersion
           : undefined,
-        startPage: typeof startPage === 'string' ? startPage : undefined,
-        passageNoteTagSortOrder: typeof passageNoteTagSortOrder === 'string' ? passageNoteTagSortOrder : undefined,
-        locale: typeof locale === 'string' ? locale : undefined,
-        includeDeuterocanonical: typeof includeDeuterocanonical === 'boolean' ? includeDeuterocanonical : undefined,
+        startPage,
+        passageNoteTagSortOrder,
+        locale,
+        includeDeuterocanonical,
       });
 
       this.isLoaded = true;

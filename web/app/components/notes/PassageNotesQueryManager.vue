@@ -175,8 +175,7 @@ import AppModal from '~/components/popups/AppModal.vue';
 import PassageNoteTagSelector from '~/components/forms/PassageNoteTagSelector.vue';
 import VerseInput from '~/components/forms/VerseInput.vue';
 import { usePassageNoteTagsStore } from '~/stores/passage-note-tags';
-import { defaultPassageNotesSort } from '~/helpers/passage-notes-route-query';
-import type { PassageNotesQuery, PassageNotesSortDirection, PassageNotesSortOn } from '~/helpers/passage-notes-route-query';
+import { defaultPassageNotesSort, type PassageNotesQuery, type PassageNotesSortDirection, type PassageNotesSortOn } from '@mybiblelog/shared';
 
 type DraftPassageRange = { startVerseId: number; endVerseId: number };
 
@@ -195,7 +194,7 @@ type ManagedQuery = Pick<
 
 const props = defineProps<{
   appliedQuery: Partial<PassageNotesQuery>;
-  passageNoteTags?: Array<{ id: string | number; label?: string; color?: string }>;
+  passageNoteTags?: Array<{ id: string; label?: string; color?: string }>;
 }>();
 
 const emit = defineEmits<{ apply: [query: ManagedQuery]; cancel: [] }>();
@@ -314,7 +313,7 @@ function clearTagSelection() {
   setDraft({ filterTags: [], filterTagMatching: 'any' });
 }
 
-function onTagIdsChange(tagIds: Array<string | number>) {
+function onTagIdsChange(tagIds: Array<string>) {
   const nextTagIds = (Array.isArray(tagIds) ? tagIds : []).map(String);
   const hadNoTags = !Array.isArray(draft.value.filterTags) || draft.value.filterTags.length === 0;
   if (nextTagIds.length && draft.value.filterTagMatching === 'exact' && hadNoTags) {

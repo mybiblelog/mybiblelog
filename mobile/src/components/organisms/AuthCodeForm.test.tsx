@@ -1,16 +1,16 @@
 jest.mock("@/src/api/authApi", () => ({
   ...jest.requireActual("@/src/api/authApi"),
   verifyEmailCode: jest.fn(),
-  completeEmailChange: jest.fn(),
-  validatePasswordResetCode: jest.fn(),
-  completePasswordReset: jest.fn(),
+  changeEmailWithCode: jest.fn(),
+  checkPasswordResetCode: jest.fn(),
+  resetPasswordWithCode: jest.fn(),
 }));
 
 import type { TestInstance } from "test-renderer";
 import {
-  completeEmailChange,
-  completePasswordReset,
-  validatePasswordResetCode,
+  changeEmailWithCode,
+  resetPasswordWithCode,
+  checkPasswordResetCode,
   verifyEmailCode,
 } from "@/src/api/authApi";
 import { fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/renderWithProviders";
@@ -66,7 +66,7 @@ describe("AuthCodeForm", () => {
   });
 
   it("change-email: submits the code against the current email and establishes a session using resultEmail", async () => {
-    (completeEmailChange as jest.Mock).mockResolvedValue({ ok: true, token: "tok-2" });
+    (changeEmailWithCode as jest.Mock).mockResolvedValue({ ok: true, token: "tok-2" });
     const onDone = jest.fn();
     const { getByTestId } = await renderWithProviders(
       <AuthCodeForm
@@ -80,7 +80,7 @@ describe("AuthCodeForm", () => {
     await typeCode(getByTestId);
 
     await waitFor(() => expect(onDone).toHaveBeenCalled());
-    expect(completeEmailChange).toHaveBeenCalledWith("old@example.com", CODE);
+    expect(changeEmailWithCode).toHaveBeenCalledWith("old@example.com", CODE);
     expect(useAuthStore.getState().state).toEqual(
       expect.objectContaining({
         status: "authenticated",
@@ -90,7 +90,7 @@ describe("AuthCodeForm", () => {
   });
 
   it("change-email: shows the mapped error on failure", async () => {
-    (completeEmailChange as jest.Mock).mockResolvedValue({
+    (changeEmailWithCode as jest.Mock).mockResolvedValue({
       ok: false,
       error: { code: "unknown_error", errors: [] },
     });
@@ -106,8 +106,8 @@ describe("AuthCodeForm", () => {
   });
 
   it("reset-password: validates the code, reveals the password step, and completes the reset", async () => {
-    (validatePasswordResetCode as jest.Mock).mockResolvedValue({ ok: true, valid: true });
-    (completePasswordReset as jest.Mock).mockResolvedValue({ ok: true, token: "tok-3" });
+    (checkPasswordResetCode as jest.Mock).mockResolvedValue({ ok: true, valid: true });
+    (resetPasswordWithCode as jest.Mock).mockResolvedValue({ ok: true, token: "tok-3" });
     const onDone = jest.fn();
     const { getByTestId, findByTestId } = await renderWithProviders(
       <AuthCodeForm flow="reset-password" email="a@example.com" onDone={onDone} />
@@ -121,7 +121,7 @@ describe("AuthCodeForm", () => {
     await fireEvent.press(getByTestId("auth-code.submit"));
 
     await waitFor(() => expect(onDone).toHaveBeenCalled());
-    expect(completePasswordReset).toHaveBeenCalledWith("a@example.com", CODE, "hunter22");
+    expect(resetPasswordWithCode).toHaveBeenCalledWith("a@example.com", CODE, "hunter22");
     expect(useAuthStore.getState().state).toEqual(
       expect.objectContaining({
         status: "authenticated",
@@ -131,7 +131,7 @@ describe("AuthCodeForm", () => {
   });
 
   it("reset-password: shows the invalid-code error and clears the code without advancing", async () => {
-    (validatePasswordResetCode as jest.Mock).mockResolvedValue({ ok: true, valid: false });
+    (checkPasswordResetCode as jest.Mock).mockResolvedValue({ ok: true, valid: false });
     const { getByTestId, findByText, queryByTestId } = await renderWithProviders(
       <AuthCodeForm flow="reset-password" email="a@example.com" onDone={jest.fn()} />
     );
@@ -148,7 +148,7 @@ describe("AuthCodeForm", () => {
   });
 
   it("reset-password: shows the mapped error when validating the code fails", async () => {
-    (validatePasswordResetCode as jest.Mock).mockResolvedValue({
+    (checkPasswordResetCode as jest.Mock).mockResolvedValue({
       ok: false,
       error: { code: "unknown_error", errors: [] },
     });
@@ -163,7 +163,7 @@ describe("AuthCodeForm", () => {
   });
 
   it("reset-password: rejects mismatched passwords without calling the API", async () => {
-    (validatePasswordResetCode as jest.Mock).mockResolvedValue({ ok: true, valid: true });
+    (checkPasswordResetCode as jest.Mock).mockResolvedValue({ ok: true, valid: true });
     const { getByTestId, findByTestId, findByText } = await renderWithProviders(
       <AuthCodeForm flow="reset-password" email="a@example.com" onDone={jest.fn()} />
     );
@@ -176,6 +176,6 @@ describe("AuthCodeForm", () => {
     await fireEvent.press(getByTestId("auth-code.submit"));
 
     expect(await findByText("Passwords must match.")).toBeTruthy();
-    expect(completePasswordReset).not.toHaveBeenCalled();
+    expect(resetPasswordWithCode).not.toHaveBeenCalled();
   });
 });

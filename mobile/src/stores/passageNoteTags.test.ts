@@ -13,8 +13,9 @@ jest.mock("@/src/stores/userSettings", () => ({
   },
 }));
 
+import type { PassageNoteTag } from "@mybiblelog/shared";
 import { ApiError } from "@/src/api/apiError";
-import { createTag, deleteTag, fetchTags, updateTag, type PassageNoteTag } from "@/src/api/tagsApi";
+import { createTag, deleteTag, fetchTags, updateTag } from "@/src/api/tagsApi";
 import { userSettingsActions, useUserSettingsStore } from "@/src/stores/userSettings";
 import { useTagsStore } from "./passageNoteTags";
 

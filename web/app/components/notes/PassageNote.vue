@@ -44,9 +44,9 @@ import PassageNoteTagPill from '~/components/notes/PassageNoteTagPill.vue';
 
 const props = defineProps<{
   note: {
-    id: string | number;
+    id: string;
     passages?: Array<{ startVerseId: number; endVerseId: number }>;
-    tags?: Array<string | number>;
+    tags?: Array<string>;
     content?: string;
     createdAt?: string;
   };

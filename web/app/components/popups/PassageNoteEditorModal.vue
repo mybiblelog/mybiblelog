@@ -159,7 +159,7 @@ const editingPassage = ref(-1);
 const editingPassageOriginalValue = ref<string | null>(null);
 const editingNewPassage = ref(false);
 const showManageTagsModal = ref(false);
-const draftSelectedTagIds = ref<Array<string | number>>([]);
+const draftSelectedTagIds = ref<Array<string>>([]);
 
 const allTags = computed(() => passageNoteTagsStore.passageNoteTags ?? []);
 
@@ -267,7 +267,7 @@ function onContentInput(e: Event) {
   store.updatePassageNote(updated);
 }
 
-function updateSelectedTags(tagIds: Array<string | number>) {
+function updateSelectedTags(tagIds: Array<string>) {
   const updated = clone(store.passageNote);
   updated.tags = tagIds;
   store.updatePassageNote(updated);
@@ -282,7 +282,7 @@ function closeManageTags() {
   showManageTagsModal.value = false;
 }
 
-function applyManageTags(tagIds: Array<string | number>) {
+function applyManageTags(tagIds: Array<string>) {
   updateSelectedTags(tagIds);
   closeManageTags();
 }

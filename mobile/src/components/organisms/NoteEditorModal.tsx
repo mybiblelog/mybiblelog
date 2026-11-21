@@ -1,7 +1,11 @@
-import { Bible } from "@mybiblelog/shared";
+import {
+  Bible,
+  type NotePassage,
+  type PassageNote,
+  type PassageNoteInput,
+} from "@mybiblelog/shared";
 import { useEffect, useRef, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import type { NoteInput, NotePassage, PassageNote } from "@/src/api/notesApi";
 import { radius, spacing, TOUCH_TARGET, useScalePress, useTheme } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { useTagsList } from "@/src/stores/passageNoteTags";
@@ -26,7 +30,7 @@ type Props = {
   /** Pre-fill a new note with these passages (ignored when editing). */
   initialPassages?: NotePassage[];
   onClose: () => void;
-  onSubmit: (input: NoteInput & { id?: string }) => void;
+  onSubmit: (input: PassageNoteInput & { id?: string }) => void;
 };
 
 type Draft = {

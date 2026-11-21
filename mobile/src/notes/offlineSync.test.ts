@@ -1,4 +1,4 @@
-import type { NoteInput } from "@/src/api/notesApi";
+import type { PassageNoteInput } from "@mybiblelog/shared";
 import type { PendingNoteMutation, StoredLocalNote } from "@/src/storage/passageNotes";
 import {
   coalesceCreate,
@@ -11,7 +11,7 @@ import {
   upsertLocalNote,
 } from "@/src/notes/offlineSync";
 
-const input = (content: string): NoteInput => ({ content, passages: [], tags: [] });
+const input = (content: string): PassageNoteInput => ({ content, passages: [], tags: [] });
 
 const localNote = (clientId: string, createdAt: string): StoredLocalNote => ({
   clientId,

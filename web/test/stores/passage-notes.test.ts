@@ -11,8 +11,8 @@ beforeEach(() => setActivePinia(createPinia()));
 function stubHttp() {
   const http = {
     get: vi.fn().mockResolvedValue({ data: [] }),
-    post: vi.fn().mockResolvedValue({ data: { id: 1 } }),
-    patch: vi.fn().mockResolvedValue({ data: { id: 1 } }),
+    post: vi.fn().mockResolvedValue({ data: { id: '1' } }),
+    patch: vi.fn().mockResolvedValue({ data: { id: '1' } }),
     delete: vi.fn().mockResolvedValue({ data: 1 }),
   };
   vi.stubGlobal('useNuxtApp', () => ({
@@ -35,7 +35,7 @@ describe('passage-notes store — tag count invalidation', () => {
     tags.isLoaded = true;
     const load = vi.spyOn(tags, 'loadPassageNoteTags').mockResolvedValue(undefined);
 
-    await usePassageNotesStore().updatePassageNote({ id: 1, tags: [] });
+    await usePassageNotesStore().updatePassageNote({ id: '1', tags: [] });
 
     expect(load).toHaveBeenCalledWith({ force: true });
   });
@@ -59,7 +59,7 @@ describe('passage-notes store — tag count invalidation', () => {
     const notes = usePassageNotesStore();
     vi.spyOn(notes, 'loadPassageNotesPage').mockResolvedValue(undefined);
 
-    await notes.deletePassageNote(1);
+    await notes.deletePassageNote('1');
 
     expect(load).toHaveBeenCalledWith({ force: true });
   });
@@ -70,19 +70,19 @@ describe('passage-notes store — tag count invalidation', () => {
     tags.isLoaded = false;
     const load = vi.spyOn(tags, 'loadPassageNoteTags').mockResolvedValue(undefined);
 
-    await usePassageNotesStore().updatePassageNote({ id: 1, tags: [] });
+    await usePassageNotesStore().updatePassageNote({ id: '1', tags: [] });
 
     expect(load).not.toHaveBeenCalled();
   });
 
-  it('skips the tag reload when the write returns no data', async () => {
+  it('rejects and skips the tag reload when the write returns no note', async () => {
     const http = stubHttp();
     http.patch.mockResolvedValue({ data: null });
     const tags = usePassageNoteTagsStore();
     tags.isLoaded = true;
     const load = vi.spyOn(tags, 'loadPassageNoteTags').mockResolvedValue(undefined);
 
-    await usePassageNotesStore().updatePassageNote({ id: 1, tags: [] });
+    await expect(usePassageNotesStore().updatePassageNote({ id: '1', tags: [] })).rejects.toThrow('unexpected payload');
 
     expect(load).not.toHaveBeenCalled();
   });

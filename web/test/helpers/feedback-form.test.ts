@@ -1,14 +1,14 @@
 import { describe, it, expect, vi } from 'vitest';
 import { nextTick, ref } from 'vue';
 import type { ApiErrorDetail } from '~/helpers/api-error';
+import { FEEDBACK_MESSAGE_MAX_LENGTH } from '@mybiblelog/shared';
 import {
-  FEEDBACK_MESSAGE_MAX_LENGTH,
   clearFeedbackErrorsOnEdit,
   makeFeedbackFieldError,
   validateFeedbackForm,
 } from '~/helpers/feedback-form';
 
-const valid = { email: 'reader@example.com', kind: 'bug', message: 'Something is broken' };
+const valid = { email: 'reader@example.com', kind: 'bug' as const, message: 'Something is broken' };
 
 describe('validateFeedbackForm', () => {
   it('returns no errors for a valid form', () => {

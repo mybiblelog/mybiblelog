@@ -1,64 +1,16 @@
+import {
+  deleteUserAccount,
+  fetchUserSettings,
+  patchUserSettings,
+  type ServerUserSettings,
+} from "@mybiblelog/shared";
 import { httpClient } from "@/src/api/httpClient";
 
-export type ServerUserSettings = {
-  dailyVerseCountGoal?: number;
-  lookBackDate?: string;
-  preferredBibleVersion?: string;
-  startPage?: string;
-  locale?: string;
-  passageNoteTagSortOrder?: string;
-  includeDeuterocanonical?: boolean;
-};
+export const getSettings = (): Promise<ServerUserSettings> => fetchUserSettings(httpClient);
 
-function toNumber(v: unknown): number | undefined {
-  if (typeof v === "number" && Number.isFinite(v)) return v;
-  if (typeof v === "string" && v.trim() !== "" && Number.isFinite(Number(v))) return Number(v);
-  return undefined;
-}
-
-export function parseServerUserSettings(value: unknown): ServerUserSettings | null {
-  if (!value || typeof value !== "object") return null;
-  const v = value as Record<string, unknown>;
-  return {
-    dailyVerseCountGoal: toNumber(v.dailyVerseCountGoal),
-    lookBackDate: typeof v.lookBackDate === "string" ? v.lookBackDate : undefined,
-    preferredBibleVersion:
-      typeof v.preferredBibleVersion === "string" ? v.preferredBibleVersion : undefined,
-    startPage: typeof v.startPage === "string" ? v.startPage : undefined,
-    locale: typeof v.locale === "string" ? v.locale : undefined,
-    passageNoteTagSortOrder:
-      typeof v.passageNoteTagSortOrder === "string" ? v.passageNoteTagSortOrder : undefined,
-    includeDeuterocanonical:
-      typeof v.includeDeuterocanonical === "boolean" ? v.includeDeuterocanonical : undefined,
-  };
-}
-
-// All requests go through the shared `httpClient` adapter, which injects the
-// bearer token from the auth store, applies the request timeout, and raises
-// typed `ApiError`s — the same path the log-entries API uses.
-
-export async function getSettings(): Promise<ServerUserSettings> {
-  const { data } = await httpClient.get<unknown>("/api/settings");
-  const parsed = parseServerUserSettings(data);
-  if (!parsed) throw new Error("GET /settings returned unexpected payload");
-  return parsed;
-}
-
-export async function updateSettings(
+export const updateSettings = (
   settings: Partial<ServerUserSettings>
-): Promise<ServerUserSettings> {
-  const { data } = await httpClient.patch<unknown>("/api/settings", { settings });
-  const parsed = parseServerUserSettings(data);
-  if (!parsed) throw new Error("PATCH /settings returned unexpected payload");
-  return parsed;
-}
+): Promise<ServerUserSettings> => patchUserSettings(httpClient, settings);
 
-/**
- * Permanently delete the authenticated user's account and all associated data
- * (log entries, notes, tags, reminders). Mirrors the web app's
- * `DELETE /settings/account` flow. The caller is responsible for clearing
- * the local session afterward (the server also clears the auth cookie).
- */
-export async function deleteAccount(): Promise<void> {
-  await httpClient.delete("/api/settings/account");
-}
+/** The caller clears the local session afterward (the server also clears the auth cookie). */
+export const deleteAccount = (): Promise<void> => deleteUserAccount(httpClient);

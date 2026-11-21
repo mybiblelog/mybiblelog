@@ -1,10 +1,16 @@
 import { defineStore } from 'pinia';
 import {
+  createPassageNoteTag,
+  deletePassageNoteTag,
+  fetchPassageNoteTags,
   getTagCreatedMsOrNull,
   normalizeSortOrder,
   sortPassageNoteTags,
+  updatePassageNoteTag,
   type PassageNoteTag,
+  type PassageNoteTagInput,
   type PassageNoteTagSortOrder,
+  type UpdatePassageNoteTagInput,
 } from '@mybiblelog/shared';
 import { useUserSettingsStore } from '~/stores/user-settings';
 
@@ -33,19 +39,17 @@ export const usePassageNoteTagsStore = defineStore('passage-note-tags', {
     ): boolean | Promise<boolean> {
       const normalized = normalizeSortOrder(sortOrder);
       this.sortOrder = normalized;
-      sortPassageNoteTags(this.passageNoteTags, this.sortOrder);
+      this.passageNoteTags = sortPassageNoteTags(this.passageNoteTags, this.sortOrder);
       if (!persist) { return true; }
       return useUserSettingsStore().updateSettings({ passageNoteTagSortOrder: normalized });
     },
 
-    setPassageNoteTags(passageNoteTags: unknown): void {
-      const next = Array.isArray(passageNoteTags) ? [...(passageNoteTags as PassageNoteTag[])] : [];
-      this.passageNoteTags = sortPassageNoteTags(next, this.sortOrder);
+    setPassageNoteTags(passageNoteTags: PassageNoteTag[]): void {
+      this.passageNoteTags = sortPassageNoteTags(passageNoteTags, this.sortOrder);
     },
 
     addPassageNoteTag(passageNoteTag: PassageNoteTag): void {
-      this.passageNoteTags.push(passageNoteTag);
-      sortPassageNoteTags(this.passageNoteTags, this.sortOrder);
+      this.passageNoteTags = sortPassageNoteTags([...this.passageNoteTags, passageNoteTag], this.sortOrder);
     },
 
     updatePassageNoteTagInState(passageNoteTagUpdate: PassageNoteTag): void {
@@ -56,10 +60,10 @@ export const usePassageNoteTagsStore = defineStore('passage-note-tags', {
       else {
         this.passageNoteTags.push(passageNoteTagUpdate);
       }
-      sortPassageNoteTags(this.passageNoteTags, this.sortOrder);
+      this.passageNoteTags = sortPassageNoteTags(this.passageNoteTags, this.sortOrder);
     },
 
-    removePassageNoteTag(passageNoteTagId: number | string): void {
+    removePassageNoteTag(passageNoteTagId: string): void {
       this.passageNoteTags = this.passageNoteTags.filter(t => t.id !== passageNoteTagId);
     },
 
@@ -71,34 +75,24 @@ export const usePassageNoteTagsStore = defineStore('passage-note-tags', {
         this.setPassageNoteTagSortOrder({ sortOrder, persist: false });
       }
 
-      const { data } = await http.get<PassageNoteTag[]>('/api/passage-note-tags');
-      this.setPassageNoteTags(data);
+      this.setPassageNoteTags(await fetchPassageNoteTags(http));
       this.isLoaded = true;
     },
 
-    async createPassageNoteTag(
-      { label, color, description }: { label: string; color: string; description: string },
-    ): Promise<PassageNoteTag> {
-      const http = useHttp();
-      const { data: result } = await http.post<PassageNoteTag>('/api/passage-note-tags', { label, color, description });
-      this.addPassageNoteTag(result);
-      return result;
+    async createPassageNoteTag(input: PassageNoteTagInput): Promise<PassageNoteTag> {
+      const created = await createPassageNoteTag(useHttp(), input);
+      this.addPassageNoteTag(created);
+      return created;
     },
 
-    async updatePassageNoteTag(
-      { id, label, color, description }: { id: number | string; label: string; color: string; description: string },
-    ): Promise<PassageNoteTag | null> {
-      const http = useHttp();
-      const { data } = await http.patch<PassageNoteTag | null>(`/api/passage-note-tags/${id}`, { id, label, color, description });
-      if (!data) { return null; }
-      this.updatePassageNoteTagInState(data);
-      return data;
+    async updatePassageNoteTag(input: UpdatePassageNoteTagInput): Promise<PassageNoteTag> {
+      const updated = await updatePassageNoteTag(useHttp(), input);
+      this.updatePassageNoteTagInState(updated);
+      return updated;
     },
 
-    async deletePassageNoteTag(passageNoteTagId: number | string): Promise<boolean> {
-      const http = useHttp();
-      const { data } = await http.delete<unknown>(`/api/passage-note-tags/${passageNoteTagId}`);
-      if (data) {
+    async deletePassageNoteTag(passageNoteTagId: string): Promise<boolean> {
+      if (await deletePassageNoteTag(useHttp(), passageNoteTagId)) {
         this.removePassageNoteTag(passageNoteTagId);
         return true;
       }

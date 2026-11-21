@@ -3,15 +3,15 @@ jest.mock("expo-router", () => ({
 }));
 
 jest.mock("@/src/api/authApi", () => ({
-  beginEmailChange: jest.fn(),
+  sendEmailChangeCode: jest.fn(),
 }));
 
 import { fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/renderWithProviders";
 import { useAuthStore } from "@/src/stores/auth";
-import { beginEmailChange } from "@/src/api/authApi";
+import { sendEmailChangeCode } from "@/src/api/authApi";
 import ChangeEmail from "@/app/(tabs)/settings/change-email";
 
-const mockedBeginEmailChange = beginEmailChange as jest.Mock;
+const mockedBeginEmailChange = sendEmailChangeCode as jest.Mock;
 
 const AUTHENTICATED_STATE = {
   status: "authenticated" as const,

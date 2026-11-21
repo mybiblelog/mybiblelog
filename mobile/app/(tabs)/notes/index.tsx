@@ -1,7 +1,7 @@
+import type { PassageNote } from "@mybiblelog/shared";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { RefreshControl, StyleSheet, View } from "react-native";
-import type { PassageNote } from "@/src/api/notesApi";
 import {
   AnimatedList,
   Button,

@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ tag: { id: string | number; label: string; color: string } }>();
+defineProps<{ tag: { id: string; label: string; color: string } }>();
 </script>
 
 <style scoped>

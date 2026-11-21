@@ -22,7 +22,13 @@
     "bible/**/*.ts",
     "log-entry/**/*.ts",
     "insights/**/*.ts",
-    "platform/**/*.ts"
+    "platform/**/*.ts",
+    "auth/**/*.ts",
+    "feedback/**/*.ts",
+    "passage-notes/**/*.ts",
+    "passage-note-tags/**/*.ts",
+    "user-settings/**/*.ts",
+    "text/**/*.ts"
   ],
   "exclude": [
     "node_modules",

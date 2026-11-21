@@ -1,4 +1,4 @@
-import { beginPasswordReset } from "@/src/api/authApi";
+import { sendPasswordResetCode } from "@/src/api/authApi";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { spacing } from "@/src/design";
 import {
@@ -35,7 +35,7 @@ export default function ForgotPassword() {
     setIsSubmitting(true);
     try {
       // The API always reports success (anti-enumeration); we advance regardless.
-      await beginPasswordReset(trimmedEmail);
+      await sendPasswordResetCode(trimmedEmail);
       setStep("code");
     } catch {
       setError(t("auth_generic_error"));

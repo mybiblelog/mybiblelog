@@ -1,6 +1,10 @@
-import { Bible, LogEntryEditorMachine, type LogEntryEditorModel } from "@mybiblelog/shared";
+import {
+  Bible,
+  LogEntryEditorMachine,
+  type LogEntryEditorModel,
+  type NotePassage,
+} from "@mybiblelog/shared";
 import { useCallback, useMemo, useState } from "react";
-import type { NotePassage } from "@/src/api/notesApi";
 
 /**
  * Thin React hook around the shared `LogEntryEditorMachine` — the book →

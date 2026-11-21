@@ -1,14 +1,11 @@
-import { create } from "zustand";
 import {
-  type NoteInput,
-  type NotesQuery,
+  defaultPassageNotesSort,
   type PassageNote,
-  createNote,
-  defaultNotesSort,
-  deleteNote,
-  fetchNotesPage,
-  updateNote,
-} from "@/src/api/notesApi";
+  type PassageNoteInput,
+  type PassageNotesQuery,
+} from "@mybiblelog/shared";
+import { create } from "zustand";
+import { createNote, deleteNote, fetchNotesPage, updateNote } from "@/src/api/notesApi";
 import { toApiErrorCode } from "@/src/api/apiError";
 import { reportHandledError } from "@/src/observability/sentry";
 import { useNoteCountsStore } from "@/src/stores/passageNoteCounts";
@@ -23,7 +20,7 @@ import { useNoteCountsStore } from "@/src/stores/passageNoteCounts";
  * app's on-mount loads and keeping app startup unchanged.
  */
 
-export const initialNotesQuery: NotesQuery = {
+export const initialNotesQuery: PassageNotesQuery = {
   limit: 10,
   offset: 0,
   sortOn: "createdAt",
@@ -44,17 +41,17 @@ export type NotesState =
 
 type NotesStore = {
   state: NotesState;
-  query: NotesQuery;
+  query: PassageNotesQuery;
   loadFirstPage: () => Promise<void>;
   loadMore: () => Promise<void>;
-  applyQuery: (update: Partial<NotesQuery>) => Promise<void>;
-  resetQuery: (override?: Partial<NotesQuery>) => Promise<void>;
-  create: (input: NoteInput) => Promise<PassageNote | null>;
-  update: (note: NoteInput & { id: string }) => Promise<PassageNote | null>;
+  applyQuery: (update: Partial<PassageNotesQuery>) => Promise<void>;
+  resetQuery: (override?: Partial<PassageNotesQuery>) => Promise<void>;
+  create: (input: PassageNoteInput) => Promise<PassageNote | null>;
+  update: (note: PassageNoteInput & { id: string }) => Promise<PassageNote | null>;
   remove: (id: string) => Promise<boolean>;
 };
 
-const cloneQuery = (query: NotesQuery): NotesQuery => ({
+const cloneQuery = (query: PassageNotesQuery): PassageNotesQuery => ({
   ...query,
   filterTags: [...query.filterTags],
 });
@@ -129,7 +126,7 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
     set({
       query: cloneQuery({
         ...initialNotesQuery,
-        ...defaultNotesSort(hasPassageFilter),
+        ...defaultPassageNotesSort(hasPassageFilter),
         ...override,
         offset: 0,
       }),
@@ -189,16 +186,16 @@ export function useNotesState(): NotesState {
   return useNotesStore((s) => s.state);
 }
 
-export function useNotesQuery(): NotesQuery {
+export function useNotesQuery(): PassageNotesQuery {
   return useNotesStore((s) => s.query);
 }
 
 /** Whether any view option differs from the defaults (web `hasAppliedViewOptions`). */
-export function selectHasAppliedViewOptions(query: NotesQuery): boolean {
+export function selectHasAppliedViewOptions(query: PassageNotesQuery): boolean {
   const hasPassageFilter = Boolean(
     query.filterPassageStartVerseId && query.filterPassageEndVerseId
   );
-  const sortDefaults = defaultNotesSort(hasPassageFilter);
+  const sortDefaults = defaultPassageNotesSort(hasPassageFilter);
   return (
     query.searchText !== initialNotesQuery.searchText ||
     query.filterTags.length > 0 ||
@@ -228,9 +225,10 @@ export function useNotesHasMore(): boolean {
 export const notesActions = {
   loadFirstPage: () => useNotesStore.getState().loadFirstPage(),
   loadMore: () => useNotesStore.getState().loadMore(),
-  applyQuery: (update: Partial<NotesQuery>) => useNotesStore.getState().applyQuery(update),
-  resetQuery: (override?: Partial<NotesQuery>) => useNotesStore.getState().resetQuery(override),
-  create: (input: NoteInput) => useNotesStore.getState().create(input),
-  update: (note: NoteInput & { id: string }) => useNotesStore.getState().update(note),
+  applyQuery: (update: Partial<PassageNotesQuery>) => useNotesStore.getState().applyQuery(update),
+  resetQuery: (override?: Partial<PassageNotesQuery>) =>
+    useNotesStore.getState().resetQuery(override),
+  create: (input: PassageNoteInput) => useNotesStore.getState().create(input),
+  update: (note: PassageNoteInput & { id: string }) => useNotesStore.getState().update(note),
   remove: (id: string) => useNotesStore.getState().remove(id),
 };

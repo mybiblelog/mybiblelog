@@ -88,6 +88,7 @@
 </template>
 
 <script setup lang="ts">
+import { FEEDBACK_MESSAGE_MAX_LENGTH, postFeedback, type FeedbackInput } from '@mybiblelog/shared';
 import AppModal from '~/components/popups/AppModal.vue';
 import FeedbackIcon from '~/components/svg/FeedbackIcon.vue';
 import { useAuthStore } from '~/stores/auth';
@@ -98,7 +99,6 @@ import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { confirmDiscardIfDirty } from '~/helpers/confirm-discard';
 import {
-  FEEDBACK_MESSAGE_MAX_LENGTH,
   clearFeedbackErrorsOnEdit,
   makeFeedbackFieldError,
   validateFeedbackForm,
@@ -113,7 +113,7 @@ const feedbackModalStore = useFeedbackModalStore();
 const mounted = ref(false);
 onMounted(() => { mounted.value = true; });
 
-const initialForm = () => ({
+const initialForm = (): FeedbackInput => ({
   email: authStore.user?.email || '',
   kind: 'bug',
   message: '',
@@ -148,7 +148,7 @@ async function submitFeedback() {
   if (Object.keys(errors.value).length) { return; }
   submitting.value = true;
   try {
-    await $http.post('/api/feedback', {
+    await postFeedback($http, {
       email: form.value.email,
       kind: form.value.kind,
       message: form.value.message,

@@ -1,6 +1,6 @@
 import { StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
 import { radius, spacing, useTheme } from "@/src/design";
-import { hexToRgb } from "@/src/notes/tagSort";
+import { hexToRgb } from "@mybiblelog/shared";
 import { AnimatedPressable } from "./AnimatedPressable";
 import { Text } from "./Text";
 
