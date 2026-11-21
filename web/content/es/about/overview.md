@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-11-12"
+dateModified: "2026-11-20"
 seo:
   title: "My Bible Log: registro de lectura bíblica gratis – funciones y guías"
   description: "Todo lo que puede hacer My Bible Log: registrar tu lectura bíblica por capítulos, fijar metas diarias, tomar notas de estudio y seguir guías como leer la Biblia en un año."
@@ -47,6 +47,7 @@ My Bible Log es un registro de lectura bíblica gratuito. Anota los capítulos q
 * [Crea tu cuenta gratis](/es/about/page-features--login)
 * [Instálalo en cualquier dispositivo](/es/about/page-features--install)
 * [Preguntas frecuentes](/es/faq)
+* [Usa un agente de IA con My Bible Log](/es/about/how-to--use-an-ai-agent-with-my-bible-log)
 
 ## Comentarios
 

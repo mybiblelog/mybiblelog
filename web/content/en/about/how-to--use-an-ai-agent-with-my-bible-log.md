@@ -55,7 +55,7 @@ curl -X POST https://www.mybiblelog.com/api/auth/login \
 
 The token is in `data.token` in the response, and it lasts 30 days.
 
-* **Signed up with Google?** Create a password first under **Settings → Email**.
+* **Signed up with Google?** Create a password first under **Settings → Change Email**.
 * **Keep your password to yourself.** Sign in yourself and give the agent only the token.
 * **Treat the token like a password.** It has full access to your account, including deleting it.
 * **To revoke a token,** use **Log Out All Sessions** in Settings, or change your password.
