@@ -38,6 +38,13 @@ const main = async (): Promise<void> => {
     await users.updateOne({ _id: user._id }, { $set: { 'settings.startPage': 'today' } });
   }
 
+  // users without includeDeuterocanonical need false (common books only, the original canon)
+  const usersWithoutIncludeDeuterocanonical = await users.find({ 'settings.includeDeuterocanonical': { $exists: false } }).toArray();
+  for (const user of usersWithoutIncludeDeuterocanonical) {
+    console.log(`Migrating user ${user.email} to common-books-only canon...`);
+    await users.updateOne({ _id: user._id }, { $set: { 'settings.includeDeuterocanonical': false } });
+  }
+
   // users with invalid lookBackDate need to have the format fixed
   const usersWithInvalidLookBackDate = await users.find({ 'settings.lookBackDate': { $not: /^\d\d\d\d-\d\d-\d\d$/ } }).toArray();
   for (const user of usersWithInvalidLookBackDate) {
