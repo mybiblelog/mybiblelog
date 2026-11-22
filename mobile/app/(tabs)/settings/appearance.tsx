@@ -15,7 +15,7 @@ export default function AppearanceSettings() {
   ];
 
   return (
-    <Screen>
+    <Screen testID="screen.settings.appearance">
       <ScreenHeader padded back title={t("settings_section_appearance")} />
       <ScrollView contentContainerStyle={styles.content}>
         <Text variant="label" color="mutedText" style={styles.sectionLabel}>

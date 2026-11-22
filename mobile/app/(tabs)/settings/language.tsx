@@ -20,7 +20,7 @@ export default function LanguageSettings() {
   ];
 
   return (
-    <Screen>
+    <Screen testID="screen.settings.language">
       <ScreenHeader padded back title={t("settings_section_language")} />
       <ScrollView contentContainerStyle={styles.content}>
         <Text variant="label" color="mutedText" style={styles.sectionLabel}>

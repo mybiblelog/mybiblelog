@@ -127,6 +127,7 @@ export default function Register() {
     <OnboardingFrame>
       <BackgroundPattern />
       <KeyboardAvoidingView
+        testID="screen.register"
         style={styles.flex}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >

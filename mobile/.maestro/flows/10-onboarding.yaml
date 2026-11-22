@@ -15,6 +15,8 @@ tags:
     visible:
       id: "onboarding.choice-new"
     timeout: 90000
+- assertVisible:
+    id: "screen.onboarding"
 
 # --- Choice step: "Get Started" -> Welcome ------------------------------
 - tapOn:

@@ -159,7 +159,7 @@ export default function Notes() {
   const { notes, totalSize, isFetchingMore } = state;
 
   return (
-    <Screen padded>
+    <Screen padded testID="screen.notes">
       {header}
       {queryBar}
 

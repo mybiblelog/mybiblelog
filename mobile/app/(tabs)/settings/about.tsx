@@ -67,7 +67,7 @@ export default function AboutSettings() {
   }
 
   return (
-    <Screen>
+    <Screen testID="screen.settings.about">
       <ScreenHeader padded back title={t("settings_section_about")} />
       <ScrollView contentContainerStyle={styles.content}>
         <Text variant="label" color="mutedText" style={styles.sectionLabel}>

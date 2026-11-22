@@ -51,7 +51,7 @@ export default function SettingsIndex() {
   const t = useT();
   const showSignInAlert = useIsUnauthenticated();
   return (
-    <Screen>
+    <Screen testID="screen.settings">
       {/* Tab root — nothing to go back to. */}
       <ScreenHeader padded title={t("settings_tab_title")} />
       <ScrollView contentContainerStyle={styles.content}>
@@ -103,6 +103,7 @@ export default function SettingsIndex() {
           title={t("settings_section_about")}
           subtitle={t("settings_section_about_subtitle")}
           onPress={() => router.push("/settings/about")}
+          testID="settings.about-link"
         />
       </ScrollView>
     </Screen>

@@ -159,7 +159,7 @@ export default function BibleBookScreen() {
   }
 
   return (
-    <Screen>
+    <Screen testID="screen.bible.book">
       <ScreenHeader
         padded
         back

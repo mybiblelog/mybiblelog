@@ -84,7 +84,7 @@ export default function ChangeEmail() {
   }
 
   return (
-    <Screen>
+    <Screen testID="screen.settings.change-email">
       <ScreenHeader padded back title={t("change_email_title")} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         {step === "form" ? (

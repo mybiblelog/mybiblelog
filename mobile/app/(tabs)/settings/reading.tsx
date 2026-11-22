@@ -226,7 +226,7 @@ function ReadingSettingsForm({ settings }: { settings: LocalUserSettings }) {
   }
 
   return (
-    <Screen>
+    <Screen testID="screen.settings.reading">
       <ScreenHeader padded back title={t("settings_section_reading")} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <SettingSection

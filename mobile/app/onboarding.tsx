@@ -46,7 +46,7 @@ export default function Onboarding() {
 
   return (
     <OnboardingFrame>
-      <Screen edges={["top", "bottom"]} padded>
+      <Screen edges={["top", "bottom"]} padded testID="screen.onboarding">
         {step !== "choice" && step !== "finish" ? (
           <Image
             source={require("../assets/images/splash-icon.png")}

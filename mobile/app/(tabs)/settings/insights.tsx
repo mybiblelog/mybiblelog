@@ -22,7 +22,7 @@ export default function Insights() {
   const [view, setView] = useState<InsightsView>("activity");
 
   return (
-    <Screen>
+    <Screen testID="screen.settings.insights">
       <ScreenHeader padded back title={t("insights_title")} />
       <ScrollView contentContainerStyle={styles.content}>
         <SegmentedControl

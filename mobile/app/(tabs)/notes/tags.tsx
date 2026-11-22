@@ -138,7 +138,7 @@ export default function Tags() {
   };
 
   return (
-    <Screen padded>
+    <Screen padded testID="screen.notes.tags">
       <ScreenHeader back title={t("tags_title")} style={styles.header} />
       <View style={styles.toolbar}>
         <Button

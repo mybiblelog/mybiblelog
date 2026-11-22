@@ -91,7 +91,7 @@ export default function Feedback() {
   }
 
   return (
-    <Screen>
+    <Screen testID="screen.settings.feedback">
       <ScreenHeader padded back title={t("feedback_title")} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <Text variant="body" color="mutedText">

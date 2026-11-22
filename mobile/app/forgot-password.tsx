@@ -52,6 +52,7 @@ export default function ForgotPassword() {
     <OnboardingFrame>
       <BackgroundPattern />
       <KeyboardAvoidingView
+        testID="screen.forgot-password"
         style={styles.flex}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >

@@ -95,6 +95,7 @@ export function RecentNotesSection() {
         variant="secondary"
         rightIcon="chevron-forward"
         onPress={() => router.push("/(tabs)/notes")}
+        testID="today.view-all-notes"
         style={styles.viewAll}
       />
 
