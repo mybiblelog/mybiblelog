@@ -1,20 +1,35 @@
 # Fast preamble for flows after 01: reuse the warm, already-logged-in session
 # established by 01-login instead of paying a full cold start + login again.
 #
-# Foreground the running app (no process restart, no JS reload). If the app
-# isn't running — e.g. a flow run standalone — the tab bar is absent and we
-# fall through to the full cold login. `tab.today` is the tab-bar test id
-# (app/(tabs)/_layout.tsx), visible on every tab screen of the running app and
-# absent on the dev-launcher/dev-menu, so it reliably means "app is up (and,
-# mid-suite, logged in)" regardless of which tab a prior flow ended on.
+# Foreground the running app (no process restart, no JS reload), then confirm
+# the session on Settings -> Account: `settings.logout` renders only when
+# authenticated. The app is offline-first, so the tab bar alone can't tell a
+# logged-in app from a logged-out one. Without a logged-in session (or if the
+# app never reaches its tab bar), fall through to the full cold login. Switching back to Today pops
+# the Settings stack (popToTopOnBlur), so later flows start from its root.
 appId: com.mybiblelog.app
 ---
 - launchApp:
     stopApp: false
 - runFlow:
     when:
-      notVisible:
+      visible:
         id: "tab.today"
+    commands:
+      - tapOn:
+          id: "tab.settings"
+      - tapOn:
+          id: "settings.account-link"
+      # Auth state can briefly render as "loading" before settling.
+      - extendedWaitUntil:
+          optional: true
+          visible:
+            id: "settings.logout"
+          timeout: 5000
+- runFlow:
+    when:
+      notVisible:
+        id: "settings.logout"
     file: ./login.yaml
 - tapOn:
     id: "tab.today"

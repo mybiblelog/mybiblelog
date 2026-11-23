@@ -43,10 +43,13 @@ wall-time. Instead:
   establishing a warm, logged-in session.
 - `02`–`06` start with `common/resume.yaml`, which just foregrounds the running
   app (`launchApp: { stopApp: false }` — no restart, no reload) and reuses that
-  session. It detects the session via the `tab.today` tab-bar id.
-- If a flow is run **standalone** (the app isn't running), `resume.yaml` sees no
-  tab bar and falls through to the full `common/login.yaml`, so every flow still
-  works on its own with the freshly-seeded credentials.
+  session. It confirms the session by checking for `settings.logout` on
+  Settings → Account (two taps); the tab bar alone can't, since the app runs
+  logged out too.
+- If the app has no logged-in session (or never reaches its tab bar),
+  `resume.yaml` falls through to the full `common/login.yaml`. A force-stopped
+  app relaunches into its persisted session, which may belong to an earlier
+  run's seeded user rather than the one just seeded.
 
 This warm reuse is what makes single-emulator runs fast and is intentionally
 **not** combined with device sharding (`maestro test --shard-split`), which
