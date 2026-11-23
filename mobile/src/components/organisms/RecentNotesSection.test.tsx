@@ -16,8 +16,8 @@ jest.mock("@/src/api/tagsApi", () => ({
 }));
 
 import { router } from "expo-router";
-import { Bible } from "@mybiblelog/shared";
-import { fetchNotesPage, type PassageNote } from "@/src/api/notesApi";
+import { Bible, type PassageNote } from "@mybiblelog/shared";
+import { fetchNotesPage } from "@/src/api/notesApi";
 import { fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/renderWithProviders";
 import { useConnectivityStore } from "@/src/stores/connectivity";
 import { useOfflineNotesStore } from "@/src/stores/offlineNotes";

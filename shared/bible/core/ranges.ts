@@ -1,6 +1,6 @@
-import { makeVerseId, parseVerseId, type VerseId, type VerseRange } from './encoding';
-import { getAllBooks, getBookChapterCount, getBooksForCanon, getBookVerseCount, getChapterVerseCount } from './metadata';
-import { getFirstBookVerseId, getLastBookVerseId, getNextVerseId, getPreviousVerseId } from './navigation';
+import { makeVerseId, parseVerseId, type VerseId, type VerseRange } from './encoding.js';
+import { getAllBooks, getBookChapterCount, getBooksForCanon, getBookVerseCount, getChapterVerseCount } from './metadata.js';
+import { getFirstBookVerseId, getLastBookVerseId, getNextVerseId, getPreviousVerseId } from './navigation.js';
 
 /**
  * Creates a sorted array of indices for an array,

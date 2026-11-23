@@ -1,6 +1,7 @@
+import type { PassageNote } from "@mybiblelog/shared";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useRef, useState } from "react";
-import { fetchNotesPage, type PassageNote } from "@/src/api/notesApi";
+import { fetchNotesPage } from "@/src/api/notesApi";
 import { reportHandledError } from "@/src/observability/sentry";
 import { initialNotesQuery } from "@/src/stores/passageNotes";
 import { tagActions } from "@/src/stores/passageNoteTags";

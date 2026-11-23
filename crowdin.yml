@@ -4,6 +4,7 @@
 # Source strings: one JSON bundle per locale under web/i18n/locales/crowdin/
 # Shape: { "global": {...}, "email": {...}, "components": { "<path>": {...} }, "pages": { "<path>": {...} } }
 # (`email` mirrors api/services/email/locales/strings.json for the current locale.)
+# Mobile strings use a separate flow: crowdin.mobile.yml.
 # English (en.json) is the Crowdin source language; other files are translations.
 #
 # From the repository root:

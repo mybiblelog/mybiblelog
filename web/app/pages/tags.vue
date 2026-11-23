@@ -161,16 +161,16 @@ function openNewTagEditor() {
   tagEditorStore.openEditor(null);
 }
 
-function openEditTagEditor(tag: { id: string | number; label?: string; color?: string; description?: string }) {
+function openEditTagEditor(tag: { id: string; label?: string; color?: string; description?: string }) {
   tagEditorStore.openEditor(tag as Parameters<typeof tagEditorStore.openEditor>[0]);
 }
 
-function viewTagNotes(tag: { id: string | number }) {
+function viewTagNotes(tag: { id: string }) {
   const query = encodePassageNotesQueryToRoute({ filterTags: [String(tag.id)], offset: 0 });
   router.push({ path: '/notes', query });
 }
 
-async function deleteTag(id: string | number) {
+async function deleteTag(id: string) {
   const dialogStore = useDialogStore();
   const toastStore = useToastStore();
 

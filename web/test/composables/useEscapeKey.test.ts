@@ -1,7 +1,4 @@
 // @vitest-environment happy-dom
-// Each test mounts its own tiny harness component to isolate the composable's
-// lifecycle (mount/unmount) per case, hence multiple `defineComponent` calls.
-/* eslint-disable vue/one-component-per-file */
 import { describe, it, expect, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { defineComponent, h, ref, nextTick } from 'vue';

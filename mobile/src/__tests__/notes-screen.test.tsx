@@ -18,8 +18,8 @@ jest.mock("@/src/api/tagsApi", () => ({
   fetchTags: jest.fn().mockResolvedValue([]),
 }));
 
+import type { PassageNote } from "@mybiblelog/shared";
 import { act, fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/renderWithProviders";
-import type { PassageNote } from "@/src/api/notesApi";
 import { fetchNotesPage } from "@/src/api/notesApi";
 import { fetchTags } from "@/src/api/tagsApi";
 import { initialNotesQuery, notesActions, useNotesStore } from "@/src/stores/passageNotes";

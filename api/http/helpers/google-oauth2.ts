@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import { getConfig } from '../../config';
 
 // In-memory store for OAuth2 state parameters (in production, use Redis)
-const stateStore = new Map();
+const stateStore = new Map<string, { expires: number }>();
 
 const generateState = () => {
   const state = crypto.randomBytes(32).toString('hex');
@@ -19,7 +19,7 @@ const generateState = () => {
   return state;
 };
 
-const verifyState = (state) => {
+const verifyState = (state: string) => {
   const stateData = stateStore.get(state);
   if (!stateData) {
     return false;
@@ -57,7 +57,7 @@ const getGoogleLoginUrl = () => {
   };
 };
 
-const getAccessTokenFromCode = async (code) => {
+const getAccessTokenFromCode = async (code: string) => {
   const { clientId, clientSecret, redirectUri } = getConfig().google;
   try {
     const response = await fetch('https://oauth2.googleapis.com/token', {
@@ -93,7 +93,7 @@ const getAccessTokenFromCode = async (code) => {
   }
 };
 
-const getUserProfileFromToken = async (token) => {
+const getUserProfileFromToken = async (token: string) => {
   const response = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
     method: 'GET',
     headers: {

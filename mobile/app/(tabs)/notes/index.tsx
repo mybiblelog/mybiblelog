@@ -1,7 +1,7 @@
+import type { PassageNote } from "@mybiblelog/shared";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { RefreshControl, StyleSheet, View } from "react-native";
-import type { PassageNote } from "@/src/api/notesApi";
 import {
   AnimatedList,
   Button,
@@ -159,7 +159,7 @@ export default function Notes() {
   const { notes, totalSize, isFetchingMore } = state;
 
   return (
-    <Screen padded>
+    <Screen padded testID="screen.notes">
       {header}
       {queryBar}
 

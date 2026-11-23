@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_CHART_DIMENSIONS, buildLineChartGeometry, buildMultiLineChartGeometry, buildSmoothPath } from './charts';
+import { DEFAULT_CHART_DIMENSIONS, buildLineChartGeometry, buildMultiLineChartGeometry, buildSmoothPath } from './charts.js';
 
 const series = [
   { date: '2024-06-01', count: 0 },

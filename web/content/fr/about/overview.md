@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-11-12"
+dateModified: "2026-11-20"
 seo:
   title: "My Bible Log : suivi de lecture biblique gratuit – guides"
   description: "Tout ce que My Bible Log peut faire : suivre votre lecture chapitre par chapitre, fixer des objectifs quotidiens, prendre des notes d'étude et suivre des guides de lecture."
@@ -47,6 +47,7 @@ My Bible Log est un suivi de lecture biblique gratuit. Notez les chapitres que v
 * [Créer votre compte gratuit](/fr/about/page-features--login)
 * [Installer sur n'importe quel appareil](/fr/about/page-features--install)
 * [Questions fréquentes](/fr/faq)
+* [Utiliser un agent IA avec My Bible Log](/fr/about/how-to--use-an-ai-agent-with-my-bible-log)
 
 ## Vos retours
 

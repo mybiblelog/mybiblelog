@@ -1,0 +1,171 @@
+# Route coverage: reach every screen through the UI a user would tap (no deep
+# links) and assert its `screen.*` root testID renders. Multi-state screens put
+# that id only on their loaded state, so a stuck spinner or a crash into the
+# error boundary fails here. src/__tests__/e2e-screen-coverage.test.ts fails if
+# a route's `screen.*` id isn't asserted by some flow.
+#
+# Ends logged out (the auth screens are only reachable that way), so it must
+# run after every flow that reuses the warm session.
+appId: com.mybiblelog.app
+tags:
+  - smoke
+---
+- runFlow: ../common/resume.yaml
+- assertVisible:
+    id: "screen.today"
+
+# --- Today -> Calendar (the push that once silently did nothing) ---------
+- scrollUntilVisible:
+    element:
+      id: "today.view-all-reading"
+    direction: DOWN
+- tapOn:
+    id: "today.view-all-reading"
+- assertVisible:
+    id: "screen.calendar"
+- assertVisible:
+    id: "calendar.days-grid"
+- back
+- assertVisible:
+    id: "screen.today"
+
+# --- Today -> Notes tab (cross-tab push from Recent Notes) ---------------
+- scrollUntilVisible:
+    element:
+      id: "today.view-all-notes"
+    direction: DOWN
+- tapOn:
+    id: "today.view-all-notes"
+- assertVisible:
+    id: "screen.notes"
+- tapOn:
+    id: "notes.tags"
+- assertVisible:
+    id: "screen.notes.tags"
+- back
+- assertVisible:
+    id: "screen.notes"
+
+# --- Bible tab: book detail, Progress, Progress -> Settings/Reading -------
+- tapOn:
+    id: "tab.bible"
+- assertVisible:
+    id: "screen.bible"
+- tapOn: "Genesis"
+- assertVisible:
+    id: "screen.bible.book"
+- back
+- tapOn:
+    id: "bible.progress-link"
+- assertVisible:
+    id: "screen.bible.progress"
+- scrollUntilVisible:
+    element:
+      id: "progress.reading-settings-link"
+    direction: DOWN
+- tapOn:
+    id: "progress.reading-settings-link"
+- assertVisible:
+    id: "screen.settings.reading"
+
+# --- Checklist tab --------------------------------------------------------
+- tapOn:
+    id: "tab.checklist"
+- assertVisible:
+    id: "screen.checklist"
+
+# --- Settings tab and every sub-screen -----------------------------------
+# Tapping the focused tab pops its stack, clearing the Reading screen the
+# Progress link pushed above.
+- tapOn:
+    id: "tab.settings"
+- tapOn:
+    id: "tab.settings"
+- assertVisible:
+    id: "screen.settings"
+- tapOn:
+    id: "settings.reading-link"
+- assertVisible:
+    id: "screen.settings.reading"
+- back
+- tapOn:
+    id: "settings.insights-link"
+- assertVisible:
+    id: "screen.settings.insights"
+- back
+- tapOn:
+    id: "settings.appearance-link"
+- assertVisible:
+    id: "screen.settings.appearance"
+- back
+- tapOn:
+    id: "settings.language-link"
+- assertVisible:
+    id: "screen.settings.language"
+- back
+- tapOn:
+    id: "settings.feedback-link"
+- assertVisible:
+    id: "screen.settings.feedback"
+- back
+- scrollUntilVisible:
+    element:
+      id: "settings.about-link"
+    direction: DOWN
+- tapOn:
+    id: "settings.about-link"
+- assertVisible:
+    id: "screen.settings.about"
+- back
+- tapOn:
+    id: "settings.account-link"
+- assertVisible:
+    id: "screen.settings.account"
+- tapOn:
+    id: "settings.change-email"
+- assertVisible:
+    id: "screen.settings.change-email"
+- back
+- scrollUntilVisible:
+    element:
+      id: "settings.delete-account"
+    direction: DOWN
+- tapOn:
+    id: "settings.delete-account"
+- assertVisible:
+    id: "screen.settings.delete-account"
+- back
+- assertVisible:
+    id: "screen.settings.account"
+
+# --- Logged out: Login, Forgot Password, Register ------------------------
+- scrollUntilVisible:
+    element:
+      id: "settings.logout"
+    direction: UP
+- tapOn:
+    id: "settings.logout"
+- tapOn:
+    id: "settings.logout-confirm"
+- extendedWaitUntil:
+    visible:
+      id: "settings.login"
+    timeout: 15000
+- tapOn:
+    id: "settings.login"
+- assertVisible:
+    id: "screen.login"
+- tapOn:
+    id: "login.forgot-password"
+- assertVisible:
+    id: "screen.forgot-password"
+- back
+- assertVisible:
+    id: "screen.login"
+- tapOn:
+    id: "login.register"
+- assertVisible:
+    id: "screen.register"
+- back
+- assertVisible:
+    id: "screen.login"

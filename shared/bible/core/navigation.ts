@@ -1,5 +1,5 @@
-import { makeVerseId, parseVerseId, type VerseId } from './encoding';
-import { getAllBooks, getBookChapterCount, getBookCount, getBooksForCanon, getChapterVerseCount } from './metadata';
+import { makeVerseId, parseVerseId, type VerseId } from './encoding.js';
+import { getAllBooks, getBookChapterCount, getBookCount, getBooksForCanon, getChapterVerseCount } from './metadata.js';
 
 /**
  * Returns the next verseId. Especially used to jump from

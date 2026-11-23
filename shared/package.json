@@ -2,6 +2,7 @@
   "name": "@mybiblelog/shared",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Shared utilities for My Bible Log",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,8 +20,8 @@
     "type-check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint --ext .ts --ignore-pattern dist/ .",
-    "lint:fix": "eslint --ext .ts --ignore-pattern dist/ . --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "prepare": "npm run build"
   },
   "keywords": [
@@ -36,6 +37,6 @@
   },
   "dependencies": {
     "dayjs": "^1.11.13",
-    "typescript": "^5.9.3"
+    "typescript": "~6.0.3"
   }
 }

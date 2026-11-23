@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import Bible from './index';
-import { computeBibleProgress } from './progress';
-import { getBookOptions } from './options';
+import Bible from './index.js';
+import { computeBibleProgress } from './progress.js';
+import { getBookOptions } from './options.js';
 
 const DEUTEROCANONICAL_BOOK_INDEXES = [67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77];
 

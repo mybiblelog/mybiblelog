@@ -2,10 +2,9 @@ jest.mock("@/src/bible/openInBible", () => ({
   openPassageInBible: jest.fn(),
 }));
 
-import { Bible } from "@mybiblelog/shared";
+import { Bible, type PassageNote } from "@mybiblelog/shared";
 import { StyleSheet } from "react-native";
 import { openPassageInBible } from "@/src/bible/openInBible";
-import type { PassageNote } from "@/src/api/notesApi";
 import { fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/renderWithProviders";
 import { NoteCard } from "./NoteCard";
 

@@ -61,7 +61,7 @@ const init = async () => {
   };
 
   const sendFn = async (params: SendEmailParams): Promise<void> => {
-    let status: 'pending' | 'sent' | 'failed' | 'log_only' = 'pending';
+    let status: 'sent' | 'failed' | 'log_only';
 
     // only send email in production
     if (nodeEnv === 'production') {

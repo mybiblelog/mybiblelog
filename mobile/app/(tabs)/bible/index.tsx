@@ -188,7 +188,7 @@ export default function BibleIndex() {
   }
 
   return (
-    <Screen>
+    <Screen testID="screen.bible">
       {header}
 
       <AnimatedList

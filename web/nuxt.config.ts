@@ -2,10 +2,10 @@ import { execSync } from 'node:child_process';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { resolve } from 'node:path';
 import { config as loadEnv } from 'dotenv';
-import { locales as sharedLocales, getLocaleCodes } from '../shared/platform/i18n';
+import { locales as sharedLocales, getLocaleCodes } from '../shared/platform/i18n.ts';
 
 loadEnv({
-  path: resolve(__dirname, '../.env'),
+  path: resolve(import.meta.dirname, '../.env'),
   quiet: true,
 });
 
@@ -40,7 +40,7 @@ export default defineNuxtConfig({
 
   postcss: {
     plugins: {
-      'postcss-mixins': { mixinsDir: resolve(__dirname, 'app/assets/css/mixins') },
+      'postcss-mixins': { mixinsDir: resolve(import.meta.dirname, 'app/assets/css/mixins') },
     },
   },
 
@@ -99,7 +99,7 @@ export default defineNuxtConfig({
   },
 
   alias: {
-    '@mybiblelog/shared': resolve(__dirname, '../shared/index.ts'),
+    '@mybiblelog/shared': resolve(import.meta.dirname, '../shared/index.ts'),
   },
 
   modules: [

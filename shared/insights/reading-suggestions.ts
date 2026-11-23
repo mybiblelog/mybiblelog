@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import Bible from '../bible';
+import Bible from '../bible/index.js';
 
 /**
  * Reading-suggestion algorithm shared by the web and mobile apps.

@@ -4,16 +4,16 @@ jest.mock("@/src/api/notesApi", () => ({
   createNote: jest.fn(),
   updateNote: jest.fn(),
   deleteNote: jest.fn(),
-  fetchBookNoteCounts: jest.fn(),
+  fetchNoteCountsByBook: jest.fn(),
 }));
+import type { PassageNote } from "@mybiblelog/shared";
 import { ApiError } from "@/src/api/apiError";
 import {
   createNote,
   deleteNote,
-  fetchBookNoteCounts,
+  fetchNoteCountsByBook,
   fetchNotesPage,
   updateNote,
-  type PassageNote,
 } from "@/src/api/notesApi";
 import { initialNotesQuery, useNotesStore } from "./passageNotes";
 
@@ -36,7 +36,7 @@ beforeEach(() => {
     state: { status: "idle" },
     query: { ...initialNotesQuery, filterTags: [] },
   });
-  (fetchBookNoteCounts as jest.Mock).mockReset().mockResolvedValue({});
+  (fetchNoteCountsByBook as jest.Mock).mockReset().mockResolvedValue({});
 });
 
 describe("loadFirstPage", () => {
@@ -199,16 +199,16 @@ describe("mutations", () => {
     (fetchNotesPage as jest.Mock).mockResolvedValue(page([], 0));
 
     await actions().create({ content: "note 9", passages: [], tags: [] });
-    expect(fetchBookNoteCounts).toHaveBeenCalledTimes(1);
+    expect(fetchNoteCountsByBook).toHaveBeenCalledTimes(1);
 
     await actions().remove("9");
-    expect(fetchBookNoteCounts).toHaveBeenCalledTimes(2);
+    expect(fetchNoteCountsByBook).toHaveBeenCalledTimes(2);
   });
 
   it("does not refresh the counts when the mutation fails", async () => {
     (createNote as jest.Mock).mockRejectedValue(new Error("boom"));
     await actions().create({ content: "x", passages: [], tags: [] });
-    expect(fetchBookNoteCounts).not.toHaveBeenCalled();
+    expect(fetchNoteCountsByBook).not.toHaveBeenCalled();
   });
 
   it("update replaces the matching note in place and refreshes counts", async () => {
@@ -228,7 +228,7 @@ describe("mutations", () => {
     expect(saved).toEqual(updated);
     const state = useNotesStore.getState().state;
     expect(state.status === "ready" && state.notes).toEqual([updated, note("2")]);
-    expect(fetchBookNoteCounts).toHaveBeenCalledTimes(1);
+    expect(fetchNoteCountsByBook).toHaveBeenCalledTimes(1);
   });
 
   it("update returns null and leaves state untouched when the save fails", async () => {
@@ -245,6 +245,6 @@ describe("mutations", () => {
 
     expect(saved).toBeNull();
     expect(useNotesStore.getState().state).toEqual(readyState);
-    expect(fetchBookNoteCounts).not.toHaveBeenCalled();
+    expect(fetchNoteCountsByBook).not.toHaveBeenCalled();
   });
 });

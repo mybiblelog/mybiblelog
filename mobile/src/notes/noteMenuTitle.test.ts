@@ -1,5 +1,4 @@
-import { Bible } from "@mybiblelog/shared";
-import type { PassageNote } from "@/src/api/notesApi";
+import { Bible, type PassageNote } from "@mybiblelog/shared";
 import { getNoteMenuTitle } from "@/src/notes/noteMenuTitle";
 
 const note = (overrides: Partial<PassageNote>): PassageNote => ({

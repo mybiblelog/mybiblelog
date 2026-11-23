@@ -1,9 +1,6 @@
+import { FEEDBACK_MESSAGE_MAX_LENGTH, type FeedbackKind } from "@mybiblelog/shared";
 import { ApiError, mapFormErrors } from "@/src/api/apiError";
-import {
-  FEEDBACK_MESSAGE_MAX_LENGTH,
-  type FeedbackKind,
-  submitFeedback,
-} from "@/src/api/feedbackApi";
+import { submitFeedback } from "@/src/api/feedbackApi";
 import { useAuth } from "@/src/stores/auth";
 import { useCanReachServer } from "@/src/stores/connectivity";
 import { useT } from "@/src/i18n/LocaleProvider";
@@ -94,7 +91,7 @@ export default function Feedback() {
   }
 
   return (
-    <Screen>
+    <Screen testID="screen.settings.feedback">
       <ScreenHeader padded back title={t("feedback_title")} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <Text variant="body" color="mutedText">

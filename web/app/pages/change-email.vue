@@ -21,6 +21,7 @@
 </template>
 
 <script setup lang="ts">
+import { completeEmailChange } from '@mybiblelog/shared';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useToastStore } from '~/stores/toast';
@@ -52,7 +53,7 @@ onMounted(async () => {
   }
 
   try {
-    await $http.post('/api/auth/change-email/complete', { email, code });
+    await completeEmailChange($http, { email, code });
   }
   catch (err) {
     const apiError = err instanceof ApiError ? err : new UnknownApiError();

@@ -7,7 +7,6 @@ type RenderBrandedWrapperParams = {
   title?: string;
 };
 
-/* eslint-disable indent */
 const renderHead = ({ title }: { title?: string }) => (`
   <head>
     ${title ? `<title>${title}</title>` : ''}
@@ -112,7 +111,6 @@ const renderBody = ({ contentHtml, footerHtml }: { contentHtml: string; footerHt
     </table>
   </body>`
 );
-/* eslint-enable indent */
 
 const renderBrandedEmail = ({ contentHtml, footerHtml, title }: RenderBrandedWrapperParams): string => {
   return (

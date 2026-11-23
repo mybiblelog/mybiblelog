@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import Bible from './index';
-import { filterAndSortBookOptions, getBookOptions } from './options';
+import Bible from './index.js';
+import { filterAndSortBookOptions, getBookOptions } from './options.js';
 
 describe('getBookOptions', () => {
   it('returns one localized option per book in canonical order', () => {

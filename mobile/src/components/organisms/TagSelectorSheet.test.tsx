@@ -1,5 +1,5 @@
+import type { PassageNoteTag } from "@mybiblelog/shared";
 import { fireEvent, renderWithProviders } from "@/src/test-utils/renderWithProviders";
-import type { PassageNoteTag } from "@/src/api/tagsApi";
 import { useAuthStore } from "@/src/stores/auth";
 import { useConnectivityStore } from "@/src/stores/connectivity";
 import { useTagsStore } from "@/src/stores/passageNoteTags";

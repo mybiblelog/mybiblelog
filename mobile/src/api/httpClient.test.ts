@@ -9,7 +9,7 @@ jest.mock("@/src/api/appSupportApi", () => ({
 }));
 import { getAuthToken } from "@/src/stores/auth";
 import { reportApiReachability } from "@/src/stores/connectivity";
-import { httpClient } from "./httpClient";
+import { createHttpClient, httpClient } from "./httpClient";
 
 function mockFetchOnce(body: unknown, ok = true, status = 200) {
   (global.fetch as jest.Mock).mockResolvedValueOnce({
@@ -128,5 +128,31 @@ describe("reachability reporting", () => {
     (global.fetch as jest.Mock).mockRejectedValueOnce(new TypeError("Network request failed"));
     await expect(httpClient.get("/api/log-entries")).rejects.toBeInstanceOf(ApiError);
     expect(reportApiReachability).toHaveBeenCalledWith(false);
+  });
+});
+
+describe("createHttpClient({ useSession: false })", () => {
+  it("sends only the token passed in, ignoring the stored one", async () => {
+    (getAuthToken as jest.Mock).mockReturnValue("stored-token");
+    mockFetchOnce({ data: {} });
+    await createHttpClient({ useSession: false, token: "given-token" }).get("/api/me");
+    const [, init] = (global.fetch as jest.Mock).mock.calls[0];
+    expect(init.headers.Authorization).toBe("Bearer given-token");
+  });
+
+  it("sends no token when none is passed in", async () => {
+    (getAuthToken as jest.Mock).mockReturnValue("stored-token");
+    mockFetchOnce({ data: {} });
+    await createHttpClient({ useSession: false }).get("/api/me");
+    const [, init] = (global.fetch as jest.Mock).mock.calls[0];
+    expect(init.headers.Authorization).toBeUndefined();
+  });
+
+  it("does not report reachability", async () => {
+    (global.fetch as jest.Mock).mockRejectedValueOnce(new TypeError("Network request failed"));
+    await expect(createHttpClient({ useSession: false }).get("/api/me")).rejects.toBeInstanceOf(
+      ApiError
+    );
+    expect(reportApiReachability).not.toHaveBeenCalled();
   });
 });

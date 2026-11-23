@@ -156,7 +156,7 @@ export default function Calendar() {
   );
 
   return (
-    <Screen>
+    <Screen testID="screen.calendar">
       <AnimatedList
         data={entriesForSelectedDay}
         refreshControl={refreshControl}

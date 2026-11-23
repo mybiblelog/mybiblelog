@@ -1,4 +1,4 @@
-import { LocaleCode } from '@shared/dist/platform/i18n';
+import { LocaleCode } from '@mybiblelog/shared';
 import locales from '../locales/content';
 import { substitute } from '../locales/substitute';
 import { getLocaleBaseUrl, emailParagraphStyle, renderCodeBlock } from './helpers';

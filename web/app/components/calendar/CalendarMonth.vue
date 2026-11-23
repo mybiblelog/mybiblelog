@@ -35,7 +35,7 @@ import CalendarWeekdays from '~/components/calendar/CalendarWeekdays.vue';
 import type { DateVerseCounts } from '~/stores/date-verse-counts';
 
 const props = defineProps<{
-  getDateVerseCounts:(date: string) => DateVerseCounts;
+  getDateVerseCounts: (date: string) => DateVerseCounts;
   dailyVerseCountGoal: number;
   trackerStartDate?: string;
 }>();

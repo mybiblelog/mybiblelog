@@ -24,7 +24,7 @@ export function createQueue<T>(
         console.log('Email queued successfully');
       }
       catch (err) {
-        if (err.statusCode === 429) {
+        if (typeof err === 'object' && err !== null && 'statusCode' in err && err.statusCode === 429) {
           console.warn('Email provider throttled — retrying in 2s');
           await sleep(2000);
           queue.unshift(job);

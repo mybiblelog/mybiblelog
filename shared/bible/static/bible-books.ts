@@ -22,7 +22,7 @@ export type BibleBook = {
     en: BibleBookLocale;
     [locale: string]: BibleBookLocale;
   };
-}
+};
 
 const bibleBooks: BibleBook[] = [
   {

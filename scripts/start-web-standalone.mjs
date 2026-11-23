@@ -10,7 +10,7 @@
 import http from 'node:http';
 
 const { listener } = await import(
-  new URL('../web/.output/server/index.mjs', import.meta.url).href
+  new URL('../web/.output/server/index.mjs', import.meta.url).href,
 );
 
 const port = parseInt(process.env.PORT || '3000', 10);

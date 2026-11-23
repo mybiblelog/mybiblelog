@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { requestApi, createTestUser, createTestAdmin, deleteTestUser } from './helpers';
+import { requestApi, createTestUser, createTestAdmin, deleteTestUser, type TestUser } from './helpers';
 
 dayjs.extend(utc);
 
@@ -45,7 +45,7 @@ describe('admin.test.js', () => {
           .get('/api/admin/feedback')
           .set('Authorization', `Bearer ${admin.token}`);
         expect(response.status).toBe(200);
-        expect(response.body.data.some((f) => f._id === feedbackId)).toBe(true);
+        expect(response.body.data.some((f: { _id: string }) => f._id === feedbackId)).toBe(true);
         expect(response.body.data[0]).toHaveProperty('status');
       }
       finally {
@@ -70,12 +70,12 @@ describe('admin.test.js', () => {
         const openResponse = await requestApi
           .get('/api/admin/feedback')
           .set('Authorization', `Bearer ${admin.token}`);
-        expect(openResponse.body.data.some((f) => f._id === feedbackId)).toBe(false);
+        expect(openResponse.body.data.some((f: { _id: string }) => f._id === feedbackId)).toBe(false);
 
         const archiveResponse = await requestApi
           .get('/api/admin/feedback?status=archived')
           .set('Authorization', `Bearer ${admin.token}`);
-        expect(archiveResponse.body.data.some((f) => f._id === feedbackId)).toBe(true);
+        expect(archiveResponse.body.data.some((f: { _id: string }) => f._id === feedbackId)).toBe(true);
       }
       finally {
         await deleteTestUser(admin);
@@ -99,12 +99,12 @@ describe('admin.test.js', () => {
         const openResponse = await requestApi
           .get('/api/admin/feedback?status=open')
           .set('Authorization', `Bearer ${admin.token}`);
-        expect(openResponse.body.data.some((f) => f._id === feedbackId)).toBe(false);
+        expect(openResponse.body.data.some((f: { _id: string }) => f._id === feedbackId)).toBe(false);
 
         const resolvedResponse = await requestApi
           .get('/api/admin/feedback?status=resolved')
           .set('Authorization', `Bearer ${admin.token}`);
-        expect(resolvedResponse.body.data.some((f) => f._id === feedbackId)).toBe(true);
+        expect(resolvedResponse.body.data.some((f: { _id: string }) => f._id === feedbackId)).toBe(true);
       }
       finally {
         await deleteTestUser(admin);
@@ -397,7 +397,7 @@ describe('admin.test.js', () => {
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
         const today = dayjs.utc().format('YYYY-MM-DD');
-        const initialCount = initialResponse.body.data.find((d) => d.date === today).usersWithLogEntry;
+        const initialCount = initialResponse.body.data.find((d: { date: string }) => d.date === today).usersWithLogEntry;
 
         // Add a log entry
         await requestApi
@@ -413,7 +413,7 @@ describe('admin.test.js', () => {
         const updatedResponse = await requestApi
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
-        const updatedCount = updatedResponse.body.data.find((d) => d.date === today).usersWithLogEntry;
+        const updatedCount = updatedResponse.body.data.find((d: { date: string }) => d.date === today).usersWithLogEntry;
 
         expect(updatedCount).toBe(initialCount + 1);
       }
@@ -432,7 +432,7 @@ describe('admin.test.js', () => {
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
         const yesterday = dayjs.utc().subtract(1, 'day').format('YYYY-MM-DD');
-        const initialCount = initialResponse.body.data.find((d) => d.date === yesterday).usersWithLogEntry;
+        const initialCount = initialResponse.body.data.find((d: { date: string }) => d.date === yesterday).usersWithLogEntry;
 
         // Add a log entry
         await requestApi
@@ -448,7 +448,7 @@ describe('admin.test.js', () => {
         const updatedResponse = await requestApi
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
-        const updatedCount = updatedResponse.body.data.find((d) => d.date === yesterday).usersWithLogEntry;
+        const updatedCount = updatedResponse.body.data.find((d: { date: string }) => d.date === yesterday).usersWithLogEntry;
 
         expect(updatedCount).toBe(initialCount + 1);
       }
@@ -467,7 +467,7 @@ describe('admin.test.js', () => {
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
         const today = dayjs.utc().format('YYYY-MM-DD');
-        const initialCount = initialResponse.body.data.find((d) => d.date === today).usersWithLogEntry;
+        const initialCount = initialResponse.body.data.find((d: { date: string }) => d.date === today).usersWithLogEntry;
 
         // Add two log entries
         await requestApi
@@ -492,7 +492,7 @@ describe('admin.test.js', () => {
         const updatedResponse = await requestApi
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
-        const updatedCount = updatedResponse.body.data.find((d) => d.date === today).usersWithLogEntry;
+        const updatedCount = updatedResponse.body.data.find((d: { date: string }) => d.date === today).usersWithLogEntry;
 
         expect(updatedCount).toBe(initialCount + 1);
       }
@@ -544,7 +544,7 @@ describe('admin.test.js', () => {
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
         const today = dayjs.utc().format('YYYY-MM-DD');
-        const initialCount = initialResponse.body.data.find((d) => d.date === today).usersWithNote;
+        const initialCount = initialResponse.body.data.find((d: { date: string }) => d.date === today).usersWithNote;
 
         // Add a note
         await requestApi
@@ -559,7 +559,7 @@ describe('admin.test.js', () => {
         const updatedResponse = await requestApi
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
-        const updatedCount = updatedResponse.body.data.find((d) => d.date === today).usersWithNote;
+        const updatedCount = updatedResponse.body.data.find((d: { date: string }) => d.date === today).usersWithNote;
 
         expect(updatedCount).toBe(initialCount + 1);
       }
@@ -578,7 +578,7 @@ describe('admin.test.js', () => {
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
         const today = dayjs.utc().format('YYYY-MM-DD');
-        const initialCount = initialResponse.body.data.find((d) => d.date === today).usersWithNote;
+        const initialCount = initialResponse.body.data.find((d: { date: string }) => d.date === today).usersWithNote;
 
         // Add two notes
         await requestApi
@@ -601,7 +601,7 @@ describe('admin.test.js', () => {
         const updatedResponse = await requestApi
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
-        const updatedCount = updatedResponse.body.data.find((d) => d.date === today).usersWithNote;
+        const updatedCount = updatedResponse.body.data.find((d: { date: string }) => d.date === today).usersWithNote;
 
         expect(updatedCount).toBe(initialCount + 1);
       }
@@ -613,14 +613,14 @@ describe('admin.test.js', () => {
 
     it('creating a new user account today increments today\'s count', async () => {
       const admin = await createTestAdmin();
-      let testUser;
+      let testUser: TestUser | undefined;
       try {
         // Get initial counts
         const initialResponse = await requestApi
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
         const today = dayjs.utc().format('YYYY-MM-DD');
-        const initialCount = initialResponse.body.data.find((d) => d.date === today).newUserAccounts;
+        const initialCount = initialResponse.body.data.find((d: { date: string }) => d.date === today).newUserAccounts;
 
         // Create a new user
         testUser = await createTestUser();
@@ -629,12 +629,12 @@ describe('admin.test.js', () => {
         const updatedResponse = await requestApi
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
-        const updatedCount = updatedResponse.body.data.find((d) => d.date === today).newUserAccounts;
+        const updatedCount = updatedResponse.body.data.find((d: { date: string }) => d.date === today).newUserAccounts;
 
         expect(updatedCount).toBe(initialCount + 1);
       }
       finally {
-        await deleteTestUser(testUser);
+        if (testUser) await deleteTestUser(testUser);
         await deleteTestUser(admin);
       }
     });
@@ -648,7 +648,7 @@ describe('admin.test.js', () => {
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
         const today = dayjs.utc().format('YYYY-MM-DD');
-        const initialCount = initialResponse.body.data.find((d) => d.date === today).newUserAccounts;
+        const initialCount = initialResponse.body.data.find((d: { date: string }) => d.date === today).newUserAccounts;
 
         // Delete the user
         await requestApi
@@ -659,7 +659,7 @@ describe('admin.test.js', () => {
         const updatedResponse = await requestApi
           .get('/api/admin/reports/user-engagement/past-week')
           .set('Authorization', `Bearer ${admin.token}`);
-        const updatedCount = updatedResponse.body.data.find((d) => d.date === today).newUserAccounts;
+        const updatedCount = updatedResponse.body.data.find((d: { date: string }) => d.date === today).newUserAccounts;
 
         expect(updatedCount).toBe(initialCount - 1);
       }
@@ -727,7 +727,7 @@ describe('admin.test.js', () => {
         expect(response.body).toHaveProperty('data');
         expect(response.body).not.toHaveProperty('error');
         expect(response.body.data.length).toBeGreaterThan(1);
-        const emails = response.body.data.map((user) => user.email);
+        const emails = response.body.data.map((user: { email: string }) => user.email);
         const sortedEmails = [...emails].sort();
         expect(emails).toEqual(sortedEmails);
       }
@@ -750,7 +750,7 @@ describe('admin.test.js', () => {
         expect(response.body).toHaveProperty('data');
         expect(response.body).not.toHaveProperty('error');
         expect(response.body.data.length).toBeGreaterThan(1);
-        const emails = response.body.data.map((user) => user.email);
+        const emails = response.body.data.map((user: { email: string }) => user.email);
         const sortedEmails = [...emails].sort().reverse();
         expect(emails).toEqual(sortedEmails);
       }
@@ -773,7 +773,7 @@ describe('admin.test.js', () => {
         expect(response.body).toHaveProperty('data');
         expect(response.body).not.toHaveProperty('error');
         expect(response.body.data.length).toBeGreaterThan(1);
-        const createdAt = response.body.data.map((user) => user.createdAt);
+        const createdAt = response.body.data.map((user: { createdAt: string }) => user.createdAt);
         const sortedCreatedAt = [...createdAt].sort();
         expect(createdAt).toEqual(sortedCreatedAt);
       }
@@ -796,7 +796,7 @@ describe('admin.test.js', () => {
         expect(response.body).toHaveProperty('data');
         expect(response.body).not.toHaveProperty('error');
         expect(response.body.data.length).toBeGreaterThan(1);
-        const createdAt = response.body.data.map((user) => user.createdAt);
+        const createdAt = response.body.data.map((user: { createdAt: string }) => user.createdAt);
         const sortedCreatedAt = [...createdAt].sort().reverse();
         expect(createdAt).toEqual(sortedCreatedAt);
       }
@@ -925,7 +925,7 @@ describe('admin.test.js', () => {
 
     it('admin can get the total number of users', async () => {
       const admin = await createTestAdmin();
-      let testUser;
+      let testUser: TestUser | undefined;
       try {
         let size = 0;
         const response = await requestApi
@@ -951,7 +951,7 @@ describe('admin.test.js', () => {
         expect(updatedResponse.body.meta.pagination.size).toBe(size + 1);
       }
       finally {
-        await deleteTestUser(testUser);
+        if (testUser) await deleteTestUser(testUser);
         await deleteTestUser(admin);
       }
     });

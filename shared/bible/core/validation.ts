@@ -1,5 +1,5 @@
-import { parseVerseId } from './encoding';
-import { getBookChapterCount, getChapterVerseCount } from './metadata';
+import { parseVerseId } from './encoding.js';
+import { getBookChapterCount, getChapterVerseCount } from './metadata.js';
 
 export const verseExists = (verseId: number): boolean => {
   const { book, chapter, verse } = parseVerseId(verseId);

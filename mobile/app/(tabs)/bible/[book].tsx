@@ -3,8 +3,7 @@ import { useLocalSearchParams } from "expo-router";
 import { memo, useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Bible, type ChapterProgress } from "@mybiblelog/shared";
-import type { NotePassage } from "@/src/api/notesApi";
+import { Bible, type ChapterProgress, type NotePassage } from "@mybiblelog/shared";
 import type { LogEntry } from "@/src/types/log-entry";
 import {
   AnimatedList,
@@ -160,7 +159,7 @@ export default function BibleBookScreen() {
   }
 
   return (
-    <Screen>
+    <Screen testID="screen.bible.book">
       <ScreenHeader
         padded
         back

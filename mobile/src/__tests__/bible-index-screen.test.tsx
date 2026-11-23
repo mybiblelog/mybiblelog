@@ -8,7 +8,7 @@ jest.mock("expo-router", () => ({
 }));
 jest.mock("@/src/api/notesApi", () => ({
   ...jest.requireActual("@/src/api/notesApi"),
-  fetchBookNoteCounts: jest.fn().mockResolvedValue({}),
+  fetchNoteCountsByBook: jest.fn().mockResolvedValue({}),
   fetchNotesPage: jest
     .fn()
     .mockResolvedValue({ notes: [], meta: { offset: 0, limit: 10, size: 0 } }),
@@ -16,7 +16,7 @@ jest.mock("@/src/api/notesApi", () => ({
 
 import { computeBibleProgress } from "@mybiblelog/shared";
 import { router } from "expo-router";
-import { fetchBookNoteCounts } from "@/src/api/notesApi";
+import { fetchNoteCountsByBook } from "@/src/api/notesApi";
 import { act, within } from "@testing-library/react-native";
 import { fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/renderWithProviders";
 import { useBibleProgressStore } from "@/src/stores/bibleProgress";
@@ -32,11 +32,11 @@ import BibleIndex from "@/app/(tabs)/bible/index";
 // The screen refetches counts on focus, and the awaited render lets that land.
 function setCounts(counts: Record<number, number>) {
   useNoteCountsStore.setState({ counts });
-  (fetchBookNoteCounts as jest.Mock).mockResolvedValue(counts);
+  (fetchNoteCountsByBook as jest.Mock).mockResolvedValue(counts);
 }
 
 beforeEach(() => {
-  (fetchBookNoteCounts as jest.Mock).mockResolvedValue({});
+  (fetchNoteCountsByBook as jest.Mock).mockResolvedValue({});
   useBookListPrefsStore.setState({ prefs: DEFAULT_BOOK_LIST_PREFS, touched: false });
   useBibleProgressStore.setState({ progress: computeBibleProgress([]), jobs: 0 });
   useNoteCountsStore.setState({ counts: null });
@@ -70,7 +70,7 @@ describe("Bible Books screen", () => {
 
   it("refreshes the counts when the screen gains focus", async () => {
     await renderWithProviders(<BibleIndex />);
-    await waitFor(() => expect(fetchBookNoteCounts).toHaveBeenCalled());
+    await waitFor(() => expect(fetchNoteCountsByBook).toHaveBeenCalled());
   });
 
   it("navigates to the book when the badge is pressed, without filtering the notes tab", async () => {

@@ -43,6 +43,6 @@ const main = async (): Promise<void> => {
 main().catch(async (err) => {
   console.error('Unexpected error:', err);
   try { await closeConnection(); }
-  catch (e) { /* ignore */ }
+  catch { /* ignore */ }
   process.exit(1);
 });

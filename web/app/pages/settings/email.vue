@@ -131,6 +131,7 @@
 </template>
 
 <script setup lang="ts">
+import { beginEmailChange } from '@mybiblelog/shared';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import type { ApiErrorDetail } from '~/helpers/api-error';
@@ -219,7 +220,7 @@ async function submitChangeEmail() {
   }
 
   try {
-    await $http.post('/api/auth/change-email', { password, newEmail });
+    await beginEmailChange($http, { password, newEmail });
     changeEmailModel.password = '';
     changeEmailModel.newEmail = '';
     resetChangeEmailErrors();

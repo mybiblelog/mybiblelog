@@ -1,4 +1,4 @@
-import { makeVerseId, parseVerseId } from './core/encoding';
+import { makeVerseId, parseVerseId } from './core/encoding.js';
 import {
   getAllBooks,
   getBookBlbCode,
@@ -18,7 +18,7 @@ import {
   getTotalVerseCount,
   isNewTestament,
   isDeuterocanonical,
-} from './core/metadata';
+} from './core/metadata.js';
 import {
   getFirstBookChapterVerseId,
   getFirstBookVerseId,
@@ -27,8 +27,8 @@ import {
   getNextVerseId,
   getNextReadingVerseId,
   getPreviousVerseId,
-} from './core/navigation';
-import { validateRange, verseExists } from './core/validation';
+} from './core/navigation.js';
+import { validateRange, verseExists } from './core/validation.js';
 import {
   checkRangeOverlap,
   compareRanges,
@@ -42,17 +42,17 @@ import {
   filterRangesByBookChapter,
   filterRangesToCanon,
   getRangesBetweenVerseIds,
-} from './core/ranges';
+} from './core/ranges.js';
 import {
   generateBibleSegments,
   generateBookChapterSegments,
   generateBookSegments,
   generateSegments,
-} from './core/segments';
-import { displayVerseRange, parseVerseRange } from './core/display';
-import { formatUsfmReference, parseUsfmReference } from './core/usfm';
+} from './core/segments.js';
+import { displayVerseRange, parseVerseRange } from './core/display.js';
+import { formatUsfmReference, parseUsfmReference } from './core/usfm.js';
 
-export type { ParsedVerseId, Segment, VerseId, VerseRange } from './core/encoding';
+export type { ParsedVerseId, Segment, VerseId, VerseRange } from './core/encoding.js';
 
 const Bible = {
   makeVerseId,

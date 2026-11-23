@@ -1,3 +1,4 @@
+import { Bible } from '@mybiblelog/shared';
 import { test, expect } from '../../fixtures';
 import { seedLogEntries, seedNote } from '../../helpers/seed';
 import { verseId, chapterRange, chapterVerseCount, bookVerseCount, bookChapterCount, displayVerseRange, BOOK } from '../../helpers/passages';
@@ -157,7 +158,7 @@ test.describe('Bible Books pages', () => {
   test('invalid book index redirects to the books overview', async ({ page }) => {
     // Every in-app link builds `/books/${bookIndex}`, but a hand-typed or stale
     // URL must not reach the Bible lookups with a non-numeric or out-of-range index.
-    for (const badIndex of ['genesis', '0', String(BOOK.REVELATION + 1), '1.5']) {
+    for (const badIndex of ['genesis', '0', String(Bible.getAllBooks().length + 1), '1.5']) {
       await page.goto(`/books/${badIndex}`);
       await expect(page).toHaveURL(/\/books$/);
     }

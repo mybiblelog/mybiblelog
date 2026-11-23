@@ -26,6 +26,7 @@
 </template>
 
 <script setup lang="ts">
+import { resendVerificationEmail } from '@mybiblelog/shared';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 
 const props = withDefaults(defineProps<{
@@ -80,13 +81,12 @@ async function onResend() {
   loading.value = true;
   lastResult.value = null;
   try {
-    const res = await $http.post<{ success?: boolean; secondsUntilCanRetry?: number }>(
-      '/api/auth/verify-email/resend',
+    const { success, secondsUntilCanRetry } = await resendVerificationEmail(
+      $http,
       { email: normalizedEmail.value, locale: i18nLocale.value },
     );
-    const secondsUntilCanRetry = Number(res.data?.secondsUntilCanRetry) || 0;
     startCountdown(secondsUntilCanRetry);
-    lastResult.value = res.data?.success ? 'sent' : null;
+    lastResult.value = success ? 'sent' : null;
   }
   catch (err) {
     const error = err instanceof ApiError ? err : new UnknownApiError();

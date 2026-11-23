@@ -4,8 +4,7 @@
  * Console output is the Worker's logging mechanism (visible in the Cloudflare dashboard).
  */
 export default {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Cloudflare email handler signature
-  async email(message, env, ctx) {
+  async email(message, _env, _ctx) {
     // (TODO: Replace with the actual domain name when setting up the Cloudflare Worker)
     const appDomain = 'https://mail.domain.com';
 

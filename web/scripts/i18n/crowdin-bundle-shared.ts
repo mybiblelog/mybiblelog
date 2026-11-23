@@ -13,6 +13,16 @@ export function emailLocaleStringsPath(nuxtRoot: string): string {
   return path.join(nuxtRoot, '..', 'api', 'services', 'email', 'locales', 'strings.json');
 }
 
+/** mobile/src/i18n/<locale>.ts — flat i18n-js tables. */
+export function mobileLocalesDir(nuxtRoot: string): string {
+  return path.join(nuxtRoot, '..', 'mobile', 'src', 'i18n');
+}
+
+/** Flat per-locale mobile bundles for crowdin.mobile.yml (gitignored with the rest of crowdin/). */
+export function mobileCrowdinDir(nuxtRoot: string): string {
+  return path.join(nuxtRoot, 'i18n', 'locales', 'crowdin', 'mobile');
+}
+
 /**
  * First inline block: no locale= and no src= (multi-locale JSON object).
  * The `(?![-\w])` guard keeps this from matching the vue-i18n v9 component tags
@@ -119,6 +129,6 @@ export function parseInlineI18nBlockJson(raw: string, filePath: string): Record<
   }
   catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
-    throw new Error(`${filePath}: ${msg}`);
+    throw new Error(`${filePath}: ${msg}`, { cause: e });
   }
 }

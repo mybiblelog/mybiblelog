@@ -51,6 +51,7 @@
 </template>
 
 <script setup lang="ts">
+import { deleteUserAccount } from '@mybiblelog/shared';
 import { useToastStore } from '~/stores/toast';
 import { useAuthStore } from '~/stores/auth';
 
@@ -85,7 +86,7 @@ async function deleteAccount() {
   if (formBusy.value) { return; }
   formBusy.value = true;
   try {
-    await $http.delete('/api/settings/account');
+    await deleteUserAccount($http);
     await authStore.logout();
   }
   catch {

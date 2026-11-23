@@ -1,5 +1,5 @@
-import Bible from '../bible';
-import type { VerseRange } from '../bible';
+import Bible from '../bible/index.js';
+import type { VerseRange } from '../bible/index.js';
 
 /**
  * Framework-agnostic passage-selection state machines.

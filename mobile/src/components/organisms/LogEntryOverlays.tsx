@@ -1,7 +1,6 @@
 import { type ReactNode, useCallback, useState } from "react";
 import { openNotesForRange } from "@/src/notes/openNotesForRange";
-import { Bible } from "@mybiblelog/shared";
-import type { NotePassage } from "@/src/api/notesApi";
+import { Bible, type NotePassage } from "@mybiblelog/shared";
 import type { StoredLogEntry } from "@/src/storage/logEntries";
 import { openPassageInBible } from "@/src/bible/openInBible";
 import { formatLongDate } from "@/src/i18n/date";

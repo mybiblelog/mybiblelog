@@ -13,9 +13,7 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-// the web app is an ESM package ("type": "module"); @mybiblelog/shared is CJS that re-exports via
-// __exportStar, which Node's ESM named-export detection can't see. Import the default (module.exports).
-import shared from '@mybiblelog/shared';
+import { defaultLocale, getLocaleCodes } from '@mybiblelog/shared';
 import globalLocales from '../../i18n/locales/locales';
 import {
   emailLocaleStringsPath,
@@ -26,8 +24,6 @@ import {
   toRelKey,
   walkVueFiles,
 } from './crowdin-bundle-shared';
-
-const { getLocaleCodes, defaultLocale } = shared;
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const NUXT_ROOT = path.resolve(SCRIPT_DIR, '../..');

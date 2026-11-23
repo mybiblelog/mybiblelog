@@ -1,4 +1,4 @@
-import { LocaleCode } from '@shared/dist/platform/i18n';
+import { LocaleCode } from '@mybiblelog/shared';
 import locales from '../locales/content';
 import { substitute } from '../locales/substitute';
 import renderBrandedEmail from './branded-wrapper';
@@ -25,7 +25,6 @@ const render = ({
   const subjectDate = new Intl.DateTimeFormat(locale, dateFormatOptions).format(emailDate);
   const subject = substitute(t.subject, { subjectDate });
 
-  /* eslint-disable indent */
   const recentLogEntriesRowsHtml = recentLogEntries.length > 0
     ? recentLogEntries.map((logEntry) => (`
         <tr>
@@ -58,7 +57,6 @@ const render = ({
   `);
 
   const footerHtml = `<p><a href="${unsubscribeLink}">${t.unsubscribe}</a></p>`;
-  /* eslint-enable indent */
 
   const html = renderBrandedEmail({ title: subject, contentHtml, footerHtml });
   return {

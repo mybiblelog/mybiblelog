@@ -7,12 +7,30 @@ How maintainers **add keys**, **sync translations**, and keep the repo and Crowd
 1. **Edit English only** when introducing a new key or changing source copy:
    - Global: the `en` object in [`web/i18n/locales/locales.ts`](../../web/i18n/locales/locales.ts)
    - Page- / component-scoped: the `"en"` object inside the `<i18n lang="json">` block in the relevant `.vue` file
-2. Keep JSON (in Vue blocks) and TypeScript **valid**; preserve **vue-i18n** placeholders exactly (e.g. `{field}`, `{minlength}`, `{display_date}`). Do not rename keys unless you update every locale and every `$t(...)` usage.
+   - Mobile: [`mobile/src/i18n/en.ts`](../../mobile/src/i18n/en.ts). Add the same key to the other locale files (English placeholder values are fine) so TypeScript passes; `i18n:import-crowdin-mobile` overwrites them with Crowdin's translations
+2. Keep JSON (in Vue blocks) and TypeScript **valid**; preserve placeholders exactly: vue-i18n `{field}` on web, i18n-js `%{count}` on mobile. Do not rename keys unless you update every locale and every `$t(...)` usage.
 3. Run **`npm run -w web build`** (or dev) to catch breakage.
 4. Run **`npm run -w web i18n:export-crowdin`**, then **`crowdin upload sources`** so Crowdin receives the updated English bundle (see [Typical CLI workflow](#typical-cli-workflow)).
 5. If you also changed **non-English** strings in the repo, run **`crowdin upload translations`** after export so target-language bundles (`de.json`, `es.json`, …) are pushed to Crowdin.
 
-After **`crowdin download`**, run **`npm run -w web i18n:import-crowdin`** to write translations into `locales.ts` and Vue files, then commit those sources. The files under `web/i18n/locales/crowdin/` are **gitignored** by default; they only need to exist on disk for the CLI.
+After **`crowdin download`**, run **`npm run -w web i18n:import-crowdin`** to write translations into `locales.ts`, email `strings.json`, and Vue files, then commit those sources. The files under `web/i18n/locales/crowdin/` are **gitignored** by default; they only need to exist on disk for the CLI.
+
+## Two flows: web and mobile
+
+The Crowdin free plan can't host web and mobile strings at the same time, so each has its own bundle and config:
+
+| Flow | Config | Export | Import | Repo files written |
+|------|--------|--------|--------|--------------------|
+| Web + email | [`crowdin.yml`](../../crowdin.yml) | `npm run -w web i18n:export-crowdin` | `npm run -w web i18n:import-crowdin` | `locales.ts`, email `strings.json`, Vue `<i18n>` |
+| Mobile | [`crowdin.mobile.yml`](../../crowdin.mobile.yml) | `npm run -w web i18n:export-crowdin-mobile` | `npm run -w web i18n:import-crowdin-mobile` | non-English `mobile/src/i18n/*.ts` |
+
+Run one flow at a time:
+
+1. Export, then `crowdin upload sources` (and `upload translations` if you have local non-English fixes). Add `--config crowdin.mobile.yml` to every `crowdin` command for mobile.
+2. Translate in Crowdin, then `crowdin download` and import. Commit the regenerated sources.
+3. Delete that flow's source file (`web/i18n/locales/crowdin/en.json` or `.../crowdin/mobile/en.json`) in the Crowdin UI before uploading the other flow. Translation memory is per project, so it survives the deletion and pre-fills matching strings next time.
+
+The rest of this page shows web commands; the mobile equivalents follow the table.
 
 ## Syncing with Crowdin
 
@@ -74,7 +92,7 @@ crowdin upload translations
 # Pull translated bundles (writes web/i18n/locales/crowdin/<code>.json)
 crowdin download
 
-# Merge downloaded strings back into locales.ts and Vue SFCs (then commit those)
+# Merge downloaded strings back into locales.ts, email strings, and Vue SFCs (then commit those)
 npm run -w web i18n:import-crowdin
 ```
 
@@ -88,10 +106,12 @@ Exact flags may vary slightly with CLI version; use `crowdin --help` or `npx @cr
 
 The repository includes [`crowdin.yml`](../../crowdin.yml) at the **root**. It defines a **single** file group:
 
-- **Source:** `web/i18n/locales/crowdin/en.json` (merged bundle: `global`, `components`, `pages`)
+- **Source:** `web/i18n/locales/crowdin/en.json` (merged bundle: `global`, `email`, `components`, `pages`)
 - **Translation:** `web/i18n/locales/crowdin/%two_letters_code%.json`
 
-It sets **`languages_mapping`** so Crowdin **`pt-BR`** maps to **`pt.json`**, matching the repo's locale code `pt` in [`shared/platform/i18n.ts`](../../shared/platform/i18n.ts).
+[`crowdin.mobile.yml`](../../crowdin.mobile.yml) is the same shape for the mobile flow, with flat key → string bundles under `web/i18n/locales/crowdin/mobile/`.
+
+Both set **`languages_mapping`** so Crowdin **`pt-BR`** maps to **`pt.json`**, matching the repo's locale code `pt` in [`shared/platform/i18n.ts`](../../shared/platform/i18n.ts).
 
 ### Portuguese: `pt` in the repo vs `pt-BR` in Crowdin
 

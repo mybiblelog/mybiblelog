@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { fetchBookNoteCounts } from "@/src/api/notesApi";
+import { fetchNoteCountsByBook } from "@/src/api/notesApi";
 import { reportHandledError } from "@/src/observability/sentry";
 
 /**
@@ -22,7 +22,7 @@ export const useNoteCountsStore = create<NoteCountsStore>((set) => ({
 
   async refresh() {
     try {
-      const counts = await fetchBookNoteCounts();
+      const counts = await fetchNoteCountsByBook();
       set({ counts });
     } catch (err) {
       reportHandledError(err, { op: "passageNoteCounts.refresh" });

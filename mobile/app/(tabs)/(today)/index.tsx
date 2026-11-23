@@ -90,7 +90,7 @@ export default function Index() {
   const goalPending = loading || countsPending;
 
   return (
-    <Screen padded>
+    <Screen padded testID="screen.today">
       <ScreenHeader
         title={t("today_title")}
         style={styles.header}

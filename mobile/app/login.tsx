@@ -132,6 +132,7 @@ export default function Login() {
     <OnboardingFrame>
       <BackgroundPattern />
       <KeyboardAvoidingView
+        testID="screen.login"
         style={styles.flex}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >

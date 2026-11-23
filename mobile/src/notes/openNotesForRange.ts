@@ -1,5 +1,5 @@
+import type { PassageNotesPassageMatching } from "@mybiblelog/shared";
 import { router } from "expo-router";
-import type { PassageMatching } from "@/src/api/notesApi";
 import { notesActions } from "@/src/stores/passageNotes";
 
 /**
@@ -11,7 +11,7 @@ import { notesActions } from "@/src/stores/passageNotes";
 export function openNotesForRange(
   startVerseId: number,
   endVerseId: number,
-  matching: PassageMatching = "inclusive"
+  matching: PassageNotesPassageMatching = "inclusive"
 ): void {
   void notesActions.resetQuery({
     filterPassageStartVerseId: startVerseId,

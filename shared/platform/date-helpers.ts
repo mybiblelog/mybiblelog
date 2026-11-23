@@ -1,14 +1,14 @@
 import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
-import relativeTime from 'dayjs/plugin/relativeTime';
+import duration from 'dayjs/plugin/duration.js';
+import relativeTime from 'dayjs/plugin/relativeTime.js';
 
 // additional locales ('en' is already included)
-import 'dayjs/locale/es';
-import 'dayjs/locale/de';
-import 'dayjs/locale/fr';
-import 'dayjs/locale/ko';
-import 'dayjs/locale/pt';
-import 'dayjs/locale/uk';
+import 'dayjs/locale/es.js';
+import 'dayjs/locale/de.js';
+import 'dayjs/locale/fr.js';
+import 'dayjs/locale/ko.js';
+import 'dayjs/locale/pt.js';
+import 'dayjs/locale/uk.js';
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);

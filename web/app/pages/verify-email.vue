@@ -15,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+import { verifyEmail } from '@mybiblelog/shared';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
@@ -45,7 +46,7 @@ onMounted(async () => {
   }
 
   try {
-    await $http.post('/api/auth/verify-email', { email, code });
+    await verifyEmail($http, { email, code });
     // If successful, automatically log the user in
     await authStore.refreshUser();
     // Notify any tab waiting on the code modal for this flow.

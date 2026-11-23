@@ -27,11 +27,13 @@ export function Screen({
   edges = ["top"],
   padded = false,
   style,
+  testID,
 }: {
   children: ReactNode;
   edges?: Edge[];
   padded?: boolean;
   style?: ViewStyle;
+  testID?: string;
 }) {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
@@ -41,6 +43,7 @@ export function Screen({
 
   return (
     <View
+      testID={testID}
       style={[
         styles.root,
         { backgroundColor: colors.background, paddingTop, paddingBottom },

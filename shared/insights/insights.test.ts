@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import dayjs from 'dayjs';
-import Bible from '../bible';
+import Bible from '../bible/index.js';
 import {
   buildContributionCalendar,
   computeBookFrequencies,
@@ -10,7 +10,7 @@ import {
   filterEntriesByDateRange,
   getIntensityLevel,
   getRecencyLevel,
-} from './insights';
+} from './insights.js';
 
 const entry = (date: string, start: number, end: number) => ({
   date,

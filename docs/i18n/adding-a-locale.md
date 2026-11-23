@@ -26,11 +26,15 @@ In each `web/app/components/**/*.vue` and `web/app/pages/**/*.vue` that already 
 
 Some locales may use **`{}`** where translations are missing. The app falls back via `fallbackLocale` in [`web/app/i18n.config.ts`](../../web/app/i18n.config.ts), but you should **replace empty objects with real translations** over time.
 
+### Mobile
+
+Add `mobile/src/i18n/<code>.ts` (copy an existing non-English file; values may be English until Crowdin fills them, then **import-crowdin-mobile** regenerates it), then register it in `mobileLocales` and the `I18n` table in [`mobile/src/i18n/index.ts`](../../mobile/src/i18n/index.ts) and add a label in the language settings screen. `i18n:export-crowdin-mobile` fails if the file is missing.
+
 ## 5. Crowdin export / import
 
 - **Export:** `npm run -w web i18n:export-crowdin` ([`web/scripts/i18n/export-crowdin-locales.ts`](../../web/scripts/i18n/export-crowdin-locales.ts)) writes `web/i18n/locales/crowdin/<code>.json` for every locale in [`shared/platform/i18n.ts`](../../shared/platform/i18n.ts).
 - **Push to Crowdin:** After export, run `crowdin upload sources` when English changed; run `crowdin upload translations` when you fixed or added non-English strings locally (see [crowdin.md](crowdin.md#typical-cli-workflow)).
-- **Import:** `npm run -w web i18n:import-crowdin` ([`web/scripts/i18n/import-crowdin-locales.ts`](../../web/scripts/i18n/import-crowdin-locales.ts)) reads those JSON files and updates `locales.ts` plus inline `<i18n>` blocks in components and pages.
+- **Import:** `npm run -w web i18n:import-crowdin` ([`web/scripts/i18n/import-crowdin-locales.ts`](../../web/scripts/i18n/import-crowdin-locales.ts)) reads those JSON files and updates `locales.ts`, email `strings.json`, and inline `<i18n>` blocks in components and pages. Mobile has its own pair, `i18n:export-crowdin-mobile` / `i18n:import-crowdin-mobile` (see [crowdin.md](crowdin.md#two-flows-web-and-mobile)).
 - **Crowdin project:** Add the new target language in Crowdin and ensure download paths match `web/i18n/locales/crowdin/<code>.json` (see [`crowdin.yml`](../../crowdin.yml)).
 
 ## 6. Key parity check

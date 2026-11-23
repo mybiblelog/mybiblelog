@@ -1,13 +1,13 @@
 import {
-  beginEmailChange,
-  beginPasswordReset,
-  completeEmailChange,
-  completePasswordReset,
+  sendEmailChangeCode,
+  sendPasswordResetCode,
+  changeEmailWithCode,
+  resetPasswordWithCode,
   emailPasswordLogin,
   googleIdTokenLogin,
-  register,
+  registerAccount,
   resendVerification,
-  validatePasswordResetCode,
+  checkPasswordResetCode,
   verifyEmailCode,
 } from "./authApi";
 
@@ -94,21 +94,21 @@ describe("emailPasswordLogin", () => {
   });
 });
 
-describe("register", () => {
+describe("registerAccount", () => {
   it("returns ok on success", async () => {
     mockFetchOnce({});
-    await expect(register("a@b.com", "pw")).resolves.toEqual({ ok: true });
+    await expect(registerAccount("a@b.com", "pw")).resolves.toEqual({ ok: true });
   });
 
   it("surfaces the structured error payload on a non-OK response", async () => {
     mockFetchOnce({ error: { code: "email_taken", errors: [] } }, false, 409);
-    const result = await register("a@b.com", "pw");
+    const result = await registerAccount("a@b.com", "pw");
     expect(result).toEqual({ ok: false, error: { code: "email_taken", errors: [] } });
   });
 
   it("maps a thrown fetch to a network_error payload", async () => {
     (global.fetch as jest.Mock).mockRejectedValueOnce(new Error("offline"));
-    const result = await register("a@b.com", "pw");
+    const result = await registerAccount("a@b.com", "pw");
     expect(result).toEqual({ ok: false, error: { code: "network_error", errors: [] } });
   });
 });
@@ -159,28 +159,28 @@ describe("resendVerification", () => {
   });
 });
 
-describe("beginPasswordReset", () => {
+describe("sendPasswordResetCode", () => {
   it("returns ok on success", async () => {
     mockFetchOnce({});
-    await expect(beginPasswordReset("a@b.com")).resolves.toEqual({ ok: true });
+    await expect(sendPasswordResetCode("a@b.com")).resolves.toEqual({ ok: true });
   });
 
   it("is fail-soft: still returns ok on a non-OK response (anti-enumeration)", async () => {
     mockFetchOnce({ error: { code: "unknown_error", errors: [] } }, false, 404);
-    await expect(beginPasswordReset("a@b.com")).resolves.toEqual({ ok: true });
+    await expect(sendPasswordResetCode("a@b.com")).resolves.toEqual({ ok: true });
   });
 
   it("maps a thrown fetch to a network_error payload", async () => {
     (global.fetch as jest.Mock).mockRejectedValueOnce(new Error("offline"));
-    const result = await beginPasswordReset("a@b.com");
+    const result = await sendPasswordResetCode("a@b.com");
     expect(result).toEqual({ ok: false, error: { code: "network_error", errors: [] } });
   });
 });
 
-describe("validatePasswordResetCode", () => {
+describe("checkPasswordResetCode", () => {
   it("returns ok with valid true on success", async () => {
     mockFetchOnce({ data: { valid: true } });
-    await expect(validatePasswordResetCode("a@b.com", "123456")).resolves.toEqual({
+    await expect(checkPasswordResetCode("a@b.com", "123456")).resolves.toEqual({
       ok: true,
       valid: true,
     });
@@ -188,7 +188,7 @@ describe("validatePasswordResetCode", () => {
 
   it("returns ok with valid false when the code is invalid", async () => {
     mockFetchOnce({ data: { valid: false } });
-    await expect(validatePasswordResetCode("a@b.com", "000000")).resolves.toEqual({
+    await expect(checkPasswordResetCode("a@b.com", "000000")).resolves.toEqual({
       ok: true,
       valid: false,
     });
@@ -196,21 +196,21 @@ describe("validatePasswordResetCode", () => {
 
   it("surfaces the structured error payload on a non-OK response", async () => {
     mockFetchOnce({ error: { code: "unknown_error", errors: [] } }, false, 400);
-    const result = await validatePasswordResetCode("a@b.com", "000000");
+    const result = await checkPasswordResetCode("a@b.com", "000000");
     expect(result).toEqual({ ok: false, error: { code: "unknown_error", errors: [] } });
   });
 
   it("maps a thrown fetch to a network_error payload", async () => {
     (global.fetch as jest.Mock).mockRejectedValueOnce(new Error("offline"));
-    const result = await validatePasswordResetCode("a@b.com", "123456");
+    const result = await checkPasswordResetCode("a@b.com", "123456");
     expect(result).toEqual({ ok: false, error: { code: "network_error", errors: [] } });
   });
 });
 
-describe("completePasswordReset", () => {
+describe("resetPasswordWithCode", () => {
   it("returns ok with a token on success", async () => {
     mockFetchOnce({ data: { token: "tok" } });
-    await expect(completePasswordReset("a@b.com", "123456", "newpw")).resolves.toEqual({
+    await expect(resetPasswordWithCode("a@b.com", "123456", "newpw")).resolves.toEqual({
       ok: true,
       token: "tok",
     });
@@ -218,34 +218,34 @@ describe("completePasswordReset", () => {
 
   it("surfaces the structured error payload on a non-OK response", async () => {
     mockFetchOnce({ error: { code: "invalid_code", errors: [] } }, false, 400);
-    const result = await completePasswordReset("a@b.com", "000000", "newpw");
+    const result = await resetPasswordWithCode("a@b.com", "000000", "newpw");
     expect(result).toEqual({ ok: false, error: { code: "invalid_code", errors: [] } });
   });
 
   it("maps a thrown fetch to a network_error payload", async () => {
     (global.fetch as jest.Mock).mockRejectedValueOnce(new Error("offline"));
-    const result = await completePasswordReset("a@b.com", "123456", "newpw");
+    const result = await resetPasswordWithCode("a@b.com", "123456", "newpw");
     expect(result).toEqual({ ok: false, error: { code: "network_error", errors: [] } });
   });
 
   it("returns unknown_error when an OK response lacks a token", async () => {
     mockFetchOnce({ data: {} });
-    const result = await completePasswordReset("a@b.com", "123456", "newpw");
+    const result = await resetPasswordWithCode("a@b.com", "123456", "newpw");
     expect(result).toEqual({ ok: false, error: { code: "unknown_error", errors: [] } });
   });
 });
 
-describe("beginEmailChange", () => {
+describe("sendEmailChangeCode", () => {
   it("returns ok on success", async () => {
     mockFetchOnce({});
-    await expect(beginEmailChange("session-tok", "new@b.com", "pw")).resolves.toEqual({
+    await expect(sendEmailChangeCode("session-tok", "new@b.com", "pw")).resolves.toEqual({
       ok: true,
     });
   });
 
   it("includes the session token as a bearer Authorization header", async () => {
     mockFetchOnce({});
-    await beginEmailChange("session-tok", "new@b.com", "pw");
+    await sendEmailChangeCode("session-tok", "new@b.com", "pw");
     const [, init] = (global.fetch as jest.Mock).mock.calls[0];
     expect(init.headers.Authorization).toBe("Bearer session-tok");
     expect(JSON.parse(init.body)).toEqual({ newEmail: "new@b.com", password: "pw" });
@@ -253,21 +253,21 @@ describe("beginEmailChange", () => {
 
   it("surfaces the structured error payload on a non-OK response", async () => {
     mockFetchOnce({ error: { code: "invalid_login", errors: [] } }, false, 401);
-    const result = await beginEmailChange("session-tok", "new@b.com", "wrong");
+    const result = await sendEmailChangeCode("session-tok", "new@b.com", "wrong");
     expect(result).toEqual({ ok: false, error: { code: "invalid_login", errors: [] } });
   });
 
   it("maps a thrown fetch to a network_error payload", async () => {
     (global.fetch as jest.Mock).mockRejectedValueOnce(new Error("offline"));
-    const result = await beginEmailChange("session-tok", "new@b.com", "pw");
+    const result = await sendEmailChangeCode("session-tok", "new@b.com", "pw");
     expect(result).toEqual({ ok: false, error: { code: "network_error", errors: [] } });
   });
 });
 
-describe("completeEmailChange", () => {
+describe("changeEmailWithCode", () => {
   it("returns ok with a token on success", async () => {
     mockFetchOnce({ data: { token: "tok" } });
-    await expect(completeEmailChange("a@b.com", "123456")).resolves.toEqual({
+    await expect(changeEmailWithCode("a@b.com", "123456")).resolves.toEqual({
       ok: true,
       token: "tok",
     });
@@ -275,19 +275,19 @@ describe("completeEmailChange", () => {
 
   it("surfaces the structured error payload on a non-OK response", async () => {
     mockFetchOnce({ error: { code: "invalid_code", errors: [] } }, false, 400);
-    const result = await completeEmailChange("a@b.com", "000000");
+    const result = await changeEmailWithCode("a@b.com", "000000");
     expect(result).toEqual({ ok: false, error: { code: "invalid_code", errors: [] } });
   });
 
   it("maps a thrown fetch to a network_error payload", async () => {
     (global.fetch as jest.Mock).mockRejectedValueOnce(new Error("offline"));
-    const result = await completeEmailChange("a@b.com", "123456");
+    const result = await changeEmailWithCode("a@b.com", "123456");
     expect(result).toEqual({ ok: false, error: { code: "network_error", errors: [] } });
   });
 
   it("returns unknown_error when an OK response lacks a token", async () => {
     mockFetchOnce({ data: {} });
-    const result = await completeEmailChange("a@b.com", "123456");
+    const result = await changeEmailWithCode("a@b.com", "123456");
     expect(result).toEqual({ ok: false, error: { code: "unknown_error", errors: [] } });
   });
 });

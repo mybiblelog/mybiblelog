@@ -37,12 +37,12 @@ import AppModal from '~/components/popups/AppModal.vue';
 import PassageNoteTagSelector from '~/components/forms/PassageNoteTagSelector.vue';
 import { usePassageNoteTagEditorStore } from '~/stores/passage-note-tag-editor';
 
-type TagOption = { id: string | number; label?: string; color?: string; [key: string]: unknown };
+type TagOption = { id: string; label?: string; color?: string; [key: string]: unknown };
 
 const props = withDefaults(defineProps<{
   open?: boolean;
   passageNoteTags?: TagOption[];
-  selectedTagIds?: Array<string | number>;
+  selectedTagIds?: Array<string>;
 }>(), {
   open: false,
   passageNoteTags: () => [],
@@ -50,8 +50,8 @@ const props = withDefaults(defineProps<{
 });
 
 const emit = defineEmits<{
-  change: [tagIds: Array<string | number>];
-  done: [tagIds: Array<string | number>];
+  change: [tagIds: Array<string>];
+  done: [tagIds: Array<string>];
   cancel: [];
 }>();
 
@@ -59,7 +59,7 @@ const { t } = useI18n();
 const tagEditorStore = usePassageNoteTagEditorStore();
 
 const pendingCreateTag = ref(false);
-const baselineTagIds = ref<Array<string | number>>([]);
+const baselineTagIds = ref<Array<string>>([]);
 
 const tagEditorOpen = computed(() => tagEditorStore.open);
 
@@ -70,7 +70,7 @@ watch(tagEditorOpen, (next, prev) => {
   }
 });
 
-function updateSelectedTagIds(tagIds: Array<string | number>) {
+function updateSelectedTagIds(tagIds: Array<string>) {
   emit('change', tagIds);
 }
 

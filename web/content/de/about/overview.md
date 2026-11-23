@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-11-12"
+dateModified: "2026-11-20"
 seo:
   title: "My Bible Log: Kostenloser Bibellese-Tracker – Funktionen & Ratgeber"
   description: "Alles, was My Bible Log kann: Bibellesen kapitelweise festhalten, Tagesziele setzen, Studiennotizen machen – und Ratgeber wie die Bibel in einem Jahr lesen."
@@ -47,6 +47,7 @@ My Bible Log ist ein kostenloser Bibellese-Tracker. Halten Sie die Kapitel fest,
 * [Kostenloses Konto erstellen](/de/about/page-features--login)
 * [Auf jedem Gerät installieren](/de/about/page-features--install)
 * [Häufig gestellte Fragen](/de/faq)
+* [KI-Agenten mit My Bible Log nutzen](/de/about/how-to--use-an-ai-agent-with-my-bible-log)
 
 ## Feedback
 

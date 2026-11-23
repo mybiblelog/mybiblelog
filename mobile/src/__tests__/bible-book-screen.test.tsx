@@ -13,7 +13,7 @@ jest.mock("@/src/api/notesApi", () => ({
   fetchNotesPage: jest
     .fn()
     .mockResolvedValue({ notes: [], meta: { offset: 0, limit: 10, size: 0 } }),
-  fetchBookNoteCounts: jest.fn().mockResolvedValue({}),
+  fetchNoteCountsByBook: jest.fn().mockResolvedValue({}),
   createNote: jest.fn(),
 }));
 jest.mock("@/src/api/tagsApi", () => ({

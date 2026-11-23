@@ -1,18 +1,13 @@
-import { create } from "zustand";
-import { toApiErrorCode } from "@/src/api/apiError";
 import {
-  type PassageNoteTag,
-  type TagInput,
-  createTag,
-  deleteTag,
-  fetchTags,
-  updateTag,
-} from "@/src/api/tagsApi";
-import {
-  type PassageNoteTagSortOrder,
   normalizeSortOrder,
   sortPassageNoteTags,
-} from "@/src/notes/tagSort";
+  type PassageNoteTag,
+  type PassageNoteTagInput,
+  type PassageNoteTagSortOrder,
+} from "@mybiblelog/shared";
+import { create } from "zustand";
+import { toApiErrorCode } from "@/src/api/apiError";
+import { createTag, deleteTag, fetchTags, updateTag } from "@/src/api/tagsApi";
 import { reportHandledError } from "@/src/observability/sentry";
 import { userSettingsActions, useUserSettingsStore } from "@/src/stores/userSettings";
 
@@ -46,8 +41,8 @@ type TagsStore = {
   sortOrder: PassageNoteTagSortOrder;
   loadTags: () => Promise<void>;
   setSortOrder: (order: PassageNoteTagSortOrder, options?: { persist?: boolean }) => Promise<void>;
-  create: (input: TagInput) => Promise<TagMutationResult>;
-  update: (input: TagInput & { id: string }) => Promise<TagMutationResult>;
+  create: (input: PassageNoteTagInput) => Promise<TagMutationResult>;
+  update: (input: PassageNoteTagInput & { id: string }) => Promise<TagMutationResult>;
   remove: (id: string) => Promise<boolean>;
 };
 
@@ -194,7 +189,7 @@ export const tagActions = {
   loadTags: () => useTagsStore.getState().loadTags(),
   setSortOrder: (order: PassageNoteTagSortOrder, options?: { persist?: boolean }) =>
     useTagsStore.getState().setSortOrder(order, options),
-  create: (input: TagInput) => useTagsStore.getState().create(input),
-  update: (input: TagInput & { id: string }) => useTagsStore.getState().update(input),
+  create: (input: PassageNoteTagInput) => useTagsStore.getState().create(input),
+  update: (input: PassageNoteTagInput & { id: string }) => useTagsStore.getState().update(input),
   remove: (id: string) => useTagsStore.getState().remove(id),
 };

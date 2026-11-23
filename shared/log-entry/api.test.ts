@@ -1,12 +1,12 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ApiResponse, HttpClient } from '../platform/http-client';
+import type { ApiResponse, HttpClient } from '../platform/http-client.js';
 import {
   deleteLogEntryRequest,
   fetchLogEntries,
   patchLogEntry,
   postLogEntry,
   type LogEntry,
-} from './api';
+} from './api.js';
 
 const respond = <T>(data: T): ApiResponse<T> => ({ data });
 

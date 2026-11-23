@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import dayjs from "dayjs";
-import { Bible } from "@mybiblelog/shared";
-import type { NotePassage } from "@/src/api/notesApi";
+import { Bible, type NotePassage } from "@mybiblelog/shared";
 import { spacing } from "@/src/design";
 import { useLocale, useT } from "@/src/i18n/LocaleProvider";
 import { justOpenedActions, useJustOpened } from "@/src/stores/justOpened";

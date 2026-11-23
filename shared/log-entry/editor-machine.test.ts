@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import Bible from '../bible';
+import Bible from '../bible/index.js';
 import {
   initLogEntryEditorModel,
   isLogEntryEditorValid,
@@ -9,7 +9,7 @@ import {
   selectStartChapter,
   selectStartVerse,
   updateDate,
-} from './editor-machine';
+} from './editor-machine.js';
 
 const GENESIS = 1;
 const JOHN = 43;

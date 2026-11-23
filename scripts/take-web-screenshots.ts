@@ -14,7 +14,6 @@
  *   npm run screenshots
  */
 
-/* eslint-disable no-console */
 import { chromium, type BrowserContext, type Page } from 'playwright';
 import sharp from 'sharp';
 import fs from 'node:fs/promises';

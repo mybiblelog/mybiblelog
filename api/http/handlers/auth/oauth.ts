@@ -36,14 +36,12 @@ export const verifyGoogleOauth: RouteHandler = async (req, deps) => {
   const accessToken = await googleOauth2.getAccessTokenFromCode(code);
   const profile = await googleOauth2.getUserProfileFromToken(accessToken);
 
-  /* eslint-disable camelcase */
   const { id, email, verified_email } = profile;
 
   // Only accept verified Google emails
   if (verified_email !== true) {
     throw new ValidationError([{ code: ApiErrorDetailCode.EmailNotVerified, field: null }]);
   }
-  /* eslint-enable camelcase */
 
   const existingUser = await users.findByEmail(email);
   if (existingUser) {

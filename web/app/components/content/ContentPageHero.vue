@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-html -- props are trusted repo-authored content -->
   <section class="hero-section">
     <div class="hero-content">
       <h1 class="hero-title">

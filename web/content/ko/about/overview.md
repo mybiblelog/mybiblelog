@@ -1,5 +1,5 @@
 ---
-dateModified: "2026-11-12"
+dateModified: "2026-11-20"
 seo:
   title: "My Bible Log: 무료 성경읽기 기록 서비스 – 기능과 안내"
   description: "My Bible Log로 할 수 있는 모든 것: 장별 성경 읽기 기록, 일일 목표 설정, 성경 공부 노트, 1년에 성경 읽기 같은 안내 글까지."
@@ -47,6 +47,7 @@ My Bible Log는 무료 성경읽기 기록 서비스입니다. 읽은 장을 기
 * [계정 생성](/ko/about/page-features--login)
 * [어디든 설치해보세요](/ko/about/page-features--install)
 * [자주 묻는 질문](/ko/faq)
+* [My Bible Log에서 AI 에이전트 사용하기](/ko/about/how-to--use-an-ai-agent-with-my-bible-log)
 
 ## 피드백
 

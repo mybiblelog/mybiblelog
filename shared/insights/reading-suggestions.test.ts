@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import dayjs from 'dayjs';
-import Bible from '../bible';
+import Bible from '../bible/index.js';
 import {
   getRecentDates,
   getLastLogEntryPerBook,
@@ -14,7 +14,7 @@ import {
   getReadingSuggestions,
   type ReadingSuggestionLogEntry,
   type ReadingSuggestionPassage,
-} from './reading-suggestions';
+} from './reading-suggestions.js';
 
 // Genesis ch1 v1 → 101001001, Exodus ch1 v1 → 102001001
 const gen1v1 = Bible.makeVerseId(1, 1, 1);

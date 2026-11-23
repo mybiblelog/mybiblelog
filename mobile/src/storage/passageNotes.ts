@@ -1,4 +1,4 @@
-import type { NoteInput, NotePassage } from "@/src/api/notesApi";
+import type { NotePassage, PassageNoteInput } from "@mybiblelog/shared";
 import { appStorage } from "@/src/storage/keys";
 import type { ReadResult } from "@/src/storage/typedStorage";
 
@@ -29,8 +29,8 @@ export type StoredLocalNote = {
 };
 
 export type PendingNoteMutation =
-  | { type: "create"; clientId: string; input: NoteInput; ts: number }
-  | { type: "update"; clientId: string; id?: string; input: NoteInput; ts: number }
+  | { type: "create"; clientId: string; input: PassageNoteInput; ts: number }
+  | { type: "update"; clientId: string; id?: string; input: PassageNoteInput; ts: number }
   | { type: "delete"; clientId: string; id?: string; ts: number };
 
 function isPassage(value: unknown): value is NotePassage {
@@ -80,7 +80,7 @@ export async function saveLocalNotes(notes: StoredLocalNote[]): Promise<void> {
   await appStorage.setDerived("passageNotes", notes);
 }
 
-function isNoteInput(value: unknown): value is NoteInput {
+function isNoteInput(value: unknown): value is PassageNoteInput {
   if (!value || typeof value !== "object") return false;
   const v = value as Record<string, unknown>;
   return (

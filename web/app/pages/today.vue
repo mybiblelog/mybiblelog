@@ -150,7 +150,6 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import { Bible } from '@mybiblelog/shared';
 import BusyBar from '~/components/ui/BusyBar.vue';
 import DoubleProgressBar from '~/components/ui/DoubleProgressBar.vue';
 import ReadingTrackerResetCard from '~/components/ui/ReadingTrackerResetCard.vue';
@@ -159,27 +158,23 @@ import LogEntry from '~/components/log/LogEntry.vue';
 import PassageNote from '~/components/notes/PassageNote.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
 import { useAppInitStore } from '~/stores/app-init';
-import { useLogEntriesStore } from '~/stores/log-entries';
 import { useDateVerseCountsStore } from '~/stores/date-verse-counts';
 import { useLogEntryEditorStore } from '~/stores/log-entry-editor';
 import { useReadingSuggestionsStore } from '~/stores/reading-suggestions';
 import type { ReadingSuggestionPassage } from '~/stores/reading-suggestions';
-import { usePassageNotesStore, type PassageNoteListItem } from '~/stores/passage-notes';
+import { usePassageNotesStore, type PassageNote as PassageNoteRecord } from '~/stores/passage-notes';
 import { usePassageNoteEditorStore } from '~/stores/passage-note-editor';
 import { useUserSettingsStore } from '~/stores/user-settings';
 import { useDialogStore } from '~/stores/dialog';
 import { useToastStore } from '~/stores/toast';
-import { encodePassageNotesQueryToRoute } from '~/helpers/passage-notes-route-query';
 
 const { t } = useI18n();
 const localePath = useLocalePath();
-const router = useRouter();
 
 definePageMeta({ middleware: ['auth'] });
 useHead({ title: () => t('today') });
 
 const appInitStore = useAppInitStore();
-const logEntriesStore = useLogEntriesStore();
 const dateVerseCountsStore = useDateVerseCountsStore();
 const logEntryEditorStore = useLogEntryEditorStore();
 const readingSuggestionsStore = useReadingSuggestionsStore();
@@ -195,60 +190,26 @@ const loadingLogEntries = ref(true);
 const loadingReadingSuggestions = ref(true);
 
 const userSettings = computed(() => userSettingsStore.settings);
-const logEntries = computed(() => logEntriesStore.currentLogEntries);
-const addNewVerseCountToReadingSuggestion = (passage: Passage) => {
-  const today = dayjs().format('YYYY-MM-DD');
-  const throughToday = logEntries.value.filter(e => e.date <= today);
-  const uniqueToday = Bible.countUniqueRangeVerses(throughToday);
-  const newVerseCount = Bible.countUniqueRangeVerses([...throughToday, passage]) - uniqueToday;
-  return { ...passage, newVerseCount };
-};
-
 const readingSuggestions = computed(() => readingSuggestionsStore.passages);
-const readingSuggestionsWithNewVerseCounts = computed(() =>
-  readingSuggestionsStore.passages.map(addNewVerseCountToReadingSuggestion),
-);
 const recentNotes = computed(() => passageNotesStore.passageNotes.slice(0, 3));
 
-const logEntriesForToday = computed(() => {
-  const today = dayjs().format('YYYY-MM-DD');
-  return logEntries.value
-    .filter(entry => entry.date === today)
-    .map(entry => addNewVerseCountToLogEntry(entry));
+const {
+  logEntriesForToday,
+  readingSuggestionsWithNewVerseCounts,
+  newVersesReadToday,
+  dailyGoalPercentComplete,
+  dailyGoalPercentCompleteNew,
+} = useDailyReadingProgress();
+
+const { actionsForLogEntry: actionsForTodayLogEntry } = useLogEntryActions(t, {
+  continueReading: true,
+  deleteMessageKeys: {
+    confirm: 'are_you_sure_you_want_to_delete_this_entry',
+    failed: 'the_log_entry_could_not_be_deleted',
+  },
 });
 
-const versesReadToday = computed(() => Bible.countUniqueRangeVerses(logEntriesForToday.value));
-
-const newVersesReadToday = computed(() =>
-  dateVerseCountsStore.getDateVerseCounts(dayjs().format('YYYY-MM-DD')).unique,
-);
-
-const dailyGoalPercentComplete = computed(() => {
-  if (!userSettings.value.dailyVerseCountGoal) { return 0; }
-  const pct = versesReadToday.value / userSettings.value.dailyVerseCountGoal * 100;
-  return Number(pct.toFixed(0));
-});
-
-const dailyGoalPercentCompleteNew = computed(() => {
-  if (!userSettings.value.dailyVerseCountGoal) { return 0; }
-  const pct = newVersesReadToday.value / userSettings.value.dailyVerseCountGoal * 100;
-  return Number(pct.toFixed(0));
-});
-
-type LogEntryLike = { id: number | string; date: string; startVerseId: number; endVerseId: number };
-
-const addNewVerseCountToLogEntry = (logEntry: LogEntryLike) => {
-  const today = dayjs().format('YYYY-MM-DD');
-  const throughYesterday = logEntries.value.filter(e => e.date < today);
-  const uniqueYesterday = Bible.countUniqueRangeVerses(throughYesterday);
-  throughYesterday.push(logEntry);
-  const newVerseCount = Bible.countUniqueRangeVerses(throughYesterday) - uniqueYesterday;
-  return { ...logEntry, newVerseCount };
-};
-
-type Passage = ReadingSuggestionPassage & { newVerseCount?: number };
-
-const actionsForReadingSuggestionPassage = (passage: Passage) => [
+const actionsForReadingSuggestionPassage = (passage: ReadingSuggestionPassage) => [
   { label: t('open_bible'), callback: () => openPassageInBible(passage) },
   { label: t('log_reading'), callback: () => trackPassage(passage) },
 ];
@@ -257,40 +218,7 @@ const openAddEntryForm = () => {
   logEntryEditorStore.openEditor({ empty: true });
 };
 
-const openEditEntryForm = (id: number | string) => {
-  const entry = logEntries.value.find(e => e.id === id);
-  if (!entry) { return; }
-  logEntryEditorStore.openEditor({
-    id: entry.id,
-    date: entry.date,
-    startVerseId: entry.startVerseId,
-    endVerseId: entry.endVerseId,
-  });
-};
-
-const deleteEntry = async (id: number | string) => {
-  const confirmed = await dialogStore.confirm({
-    message: t('are_you_sure_you_want_to_delete_this_entry'),
-    confirmButtonType: 'danger',
-  });
-  if (!confirmed) { return; }
-  const success = await logEntriesStore.deleteLogEntry(id);
-  if (!success) {
-    toastStore.add({ type: 'error', text: t('the_log_entry_could_not_be_deleted') });
-  }
-};
-
-const continueReadingPassage = (passage: { endVerseId: number }) => {
-  const nextVerseId = Bible.getNextReadingVerseId(passage.endVerseId, userSettingsStore.settings.includeDeuterocanonical);
-  if (!nextVerseId) { return; }
-  const { book, chapter } = Bible.parseVerseId(nextVerseId);
-  openPassageInBible({
-    startVerseId: nextVerseId,
-    endVerseId: Bible.getLastBookChapterVerseId(book, chapter),
-  });
-};
-
-const trackPassage = (passage: Passage) => {
+const trackPassage = (passage: ReadingSuggestionPassage) => {
   logEntryEditorStore.openEditor({
     id: null,
     date: dayjs().format('YYYY-MM-DD'),
@@ -299,40 +227,16 @@ const trackPassage = (passage: Passage) => {
   });
 };
 
-const takeNoteOnPassage = (passage: Passage) => {
-  const { startVerseId, endVerseId } = passage;
-  passageNoteEditorStore.openEditor({ passages: [{ startVerseId, endVerseId }], content: '' });
-};
-
-const viewNotesForPassage = (passage: Passage) => {
-  const { startVerseId, endVerseId } = passage;
-  const q = encodePassageNotesQueryToRoute({
-    filterPassageStartVerseId: startVerseId,
-    filterPassageEndVerseId: endVerseId,
-    offset: 0,
-  });
-  router.push({ path: localePath('notes'), query: q as Record<string, string | string[]> });
-};
-
-const { actionsForLogEntry: actionsForTodayLogEntry } = useLogEntryActions<LogEntryLike>(t, {
-  openInBible: openPassageInBible,
-  continueReading: continueReadingPassage,
-  takeNote: takeNoteOnPassage,
-  viewNotes: viewNotesForPassage,
-  edit: openEditEntryForm,
-  remove: deleteEntry,
-});
-
 const openNewNoteEditor = () => {
   passageNoteEditorStore.openEditor();
 };
 
-const actionsForRecentNote = (note: PassageNoteListItem) => [
+const actionsForRecentNote = (note: PassageNoteRecord) => [
   { label: t('edit'), callback: () => passageNoteEditorStore.openEditor(note as Parameters<typeof passageNoteEditorStore.openEditor>[0]) },
   { label: t('delete'), callback: () => deletePassageNote(note.id) },
 ];
 
-const deletePassageNote = async (id: number | string) => {
+const deletePassageNote = async (id: string) => {
   const confirmed = await dialogStore.confirm({
     message: t('are_you_sure_you_want_to_delete_this_note'),
     confirmButtonType: 'danger',
@@ -343,7 +247,6 @@ const deletePassageNote = async (id: number | string) => {
     toastStore.add({ type: 'error', text: t('the_note_could_not_be_deleted') });
   }
 };
-
 onMounted(async () => {
   try {
     await appInitStore.loadUserData();

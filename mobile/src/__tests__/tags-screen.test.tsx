@@ -4,8 +4,9 @@ jest.mock("@/src/api/tagsApi", () => ({
   deleteTag: jest.fn().mockResolvedValue(true),
 }));
 
+import type { PassageNoteTag } from "@mybiblelog/shared";
 import { fireEvent, renderWithProviders } from "@/src/test-utils/renderWithProviders";
-import { deleteTag, fetchTags, type PassageNoteTag } from "@/src/api/tagsApi";
+import { deleteTag, fetchTags } from "@/src/api/tagsApi";
 import { useAuthStore } from "@/src/stores/auth";
 import { useConnectivityStore } from "@/src/stores/connectivity";
 import { useTagsStore } from "@/src/stores/passageNoteTags";

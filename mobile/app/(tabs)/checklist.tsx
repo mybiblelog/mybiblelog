@@ -286,7 +286,7 @@ export default function Checklist() {
   const busy = Boolean(busyChapter);
 
   return (
-    <Screen padded>
+    <Screen padded testID="screen.checklist">
       <View style={styles.header}>
         <ScreenHeader title={t("chapter_checklist")} right={busy ? <Spinner /> : undefined} />
         <BookListToolbar

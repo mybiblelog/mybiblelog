@@ -3,7 +3,7 @@ jest.mock("expo-router", () => ({
 }));
 
 jest.mock("@/src/api/authApi", () => ({
-  beginPasswordReset: jest.fn(),
+  sendPasswordResetCode: jest.fn(),
 }));
 
 // Stub AuthCodeForm so this screen test exercises the forgot-password step
@@ -24,17 +24,17 @@ jest.mock("@/src/components", () => {
 
 import { fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/renderWithProviders";
 import { router } from "expo-router";
-import { beginPasswordReset } from "@/src/api/authApi";
+import { sendPasswordResetCode } from "@/src/api/authApi";
 import ForgotPassword from "@/app/forgot-password";
 
-const mockBeginPasswordReset = beginPasswordReset as jest.Mock;
+const mockBeginPasswordReset = sendPasswordResetCode as jest.Mock;
 
 beforeEach(() => {
   mockBeginPasswordReset.mockReset();
 });
 
 describe("Forgot password screen", () => {
-  it("shows a validation error and does not call beginPasswordReset when the email is empty", async () => {
+  it("shows a validation error and does not call sendPasswordResetCode when the email is empty", async () => {
     const { getByTestId, getByText } = await renderWithProviders(<ForgotPassword />);
 
     await fireEvent.press(getByTestId("forgot-password.submit"));
@@ -77,7 +77,7 @@ describe("Forgot password screen", () => {
     expect(router.replace).toHaveBeenCalledWith("/");
   });
 
-  it("shows an error message when beginPasswordReset rejects", async () => {
+  it("shows an error message when sendPasswordResetCode rejects", async () => {
     mockBeginPasswordReset.mockRejectedValueOnce(new Error("network down"));
 
     const { getByTestId, getByText, queryByText } = await renderWithProviders(<ForgotPassword />);

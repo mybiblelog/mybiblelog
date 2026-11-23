@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-html -- props are trusted repo-authored content -->
   <section class="fifty-fifty-section" :class="{ 'fifty-fifty-section--reverse': reverse }">
     <div class="fifty-fifty-container content-column">
       <div class="fifty-fifty-image">

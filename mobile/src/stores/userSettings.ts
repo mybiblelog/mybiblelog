@@ -1,3 +1,4 @@
+import type { ServerUserSettings } from "@mybiblelog/shared";
 import { create } from "zustand";
 import {
   DEFAULT_LOCAL_USER_SETTINGS,
@@ -6,7 +7,7 @@ import {
   readLocalUserSettings,
   saveLocalUserSettings,
 } from "@/src/settings/userSettingsStorage";
-import { type ServerUserSettings, getSettings, updateSettings } from "@/src/api/settingsApi";
+import { getSettings, updateSettings } from "@/src/api/settingsApi";
 import { reportHandledError } from "@/src/observability/sentry";
 import { appStorage } from "@/src/storage/keys";
 import { readLogEntries } from "@/src/storage/logEntries";

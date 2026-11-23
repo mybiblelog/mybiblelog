@@ -9,12 +9,12 @@ import {
   normalizeSortOrder,
   rgbToHue,
   sortPassageNoteTags,
-  type PassageNoteTag,
-} from './sort';
+  type SortablePassageNoteTag,
+} from './sort.js';
 
-const tag = (overrides: Partial<PassageNoteTag> & { id: number | string }): PassageNoteTag => ({ ...overrides });
+const tag = (overrides: Partial<SortablePassageNoteTag> & { id: number | string }): SortablePassageNoteTag => ({ ...overrides });
 
-const labels = (tags: PassageNoteTag[]): Array<string | undefined> => tags.map(t => t.label);
+const labels = (tags: SortablePassageNoteTag[]): Array<string | undefined> => tags.map(t => t.label);
 
 describe('normalizeSortOrder', () => {
   it('accepts every known sort order', () => {
@@ -171,10 +171,12 @@ describe('sortPassageNoteTags', () => {
     expect(labels(sortPassageNoteTags(tags, 'noteCount:ascending'))).toEqual(['none', 'few', 'many']);
   });
 
-  it('sorts in place and returns the same array reference', () => {
+  it('returns a sorted copy without mutating the input', () => {
     const tags = [tag({ id: 1, label: 'B' }), tag({ id: 2, label: 'A' })];
     const result = sortPassageNoteTags(tags, 'label:ascending');
-    expect(result).toBe(tags);
+    expect(result).not.toBe(tags);
+    expect(labels(tags)).toEqual(['B', 'A']);
+    expect(labels(result)).toEqual(['A', 'B']);
   });
 });
 

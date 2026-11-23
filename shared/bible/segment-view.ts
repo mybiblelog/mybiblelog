@@ -1,4 +1,4 @@
-import type { Segment } from './core/encoding';
+import type { Segment } from './core/encoding.js';
 
 /**
  * A reading `Segment` annotated with the share of a total it represents,

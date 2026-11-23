@@ -1,0 +1,25 @@
+# Crowdin CLI configuration for the mobile app strings (mobile/src/i18n/<locale>.ts).
+# Separate from crowdin.yml because the Crowdin free plan can't host web and mobile strings at once:
+# run one flow end to end, then delete its source file in Crowdin before starting the other.
+# See docs/i18n/crowdin.md.
+#
+# From the repository root:
+#   npm run -w web i18n:export-crowdin-mobile
+#   crowdin upload sources --config crowdin.mobile.yml
+#   crowdin upload translations --config crowdin.mobile.yml
+#   crowdin download --config crowdin.mobile.yml
+#   npm run -w web i18n:import-crowdin-mobile   # regenerates non-English mobile/src/i18n/*.ts
+#
+# Do not commit tokens.
+
+project_id_env: CROWDIN_PROJECT_ID
+api_token_env: CROWDIN_PERSONAL_TOKEN
+base_path: .
+preserve_hierarchy: true
+
+files:
+  - source: /web/i18n/locales/crowdin/mobile/en.json
+    translation: /web/i18n/locales/crowdin/mobile/%two_letters_code%.json
+    languages_mapping:
+      two_letters_code:
+        pt-BR: pt

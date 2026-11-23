@@ -1,16 +1,9 @@
 import { watch } from 'vue';
 import type { Ref } from 'vue';
 import type { ApiErrorDetail } from './api-error';
+import { FEEDBACK_MESSAGE_MAX_LENGTH, type FeedbackInput } from '@mybiblelog/shared';
 import type { Terr } from '~/plugins/translate-api';
 
-/** Mirrors the API's `feedbackBodySchema` limit on `message`. */
-export const FEEDBACK_MESSAGE_MAX_LENGTH = 1500;
-
-export type FeedbackForm = {
-  email: string;
-  kind: string;
-  message: string;
-};
 
 /**
  * Client-side validation for the feedback form, mirroring the API's
@@ -19,7 +12,7 @@ export type FeedbackForm = {
  * form renders client and server errors identically (via `$terr`). The API
  * remains the source of truth.
  */
-export const validateFeedbackForm = (form: FeedbackForm): Record<string, ApiErrorDetail> => {
+export const validateFeedbackForm = (form: FeedbackInput): Record<string, ApiErrorDetail> => {
   const errors: Record<string, ApiErrorDetail> = {};
 
   const email = form.email.trim();
@@ -56,10 +49,11 @@ export const makeFeedbackFieldError = (
 };
 
 export const clearFeedbackErrorsOnEdit = (
-  form: Ref<FeedbackForm>,
+  form: Ref<FeedbackInput>,
   errors: Ref<Record<string, ApiErrorDetail>>,
 ) => {
   for (const field of ['email', 'message'] as const) {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete -- `field` is the fixed 'email' | 'message' union
     watch(() => form.value[field], () => { delete errors.value[field]; });
   }
 };

@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import Bible from './index';
+import Bible from './index.js';
 
 /**
  * Deeply freezes an object, making it immutable.

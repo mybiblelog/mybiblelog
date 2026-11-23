@@ -81,7 +81,7 @@ export default function DeleteAccountScreen() {
   ];
 
   return (
-    <Screen>
+    <Screen testID="screen.settings.delete-account">
       <ScreenHeader padded back title={t("delete_account_title")} />
       <ScrollView contentContainerStyle={styles.content}>
         <Text variant="bodyStrong" style={styles.description}>

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-import weekday from 'dayjs/plugin/weekday';
-import type { DateVerseCounts } from './date-verse-counts';
+import weekday from 'dayjs/plugin/weekday.js';
+import type { DateVerseCounts } from './date-verse-counts.js';
 
 dayjs.extend(weekday);
 

@@ -42,7 +42,7 @@ export default function AccountSettings() {
   const connectivityText = t(CONNECTIVITY_TEXT_KEYS[connectionStatus]);
 
   return (
-    <Screen>
+    <Screen testID="screen.settings.account">
       <ScreenHeader padded back title={t("settings_section_account")} />
       <ScrollView contentContainerStyle={styles.content}>
         <Text variant="label" color="mutedText" style={styles.sectionLabel}>
@@ -148,6 +148,7 @@ export default function AccountSettings() {
               variant="plain"
               style={{ backgroundColor: colors.surfaceMuted }}
               onPress={() => router.push("/settings/delete-account")}
+              testID="settings.delete-account"
             />
           </>
         )}

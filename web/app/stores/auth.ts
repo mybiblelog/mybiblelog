@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { fetchAuthUser, login, logout, type AuthUser } from '@mybiblelog/shared';
 import { sessionStore } from '~/helpers/app-storage';
 import { useAppInitStore } from '~/stores/app-init';
 
@@ -15,11 +16,7 @@ export async function purgePwaRuntimeCache(): Promise<void> {
   await caches.delete(PWA_CACHE_NAME);
 }
 
-export type AuthUser = {
-  email?: string;
-  isAdmin?: boolean;
-  hasLocalAccount?: boolean;
-};
+export type { AuthUser };
 
 export type AuthState = {
   loggedIn: boolean;
@@ -45,8 +42,8 @@ export const useAuthStore = defineStore('auth', {
     async login({ email, password }: { email: string; password: string }): Promise<void> {
       const http = useHttp();
       try {
-        const { data } = await http.post<{ user: AuthUser }>('/api/auth/login', { email, password });
-        this.setUser(data?.user ?? null);
+        const { user } = await login(http, { email, password });
+        this.setUser(user);
         // A fresh session may follow a previous user's; drop any stale cached
         // data so the destination page's loadUserData() pulls this user's data.
         useAppInitStore().resetUserData();
@@ -59,14 +56,13 @@ export const useAuthStore = defineStore('auth', {
 
     async refreshUser(): Promise<void> {
       const http = useHttp();
-      const { data } = await http.get<{ user: AuthUser | null }>('/api/auth/user');
-      this.setUser(data?.user ?? null);
+      this.setUser(await fetchAuthUser(http));
     },
 
     async logout(reason?: LogoutReason): Promise<void> {
       const http = useHttp();
       try {
-        await http.post('/api/auth/logout');
+        await logout(http);
       }
       catch {
         // Expected to fail after account deletion

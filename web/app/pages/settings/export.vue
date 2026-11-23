@@ -49,13 +49,11 @@
 
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import { Bible } from '@mybiblelog/shared';
+import { Bible, fetchPassageNoteTags, type PassageNote, type PassageNoteTag } from '@mybiblelog/shared';
 import { UnknownApiError } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
 import { useToastStore } from '~/stores/toast';
 import { useLogEntriesStore } from '~/stores/log-entries';
-import type { PassageNoteListItem } from '~/stores/passage-notes';
-import type { PassageNoteTag } from '~/stores/passage-note-tags';
 import { useAppInitStore } from '~/stores/app-init';
 
 definePageMeta({ middleware: ['auth'] });
@@ -106,13 +104,15 @@ function downloadLogEntriesCSV() {
   generateDownload(t('reading_log_filename', { today }), logCsvCache);
 }
 
-async function loadAllNotes(): Promise<PassageNoteListItem[]> {
-  const allNotes: PassageNoteListItem[] = [];
+// Unparsed on purpose: the export carries the full server payload, including
+// fields the shared parser drops (e.g. each passage's USFM `passage`).
+async function loadAllNotes(): Promise<PassageNote[]> {
+  const allNotes: PassageNote[] = [];
   let offset = 0;
   // Defensive cap so a malformed/unexpected API response can never spin this loop forever.
   const MAX_PAGES = 1000;
   for (let page = 0; page < MAX_PAGES; page++) {
-    const { data, meta } = await $http.get<PassageNoteListItem[]>(`/api/passage-notes?offset=${offset}`);
+    const { data, meta } = await $http.get<PassageNote[]>(`/api/passage-notes?offset=${offset}`);
     if (!data.length) { break; }
     allNotes.push(...data);
     // `meta.pagination.size` is the total matching record count, not the page size, so advance
@@ -128,7 +128,7 @@ async function downloadNotesTextFile() {
   const toastStore = useToastStore();
   if (!notesTextCache) {
     try {
-      const { data: tags } = await $http.get<PassageNoteTag[]>('/api/passage-note-tags');
+      const tags = await fetchPassageNoteTags($http);
       const notes = await loadAllNotes();
       const NOTES_HEADING = t('notes_export_heading_notes');
       const TAGS_HEADING = t('notes_export_heading_tags');
@@ -155,7 +155,7 @@ async function downloadNotesJsonFile() {
   const toastStore = useToastStore();
   if (!notesJsonCache) {
     try {
-      const { data: tags } = await $http.get<PassageNoteTag[]>('/api/passage-note-tags');
+      const tags = await fetchPassageNoteTags($http);
       const notes = await loadAllNotes();
       notesJsonCache = JSON.stringify({ notes, tags });
     }
@@ -168,7 +168,7 @@ async function downloadNotesJsonFile() {
   generateDownload(t('notes_json_filename', { today }), notesJsonCache);
 }
 
-function generateNoteText(note: PassageNoteListItem, tags: PassageNoteTag[]) {
+function generateNoteText(note: PassageNote, tags: PassageNoteTag[]) {
   const dateTimeFormat = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'long' } as Intl.DateTimeFormatOptions);
   const noteDate = dateTimeFormat.format(new Date(String(note.createdAt ?? '')));
   const PASSAGES_HEADING = t('notes_export_heading_passages');
@@ -183,7 +183,7 @@ function generateNoteText(note: PassageNoteListItem, tags: PassageNoteTag[]) {
   if (note.tags?.length) {
     const tagLabels = note.tags
       .map((tagId) => {
-        const tag = tags.find(t => t.id === tagId || t._id === tagId);
+        const tag = tags.find(t => t.id === tagId);
         return tag ? tag.label : null;
       })
       .filter(Boolean);

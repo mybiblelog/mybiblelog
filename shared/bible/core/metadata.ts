@@ -1,7 +1,7 @@
-import bibleBooks, { type BibleBook } from '../static/bible-books';
-import commonChapterVerses from '../static/chapter-verses/nasb';
-import deuterocanonicalChapterVerses from '../static/chapter-verses/deuterocanonical';
-import { makeVerseId } from './encoding';
+import bibleBooks, { type BibleBook } from '../static/bible-books.js';
+import commonChapterVerses from '../static/chapter-verses/nasb.js';
+import deuterocanonicalChapterVerses from '../static/chapter-verses/deuterocanonical.js';
+import { makeVerseId } from './encoding.js';
 
 /**
  * Chapter verse counts for every supported book. The 66-book common canon comes from

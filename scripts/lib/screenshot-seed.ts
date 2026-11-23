@@ -12,7 +12,6 @@
  * would otherwise evaluate them before an entry script's own dotenv call runs.
  */
 
-/* eslint-disable no-console */
 import path from 'node:path';
 import dotenv from 'dotenv';
 import { Bible } from '@mybiblelog/shared';

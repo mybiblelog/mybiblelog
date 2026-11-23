@@ -1,5 +1,4 @@
-import { Bible } from "@mybiblelog/shared";
-import type { PassageNote } from "@/src/api/notesApi";
+import { Bible, type PassageNote } from "@mybiblelog/shared";
 import type { TranslationKey } from "@/src/i18n";
 import { formatLongDate } from "@/src/i18n/date";
 import type { SupportedLocale } from "@/src/i18n/LocaleProvider";

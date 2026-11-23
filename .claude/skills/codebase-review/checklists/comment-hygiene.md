@@ -25,7 +25,7 @@ Do not flag:
   these).
 - Comments explaining a genuinely non-obvious workaround, a hidden
   constraint, or a subtle invariant — e.g. the `mobile/` ESLint-isolation
-  comment in root `.eslintrc.js`, or SSR store-capture-before-await
+  comment in root `eslint.config.mjs`, or SSR store-capture-before-await
   comments in `api/`. Those are exactly the comments worth keeping.
 - TODOs that do have an owner or issue reference.
 - JSDoc/TSDoc on exported public APIs in `shared/` where the params

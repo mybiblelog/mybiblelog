@@ -147,7 +147,7 @@ export default function Progress() {
   }
 
   return (
-    <Screen>
+    <Screen testID="screen.bible.progress">
       <ScreenHeader padded back title={t("progress_title")} />
       <ScrollView contentContainerStyle={styles.content}>
         <SectionCard
@@ -169,6 +169,7 @@ export default function Progress() {
             rightIcon="chevron-forward"
             style={styles.cardAction}
             onPress={() => router.push("/(tabs)/settings/reading")}
+            testID="progress.reading-settings-link"
           />
         </SectionCard>
 

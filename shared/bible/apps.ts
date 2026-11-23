@@ -1,6 +1,6 @@
-import Bible from './index';
-import { bibleVersions, BibleVersions } from './translations';
-import { getMobileOperatingSystem, isMobileOperatingSystem } from '../platform/device';
+import Bible from './index.js';
+import { bibleVersions, BibleVersions } from './translations.js';
+import { getMobileOperatingSystem, isMobileOperatingSystem } from '../platform/device.js';
 
 export {
   BibleVersions,
@@ -10,7 +10,7 @@ export {
   bibleVersionOptions,
   localeVersionGroups,
   getDefaultBibleVersion,
-} from './translations';
+} from './translations.js';
 
 const defaultBibleVersion: keyof typeof BibleVersions = BibleVersions.NASB2020;
 

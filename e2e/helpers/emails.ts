@@ -69,17 +69,15 @@ export const waitForEmail = async ({
   intervalMs = 500,
 }: WaitForEmailOptions): Promise<TestEmail> => {
   const deadline = Date.now() + timeoutMs;
-  let seen = 0;
   for (;;) {
     const emails = await fetchEmails(to, subject);
-    seen = emails.length;
     const match = emails.find((email) => !since || new Date(email.createdAt).getTime() > since.getTime());
     if (match) {
       return match;
     }
     if (Date.now() >= deadline) {
       const subjectNote = subject ? ` (subject ~ "${subject}")` : '';
-      throw new Error(`Timed out waiting for an email to ${to}${subjectNote}. Saw ${seen} non-matching email(s).`);
+      throw new Error(`Timed out waiting for an email to ${to}${subjectNote}. Saw ${emails.length} non-matching email(s).`);
     }
     await new Promise((resolve) => setTimeout(resolve, intervalMs));
   }

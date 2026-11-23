@@ -103,13 +103,9 @@ export const buildDailyReminderEmail = (
     locale,
   });
 
-  let listUnsubscribeHeader = '';
-  if (unsubscribeEmail) {
-    listUnsubscribeHeader = `<mailto:${unsubscribeEmail}>, <${unsubscribeLink}>`;
-  }
-  else {
-    listUnsubscribeHeader = `<${unsubscribeLink}>`;
-  }
+  const listUnsubscribeHeader = unsubscribeEmail ?
+    `<mailto:${unsubscribeEmail}>, <${unsubscribeLink}>` :
+    `<${unsubscribeLink}>`;
 
   return {
     from: `My Bible Log <team@${emailSendingDomain}>`,

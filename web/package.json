@@ -6,6 +6,8 @@
   "scripts": {
     "i18n:export-crowdin": "tsx ./scripts/i18n/export-crowdin-locales.ts",
     "i18n:import-crowdin": "tsx ./scripts/i18n/import-crowdin-locales.ts",
+    "i18n:export-crowdin-mobile": "tsx ./scripts/i18n/export-crowdin-mobile.ts",
+    "i18n:import-crowdin-mobile": "tsx ./scripts/i18n/import-crowdin-mobile.ts",
     "i18n:verify-keys": "tsx ./scripts/i18n/verify-i18n-keys.ts",
     "dev": "nuxt dev",
     "build": "nuxt build",
@@ -17,8 +19,8 @@
     "test:client": "vitest run -c vitest.client.config.ts",
     "pretest:watch": "node test/ensure-nuxt-tsconfig.mjs",
     "test:watch": "vitest",
-    "lint": "eslint --ext .ts,.js,.vue .",
-    "lint:fix": "eslint --ext .ts,.js,.vue . --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "lint:css": "stylelint \"**/*.{css,vue}\"",
     "lint:css:fix": "stylelint \"**/*.{css,vue}\" --fix",
     "type-check": "nuxt prepare && vue-tsc --noEmit",
@@ -39,7 +41,7 @@
     "vue": "^3.5.44"
   },
   "devDependencies": {
-    "@nuxtjs/eslint-config-typescript": "^12.1.0",
+    "@nuxt/eslint-config": "^1.17.0",
     "@pinia/testing": "^2.0.1",
     "@vite-pwa/assets-generator": "^1.0.4",
     "@vitejs/plugin-vue": "^6.0.7",
@@ -51,7 +53,7 @@
     "stylelint": "^17.14.0",
     "stylelint-config-standard-vue": "^1.0.0",
     "tsx": "^4.22.3",
-    "typescript": "^5.9.3",
+    "typescript": "~6.0.3",
     "vitest": "^5.0.5",
     "vue-tsc": "^3.3.8"
   }

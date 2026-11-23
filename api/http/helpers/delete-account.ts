@@ -14,7 +14,7 @@ const deleteAccount = async (email: string): Promise<boolean> => {
     await users.deleteById(user.id);
     return true;
   }
-  catch (error) {
+  catch {
     return false;
   }
 };

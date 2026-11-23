@@ -49,6 +49,7 @@
 </template>
 
 <script setup lang="ts">
+import { completePasswordReset, validatePasswordResetCode } from '@mybiblelog/shared';
 import { ApiError, UnknownApiError } from '~/helpers/api-error';
 import type { ApiErrorDetail } from '~/helpers/api-error';
 import mapFormErrors from '~/helpers/map-form-errors';
@@ -88,11 +89,7 @@ onMounted(async () => {
   passwordResetEmail.value = email;
 
   try {
-    const { data } = await $http.post<{ valid: boolean }>(
-      '/api/auth/password/reset/validate',
-      { email, code },
-    );
-    passwordResetCodeValid.value = data.valid;
+    passwordResetCodeValid.value = await validatePasswordResetCode($http, { email, code });
   }
   catch {
     passwordResetCodeValid.value = false;
@@ -114,9 +111,9 @@ const submitChangePassword = async () => {
   }
 
   try {
-    await $http.post('/api/auth/password/reset/complete', {
-      email: passwordResetEmail.value,
-      code: passwordResetCode.value,
+    await completePasswordReset($http, {
+      email: passwordResetEmail.value ?? '',
+      code: passwordResetCode.value ?? '',
       newPassword: newPassword.value,
     });
     await authStore.refreshUser();

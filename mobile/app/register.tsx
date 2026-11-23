@@ -1,5 +1,5 @@
 import { mapFormErrors } from "@/src/api/apiError";
-import { register } from "@/src/api/authApi";
+import { registerAccount } from "@/src/api/authApi";
 import { useAuth } from "@/src/stores/auth";
 import { useCanReachServer } from "@/src/stores/connectivity";
 import { signInWithGoogle } from "@/src/auth/googleSignIn";
@@ -93,7 +93,7 @@ export default function Register() {
 
     setIsSubmitting(true);
     try {
-      const reg = await register(trimmedEmail, password, locale);
+      const reg = await registerAccount(trimmedEmail, password, locale);
       if (!reg.ok) {
         const fieldMap = mapFormErrors(reg.error);
         setEmailError(fieldMap.email ? translateApiError(t, fieldMap.email) : null);
@@ -127,6 +127,7 @@ export default function Register() {
     <OnboardingFrame>
       <BackgroundPattern />
       <KeyboardAvoidingView
+        testID="screen.register"
         style={styles.flex}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >

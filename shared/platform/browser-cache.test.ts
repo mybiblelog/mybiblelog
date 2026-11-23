@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import BrowserCache from './browser-cache';
+import BrowserCache from './browser-cache.js';
 
 class MemorySessionStorage {
   private store = new Map<string, string>();

@@ -123,8 +123,8 @@ interface UserStats {
 }
 
 const props = withDefaults(defineProps<{
-  user: AdminUser | null;
-  open: boolean;
+  user?: AdminUser | null;
+  open?: boolean;
   allowDelete?: boolean;
 }>(), {
   user: null,

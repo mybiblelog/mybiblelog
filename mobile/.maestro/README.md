@@ -43,10 +43,13 @@ wall-time. Instead:
   establishing a warm, logged-in session.
 - `02`–`06` start with `common/resume.yaml`, which just foregrounds the running
   app (`launchApp: { stopApp: false }` — no restart, no reload) and reuses that
-  session. It detects the session via the `tab.today` tab-bar id.
-- If a flow is run **standalone** (the app isn't running), `resume.yaml` sees no
-  tab bar and falls through to the full `common/login.yaml`, so every flow still
-  works on its own with the freshly-seeded credentials.
+  session. It confirms the session by checking for `settings.logout` on
+  Settings → Account (two taps); the tab bar alone can't, since the app runs
+  logged out too.
+- If the app has no logged-in session (or never reaches its tab bar),
+  `resume.yaml` falls through to the full `common/login.yaml`. A force-stopped
+  app relaunches into its persisted session, which may belong to an earlier
+  run's seeded user rather than the one just seeded.
 
 This warm reuse is what makes single-emulator runs fast and is intentionally
 **not** combined with device sharding (`maestro test --shard-split`), which
@@ -65,10 +68,20 @@ one tag, one note — works for every flow) and `empty`.
 | `04-notes-tags` | smoke | Tag + note creation, search filtering, and filters clearing when the Notes tab loses focus. |
 | `05-bible-progress` | smoke | Bible Books renders seeded progress and links to the Progress page. |
 | `06-insights` | smoke | Settings links to Insights; all four views (Activity/Books/Frequency/Trend) render. |
+| `11-all-screens` | smoke | Every screen is reachable by tapping through the UI and renders its loaded state (`screen.*` root testID). Runs after `06` because it ends logged out to reach Login/Register/Forgot Password. |
 | `10-onboarding` | onboarding | Walks the onboarding wizard end-to-end (Choice → Welcome → Goal → Bible → Finish), including Back navigation between steps. Not tagged `smoke`; run explicitly via `--include-tags onboarding`. `common/login.yaml`/`common/open-app.yaml` auto-skip onboarding via its `Welcome` step's Skip button, so this is the only flow that exercises the wizard itself. |
 
 Future candidates: settings language round-trip (es→en), checklist chapter
-toggles. Calendar flows were skipped as date-brittle.
+toggles.
+
+### Screen coverage guard
+
+Every route in `app/` sets `testID="screen.<route>"` on its root (on the
+*loaded* state for screens with a spinner/error state). `src/__tests__/e2e-screen-coverage.test.ts`
+(plain `npm test`, so it runs in CI) fails when a route has no `screen.*` id or
+no flow asserts it — so a new screen must be wired into `11-all-screens` (or
+another flow) by normal navigation. `upgrade-required` is exempt: only the
+API's version gate can reach it.
 
 ## Dev-build quirks (why a release build is the better target)
 

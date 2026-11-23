@@ -1,15 +1,15 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
 import {
+  normalizeHexColor,
+  type PassageNoteTag,
   TAG_DESCRIPTION_MAX_LENGTH,
   TAG_LABEL_MAX_LENGTH,
-  type PassageNoteTag,
-} from "@/src/api/tagsApi";
+} from "@mybiblelog/shared";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { radius, spacing, TOUCH_TARGET, useTheme } from "@/src/design";
 import { useT } from "@/src/i18n/LocaleProvider";
 import { translateApiErrorCode } from "@/src/i18n/translateApiError";
 import { TAG_COLOR_PALETTE } from "@/src/notes/tagColors";
-import { normalizeHexColor } from "@/src/notes/tagSort";
 import { tagActions } from "@/src/stores/passageNoteTags";
 import { AnimatedPressable } from "../atoms/AnimatedPressable";
 import { Button } from "../atoms/Button";

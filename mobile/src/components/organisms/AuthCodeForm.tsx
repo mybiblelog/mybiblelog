@@ -2,9 +2,9 @@ import { useRef, useState } from "react";
 import { StyleSheet, View, type TextInputInstance } from "react-native";
 import { mapFormErrors } from "@/src/api/apiError";
 import {
-  completeEmailChange,
-  completePasswordReset,
-  validatePasswordResetCode,
+  changeEmailWithCode,
+  resetPasswordWithCode,
+  checkPasswordResetCode,
   verifyEmailCode,
 } from "@/src/api/authApi";
 import { useAuth } from "@/src/stores/auth";
@@ -72,12 +72,12 @@ export function AuthCodeForm({
         await establishSession(r.token, sessionEmail);
         onDone();
       } else if (flow === "change-email") {
-        const r = await completeEmailChange(email, rawCode);
+        const r = await changeEmailWithCode(email, rawCode);
         if (!r.ok) return failCode(r.error);
         await establishSession(r.token, sessionEmail);
         onDone();
       } else {
-        const r = await validatePasswordResetCode(email, rawCode);
+        const r = await checkPasswordResetCode(email, rawCode);
         if (!r.ok) return failCode(r.error);
         if (!r.valid) {
           setError(t("auth_code_invalid"));
@@ -114,7 +114,7 @@ export function AuthCodeForm({
     }
     setSubmitting(true);
     try {
-      const r = await completePasswordReset(email, code, newPassword);
+      const r = await resetPasswordWithCode(email, code, newPassword);
       if (!r.ok) {
         showError(r.error);
         return;
