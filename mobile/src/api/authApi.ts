@@ -9,50 +9,18 @@ import {
   resendVerificationEmail,
   validatePasswordResetCode,
   verifyEmail,
-  type ApiResponse,
   type AuthSession,
   type HttpClient,
 } from "@mybiblelog/shared";
-import { getApiOrigin } from "@/src/api/apiBase";
-import { fetchWithTimeout } from "@/src/api/fetchWithTimeout";
-import { ApiError, type ApiErrorPayload, parseApiErrorBody } from "@/src/api/apiError";
+import { ApiError, type ApiErrorPayload } from "@/src/api/apiError";
+import { createHttpClient } from "@/src/api/httpClient";
 
 /**
- * The auth endpoints run outside the session, so instead of the shared
- * `httpClient` (which injects the stored bearer token and reports API
- * reachability) they use a bare transport that only sends a token when one is
- * passed in. Results are returned rather than thrown, so forms can render the
- * API's top-level and field-level errors directly.
+ * The auth endpoints run outside the session, so they send a token only when
+ * one is passed in. Results are returned rather than thrown, so forms can
+ * render the API's top-level and field-level errors directly.
  */
-function authHttp(token?: string): HttpClient {
-  async function request<T>(method: string, path: string, body?: unknown): Promise<ApiResponse<T>> {
-    const headers: Record<string, string> = {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    };
-    if (token) headers.Authorization = `Bearer ${token}`;
-    let res: Response;
-    let json: { data?: unknown; meta?: unknown } | undefined;
-    try {
-      res = await fetchWithTimeout(`${getApiOrigin()}${path}`, {
-        method,
-        headers,
-        body: body !== undefined ? JSON.stringify(body) : undefined,
-      });
-      json = await res.json().catch(() => undefined);
-    } catch {
-      throw new ApiError(NETWORK_ERROR);
-    }
-    if (!res.ok) throw new ApiError(parseApiErrorBody(json), res.status);
-    return { data: json?.data as T, meta: json?.meta };
-  }
-  return {
-    get: (path) => request("GET", path),
-    post: (path, body) => request("POST", path, body),
-    patch: (path, body) => request("PATCH", path, body),
-    delete: (path) => request("DELETE", path),
-  };
-}
+const authHttp = (token?: string): HttpClient => createHttpClient({ useSession: false, token });
 
 const NETWORK_ERROR: ApiErrorPayload = { code: "network_error", errors: [] };
 const UNKNOWN_ERROR: ApiErrorPayload = { code: "unknown_error", errors: [] };

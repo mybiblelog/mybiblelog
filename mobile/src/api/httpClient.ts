@@ -19,11 +19,26 @@ import { reportApiReachability } from "@/src/stores/connectivity";
  * which is what lets the UI say "server unavailable" instead of blaming the
  * user's network — and lets a recovered server clear that state immediately
  * rather than waiting for the auth store's next backoff tick.
+ *
+ * `createHttpClient({ useSession: false })` builds a client for calls made
+ * outside the session (the auth endpoints): it sends only the token passed in
+ * and leaves reachability reporting alone.
  */
 
 type Method = "GET" | "POST" | "PATCH" | "DELETE";
 
-async function request<T>(method: Method, path: string, body?: unknown): Promise<ApiResponse<T>> {
+type HttpClientOptions = { useSession: true } | { useSession: false; token?: string };
+
+async function request<T>(
+  options: HttpClientOptions,
+  method: Method,
+  path: string,
+  body?: unknown
+): Promise<ApiResponse<T>> {
+  const reportReachability = (reachable: boolean) => {
+    if (options.useSession) reportApiReachability(reachable);
+  };
+
   const headers: Record<string, string> = { Accept: "application/json" };
   // Used by the API to record which platform(s) and app version a user is on
   // (see `api/http/helpers/platform.ts`). `getPlatform()` yields the lowercase
@@ -32,7 +47,7 @@ async function request<T>(method: Method, path: string, body?: unknown): Promise
   if (platform) headers["X-Platform"] = platform;
   const appVersion = getAppVersion();
   if (appVersion) headers["X-App-Version"] = appVersion;
-  const token = getAuthToken();
+  const token = options.useSession ? getAuthToken() : options.token;
   if (token) headers.Authorization = `Bearer ${token}`;
   if (body !== undefined) headers["Content-Type"] = "application/json";
 
@@ -48,13 +63,13 @@ async function request<T>(method: Method, path: string, body?: unknown): Promise
     // DNS, TLS) or a timeout (`AbortError`). The platform surfaces these as raw
     // native exceptions (e.g. Android's `java.io.IOException`), which must never
     // reach the UI — normalize them to a typed, translatable `network_error`.
-    reportApiReachability(false);
+    reportReachability(false);
     throw new ApiError({ code: "network_error", errors: [] });
   }
 
   // A 4xx is a coherent answer (the API is up and talking to us); a 5xx means it
   // can't serve the app, which reads to the user as the server being down.
-  reportApiReachability(res.status < 500);
+  reportReachability(res.status < 500);
 
   const json = (await res.json().catch(() => undefined)) as
     { data?: unknown; meta?: unknown } | undefined;
@@ -66,9 +81,13 @@ async function request<T>(method: Method, path: string, body?: unknown): Promise
   return { data: json?.data as T, meta: json?.meta };
 }
 
-export const httpClient: HttpClient = {
-  get: <T = unknown>(path: string) => request<T>("GET", path),
-  post: <T = unknown>(path: string, body?: unknown) => request<T>("POST", path, body),
-  patch: <T = unknown>(path: string, body?: unknown) => request<T>("PATCH", path, body),
-  delete: <T = unknown>(path: string) => request<T>("DELETE", path),
-};
+export function createHttpClient(options: HttpClientOptions): HttpClient {
+  return {
+    get: <T = unknown>(path: string) => request<T>(options, "GET", path),
+    post: <T = unknown>(path: string, body?: unknown) => request<T>(options, "POST", path, body),
+    patch: <T = unknown>(path: string, body?: unknown) => request<T>(options, "PATCH", path, body),
+    delete: <T = unknown>(path: string) => request<T>(options, "DELETE", path),
+  };
+}
+
+export const httpClient = createHttpClient({ useSession: true });
