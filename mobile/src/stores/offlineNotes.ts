@@ -148,6 +148,7 @@ export const useOfflineNotesStore = create<OfflineNotesStore>((set, get) => ({
         const remaining: PendingNoteMutation[] = [];
         const syncedClientIds = new Set<string>();
         let dropped = 0;
+        let reachedServer = false;
 
         for (const m of mutations) {
           try {
@@ -164,7 +165,10 @@ export const useOfflineNotesStore = create<OfflineNotesStore>((set, get) => ({
               continue;
             }
             if (m.type === "delete") {
-              if (m.id) await apiDeleteNote(m.id);
+              if (m.id) {
+                await apiDeleteNote(m.id);
+                reachedServer = true;
+              }
               continue;
             }
           } catch (err) {
@@ -189,6 +193,9 @@ export const useOfflineNotesStore = create<OfflineNotesStore>((set, get) => ({
             await saveLocalNotes(nextNotes);
           }
         }
+        // The online lists don't know about what just synced — the Notes tab's
+        // store and Today's recent notes would keep showing the pre-sync list.
+        if (reachedServer || syncedClientIds.size > 0) notesActions.notifyServerChanged();
       } catch (err) {
         reportHandledError(err, { op: "offlineNotes.syncNow" });
       } finally {

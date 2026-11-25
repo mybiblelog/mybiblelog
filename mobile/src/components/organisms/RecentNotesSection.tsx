@@ -25,8 +25,8 @@ import { toCardNote } from "./OfflineNotesView";
  * the three most recently created notes with add/edit/delete actions and a
  * link to the Notes tab. Uses its own lightweight fetch (`useRecentNotes`)
  * so the Notes tab's query state is never disturbed; mutations go through
- * `notesActions` (keeping the notes store and note counts coherent) and then
- * refresh the local list.
+ * `notesActions` (keeping the notes store and note counts coherent), whose
+ * revision bump makes `useRecentNotes` refetch.
  *
  * When the API can't be reached (or the user is signed out), it switches to
  * `useLocalNotes()` instead — same `showLocalView` gate as the Notes tab's
@@ -38,7 +38,7 @@ export function RecentNotesSection() {
   const t = useT();
   const { locale } = useLocale();
   const { showToast } = useToast();
-  const { status: remoteStatus, notes: remoteNotes, refresh } = useRecentNotes();
+  const { status: remoteStatus, notes: remoteNotes } = useRecentNotes();
   const localNotes = useLocalNotes();
   const isUnauthenticated = useIsUnauthenticated();
   const connectionStatus = useConnectionStatus();
@@ -112,7 +112,6 @@ export function RecentNotesSection() {
           }
           void notesActions.create(input).then((created) => {
             if (!created) showToast({ type: "error", message: t("note_could_not_save") });
-            else refresh();
           });
         }}
       />
@@ -130,7 +129,6 @@ export function RecentNotesSection() {
           } else {
             void notesActions.update({ ...input, id: editingNote.id }).then((saved) => {
               if (!saved) showToast({ type: "error", message: t("note_could_not_save") });
-              else refresh();
             });
           }
           setEditingNote(null);
@@ -170,7 +168,6 @@ export function RecentNotesSection() {
           } else {
             void notesActions.remove(note.id).then((deleted) => {
               if (!deleted) showToast({ type: "error", message: t("note_could_not_delete") });
-              else refresh();
             });
           }
         }}

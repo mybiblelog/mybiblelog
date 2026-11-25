@@ -35,6 +35,7 @@ beforeEach(() => {
   useNotesStore.setState({
     state: { status: "idle" },
     query: { ...initialNotesQuery, filterTags: [] },
+    revision: 0,
   });
   (fetchNoteCountsByBook as jest.Mock).mockReset().mockResolvedValue({});
 });
@@ -248,3 +249,72 @@ describe("mutations", () => {
     expect(fetchNoteCountsByBook).not.toHaveBeenCalled();
   });
 });
+
+describe("revision", () => {
+  const revision = () => useNotesStore.getState().revision;
+  const input = { content: "x", passages: [], tags: [] };
+
+  beforeEach(() => {
+    (fetchNotesPage as jest.Mock).mockReset().mockResolvedValue(page([], 0));
+  });
+
+  it("bumps on each successful create, update and remove", async () => {
+    (createNote as jest.Mock).mockResolvedValue(note("1"));
+    (updateNote as jest.Mock).mockResolvedValue(note("1"));
+    (deleteNote as jest.Mock).mockResolvedValue(true);
+
+    await actions().create(input);
+    expect(revision()).toBe(1);
+    await actions().update({ ...input, id: "1" });
+    expect(revision()).toBe(2);
+    await actions().remove("1");
+    expect(revision()).toBe(3);
+  });
+
+  it("does not bump when a mutation fails or deletes nothing", async () => {
+    (createNote as jest.Mock).mockRejectedValue(new Error("boom"));
+    (updateNote as jest.Mock).mockRejectedValue(new Error("boom"));
+    (deleteNote as jest.Mock).mockResolvedValue(false);
+
+    await actions().create(input);
+    await actions().update({ ...input, id: "1" });
+    await actions().remove("1");
+
+    expect(revision()).toBe(0);
+  });
+});
+
+describe("notifyServerChanged", () => {
+  beforeEach(() => {
+    (fetchNotesPage as jest.Mock).mockReset().mockResolvedValue(page([note("9")], 1));
+  });
+
+  it("bumps the revision, refreshes counts, and reloads a loaded list", async () => {
+    useNotesStore.setState({
+      state: { status: "ready", notes: [], totalSize: 0, isFetchingMore: false },
+    });
+
+    actions().notifyServerChanged();
+
+    expect(useNotesStore.getState().revision).toBe(1);
+    expect(fetchNoteCountsByBook).toHaveBeenCalledTimes(1);
+    expect(fetchNotesPage).toHaveBeenCalledWith(expect.objectContaining({ offset: 0 }));
+    await waitForReady();
+    const state = useNotesStore.getState().state;
+    expect(state.status === "ready" && state.notes).toEqual([note("9")]);
+  });
+
+  it("leaves a never-loaded list idle (the Notes tab loads it on mount)", () => {
+    actions().notifyServerChanged();
+
+    expect(useNotesStore.getState().revision).toBe(1);
+    expect(fetchNotesPage).not.toHaveBeenCalled();
+    expect(useNotesStore.getState().state).toEqual({ status: "idle" });
+  });
+});
+
+async function waitForReady(): Promise<void> {
+  for (let i = 0; i < 10 && useNotesStore.getState().state.status !== "ready"; i++) {
+    await Promise.resolve();
+  }
+}

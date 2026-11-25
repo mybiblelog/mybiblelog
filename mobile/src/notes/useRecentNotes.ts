@@ -1,9 +1,9 @@
 import type { PassageNote } from "@mybiblelog/shared";
 import { useFocusEffect } from "expo-router";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { fetchNotesPage } from "@/src/api/notesApi";
 import { reportHandledError } from "@/src/observability/sentry";
-import { initialNotesQuery } from "@/src/stores/passageNotes";
+import { initialNotesQuery, useNotesRevision } from "@/src/stores/passageNotes";
 import { tagActions } from "@/src/stores/passageNoteTags";
 
 export const RECENT_NOTES_LIMIT = 3;
@@ -19,8 +19,11 @@ export type RecentNotesState =
  * Deliberately NOT backed by the notes store: that store is the Notes tab's
  * list, and mutating its query from Today would clobber the tab's filters
  * (and fight the tab's blur-reset). This is a local fetch with the default
- * (newest-first) query. Refreshes on focus — Today stays mounted across tab
- * switches — and exposes `refresh` for post-mutation reloads.
+ * (newest-first) query. Refreshes on focus, since Today stays mounted across
+ * tab switches, and whenever the store's `revision` says the server's notes
+ * changed. That covers notes created from anywhere while Today is
+ * still focused (the log-entry "Take note" action, the just-opened prompt, an
+ * offline-queue sync), without each caller having to remember to refresh this.
  */
 export function useRecentNotes(): RecentNotesState & { refresh: () => void } {
   const [state, setState] = useState<RecentNotesState>({ status: "loading", notes: [] });
@@ -48,6 +51,15 @@ export function useRecentNotes(): RecentNotesState & { refresh: () => void } {
       void tagActions.loadTags();
     }, [refresh])
   );
+
+  const revision = useNotesRevision();
+  const seenRevision = useRef(revision);
+  useEffect(() => {
+    // The focus effect already covers the initial fetch.
+    if (seenRevision.current === revision) return;
+    seenRevision.current = revision;
+    refresh();
+  }, [revision, refresh]);
 
   return { ...state, refresh };
 }

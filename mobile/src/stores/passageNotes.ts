@@ -42,6 +42,12 @@ export type NotesState =
 type NotesStore = {
   state: NotesState;
   query: PassageNotesQuery;
+  /**
+   * Bumped whenever the server's notes change (this store's own mutations, or
+   * an offline-queue sync via `notifyServerChanged`). Views that keep their own
+   * note fetches — Today's recent notes — watch it to know when to refetch.
+   */
+  revision: number;
   loadFirstPage: () => Promise<void>;
   loadMore: () => Promise<void>;
   applyQuery: (update: Partial<PassageNotesQuery>) => Promise<void>;
@@ -49,6 +55,7 @@ type NotesStore = {
   create: (input: PassageNoteInput) => Promise<PassageNote | null>;
   update: (note: PassageNoteInput & { id: string }) => Promise<PassageNote | null>;
   remove: (id: string) => Promise<boolean>;
+  notifyServerChanged: () => void;
 };
 
 const cloneQuery = (query: PassageNotesQuery): PassageNotesQuery => ({
@@ -59,6 +66,7 @@ const cloneQuery = (query: PassageNotesQuery): PassageNotesQuery => ({
 export const useNotesStore = create<NotesStore>((set, get) => ({
   state: { status: "idle" },
   query: cloneQuery(initialNotesQuery),
+  revision: 0,
 
   async loadFirstPage() {
     const query = cloneQuery({ ...get().query, offset: 0 });
@@ -137,6 +145,7 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
   async create(input) {
     try {
       const created = await createNote(input);
+      set({ revision: get().revision + 1 });
       void useNoteCountsStore.getState().refresh();
       await get().loadFirstPage();
       return created;
@@ -149,6 +158,7 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
   async update(note) {
     try {
       const saved = await updateNote(note);
+      set({ revision: get().revision + 1 });
       // Passage edits can move a note between books.
       void useNoteCountsStore.getState().refresh();
       const current = get().state;
@@ -171,6 +181,7 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
     try {
       const deleted = await deleteNote(id);
       if (deleted) {
+        set({ revision: get().revision + 1 });
         void useNoteCountsStore.getState().refresh();
         await get().loadFirstPage();
       }
@@ -180,10 +191,21 @@ export const useNotesStore = create<NotesStore>((set, get) => ({
       return false;
     }
   },
+
+  notifyServerChanged() {
+    set({ revision: get().revision + 1 });
+    void useNoteCountsStore.getState().refresh();
+    // Keep the lazy on-mount load: an untouched list loads fresh when opened.
+    if (get().state.status !== "idle") void get().loadFirstPage();
+  },
 }));
 
 export function useNotesState(): NotesState {
   return useNotesStore((s) => s.state);
+}
+
+export function useNotesRevision(): number {
+  return useNotesStore((s) => s.revision);
 }
 
 export function useNotesQuery(): PassageNotesQuery {
@@ -231,4 +253,5 @@ export const notesActions = {
   create: (input: PassageNoteInput) => useNotesStore.getState().create(input),
   update: (note: PassageNoteInput & { id: string }) => useNotesStore.getState().update(note),
   remove: (id: string) => useNotesStore.getState().remove(id),
+  notifyServerChanged: () => useNotesStore.getState().notifyServerChanged(),
 };

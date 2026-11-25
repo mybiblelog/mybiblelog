@@ -9,6 +9,8 @@ jest.mock("expo-router", () => ({
 jest.mock("@/src/api/notesApi", () => ({
   ...jest.requireActual("@/src/api/notesApi"),
   fetchNotesPage: jest.fn(),
+  createNote: jest.fn(),
+  fetchNoteCountsByBook: jest.fn().mockResolvedValue({}),
 }));
 jest.mock("@/src/api/tagsApi", () => ({
   ...jest.requireActual("@/src/api/tagsApi"),
@@ -17,10 +19,16 @@ jest.mock("@/src/api/tagsApi", () => ({
 
 import { router } from "expo-router";
 import { Bible, type PassageNote } from "@mybiblelog/shared";
-import { fetchNotesPage } from "@/src/api/notesApi";
-import { fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/renderWithProviders";
+import { createNote, fetchNotesPage } from "@/src/api/notesApi";
+import {
+  act,
+  fireEvent,
+  renderWithProviders,
+  waitFor,
+} from "@/src/test-utils/renderWithProviders";
 import { useConnectivityStore } from "@/src/stores/connectivity";
 import { useOfflineNotesStore } from "@/src/stores/offlineNotes";
+import { notesActions } from "@/src/stores/passageNotes";
 import { RecentNotesSection } from "./RecentNotesSection";
 
 const notes: PassageNote[] = [
@@ -105,5 +113,55 @@ describe("RecentNotesSection", () => {
 
     await waitFor(() => expect(getByText("Staged while offline")).toBeTruthy());
     expect(queryByText("In the beginning…")).toBeNull();
+  });
+
+  describe("refetching when notes change elsewhere while Today stays focused", () => {
+    const added: PassageNote = { id: "n3", content: "Brand new note", passages: [], tags: [] };
+    const withAdded = () =>
+      (fetchNotesPage as jest.Mock).mockResolvedValue({
+        notes: [added, ...notes],
+        meta: { offset: 0, limit: 3, size: 3 },
+      });
+
+    it("shows a note created through the notes store (e.g. a log entry's Take note)", async () => {
+      const { getByText } = await renderWithProviders(<RecentNotesSection />);
+      await waitFor(() => expect(getByText("In the beginning…")).toBeTruthy());
+      (createNote as jest.Mock).mockResolvedValue(added);
+      withAdded();
+
+      await act(async () => {
+        await notesActions.create({ content: added.content, passages: [], tags: [] });
+      });
+
+      await waitFor(() => expect(getByText("Brand new note")).toBeTruthy());
+    });
+
+    it("refetches after an offline-queue sync reports a server change", async () => {
+      const { getByText } = await renderWithProviders(<RecentNotesSection />);
+      await waitFor(() => expect(getByText("In the beginning…")).toBeTruthy());
+      withAdded();
+
+      await act(async () => notesActions.notifyServerChanged());
+
+      await waitFor(() => expect(getByText("Brand new note")).toBeTruthy());
+    });
+
+    it("fetches once per change, not once per caller", async () => {
+      const { getByText } = await renderWithProviders(<RecentNotesSection />);
+      await waitFor(() => expect(getByText("In the beginning…")).toBeTruthy());
+      const callsAfterMount = (fetchNotesPage as jest.Mock).mock.calls.filter(
+        ([q]) => q.limit === 3
+      ).length;
+      (createNote as jest.Mock).mockResolvedValue(added);
+      withAdded();
+
+      await act(async () => {
+        await notesActions.create({ content: added.content, passages: [], tags: [] });
+      });
+      await waitFor(() => expect(getByText("Brand new note")).toBeTruthy());
+
+      const recentCalls = (fetchNotesPage as jest.Mock).mock.calls.filter(([q]) => q.limit === 3);
+      expect(recentCalls).toHaveLength(callsAfterMount + 1);
+    });
   });
 });

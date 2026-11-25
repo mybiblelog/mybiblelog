@@ -17,7 +17,7 @@ jest.mock("@/src/stores/connectivity", () => ({
   useConnectivityStore: { subscribe: jest.fn() },
 }));
 jest.mock("@/src/stores/passageNotes", () => ({
-  notesActions: { loadFirstPage: jest.fn() },
+  notesActions: { loadFirstPage: jest.fn(), notifyServerChanged: jest.fn() },
   useNotesStore: { getState: jest.fn(() => ({ state: { status: "idle" } })) },
 }));
 jest.mock("@/src/stores/passageNoteTags", () => ({
@@ -28,6 +28,7 @@ import { ApiError } from "@/src/api/apiError";
 import { consumeDroppedChanges } from "@/src/stores/syncNotices";
 import { createNote } from "@/src/api/notesApi";
 import { getIsOnline } from "@/src/stores/connectivity";
+import { notesActions } from "@/src/stores/passageNotes";
 import {
   loadLocalNotes,
   loadPendingNoteMutations,
@@ -105,6 +106,27 @@ describe("syncNow", () => {
     expect(await loadPendingNoteMutations()).toHaveLength(0);
   });
 
+  it("tells the online notes store the server changed once something synced", async () => {
+    (getIsOnline as jest.Mock).mockReturnValue(false);
+    await actions().createNote(input);
+    (getIsOnline as jest.Mock).mockReturnValue(true);
+    (createNote as jest.Mock).mockResolvedValue({ id: "server-1", ...input });
+
+    await actions().syncNow();
+
+    expect(notesActions.notifyServerChanged).toHaveBeenCalledTimes(1);
+  });
+
+  it("syncs immediately and notifies when created while the device is online", async () => {
+    (createNote as jest.Mock).mockResolvedValue({ id: "server-1", ...input });
+
+    await actions().createNote(input);
+    await actions().syncNow(); // joins the sync createNote started
+
+    expect(createNote).toHaveBeenCalledWith(input);
+    expect(notesActions.notifyServerChanged).toHaveBeenCalledTimes(1);
+  });
+
   it("keeps the note and mutation queued on a transient failure", async () => {
     consumeDroppedChanges();
     (getIsOnline as jest.Mock).mockReturnValue(false);
@@ -117,6 +139,7 @@ describe("syncNow", () => {
     expect(readyNotes()).toHaveLength(1);
     expect(await loadPendingNoteMutations()).toHaveLength(1);
     expect(consumeDroppedChanges()).toBe(0);
+    expect(notesActions.notifyServerChanged).not.toHaveBeenCalled();
   });
 
   it("drops the mutation but keeps the note on a permanent (4xx) failure", async () => {
@@ -133,6 +156,7 @@ describe("syncNow", () => {
     expect(readyNotes()).toHaveLength(1);
     expect(await loadPendingNoteMutations()).toHaveLength(0);
     expect(consumeDroppedChanges()).toBe(1);
+    expect(notesActions.notifyServerChanged).not.toHaveBeenCalled();
   });
 });
 
