@@ -257,8 +257,13 @@ form label {
   pointer-events: none;
 }
 
+/* Explicit line-height and min-height (not a fixed height): with the large
+   top padding that makes room for the floating label, a fixed 3rem left less
+   content height than the text's line box, and Firefox/Safari clip the
+   bottom of the selected value. */
 form input {
   font-size: 16px;
+  line-height: 1.25;
   min-height: 3rem;
   padding: var(--mbl-space-xs);
   padding-top: var(--mbl-space-lg);
@@ -271,7 +276,8 @@ form input {
 
 form select {
   font-size: 16px;
-  height: 3rem;
+  line-height: 1.25;
+  min-height: 3rem;
   padding: var(--mbl-space-xs);
   padding-top: var(--mbl-space-lg);
   border: 2px solid var(--mbl-border-strong);
@@ -284,6 +290,12 @@ form select {
   background-repeat: no-repeat;
   background-position: right 0.5rem center;
   padding-right: var(--mbl-space-2xl);
+}
+
+/* Fill the grid row so a date input and a select side by side match heights. */
+form input,
+form select {
+  flex-grow: 1;
 }
 
 form select:focus, form input:focus {
