@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { waitFor } from "@testing-library/react-native";
 
 jest.mock("@/src/api/notesApi", () => ({
   ...jest.requireActual("@/src/api/notesApi"),
@@ -12,9 +13,16 @@ jest.mock("@/src/stores/auth", () => ({
     subscribe: jest.fn(),
   },
 }));
+// Keep the listener the store registers, so tests can play connectivity changes
+// (`clearMocks` would wipe `mock.calls` between tests).
+const mockConnectivityListeners: ((s: object, prev: object) => void)[] = [];
 jest.mock("@/src/stores/connectivity", () => ({
   getIsOnline: jest.fn(),
-  useConnectivityStore: { subscribe: jest.fn() },
+  useConnectivityStore: {
+    subscribe: jest.fn((listener: (s: object, prev: object) => void) => {
+      mockConnectivityListeners.push(listener);
+    }),
+  },
 }));
 jest.mock("@/src/stores/passageNotes", () => ({
   notesActions: { loadFirstPage: jest.fn(), notifyServerChanged: jest.fn() },
@@ -268,5 +276,56 @@ describe("rehydrating after a failed read", () => {
 
     expect(readyNotes()).toEqual([createdInMemory]);
     expect(isStorageDegraded()).toBe(true);
+  });
+});
+
+describe("draining the queue when the server comes back", () => {
+  const playConnectivity = (s: object, prev: object) =>
+    mockConnectivityListeners.forEach((listener) => listener(s, prev));
+
+  beforeAll(async () => {
+    initNotes(); // module-guarded; registers the listener if nothing has yet
+    await Promise.resolve();
+  });
+
+  beforeEach(async () => {
+    // The device is online but the server is down (settles the listener's
+    // device-online tracking first, so only the server edge is under test).
+    (getIsOnline as jest.Mock).mockReturnValue(true);
+    playConnectivity(
+      { isOnline: false, apiReachable: null },
+      { isOnline: null, apiReachable: null }
+    );
+    (createNote as jest.Mock).mockRejectedValue(new Error("server down"));
+    playConnectivity(
+      { isOnline: true, apiReachable: false },
+      { isOnline: false, apiReachable: null }
+    );
+    await actions().syncNow();
+    // Stage a note; its immediate sync attempt fails, leaving it queued.
+    await actions().createNote(input);
+    await actions().syncNow();
+    expect(await loadPendingNoteMutations()).toHaveLength(1);
+    (createNote as jest.Mock).mockReset().mockResolvedValue({ id: "server-1", ...input });
+  });
+
+  it("syncs once the API answers again on the same network", async () => {
+    playConnectivity(
+      { isOnline: true, apiReachable: true },
+      { isOnline: true, apiReachable: false }
+    );
+
+    await waitFor(() => expect(createNote).toHaveBeenCalledWith(input));
+    await waitFor(async () => expect(await loadPendingNoteMutations()).toHaveLength(0));
+  });
+
+  it("ignores the first reachability verdict at startup (null -> true)", async () => {
+    playConnectivity(
+      { isOnline: true, apiReachable: true },
+      { isOnline: true, apiReachable: null }
+    );
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(createNote).not.toHaveBeenCalled();
   });
 });

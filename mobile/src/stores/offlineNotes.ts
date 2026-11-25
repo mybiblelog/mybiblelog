@@ -64,6 +64,10 @@ function isAuthenticated(): boolean {
   return useAuthStore.getState().state.status === "authenticated";
 }
 
+// Deliberately ignores `apiReachable`: a sync attempt is itself one of the
+// requests that re-measures it, and a "server down" verdict from an ordinary
+// request isn't always followed by a retrying auth probe — gating on it could
+// leave the verdict, and this queue, stuck. Recovery is picked up in `initNotes`.
 function canReachApi(): boolean {
   return isAuthenticated() && getIsOnline() === true;
 }
@@ -253,8 +257,13 @@ export function initNotes(): void {
   })();
 
   let wasOnline = getIsOnline();
-  useConnectivityStore.subscribe((s) => {
-    if (s.isOnline === true && wasOnline !== true) onReachable();
+  useConnectivityStore.subscribe((s, prev) => {
+    // The device came back online, or it stayed online and our API answered
+    // again after an outage. Not `null -> true`: that's just startup's first
+    // request, and init has already run `onReachable` above.
+    const deviceBack = s.isOnline === true && wasOnline !== true;
+    const serverBack = s.apiReachable === true && prev.apiReachable === false;
+    if (deviceBack || serverBack) onReachable();
     wasOnline = s.isOnline;
   });
   useAuthStore.subscribe(() => onReachable());
