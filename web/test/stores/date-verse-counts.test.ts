@@ -29,6 +29,7 @@ describe('date-verse-counts store', () => {
   it('cacheDateVerseCounts is a no-op with no log entries and settles jobs to 0', () => {
     const store = useDateVerseCountsStore();
     useLogEntriesStore().logEntries = [];
+    useLogEntriesStore().isLoaded = true;
     store.cacheDateVerseCounts();
     expect(store.busy).toBe(false);
     expect(store.getAllDateVerseCounts).toEqual({});
@@ -46,6 +47,7 @@ describe('date-verse-counts store', () => {
       { id: 1, date: '2026-01-01', startVerseId: Bible.makeVerseId(1, 1, 1), endVerseId: Bible.makeVerseId(1, 1, 10) },
       { id: 2, date: '2026-01-02', startVerseId: Bible.makeVerseId(1, 1, 5), endVerseId: Bible.makeVerseId(1, 1, 20) },
     ] as never;
+    useLogEntriesStore().isLoaded = true;
 
     const store = useDateVerseCountsStore();
     store.cacheDateVerseCounts();
@@ -61,5 +63,48 @@ describe('date-verse-counts store', () => {
     const throughToday = logEntries.filter(e => e.date <= '2026-01-02');
     const inlineNewVerses = Bible.countUniqueRangeVerses(throughToday) - Bible.countUniqueRangeVerses(throughYesterday);
     expect(day2.unique).toBe(inlineNewVerses);
+  });
+
+  it('cacheDateVerseCounts replaces counts for dates the log no longer covers', () => {
+    // Counts left over from another user (or deleted entries) on dates before
+    // the current log's earliest entry must not survive a recompute.
+    const store = useDateVerseCountsStore();
+    store.dateVerseCounts = { '2020-01-01': { total: 31, unique: 31 } };
+    useLogEntriesStore().logEntries = [
+      { id: 1, date: '2026-01-01', startVerseId: Bible.makeVerseId(1, 1, 1), endVerseId: Bible.makeVerseId(1, 1, 10) },
+    ] as never;
+    useLogEntriesStore().isLoaded = true;
+
+    store.cacheDateVerseCounts();
+
+    expect(store.getDateVerseCounts('2020-01-01')).toEqual({ total: 0, unique: 0 });
+    expect(store.getDateVerseCounts('2026-01-01').total).toBe(10);
+  });
+
+  it('cacheDateVerseCounts empties the map once the loaded log is empty', () => {
+    const store = useDateVerseCountsStore();
+    store.dateVerseCounts = { '2026-01-01': { total: 10, unique: 10 } };
+    useLogEntriesStore().logEntries = [];
+    useLogEntriesStore().isLoaded = true;
+
+    store.cacheDateVerseCounts();
+
+    expect(store.getAllDateVerseCounts).toEqual({});
+  });
+
+  it('cacheDateVerseCounts leaves counts alone until the log has loaded', () => {
+    const store = useDateVerseCountsStore();
+    store.dateVerseCounts = { '2026-01-01': { total: 10, unique: 10 } };
+
+    store.cacheDateVerseCounts();
+
+    expect(store.getDateVerseCounts('2026-01-01')).toEqual({ total: 10, unique: 10 });
+  });
+
+  it('clear drops all counts', () => {
+    const store = useDateVerseCountsStore();
+    store.dateVerseCounts = { '2026-01-01': { total: 10, unique: 10 } };
+    store.clear();
+    expect(store.getAllDateVerseCounts).toEqual({});
   });
 });

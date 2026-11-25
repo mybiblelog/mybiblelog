@@ -36,35 +36,44 @@ export const useDateVerseCountsStore = defineStore('date-verse-counts', {
     getAllDateVerseCounts: state => state.dateVerseCounts,
   },
   actions: {
+    // Forget the in-memory and session-cached counts, e.g. when the active user changes.
+    clear(): void {
+      this.$reset();
+      try { BrowserCache.delete(DATE_VERSE_COUNTS_CACHE_KEY); }
+      catch { /* BrowserCache can fail in non-browser contexts */ }
+    },
+
     cacheDateVerseCounts(): void {
       this.jobs += 1;
       try {
-        try {
-          const cachedRaw = BrowserCache.get(DATE_VERSE_COUNTS_CACHE_KEY) as unknown;
-          const cached = parseCachedDateVerseCounts(cachedRaw);
-          if (cached && Object.keys(cached).length) {
-            this.dateVerseCounts = cached;
-          }
-        }
-        catch { /* BrowserCache can fail in non-browser contexts */ }
+        const logEntriesStore = useLogEntriesStore();
 
-        const logEntries = useLogEntriesStore().logEntries;
+        // Until the log is loaded, show the last computed counts (if this tab
+        // has any) rather than an empty calendar.
+        if (!logEntriesStore.isLoaded) {
+          try {
+            const cached = parseCachedDateVerseCounts(BrowserCache.get(DATE_VERSE_COUNTS_CACHE_KEY) as unknown);
+            if (cached && Object.keys(cached).length) {
+              this.dateVerseCounts = cached;
+            }
+          }
+          catch { /* BrowserCache can fail in non-browser contexts */ }
+          return;
+        }
+
+        const logEntries = logEntriesStore.logEntries;
         let startDate: string | undefined;
         for (const entry of logEntries) {
           if (startDate === undefined || entry.date < startDate) { startDate = entry.date; }
         }
-        if (!startDate) { return; }
 
+        // Replace the map rather than merging into it: a merge kept counts for
+        // dates the log no longer covers (deleted entries, or a previous user's
+        // log after signing in as someone else).
         const trackerStartDate = useUserSettingsStore().settings.lookBackDate;
-        const dateVerseCounts = computeDateVerseCounts(
-          logEntries,
-          startDate,
-          dayjs().format('YYYY-MM-DD'),
-          trackerStartDate,
-        );
-        Object.keys(dateVerseCounts).forEach((date) => {
-          this.dateVerseCounts[date] = dateVerseCounts[date]!;
-        });
+        this.dateVerseCounts = startDate
+          ? computeDateVerseCounts(logEntries, startDate, dayjs().format('YYYY-MM-DD'), trackerStartDate)
+          : {};
 
         try {
           BrowserCache.set(DATE_VERSE_COUNTS_CACHE_KEY, JSON.stringify(this.dateVerseCounts), DATE_VERSE_COUNTS_CACHE_MINUTES);
