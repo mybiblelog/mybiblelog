@@ -20,12 +20,7 @@ jest.mock("@/src/api/tagsApi", () => ({
 import { router } from "expo-router";
 import { Bible, type PassageNote } from "@mybiblelog/shared";
 import { createNote, fetchNotesPage } from "@/src/api/notesApi";
-import {
-  act,
-  fireEvent,
-  renderWithProviders,
-  waitFor,
-} from "@/src/test-utils/renderWithProviders";
+import { act, fireEvent, renderWithProviders, waitFor } from "@/src/test-utils/renderWithProviders";
 import { useConnectivityStore } from "@/src/stores/connectivity";
 import { useOfflineNotesStore } from "@/src/stores/offlineNotes";
 import { notesActions } from "@/src/stores/passageNotes";
