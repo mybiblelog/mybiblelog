@@ -10,9 +10,11 @@ import { isDuplicateKeyError } from './helpers/duplicate-key-error';
 import { hashPassword } from './helpers/user-auth';
 import { buildDefaultUserSettings } from './helpers/user-settings';
 import { CODE_TTL_MS, generateVerificationCode } from './helpers/verification-codes';
+import { recordedPlatformsExpr, signupPlatformExpr } from './helpers/platform-expressions';
 import {
   AdminUserListItem,
   AdminUserListQuery,
+  AdminUserPlatformReport,
   UserCreateInput,
   UserRecord,
   UserSettingsRecord,
@@ -521,6 +523,29 @@ export const createUserRepository = ({ users }: Collections) => {
         filterQuery.email = { $regex: escapedSearchText, $options: 'i' };
       }
 
+      for (const platform of query.platforms) {
+        filterQuery[`platforms.${platform}`] = { $exists: true };
+      }
+      if (query.platformsExact) {
+        for (const platform of ALLOWED_PLATFORMS) {
+          if (!query.platforms.includes(platform)) {
+            filterQuery[`platforms.${platform}`] = { $exists: false };
+          }
+        }
+      }
+
+      if (query.locale) {
+        filterQuery['settings.locale'] = query.locale;
+      }
+
+      if (query.signupPlatform) {
+        // Evaluated per document, but cheap next to the in-memory createdAt/email
+        // sort this list already does over every matching user.
+        filterQuery.$expr = {
+          $eq: [signupPlatformExpr, query.signupPlatform === 'unknown' ? null : query.signupPlatform],
+        };
+      }
+
       const sortQuery: Record<string, 1 | -1> = {
         [query.sortOn]: query.sortDirection,
       };
@@ -535,6 +560,8 @@ export const createUserRepository = ({ users }: Collections) => {
             $addFields: {
               id: '$_id',
               hasLocalAccount: { $ne: ['$password', null] },
+              platforms: { $ifNull: ['$platforms', {}] },
+              signupPlatform: signupPlatformExpr,
             },
           },
           {
@@ -558,6 +585,80 @@ export const createUserRepository = ({ users }: Collections) => {
       return {
         users: results.map((user) => ({ ...user, id: String(user.id) })),
         total,
+      };
+    },
+
+    /**
+     * Counts every user by locale, by platform, and by exact platform
+     * combination split by signup platform, in one aggregation pass.
+     *
+     * This necessarily reads the whole collection, so it projects down to the
+     * few fields it needs before anything else, and is capped by `maxTimeMS`;
+     * callers are expected to cache the result (see the admin handler) rather
+     * than run it per page view.
+     */
+    async getPlatformReport({ maxTimeMS = 15_000 }: { maxTimeMS?: number } = {}): Promise<AdminUserPlatformReport> {
+      type ComboRow = { _id: { platforms: Platform[]; signupPlatform: Platform | null }; count: number };
+      type Facets = {
+        total: { count: number }[];
+        byLocale: { _id: string | null; count: number }[];
+        byCombination: ComboRow[];
+      };
+
+      const [facets] = await users
+        .aggregate<Facets>(
+          [
+            {
+              $project: {
+                _id: 0,
+                locale: '$settings.locale',
+                platforms: recordedPlatformsExpr,
+                signupPlatform: signupPlatformExpr,
+              },
+            },
+            {
+              $facet: {
+                total: [{ $count: 'count' }],
+                byLocale: [{ $group: { _id: '$locale', count: { $sum: 1 } } }],
+                // Per-platform totals are derived from these rows in JS, which
+                // saves a third pass over the projected documents.
+                byCombination: [
+                  { $group: { _id: { platforms: '$platforms', signupPlatform: '$signupPlatform' }, count: { $sum: 1 } } },
+                ],
+              },
+            },
+          ],
+          { maxTimeMS },
+        )
+        .toArray();
+
+      const byPlatform = Object.fromEntries(ALLOWED_PLATFORMS.map((p) => [p, 0])) as Record<Platform, number>;
+      let noPlatform = 0;
+      const combinations = new Map<string, AdminUserPlatformReport['byCombination'][number]>();
+      for (const { _id, count } of facets?.byCombination ?? []) {
+        if (_id.platforms.length === 0) {
+          noPlatform += count;
+        }
+        for (const platform of _id.platforms) {
+          byPlatform[platform] += count;
+        }
+        const key = _id.platforms.join('+');
+        const combo = combinations.get(key) ?? { platforms: _id.platforms, count: 0, bySignupPlatform: {} };
+        const signup = _id.signupPlatform ?? 'unknown';
+        combo.count += count;
+        combo.bySignupPlatform[signup] = (combo.bySignupPlatform[signup] ?? 0) + count;
+        combinations.set(key, combo);
+      }
+
+      return {
+        generatedAt: new Date(),
+        totalUsers: facets?.total[0]?.count ?? 0,
+        byLocale: (facets?.byLocale ?? [])
+          .map(({ _id, count }) => ({ locale: _id ?? 'unknown', count }))
+          .sort((a, b) => b.count - a.count || a.locale.localeCompare(b.locale)),
+        byPlatform,
+        noPlatform,
+        byCombination: [...combinations.values()].sort((a, b) => b.count - a.count),
       };
     },
 

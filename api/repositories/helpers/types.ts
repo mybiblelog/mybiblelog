@@ -1,3 +1,5 @@
+import type { Platform } from '../../http/helpers/platform';
+
 /**
  * Plain domain object types returned by the repository layer.
  *
@@ -72,6 +74,14 @@ export interface AdminUserListQuery {
   sortOn: string;
   sortDirection: 1 | -1;
   searchText: string;
+  /** Only users who have used every one of these platforms. */
+  platforms: Platform[];
+  /** With `platforms`, also exclude users who used any other platform (an empty `platforms` then means "none recorded"). */
+  platformsExact: boolean;
+  /** Only users whose signup platform is this (`'unknown'`: not determinable, see `SIGNUP_PLATFORM_WINDOW_MS`). */
+  signupPlatform: Platform | 'unknown' | null;
+  /** Only users with this `settings.locale`. */
+  locale: string | null;
 }
 
 export interface AdminUserListItem {
@@ -84,8 +94,32 @@ export interface AdminUserListItem {
   newEmail?: string | null;
   oldEmails: string[];
   settings: UserSettingsRecord;
+  platforms: Record<string, PlatformActivityRecord>;
+  /** See `signupPlatformExpr`; `null` when unknown. */
+  signupPlatform: Platform | null;
   createdAt: Date;
   updatedAt: Date;
+}
+
+/** Whole-user-base breakdown by locale and platform (`GET /admin/reports/user-platforms`). */
+export interface AdminUserPlatformReport {
+  generatedAt: Date;
+  totalUsers: number;
+  /** Sorted by count, descending. */
+  byLocale: { locale: string; count: number }[];
+  /** Users who have used each platform; a multi-platform user counts under each. */
+  byPlatform: Record<Platform, number>;
+  /** Users with no platform recorded (mostly accounts inactive since tracking began). */
+  noPlatform: number;
+  /**
+   * One row per exact set of platforms used (`[]` = none recorded), sorted by
+   * count descending, split by signup platform (`unknown` when not determinable).
+   */
+  byCombination: {
+    platforms: Platform[];
+    count: number;
+    bySignupPlatform: Partial<Record<Platform | 'unknown', number>>;
+  }[];
 }
 
 export interface LogEntryRecord {

@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
 import { ObjectId } from 'mongodb';
 import { ValidationError } from '../../http/errors/validation-errors';
 import { NotFoundError } from '../../http/errors/http-errors';
-import type { UserCreateInput, UserRecord } from '../../repositories/helpers/types';
+import type { AdminUserListQuery, UserCreateInput, UserRecord } from '../../repositories/helpers/types';
 import {
   getRepos,
   getCollections,
@@ -412,12 +412,16 @@ describe('user.repository', () => {
   });
 
   describe('listAdminUsers', () => {
-    const baseQuery = {
+    const baseQuery: AdminUserListQuery = {
       limit: 10,
       offset: 0,
       sortOn: 'email',
-      sortDirection: 1 as const,
+      sortDirection: 1,
       searchText: '',
+      platforms: [],
+      platformsExact: false,
+      signupPlatform: null,
+      locale: null,
     };
 
     it('paginates, reports the total, sorts, and projects out sensitive fields', async () => {
@@ -446,6 +450,81 @@ describe('user.repository', () => {
       const { users } = await getRepos();
       const page = await users.listAdminUsers({ ...baseQuery, searchText: 'a+b' });
       expect(page.total).toBe(0);
+    });
+    describe('platform/locale filters', () => {
+      const later = () => new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
+
+      // web-only (signed up on web), android->web (signed up on android),
+      // android-only in German, a pre-tracking web user (signup unknown), and
+      // one with nothing recorded.
+      const seed = async () => {
+        const { users } = await getRepos();
+        const webOnly = await createUser();
+        const androidThenWeb = await createUser();
+        const androidDe = await createUser({ locale: 'de' });
+        const legacyWeb = await createUser();
+        const none = await createUser();
+        await users.recordClientActivity(webOnly.id, 'web', 'aaaaaaa');
+        await users.recordClientActivity(androidThenWeb.id, 'android', '1.0.0');
+        await users.recordClientActivity(androidThenWeb.id, 'web', 'aaaaaaa', later());
+        await users.recordClientActivity(androidDe.id, 'android', '1.0.0');
+        await users.recordClientActivity(legacyWeb.id, 'web', 'aaaaaaa', later());
+        return { webOnly, androidThenWeb, androidDe, legacyWeb, none };
+      };
+
+      const emailsFor = async (overrides: Partial<AdminUserListQuery>) => {
+        const { users } = await getRepos();
+        const page = await users.listAdminUsers({ ...baseQuery, ...overrides });
+        expect(page.total).toBe(page.users.length);
+        return page.users.map((u) => u.email).sort();
+      };
+
+      it('platforms matches users who used all of them; platformsExact excludes others', async () => {
+        const u = await seed();
+        expect(await emailsFor({ platforms: ['android'] }))
+          .toEqual([u.androidThenWeb.email, u.androidDe.email].sort());
+        expect(await emailsFor({ platforms: ['android', 'web'] })).toEqual([u.androidThenWeb.email]);
+        expect(await emailsFor({ platforms: ['web'], platformsExact: true }))
+          .toEqual([u.webOnly.email, u.legacyWeb.email].sort());
+        expect(await emailsFor({ platforms: [], platformsExact: true })).toEqual([u.none.email]);
+      });
+
+      it('filters by locale and by signup platform (unknown when first seen long after signup)', async () => {
+        const u = await seed();
+        expect(await emailsFor({ locale: 'de' })).toEqual([u.androidDe.email]);
+        expect(await emailsFor({ signupPlatform: 'android' }))
+          .toEqual([u.androidThenWeb.email, u.androidDe.email].sort());
+        expect(await emailsFor({ signupPlatform: 'web' })).toEqual([u.webOnly.email]);
+        expect(await emailsFor({ signupPlatform: 'unknown' })).toEqual([u.legacyWeb.email, u.none.email].sort());
+      });
+
+      it('annotates each listed user with platforms and signupPlatform', async () => {
+        const u = await seed();
+        const { users } = await getRepos();
+        const page = await users.listAdminUsers({ ...baseQuery, platforms: ['android', 'web'] });
+        expect(page.users[0]!.email).toBe(u.androidThenWeb.email);
+        expect(Object.keys(page.users[0]!.platforms).sort()).toEqual(['android', 'web']);
+        expect(page.users[0]!.signupPlatform).toBe('android');
+      });
+
+      it('getPlatformReport counts by locale, platform and combination split by signup platform', async () => {
+        await seed();
+        const { users } = await getRepos();
+        const report = await users.getPlatformReport();
+
+        expect(report.totalUsers).toBe(5);
+        expect(report.byLocale).toEqual([{ locale: 'en', count: 4 }, { locale: 'de', count: 1 }]);
+        expect(report.byPlatform).toEqual({ web: 3, android: 2, ios: 0 });
+        expect(report.noPlatform).toBe(1);
+        expect(report.byCombination).toEqual(expect.arrayContaining([
+          { platforms: ['web'], count: 2, bySignupPlatform: { web: 1, unknown: 1 } },
+          { platforms: ['android'], count: 1, bySignupPlatform: { android: 1 } },
+          { platforms: ['web', 'android'], count: 1, bySignupPlatform: { android: 1 } },
+          { platforms: [], count: 1, bySignupPlatform: { unknown: 1 } },
+        ]));
+        expect(report.byCombination).toHaveLength(4);
+        expect(report.byCombination[0]!.count).toBe(2);
+      });
     });
   });
 

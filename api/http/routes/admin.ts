@@ -9,6 +9,8 @@ import {
   adminUserSchema,
   adminUserSummarySchema,
   adminUserStatsSchema,
+  adminUserPlatformReportQuerySchema,
+  adminUserPlatformReportSchema,
   userEngagementDaySchema,
 } from '../../validation/schemas/admin';
 import { feedbackSchema } from '../../validation/schemas/feedback';
@@ -17,6 +19,7 @@ import {
   updateFeedback,
   deleteFeedback,
   getUserEngagementPastWeek,
+  getUserPlatformReport,
   listUsers,
   getUser,
   loginAsUser,
@@ -81,6 +84,19 @@ export const adminRoutes: RouteDefinition[] = [
         description: 'One entry per day for the last 7 days',
         schema: z.array(userEngagementDaySchema),
       },
+      errors: [401, 403],
+    },
+  },
+  {
+    method: 'GET',
+    path: '/admin/reports/user-platforms',
+    handler: getUserPlatformReport,
+    docs: {
+      summary: 'Get user counts by locale, platform and platform combination',
+      description: 'Computed over every user and cached server-side for a few minutes; pass refresh=true to recompute.',
+      tags,
+      request: { query: adminUserPlatformReportQuerySchema },
+      response: { description: 'The platform/locale report', schema: adminUserPlatformReportSchema },
       errors: [401, 403],
     },
   },

@@ -12,6 +12,61 @@
         </div>
       </div>
 
+      <admin-user-platform-report @apply-filter="applyFilter" />
+
+      <div class="users-page__filters">
+        <div class="users-page__filter-group" role="group" :aria-label="t('filter_platforms')">
+          <span class="mbl-text-small mbl-text-muted">{{ t('filter_platforms') }}</span>
+          <button
+            v-for="platform in PLATFORMS"
+            :key="platform"
+            class="mbl-button mbl-button--sm mbl-button--light"
+            :class="{ 'mbl-button--primary': filter.platforms.includes(platform) }"
+            :aria-pressed="filter.platforms.includes(platform)"
+            type="button"
+            @click="togglePlatform(platform)"
+          >
+            {{ platform }}
+          </button>
+          <label class="mbl-checkbox mbl-text-small">
+            <input v-model="filter.platformsExact" type="checkbox">
+            {{ filter.platforms.length ? t('filter_exact') : t('filter_none_recorded') }}
+          </label>
+        </div>
+        <div class="users-page__filter-group">
+          <span class="mbl-text-small mbl-text-muted">{{ t('filter_signup') }}</span>
+          <div class="mbl-select mbl-select--sm">
+            <select v-model="filter.signupPlatform" :aria-label="t('filter_signup')">
+              <option value="">
+                {{ t('filter_any') }}
+              </option>
+              <option v-for="platform in PLATFORMS" :key="platform" :value="platform">
+                {{ platform }}
+              </option>
+              <option value="unknown">
+                {{ t('filter_unknown') }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="users-page__filter-group">
+          <span class="mbl-text-small mbl-text-muted">{{ t('filter_locale') }}</span>
+          <div class="mbl-select mbl-select--sm">
+            <select v-model="filter.locale" :aria-label="t('filter_locale')">
+              <option value="">
+                {{ t('filter_any') }}
+              </option>
+              <option v-for="l in locales" :key="l.code" :value="l.code">
+                {{ l.name }} ({{ l.code }})
+              </option>
+            </select>
+          </div>
+        </div>
+        <button v-if="hasFilter" class="mbl-button mbl-button--sm mbl-button--light" type="button" @click="clearFilter">
+          {{ t('filter_clear') }}
+        </button>
+      </div>
+
       <div class="users-page__toolbar">
         <div class="users-page__sort">
           <span class="mbl-text-small mbl-text-muted">{{ t('sort') }}</span>
@@ -110,6 +165,16 @@
               <div class="user-card__date mbl-text-small mbl-text-muted">
                 {{ user.createdAt.split('T')[0] }}
               </div>
+              <div class="user-card__platforms mbl-text-small mbl-text-muted">
+                <span>{{ user.settings?.locale }}</span>
+                <span
+                  v-for="platform in userPlatforms(user)"
+                  :key="platform"
+                  class="user-card__platform"
+                  :class="{ 'user-card__platform--signup': platform === user.signupPlatform }"
+                  :title="platform === user.signupPlatform ? t('signed_up_here') : undefined"
+                >{{ platform }}</span>
+              </div>
               <div class="user-card__actions">
                 <button class="mbl-button mbl-button--light mbl-button--primary mbl-button--sm" @click="openUserDetails(user)">
                   {{ t('details') }}
@@ -131,7 +196,9 @@
 </template>
 
 <script setup lang="ts">
+import { locales } from '@mybiblelog/shared';
 import AdminUserDetailModal from '~/components/admin/AdminUserDetailModal.vue';
+import AdminUserPlatformReport, { type AdminPlatform, type AdminUserFilter } from '~/components/admin/AdminUserPlatformReport.vue';
 import CaretDownIcon from '~/components/svg/CaretDownIcon.vue';
 import CaretLeftIcon from '~/components/svg/CaretLeftIcon.vue';
 import CaretRightIcon from '~/components/svg/CaretRightIcon.vue';
@@ -145,7 +212,12 @@ interface AdminUser {
   createdAt: string;
   googleId?: string;
   hasLocalAccount?: boolean;
+  settings?: { locale: string };
+  platforms?: Partial<Record<AdminPlatform, { firstSeenAt: string }>>;
+  signupPlatform?: AdminPlatform | null;
 }
+
+const PLATFORMS: AdminPlatform[] = ['web', 'android', 'ios'];
 
 const { $http } = useNuxtApp();
 const { t } = useI18n();
@@ -159,6 +231,9 @@ const sortDirection = ref(-1);
 const searchText = ref('');
 const limit = ref(50);
 const page = ref(1);
+const emptyFilter = (): AdminUserFilter => ({ platforms: [], platformsExact: false, signupPlatform: '', locale: '' });
+const filter = reactive<AdminUserFilter>(emptyFilter());
+const hasFilter = computed(() => Boolean(filter.platforms.length || filter.platformsExact || filter.signupPlatform || filter.locale));
 
 const offset = computed(() => (page.value - 1) * limit.value);
 const totalPages = computed(() => Math.ceil(totalUsers.value / limit.value) || 1);
@@ -177,6 +252,10 @@ function buildUrl() {
   params.set('sortDirection', sortDirection.value === 1 ? 'ascending' : 'descending');
   params.set('limit', String(limit.value));
   if (offset.value) { params.set('offset', String(offset.value)); }
+  if (filter.platforms.length) { params.set('platforms', filter.platforms.join(',')); }
+  if (filter.platformsExact) { params.set('platformsExact', 'true'); }
+  if (filter.signupPlatform) { params.set('signupPlatform', filter.signupPlatform); }
+  if (filter.locale) { params.set('locale', filter.locale); }
   return `/api/admin/users?${params}`;
 }
 
@@ -211,6 +290,26 @@ function onPageChanged(newPage: number) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+function togglePlatform(platform: AdminPlatform) {
+  filter.platforms = filter.platforms.includes(platform)
+    ? filter.platforms.filter((p) => p !== platform)
+    : PLATFORMS.filter((p) => p === platform || filter.platforms.includes(p));
+}
+
+function applyFilter(next: Partial<AdminUserFilter>) {
+  Object.assign(filter, emptyFilter(), next);
+}
+
+function clearFilter() {
+  Object.assign(filter, emptyFilter());
+}
+
+/** Platforms in first-seen order, so the signup platform (if known) leads. */
+function userPlatforms(user: AdminUser): AdminPlatform[] {
+  const entries = Object.entries(user.platforms ?? {}) as [AdminPlatform, { firstSeenAt: string }][];
+  return entries.sort((a, b) => a[1].firstSeenAt.localeCompare(b[1].firstSeenAt)).map(([p]) => p);
+}
+
 function openUserDetails(user: AdminUser) {
   selectedUser.value = user;
 }
@@ -225,6 +324,10 @@ function onUserDeleted() {
 }
 
 watch(limit, () => { page.value = 1; loadUsers(); });
+watch(filter, () => {
+  if (page.value !== 1) { page.value = 1; } // the page watcher reloads
+  else { loadUsers(); }
+});
 watch(page, () => { loadUsers(); });
 watch(searchText, () => {
   if (searchText.value.length > 0 && searchText.value.length < 3) { return; }
@@ -236,6 +339,21 @@ onMounted(() => { loadUsers(); });
 </script>
 
 <style scoped>
+.users-page__filters {
+  display: flex;
+  align-items: center;
+  gap: var(--mbl-space-sm) var(--mbl-space-md);
+  flex-wrap: wrap;
+  margin-bottom: var(--mbl-space-md);
+}
+
+.users-page__filter-group {
+  display: flex;
+  align-items: center;
+  gap: var(--mbl-space-xs);
+  flex-wrap: wrap;
+}
+
 .users-page__toolbar {
   display: flex;
   align-items: center;
@@ -312,8 +430,24 @@ onMounted(() => { loadUsers(); });
   white-space: nowrap;
 }
 
+.user-card__platforms {
+  align-self: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mbl-space-xs);
+}
+
+.user-card__platform {
+  padding: 0 var(--mbl-space-xs);
+  border: 1px solid var(--mbl-border-soft);
+  border-radius: var(--mbl-radius-sm);
+}
+
+.user-card__platform--signup {
+  font-weight: 600;
+}
+
 .user-card__actions {
-  grid-column: 1 / -1;
   display: flex;
   justify-content: flex-end;
 }
@@ -342,7 +476,16 @@ onMounted(() => { loadUsers(); });
     "aria_next_page": "Next page",
     "aria_page": "Page",
     "page_number": "Page {page}",
-    "details": "Details"
+    "details": "Details",
+    "filter_platforms": "Used:",
+    "filter_exact": "Only these",
+    "filter_none_recorded": "No platform recorded",
+    "filter_signup": "Signed up on:",
+    "filter_locale": "Locale:",
+    "filter_any": "Any",
+    "filter_unknown": "Unknown",
+    "filter_clear": "Clear filters",
+    "signed_up_here": "Signed up on this platform"
   },
   "de": {
     "title": "Benutzerverwaltung",
@@ -361,7 +504,16 @@ onMounted(() => { loadUsers(); });
     "aria_next_page": "Nächste Seite",
     "aria_page": "Seite",
     "page_number": "Seite {page}",
-    "details": "Details"
+    "details": "Details",
+    "filter_platforms": "Genutzt:",
+    "filter_exact": "Nur diese",
+    "filter_none_recorded": "Keine Plattform erfasst",
+    "filter_signup": "Registriert über:",
+    "filter_locale": "Sprache:",
+    "filter_any": "Alle",
+    "filter_unknown": "Unbekannt",
+    "filter_clear": "Filter zurücksetzen",
+    "signed_up_here": "Über diese Plattform registriert"
   },
   "es": {
     "title": "Administración de Usuarios",
@@ -380,7 +532,16 @@ onMounted(() => { loadUsers(); });
     "aria_next_page": "Página siguiente",
     "aria_page": "Página",
     "page_number": "Página {page}",
-    "details": "Detalles"
+    "details": "Detalles",
+    "filter_platforms": "Usó:",
+    "filter_exact": "Solo estas",
+    "filter_none_recorded": "Ninguna plataforma registrada",
+    "filter_signup": "Registrado en:",
+    "filter_locale": "Idioma:",
+    "filter_any": "Cualquiera",
+    "filter_unknown": "Desconocida",
+    "filter_clear": "Quitar filtros",
+    "signed_up_here": "Se registró en esta plataforma"
   },
   "fr": {
     "title": "Administration des Utilisateurs",
@@ -399,7 +560,16 @@ onMounted(() => { loadUsers(); });
     "aria_next_page": "Page suivante",
     "aria_page": "Page",
     "page_number": "Page {page}",
-    "details": "Détails"
+    "details": "Détails",
+    "filter_platforms": "Utilisé :",
+    "filter_exact": "Uniquement celles-ci",
+    "filter_none_recorded": "Aucune plateforme enregistrée",
+    "filter_signup": "Inscrit sur :",
+    "filter_locale": "Langue :",
+    "filter_any": "Toutes",
+    "filter_unknown": "Inconnue",
+    "filter_clear": "Effacer les filtres",
+    "signed_up_here": "Inscrit sur cette plateforme"
   },
   "ko": {
     "title": "사용자 관리",
@@ -418,7 +588,16 @@ onMounted(() => { loadUsers(); });
     "aria_next_page": "다음 페이지",
     "aria_page": "페이지",
     "page_number": "{page} 페이지",
-    "details": "상세"
+    "details": "상세",
+    "filter_platforms": "사용:",
+    "filter_exact": "이 플랫폼만",
+    "filter_none_recorded": "기록된 플랫폼 없음",
+    "filter_signup": "가입 플랫폼:",
+    "filter_locale": "언어:",
+    "filter_any": "전체",
+    "filter_unknown": "알 수 없음",
+    "filter_clear": "필터 지우기",
+    "signed_up_here": "이 플랫폼에서 가입함"
   },
   "pt": {
     "title": "Administração de Usuários",
@@ -437,7 +616,16 @@ onMounted(() => { loadUsers(); });
     "aria_next_page": "Próxima página",
     "aria_page": "Página",
     "page_number": "Página {page}",
-    "details": "Detalhes"
+    "details": "Detalhes",
+    "filter_platforms": "Usou:",
+    "filter_exact": "Somente estas",
+    "filter_none_recorded": "Nenhuma plataforma registrada",
+    "filter_signup": "Cadastrado em:",
+    "filter_locale": "Idioma:",
+    "filter_any": "Qualquer",
+    "filter_unknown": "Desconhecida",
+    "filter_clear": "Limpar filtros",
+    "signed_up_here": "Cadastrou-se nesta plataforma"
   },
   "uk": {
     "title": "Керування користувачами",
@@ -456,7 +644,16 @@ onMounted(() => { loadUsers(); });
     "aria_next_page": "Наступна сторінка",
     "aria_page": "Сторінка",
     "page_number": "Сторінка {page}",
-    "details": "Деталі"
+    "details": "Деталі",
+    "filter_platforms": "Використовував:",
+    "filter_exact": "Лише ці",
+    "filter_none_recorded": "Платформу не зафіксовано",
+    "filter_signup": "Зареєстровано через:",
+    "filter_locale": "Мова:",
+    "filter_any": "Будь-яка",
+    "filter_unknown": "Невідомо",
+    "filter_clear": "Скинути фільтри",
+    "signed_up_here": "Зареєструвався на цій платформі"
   }
 }
 </i18n>

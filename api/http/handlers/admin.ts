@@ -2,8 +2,9 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { generateUserJWT } from '../../repositories/helpers/user-auth';
 import { type Repositories } from '../../repositories/useRepositories';
-import { type AdminUserListQuery, type FeedbackStatus } from '../../repositories/helpers/types';
-import { isWebClient, type Platform } from '../helpers/platform';
+import { isValidLocaleCode } from '@mybiblelog/shared';
+import { type AdminUserListQuery, type AdminUserPlatformReport, type FeedbackStatus } from '../../repositories/helpers/types';
+import { ALLOWED_PLATFORMS, isWebClient, type Platform } from '../helpers/platform';
 import deleteAccount from '../helpers/delete-account';
 import { InvalidRequestError, NotFoundError } from '../errors/http-errors';
 import { ApiErrorDetailCode } from '../errors/error-codes';
@@ -72,6 +73,9 @@ const getPastWeekEngagement = async (
   return engagementData;
 };
 
+const isPlatform = (value: string): value is Platform =>
+  (ALLOWED_PLATFORMS as readonly string[]).includes(value);
+
 /**
  * Parses and clamps the `/admin/users` query string. Returns `null` for an
  * unparseable `limit`/`offset` (the handler turns that into a 400), mirroring the
@@ -86,6 +90,10 @@ const parseUserListQuery = (query: Record<string, string | undefined>): AdminUse
     sortOn: 'createdAt',
     sortDirection: -1,
     searchText: '',
+    platforms: [],
+    platformsExact: false,
+    signupPlatform: null,
+    locale: null,
   };
 
   const sortOnValues = ['createdAt', 'email'];
@@ -118,6 +126,31 @@ const parseUserListQuery = (query: Record<string, string | undefined>): AdminUse
 
   if (query.searchText?.length) {
     validated.searchText = query.searchText;
+  }
+
+  // Unlike sort/paging, a bad filter value is rejected rather than ignored:
+  // silently dropping it would present an unfiltered list as filtered.
+  if (query.platforms) {
+    const platforms = query.platforms.split(',').filter(Boolean);
+    if (!platforms.every(isPlatform)) {
+      return null;
+    }
+    validated.platforms = [...new Set(platforms)];
+  }
+  validated.platformsExact = query.platformsExact === 'true';
+
+  if (query.signupPlatform) {
+    if (query.signupPlatform !== 'unknown' && !isPlatform(query.signupPlatform)) {
+      return null;
+    }
+    validated.signupPlatform = query.signupPlatform;
+  }
+
+  if (query.locale) {
+    if (!isValidLocaleCode(query.locale)) {
+      return null;
+    }
+    validated.locale = query.locale;
   }
 
   return validated;
@@ -168,7 +201,41 @@ export const getUserEngagementPastWeek: RouteHandler = async (req, deps) => {
   return { status: 200, body: { data: engagementData } };
 };
 
-// GET /admin/users - List users with sorting/searching/pagination
+/**
+ * The platform/locale report scans every user, so it is served from a
+ * per-process cache: page views within `PLATFORM_REPORT_TTL_MS` cost nothing,
+ * and concurrent misses share one in-flight aggregation. Admins can force a
+ * fresh run (`?refresh=true`); that is a deliberate click, not a page load.
+ * Counts this coarse don't need to be more current than a few minutes, and
+ * the response carries `generatedAt` so the page can say how old they are.
+ */
+const PLATFORM_REPORT_TTL_MS = 10 * 60 * 1000;
+let platformReportCache: { promise: Promise<AdminUserPlatformReport>; expiresAt: number } | null = null;
+
+const getCachedPlatformReport = (repositories: Repositories, refresh: boolean): Promise<AdminUserPlatformReport> => {
+  const now = Date.now();
+  if (!refresh && platformReportCache && platformReportCache.expiresAt > now) {
+    return platformReportCache.promise;
+  }
+  const entry = { promise: repositories.users.getPlatformReport(), expiresAt: now + PLATFORM_REPORT_TTL_MS };
+  platformReportCache = entry;
+  // Don't keep serving a failure for the whole TTL.
+  entry.promise.catch(() => {
+    if (platformReportCache === entry) {
+      platformReportCache = null;
+    }
+  });
+  return entry.promise;
+};
+
+// GET /admin/reports/user-platforms - Users by locale, platform and platform combination (cached)
+export const getUserPlatformReport: RouteHandler = async (req, deps) => {
+  await deps.authenticate(req, { adminOnly: true });
+  const report = await getCachedPlatformReport(deps.repositories, req.query.refresh === 'true');
+  return { status: 200, body: { data: report } };
+};
+
+// GET /admin/users - List users with sorting/searching/filtering/pagination
 export const listUsers: RouteHandler = async (req, deps) => {
   await deps.authenticate(req, { adminOnly: true });
 
