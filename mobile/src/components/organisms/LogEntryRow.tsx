@@ -12,6 +12,7 @@ export const LogEntryRow = memo(function LogEntryRow({
   onPressMenu,
   meta,
   showDate = true,
+  active,
   testID,
 }: {
   entry: LogEntry;
@@ -19,6 +20,8 @@ export const LogEntryRow = memo(function LogEntryRow({
   meta?: string;
   /** Hide the date on screens that are already scoped to one day (Today). */
   showDate?: boolean;
+  /** The entry an open menu / delete confirmation acts on. */
+  active?: boolean;
   testID?: string;
 }) {
   const { locale } = useLocale();
@@ -37,6 +40,7 @@ export const LogEntryRow = memo(function LogEntryRow({
       subtitle={displayDate}
       meta={meta}
       testID={testID}
+      active={active}
       trailing={
         <IconButton
           name="ellipsis-vertical"

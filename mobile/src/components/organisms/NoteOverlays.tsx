@@ -14,6 +14,8 @@ type NoteOverlaysApi = {
   openAdd: () => void;
   /** Open the card action menu for a note. */
   openMenu: (note: PassageNote) => void;
+  /** Id of the note the open menu or delete confirmation acts on. */
+  activeId: string | null;
   /** Open the search/filter/sort sheet. */
   openQuery: () => void;
   /** Render this once at the end of the screen. */
@@ -120,5 +122,7 @@ export function useNoteOverlays(): NoteOverlaysApi {
     </>
   );
 
-  return { openAdd, openMenu, openQuery, overlays };
+  const activeId = (menuNote ?? deletingNote)?.id ?? null;
+
+  return { openAdd, openMenu, activeId, openQuery, overlays };
 }

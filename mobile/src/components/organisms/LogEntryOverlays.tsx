@@ -28,6 +28,8 @@ type LogEntryOverlaysApi = {
   openAdd: () => void;
   /** Open the row action menu for an entry. */
   openMenu: (entry: StoredLogEntry) => void;
+  /** `clientId` of the entry the open menu or delete confirmation acts on. */
+  activeClientId: string | null;
   /** Render this once at the end of the screen. */
   overlays: ReactNode;
 };
@@ -182,5 +184,8 @@ export function useLogEntryOverlays({ entries, presetDate }: Options): LogEntryO
     </>
   );
 
-  return { openAdd, openMenu, overlays };
+  // Only ids that still resolve, so a row removed by sync can't stay "active".
+  const activeClientId = (menuEntry ?? deletingEntry)?.clientId ?? null;
+
+  return { openAdd, openMenu, activeClientId, overlays };
 }

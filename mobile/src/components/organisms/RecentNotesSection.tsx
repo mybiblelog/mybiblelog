@@ -61,6 +61,7 @@ export function RecentNotesSection() {
   const menuTitle = menuNote ? getNoteMenuTitle(menuNote, t, locale) : undefined;
   const [editingNote, setEditingNote] = useState<PassageNote | null>(null);
   const [deletingNote, setDeletingNote] = useState<PassageNote | null>(null);
+  const activeId = (menuNote ?? deletingNote)?.id ?? null;
 
   return (
     <View style={styles.section}>
@@ -85,7 +86,12 @@ export function RecentNotesSection() {
       ) : (
         <View style={styles.list}>
           {notes.map((note) => (
-            <NoteCard key={note.id} note={note} onPressMenu={setMenuNote} />
+            <NoteCard
+              key={note.id}
+              note={note}
+              active={note.id === activeId}
+              onPressMenu={setMenuNote}
+            />
           ))}
         </View>
       )}

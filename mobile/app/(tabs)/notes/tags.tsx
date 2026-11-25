@@ -47,6 +47,8 @@ export default function Tags() {
   const [editingTag, setEditingTag] = useState<PassageNoteTag | null>(null);
   const [deletingTag, setDeletingTag] = useState<PassageNoteTag | null>(null);
   const [blockedTag, setBlockedTag] = useState<PassageNoteTag | null>(null);
+  // The tag an open menu or confirmation acts on.
+  const activeTagId = (menuTag ?? deletingTag ?? blockedTag)?.id ?? null;
 
   useEffect(() => {
     void tagActions.loadTags();
@@ -99,6 +101,7 @@ export default function Tags() {
     return (
       <AnimatedList
         data={state.tags}
+        extraData={activeTagId}
         contentContainerStyle={[
           styles.listContent,
           state.tags.length === 0 && styles.listContentEmpty,
@@ -112,6 +115,7 @@ export default function Tags() {
             subtitleColor="text"
             subtitleStyle={styles.tagDescription}
             meta={t("tag_notes_count", { count: item.noteCount })}
+            active={item.id === activeTagId}
             onPress={() => setMenuTag(item)}
             trailing={
               <IconButton

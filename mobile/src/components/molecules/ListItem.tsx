@@ -33,6 +33,8 @@ export type ListItemProps = {
    * "plain" — no surface of its own, for rows grouped inside a parent Card.
    */
   variant?: "card" | "plain";
+  /** Highlight the row as the target of an open menu (card variant only). */
+  active?: boolean;
   testID?: string;
   style?: StyleProp<ViewStyle>;
 };
@@ -61,6 +63,7 @@ export function ListItem({
   chevron,
   onPress,
   variant = "card",
+  active,
   testID,
   style,
 }: ListItemProps) {
@@ -109,6 +112,7 @@ export function ListItem({
         onPress={onPress}
         testID={testID}
         pressFeedback={ROW_PRESS}
+        active={active}
         style={style}
       >
         <View style={styles.row}>{inner}</View>

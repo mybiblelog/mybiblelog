@@ -137,7 +137,7 @@ export default function Calendar() {
     [entries, selectedDay]
   );
 
-  const { openAdd, openMenu, overlays } = useLogEntryOverlays({
+  const { openAdd, openMenu, activeClientId, overlays } = useLogEntryOverlays({
     entries: entriesForSelectedDay,
     presetDate: selectedDay,
   });
@@ -159,13 +159,18 @@ export default function Calendar() {
     <Screen testID="screen.calendar">
       <AnimatedList
         data={entriesForSelectedDay}
+        extraData={activeClientId}
         refreshControl={refreshControl}
         keyExtractor={(item: StoredLogEntry) => item.clientId}
         contentContainerStyle={styles.pageContent}
         ItemSeparatorComponent={EntrySeparator}
         renderItem={({ item }) => (
           <View style={styles.rowWrap}>
-            <LogEntryRow entry={item} onPressMenu={() => openMenu(item)} />
+            <LogEntryRow
+              entry={item}
+              active={item.clientId === activeClientId}
+              onPressMenu={() => openMenu(item)}
+            />
           </View>
         )}
         ListHeaderComponent={

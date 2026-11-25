@@ -43,7 +43,7 @@ export function OfflineNotesView() {
   const notes = useLocalNotes();
   const isUnauthenticated = useIsUnauthenticated();
   const canReachServer = useCanReachServer();
-  const { openAdd, openMenu, overlays } = useLocalNoteOverlays();
+  const { openAdd, openMenu, activeId, overlays } = useLocalNoteOverlays();
 
   const header = (
     <ScreenHeader
@@ -83,11 +83,16 @@ export function OfflineNotesView() {
 
       <AnimatedList
         data={notes}
+        extraData={activeId}
         animateItemLayout={false}
         contentContainerStyle={[styles.listContent, notes.length === 0 && styles.listContentEmpty]}
         keyExtractor={(item: StoredLocalNote) => item.clientId}
         renderItem={({ item }: { item: StoredLocalNote }) => (
-          <NoteCard note={toCardNote(item)} onPressMenu={openMenu} />
+          <NoteCard
+            note={toCardNote(item)}
+            active={item.clientId === activeId}
+            onPressMenu={openMenu}
+          />
         )}
         ItemSeparatorComponent={Separator}
         ListEmptyComponent={

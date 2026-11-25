@@ -29,6 +29,11 @@ type Props = {
    */
   flat?: boolean;
   tone?: CardTone;
+  /**
+   * Ring the card in the accent color — marks the item an open context menu
+   * or pending confirmation acts on, so it stays identifiable behind the sheet.
+   */
+  active?: boolean;
   onPress?: () => void;
   /** Override the press animation — wide targets want less travel. */
   pressFeedback?: { scaleTo?: number; opacityTo?: number };
@@ -50,6 +55,7 @@ export function Card({
   padding = "content",
   flat = false,
   tone = "neutral",
+  active = false,
   onPress,
   pressFeedback,
   accessibilityLabel,
@@ -82,10 +88,21 @@ export function Card({
     style,
   ];
 
+  // An overlay rather than a border on the card itself, so toggling it never
+  // shifts the content by the ring's width.
+  const ring = active ? (
+    <View
+      pointerEvents="none"
+      testID={testID ? `${testID}.active` : undefined}
+      style={[styles.activeRing, { borderRadius: radius.card, borderColor: colors.primary }]}
+    />
+  ) : null;
+
   if (!onPress) {
     return (
       <View testID={testID} style={base}>
         {children}
+        {ring}
       </View>
     );
   }
@@ -101,6 +118,7 @@ export function Card({
       style={[base, press.animatedStyle]}
     >
       {children}
+      {ring}
     </AnimatedPressable>
   );
 }
@@ -111,4 +129,5 @@ const styles = StyleSheet.create({
   paddingListItem: { paddingVertical: spacing.xs, paddingHorizontal: spacing.md },
   // Callouts carry a visible edge, as web's .mbl-message does.
   toned: { borderWidth: StyleSheet.hairlineWidth },
+  activeRing: { position: "absolute", top: 0, right: 0, bottom: 0, left: 0, borderWidth: 2 },
 });

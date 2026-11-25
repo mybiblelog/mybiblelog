@@ -47,7 +47,9 @@ export default function Index() {
     [entries, today]
   );
 
-  const { openAdd, openMenu, overlays } = useLogEntryOverlays({ entries: todayEntries });
+  const { openAdd, openMenu, activeClientId, overlays } = useLogEntryOverlays({
+    entries: todayEntries,
+  });
 
   const goal = settings?.dailyVerseCountGoal ?? 0;
   const lookBackDate = settings?.lookBackDate ?? "0000-00-00";
@@ -125,6 +127,7 @@ export default function Index() {
 
       <AnimatedList
         data={loading ? [] : todayEntries}
+        extraData={activeClientId}
         refreshControl={refreshControl}
         contentContainerStyle={styles.listContent}
         keyExtractor={(item: StoredLogEntry) => item.clientId}
@@ -136,6 +139,7 @@ export default function Index() {
               testID="today.entry-row"
               // Every row on this screen is today's — the date is noise here.
               showDate={false}
+              active={item.clientId === activeClientId}
               meta={
                 stats
                   ? formatVerseCountMessage(t, {

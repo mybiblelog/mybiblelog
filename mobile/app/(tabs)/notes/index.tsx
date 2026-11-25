@@ -36,7 +36,7 @@ export default function Notes() {
   const { colors } = useTheme();
   const state = useNotesState();
   const hasAppliedOptions = useNotesHasAppliedOptions();
-  const { openAdd, openMenu, openQuery, overlays } = useNoteOverlays();
+  const { openAdd, openMenu, activeId, openQuery, overlays } = useNoteOverlays();
   const [refreshing, setRefreshing] = useState(false);
   const isUnauthenticated = useIsUnauthenticated();
   const status = useConnectionStatus();
@@ -169,11 +169,14 @@ export default function Notes() {
 
       <AnimatedList
         data={notes}
+        extraData={activeId}
         animateItemLayout={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         contentContainerStyle={[styles.listContent, notes.length === 0 && styles.listContentEmpty]}
         keyExtractor={(item: PassageNote) => item.id}
-        renderItem={({ item }) => <NoteCard note={item} onPressMenu={openMenu} />}
+        renderItem={({ item }) => (
+          <NoteCard note={item} active={item.id === activeId} onPressMenu={openMenu} />
+        )}
         ItemSeparatorComponent={Separator}
         onEndReachedThreshold={0.4}
         onEndReached={() => void notesActions.loadMore()}

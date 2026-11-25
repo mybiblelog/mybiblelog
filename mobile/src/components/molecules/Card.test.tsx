@@ -182,4 +182,27 @@ describe("Card", () => {
       expect(screen.queryByRole("button")).toBeNull();
     });
   });
+
+  describe("active", () => {
+    it("draws no ring by default", async () => {
+      await renderWithProviders(
+        <Card testID="c">
+          <Text>x</Text>
+        </Card>
+      );
+      expect(screen.queryByTestId("c.active")).toBeNull();
+    });
+
+    it("rings the card in the primary color without changing its own padding", async () => {
+      await renderWithProviders(
+        <Card testID="c" padding="list-item" active>
+          <Text>x</Text>
+        </Card>
+      );
+      const ring = StyleSheet.flatten(screen.getByTestId("c.active").props.style);
+      expect(ring.borderColor).toBe(colorsByScheme.light.primary);
+      expect(ring.position).toBe("absolute");
+      expect(styleOf("c").borderWidth).toBeUndefined();
+    });
+  });
 });

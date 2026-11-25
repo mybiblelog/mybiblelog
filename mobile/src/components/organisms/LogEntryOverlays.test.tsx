@@ -20,9 +20,10 @@ import { useLogEntryOverlays } from "./LogEntryOverlays";
 // A harness exposing the hook's `openMenu` through a pressable button so
 // tests can drive the overlays exactly like a screen would.
 function Harness({ entry }: { entry: StoredLogEntry }) {
-  const { openMenu, overlays } = useLogEntryOverlays({ entries: [entry] });
+  const { openMenu, activeClientId, overlays } = useLogEntryOverlays({ entries: [entry] });
   return (
     <>
+      <Text>{`active:${activeClientId ?? "none"}`}</Text>
       <TouchableOpacity onPress={() => openMenu(entry)}>
         <Text>Open Menu</Text>
       </TouchableOpacity>
@@ -106,5 +107,21 @@ describe("useLogEntryOverlays", () => {
     await waitFor(() =>
       expect(logEntryActions.deleteEntry).toHaveBeenCalledWith(genesisEntry.clientId)
     );
+  });
+
+  it("marks the entry active while its menu and delete confirmation are open", async () => {
+    const { getByText } = await renderWithProviders(<Harness entry={genesisEntry} />);
+    expect(getByText("active:none")).toBeTruthy();
+
+    await fireEvent.press(getByText("Open Menu"));
+    expect(getByText("active:client-1")).toBeTruthy();
+
+    // Still active once the menu hands off to the confirm dialog…
+    await fireEvent.press(getByText("Delete"));
+    expect(getByText("active:client-1")).toBeTruthy();
+
+    // …and cleared when the dialog is dismissed.
+    await fireEvent.press(getByText("Cancel"));
+    await waitFor(() => expect(getByText("active:none")).toBeTruthy());
   });
 });

@@ -13,6 +13,8 @@ type LocalNoteOverlaysApi = {
   openAdd: () => void;
   /** Open the card action menu for a local note. */
   openMenu: (note: PassageNote) => void;
+  /** Id of the note the open menu or delete confirmation acts on. */
+  activeId: string | null;
   /** Render this once at the end of the screen. */
   overlays: ReactNode;
 };
@@ -102,5 +104,7 @@ export function useLocalNoteOverlays(): LocalNoteOverlaysApi {
     </>
   );
 
-  return { openAdd, openMenu, overlays };
+  const activeId = (menuNote ?? deletingNote)?.id ?? null;
+
+  return { openAdd, openMenu, activeId, overlays };
 }

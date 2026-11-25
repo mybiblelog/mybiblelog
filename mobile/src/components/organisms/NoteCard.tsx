@@ -14,11 +14,13 @@ import { Card } from "../molecules/Card";
 type Props = {
   note: PassageNote;
   onPressMenu: (note: PassageNote) => void;
+  /** The note an open menu / delete confirmation acts on. */
+  active?: boolean;
   testID?: string;
 };
 
 /** A note in the list (web `PassageNote.vue` equivalent). */
-export function NoteCard({ note, onPressMenu, testID }: Props) {
+export function NoteCard({ note, onPressMenu, active, testID }: Props) {
   const t = useT();
   const { locale } = useLocale();
   const tags = useTagsList();
@@ -48,7 +50,7 @@ export function NoteCard({ note, onPressMenu, testID }: Props) {
   return (
     // "list-item" padding, so a note sits in the same column as the log-entry
     // rows it shares the Today screen with.
-    <Card padding="list-item" testID={testID}>
+    <Card padding="list-item" active={active} testID={testID}>
       <View style={styles.header}>
         {note.passages.length > 0 ? (
           <View style={styles.passageList}>
