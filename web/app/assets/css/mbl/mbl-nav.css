@@ -18,6 +18,26 @@
   display: inline-block;
 }
 
+/* Downward caret marks a text button as a menu trigger rather than an action.
+   Drawn like the .mbl-select caret; flips up while the menu is open. */
+.mbl-dropdown__trigger .mbl-button::after {
+  border: 1px solid currentcolor;
+  border-right: 0;
+  border-top: 0;
+  content: '';
+  height: 0.5em;
+  margin-left: 0.625em;
+  margin-top: -0.25em;
+  pointer-events: none;
+  transform: rotate(-45deg);
+  width: 0.5em;
+}
+
+.mbl-dropdown--active .mbl-dropdown__trigger .mbl-button::after {
+  margin-top: 0.25em;
+  transform: rotate(135deg);
+}
+
 .mbl-dropdown__menu {
   display: none;
   left: 0;
