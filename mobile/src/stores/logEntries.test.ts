@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { waitFor } from "@testing-library/react-native";
 
 jest.mock("@mybiblelog/shared", () => ({
   ...jest.requireActual("@mybiblelog/shared"),
@@ -14,9 +15,16 @@ jest.mock("@/src/stores/auth", () => ({
     subscribe: jest.fn(),
   },
 }));
+// Keep the listener the store registers, so tests can play connectivity changes
+// (`clearMocks` would wipe `mock.calls` between tests).
+const mockConnectivityListeners: ((s: object, prev: object) => void)[] = [];
 jest.mock("@/src/stores/connectivity", () => ({
   getIsOnline: jest.fn(),
-  useConnectivityStore: { subscribe: jest.fn() },
+  useConnectivityStore: {
+    subscribe: jest.fn((listener: (s: object, prev: object) => void) => {
+      mockConnectivityListeners.push(listener);
+    }),
+  },
 }));
 jest.mock("@/src/stores/achievements", () => ({
   achievementActions: { evaluate: jest.fn() },
@@ -532,5 +540,57 @@ describe("rehydrating after a failed read", () => {
     const state = useLogEntriesStore.getState().state;
     expect(state.status === "ready" && state.entries).toEqual([createdInMemory]);
     expect(isStorageDegraded()).toBe(true);
+  });
+});
+
+describe("draining the queue when the server comes back", () => {
+  const playConnectivity = (s: object, prev: object) =>
+    mockConnectivityListeners.forEach((listener) => listener(s, prev));
+
+  beforeAll(async () => {
+    initLogEntries(); // module-guarded; registers the listener if nothing has yet
+    await Promise.resolve();
+  });
+
+  beforeEach(async () => {
+    (fetchLogEntries as jest.Mock).mockReset().mockResolvedValue([]);
+    // The device is online but the server is down (settles the listener's
+    // device-online tracking first, so only the server edge is under test).
+    (getIsOnline as jest.Mock).mockReturnValue(true);
+    (postLogEntry as jest.Mock).mockReset().mockRejectedValue(new Error("server down"));
+    playConnectivity(
+      { isOnline: false, apiReachable: null },
+      { isOnline: null, apiReachable: null }
+    );
+    playConnectivity(
+      { isOnline: true, apiReachable: false },
+      { isOnline: false, apiReachable: null }
+    );
+    await actions().syncNow();
+    // The create fails against the down server and falls back to the queue.
+    await actions().createEntry(entry);
+    await actions().syncNow();
+    expect(await loadPendingLogEntryMutations()).toHaveLength(1);
+    (postLogEntry as jest.Mock).mockReset().mockResolvedValue({ id: "server-1", ...entry });
+  });
+
+  it("syncs once the API answers again on the same network", async () => {
+    playConnectivity(
+      { isOnline: true, apiReachable: true },
+      { isOnline: true, apiReachable: false }
+    );
+
+    await waitFor(() => expect(postLogEntry).toHaveBeenCalledTimes(1));
+    await waitFor(async () => expect(await loadPendingLogEntryMutations()).toHaveLength(0));
+  });
+
+  it("ignores the first reachability verdict at startup (null -> true)", async () => {
+    playConnectivity(
+      { isOnline: true, apiReachable: true },
+      { isOnline: true, apiReachable: null }
+    );
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(postLogEntry).not.toHaveBeenCalled();
   });
 });
