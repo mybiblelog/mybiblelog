@@ -461,6 +461,14 @@ export const ko = {
   onboarding_bible_app_label:
     "My Bible Log에서 성경 구절을 열 때 이 앱 또는 성경 사이트에서 열고 싶습니다:",
   onboarding_bible_change_hint: "이 설정은 언제든지 바꿀 수 있습니다.",
+  onboarding_reminder_title: "매일 알림",
+  onboarding_reminder_description:
+    "매일 읽도록 살짝 알려 드릴까요? 시간을 선택하시면 알림을 보내 드립니다.",
+  onboarding_reminder_change_hint: "선택 사항입니다. 설정에서 언제든지 켜거나 끌 수 있습니다.",
+  daily_reminder_prompt_title: "하루도 놓치지 마세요",
+  daily_reminder_prompt_text: "매일 알림을 설정해 꾸준한 읽기 습관을 만들어 보세요.",
+  daily_reminder_prompt_cta: "알림 설정",
+  daily_reminder_prompt_not_now: "괜찮아요",
   onboarding_continue: "계속",
   onboarding_finish_title: "시작하기",
   onboarding_finish_description: "준비가 모두 끝났습니다! 이제 성경을 읽기 시작할 시간이에요.",

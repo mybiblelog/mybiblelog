@@ -472,6 +472,16 @@ export const pt = {
   onboarding_bible_app_label:
     "Quando abro uma passagem do My Bible Log, quero que ela abra neste aplicativo ou site:",
   onboarding_bible_change_hint: "Você pode alterar essas configurações a qualquer momento.",
+  onboarding_reminder_title: "Lembrete diário",
+  onboarding_reminder_description:
+    "Quer um lembrete gentil para ler todos os dias? Escolha um horário e enviaremos um lembrete.",
+  onboarding_reminder_change_hint:
+    "É opcional — você pode ativá-lo ou desativá-lo a qualquer momento nas Configurações.",
+  daily_reminder_prompt_title: "Não perca nenhum dia",
+  daily_reminder_prompt_text:
+    "Defina um lembrete diário para ajudar a criar um hábito de leitura constante.",
+  daily_reminder_prompt_cta: "Definir lembrete",
+  daily_reminder_prompt_not_now: "Não, obrigado",
   onboarding_continue: "Continuar",
   onboarding_finish_title: "Começar",
   onboarding_finish_description: "Tudo está pronto! É hora de começar a ler.",

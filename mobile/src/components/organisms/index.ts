@@ -10,6 +10,7 @@ export { ChapterMenu } from "./ChapterMenu";
 export { ConfigErrorScreen } from "./ConfigErrorScreen";
 export { ConfirmDialog } from "./ConfirmDialog";
 export { DailyVersesChart } from "./DailyVersesChart";
+export { DailyReminderPromptCard } from "./DailyReminderPromptCard";
 export { DailyReminderSection } from "./DailyReminderSection";
 export { DatePickerSheet } from "./DatePickerSheet";
 export { GuestBackupAlert } from "./GuestBackupAlert";

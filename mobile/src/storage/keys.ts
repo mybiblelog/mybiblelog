@@ -24,6 +24,7 @@ import type { AuthSession } from "@/src/auth/authStorage";
 import type { ReviewPromptState } from "@/src/review/reviewPrompt";
 import type { BookListPrefs } from "@/src/stores/bookListPrefs";
 import type { DailyReminderSettings } from "@/src/notifications/dailyReminder";
+import type { DailyReminderPromptState } from "@/src/notifications/dailyReminderPrompt";
 import { createTypedStorage, defineKey } from "./typedStorage";
 import type { StorageHooks } from "./typedStorage";
 import { reportStorageFailure, reportStorageOk } from "./health";
@@ -67,6 +68,12 @@ export const appStorage = createTypedStorage(
      * `src/notifications/dailyReminder.ts`.
      */
     dailyReminder: defineKey<DailyReminderSettings>("dailyReminder.v1"),
+    /**
+     * Whether the Today screen's "set a daily reminder" card was dismissed.
+     * Permanent (unlike `InlineAlert`'s TTL dismissals): it's a one-time
+     * introduction, not a recurring warning.
+     */
+    dailyReminderPrompt: defineKey<DailyReminderPromptState>("dailyReminderPrompt.v1"),
   },
   healthHooks
 );

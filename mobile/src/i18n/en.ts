@@ -462,6 +462,15 @@ export const en = {
   onboarding_bible_app_label:
     "When I open a passage from My Bible Log, I want it to open in this app or website:",
   onboarding_bible_change_hint: "You can change these settings at any time.",
+  onboarding_reminder_title: "Daily Reminder",
+  onboarding_reminder_description:
+    "Want a gentle nudge to read each day? Pick a time and we'll send you a reminder.",
+  onboarding_reminder_change_hint:
+    "This is optional — you can turn it on or off anytime in Settings.",
+  daily_reminder_prompt_title: "Never miss a day",
+  daily_reminder_prompt_text: "Set a daily reminder to help build a steady reading habit.",
+  daily_reminder_prompt_cta: "Set a Reminder",
+  daily_reminder_prompt_not_now: "No Thanks",
   onboarding_continue: "Continue",
   onboarding_finish_title: "Get Started",
   onboarding_finish_description: "You're all set up! It's time to start reading.",

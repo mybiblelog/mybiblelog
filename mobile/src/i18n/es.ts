@@ -476,6 +476,16 @@ export const es = {
   onboarding_bible_app_label:
     "Cuando abro un pasaje desde My Bible Log, quiero que se abra en esta aplicación o sitio web:",
   onboarding_bible_change_hint: "Puede cambiar esta configuración en cualquier momento.",
+  onboarding_reminder_title: "Recordatorio diario",
+  onboarding_reminder_description:
+    "¿Quieres un suave recordatorio para leer cada día? Elige una hora y te enviaremos un recordatorio.",
+  onboarding_reminder_change_hint:
+    "Es opcional: puedes activarlo o desactivarlo en cualquier momento en Ajustes.",
+  daily_reminder_prompt_title: "No te pierdas ningún día",
+  daily_reminder_prompt_text:
+    "Configura un recordatorio diario para ayudarte a crear un hábito de lectura constante.",
+  daily_reminder_prompt_cta: "Configurar recordatorio",
+  daily_reminder_prompt_not_now: "No, gracias",
   onboarding_continue: "Continuar",
   onboarding_finish_title: "Comenzar",
   onboarding_finish_description: "¡Todo está listo! Es hora de comenzar a leer.",

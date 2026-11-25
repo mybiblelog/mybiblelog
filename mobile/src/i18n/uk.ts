@@ -472,6 +472,16 @@ export const uk = {
   onboarding_bible_app_label:
     "Коли я відкриваю уривок з My Bible Log, я хочу, щоб він відкрився в цій програмі або на веб-сайті:",
   onboarding_bible_change_hint: "Ви можете змінити ці налаштування в будь-який час.",
+  onboarding_reminder_title: "Щоденне нагадування",
+  onboarding_reminder_description:
+    "Хочете м'яке нагадування читати щодня? Оберіть час, і ми надішлемо вам нагадування.",
+  onboarding_reminder_change_hint:
+    "Це необов'язково — ви можете увімкнути або вимкнути його будь-коли в Налаштуваннях.",
+  daily_reminder_prompt_title: "Не пропускайте жодного дня",
+  daily_reminder_prompt_text:
+    "Налаштуйте щоденне нагадування, щоб сформувати стабільну звичку читання.",
+  daily_reminder_prompt_cta: "Налаштувати нагадування",
+  daily_reminder_prompt_not_now: "Ні, дякую",
   onboarding_continue: "Продовжити",
   onboarding_finish_title: "Почніть",
   onboarding_finish_description: "Все налаштовано! Час почати читати.",

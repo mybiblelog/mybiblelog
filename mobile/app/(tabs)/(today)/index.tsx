@@ -5,6 +5,7 @@ import { StyleSheet, View } from "react-native";
 import {
   AnimatedList,
   Button,
+  DailyReminderPromptCard,
   DoubleProgressBar,
   EmptyState,
   GuestBackupAlert,
@@ -122,6 +123,7 @@ export default function Index() {
 
       <ReadingTrackerResetCard hasEntriesToday={todayEntries.length > 0} />
       <GuestBackupAlert hasEntries={(entries?.length ?? 0) > 0} />
+      <DailyReminderPromptCard hasEntries={(entries?.length ?? 0) > 0} />
 
       <AnimatedList
         data={loading ? [] : todayEntries}

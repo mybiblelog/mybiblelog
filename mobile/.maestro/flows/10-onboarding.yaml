@@ -87,6 +87,13 @@ tags:
 - tapOn:
     id: "onboarding.bible-next"
 
+# --- Reminder step: optional; continue without enabling it (enabling would
+# raise the OS notification permission dialog) ---------------------------
+- assertVisible:
+    id: "settings-reading.reminder-section"
+- tapOn:
+    id: "onboarding.reminder-next"
+
 # --- Finish step: complete onboarding, land on Today (logged out) ------
 - assertVisible:
     id: "onboarding.finish"

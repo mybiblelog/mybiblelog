@@ -112,6 +112,7 @@ export function InlineAlert({
             onPress={handleDismiss}
             size={18}
             style={styles.dismiss}
+            testID={testID ? `${testID}.dismiss` : undefined}
           />
         ) : null}
       </View>

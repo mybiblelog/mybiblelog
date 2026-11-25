@@ -6,6 +6,7 @@ import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } f
 import {
   Button,
   Card,
+  DailyReminderSection,
   Icon,
   IconButton,
   InputField,
@@ -25,14 +26,17 @@ import { getGoalPlan } from "@/src/progress/outlook";
 import { onboardingActions } from "@/src/stores/onboarding";
 import { userSettingsActions, useSettingsValue } from "@/src/stores/userSettings";
 
-type OnboardingStep = "choice" | "welcome" | "canon" | "goal" | "bible" | "finish";
+type OnboardingStep = "choice" | "welcome" | "canon" | "goal" | "bible" | "reminder" | "finish";
 
-const TOTAL_STEPS = 4; // welcome, canon, goal, bible — matches web's PillProgressBar count
+// Web's wizard has 4 steps; the reminder step is mobile-only because the
+// mobile reminder is an on-device notification, not the web's reminder email.
+const TOTAL_STEPS = 5;
 const STEP_INDEX: Partial<Record<OnboardingStep, number>> = {
   welcome: 0,
   canon: 1,
   goal: 2,
   bible: 3,
+  reminder: 4,
 };
 
 async function finishOnboarding() {
@@ -89,8 +93,11 @@ export default function Onboarding() {
             initialVersion={settings?.preferredBibleVersion ?? ""}
             initialApp={settings?.preferredBibleApp ?? ""}
             onBack={() => setStep("goal")}
-            onNext={() => setStep("finish")}
+            onNext={() => setStep("reminder")}
           />
+        ) : null}
+        {step === "reminder" ? (
+          <ReminderStep onBack={() => setStep("bible")} onNext={() => setStep("finish")} />
         ) : null}
         {step === "finish" ? <FinishStep onDone={() => void finishOnboarding()} /> : null}
       </Screen>
@@ -507,6 +514,40 @@ function BibleStep({
         onSelect={(v) => setApp(String(v))}
         onClose={() => setAppOpen(false)}
       />
+    </View>
+  );
+}
+
+function ReminderStep({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
+  const t = useT();
+  return (
+    <View style={styles.flex}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Text variant="title" style={styles.title}>
+          {t("onboarding_reminder_title")}
+        </Text>
+        <Text variant="body" color="mutedText" style={styles.description}>
+          {t("onboarding_reminder_description")}
+        </Text>
+
+        <Card style={styles.fieldGroup}>
+          <DailyReminderSection embedded />
+        </Card>
+
+        <Text variant="caption" color="mutedText" style={styles.hint}>
+          {t("onboarding_reminder_change_hint")}
+        </Text>
+
+        <View style={styles.stepButtons}>
+          <Button
+            label={t("onboarding_continue")}
+            testID="onboarding.reminder-next"
+            fullWidth
+            onPress={onNext}
+          />
+          <Button label={t("back")} variant="ghost" size="sm" onPress={onBack} />
+        </View>
+      </ScrollView>
     </View>
   );
 }

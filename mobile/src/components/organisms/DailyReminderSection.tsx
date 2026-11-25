@@ -38,8 +38,11 @@ function toDate(hour: number, minute: number): Date {
  * changes immediately: toggling on requests OS notification permission right
  * away (never at app launch), and picking a new time reschedules the
  * notification immediately rather than waiting on a separate Save.
+ *
+ * `embedded` drops the section heading and top margin for hosts that supply
+ * their own (the onboarding reminder step).
  */
-export function DailyReminderSection() {
+export function DailyReminderSection({ embedded = false }: { embedded?: boolean } = {}) {
   const t = useT();
   const { locale } = useLocale();
   const [settings, setSettings] = useState<DailyReminderSettings | null>(null);
@@ -119,10 +122,15 @@ export function DailyReminderSection() {
   }
 
   return (
-    <View style={styles.section} testID="settings-reading.reminder-section">
-      <Text variant="label" color="mutedText">
-        {t("settings_reading_reminder_title")}
-      </Text>
+    <View
+      style={[styles.section, embedded && styles.embedded]}
+      testID="settings-reading.reminder-section"
+    >
+      {!embedded && (
+        <Text variant="label" color="mutedText">
+          {t("settings_reading_reminder_title")}
+        </Text>
+      )}
       <CheckboxRow
         label={t("settings_reading_reminder_toggle")}
         checked={current.enabled}
@@ -154,4 +162,5 @@ export function DailyReminderSection() {
 
 const styles = StyleSheet.create({
   section: { gap: spacing.xs, marginTop: spacing.md },
+  embedded: { marginTop: 0 },
 });

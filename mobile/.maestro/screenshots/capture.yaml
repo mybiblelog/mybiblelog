@@ -177,6 +177,11 @@ appId: com.mybiblelog.app
 # --- Today: reading suggestion menu (sc1) + log-entry editor (sc14) ----------
 - tapOn:
     id: "tab.today"
+# The seeded account has entries but no reminder, so Today shows the one-time
+# "set a daily reminder" card; dismiss it to keep it out of sc1/sc4.
+- tapOn:
+    id: "today.daily-reminder-prompt.dismiss"
+    optional: true
 - tapOn:
     id: "today.suggestion"
 - waitForAnimationToEnd:

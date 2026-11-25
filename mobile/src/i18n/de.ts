@@ -481,6 +481,16 @@ export const de = {
   onboarding_bible_app_label:
     "Wenn ich eine Passage von My Bible Log öffne, möchte ich, dass sie in dieser App oder Website geöffnet wird:",
   onboarding_bible_change_hint: "Sie können diese Einstellungen jederzeit ändern.",
+  onboarding_reminder_title: "Tägliche Erinnerung",
+  onboarding_reminder_description:
+    "Möchtest du jeden Tag sanft ans Lesen erinnert werden? Wähle eine Uhrzeit und wir senden dir eine Erinnerung.",
+  onboarding_reminder_change_hint:
+    "Das ist optional – du kannst es jederzeit in den Einstellungen ein- oder ausschalten.",
+  daily_reminder_prompt_title: "Keinen Tag verpassen",
+  daily_reminder_prompt_text:
+    "Stelle eine tägliche Erinnerung ein, um eine beständige Lesegewohnheit aufzubauen.",
+  daily_reminder_prompt_cta: "Erinnerung einrichten",
+  daily_reminder_prompt_not_now: "Nein, danke",
   onboarding_continue: "Weiter",
   onboarding_finish_title: "Loslegen",
   onboarding_finish_description:
