@@ -119,7 +119,7 @@ const BookCard = memo(function BookCard({
             size={18}
             color={book.complete ? "success" : "border"}
           />
-          <Text variant="bodyStrong" style={styles.bookName}>
+          <Text variant="bodyStrong" style={styles.bookName} numberOfLines={2}>
             {bookName}
           </Text>
         </View>
@@ -360,10 +360,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
+  // `flex: 1` (not `flexShrink`) so the name's width comes from the row's
+  // leftover space rather than its own measurement: on Android a self-measured
+  // width can come out a fraction short, wrapping the last word onto a line the
+  // row never sized for (e.g. "Additions to Esther" rendered as "Additions to").
   bookHeaderLeft: {
     flexDirection: "row",
     alignItems: "center",
-    flexShrink: 1,
+    flex: 1,
     paddingRight: spacing.sm,
     gap: spacing.sm,
   },
@@ -373,7 +377,7 @@ const styles = StyleSheet.create({
     gap: spacing.xs,
   },
   bookName: {
-    flexShrink: 1,
+    flex: 1,
   },
   chevronUp: {
     transform: [{ rotate: "180deg" }],
